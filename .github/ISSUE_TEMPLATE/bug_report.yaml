@@ -2,6 +2,7 @@ name: Bug report
 description: Create a bug report to help us improve the project
 title: "[Bug]: <title>"
 labels: ["bug"]
+projects: ["SE-UUlm/2"]
 
 body:
   - type: checkboxes

@@ -2,6 +2,7 @@ name: Use Case
 description: Describe a use case for this project
 title: "[Use Case]: <title>"
 labels: ["use case"]
+projects: ["SE-UUlm/2"]
 
 body:
   - type: input
