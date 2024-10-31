@@ -14,6 +14,14 @@ body:
         - label: I have searched the existing issues
           required: true
 
+  - type: input
+    id: use-case
+    attributes:
+      label: To which use case does your bug report relate?
+      placeholder: '#1'
+    validations:
+      required: false
+
   - type: textarea
     id: what-happend
     attributes:
