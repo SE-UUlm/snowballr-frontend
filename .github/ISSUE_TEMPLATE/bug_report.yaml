@@ -23,9 +23,9 @@ body:
           required: false
 
     - type: textarea
-      id: what-happend
+      id: what-happened
       attributes:
-          label: What happend?
+          label: What happened?
           description: A clear and concise description of what the bug is.
           placeholder: e.g. "When a button is pressed, the application crashes."
       validations:
