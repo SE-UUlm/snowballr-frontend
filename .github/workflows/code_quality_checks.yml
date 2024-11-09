@@ -1,0 +1,70 @@
+name: Code Quality Checks
+
+on:
+    push:
+        branches:
+            - main
+            - develop
+    pull_request:
+    workflow_dispatch:
+
+env:
+    node_version: ${{ vars.NODE_VERSION }}
+
+jobs:
+    linting:
+        name: Linting with Prettier and ESLint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Prettier & ESLint
+              run: npm run lint
+
+    unit-test:
+        name: Unit Testing with Vitest
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Vitest
+              run: npm run test:unit
+
+    e2e-test:
+        name: End-to-End Testing with Playwright
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Install Playwright
+              run: npx playwright install --with-deps
+
+            - name: Run Playwright
+              run: npm run test:e2e
