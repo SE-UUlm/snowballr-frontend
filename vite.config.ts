@@ -6,5 +6,10 @@ export default defineConfig({
 
     test: {
         include: ["src/**/*.{test,spec}.{js,ts}"],
+        reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : ['default'],
+
+
+
+
     },
 });
