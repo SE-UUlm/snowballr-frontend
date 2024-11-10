@@ -8,7 +8,11 @@ export default defineConfig({
     test: {
         include: ["test/**/*.{test,spec}.{js,ts}"],
         reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["default"],
+        sequence: {
+            shuffle: true,
+        },
         coverage: {
+            provider: "v8",
             enabled: true,
             cleanOnRerun: true,
             reporter: process.env.GITHUB_ACTIONS ? ["lcov"] : ["html"],
