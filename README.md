@@ -2,6 +2,10 @@
 
 Frontend of the SnowballR project.
 
+## Use Cases
+
+To keep track of the use cases we are working on, we are using the GitHub project board feature. You can find them [here](https://github.com/orgs/SE-UUlm/projects/2/views/7).
+
 ## Developing
 
 Once you've installed dependencies with `npm install`, start a development server:
