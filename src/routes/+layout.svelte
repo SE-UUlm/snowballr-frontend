@@ -1,4 +1,6 @@
 <script lang="ts">
+    import "../app.css";
+
     let { children } = $props();
 </script>
 
@@ -6,6 +8,7 @@
 
 {@render children()}
 
+<br />
 <a href="/archivedprojects">Archived Projects</a><br />
 <a href="/paper/42">Paper 42 View</a><br />
 <a href="/project/42">Project 42 Dashboard</a><br />
