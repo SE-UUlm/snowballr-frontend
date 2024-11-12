@@ -10,18 +10,23 @@
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
 
-    export let user: {
-        firstName: string;
-        lastName: string;
-    };
-    export let backRef: string = "";
-    export let pageTitle: string = "Project 1";
-    export let tabs: {
-        value: string;
-        label: string;
-        href: string;
-    }[] = [];
-    export let defaultTabValue: string = "";
+    const {
+        user,
+        backRef = undefined,
+        pageTitle = "",
+        tabs = [],
+        defaultTabValue = "",
+    } = $props<{
+        user: { firstName: string; lastName: string };
+        backRef?: string | undefined;
+        pageTitle: string;
+        tabs: {
+            value: string;
+            label: string;
+            href: string;
+        }[];
+        defaultTabValue: string;
+    }>();
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
     const menuItems: {
@@ -59,7 +64,7 @@
 </script>
 
 <Card.Root class="shadow-lg w-fit">
-    <Card.Content class="p-4 grid grid-flow-col gap-[10px] items-center">
+    <Card.Content class="grid grid-flow-col gap-[0.625rem] items-center px-4 py-3">
         <DropdownMenu.Root>
             <DropdownMenu.Trigger>
                 <Avatar.Root>
@@ -93,16 +98,22 @@
                 </DropdownMenu.Group>
             </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <a href={backRef}><ArrowLeft class="w-6 h-6" /></a>
-        <h1 class="text-[28px] font-semibold place-content-center">{pageTitle}</h1>
-        <Tabs.Root value={defaultTabValue}>
-            <Tabs.List>
-                {#each tabs as tab}
-                    <Tabs.Trigger value={tab.value}>
-                        <a href={tab.href}>{tab.label}</a>
-                    </Tabs.Trigger>
-                {/each}
-            </Tabs.List>
-        </Tabs.Root>
+        {#if backRef !== undefined}
+            <a href={backRef}><ArrowLeft class="w-6 h-6" /></a>
+        {/if}
+        <h1 class="text-[1.25rem] font-semibold place-content-center">{pageTitle}</h1>
+        {#if tabs.length > 0}
+            <Tabs.Root value={defaultTabValue}>
+                <Tabs.List>
+                    {#each tabs as tab}
+                        <a href={tab.href}>
+                            <Tabs.Trigger value={tab.value}>
+                                <span class="font-semibold">{tab.label}</span>
+                            </Tabs.Trigger>
+                        </a>
+                    {/each}
+                </Tabs.List>
+            </Tabs.Root>
+        {/if}
     </Card.Content>
 </Card.Root>
