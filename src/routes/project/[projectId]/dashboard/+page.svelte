@@ -13,6 +13,6 @@
     };
 </script>
 
-<ProjectNavigationBar {user} {project} defaultTabValue="papers" />
+<ProjectNavigationBar {user} {project} defaultTabValue="dashboard" />
 
-<h3>Project {data.projectId} Papers</h3>
+<h3>Project {data.projectId} Dashboard</h3>
