@@ -1,13 +1,14 @@
 <script lang="ts">
     import NavigationBar from "$lib/components/custom/NavigationBar.svelte";
 
-    let { user, project, defaultTabValue } = $props<{
+    interface Props {
         user: { firstName: string; lastName: string };
         project: { id: string; name: string };
         defaultTabValue: "dashboard" | "papers" | "statistics" | "settings";
-    }>();
+    }
 
-    let tabs = [
+    const { user, project, defaultTabValue }: Props = $props();
+    const tabs = [
         {
             value: "dashboard",
             label: "Dashboard",

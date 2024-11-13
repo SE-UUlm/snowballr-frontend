@@ -9,14 +9,10 @@
     import Inbox from "lucide-svelte/icons/inbox";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
+    import type { ComponentType } from "svelte";
+    import type { Icon } from "lucide-svelte";
 
-    const {
-        user,
-        backRef = undefined,
-        pageTitle = "",
-        tabs = [],
-        defaultTabValue = "",
-    } = $props<{
+    interface Props {
         user: { firstName: string; lastName: string };
         backRef?: string | undefined;
         pageTitle: string;
@@ -26,12 +22,20 @@
             href: string;
         }[];
         defaultTabValue: string;
-    }>();
+    }
+
+    const {
+        user,
+        backRef = undefined,
+        pageTitle = "",
+        tabs = [],
+        defaultTabValue = "",
+    }: Props = $props();
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
     const menuItems: {
-        /* eslint-disable @typescript-eslint/no-explicit-any*/
-        icon: any;
+        // The icon library still uses the depracted ComponentType type
+        icon: ComponentType<Icon>;
         label: string;
         shortcut: string;
         href: string;
@@ -74,8 +78,7 @@
             <DropdownMenu.Content class="w-56">
                 <DropdownMenu.Group>
                     <DropdownMenu.GroupHeading>
-                        {user.firstName}
-                        {user.lastName}
+                        {`${user.firstName} ${user.lastName}`}
                     </DropdownMenu.GroupHeading>
                     <DropdownMenu.Separator />
                     <DropdownMenu.Group>
