@@ -1,5 +1,5 @@
 <script lang="ts">
-    import SimpleNavigationBar from "$lib/components/custom/SimpleNavigationBar.svelte";
+    import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
 
     const { children } = $props();
 

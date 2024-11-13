@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ProjectNavigationBar from "$lib/components/custom/ProjectNavigationBar.svelte";
+    import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
     let { children, data } = $props();
     let user = {

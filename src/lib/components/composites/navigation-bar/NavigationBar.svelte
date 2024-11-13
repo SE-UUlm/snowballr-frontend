@@ -1,9 +1,9 @@
 <script lang="ts">
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
-    import * as Avatar from "$lib/components/ui/avatar/index.js";
-    import * as Card from "$lib/components/ui/card/index.js";
-    import * as Tabs from "$lib/components/ui/tabs/index.js";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import * as Avatar from "$lib/components/primitives/avatar/index.js";
+    import * as Card from "$lib/components/primitives/card/index.js";
+    import * as Tabs from "$lib/components/primitives/tabs/index.js";
+    import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
     import BookOpen from "lucide-svelte/icons/book-open";
     import Archive from "lucide-svelte/icons/archive";
     import Inbox from "lucide-svelte/icons/inbox";
