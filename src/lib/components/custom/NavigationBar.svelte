@@ -9,27 +9,27 @@
     import Inbox from "lucide-svelte/icons/inbox";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
-    import type { ComponentType } from "svelte";
+    import type { ComponentType, Snippet } from "svelte";
     import type { Icon } from "lucide-svelte";
 
     interface Props {
         user: { firstName: string; lastName: string };
         backRef?: string | undefined;
-        pageTitle: string;
         tabs: {
             value: string;
             label: string;
             href: string;
         }[];
         defaultTabValue: string;
+        children: Snippet<[]>;
     }
 
     const {
         user,
         backRef = undefined,
-        pageTitle = "",
         tabs = [],
         defaultTabValue = "",
+        children,
     }: Props = $props();
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
@@ -104,7 +104,8 @@
         {#if backRef !== undefined}
             <a href={backRef}><ArrowLeft class="w-6 h-6" /></a>
         {/if}
-        <h1 class="text-[1.25rem] font-semibold place-content-center">{pageTitle}</h1>
+        <!-- Children can be e.g. a title element -->
+        {@render children()}
         {#if tabs.length > 0}
             <Tabs.Root value={defaultTabValue}>
                 <Tabs.List>

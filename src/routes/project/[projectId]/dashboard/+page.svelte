@@ -1,13 +1,13 @@
 <script lang="ts">
     import ProjectNavigationBar from "$lib/components/custom/ProjectNavigationBar.svelte";
 
-    let { data } = $props();
+    const { data } = $props();
 
-    let user = {
+    const user = {
         firstName: "Max",
         lastName: "Mustermann",
     };
-    let project = {
+    const project = {
         id: data.projectId,
         name: `Project ${data.projectId}`,
     };

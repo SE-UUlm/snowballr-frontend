@@ -1,14 +1,14 @@
 <script lang="ts">
-    import NavigationBar from "$lib/components/custom/NavigationBar.svelte";
+    import SimpleNavigationBar from "$lib/components/custom/SimpleNavigationBar.svelte";
 
-    let { children } = $props();
+    const { children } = $props();
 
-    let user = {
+    const user = {
         firstName: "Max",
         lastName: "Mustermann",
     };
 </script>
 
-<NavigationBar {user} pageTitle="Settings" backRef="/" />
+<SimpleNavigationBar {user} title="Settings" backRef="/" />
 
 {@render children()}

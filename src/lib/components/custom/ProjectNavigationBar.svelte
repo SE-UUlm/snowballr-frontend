@@ -1,5 +1,5 @@
 <script lang="ts">
-    import NavigationBar from "$lib/components/custom/NavigationBar.svelte";
+    import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
 
     interface Props {
         user: { firstName: string; lastName: string };
@@ -32,4 +32,4 @@
     ];
 </script>
 
-<NavigationBar {user} backRef="/" pageTitle={project.name} {tabs} {defaultTabValue} />
+<SimpleNavigationBar {user} backRef="/" title={project.name} {tabs} {defaultTabValue} />

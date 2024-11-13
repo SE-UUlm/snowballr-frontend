@@ -1,10 +1,10 @@
 <script lang="ts">
-    import NavigationBar from "$lib/components/custom/NavigationBar.svelte";
+    import SimpleNavigationBar from "$lib/components/custom/SimpleNavigationBar.svelte";
 
-    let user = {
+    const user = {
         firstName: "Max",
         lastName: "Mustermann",
     };
 </script>
 
-<NavigationBar {user} pageTitle="Archived Projects" backRef="/" />
+<SimpleNavigationBar {user} title="Archived Projects" backRef="/" />
