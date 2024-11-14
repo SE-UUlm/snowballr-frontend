@@ -1,5 +1,16 @@
 <script lang="ts">
-    let { data } = $props();
+    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+
+    const { data } = $props();
+    const user = {
+        firstName: "Max",
+        lastName: "Mustermann",
+    };
+    const paper = {
+        id: undefined,
+        title: "Field-Sensitive Point...",
+        authors: ["Author 1", "Author 2", "Author 3", "Author 4", "Author 5", "Aut..."],
+    };
 </script>
 
-<h3>Project {data.projectId} New Paper</h3>
+<PaperNavigationBar {user} backRef={`/project/${data.projectId}/dashboard`} {paper} />
