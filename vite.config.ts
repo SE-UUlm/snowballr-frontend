@@ -8,6 +8,7 @@ export default defineConfig({
     test: {
         include: ["test/**/*.{test,spec}.{js,ts}"],
         reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["default"],
+        environment: "jsdom",
         sequence: {
             shuffle: true,
         },
