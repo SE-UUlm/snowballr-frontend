@@ -1,11 +1,13 @@
 <script lang="ts">
+    import "../app.css";
+
     let { children } = $props();
 </script>
 
-<h1>Global Layout</h1>
-
 {@render children()}
 
+<br />
+<a href="theme">Theme</a><br />
 <a href="/archivedprojects">Archived Projects</a><br />
 <a href="/paper/42">Paper 42 View</a><br />
 <a href="/project/42">Project 42 Dashboard</a><br />
