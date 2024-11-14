@@ -2,8 +2,14 @@
     import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
 
     interface Props {
-        user: { firstName: string; lastName: string };
-        project: { id: string; name: string };
+        user: {
+            firstName: string;
+            lastName: string;
+        };
+        project: {
+            id: string;
+            name: string;
+        };
         defaultTabValue: "dashboard" | "papers" | "statistics" | "settings";
     }
 

@@ -13,7 +13,10 @@
     import type { Icon } from "lucide-svelte";
 
     interface Props {
-        user: { firstName: string; lastName: string };
+        user: {
+            firstName: string;
+            lastName: string;
+        };
         backRef?: string | undefined;
         tabs: {
             value: string;
