@@ -74,7 +74,10 @@
     }
 }
 
+/**** Custom Styling ****/
+
 @layer components {
+    /* Tag Styles */
     h1 {
         @apply text-2xl font-semibold tracking-normal text-primary;
     }
@@ -84,6 +87,8 @@
     h3 {
         @apply text-base font-normal tracking-normal text-primary;
     }
+
+    /* Custom Style Classes */
     .text-placeholder {
         @apply text-sm font-medium tracking-normal text-slate-500 italic;
     }
@@ -96,22 +101,22 @@
     .text-default-nc {
         @apply text-sm tracking-normal;
     }
-    .text-default-bold {
-        @apply text-default-bold-nc text-primary;
+    .text-default-b {
+        @apply text-default-b-nc text-primary;
     }
-    .text-default-bold-nc {
+    .text-default-b-nc {
         @apply text-default-nc font-bold;
     }
-    .text-default-semibold {
-        @apply text-default-semibold-nc text-primary;
+    .text-default-sb {
+        @apply text-default-sb-nc text-primary;
     }
-    .text-default-semibold-nc {
+    .text-default-sb-nc {
         @apply text-default-nc font-semibold;
     }
-    .text-default-medium {
-        @apply text-default-medium-nc text-primary;
+    .text-default-m {
+        @apply text-default-m-nc text-primary;
     }
-    .text-default-medium-nc {
+    .text-default-m-nc {
         @apply text-default-nc font-medium;
     }
 }

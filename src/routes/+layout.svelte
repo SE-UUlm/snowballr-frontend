@@ -13,8 +13,8 @@
     </div>
     <div class="text-hint">Hint Element (detail in figma + neutral/500)</div>
     <div class="text-default">Default Element (subtle in figma)</div>
-    <div class="text-default-medium">Default Element (subtle-medium in figma)</div>
-    <div class="text-default-semibold">Default Element (subtle-semibold in figma)</div>
+    <div class="text-default-m">Default Element (subtle-medium in figma)</div>
+    <div class="text-default-sb">Default Element (subtle-semibold in figma)</div>
 </div>
 
 {@render children()}
