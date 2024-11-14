@@ -79,27 +79,27 @@
 @layer components {
     /* Tag Styles */
     h1 {
-        @apply text-2xl font-semibold tracking-normal text-primary;
+        @apply text-2xl font-bold tracking-normal text-primary;
     }
     h2 {
         @apply text-xl font-semibold tracking-normal text-primary;
     }
     h3 {
-        @apply text-base font-normal tracking-normal text-primary;
+        @apply text-lg font-semibold tracking-normal text-primary;
     }
 
     /* Custom Style Classes */
     .text-placeholder {
-        @apply text-sm font-medium tracking-normal text-slate-500 italic;
+        @apply text-base font-medium tracking-normal text-slate-500 italic;
     }
     .text-hint {
-        @apply text-xs/5 font-medium tracking-normal text-neutral-500;
+        @apply text-sm font-medium tracking-normal text-neutral-500;
     }
     .text-default {
         @apply text-default-nc text-primary;
     }
     .text-default-nc {
-        @apply text-sm tracking-normal;
+        @apply text-base tracking-normal;
     }
     .text-default-b {
         @apply text-default-b-nc text-primary;
