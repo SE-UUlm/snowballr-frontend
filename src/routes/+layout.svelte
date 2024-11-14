@@ -4,22 +4,10 @@
     let { children } = $props();
 </script>
 
-<div>
-    <h1>H1 Element (h3 in figma)</h1>
-    <h2>H2 Element (h4 in figma)</h2>
-    <h3>H3 Element (list in figma)</h3>
-    <div class="text-placeholder">
-        Placeholder Element (subtle-medium in figma + italic + slate/500)
-    </div>
-    <div class="text-hint">Hint Element (detail in figma + neutral/500)</div>
-    <div class="text-default">Default Element (subtle in figma)</div>
-    <div class="text-default-m">Default Element (subtle-medium in figma)</div>
-    <div class="text-default-sb">Default Element (subtle-semibold in figma)</div>
-</div>
-
 {@render children()}
 
 <br />
+<a href="theme">Theme</a><br />
 <a href="/archivedprojects">Archived Projects</a><br />
 <a href="/paper/42">Paper 42 View</a><br />
 <a href="/project/42">Project 42 Dashboard</a><br />

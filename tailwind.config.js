@@ -1,5 +1,6 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import tailwindcssAnimate from "tailwindcss-animate";
+import colors from "tailwindcss/colors.js";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -59,6 +60,13 @@ const config = {
                     border: "hsl(var(--sidebar-border))",
                     ring: "hsl(var(--sidebar-ring))",
                 },
+                "decline-red": colors.red["400"],
+                "maybe-yellow": colors.yellow["400"],
+                "accept-green": colors.green["300"],
+                "warning-amber": "#FFC310",
+                "container-border-grey": "#E6E6E6",
+                "input-border-slate": colors.slate["400"],
+                "input-placeholder-slate": colors.slate["500"],
             },
             borderRadius: {
                 xl: "calc(var(--radius) + 4px)",
