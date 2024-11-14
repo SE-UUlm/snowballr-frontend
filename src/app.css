@@ -91,12 +91,27 @@
         @apply text-xs/5 font-medium tracking-normal text-neutral-500;
     }
     .text-default {
-        @apply text-sm font-bold tracking-normal text-primary;
+        @apply text-default-nc text-primary;
+    }
+    .text-default-nc {
+        @apply text-sm tracking-normal;
+    }
+    .text-default-bold {
+        @apply text-default-bold-nc text-primary;
+    }
+    .text-default-bold-nc {
+        @apply text-default-nc font-bold;
     }
     .text-default-semibold {
-        @apply text-sm font-semibold tracking-normal text-primary;
+        @apply text-default-semibold-nc text-primary;
+    }
+    .text-default-semibold-nc {
+        @apply text-default-nc font-semibold;
     }
     .text-default-medium {
-        @apply text-sm font-medium tracking-normal text-primary;
+        @apply text-default-medium-nc text-primary;
+    }
+    .text-default-medium-nc {
+        @apply text-default-nc font-medium;
     }
 }
