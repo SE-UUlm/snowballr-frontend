@@ -24,7 +24,7 @@
             href: string;
         }[];
         defaultTabValue: string;
-        children: Snippet<[]>;
+        children?: Snippet | undefined;
     }
 
     const {
@@ -32,12 +32,12 @@
         backRef = undefined,
         tabs = [],
         defaultTabValue = "",
-        children,
+        children = undefined,
     }: Props = $props();
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
     const menuItems: {
-        // The icon library still uses the depracted ComponentType type
+        // The icon library still uses the deprecated ComponentType type
         icon: ComponentType<Icon>;
         label: string;
         shortcut: string;
@@ -112,7 +112,7 @@
                     <a href={backRef}><ArrowLeft class="w-6 h-6" /></a>
                 {/if}
                 <!-- Children can be e.g. a title element -->
-                {@render children()}
+                {@render children?.()}
                 {#if tabs.length > 0}
                     <Tabs.Root value={defaultTabValue}>
                         <Tabs.List>
