@@ -165,3 +165,21 @@ jobs:
                   artifact-name: code-coverage-report
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   update-comment: true
+
+    check:
+        name: Svelte Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run all checks
+              run: npm run check
