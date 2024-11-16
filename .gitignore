@@ -189,3 +189,28 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,visualstudiocode,webstorm,svelte
+
+# ------------------
+# Manually modified:
+# ------------------
+
+## Added when creating SvelteKit Demo project (per default)
+node_modules
+
+### Output
+.output
+.vercel
+/build
+
+### Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+### Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+## Ignore test results
+test-results
