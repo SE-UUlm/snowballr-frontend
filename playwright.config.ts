@@ -5,6 +5,7 @@ export default defineConfig({
         command: "npm run build && npm run preview",
         port: 4173,
     },
-
     testDir: "e2e",
+    // Opt out of parallel tests on CI.
+    workers: process.env.CI ? 1 : undefined,
 });
