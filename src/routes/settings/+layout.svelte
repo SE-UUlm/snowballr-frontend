@@ -9,6 +9,6 @@
     };
 </script>
 
-<SimpleNavigationBar {user} title="Settings" backRef="/" />
+<SimpleNavigationBar {user} title="Settings" backRef="/" tabs={[]} defaultTabValue="" />
 
 {@render children()}

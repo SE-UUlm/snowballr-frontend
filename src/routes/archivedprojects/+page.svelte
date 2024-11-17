@@ -7,4 +7,4 @@
     };
 </script>
 
-<SimpleNavigationBar {user} title="Archived Projects" backRef="/" />
+<SimpleNavigationBar {user} title="Archived Projects" backRef="/" tabs={[]} defaultTabValue="" />

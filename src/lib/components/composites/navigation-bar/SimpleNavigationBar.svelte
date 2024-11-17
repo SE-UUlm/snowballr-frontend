@@ -13,13 +13,7 @@
         defaultTabValue: string;
     }
 
-    const {
-        user,
-        backRef = undefined,
-        title = "",
-        tabs = [],
-        defaultTabValue = "",
-    }: Props = $props();
+    const { user, backRef = undefined, title, tabs, defaultTabValue }: Props = $props();
 </script>
 
 <NavigationBar {user} {backRef} {tabs} {defaultTabValue}>

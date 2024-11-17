@@ -7,4 +7,4 @@
     };
 </script>
 
-<SimpleNavigationBar {user} title="Invitations" backRef="/" />
+<SimpleNavigationBar {user} title="Invitations" backRef="/" tabs={[]} defaultTabValue="" />

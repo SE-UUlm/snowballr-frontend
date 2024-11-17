@@ -7,4 +7,4 @@
     };
 </script>
 
-<SimpleNavigationBar {user} title="SnowballR" />
+<SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />

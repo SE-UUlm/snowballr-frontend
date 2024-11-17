@@ -30,8 +30,8 @@
     const {
         user,
         backRef = undefined,
-        tabs = [],
-        defaultTabValue = "",
+        tabs,
+        defaultTabValue,
         children = undefined,
     }: Props = $props();
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
