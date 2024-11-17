@@ -7,7 +7,7 @@
             lastName: string;
         };
         project: {
-            id: string;
+            id: number;
             name: string;
         };
         defaultTabValue: "dashboard" | "papers" | "statistics" | "settings";
