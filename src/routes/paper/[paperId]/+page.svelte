@@ -1,5 +1,7 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import PaperDetailsCard from "$lib/components/composites/paper-components/cards/PaperDetailsCard.svelte";
+    import PaperResearchContextCard from "$lib/components/composites/paper-components/cards/PaperResearchContextCard.svelte";
 
     const { data } = $props();
     const { user, paper } = data;
@@ -16,8 +18,8 @@
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <div class="bg-red-500 w-full">Card 1</div>
-        <div class="bg-green-500 w-full">Card 2</div>
+        <PaperDetailsCard />
+        <PaperResearchContextCard />
     </div>
     <div class="flex flex-row w-full h-fit justify-between">
         <div>Button to left</div>
