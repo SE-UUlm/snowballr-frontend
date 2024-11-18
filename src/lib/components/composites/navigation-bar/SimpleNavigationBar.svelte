@@ -17,5 +17,5 @@
 </script>
 
 <NavigationBar {user} {backRef} {tabs} {defaultTabValue}>
-    <h1 class="place-content-center truncate">{title}</h1>
+    <h2 class="place-content-center truncate">{title}</h2>
 </NavigationBar>

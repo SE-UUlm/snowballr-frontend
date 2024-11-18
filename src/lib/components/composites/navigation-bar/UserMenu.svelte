@@ -59,7 +59,7 @@
             <Avatar.Fallback>{userInitials}</Avatar.Fallback>
         </Avatar.Root>
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="w-56">
+    <DropdownMenu.Content class="w-60" side="bottom" sideOffset={0} align="start">
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
                 {`${user.firstName} ${user.lastName}`}
