@@ -12,9 +12,6 @@ Once you've installed dependencies with `npm install`, start a development serve
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
 ## Building
@@ -28,3 +25,35 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Testing
+
+To test the functionality of our app we employ unit, integration and end-to-end tests. To run all tests at once you can use:
+
+```bash
+npm run test
+```
+
+### Unit Tests
+
+Unit tests are used to test individual functions or components in isolation. They are located in the [test/unit](./test/unit/) directory. Run them with:
+
+```bash
+npm run test:unit
+```
+
+### Integration Tests
+
+Integration tests are used to test the interaction between different components or functions. They are located in the [test/integration](./test/integration/) directory. Run them with:
+
+```bash
+npm run test:integration
+```
+
+### End-to-End Tests
+
+End-to-end tests are used to test the functionality of the app as a whole. They are located in the [test/e2e](./test/e2e/) directory. Run them with:
+
+```bash
+npm run test:e2e
+```

@@ -326,5 +326,6 @@ fabric.properties
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-## Ignore test results
+## Ignore test results and reports
 test-results
+e2e-report

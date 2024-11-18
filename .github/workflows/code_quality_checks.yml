@@ -45,12 +45,49 @@ jobs:
             - name: Install dependencies
               run: npm install
 
-            - name: Run Vitest
+            - name: Run unit tests
               run: npm run test:unit
+
+            - name: Archive coverage report
+              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                  name: unit-code-coverage-report
+                  path: coverage/
+                  retention-days: 1
+                  if-no-files-found: error
+
+    integration-test:
+        name: Integration Testing with Vitest
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run integration tests
+              run: npm run test:integration
+
+            - name: Archive coverage report
+              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                  name: integration-code-coverage-report
+                  path: coverage/
+                  retention-days: 1
+                  if-no-files-found: error
 
     e2e-test:
         name: End-to-End Testing with Playwright
         runs-on: ubuntu-latest
+        timeout-minutes: 30
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -68,3 +105,81 @@ jobs:
 
             - name: Run Playwright
               run: npm run test:e2e
+
+            - name: Archive Playwright report
+              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                  name: playwright-report
+                  path: e2e-report/
+                  retention-days: 30
+
+    coverage-report:
+        name: Code Coverage Report
+        runs-on: ubuntu-latest
+        needs: [unit-test, integration-test]
+        permissions:
+            pull-requests: write
+            contents: read
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Download unit test coverage report
+              uses: actions/download-artifact@v4
+              with:
+                  name: unit-code-coverage-report
+                  path: coverage/unit
+
+            - name: Download integration test coverage report
+              uses: actions/download-artifact@v4
+              with:
+                  name: integration-code-coverage-report
+                  path: coverage/integration
+
+            # Now there are two coverage reports in the coverage folder
+            # coverage
+            # ├── integration
+            # │   └── lcov.info
+            # └── unit
+            #     └── lcov.info
+
+            - name: Install LCOV
+              run: sudo apt install lcov
+
+            - name: Combine coverage reports
+              run: lcov -a coverage/unit/lcov.info -a coverage/integration/lcov.info --output-file final-lcov.info
+
+            - name: Setup LCOV
+              uses: hrishikesh-kadam/setup-lcov@v1
+
+            - name: Report code coverage
+              uses: zgosalvez/github-actions-report-lcov@v4
+              with:
+                  coverage-files: final-lcov.info
+                  artifact-name: code-coverage-report
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  update-comment: true
+
+    check:
+        name: Svelte Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.node_version }}
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run all checks
+              run: npm run check
