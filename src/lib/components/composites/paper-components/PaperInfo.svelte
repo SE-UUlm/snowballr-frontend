@@ -1,10 +1,8 @@
 <script lang="ts">
+    import type { Paper } from "../../../../app";
+
     interface Props {
-        paper: {
-            id?: number | undefined;
-            title: string;
-            authors: string[];
-        };
+        paper: Omit<Paper, "id"> & { id: number | undefined };
     }
 
     const { paper }: Props = $props();

@@ -1,16 +1,14 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
+    import type { Tab } from "$lib/components/composites/navigation-bar/navigation-bar";
+    import type { User } from "../../../../app";
 
     interface Props {
-        user: { firstName: string; lastName: string };
+        user: User;
         backRef?: string | undefined;
         title: string;
-        tabs: {
-            value: string;
-            label: string;
-            href: string;
-        }[];
-        defaultTabValue: string;
+        tabs: Tab[];
+        defaultTabValue: (typeof tabs)[number]["value"];
     }
 
     const { user, backRef = undefined, title, tabs, defaultTabValue }: Props = $props();

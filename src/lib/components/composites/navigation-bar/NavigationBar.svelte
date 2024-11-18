@@ -4,19 +4,14 @@
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
+    import type { Tab } from "$lib/components/composites/navigation-bar/navigation-bar";
+    import type { User } from "../../../../app";
 
     interface Props {
-        user: {
-            firstName: string;
-            lastName: string;
-        };
+        user: User;
         backRef?: string | undefined;
-        tabs: {
-            value: string;
-            label: string;
-            href: string;
-        }[];
-        defaultTabValue: string;
+        tabs: Tab[];
+        defaultTabValue: (typeof tabs)[number]["value"];
         children?: Snippet | undefined;
     }
 

@@ -1,18 +1,12 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
     import PaperInfo from "../paper-components/PaperInfo.svelte";
+    import type { Paper, User } from "../../../../app";
 
     interface Props {
-        user: {
-            firstName: string;
-            lastName: string;
-        };
+        user: User;
         backRef?: string | undefined;
-        paper: {
-            id?: number | undefined;
-            title: string;
-            authors: string[];
-        };
+        paper: Omit<Paper, "id"> & { id: number | undefined };
     }
 
     const { user, backRef, paper }: Props = $props();

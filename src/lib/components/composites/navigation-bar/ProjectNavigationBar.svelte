@@ -1,16 +1,13 @@
 <script lang="ts">
     import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
+    import type { Tab } from "$lib/components/composites/navigation-bar/navigation-bar";
+    import type { Project, User } from "../../../../app";
 
+    type TabValue = (typeof tabs)[number]["value"];
     interface Props {
-        user: {
-            firstName: string;
-            lastName: string;
-        };
-        project: {
-            id: number;
-            name: string;
-        };
-        defaultTabValue: "dashboard" | "papers" | "statistics" | "settings";
+        user: User;
+        project: Project;
+        defaultTabValue: TabValue;
     }
 
     const { user, project, defaultTabValue }: Props = $props();
@@ -35,7 +32,13 @@
             label: "Settings",
             href: `/project/${project.id}/settings/general`,
         },
-    ];
+    ] as const;
 </script>
 
-<SimpleNavigationBar {user} backRef="/" title={project.name} {tabs} {defaultTabValue} />
+<SimpleNavigationBar
+    {user}
+    backRef="/"
+    title={project.name}
+    tabs={tabs as unknown as Tab[]}
+    {defaultTabValue}
+/>
