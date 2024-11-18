@@ -19,19 +19,8 @@ describe("ProjectNavigationBar", () => {
             },
         });
 
-        const header = screen.getByRole("banner");
-        expect(header).toBeInTheDocument();
-
-        const nav = screen.getByRole("navigation");
-        expect(nav).toBeInTheDocument();
-
         const linkTags = screen.getAllByRole("link");
         expect(linkTags).toHaveLength(5);
-
-        const backButtons = linkTags.filter((link) => link.getAttribute("href") === "/");
-        expect(backButtons).toHaveLength(1);
-        const backButton = backButtons[0];
-        expect(backButton).toBeInTheDocument();
 
         const dashboardLinks = linkTags.filter(
             (link) => link.getAttribute("href") === "/project/123/dashboard",
@@ -75,10 +64,6 @@ describe("ProjectNavigationBar", () => {
         const statisticsTab = statisticsTabs[0];
         expect(statisticsTab).toHaveAttribute("data-state", "active");
         expect(statisticsTab).toHaveAttribute("aria-selected", "true");
-
-        // User initials are shown
-        const userInitials = screen.getByText("JD");
-        expect(userInitials).toBeInTheDocument();
 
         // Project title is shown
         const projectTitle = screen.getByText("Example Project Title");

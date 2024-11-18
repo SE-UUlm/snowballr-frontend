@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 
@@ -49,5 +49,25 @@ describe("PaperNavigationBar", () => {
         // Paper ID is shown
         const paperId = screen.getByText("#123");
         expect(paperId).toBeInTheDocument();
+    });
+
+    test("When paper ID is not provided, then paper ID is not shown", async () => {
+        render(PaperNavigationBar, {
+            target: document.body,
+            props: {
+                user: {
+                    firstName: "John",
+                    lastName: "Doe",
+                },
+                backRef: "/",
+                paper: {
+                    id: undefined,
+                    title: "Example Paper Title",
+                    authors: ["John Doe", "Jane Doe"],
+                },
+            },
+        });
+
+        assert.throws(() => screen.getByText("#123"));
     });
 });
