@@ -14,8 +14,10 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 paper: {
                     id: 123,
-                    title: "Example Paper Title",
-                    authors: ["John Doe", "Jane Doe"],
+                    data: {
+                        title: "Example Paper Title",
+                        authors: ["John Doe", "Jane Doe"],
+                    },
                 },
             },
         });
@@ -62,12 +64,37 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 paper: {
                     id: undefined,
-                    title: "Example Paper Title",
-                    authors: ["John Doe", "Jane Doe"],
+                    data: {
+                        title: "Example Paper Title",
+                        authors: ["John Doe", "Jane Doe"],
+                    },
                 },
             },
         });
 
         assert.throws(() => screen.getByText("#123"));
+    });
+
+    test("When paper authors are not provided, then 'unknown authors' is shown", async () => {
+        render(PaperNavigationBar, {
+            target: document.body,
+            props: {
+                user: {
+                    firstName: "John",
+                    lastName: "Doe",
+                },
+                backRef: "/",
+                paper: {
+                    id: 123,
+                    data: {
+                        title: "Example Paper Title",
+                        authors: [],
+                    },
+                },
+            },
+        });
+
+        const paperAuthors = screen.getByText("unknown authors");
+        expect(paperAuthors).toBeInTheDocument();
     });
 });

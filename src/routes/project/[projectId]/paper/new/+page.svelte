@@ -8,8 +8,10 @@
     };
     const paper = {
         id: undefined,
-        title: "Field-Sensitive Point...",
-        authors: ["Author 1", "Author 2", "Author 3", "Author 4", "Author 5", "Aut..."],
+        data: {
+            title: "Field-Sensitive Point...",
+            authors: ["Author 1", "Author 2", "Author 3", "Author 4", "Author 5", "Aut..."],
+        },
     };
 </script>
 

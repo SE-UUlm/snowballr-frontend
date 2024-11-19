@@ -1,12 +1,12 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
     import PaperInfo from "../paper-components/PaperInfo.svelte";
-    import type { Paper, User } from "../../../../app";
+    import type { PaperData, User } from "../../../../app";
 
     interface Props {
         user: User;
         backRef?: string | undefined;
-        paper: Omit<Paper, "id"> & { id: number | undefined };
+        paper: { id: number | undefined; data: PaperData };
     }
 
     const { user, backRef, paper }: Props = $props();

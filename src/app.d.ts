@@ -9,6 +9,9 @@ declare global {
         // interface Platform {}
         interface Paper {
             readonly id: number;
+            readonly data: PaperData;
+        }
+        interface PaperData {
             readonly title: string;
             readonly authors: string[];
             readonly isBookmarked?: boolean;
@@ -24,4 +27,4 @@ declare global {
     }
 }
 
-export { Paper, Project, User };
+export { Paper, Project, User, PaperData };
