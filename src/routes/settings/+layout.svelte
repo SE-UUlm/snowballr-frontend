@@ -1,7 +1,14 @@
 <script lang="ts">
-    let { children } = $props();
+    import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
+
+    const { children } = $props();
+
+    const user = {
+        firstName: "Max",
+        lastName: "Mustermann",
+    };
 </script>
 
-<h2>Settings Layout</h2>
+<SimpleNavigationBar {user} title="Settings" backRef="/" tabs={[]} defaultTabValue="" />
 
 {@render children()}

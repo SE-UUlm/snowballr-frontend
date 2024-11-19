@@ -1,1 +1,10 @@
-<h2>Homepage</h2>
+<script lang="ts">
+    import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
+
+    const user = {
+        firstName: "Max",
+        lastName: "Mustermann",
+    };
+</script>
+
+<SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />

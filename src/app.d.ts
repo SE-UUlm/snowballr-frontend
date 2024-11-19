@@ -7,7 +7,24 @@ declare global {
         // interface PageData {}
         // interface PageState {}
         // interface Platform {}
+        interface Paper {
+            readonly id: number;
+            readonly data: PaperData;
+        }
+        interface PaperData {
+            readonly title: string;
+            readonly authors: string[];
+            readonly isBookmarked?: boolean;
+        }
+        interface Project {
+            readonly id: number;
+            readonly name: string;
+        }
+        interface User {
+            readonly firstName: string;
+            readonly lastName: string;
+        }
     }
 }
 
-export {};
+export { Paper, Project, User, PaperData };

@@ -1,7 +1,29 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
+    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 
-    export let data: PageData;
+    const { data } = $props();
+    const user = {
+        firstName: "Max",
+        lastName: "Mustermann",
+    };
+    const paper = {
+        id: data.paperId,
+        data: {
+            title: "Field-Sensitive Pointer Analysis for Static Dataflow in the R Programming Language",
+            authors: [
+                "Author 1",
+                "Author 2",
+                "Author 3",
+                "Author 4",
+                "Author 5",
+                "Author 6",
+                "Author 7",
+                "Author 8",
+                "Author 9",
+                "Author 10",
+            ],
+        },
+    };
 </script>
 
-<h2>Paper {data.paperId} View</h2>
+<PaperNavigationBar {user} backRef="/" {paper} />
