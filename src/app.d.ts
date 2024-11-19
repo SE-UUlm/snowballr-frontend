@@ -8,8 +8,10 @@ declare global {
         // interface PageState {}
         // interface Platform {}
         interface Paper {
-            readonly firstName: string;
-            readonly lastName: string;
+            readonly id: number;
+            readonly title: string;
+            readonly authors: string[];
+            readonly isBookmarked?: boolean;
         }
         interface Project {
             readonly id: number;
