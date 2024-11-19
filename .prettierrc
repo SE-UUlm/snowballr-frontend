@@ -12,6 +12,12 @@
             "options": {
                 "parser": "svelte"
             }
+        },
+        {
+            "files": "*.md",
+            "options": {
+                "tabWidth": 2
+            }
         }
     ]
 }
