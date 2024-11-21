@@ -10,6 +10,11 @@
     const searchPlaceholderText: string = "Search paper";
 </script>
 
-<SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
+<div class="flex flex-col gap-5">
+    <!-- example ussage of the navigation bar -->
+    <SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
 
-<SearchBar placeholderText={searchPlaceholderText}></SearchBar>
+    <!-- example usage of the search bar ... -->
+    <SearchBar placeholderText={searchPlaceholderText} onSearch={(input) => console.log(input)} />
+    <SearchBar onSearch={(input) => console.log(input)} />
+</div>
