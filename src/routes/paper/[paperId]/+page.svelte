@@ -8,4 +8,10 @@
 <svelte:head>
     <title>{paper.title}</title>
 </svelte:head>
-<PaperView {user} {paper} showNavigationButtons={false} backRef="/" />
+<PaperView
+    {user}
+    {paper}
+    showNavigationButtons={false}
+    backRef="/"
+    userConfig={{ isReviewMode: false, showMaybeButton: false }}
+/>
