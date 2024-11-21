@@ -18,6 +18,7 @@
         if (event.key == "Escape") {
             // Check, whether user pressed the 'Esc' character to dispatch focus and clear input
             searchInput = "";
+            (document.activeElement as HTMLInputElement).blur();
         } else if (event.key == "Enter") {
             // Check, whether user pressed 'Enter' to start the search directly (and dispatch focus)
             onSearch(searchInput);
