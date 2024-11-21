@@ -8,4 +8,4 @@
 <svelte:head>
     <title>{paper.title}</title>
 </svelte:head>
-<PaperView {user} {paper} showNavigationButtons={false} />
+<PaperView {user} {paper} showNavigationButtons={false} backRef="/" />
