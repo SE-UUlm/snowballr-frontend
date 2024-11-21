@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
     const { user, project, paper } = data;
@@ -8,4 +8,9 @@
 <svelte:head>
     <title>{paper.title} | {project.name}</title>
 </svelte:head>
-<PaperNavigationBar {user} backRef={`/project/${project.id}/dashboard`} {paper} />
+<PaperView
+    {user}
+    {paper}
+    showNavigationButtons={true}
+    backRef={`/project/${project.id}/dashboard`}
+/>

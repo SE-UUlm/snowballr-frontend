@@ -10,13 +10,14 @@
         user: User;
         paper: Paper;
         showNavigationButtons: boolean;
+        backRef: string;
     }
 
-    const { user, paper, showNavigationButtons }: Props = $props();
+    const { user, paper, showNavigationButtons, backRef }: Props = $props();
 </script>
 
 <div class="flex flex-row justify-between h-fit w-full gap-4">
-    <PaperNavigationBar {user} backRef="/" {paper} />
+    <PaperNavigationBar {user} {backRef} {paper} />
     <PaperBookmarkButton paperId={paper.id} isBookmarked={paper.data.isBookmarked} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
@@ -27,8 +28,8 @@
     {#if showNavigationButtons}
         <div class="flex flex-row w-full h-fit justify-between gap-4">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
-            <PaperNavigationButton direction="left" href={`/paper/${paper.id}`} />
-            <PaperNavigationButton direction="right" href={`/paper/${paper.id}`} />
+            <PaperNavigationButton direction="left" href="" />
+            <PaperNavigationButton direction="right" href="" />
         </div>
     {/if}
 </main>
