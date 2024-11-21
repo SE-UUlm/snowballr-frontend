@@ -13,7 +13,7 @@
 </script>
 
 <Button
-    class="bg-slate-200 hover:bg-slate-400 text-primary flex-1 max-w-xs shadow-lg"
+    class="bg-slate-200 hover:bg-slate-400 text-primary flex-grow max-w-xs shadow-lg min-w-32"
     {href}
     onclick={onClick}
 >

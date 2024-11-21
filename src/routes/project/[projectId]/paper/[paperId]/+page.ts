@@ -25,5 +25,6 @@ export const load: PageLoad = ({ params }) => {
     };
     return {
         paper,
+        isReviewMode: true,
     };
 };

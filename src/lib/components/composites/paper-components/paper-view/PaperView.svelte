@@ -4,6 +4,9 @@
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { Paper, User } from "../../../../../app";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
+    import AcceptButton from "./decision-buttons/AcceptButton.svelte";
+    import DeclineButton from "./decision-buttons/DeclineButton.svelte";
+    import MaybeButton from "./decision-buttons/MaybeButton.svelte";
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
 
     interface Props {
@@ -11,9 +14,13 @@
         paper: Paper;
         showNavigationButtons: boolean;
         backRef: string;
+        userConfig: {
+            isReviewMode: boolean;
+            showMaybeButton: boolean;
+        };
     }
 
-    const { user, paper, showNavigationButtons, backRef }: Props = $props();
+    const { user, paper, showNavigationButtons, backRef, userConfig }: Props = $props();
 </script>
 
 <div class="flex flex-row justify-between h-fit w-full gap-4">
@@ -29,6 +36,17 @@
         <div class="flex flex-row w-full h-fit justify-between gap-4">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
+            {#if userConfig.isReviewMode}
+                <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
+                <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
+                <div class="flex flex-grow-1000 max-w-[62rem] gap-[1rem] justify-center">
+                    <DeclineButton paperId={paper.id} />
+                    {#if userConfig.showMaybeButton}
+                        <MaybeButton paperId={paper.id} />
+                    {/if}
+                    <AcceptButton paperId={paper.id} />
+                </div>
+            {/if}
             <PaperNavigationButton direction="right" href="" />
         </div>
     {/if}

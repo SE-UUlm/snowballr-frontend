@@ -17,7 +17,6 @@
 <Card.Root class="shadow-lg border-container-border-grey w-full h-full">
     <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value}>
         <!-- Set p-0 first to override inherited padding -->
-        <!-- TODO: make tabs scrollable, when overflowing -->
         <Tabs.List
             class="w-full h-fit justify-start rounded-none border-b b-2 bg-transparent p-0 px-3 pt-3"
         >
