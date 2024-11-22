@@ -8,6 +8,15 @@
     ];
 </script>
 
+<!--
+@component
+Paper Card for paper details in the Paper View component.
+
+Usage:
+```svelte
+<PaperDetailsCard />
+```
+-->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
         <span

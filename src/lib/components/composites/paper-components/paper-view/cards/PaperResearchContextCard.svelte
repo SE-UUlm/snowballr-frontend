@@ -8,6 +8,15 @@
     ];
 </script>
 
+<!--
+@component
+Paper Card for paper research context in the Paper View component.
+
+Usage:
+```svelte
+<PaperResearchContextCard />
+```
+-->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
         <span
