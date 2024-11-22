@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { Button } from "$lib/components/primitives/button/index.js";
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import ArrowRight from "lucide-svelte/icons/arrow-right";
+    import Tooltip from "../../Tooltip.svelte";
+    import { goto } from "$app/navigation";
 
     interface Props {
         direction: "left" | "right";
@@ -12,14 +13,26 @@
     const { direction, href, onClick }: Props = $props();
 </script>
 
-<Button
+<Tooltip
     class="bg-slate-200 hover:bg-slate-400 text-primary flex-grow max-w-xs shadow-lg min-w-32"
-    {href}
-    onclick={onClick}
+    buttonVariant="link"
+    onclick={() => {
+        if (onClick) onClick();
+        goto(href);
+    }}
 >
-    {#if direction === "left"}
-        <ArrowLeft />
-    {:else}
-        <ArrowRight />
-    {/if}
-</Button>
+    {#snippet trigger()}
+        {#if direction === "left"}
+            <ArrowLeft />
+        {:else}
+            <ArrowRight />
+        {/if}
+    {/snippet}
+    {#snippet content()}
+        {#if direction === "left"}
+            <p>Previous paper</p>
+        {:else}
+            <p>Next paper</p>
+        {/if}
+    {/snippet}
+</Tooltip>
