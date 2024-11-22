@@ -1,8 +1,10 @@
 <script lang="ts">
-    import { Button } from "$lib/components/primitives/button/index.js";
+    import { buttonVariants } from "$lib/components/primitives/button/index.js";
     import Bookmark from "lucide-svelte/icons/bookmark";
     import BookmarkPlus from "lucide-svelte/icons/bookmark-plus";
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
+    import { cn } from "$lib/utils";
+    import Tooltip from "./Tooltip.svelte";
 
     interface Props {
         paperId: number;
@@ -66,19 +68,31 @@
     }
 </script>
 
-<Button
-    class="border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit"
+<Tooltip
+    class={cn(
+        buttonVariants(),
+        "border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit",
+    )}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
     onclick={onClick}
 >
-    {#if state === "added"}
-        <Bookmark fill="bg-primary" />
-    {:else if state === "adding"}
-        <BookmarkPlus />
-    {:else if state === "removing"}
-        <BookmarkMinus />
-    {:else}
-        <Bookmark />
-    {/if}
-</Button>
+    {#snippet trigger()}
+        {#if state === "added"}
+            <Bookmark fill="bg-primary" />
+        {:else if state === "adding"}
+            <BookmarkPlus />
+        {:else if state === "removing"}
+            <BookmarkMinus />
+        {:else}
+            <Bookmark />
+        {/if}
+    {/snippet}
+    {#snippet content()}
+        {#if state === "not added" || state === "adding"}
+            <p>Add to Reading List</p>
+        {:else}
+            <p>Remove from Reading List</p>
+        {/if}
+    {/snippet}
+</Tooltip>
