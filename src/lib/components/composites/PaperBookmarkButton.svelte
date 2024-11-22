@@ -68,6 +68,18 @@
     }
 </script>
 
+<!--
+@component
+Button to add a paper to or remove a paper from the reading list.
+
+This component will handle the API calls itself.
+According to bookmark state of the paper (isBookmarked), the button will change its appearance.
+
+Usage:
+```svelte
+<PaperBookmarkButton paperId={42} isBookmarked={false} />
+```
+-->
 <Tooltip
     class={cn(
         buttonVariants(),

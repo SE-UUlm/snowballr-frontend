@@ -28,18 +28,18 @@ The tooltip can't be used as link. To still redirect on click, use the `onclick`
 
 Usage:
 ```svelte
-<Tooltip
-    class="text-primary shadow-sm"
-    buttonVariant="default"
-    onclick={() => goto(href)}
->
-    {#snippet trigger()}
-        I'm a trigger
-    {/snippet}
-    {#snippet content()}
-        This shows a tooltip
-    {/snippet}
-</Tooltip>
+    <Tooltip
+        class="text-primary shadow-sm"
+        buttonVariant="default"
+        onclick={() => goto(href)}
+    >
+        {#snippet trigger()}
+            I'm a trigger
+        {/snippet}
+        {#snippet content()}
+            This shows a tooltip
+        {/snippet}
+    </Tooltip>
 ```
 -->
 <Tooltip.Provider>

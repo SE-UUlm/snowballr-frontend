@@ -11,6 +11,17 @@
 </script>
 
 <!-- flex cannot be applied to the Tabs.Content element directly, which is why the content is wrapped in another div -->
+<!--
+@component
+Card content used in the Paper Card component.
+
+Usage:
+```svelte
+    <PaperCardContent value="details">
+        <p>Details content</p>
+    </PaperCardContent>
+```
+-->
 <Tabs.Content {value}>
     <div class="flex flex-col gap-5">
         {@render children()}

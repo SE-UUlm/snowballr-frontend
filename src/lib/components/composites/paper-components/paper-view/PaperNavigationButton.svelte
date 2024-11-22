@@ -13,6 +13,17 @@
     const { direction, href, onClick }: Props = $props();
 </script>
 
+<!--
+@component
+Button that navigates to the next or previous paper.
+
+This component is used in the PaperView component to navigate between papers.
+
+Usage:
+```svelte
+<PaperNavigationButton direction="left" href="/papers/1" />
+```
+-->
 <Tooltip
     class="bg-slate-200 hover:bg-slate-400 text-primary flex-grow max-w-xs shadow-lg min-w-32"
     buttonVariant="link"
