@@ -11,6 +11,7 @@
     }
 
     const { direction, href, onClick }: Props = $props();
+    const tooltipText = direction === "left" ? "Previous paper" : "Next paper";
 </script>
 
 <!--
@@ -31,6 +32,7 @@ Usage:
         if (onClick) onClick();
         goto(href);
     }}
+    aria-label={tooltipText}
 >
     {#snippet trigger()}
         {#if direction === "left"}
@@ -40,10 +42,6 @@ Usage:
         {/if}
     {/snippet}
     {#snippet content()}
-        {#if direction === "left"}
-            <p>Previous paper</p>
-        {:else}
-            <p>Next paper</p>
-        {/if}
+        <p>{tooltipText}</p>
     {/snippet}
 </Tooltip>
