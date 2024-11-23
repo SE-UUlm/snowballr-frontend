@@ -14,6 +14,11 @@
     const { paperId, isBookmarked }: Props = $props();
     type BookmarkState = "added" | "not added" | "adding" | "removing";
     let state = $state<BookmarkState>(isBookmarked ? "added" : "not added");
+    const tooltipText = $derived(
+        state === "not added" || state === "adding"
+            ? "Add to Reading List"
+            : "Remove from Reading List",
+    );
 
     function onMouseEnter() {
         switch (state) {
@@ -88,6 +93,7 @@ Usage:
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
     onclick={onClick}
+    aria-label={tooltipText}
 >
     {#snippet trigger()}
         {#if state === "added"}
@@ -101,10 +107,6 @@ Usage:
         {/if}
     {/snippet}
     {#snippet content()}
-        {#if state === "not added" || state === "adding"}
-            <p>Add to Reading List</p>
-        {:else}
-            <p>Remove from Reading List</p>
-        {/if}
+        <p>{tooltipText}</p>
     {/snippet}
 </Tooltip>

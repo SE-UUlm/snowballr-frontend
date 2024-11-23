@@ -29,7 +29,9 @@
         <nav class="grid grid-flow-col gap-3 items-center px-4 py-3">
             <UserMenu {user} />
             {#if backRef !== undefined}
-                <a href={backRef}><ArrowLeft class="w-6 h-6" /></a>
+                <a href={backRef} aria-label={`Back to ${backRef}`}>
+                    <ArrowLeft class="w-6 h-6" />
+                </a>
             {/if}
             <!-- Children can be e.g. a title element -->
             {@render children?.()}

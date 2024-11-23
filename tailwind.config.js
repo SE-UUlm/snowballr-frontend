@@ -63,17 +63,17 @@ const config = {
                 "decline-red": {
                     DEFAULT: colors.red["400"],
                     hover: colors.red["600"],
-                    shortcut: colors.red["800"],
+                    shortcut: "#1F0404",
                 },
                 "maybe-yellow": {
                     DEFAULT: colors.yellow["400"],
                     hover: colors.yellow["600"],
-                    shortcut: colors.yellow["800"],
+                    shortcut: colors.yellow["950"],
                 },
                 "accept-green": {
                     DEFAULT: colors.green["300"],
                     hover: colors.green["500"],
-                    shortcut: colors.green["700"],
+                    shortcut: colors.green["950"],
                 },
                 "unreviewed-gray": colors.gray["400"],
                 "warning-amber": "#FFC310",
