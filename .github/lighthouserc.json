@@ -1,0 +1,13 @@
+{
+    "ci": {
+        "collect": {
+            "settings": {
+                "configPath": ".github/lighthouse.config.js"
+            }
+        },
+        "assert": {},
+        "upload": {},
+        "server": {},
+        "wizard": {}
+    }
+}
