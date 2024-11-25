@@ -28,7 +28,7 @@
         "autoprefixer": "^10.4.20",
         "bits-ui": "^1.0.0-next.51",
         "clsx": "^2.1.1",
-        "@types/node": "^22.9.0",
+        "@types/node": "^22.9.3",
         "@vitest/coverage-v8": "^2.1.5",
         "@vitest/ui": "^2.1.5",
         "eslint": "^9.15.0",
