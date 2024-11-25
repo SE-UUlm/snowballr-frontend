@@ -11,7 +11,7 @@
     }
 
     const { direction, href, onClick }: Props = $props();
-    const tooltipText = direction === "left" ? "Previous paper" : "Next paper";
+    const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 </script>
 
 <!--
@@ -19,10 +19,15 @@
 Button that navigates to the next or previous paper.
 
 This component is used in the PaperView component to navigate between papers.
+When the button is clicked, the `onClick` function is called and the user is navigated to the `href` location.
 
 Usage:
 ```svelte
-<PaperNavigationButton direction="left" href="/papers/1" />
+    <PaperNavigationButton
+        direction="left"
+        href="/papers/1"
+        onClick={() => console.log("button was clicked")}
+    />
 ```
 -->
 <Tooltip
