@@ -90,7 +90,7 @@
 
     /* Custom Style Classes */
     .text-placeholder {
-        @apply text-base font-medium tracking-normal text-slate-500 italic;
+        @apply text-base font-medium tracking-normal text-input-placeholder-slate;
     }
     .text-hint {
         @apply text-sm font-medium tracking-normal text-neutral-500;
