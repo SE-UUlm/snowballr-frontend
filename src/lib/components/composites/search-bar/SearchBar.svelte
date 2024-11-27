@@ -14,21 +14,29 @@
     const timeout: number = 500;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-    const processNewInput = (event: KeyboardEvent) => {
-        if (event.key == "Escape") {
+    const handleNewInput = () => {
+        if (timeoutId !== null) clearTimeout(timeoutId);
+
+        if (searchInput !== "") {
+            // Wait a certain amount of time and start search, if no new key is pressed
+            timeoutId = setTimeout(() => onSearch(searchInput), timeout);
+        }
+    };
+
+    const handleSpecialButtons = (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
             // Check, whether user pressed the 'Esc' character to clear input and dispatch focus
             searchInput = "";
             if (timeoutId !== null) clearTimeout(timeoutId);
 
             (document.activeElement as HTMLInputElement).blur();
-        } else if (event.key == "Enter" && searchInput !== "") {
+        }
+        if (event.key === "Enter" && searchInput !== "") {
             // Check, whether user pressed 'Enter' to start the search directly (and dispatch focus)
             onSearch(searchInput);
-        } else if (searchInput !== "") {
             if (timeoutId !== null) clearTimeout(timeoutId);
 
-            // Wait a certain amount of time and start search, if no new key is pressed
-            timeoutId = setTimeout(() => onSearch(searchInput), timeout);
+            (document.activeElement as HTMLInputElement).blur();
         }
     };
 </script>
@@ -54,7 +62,8 @@ Usage:
         type="text"
         placeholder={placeholderText}
         bind:value={searchInput}
-        onkeyup={processNewInput}
+        oninput={handleNewInput}
+        onkeyup={handleSpecialButtons}
         class="px-4 py-3 pr-10"
     />
     <button
