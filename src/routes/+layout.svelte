@@ -28,4 +28,6 @@
     <a href="/signin">Sign In</a><br />
     <a href="/signup">Sign Up</a><br />
     <a href="/">Homepage</a><br />
+
+    <a href="/componentsusage">(Exemplary) Usage of the custom components</a><br />
 </div>
