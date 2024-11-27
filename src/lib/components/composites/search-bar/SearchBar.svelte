@@ -46,13 +46,13 @@
 Search bar with adaptable placeholder text.
 
 It starts the search on the following events:
-  - the user pressed enter
-  - the user click the search icon
-  - the user enters the search text and wait
+  - the user presses enter
+  - the user clicks the search icon
+  - the user enters the search text and waits
 If the user enters the 'Esc' key, the search is aborted.
 
 Usage:
-```tsx
+```svelte
     <SearchBar placeholderText={yourText} onSearch={yourCallback    } />
 ```
 -->
