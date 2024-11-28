@@ -8,5 +8,4 @@
 <svelte:head>
     <title>SnowballR</title>
 </svelte:head>
-
-<SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
+<SimpleNavigationBar {user} title="SnowballR" />

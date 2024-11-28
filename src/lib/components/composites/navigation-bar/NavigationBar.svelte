@@ -10,16 +10,16 @@
     interface Props {
         user: User;
         backRef?: string | undefined;
-        tabs: Tab[];
-        defaultTabValue: (typeof tabs)[number]["value"];
+        tabs?: Tab[] | undefined;
+        defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
         children?: Snippet | undefined;
     }
 
     const {
         user,
         backRef = undefined,
-        tabs,
-        defaultTabValue,
+        tabs = [],
+        defaultTabValue = "",
         children = undefined,
     }: Props = $props();
 </script>

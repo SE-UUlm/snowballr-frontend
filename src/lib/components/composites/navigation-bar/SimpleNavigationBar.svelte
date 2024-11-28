@@ -7,11 +7,11 @@
         user: User;
         backRef?: string | undefined;
         title: string;
-        tabs: Tab[];
-        defaultTabValue: (typeof tabs)[number]["value"];
+        tabs?: Tab[] | undefined;
+        defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
     }
 
-    const { user, backRef = undefined, title, tabs, defaultTabValue }: Props = $props();
+    const { user, backRef = undefined, title, tabs = [], defaultTabValue = "" }: Props = $props();
 </script>
 
 <NavigationBar {user} {backRef} {tabs} {defaultTabValue}>
