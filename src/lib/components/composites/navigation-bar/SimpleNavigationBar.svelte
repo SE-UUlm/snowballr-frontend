@@ -1,7 +1,7 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
     import type { Tab } from "$lib/components/composites/navigation-bar/types";
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/model/backend";
 
     interface Props {
         user: User;

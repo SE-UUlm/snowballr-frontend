@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Paper, PaperSpec } from "$lib/types";
+    import type { Paper, PaperSpec } from "$lib/model/backend";
 
     interface Props {
         paper: Paper | PaperSpec;
@@ -17,7 +17,7 @@
     </div>
     <div class="text-hint truncate">
         {#if paper.authors.length > 0}
-            {paper.authors.join(", ")}
+            {paper.authors.map((a) => `${a.firstName} ${a.lastName}`).join(", ")}
         {:else}
             <span class="italic">unknown authors</span>
         {/if}

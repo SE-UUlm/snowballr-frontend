@@ -5,7 +5,7 @@
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
     import type { Tab } from "$lib/components/composites/navigation-bar/types";
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/model/backend";
 
     interface Props {
         user: User;
