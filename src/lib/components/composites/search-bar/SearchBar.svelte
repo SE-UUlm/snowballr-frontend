@@ -11,7 +11,7 @@
     let searchInput: string = $state("");
 
     // timeout in ms to wait after last key input before start search
-    const timeout: number = 500;
+    const timeoutInMs: number = 500;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const handleNewInput = () => {
@@ -19,7 +19,7 @@
 
         if (searchInput !== "") {
             // Wait a certain amount of time and start search, if no new key is pressed
-            timeoutId = setTimeout(() => onSearch(searchInput), timeout);
+            timeoutId = setTimeout(() => onSearch(searchInput), timeoutInMs);
         }
     };
 
@@ -53,7 +53,7 @@ If the user enters the 'Esc' key, the search is aborted.
 
 Usage:
 ```svelte
-    <SearchBar placeholderText={yourText} onSearch={yourCallback    } />
+    <SearchBar placeholderText={yourText} onSearch={yourCallback} />
 ```
 -->
 <div class="relative w-full">

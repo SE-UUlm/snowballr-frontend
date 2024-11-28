@@ -23,7 +23,7 @@ describe("SearchBarComponent", () => {
         assert.doesNotThrow(() => screen.getByPlaceholderText("Search paper"));
     });
 
-    test("When the user enters a search string into the search bar and click the search icon, then the search is conducted", async () => {
+    test("When the user enters a search string into the search bar and clicks the search icon, then the search is conducted", async () => {
         let searchInput: string = "start";
         render(SearchBar, {
             props: { onSearch: (input: string) => (searchInput = input) },
@@ -35,7 +35,7 @@ describe("SearchBarComponent", () => {
         assert.equal(searchInput, "Test");
     });
 
-    test("When the user enters a search string into the search bar and press enter, then the search is conducted", async () => {
+    test("When the user enters a search string into the search bar and presses enter, then the search is conducted", async () => {
         let searchInput: string = "start";
         render(SearchBar, {
             props: { onSearch: (input: string) => (searchInput = input) },
