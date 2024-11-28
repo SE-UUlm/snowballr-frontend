@@ -14,8 +14,6 @@ describe("SimpleNavigationBar", () => {
                 }),
                 backRef: "/",
                 title: "Simple Navigation Bar",
-                tabs: [],
-                defaultTabValue: "",
             },
         });
 
