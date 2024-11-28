@@ -11,7 +11,7 @@
 <PaperView
     {user}
     {paper}
-    showNavigationButtons={true}
+    showButtonBar={true}
     backRef={`/project/${project.id}/dashboard`}
     userConfig={{ isReviewMode, showMaybeButton: true }}
 />

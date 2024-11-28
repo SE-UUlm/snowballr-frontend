@@ -12,7 +12,7 @@
     interface Props {
         user: User;
         paper: Paper;
-        showNavigationButtons: boolean;
+        showButtonBar: boolean;
         backRef: string;
         userConfig: {
             isReviewMode: boolean;
@@ -20,9 +20,33 @@
         };
     }
 
-    const { user, paper, showNavigationButtons, backRef, userConfig }: Props = $props();
+    const { user, paper, showButtonBar, backRef, userConfig }: Props = $props();
 </script>
 
+<!--
+@component
+Whole page component to display information about a paper.
+In the bottom, there are buttons to accept, decline or mark the paper as undecided.
+Additonally, there are buttons to navigate to the previous or next paper.
+
+- when `showButtonBar` is false, then no buttons are shown at the bottom of the page
+- when `userConfig.isReviewMode` is false, then no decision buttons are shown
+- when `userConfig.showMaybeButton` is false, then the maybe button is not shown
+
+Usage:
+```svelte
+    <PaperView
+        user={user}
+        paper={paper}
+        showButtonBar={true}
+        backRef="/"
+        userConfig={{
+            isReviewMode: true,
+            showMaybeButton: true,
+        }}
+    />
+```
+-->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
     <PaperNavigationBar {user} {backRef} {paper} />
     <PaperBookmarkButton paperId={paper.id} isBookmarked={paper.data.isBookmarked} />
@@ -32,8 +56,8 @@
         <PaperDetailsCard />
         <PaperResearchContextCard />
     </div>
-    {#if showNavigationButtons}
-        <div class="flex flex-row w-full h-fit justify-between gap-4">
+    {#if showButtonBar}
+        <div class="flex flex-row w-full h-fit justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
             {#if userConfig.isReviewMode}
