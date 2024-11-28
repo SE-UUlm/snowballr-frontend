@@ -157,20 +157,10 @@ describe("NavigationBar", () => {
         });
 
         const tabs = screen.getAllByRole("tab");
-
-        // First tab is not selected
-        const firstTabs = tabs.filter((tab) => tab.getAttribute("tabindex") == "0");
-        expect(firstTabs).toHaveLength(1);
-        const firstTab = firstTabs[0];
-        expect(firstTab).toHaveAttribute("data-state", "inactive");
-        expect(firstTab).toHaveAttribute("aria-selected", "false");
-
-        // Second tab is not selected
-        const secondTabs = tabs.filter((tab) => tab.getAttribute("tabindex") == "-1");
-        expect(secondTabs).toHaveLength(1);
-        const secondTab = secondTabs[0];
-        expect(secondTab).toHaveAttribute("data-state", "inactive");
-        expect(secondTab).toHaveAttribute("aria-selected", "false");
+        tabs.forEach((tab) => {
+            expect(tab).toHaveAttribute("data-state", "inactive");
+            expect(tab).toHaveAttribute("aria-selected", "false");
+        });
     });
 
     test("When no name is provided, then no user initials are shown", () => {

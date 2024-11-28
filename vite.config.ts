@@ -13,6 +13,7 @@ export default defineConfig({
         },
         coverage: {
             include: ["src/**"],
+            exclude: ["src/routes/**/+*.{svelte,ts}", "**/*.d.ts"],
             provider: "v8",
             enabled: true,
             cleanOnRerun: true,
