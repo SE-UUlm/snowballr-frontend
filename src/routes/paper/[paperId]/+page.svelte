@@ -11,7 +11,7 @@
 <PaperView
     {user}
     {paper}
-    showNavigationButtons={false}
+    showButtonBar={false}
     backRef="/"
     userConfig={{ isReviewMode: false, showMaybeButton: false }}
 />

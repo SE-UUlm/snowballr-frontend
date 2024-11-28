@@ -38,6 +38,7 @@ Usage:
         goto(href);
     }}
     aria-label={tooltipText}
+    data-testid="navigation-button"
 >
     {#snippet trigger()}
         {#if direction === "left"}

@@ -45,4 +45,5 @@ Usage:
     content={tooltipContent}
     onclick={onClick}
     {...restProps}
+    data-testid="decision-button"
 ></Tooltip>
