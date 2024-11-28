@@ -17,21 +17,20 @@
     const handleNewInput = () => {
         if (timeoutId !== null) clearTimeout(timeoutId);
 
-        if (searchInput !== "") {
-            // Wait a certain amount of time and start search, if no new key is pressed
-            timeoutId = setTimeout(() => onSearch(searchInput), timeoutInMs);
-        }
+        // Wait a certain amount of time and start search, if no new key is pressed
+        timeoutId = setTimeout(() => onSearch(searchInput), timeoutInMs);
     };
 
     const handleSpecialButtons = (event: KeyboardEvent) => {
         if (event.key === "Escape") {
             // Check, whether user pressed the 'Esc' character to clear input and dispatch focus
             searchInput = "";
+            onSearch(searchInput);
             if (timeoutId !== null) clearTimeout(timeoutId);
 
             (document.activeElement as HTMLInputElement).blur();
         }
-        if (event.key === "Enter" && searchInput !== "") {
+        if (event.key === "Enter") {
             // Check, whether user pressed 'Enter' to start the search directly (and dispatch focus)
             onSearch(searchInput);
             if (timeoutId !== null) clearTimeout(timeoutId);
@@ -49,7 +48,11 @@ It starts the search on the following events:
   - the user presses enter
   - the user clicks the search icon
   - the user enters the search text and waits
-If the user enters the 'Esc' key, the search is aborted.
+If the user enters the 'Esc' key, the search is aborted,
+meaning the input is cleared, the search bar loose focus
+and the search method is triggered with an empty string,
+so if no further handling exist, all elements are retrieved
+by the search.
 
 Usage:
 ```svelte
