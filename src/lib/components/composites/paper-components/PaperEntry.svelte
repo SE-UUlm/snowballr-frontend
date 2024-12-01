@@ -1,32 +1,30 @@
 <script lang="ts">
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import type { Paper } from "../../../../app";
-    import { ReviewStatus } from "../../../../types";
+    import { type Paper, ReviewDecision } from "$lib/model/backend";
 
     interface PaperEntryProps {
         paper: Paper;
+        showReviewStatus: boolean;
     }
 
-    const { paper }: PaperEntryProps = $props();
+    const { paper, showReviewStatus = false }: PaperEntryProps = $props();
 
-    const reviewStatusColor: Record<ReviewStatus, string> = {
-        [ReviewStatus.Unreviewed]: "border-unreviewed-gray",
-        [ReviewStatus.Accepted]: "border-accept-green",
-        [ReviewStatus.Maybe]: "border-maybe-yellow",
-        [ReviewStatus.Declined]: "border-decline-red",
+    const reviewDecisionColor: Record<ReviewDecision | "unreviewed", string> = {
+        [ReviewDecision.Accepted]: "border-accept-green",
+        [ReviewDecision.Maybe]: "border-maybe-yellow",
+        [ReviewDecision.Declined]: "border-decline-red",
+        ["unreviewed"]: "border-unreviewed-gray",
     };
-
-    function showStatus(): boolean {
-        return paper.showReviewStatus && paper.reviewData !== undefined;
-    }
 </script>
 
 <div
-    class="w-full border {showStatus() ? 'border-l-0' : ''} border-container-border-grey rounded-md"
+    class="w-full border {showReviewStatus
+        ? 'border-l-0'
+        : ''} border-container-border-grey rounded-md"
 >
     <div
-        class="{showStatus()
-            ? `border-l-4 ${reviewStatusColor[paper.reviewData.finalDecision]}`
+        class="{showReviewStatus
+            ? `border-l-4 ${reviewDecisionColor[paper.reviewData?.finalDecision ?? 'unreviewed']}`
             : ''} rounded-md px-3 py-1.5"
     >
         <PaperInfo {paper} />

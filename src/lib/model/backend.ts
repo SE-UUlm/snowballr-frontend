@@ -5,12 +5,12 @@ export enum CriterionCategory {
 }
 
 export enum ReviewDecision {
-    No,
+    Declined,
     Maybe,
-    Yes,
+    Accepted,
 }
 
-export type PaperDecision = ReviewDecision.Yes | ReviewDecision.No;
+export type PaperDecision = ReviewDecision.Accepted | ReviewDecision.Declined;
 
 export interface ReviewDecisionMatrix {
     numberOfReviewers: number;
@@ -66,14 +66,15 @@ export interface StageEntry {
 
 export interface Paper {
     id: number;
-    doi: string;
+    doi?: string;
     title: string;
-    abstrakt: string;
-    year: number;
-    type: string;
+    abstrakt?: string;
+    year?: number;
+    type?: string;
     authors: Author[];
     backwardReferencedPaperIds: number[];
     forwardReferencedPaperIds: number[];
+    reviewData?: { finalDecision: ReviewDecision; reviews: Review[] };
 }
 
 export type PaperSpec = Omit<Paper, "id">;
@@ -82,7 +83,7 @@ export interface Author {
     id: number;
     firstName: string;
     lastName: string;
-    orcid: string;
+    orcid?: string;
 }
 
 export type AuthorSpec = Omit<Author, "id">;
