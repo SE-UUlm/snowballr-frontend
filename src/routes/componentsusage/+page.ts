@@ -38,5 +38,29 @@ export const load: PageLoad = async () => {
             ],
         },
     };
-    return { paper };
+
+    const paper2: Paper = {
+        id: 13,
+        title: "How to Drawjectory? Trajectory Planning using Programming by Demonstration",
+        authors: [
+            { id: 10, firstName: "Leonhard", lastName: "Alkewitz" },
+            { id: 11, firstName: "Timo", lastName: "Zuccarello" },
+            { id: 12, firstName: "Alexander", lastName: "Raschke" },
+            { id: 13, firstName: "Matthias", lastName: "Tichy" },
+        ],
+        backwardReferencedPaperIds: [],
+        forwardReferencedPaperIds: [],
+        reviewData: {
+            finalDecision: ReviewDecision.Declined,
+            reviews: [
+                {
+                    user: user,
+                    finished: true,
+                    decision: ReviewDecision.Declined,
+                    selectedCriteriaIds: [],
+                },
+            ],
+        },
+    };
+    return { paper, paper2 };
 };

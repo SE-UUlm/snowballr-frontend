@@ -2,16 +2,25 @@
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import { type Paper, ReviewDecision } from "$lib/model/backend";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
+    import { goto } from "$app/navigation";
 
     interface PaperEntryProps {
         paper: Paper;
-        showReviewStatus: boolean;
+        projectId: number;
+        showReviewStatus?: boolean;
         onClick?: () => void;
     }
-    const onClickHandler = () => {};
 
-    const { paper, showReviewStatus = false, onClick = onClickHandler }: PaperEntryProps = $props();
+    const navigateToPaperView = () => goto(`/project/${projectId}/paper/${paper.id}`);
 
+    const {
+        paper,
+        projectId,
+        showReviewStatus = false,
+        onClick = navigateToPaperView,
+    }: PaperEntryProps = $props();
+
+    // Mapping of review decision to border color of paper list entry
     const reviewDecisionColor: Record<ReviewDecision | "unreviewed", string> = {
         [ReviewDecision.Accepted]: "border-accept-green",
         [ReviewDecision.Maybe]: "border-maybe-yellow",
@@ -38,10 +47,13 @@ Usage:
     <PaperEntry paper={paper} showReviewStatus={true} />
 ```
 -->
-<div
+<button
+    type="button"
     class="flex flex-row items-center justify-end pe-3 gap-3 w-full border {showReviewStatus
         ? 'border-l-0'
         : ''} border-container-border-grey rounded-md"
+    onclick={() => onClick()}
+    ondblclick={() => navigateToPaperView()}
 >
     <div
         class="flex flex-auto {showReviewStatus
@@ -55,4 +67,4 @@ Usage:
             <UserAvatar user={review.user} reviewDecision={review.decision} />
         {/each}
     {/if}
-</div>
+</button>

@@ -4,7 +4,7 @@
     import PaperEntry from "$lib/components/composites/paper-components/PaperEntry.svelte";
 
     const { data } = $props();
-    const { user, paper } = data;
+    const { user, paper, paper2 } = data;
 
     const searchPlaceholderText: string = "Search paper";
 </script>
@@ -18,5 +18,14 @@
     <SearchBar placeholderText={searchPlaceholderText} onSearch={(input) => console.log(input)} />
     <SearchBar onSearch={(input) => console.log(input)} />
 
-    <PaperEntry {paper} showReviewStatus={true} />
+    <PaperEntry {paper} projectId={42} showReviewStatus={true} />
+    <PaperEntry
+        paper={paper2}
+        projectId={42}
+        showReviewStatus={true}
+        onClick={() =>
+            console.log(
+                "Here you can add your code to open and close a paper information overlay...",
+            )}
+    />
 </div>

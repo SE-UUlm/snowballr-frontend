@@ -15,9 +15,11 @@
         {/if}
         <h2 class="place-content-center truncate">{paper.title}</h2>
     </div>
-    <div class="text-hint truncate">
+    <div class="flex flex-row items-center text-hint truncate">
         {#if paper.authors.length > 0}
-            {paper.authors.map((a) => `${a.firstName} ${a.lastName}`).join(", ")}
+            <span class="place-content-start truncate"
+                >{paper.authors.map((a) => `${a.firstName} ${a.lastName}`).join(", ")}</span
+            >
         {:else}
             <span class="italic">unknown authors</span>
         {/if}
