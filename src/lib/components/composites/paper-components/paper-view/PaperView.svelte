@@ -2,7 +2,7 @@
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { Paper, User } from "../../../../../app";
+    import type { Paper, User } from "$lib/types";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
@@ -49,7 +49,7 @@ Usage:
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
     <PaperNavigationBar {user} {backRef} {paper} />
-    <PaperBookmarkButton paperId={paper.id} isBookmarked={paper.data.isBookmarked} />
+    <PaperBookmarkButton paperId={paper.id} isBookmarked={paper.isBookmarked} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
