@@ -5,4 +5,7 @@
     const { user, paper } = data;
 </script>
 
+<svelte:head>
+    <title>{paper.title}</title>
+</svelte:head>
 <PaperNavigationBar {user} backRef="/" {paper} />

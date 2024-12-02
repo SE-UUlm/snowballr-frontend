@@ -5,4 +5,7 @@
     const { user } = data;
 </script>
 
+<svelte:head>
+    <title>Reading List</title>
+</svelte:head>
 <SimpleNavigationBar {user} title="Reading List" backRef="/" tabs={[]} defaultTabValue="" />

@@ -1,5 +1,9 @@
 <script lang="ts">
     let { data } = $props();
+    const { project } = data;
 </script>
 
-<h4>Project {data.project.id} Settings - SLR</h4>
+<svelte:head>
+    <title>SLR | Settings | {project.name}</title>
+</svelte:head>
+<h4>Project {project.id} Settings - SLR</h4>

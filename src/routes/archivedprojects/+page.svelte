@@ -5,4 +5,7 @@
     const { user } = data;
 </script>
 
+<svelte:head>
+    <title>Archived Projects</title>
+</svelte:head>
 <SimpleNavigationBar {user} title="Archived Projects" backRef="/" tabs={[]} defaultTabValue="" />
