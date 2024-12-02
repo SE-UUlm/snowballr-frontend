@@ -4,8 +4,8 @@
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
-    import type { Tab } from "$lib/components/composites/navigation-bar/navigation-bar";
-    import type { User } from "../../../../app";
+    import type { Tab } from "$lib/components/composites/navigation-bar/types";
+    import type { User } from "$lib/types";
 
     interface Props {
         user: User;

@@ -1,18 +1,14 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import type { PaperSpec } from "$lib/types.js";
 
     const { data } = $props();
-    const user = {
-        firstName: "Max",
-        lastName: "Mustermann",
-    };
-    const paper = {
-        id: undefined,
-        data: {
-            title: "Field-Sensitive Point...",
-            authors: ["Author 1", "Author 2", "Author 3", "Author 4", "Author 5", "Aut..."],
-        },
+    const { user, project } = data;
+    const paper: PaperSpec = {
+        title: "Field-Sensitive Point...",
+        authors: ["Author 1", "Author 2", "Author 3", "Author 4", "Author 5", "Aut..."],
+        isBookmarked: false,
     };
 </script>
 
-<PaperNavigationBar {user} backRef={`/project/${data.projectId}/dashboard`} {paper} />
+<PaperNavigationBar {user} backRef={`/project/${project.id}/dashboard`} {paper} />

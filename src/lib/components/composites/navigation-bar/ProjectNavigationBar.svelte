@@ -1,7 +1,7 @@
 <script lang="ts">
     import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
-    import type { Tab } from "$lib/components/composites/navigation-bar/navigation-bar";
-    import type { Project, User } from "../../../../app";
+    import type { Tab } from "$lib/components/composites/navigation-bar/types";
+    import type { Project, User } from "$lib/types";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {

@@ -2,17 +2,9 @@
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
     let { data } = $props();
-
-    let user = {
-        firstName: "Max",
-        lastName: "Mustermann",
-    };
-    let project = {
-        id: data.projectId,
-        name: `Project ${data.projectId}`,
-    };
+    const { user, project } = data;
 </script>
 
 <ProjectNavigationBar {user} {project} defaultTabValue="papers" />
 
-<h3>Project {data.projectId} Papers</h3>
+<h3>Project {project.id} Papers</h3>

@@ -14,10 +14,8 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 paper: {
                     id: 123,
-                    data: {
-                        title: "Example Paper Title",
-                        authors: ["John Doe", "Jane Doe"],
-                    },
+                    title: "Example Paper Title",
+                    authors: ["John Doe", "Jane Doe"],
                 },
             },
         });
@@ -63,11 +61,8 @@ describe("PaperNavigationBar", () => {
                 },
                 backRef: "/",
                 paper: {
-                    id: undefined,
-                    data: {
-                        title: "Example Paper Title",
-                        authors: ["John Doe", "Jane Doe"],
-                    },
+                    title: "Example Paper Title",
+                    authors: ["John Doe", "Jane Doe"],
                 },
             },
         });
@@ -86,10 +81,8 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 paper: {
                     id: 123,
-                    data: {
-                        title: "Example Paper Title",
-                        authors: [],
-                    },
+                    title: "Example Paper Title",
+                    authors: [],
                 },
             },
         });
