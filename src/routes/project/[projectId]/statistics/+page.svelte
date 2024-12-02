@@ -5,6 +5,9 @@
     const { user, project } = data;
 </script>
 
+<svelte:head>
+    <title>Statistics | {project.name}</title>
+</svelte:head>
 <ProjectNavigationBar {user} {project} defaultTabValue="statistics" />
 
-<h3>Project {data.project.id} Statistics</h3>
+<h3>Project {project.id} Statistics</h3>

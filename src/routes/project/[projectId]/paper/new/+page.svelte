@@ -11,4 +11,7 @@
     };
 </script>
 
+<svelte:head>
+    <title>Add Paper | {project.name}</title>
+</svelte:head>
 <PaperNavigationBar {user} backRef={`/project/${project.id}/dashboard`} {paper} />

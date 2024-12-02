@@ -5,6 +5,9 @@
     const { user, project } = data;
 </script>
 
+<svelte:head>
+    <title>{project.name}</title>
+</svelte:head>
 <ProjectNavigationBar {user} {project} defaultTabValue="dashboard" />
 
 <h3>Project {project.id} Dashboard</h3>

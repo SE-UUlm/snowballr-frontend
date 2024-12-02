@@ -8,6 +8,9 @@
     const searchPlaceholderText: string = "Search paper";
 </script>
 
+<svelte:head>
+    <title>Component Usage Demo</title>
+</svelte:head>
 <div class="flex flex-col gap-5">
     <SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
 

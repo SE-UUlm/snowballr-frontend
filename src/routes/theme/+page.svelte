@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>Theme</title>
+</svelte:head>
 <div>
     <h1>H1 Element (h3 in figma)</h1>
     <h2>H2 Element (h4 in figma)</h2>
