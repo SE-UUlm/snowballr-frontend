@@ -11,6 +11,7 @@
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
         "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+        "show-coverage": "npm run test && cd coverage/ && open index.html",
         "test:unit": "vitest run --project unit",
         "test:unit:ui": "npm run test:unit -- --ui",
         "test:integration": "vitest run --project integration",
