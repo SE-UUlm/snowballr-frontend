@@ -16,6 +16,7 @@ describe("PaperNavigationBar", () => {
                     id: 123,
                     title: "Example Paper Title",
                     authors: ["John Doe", "Jane Doe"],
+                    isBookmarked: false,
                 },
             },
         });
@@ -63,6 +64,7 @@ describe("PaperNavigationBar", () => {
                 paper: {
                     title: "Example Paper Title",
                     authors: ["John Doe", "Jane Doe"],
+                    isBookmarked: false,
                 },
             },
         });
@@ -83,6 +85,7 @@ describe("PaperNavigationBar", () => {
                     id: 123,
                     title: "Example Paper Title",
                     authors: [],
+                    isBookmarked: false,
                 },
             },
         });

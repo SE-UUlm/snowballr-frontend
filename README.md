@@ -36,7 +36,7 @@ npm run test
 
 ### Unit Tests
 
-Unit tests are used to test individual functions or components in isolation. They are located in the [test/unit](./test/unit/) directory. Run them with:
+Unit tests are used to test individual functions or components in isolation. They are located in the [tests/unit](./tests/unit/) directory. Run them with:
 
 ```bash
 npm run test:unit
@@ -44,7 +44,7 @@ npm run test:unit
 
 ### Integration Tests
 
-Integration tests are used to test the interaction between different components or functions. They are located in the [test/integration](./test/integration/) directory. Run them with:
+Integration tests are used to test the interaction between different components or functions. They are located in the [tests/integration](./tests/integration/) directory. Run them with:
 
 ```bash
 npm run test:integration
@@ -52,7 +52,7 @@ npm run test:integration
 
 ### End-to-End Tests
 
-End-to-end tests are used to test the functionality of the app as a whole. They are located in the [test/e2e](./test/e2e/) directory. Run them with:
+End-to-end tests are used to test the functionality of the app as a whole. They are located in the [tests/e2e](./tests/e2e/) directory. Run them with:
 
 ```bash
 npm run test:e2e

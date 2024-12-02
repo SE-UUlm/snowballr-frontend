@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
-    testDir: "test/e2e",
+    testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
     // Opt out of parallel tests on CI.
