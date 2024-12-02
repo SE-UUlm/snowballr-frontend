@@ -2,4 +2,4 @@
     let { data } = $props();
 </script>
 
-<h4>Project {data.projectId} Settings - Review</h4>
+<h4>Project {data.project.id} Settings - Review</h4>

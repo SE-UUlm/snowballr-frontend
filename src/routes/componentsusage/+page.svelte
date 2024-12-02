@@ -2,10 +2,8 @@
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
 
-    const user = {
-        firstName: "Max",
-        lastName: "Mustermann",
-    };
+    const { data } = $props();
+    const { user } = data;
 
     const searchPlaceholderText: string = "Search paper";
 </script>

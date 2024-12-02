@@ -1,19 +1,12 @@
 <script lang="ts">
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
-    let { children, data } = $props();
-    let user = {
-        firstName: "Max",
-        lastName: "Mustermann",
-    };
-    let project = {
-        id: data.projectId,
-        name: `Project ${data.projectId}`,
-    };
+    const { children, data } = $props();
+    const { user, project } = data;
 </script>
 
 <ProjectNavigationBar {user} {project} defaultTabValue="settings" />
 
-<h3>Project {data.projectId} Settings</h3>
+<h3>Project {project.id} Settings</h3>
 
 {@render children()}
