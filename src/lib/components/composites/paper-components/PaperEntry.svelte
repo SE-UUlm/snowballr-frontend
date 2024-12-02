@@ -27,6 +27,26 @@
         [ReviewDecision.Declined]: "border-decline-red",
         ["unreviewed"]: "border-unreviewed-gray",
     };
+
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Handles the click event of the paper entry component by checking
+     * whether it was a single click (so no further click after 250ms) or a double click
+     * and call the corresponding functions:
+     *  - single click => onClick() (possible overridden, otherwise navigateToPaperView())
+     *  - double click => navigateToPaperView() (default)
+     *
+     * @param e - the click event
+     */
+    const handleClick = (e: MouseEvent) => {
+        if (e.detail === 1) {
+            if (timeoutId !== null) clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => onClick(), 250);
+        } else if (e.detail === 2) {
+            if (timeoutId !== null) clearTimeout(timeoutId);
+            navigateToPaperView();
+        }
+    };
 </script>
 
 <!--
@@ -52,8 +72,7 @@ Usage:
     class="flex flex-row items-center justify-end pe-3 gap-3 w-full border {showReviewStatus
         ? 'border-l-0'
         : ''} border-container-border-grey rounded-md"
-    onclick={() => onClick()}
-    ondblclick={() => navigateToPaperView()}
+    onclick={handleClick}
 >
     <div
         class="flex flex-auto {showReviewStatus
