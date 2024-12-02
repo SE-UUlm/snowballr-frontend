@@ -1,7 +1,16 @@
 import type { PageLoad } from "./$types";
-import { type Paper, ReviewDecision } from "$lib/model/backend";
+import { type Paper, ReviewDecision, type User } from "$lib/model/backend";
 
 export const load: PageLoad = async () => {
+    const user: User = {
+        id: 0,
+        status: "active",
+        firstName: "John",
+        lastName: "Doe",
+        isAdmin: false,
+        email: "john.doe@example.com",
+    };
+
     const paper: Paper = {
         id: 12,
         title: "Field Sensitive Pointer Analysis for Static Data Flow in the R Programming Language",
@@ -15,9 +24,15 @@ export const load: PageLoad = async () => {
             finalDecision: ReviewDecision.Accepted,
             reviews: [
                 {
-                    userId: 1,
+                    user: user,
                     finished: true,
                     decision: ReviewDecision.Accepted,
+                    selectedCriteriaIds: [],
+                },
+                {
+                    user: user,
+                    finished: true,
+                    decision: ReviewDecision.Maybe,
                     selectedCriteriaIds: [],
                 },
             ],

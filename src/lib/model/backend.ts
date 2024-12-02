@@ -49,7 +49,8 @@ export interface Criterion {
 export type CriterionSpec = Omit<Criterion, "id">;
 
 export interface Review {
-    userId: number;
+    // TODO: exchange by userId, if userIds can be resolved properly by user controller
+    user: User;
     finished: boolean;
     decision: ReviewDecision;
     selectedCriteriaIds: number[];

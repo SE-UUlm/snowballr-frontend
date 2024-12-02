@@ -1,5 +1,4 @@
 <script lang="ts">
-    import * as Avatar from "$lib/components/primitives/avatar/index.js";
     import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
     import BookOpen from "lucide-svelte/icons/book-open";
     import Archive from "lucide-svelte/icons/archive";
@@ -9,14 +8,13 @@
     import type { ComponentType } from "svelte";
     import type { Icon } from "lucide-svelte";
     import type { User } from "$lib/model/backend";
+    import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
 
     interface Props {
         user: User;
     }
     const { user }: Props = $props();
 
-    const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
-    const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
     const menuItems: {
         // The icon library still uses the deprecated ComponentType type
         icon: ComponentType<Icon>;
@@ -52,11 +50,8 @@
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-        <Avatar.Root>
-            <Avatar.Fallback>{userInitials}</Avatar.Fallback>
-        </Avatar.Root>
-    </DropdownMenu.Trigger>
+    <UserAvatar {user} />
+    <DropdownMenu.Trigger></DropdownMenu.Trigger>
     <DropdownMenu.Content class="w-60" side="bottom" sideOffset={0} align="start">
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
