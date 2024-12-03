@@ -64,7 +64,7 @@ if the event handler is not overridden.
 
 Usage:
 ```svelte
-    <PaperEntry paper={paper} showReviewStatus={true} />
+    <PaperEntry paper={paper} projectId={1} showReviewStatus={true} />
 ```
 -->
 <button
@@ -81,7 +81,7 @@ Usage:
     >
         <PaperInfo {paper} />
     </div>
-    {#if paper.reviewData !== undefined}
+    {#if paper.reviewData !== undefined && showReviewStatus}
         {#each paper.reviewData.reviews as review}
             <UserAvatar user={review.user} reviewDecision={review.decision} />
         {/each}
