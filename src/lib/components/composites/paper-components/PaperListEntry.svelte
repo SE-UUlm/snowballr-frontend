@@ -73,7 +73,7 @@ Usage:
     type="button"
     class="flex flex-row items-center justify-end pe-3 gap-3 w-full border {showReviewStatus
         ? 'border-l-0'
-        : ''} border-container-border-grey rounded-md hover:bg-container-border-grey/35"
+        : ''} border-container-border-grey rounded-md hover:bg-container-border-grey/35 group/paper-list-entry"
     onclick={handleClick}
 >
     <div

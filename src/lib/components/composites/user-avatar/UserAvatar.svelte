@@ -40,25 +40,27 @@ Usage:
 -->
 <div class="relative">
     <Avatar.Root>
-        <Avatar.Fallback>{userInitials}</Avatar.Fallback>
+        <Avatar.Fallback class="group-hover/paper-list-entry:bg-white"
+            >{userInitials}</Avatar.Fallback
+        >
     </Avatar.Root>
     {#if reviewDecision === ReviewDecision.Accepted}
-        <div
-            class="absolute top-6 left-6 flex justify-center items-center rounded-full bg-accept-green h-5 w-5"
-        >
+        <div class="review-decision bg-accept-green h-5 w-5">
             <Check size={16} color="#ffffff" strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.Declined}
-        <div
-            class="absolute top-6 left-6 flex justify-center items-center rounded-full bg-decline-red h-5 w-5"
-        >
+        <div class="review-decision bg-decline-red h-5 w-5">
             <X size={16} color="#ffffff" strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.Maybe}
-        <div
-            class="absolute top-6 left-6 flex justify-center items-center rounded-full bg-maybe-yellow h-5 w-5"
-        >
+        <div class="review-decision bg-maybe-yellow h-5 w-5">
             <text class="text-white">?</text>
         </div>
     {/if}
 </div>
+
+<style>
+    .review-decision {
+        @apply absolute top-6 left-6 flex justify-center items-center rounded-full;
+    }
+</style>
