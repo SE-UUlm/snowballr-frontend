@@ -36,14 +36,16 @@
      *  - single click => onClick() (possible overridden, otherwise navigateToPaperView())
      *  - double click => navigateToPaperView() (default)
      *
-     * @param e - the click event
+     * @param event - the click event
      */
-    const handleClick = (e: MouseEvent) => {
-        if (e.detail === 1) {
-            if (timeoutId !== null) clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => onClick(), 250);
-        } else if (e.detail === 2) {
-            if (timeoutId !== null) clearTimeout(timeoutId);
+    const handleClick = (event: MouseEvent) => {
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+        }
+        const numberOfClicks = event.detail;
+        if (numberOfClicks === 1) {
+            timeoutId = setTimeout(onClick, 500);
+        } else if (numberOfClicks === 2) {
             navigateToPaperView();
         }
     };
