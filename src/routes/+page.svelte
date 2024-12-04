@@ -1,7 +1,7 @@
 <script lang="ts">
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
     import NamedListWrapper from "$lib/components/composites/NamedListWrapper.svelte";
-    import ProjectListEntry from "$lib/components/composites/navigation-bar/project-components/ProjectListEntry.svelte";
+    import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 
     const { data } = $props();
     const { user } = data;
@@ -22,6 +22,6 @@
         ></NamedListWrapper
     >
     <NamedListWrapper listName={"Projects"}>
-        <ProjectListEntry />
+        <ProjectListEntry {...data} />
     </NamedListWrapper>
 </main>
