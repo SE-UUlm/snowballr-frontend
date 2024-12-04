@@ -1,11 +1,11 @@
 import { expect, test, describe } from "vitest";
-import PaperEntry from "$lib/components/composites/paper-components/PaperEntry.svelte";
+import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { createPaper, Users } from "../../model-builder";
 
-describe("PaperEntryComponent", () => {
-    test("When all required props are provided, then the paper entry is completely shown (without review information)", () => {
+describe("PaperListEntryComponent", () => {
+    test("When all required props are provided, then the paper list entry is completely shown (without review information)", () => {
         render(PaperEntry, {
             props: {
                 paper: createPaper({
@@ -26,7 +26,7 @@ describe("PaperEntryComponent", () => {
         expect(screen.getByRole("button").childElementCount).toBe(1);
     });
 
-    test("When review information are provided, but should not be shown, then the paper entry is completely shown without review information", () => {
+    test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", () => {
         render(PaperEntry, {
             props: {
                 paper: createPaper({
@@ -48,7 +48,7 @@ describe("PaperEntryComponent", () => {
         expect(screen.getByRole("button").childElementCount).toBe(1);
     });
 
-    test("When review information are provided and should be shown, then the paper entry is completely shown with review information", () => {
+    test("When review information are provided and should be shown, then the paper list entry is completely shown with review information", () => {
         render(PaperEntry, {
             props: {
                 paper: createPaper({

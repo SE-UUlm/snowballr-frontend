@@ -1,7 +1,7 @@
 <script lang="ts">
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import PaperEntry from "$lib/components/composites/paper-components/PaperEntry.svelte";
+    import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 
     const { data } = $props();
     const { user, paper, paper2 } = data;
@@ -18,8 +18,8 @@
     <SearchBar placeholderText={searchPlaceholderText} onSearch={(input) => console.log(input)} />
     <SearchBar onSearch={(input) => console.log(input)} />
 
-    <PaperEntry {paper} projectId={42} showReviewStatus={true} />
-    <PaperEntry
+    <PaperListEntry {paper} projectId={42} showReviewStatus={true} />
+    <PaperListEntry
         paper={paper2}
         projectId={42}
         showReviewStatus={true}

@@ -4,7 +4,7 @@
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
 
-    interface PaperEntryProps {
+    interface PaperListEntryProps {
         paper: Paper;
         projectId: number;
         showReviewStatus?: boolean;
@@ -18,7 +18,7 @@
         projectId,
         showReviewStatus = false,
         onClick = navigateToPaperView,
-    }: PaperEntryProps = $props();
+    }: PaperListEntryProps = $props();
 
     // Mapping of review decision to border color of paper list entry
     const reviewDecisionColor: Record<ReviewDecision | "unreviewed", string> = {
@@ -64,7 +64,7 @@ if the event handler is not overridden.
 
 Usage:
 ```svelte
-    <PaperEntry paper={paper} projectId={1} showReviewStatus={true} />
+    <PaperListEntry paper={paper} projectId={1} showReviewStatus={true} />
 ```
 -->
 <button
