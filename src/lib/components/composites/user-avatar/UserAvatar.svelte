@@ -2,7 +2,7 @@
     import * as Avatar from "$lib/components/primitives/avatar/index.js";
     import { ReviewDecision, type User } from "$lib/model/backend";
     import Check from "lucide-svelte/icons/check";
-    import { X } from "lucide-svelte";
+    import X from "lucide-svelte/icons/x";
 
     interface Props {
         user: User;

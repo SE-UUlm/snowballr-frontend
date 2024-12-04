@@ -50,8 +50,9 @@
 </script>
 
 <DropdownMenu.Root>
-    <UserAvatar {user} />
-    <DropdownMenu.Trigger></DropdownMenu.Trigger>
+    <DropdownMenu.Trigger>
+        <UserAvatar {user} />
+    </DropdownMenu.Trigger>
     <DropdownMenu.Content class="w-60" side="bottom" sideOffset={0} align="start">
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
