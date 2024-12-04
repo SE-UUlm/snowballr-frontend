@@ -11,12 +11,13 @@
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
         "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
-        "show-coverage": "npm run test && cd coverage/ && open index.html",
+        "show-coverage": "open coverage/index.html",
         "test:unit": "vitest run --project unit",
         "test:unit:ui": "npm run test:unit -- --ui",
         "test:integration": "vitest run --project integration",
         "test:integration:ui": "npm run test:integration -- --ui",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test",
+        "test:and-open-coverage": "npm run test && npm run show-coverage"
     },
     "devDependencies": {
         "@playwright/test": "^1.49.0",
