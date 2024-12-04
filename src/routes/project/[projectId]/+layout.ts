@@ -1,4 +1,4 @@
-import type { Project } from "$lib/types";
+import type { Project } from "$lib/model/backend";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params }) => {
@@ -9,6 +9,12 @@ export const load: LayoutLoad = async ({ params }) => {
     const project: Project = {
         id: projectId,
         name: "Project " + projectId,
+        reviewDecisionMatrix: {
+            numberOfReviewers: 1,
+            patterns: new Map(),
+        },
+        similarityThreshold: 0,
+        paperFetchApis: [],
     };
     return {
         project,

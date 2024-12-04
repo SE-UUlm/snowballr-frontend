@@ -1,16 +1,14 @@
 import { assert, expect, test, describe } from "vitest";
 import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
+import { createUser, Users } from "../../model-builder";
 
 describe("NavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [
                     {
@@ -88,10 +86,7 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: undefined,
                 tabs: [
                     {
@@ -118,10 +113,7 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [],
                 defaultTabValue: "first",
@@ -135,10 +127,7 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [
                     {
@@ -167,10 +156,10 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: {
+                user: createUser({
                     firstName: "",
                     lastName: "",
-                },
+                }),
                 backRef: "/",
                 tabs: [
                     {

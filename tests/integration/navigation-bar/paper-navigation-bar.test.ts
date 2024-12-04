@@ -1,23 +1,20 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
+import { Authors, createPaper, Users } from "../../model-builder";
 
 describe("PaperNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
-                paper: {
+                paper: createPaper({
                     id: 123,
                     title: "Example Paper Title",
-                    authors: ["John Doe", "Jane Doe"],
-                    isBookmarked: false,
-                },
+                    authors: [Authors.johnDoe, Authors.janeDoe],
+                }),
             },
         });
 
@@ -56,16 +53,12 @@ describe("PaperNavigationBar", () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
-                paper: {
+                paper: createPaper({
                     title: "Example Paper Title",
-                    authors: ["John Doe", "Jane Doe"],
-                    isBookmarked: false,
-                },
+                    authors: [Authors.johnDoe, Authors.janeDoe],
+                }),
             },
         });
 
@@ -76,17 +69,13 @@ describe("PaperNavigationBar", () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: {
-                    firstName: "John",
-                    lastName: "Doe",
-                },
+                user: Users.johnDoe,
                 backRef: "/",
-                paper: {
+                paper: createPaper({
                     id: 123,
                     title: "Example Paper Title",
                     authors: [],
-                    isBookmarked: false,
-                },
+                }),
             },
         });
 

@@ -1,4 +1,4 @@
-import type { Paper } from "$lib/types";
+import type { Paper } from "$lib/model/backend";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
@@ -7,21 +7,21 @@ export const load: PageLoad = ({ params }) => {
         throw new Error(`Invalid paperId ${params.paperId}`);
     }
     const paper: Paper = {
+        doi: "Doi",
         id: paperId,
         title: "Field-Sensitive Pointer Analysis for Static Dataflow in the R Programming Language",
+        abstrakt: "Abstrakt",
+        year: 2015,
+        type: "Paper",
         authors: [
-            "Author 1",
-            "Author 2",
-            "Author 3",
-            "Author 4",
-            "Author 5",
-            "Author 6",
-            "Author 7",
-            "Author 8",
-            "Author 9",
-            "Author 10",
+            { id: 0, firstName: "Foo", lastName: "Bar", orcid: "" },
+            { id: 1, firstName: "Foo", lastName: "Bar", orcid: "" },
+            { id: 2, firstName: "Foo", lastName: "Bar", orcid: "" },
+            { id: 3, firstName: "Foo", lastName: "Bar", orcid: "" },
+            { id: 4, firstName: "Foo", lastName: "Bar", orcid: "" },
         ],
-        isBookmarked: false,
+        backwardReferencedPaperIds: [],
+        forwardReferencedPaperIds: [],
     };
     return {
         paper,

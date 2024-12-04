@@ -1,20 +1,21 @@
 import { assert, expect, test, describe } from "vitest";
 import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
+import { createProject, createUser } from "../../model-builder";
 
 describe("ProjectNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
         render(ProjectNavigationBar, {
             target: document.body,
             props: {
-                user: {
+                user: createUser({
                     firstName: "John",
                     lastName: "Doe",
-                },
-                project: {
+                }),
+                project: createProject({
                     id: 123,
                     name: "Example Project Title",
-                },
+                }),
                 defaultTabValue: "statistics",
             },
         });
