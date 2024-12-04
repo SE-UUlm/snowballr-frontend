@@ -24,6 +24,23 @@
     };
 </script>
 
+<!--
+@component
+Container displaying important project information.
+
+This component shows the
+  - project id and name
+  - members of the project
+  - current stage
+  - current project progress (as progress bar, whereas the parameter must be provided as percentage)
+
+Furthermore this component is clickable and navigates to the corresponding project homepage.
+
+Usage:
+```svelte
+    <ProjectListEntry project={demoProject} members={memberUserSpecArray} stage={3} projectProgress={70} />
+```
+-->
 <button
     type="button"
     class="flex flex-col lg:flex-row h-fit w-full gap-3 lg:gap-10 items-start lg:items-center justify-between px-5 py-2 border border-container-border-grey rounded-md hover:bg-container-border-grey/35"
