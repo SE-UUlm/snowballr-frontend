@@ -68,7 +68,7 @@ export interface Paper {
     id: number;
     doi: string;
     title: string;
-    abstrakt: string;
+    abstract: string;
     year: number;
     type: string;
     authors: Author[];
