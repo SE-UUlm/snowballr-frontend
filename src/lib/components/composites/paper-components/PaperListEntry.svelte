@@ -31,21 +31,20 @@
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     /**
      * Handles the click event of the paper entry component by checking
-     * whether it was a single click (so no further click after 250ms) or a double click
+     * whether it was a single click (so no further click after 350ms) or a double click
      * and call the corresponding functions:
      *  - single click => onClick() (possible overridden, otherwise navigateToPaperView())
      *  - double click => navigateToPaperView() (default)
-     *
-     * @param event - the click event
      */
-    const handleClick = (event: MouseEvent) => {
-        if (timeoutId !== null) {
+    const handleClick = () => {
+        if (timeoutId === null) {
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                onClick();
+            }, 350);
+        } else {
             clearTimeout(timeoutId);
-        }
-        const numberOfClicks = event.detail;
-        if (numberOfClicks === 1) {
-            timeoutId = setTimeout(onClick, 500);
-        } else if (numberOfClicks === 2) {
+            timeoutId = null;
             navigateToPaperView();
         }
     };

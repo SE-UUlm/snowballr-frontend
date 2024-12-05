@@ -87,7 +87,7 @@ describe("PaperListEntryComponent", () => {
         expect(onClickExecuted).equal(false);
 
         await userEvent.click(screen.getByRole("button"));
-        await new Promise((resolve) => setTimeout(resolve, 505));
+        await new Promise((resolve) => setTimeout(resolve, 350));
         expect(onClickExecuted).equal(true);
     });
 });
