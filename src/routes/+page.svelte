@@ -8,6 +8,5 @@
 <svelte:head>
     <title>SnowballR</title>
 </svelte:head>
-<div class="flex flex-col gap-3">
-    <SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
-</div>
+
+<SimpleNavigationBar {user} title="SnowballR" tabs={[]} defaultTabValue="" />
