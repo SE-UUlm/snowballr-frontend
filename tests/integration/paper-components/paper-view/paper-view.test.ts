@@ -1,20 +1,13 @@
 import { render, screen } from "@testing-library/svelte";
 import { assert, describe, expect, test } from "vitest";
 import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+import { createPaper, createUser } from "../../../model-builder";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
         render(PaperView, {
-            user: {
-                firstName: "John",
-                lastName: "Doe",
-            },
-            paper: {
-                id: 1,
-                title: "Paper Title",
-                authors: ["Alice", "Bob"],
-                isBookmarked: false,
-            },
+            user: createUser(),
+            paper: createPaper(),
             showButtonBar: false,
             backRef: "",
             userConfig: {
@@ -28,16 +21,8 @@ describe("PaperView", () => {
 
     test("When `showButtonBar` is true, then navigation buttons are shown", () => {
         render(PaperView, {
-            user: {
-                firstName: "John",
-                lastName: "Doe",
-            },
-            paper: {
-                id: 1,
-                title: "Paper Title",
-                authors: ["Alice", "Bob"],
-                isBookmarked: false,
-            },
+            user: createUser(),
+            paper: createPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -52,16 +37,8 @@ describe("PaperView", () => {
 
     test("When navigation buttons are shown and `isReviewMode` is true, then the decision buttons are shown", () => {
         render(PaperView, {
-            user: {
-                firstName: "John",
-                lastName: "Doe",
-            },
-            paper: {
-                id: 1,
-                title: "Paper Title",
-                authors: ["Alice", "Bob"],
-                isBookmarked: false,
-            },
+            user: createUser(),
+            paper: createPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -79,16 +56,8 @@ describe("PaperView", () => {
 
     test("When navigation and decision buttons are shown but `showMaybeButton` is false, then only the accept and decline buttons are shown", () => {
         render(PaperView, {
-            user: {
-                firstName: "John",
-                lastName: "Doe",
-            },
-            paper: {
-                id: 1,
-                title: "Paper Title",
-                authors: ["Alice", "Bob"],
-                isBookmarked: false,
-            },
+            user: createUser(),
+            paper: createPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {
