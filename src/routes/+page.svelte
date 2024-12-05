@@ -1,10 +1,10 @@
 <script lang="ts">
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
-    import NamedListWrapper from "$lib/components/composites/NamedListWrapper.svelte";
+    import NamedList from "$lib/components/composites/NamedList.svelte";
     import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 
     const { data } = $props();
-    const { user } = data;
+    const { user, projectMetadata } = data;
 </script>
 
 <svelte:head>
@@ -13,15 +13,13 @@
 <SimpleNavigationBar {user} title="SnowballR" />
 
 <main class="flex flex-row h-full w-full mb-10 gap-x-5">
-    <NamedListWrapper listName={"Open Reviews"}
-        ><span>
-            >Will be implemented in <a
-                class="text-blue-400"
-                href="https://github.com/SE-UUlm/snowballr-frontend/issues/121">#121</a
-            >.</span
-        ></NamedListWrapper
-    >
-    <NamedListWrapper listName={"Projects"}>
-        <ProjectListEntry {...data} />
-    </NamedListWrapper>
+    <!-- TODO: exchange by the NamedList for the open reviews -->
+    <section class="flex flex-col h-full w-full px-5 gap-y-4">
+        <h2>Open Reviews</h2>
+    </section>
+    <NamedList listName="Projects" items={projectMetadata}>
+        {#snippet ListItemComponent(componentData)}
+            <ProjectListEntry {...componentData} />
+        {/snippet}
+    </NamedList>
 </main>
