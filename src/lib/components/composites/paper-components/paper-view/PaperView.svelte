@@ -2,7 +2,7 @@
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { Paper, User } from "$lib/types";
+    import type { Paper, User } from "$lib/model/backend";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
@@ -12,6 +12,7 @@
     interface Props {
         user: User;
         paper: Paper;
+        isPaperBookmarked?: boolean;
         showButtonBar: boolean;
         backRef: string;
         userConfig: {
@@ -20,7 +21,14 @@
         };
     }
 
-    const { user, paper, showButtonBar, backRef, userConfig }: Props = $props();
+    const {
+        user,
+        paper,
+        isPaperBookmarked = false,
+        showButtonBar,
+        backRef,
+        userConfig,
+    }: Props = $props();
 </script>
 
 <!--
@@ -49,7 +57,7 @@ Usage:
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
     <PaperNavigationBar {user} {backRef} {paper} />
-    <PaperBookmarkButton paperId={paper.id} isBookmarked={paper.isBookmarked} />
+    <PaperBookmarkButton paperId={paper.id} isBookmarked={isPaperBookmarked} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
