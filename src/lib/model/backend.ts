@@ -38,6 +38,13 @@ export interface Project {
 
 export type ProjectSpec = Omit<Project, "id">;
 
+export interface ProjectMetadata {
+    project: Project;
+    members: User[];
+    stage: number;
+    stageProgress: number;
+}
+
 export interface Criterion {
     id: number;
     tag: string;
@@ -68,7 +75,7 @@ export interface Paper {
     id: number;
     doi: string;
     title: string;
-    abstract: string;
+    abstrakt: string;
     year: number;
     type: string;
     authors: Author[];

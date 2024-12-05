@@ -1,26 +1,24 @@
 <script lang="ts">
     import { Progress } from "$lib/components/primitives/progress";
     import { goto } from "$app/navigation";
-    import type { Project, UserSpec } from "$lib/model/backend";
+    import type { Project, User } from "$lib/model/backend";
 
     interface ProjectListEntryProps {
         project: Project;
-        members: UserSpec[];
+        members: User[];
         stage: number;
-        projectProgress: number;
+        stageProgress: number;
     }
 
-    const { project, members, stage, projectProgress }: ProjectListEntryProps = $props();
+    const { project, members, stage, stageProgress }: ProjectListEntryProps = $props();
 
     /**
      * Combine the first- and lastname of the members array into a string as following:
-     * [{firstName: "Max", lastName: "Mustermann", email: "max@mustermann.com"}, ... ] -->
-     * "Max Mustermann, ..."
+     * [{firstName: "John", lastName: "Doe", email: "john@doe.com"}, ... ] -->
+     * "John Doe, ..."
      */
     const getMemberNames = () => {
-        return members
-            .map((member: UserSpec) => `${member.firstName} ${member.lastName}`)
-            .join(", ");
+        return members.map((member: User) => `${member.firstName} ${member.lastName}`).join(", ");
     };
 </script>
 
@@ -32,13 +30,13 @@ This component shows the
   - project id and name
   - members of the project
   - current stage
-  - current project progress (as progress bar, whereas the parameter must be provided as percentage)
+  - current stage progress (as progress bar, whereas the parameter must be provided as percentage)
 
 Furthermore this component is clickable and navigates to the corresponding project homepage.
 
 Usage:
 ```svelte
-    <ProjectListEntry project={demoProject} members={memberUserSpecArray} stage={3} projectProgress={70} />
+    <ProjectListEntry project={demoProject} members={memberUserSpecArray} stage={3} stageProgress={70} />
 ```
 -->
 <button
@@ -61,6 +59,6 @@ Usage:
         class="flex flex-row w-full gap-x-5 lg:gap-x-2.5 items-center justify-start lg:justify-end"
     >
         <span class="h-fit w-fit text-nowrap">Stage {stage}</span>
-        <Progress class="h-2.5 w-full min-w-16 lg:max-w-32" value={projectProgress} />
+        <Progress class="h-2.5 w-full min-w-16 lg:max-w-32" value={stageProgress} />
     </div>
 </button>
