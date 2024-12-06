@@ -11,6 +11,7 @@ export default defineConfig({
         sequence: {
             shuffle: true,
         },
+        setupFiles: ["./tests/setupTest.ts"],
         coverage: {
             include: ["src/**"],
             exclude: ["src/routes/**/+*.{svelte,ts}", "**/*.d.ts"],

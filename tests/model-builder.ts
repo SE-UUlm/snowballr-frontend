@@ -1,4 +1,10 @@
-import type { Author, Paper, Project, User } from "$lib/model/backend";
+import {
+    type Author,
+    type Paper,
+    type Project,
+    ReviewDecision,
+    type User,
+} from "$lib/model/backend";
 
 export function createUser(user: Partial<User>): User {
     return {
@@ -81,6 +87,17 @@ export function createPaper(paper: Partial<Paper>): Paper {
         authors: [Authors.johnDoe],
         backwardReferencedPaperIds: [],
         forwardReferencedPaperIds: [],
+        reviewData: {
+            finalDecision: ReviewDecision.Declined,
+            reviews: [
+                {
+                    user: Users.johnDoe,
+                    finished: true,
+                    decision: ReviewDecision.Declined,
+                    selectedCriteriaIds: [],
+                },
+            ],
+        },
         ...paper,
     };
 }

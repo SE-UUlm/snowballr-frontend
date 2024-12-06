@@ -63,6 +63,7 @@ const config = {
                 "decline-red": colors.red["400"],
                 "maybe-yellow": colors.yellow["400"],
                 "accept-green": colors.green["300"],
+                "unreviewed-gray": colors.gray["400"],
                 "warning-amber": "#FFC310",
                 "container-border-grey": "#E6E6E6",
                 "input-border-slate": colors.slate["400"],
