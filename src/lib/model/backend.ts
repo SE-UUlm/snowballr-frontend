@@ -38,6 +38,13 @@ export interface Project {
 
 export type ProjectSpec = Omit<Project, "id">;
 
+export interface ProjectMetadata {
+    project: Project;
+    members: User[];
+    stage: number;
+    stageProgress: number;
+}
+
 export interface Criterion {
     id: number;
     tag: string;
