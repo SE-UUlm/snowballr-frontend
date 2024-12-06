@@ -12,6 +12,6 @@
     const { user, backRef, paper }: Props = $props();
 </script>
 
-<NavigationBar {user} {backRef} tabs={[]} defaultTabValue="">
+<NavigationBar {user} {backRef}>
     <PaperInfo {paper} />
 </NavigationBar>

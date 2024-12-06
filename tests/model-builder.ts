@@ -6,7 +6,7 @@ import {
     type User,
 } from "$lib/model/backend";
 
-export function createUser(user: Partial<User>): User {
+export function createUser(user: Partial<User> = {}): User {
     return {
         id: 0,
         firstName: "John",
@@ -37,7 +37,7 @@ export const Users = {
     },
 };
 
-export function createProject(project: Partial<Project>): Project {
+export function createProject(project: Partial<Project> = {}): Project {
     return {
         id: 0,
         name: "Foo",
@@ -51,7 +51,7 @@ export function createProject(project: Partial<Project>): Project {
     };
 }
 
-export function createAuthor(author: Partial<Author>): Author {
+export function createAuthor(author: Partial<Author> = {}): Author {
     return {
         id: 0,
         firstName: "John",
@@ -76,7 +76,7 @@ export const Authors = {
     },
 };
 
-export function createPaper(paper: Partial<Paper>): Paper {
+export function createPaper(paper: Partial<Paper> = {}): Paper {
     return {
         id: 0,
         doi: "doi",
