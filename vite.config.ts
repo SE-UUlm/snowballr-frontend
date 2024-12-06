@@ -7,6 +7,7 @@ export default defineConfig({
     // Tell Vitest to use the `browser` entry points in `package.json` files, even though it's running in Node
     resolve: process.env.VITEST ? { conditions: ["browser"] } : undefined,
     test: {
+        watch: false,
         reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["default"],
         sequence: {
             shuffle: true,
