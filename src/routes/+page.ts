@@ -93,6 +93,24 @@ export const load: PageLoad = async () => {
             stage: 1,
             stageProgress: 82,
         },
+        {
+            project: createProject({ id: 3, name: "Demo Project 2" }),
+            members: [Users.johnDoe, Users.janeDoe],
+            stage: 2,
+            stageProgress: 70,
+        },
+        {
+            project: createProject({ id: 4, name: "Demo Project 3" }),
+            members: [Users.johnDoe, Users.janeDoe],
+            stage: 2,
+            stageProgress: 70,
+        },
+        {
+            project: createProject({ id: 5, name: "Demo Project 4" }),
+            members: [Users.johnDoe, Users.janeDoe],
+            stage: 2,
+            stageProgress: 70,
+        },
     ];
 
     return { projectMetadata: projectMetadataExamples };
