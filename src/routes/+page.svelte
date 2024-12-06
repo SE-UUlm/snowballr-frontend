@@ -17,7 +17,7 @@
     <section class="flex flex-col h-full w-full px-5 gap-y-4">
         <h2>Open Reviews</h2>
     </section>
-    <NamedList listName="Projects" items={projectMetadata}>
+    <NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
         {#snippet ListItemComponent(componentData)}
             <ProjectListEntry {...componentData} />
         {/snippet}
