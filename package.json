@@ -10,7 +10,7 @@
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
-        "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+        "test": "vitest && npm run test:e2e",
         "show-coverage": "open coverage/index.html",
         "test:unit": "vitest --project unit",
         "test:unit:ui": "npm run test:unit -- --ui --watch --open",
