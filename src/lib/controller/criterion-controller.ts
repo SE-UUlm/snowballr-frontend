@@ -1,13 +1,12 @@
 import type { Criterion, CriterionSpec } from "$lib/model/backend";
 import type { ICriterionController } from "../backend-api";
+import { HttpClient } from "./http-client";
 
 export class CriterionController implements ICriterionController {
-    private projectId: number;
-    private criterionId: number;
+    private client: HttpClient;
 
-    constructor(projectId: number, criterionId: number) {
-        this.projectId = projectId;
-        this.criterionId = criterionId;
+    constructor(basePath: string, criterionId: number) {
+        this.client = new HttpClient(`${basePath}/criteria/${criterionId}`);
     }
 
     async get(): Promise<Criterion> {

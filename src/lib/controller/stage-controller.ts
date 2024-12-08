@@ -1,14 +1,15 @@
 import type { StageEntry } from "$lib/model/backend";
 import type { IStageController, IStageEntryController } from "../backend-api";
+import { HttpClient } from "./http-client";
 import { StageEntryController } from "./stage-entry-controller";
 
 export class StageController implements IStageController {
-    private projectId: number;
-    private stageIndex: number;
+    private client: HttpClient;
+    private path: string;
 
-    constructor(projectId: number, stageIndex: number) {
-        this.projectId = projectId;
-        this.stageIndex = stageIndex;
+    constructor(basePath: string, stageIndex: number) {
+        this.path = `${basePath}/stages/${stageIndex}`;
+        this.client = new HttpClient(this.path);
     }
 
     async getAllPapersAsCsv(): Promise<Blob> {
@@ -25,6 +26,6 @@ export class StageController implements IStageController {
     }
 
     paper(paperId: number): IStageEntryController {
-        return new StageEntryController(this.projectId, this.stageIndex, paperId);
+        return new StageEntryController(this.path, paperId);
     }
 }

@@ -1,13 +1,16 @@
 import type { Criterion, CriterionSpec, Project, ProjectSpec, User } from "$lib/model/backend";
 import type { ICriterionController, IProjectController, IStageController } from "../backend-api";
 import { CriterionController } from "./criterion-controller";
+import { HttpClient } from "./http-client";
 import { StageController } from "./stage-controller";
 
 export class ProjectController implements IProjectController {
-    private projectId: number;
+    private client: HttpClient;
+    private path: string;
 
     constructor(projectId: number) {
-        this.projectId = projectId;
+        this.path = `projects/${projectId}`;
+        this.client = new HttpClient(this.path);
     }
 
     async get(): Promise<Project> {
@@ -36,7 +39,7 @@ export class ProjectController implements IProjectController {
     }
 
     stage(stageIndex: number): IStageController {
-        return new StageController(this.projectId, stageIndex);
+        return new StageController(this.path, stageIndex);
     }
 
     async getMembers(): Promise<User[]> {
@@ -63,6 +66,6 @@ export class ProjectController implements IProjectController {
     }
 
     criterion(criterionId: number): ICriterionController {
-        return new CriterionController(this.projectId, criterionId);
+        return new CriterionController(this.path, criterionId);
     }
 }
