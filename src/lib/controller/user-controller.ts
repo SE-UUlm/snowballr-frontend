@@ -1,11 +1,12 @@
 import type { User, UserSpec, Project, Paper } from "$lib/model/backend";
 import type { IUserController } from "../backend-api";
+import { HttpClient } from "./http-client";
 
 export class UserController implements IUserController {
-    private userId: number;
+    private client: HttpClient;
 
     constructor(userId: number) {
-        this.userId = userId;
+        this.client = new HttpClient(`users/${userId}`);
     }
 
     async get(): Promise<User> {
