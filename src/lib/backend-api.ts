@@ -46,7 +46,7 @@ export interface IStageEntryController {
 
     getReviews(): Promise<Review[]>;
     addReview(spec: ReviewSpec): Promise<Review>;
-    review(userId: number): IReviewController;
+    review(reviewerId: number): IReviewController;
 }
 
 export interface IStageController {
@@ -71,7 +71,7 @@ export interface IProjectController {
     getReplicationPackageAsZip(): Promise<Blob>;
     getAllPapersAsCsv(): Promise<Blob>;
 
-    getStageCount(): number;
+    getStageCount(): Promise<number>;
     stage(stageIndex: number): IStageController;
 
     getMembers(): Promise<User[]>;
@@ -90,8 +90,8 @@ export interface IAuthorController {
 }
 
 export interface IBackendController {
-    login(username: string, password: string): Promise<User>;
-    logout(): Promise<void>;
+    signIn(username: string, password: string): Promise<User>;
+    signOut(): Promise<void>;
     requestEmailForgottenPassword(email: string): Promise<void>;
 
     getProjects(): Promise<Project[]>;
