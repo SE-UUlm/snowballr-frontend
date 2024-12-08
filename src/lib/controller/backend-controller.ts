@@ -16,14 +16,18 @@ import type {
     PaperSpec,
 } from "../model/backend";
 import { AuthorController } from "./author-controller";
+import { HttpClient } from "./http-client";
 import { PaperController } from "./paper-controller";
 import { ProjectController } from "./project-controller";
 import { UserController } from "./user-controller";
 
 export class BackendController implements IBackendController {
     private static instance: BackendController = new BackendController();
+    private client: HttpClient;
 
-    private constructor() {}
+    private constructor() {
+        this.client = new HttpClient();
+    }
 
     static getInstance() {
         return BackendController.instance;

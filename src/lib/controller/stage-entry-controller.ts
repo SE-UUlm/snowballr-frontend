@@ -1,16 +1,15 @@
 import type { StageEntry, Review, ReviewSpec } from "$lib/model/backend";
 import type { IReviewController, IStageEntryController } from "../backend-api";
+import { HttpClient } from "./http-client";
 import { ReviewController } from "./review-controller";
 
 export class StageEntryController implements IStageEntryController {
-    private projectId: number;
-    private stageIndex: number;
-    private paperId: number;
+    private client: HttpClient;
+    private path: string;
 
-    constructor(projectId: number, stageIndex: number, paperId: number) {
-        this.projectId = projectId;
-        this.stageIndex = stageIndex;
-        this.paperId = paperId;
+    constructor(basePath: string, paperId: number) {
+        this.path = `${basePath}/papers/${paperId}`;
+        this.client = new HttpClient(this.path);
     }
 
     async get(): Promise<StageEntry> {
@@ -31,6 +30,6 @@ export class StageEntryController implements IStageEntryController {
     }
 
     review(reviewerId: number): IReviewController {
-        return new ReviewController(this.projectId, this.stageIndex, this.paperId, reviewerId);
+        return new ReviewController(this.path, reviewerId);
     }
 }

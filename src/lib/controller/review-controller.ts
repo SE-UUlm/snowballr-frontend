@@ -1,17 +1,12 @@
 import type { Review, ReviewSpec } from "$lib/model/backend";
 import type { IReviewController } from "../backend-api";
+import { HttpClient } from "./http-client";
 
 export class ReviewController implements IReviewController {
-    private projectId: number;
-    private stageIndex: number;
-    private paperId: number;
-    private reviewerId: number;
+    private client: HttpClient;
 
-    constructor(projectId: number, stageIndex: number, paperId: number, reviewerId: number) {
-        this.projectId = projectId;
-        this.stageIndex = stageIndex;
-        this.paperId = paperId;
-        this.reviewerId = reviewerId;
+    constructor(basePath: string, reviewerId: number) {
+        this.client = new HttpClient(`${basePath}/reviews/${reviewerId}`);
     }
 
     async get(): Promise<Review> {

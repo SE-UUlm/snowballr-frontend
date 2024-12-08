@@ -1,11 +1,12 @@
 import type { Paper, PaperSpec } from "$lib/model/backend";
 import type { IPaperController } from "../backend-api";
+import { HttpClient } from "./http-client";
 
 export class PaperController implements IPaperController {
-    private paperId: number;
+    private client: HttpClient;
 
     constructor(paperId: number) {
-        this.paperId = paperId;
+        this.client = new HttpClient(`papers/${paperId}`);
     }
 
     async get(): Promise<Paper> {

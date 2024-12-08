@@ -1,11 +1,12 @@
 import type { Author, AuthorSpec } from "$lib/model/backend";
 import type { IAuthorController } from "../backend-api";
+import { HttpClient } from "./http-client";
 
 export class AuthorController implements IAuthorController {
-    private authorId: number;
+    private client: HttpClient;
 
     constructor(authorId: number) {
-        this.authorId = authorId;
+        this.client = new HttpClient(`authors/${authorId}`);
     }
 
     async get(): Promise<Author> {

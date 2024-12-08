@@ -21,6 +21,9 @@ jobs:
             - name: Install dependencies
               run: npm install
 
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
+
             - name: Build application
               run: npm run build
 
