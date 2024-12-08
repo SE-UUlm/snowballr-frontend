@@ -7,11 +7,20 @@
     type Props = {
         class?: string;
         value?: string;
+        showForgotPasswordLink?: boolean;
     };
 
-    let { value = $bindable(), class: className = "", ...restProps }: Props = $props();
+    let {
+        value = $bindable(),
+        class: className = "",
+        showForgotPasswordLink,
+        ...restProps
+    }: Props = $props();
     let isPasswordVisible = $state(false);
     let input: Input;
+    const link = showForgotPasswordLink
+        ? { href: "/resetpassword", text: "Forgot your password?" }
+        : undefined;
 
     /**
      * Same as {@link Input.validate}.
@@ -32,7 +41,7 @@ Customized {@link Input} component for password input.
 
 Usage:
 ```svelte
-    <PasswordInput bind:value={password} bind:this={passwordInput} />
+    <PasswordInput bind:value={password} bind:this={passwordInput} showForgotPasswordLink />
 ```
 -->
 <Input
@@ -47,6 +56,7 @@ Usage:
     label="Password"
     onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
     required
+    {link}
     schema={Schema.password}
     type={isPasswordVisible ? "text" : "password"}
     validationDisplayMode="constant"
