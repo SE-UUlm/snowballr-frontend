@@ -6,6 +6,14 @@ Frontend of the SnowballR project.
 
 To keep track of the use cases we are working on, we are using the GitHub project board feature. You can find them [here](https://github.com/orgs/SE-UUlm/projects/2/views/7).
 
+## Environment Variables
+
+To run the app, you need to create a `.env` file in the root directory of the project. The file should contain the following environment variables (see [.env.example](./.env.example) for an example):
+
+| Variable              | Description                 |
+| --------------------- | --------------------------- |
+| `PUBLIC_API_BASE_URL` | The URL of the backend API. |
+
 ## Developing
 
 Once you've installed dependencies with `npm install`, start a development server:

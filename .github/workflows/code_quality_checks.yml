@@ -181,5 +181,8 @@ jobs:
             - name: Install dependencies
               run: npm install
 
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
+
             - name: Run all checks
               run: npm run check
