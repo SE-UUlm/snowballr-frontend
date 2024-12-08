@@ -1,0 +1,101 @@
+import type {
+    IAuthorController,
+    IBackendController,
+    IPaperController,
+    IProjectController,
+    IUserController,
+} from "../backend-api";
+import type {
+    User,
+    Project,
+    ProjectSpec,
+    UserSpec,
+    Author,
+    AuthorSpec,
+    Paper,
+    PaperSpec,
+} from "../model/backend";
+import { AuthorController } from "./author-controller";
+import { PaperController } from "./paper-controller";
+import { ProjectController } from "./project-controller";
+import { UserController } from "./user-controller";
+
+export class BackendController implements IBackendController {
+    private static instance: BackendController = new BackendController();
+
+    private constructor() {}
+
+    static getInstance() {
+        return BackendController.instance;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async signIn(username: string, password: string): Promise<User> {
+        throw new Error("Method not implemented.");
+    }
+
+    async signOut(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async requestEmailForgottenPassword(email: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+
+    async getProjects(): Promise<Project[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async createProject(spec: ProjectSpec): Promise<Project> {
+        throw new Error("Method not implemented.");
+    }
+
+    project(projectId: number): IProjectController {
+        return new ProjectController(projectId);
+    }
+
+    async getUsers(): Promise<User[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async createUser(personalInfo: UserSpec, password: string): Promise<User> {
+        throw new Error("Method not implemented.");
+    }
+
+    user(userId: number): IUserController {
+        return new UserController(userId);
+    }
+
+    thisUser(): IUserController {
+        throw new Error("Method not implemented.");
+    }
+
+    async getAuthors(): Promise<Author[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async createAuthor(spec: AuthorSpec): Promise<Author> {
+        throw new Error("Method not implemented.");
+    }
+
+    author(authorId: number): IAuthorController {
+        return new AuthorController(authorId);
+    }
+
+    async getPapers(): Promise<Paper[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async createPaper(spec: PaperSpec): Promise<Paper> {
+        throw new Error("Method not implemented.");
+    }
+
+    paper(paperId: number): IPaperController {
+        return new PaperController(paperId);
+    }
+}
