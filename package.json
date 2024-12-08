@@ -10,12 +10,12 @@
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
-        "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+        "test": "vitest && npm run test:e2e",
         "show-coverage": "open coverage/index.html",
-        "test:unit": "vitest run --project unit",
-        "test:unit:ui": "npm run test:unit -- --ui",
-        "test:integration": "vitest run --project integration",
-        "test:integration:ui": "npm run test:integration -- --ui",
+        "test:unit": "vitest --project unit",
+        "test:unit:ui": "npm run test:unit -- --ui --watch --open",
+        "test:integration": "vitest --project integration",
+        "test:integration:ui": "npm run test:integration -- --ui --watch --open",
         "test:e2e": "playwright test",
         "test:and-open-coverage": "npm run test && npm run show-coverage"
     },
@@ -32,7 +32,7 @@
         "@vitest/coverage-v8": "^2.1.5",
         "@vitest/ui": "^2.1.5",
         "autoprefixer": "^10.4.20",
-        "bits-ui": "^1.0.0-next.51",
+        "bits-ui": "^1.0.0-next.64",
         "clsx": "^2.1.1",
         "eslint": "^9.15.0",
         "eslint-config-prettier": "^9.1.0",
@@ -40,6 +40,7 @@
         "globals": "^15.12.0",
         "jsdom": "^25.0.1",
         "lucide-svelte": "^0.456.0",
+        "msw": "^2.6.8",
         "postcss": "^8.4.49",
         "prettier": "^3.3.2",
         "prettier-plugin-svelte": "^3.2.8",
@@ -52,6 +53,7 @@
         "typescript": "^5.7.2",
         "typescript-eslint": "^8.15.0",
         "vite": "^5.4.11",
-        "vitest": "^2.1.5"
+        "vitest": "^2.1.5",
+        "zod": "^3.23.8"
     }
 }

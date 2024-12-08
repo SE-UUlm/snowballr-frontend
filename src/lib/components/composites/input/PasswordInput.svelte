@@ -1,0 +1,71 @@
+<script lang="ts">
+    import Eye from "lucide-svelte/icons/eye";
+    import EyeClosed from "lucide-svelte/icons/eye-closed";
+    import { Schema } from "$lib/schemas";
+    import Input from "./Input.svelte";
+
+    type Props = {
+        class?: string;
+        value?: string;
+        showForgotPasswordLink?: boolean;
+    };
+
+    let {
+        value = $bindable(),
+        class: className = "",
+        showForgotPasswordLink,
+        ...restProps
+    }: Props = $props();
+    let isPasswordVisible = $state(false);
+    let input: Input;
+    const link = showForgotPasswordLink
+        ? { href: "/resetpassword", text: "Forgot your password?" }
+        : undefined;
+
+    /**
+     * Same as {@link Input.validate}.
+     */
+    export const validate = () => input.validate();
+
+    /**
+     * Same as {@link Input.getValue}.
+     */
+    export const getValue = () => input.getValue();
+</script>
+
+<!--
+@component
+Password Input Element.
+
+Customized {@link Input} component for password input.
+
+Usage:
+```svelte
+    <PasswordInput bind:value={password} bind:this={passwordInput} showForgotPasswordLink />
+```
+-->
+<Input
+    class={className}
+    inputId="password"
+    label="Password"
+    required
+    type={isPasswordVisible ? "text" : "password"}
+    {link}
+    schema={Schema.password}
+    onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
+    buttonProps={{ "aria-label": "Toggle password visibility" }}
+    bind:value
+    bind:this={input}
+    autocomplete={undefined}
+    autocapitalize="off"
+    autocorrect="off"
+    {...restProps}
+>
+    {#snippet buttonContent()}
+        {#if isPasswordVisible}
+            <Eye />
+        {:else}
+            <EyeClosed />
+        {/if}
+    {/snippet}
+</Input>
