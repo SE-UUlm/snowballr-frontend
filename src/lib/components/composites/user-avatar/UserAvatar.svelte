@@ -59,7 +59,7 @@ Usage:
     {/if}
 </div>
 
-<style>
+<style lang="postcss">
     .review-decision {
         @apply absolute top-6 left-6 h-5 w-5 flex justify-center items-center rounded-full;
     }
