@@ -7,11 +7,20 @@
     type Props = {
         class?: string;
         value?: string;
+        showForgotPasswordLink?: boolean;
     };
 
-    let { value = $bindable(), class: className = "", ...restProps }: Props = $props();
+    let {
+        value = $bindable(),
+        class: className = "",
+        showForgotPasswordLink,
+        ...restProps
+    }: Props = $props();
     let isPasswordVisible = $state(false);
     let input: Input;
+    const link = showForgotPasswordLink
+        ? { href: "/resetpassword", text: "Forgot your password?" }
+        : undefined;
 
     /**
      * Same as {@link Input.validate}.
@@ -41,6 +50,7 @@ Usage:
     label="Password"
     required
     type={isPasswordVisible ? "text" : "password"}
+    {link}
     schema={Schema.password}
     onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
     buttonProps={{ "aria-label": "Toggle password visibility" }}
