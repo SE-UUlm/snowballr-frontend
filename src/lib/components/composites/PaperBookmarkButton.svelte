@@ -8,67 +8,34 @@
 
     interface Props {
         paperId: number;
-        isBookmarked: boolean;
+        isBookmarkedDefault: boolean;
     }
 
-    const { paperId, isBookmarked }: Props = $props();
-    type BookmarkState = "added" | "not added" | "adding" | "removing";
-    let state = $state<BookmarkState>(isBookmarked ? "added" : "not added");
-    const tooltipText = $derived(
-        state === "not added" || state === "adding"
-            ? "Add to Reading List"
-            : "Remove from Reading List",
-    );
+    const { paperId, isBookmarkedDefault }: Props = $props();
 
-    function onMouseEnter() {
-        switch (state) {
-            case "added":
-                state = "removing";
-                break;
-            case "not added":
-                state = "adding";
-                break;
-            default:
-                break;
-        }
-    }
+    let isBookmarked = $state(isBookmarkedDefault);
+    let isHovered = $state(false);
+    const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
 
-    function onMouseLeave() {
-        switch (state) {
-            case "adding":
-                state = "not added";
-                break;
-            case "removing":
-                state = "added";
-                break;
-            default:
-                break;
-        }
-    }
+    const onMouseEnter = () => (isHovered = true);
+    const onMouseLeave = () => (isHovered = false);
 
     function onClick() {
-        switch (state) {
-            case "not added":
-            case "adding":
-                addPaperToReadingList();
-                break;
-            case "removing":
-            case "added":
-                removePaperFromReadingList();
-                break;
-            default:
-                throw new Error(`unexpected state '${state}'`);
+        if (isBookmarked) {
+            removePaperFromReadingList();
+        } else {
+            addPaperToReadingList();
         }
     }
 
     function addPaperToReadingList() {
         // TODO: Will be implemented in #99
-        state = "added";
+        isBookmarked = true;
         console.log(`Added paper with id ${paperId} to reading list`);
     }
     function removePaperFromReadingList() {
         // TODO: Will be implemented in #100
-        state = "not added";
+        isBookmarked = false;
         console.log(`Removed paper with id ${paperId} from reading list`);
     }
 </script>
@@ -96,12 +63,14 @@ Usage:
     aria-label={tooltipText}
 >
     {#snippet trigger()}
-        {#if state === "added"}
+        {#if isHovered}
+            {#if isBookmarked}
+                <BookmarkMinus />
+            {:else}
+                <BookmarkPlus />
+            {/if}
+        {:else if isBookmarked}
             <Bookmark fill="bg-primary" />
-        {:else if state === "adding"}
-            <BookmarkPlus />
-        {:else if state === "removing"}
-            <BookmarkMinus />
         {:else}
             <Bookmark />
         {/if}

@@ -57,7 +57,7 @@ Usage:
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
     <PaperNavigationBar {user} {backRef} {paper} />
-    <PaperBookmarkButton paperId={paper.id} isBookmarked={isPaperBookmarked} />
+    <PaperBookmarkButton paperId={paper.id} isBookmarkedDefault={isPaperBookmarked} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
