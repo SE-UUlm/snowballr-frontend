@@ -37,10 +37,11 @@ jobs:
                       const globber = await glob.create('**/src/routes/**/+page.svelte');
                       const files = await globber.glob();
                       const urls = files
-                          .map(x => x.match(/routes\/([a-zA-Z\/\[\]]*?)\/?\+page\.svelte/)[1])
-                          .map(x => x.replace('[paperId]', '42').replace('[projectId]', '12'))
+                          .map(x => x.match(/routes\/([\(a-zA-Z\/\[\]\)]*?)\/?\+page\.svelte/)[1])
+                          .map(x => x.replace('[paperId]', '42').replace('[projectId]', '12').replace(/\([a-z\-]+\)\//g, ''))
                           .map(x => `http://localhost:8080/${x}`)
                           .join('\n');
+                      console.log('generated URLs:', urls);
                       core.setOutput('urls', urls);
 
             # Add '& echo ...' to run command in background
