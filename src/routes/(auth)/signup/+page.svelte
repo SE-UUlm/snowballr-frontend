@@ -3,6 +3,8 @@
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
+    import { BackendController } from "$lib/controller/backend-controller";
+    import type { UserSpec } from "$lib/model/backend";
     import { Schema } from "$lib/schemas";
 
     let firstNameInput: Input;
@@ -10,26 +12,28 @@
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
-    function handleSubmit(event: Event) {
+    async function handleSubmit(event: Event) {
         event.preventDefault();
 
-        const areInputsValid =
-            firstNameInput.validate() &&
-            lastNameInput.validate() &&
-            emailInput.validate() &&
-            passwordInput.validate();
-        if (!areInputsValid) {
+        const isFirstNameValid = firstNameInput.validate();
+        const isLastNameValid = lastNameInput.validate();
+        const isEmailValid = emailInput.validate();
+        const isPasswordValid = passwordInput.validate();
+        if (!(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid)) {
             return;
         }
 
-        const signUpData = {
+        const userSpec: UserSpec = {
             firstName: firstNameInput.getValue(),
             lastName: lastNameInput.getValue(),
             email: emailInput.getValue(),
-            password: passwordInput.getValue(),
         };
-        // TODO: CALL API TO SIGN UP
-        console.log("sign up with", signUpData);
+        const user = await BackendController.getInstance().createUser(
+            userSpec,
+            passwordInput.getValue(),
+        );
+        // TODO: Login and redirect to the home page
+        console.log(user);
     }
 </script>
 

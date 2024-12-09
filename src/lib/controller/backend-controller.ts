@@ -64,9 +64,17 @@ export class BackendController implements IBackendController {
         throw new Error("Method not implemented.");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async createUser(personalInfo: UserSpec, password: string): Promise<User> {
-        throw new Error("Method not implemented.");
+        const payload = {
+            email: personalInfo.email,
+            sender: {
+                firstName: personalInfo.firstName,
+                lastName: personalInfo.lastName,
+                password: password,
+            },
+        };
+
+        return this.client.post("users", payload).then((response) => response.json());
     }
 
     user(userId: number): IUserController {
