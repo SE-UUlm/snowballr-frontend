@@ -45,6 +45,9 @@ jobs:
             - name: Install dependencies
               run: npm install
 
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
+
             - name: Run unit tests
               run: npm run test:unit
 
@@ -71,6 +74,9 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
 
             - name: Run integration tests
               run: npm run test:integration
@@ -99,6 +105,9 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
 
             - name: Install Playwright
               run: npx playwright install --with-deps
@@ -180,6 +189,9 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+
+            - name: Create .env file from .env.example
+              run: cat .env.example > .env
 
             - name: Run all checks
               run: npm run check
