@@ -3,7 +3,7 @@
     import PaperCardContent from "./PaperCardContent.svelte";
 
     const tabs = [
-        { value: "1", label: "References/Citations" },
+        { value: "1", label: "Forward/Backward References" },
         { value: "2", label: "Review Information" },
     ];
 </script>
