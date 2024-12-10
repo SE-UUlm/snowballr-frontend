@@ -5,8 +5,8 @@ import { HttpClient } from "./http-client";
 import { StageController } from "./stage-controller";
 
 export class ProjectController implements IProjectController {
-    private client: HttpClient;
-    private path: string;
+    private readonly client: HttpClient;
+    private readonly path: string;
 
     constructor(projectId: number) {
         this.path = `projects/${projectId}`;

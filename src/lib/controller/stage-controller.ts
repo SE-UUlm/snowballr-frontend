@@ -4,8 +4,8 @@ import { HttpClient } from "./http-client";
 import { StageEntryController } from "./stage-entry-controller";
 
 export class StageController implements IStageController {
-    private client: HttpClient;
-    private path: string;
+    private readonly client: HttpClient;
+    private readonly path: string;
 
     constructor(basePath: string, stageIndex: number) {
         this.path = `${basePath}/stages/${stageIndex}`;

@@ -3,7 +3,7 @@ import type { IPaperController } from "../backend-api";
 import { HttpClient } from "./http-client";
 
 export class PaperController implements IPaperController {
-    private client: HttpClient;
+    private readonly client: HttpClient;
 
     constructor(paperId: number) {
         this.client = new HttpClient(`papers/${paperId}`);

@@ -15,7 +15,7 @@ import { PUBLIC_API_BASE_URL } from "$env/static/public";
  * await client.delete();
  */
 export class HttpClient {
-    private basePath: string;
+    private readonly basePath: string;
 
     /**
      * Creates a new HTTP client.

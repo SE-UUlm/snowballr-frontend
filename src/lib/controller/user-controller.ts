@@ -3,7 +3,7 @@ import type { IUserController } from "../backend-api";
 import { HttpClient } from "./http-client";
 
 export class UserController implements IUserController {
-    private client: HttpClient;
+    private readonly client: HttpClient;
 
     constructor(userId: number) {
         this.client = new HttpClient(`users/${userId}`);

@@ -22,8 +22,8 @@ import { ProjectController } from "./project-controller";
 import { UserController } from "./user-controller";
 
 export class BackendController implements IBackendController {
-    private static instance: BackendController = new BackendController();
-    private client: HttpClient;
+    private static readonly instance: BackendController = new BackendController();
+    private readonly client: HttpClient;
 
     private constructor() {
         this.client = new HttpClient();

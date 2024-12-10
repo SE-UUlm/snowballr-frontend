@@ -3,7 +3,7 @@ import type { ICriterionController } from "../backend-api";
 import { HttpClient } from "./http-client";
 
 export class CriterionController implements ICriterionController {
-    private client: HttpClient;
+    private readonly client: HttpClient;
 
     constructor(basePath: string, criterionId: number) {
         this.client = new HttpClient(`${basePath}/criteria/${criterionId}`);

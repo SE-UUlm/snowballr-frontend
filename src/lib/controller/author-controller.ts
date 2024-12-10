@@ -3,7 +3,7 @@ import type { IAuthorController } from "../backend-api";
 import { HttpClient } from "./http-client";
 
 export class AuthorController implements IAuthorController {
-    private client: HttpClient;
+    private readonly client: HttpClient;
 
     constructor(authorId: number) {
         this.client = new HttpClient(`authors/${authorId}`);

@@ -4,8 +4,8 @@ import { HttpClient } from "./http-client";
 import { ReviewController } from "./review-controller";
 
 export class StageEntryController implements IStageEntryController {
-    private client: HttpClient;
-    private path: string;
+    private readonly client: HttpClient;
+    private readonly path: string;
 
     constructor(basePath: string, paperId: number) {
         this.path = `${basePath}/papers/${paperId}`;

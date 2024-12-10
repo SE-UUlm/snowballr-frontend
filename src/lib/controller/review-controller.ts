@@ -3,7 +3,7 @@ import type { IReviewController } from "../backend-api";
 import { HttpClient } from "./http-client";
 
 export class ReviewController implements IReviewController {
-    private client: HttpClient;
+    private readonly client: HttpClient;
 
     constructor(basePath: string, reviewerId: number) {
         this.client = new HttpClient(`${basePath}/reviews/${reviewerId}`);
