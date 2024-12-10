@@ -34,7 +34,7 @@ export class BackendController implements IBackendController {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async signIn(username: string, password: string): Promise<User> {
+    async signIn(email: string, password: string): Promise<User> {
         throw new Error("Method not implemented.");
     }
 

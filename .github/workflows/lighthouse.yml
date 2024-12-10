@@ -5,6 +5,10 @@ on:
         types:
             - review_requested
 
+env:
+    node_version: ${{ vars.NODE_VERSION }}
+    PUBLIC_API_BASE_URL: http://localhost:8080
+
 jobs:
     lighthouse:
         name: Lighthouse Auditing
@@ -20,9 +24,6 @@ jobs:
 
             - name: Install dependencies
               run: npm install
-
-            - name: Create .env file from .env.example
-              run: cat .env.example > .env
 
             - name: Build application
               run: npm run build
