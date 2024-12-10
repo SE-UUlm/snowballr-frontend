@@ -1,50 +1,7 @@
 import { HttpClient } from "$lib/controller/http-client";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
-import { http, HttpResponse } from "msw";
-import { PUBLIC_API_BASE_URL } from "$env/static/public";
 import { setupServer } from "msw/node";
-
-const handlers = [
-    http.get(`${PUBLIC_API_BASE_URL}/test`, () => {
-        return HttpResponse.json({
-            data: "get-test",
-        });
-    }),
-
-    http.post(`${PUBLIC_API_BASE_URL}/test`, () => {
-        return HttpResponse.json({
-            data: "post-test",
-        });
-    }),
-
-    http.put(`${PUBLIC_API_BASE_URL}/test`, () => {
-        return HttpResponse.json({
-            data: "put-test",
-        });
-    }),
-
-    http.patch(`${PUBLIC_API_BASE_URL}/test`, () => {
-        return HttpResponse.json({
-            data: "patch-test",
-        });
-    }),
-
-    http.delete(`${PUBLIC_API_BASE_URL}/test`, () => {
-        return HttpResponse.json({
-            data: "delete-test",
-        });
-    }),
-
-    http.get(`${PUBLIC_API_BASE_URL}`, () => {
-        return HttpResponse.json({
-            data: "get-root",
-        });
-    }),
-
-    http.post(`${PUBLIC_API_BASE_URL}/echo`, async ({ request }) => {
-        return HttpResponse.json(await request.json());
-    }),
-];
+import { handlers } from "./mock-api-handlers";
 
 const server = setupServer(...handlers);
 
