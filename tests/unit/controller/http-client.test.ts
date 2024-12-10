@@ -108,7 +108,7 @@ describe("HttpClient", () => {
         expect(await response.json()).toEqual({ data: "delete-test" });
     });
 
-    test("When get request is called without path, then correct data is returned", async () => {
+    test("When get request is called without path, then root data is returned", async () => {
         const httpClient = new HttpClient();
 
         const response = await httpClient.get();
@@ -118,7 +118,7 @@ describe("HttpClient", () => {
         expect(await response.json()).toEqual({ data: "get-root" });
     });
 
-    test("When get request is called with body, then correct data is returned", async () => {
+    test("When post request is called with body, then correct data is returned", async () => {
         const httpClient = new HttpClient();
 
         const response = await httpClient.post("echo", { data: "echo-test" });
