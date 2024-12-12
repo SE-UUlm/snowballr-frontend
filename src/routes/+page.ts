@@ -1,20 +1,8 @@
 import type { PageLoad } from "./$types";
-import type { Project, ProjectMetadata, User } from "$lib/model/backend";
+import type { Project, ProjectMetadata } from "$lib/model/backend";
 
 export const load: PageLoad = async () => {
-    function createUser(user: Partial<User>): User {
-        return {
-            id: 0,
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@example.com",
-            isAdmin: false,
-            status: "active",
-            ...user,
-        };
-    }
-
-    const Users = {
+    const DemoUsers = {
         johnDoe: {
             id: 0,
             firstName: "John",
@@ -71,47 +59,33 @@ export const load: PageLoad = async () => {
         };
     }
 
-    const projectMetadataExamples: ProjectMetadata[] = [
-        {
-            project: createProject({ id: 0, name: "Demo Project" }),
-            members: [Users.johnDoe, Users.janeDoe],
-            stage: 2,
-            stageProgress: 70,
-        },
+    const projectMetadataSimpleExamples: ProjectMetadata[] = [
         {
             project: createProject({ id: 1, name: "Field-Sensitive Pointer Analysis ..." }),
-            members: [
-                Users.felixSchlegel,
-                createUser({ id: 7, firstName: "Florian", lastName: "Sihler" }),
-            ],
+            members: [DemoUsers.felixSchlegel],
             stage: 1,
             stageProgress: 22,
         },
         {
             project: createProject({ id: 2, name: "SnowballR" }),
-            members: [Users.felixSchlegel, Users.lucaSchlecker, Users.lucaSchlecker],
+            members: [DemoUsers.felixSchlegel, DemoUsers.lucaSchlecker, DemoUsers.lucaSchlecker],
             stage: 1,
             stageProgress: 82,
         },
-        {
-            project: createProject({ id: 3, name: "Demo Project 2" }),
-            members: [Users.johnDoe, Users.janeDoe],
-            stage: 2,
-            stageProgress: 70,
-        },
-        {
-            project: createProject({ id: 4, name: "Demo Project 3" }),
-            members: [Users.johnDoe, Users.janeDoe],
-            stage: 2,
-            stageProgress: 70,
-        },
-        {
-            project: createProject({ id: 5, name: "Demo Project 4" }),
-            members: [Users.johnDoe, Users.janeDoe],
-            stage: 2,
-            stageProgress: 70,
-        },
     ];
+
+    const projectMetadataExamples = projectMetadataSimpleExamples.concat(
+        Array(15)
+            .fill(0)
+            .map((_, i) => {
+                return {
+                    project: createProject({ id: i, name: `Demo Project ${i}` }),
+                    members: [DemoUsers.johnDoe, DemoUsers.janeDoe],
+                    stage: 1,
+                    stageProgress: Math.random() * 100,
+                };
+            }),
+    );
 
     return { projectMetadata: projectMetadataExamples };
 };
