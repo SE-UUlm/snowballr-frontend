@@ -114,6 +114,9 @@
     .text-hint {
         @apply text-sm font-medium tracking-normal text-neutral-500;
     }
+    .text-error {
+        @apply text-base font-medium tracking-normal text-neutral-500 italic;
+    }
     .text-default {
         @apply text-default-nc text-primary;
     }
@@ -144,13 +147,16 @@
         overflow-y: auto;
 
         background:
-            linear-gradient(white 30%, rgba(255,255,255,0)),
-            linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-
-            radial-gradient(farthest-side at 50% 40%, rgba(0,0,0,.1), rgba(0,0,0,0)),
-            radial-gradient(farthest-side at 50% 60%, rgba(0,0,0,.1), rgba(0,0,0,0)) 0 100%;
+            linear-gradient(white 30%, rgba(255, 255, 255, 0)),
+            linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
+            radial-gradient(farthest-side at 50% 40%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)),
+            radial-gradient(farthest-side at 50% 60%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) 0 100%;
         background-repeat: no-repeat;
-        background-size: 100% 40px, 100% 40px, 100% 10px, 100% 10px;
+        background-size:
+            100% 40px,
+            100% 40px,
+            100% 10px,
+            100% 10px;
 
         background-attachment: local, local, scroll, scroll;
     }
