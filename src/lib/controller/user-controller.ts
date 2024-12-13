@@ -28,20 +28,13 @@ export class UserController implements IUserController {
     }
 
     async getProjects(): Promise<Project[]> {
-        /* const response = await this.client.get("projects");
+        const response = await this.client.get("projects");
         try {
-            const projects = await response.json();
-            console.log("Got projects");
+            const projects: Project[] = await response.json();
             return Promise.resolve(projects);
         } catch (error: unknown) {
             return Promise.reject(error);
-        }*/
-        return this.client
-            .get("projects")
-            .then((response) => response.json())
-            .catch(() => {
-                throw new Error("Bla bla");
-            });
+        }
     }
 
     async getReadingList(): Promise<Paper[]> {
