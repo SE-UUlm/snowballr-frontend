@@ -65,6 +65,7 @@ export interface Review {
 
 export type ReviewSpec = Omit<Review, "userId">;
 
+// TODO: figure out purpose of this interface
 export interface StageEntry {
     paper: Paper;
     stage: number;

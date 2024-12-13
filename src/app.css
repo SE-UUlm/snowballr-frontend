@@ -114,6 +114,9 @@
     .text-hint {
         @apply text-sm font-medium tracking-normal text-neutral-500;
     }
+    .text-error {
+        @apply text-base font-medium tracking-normal text-neutral-500 italic;
+    }
     .text-default {
         @apply text-default-nc text-primary;
     }

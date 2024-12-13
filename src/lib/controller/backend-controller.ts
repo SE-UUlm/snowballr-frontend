@@ -82,7 +82,8 @@ export class BackendController implements IBackendController {
     }
 
     thisUser(): IUserController {
-        throw new Error("Method not implemented.");
+        // TODO: exchange this by logged in user (will be fixed in https://github.com/SE-UUlm/snowballr-frontend/pull/124/)
+        return this.user(0);
     }
 
     async getAuthors(): Promise<Author[]> {

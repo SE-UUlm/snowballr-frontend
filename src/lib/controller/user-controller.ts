@@ -28,7 +28,20 @@ export class UserController implements IUserController {
     }
 
     async getProjects(): Promise<Project[]> {
-        throw new Error("Method not implemented.");
+        /* const response = await this.client.get("projects");
+        try {
+            const projects = await response.json();
+            console.log("Got projects");
+            return Promise.resolve(projects);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }*/
+        return this.client
+            .get("projects")
+            .then((response) => response.json())
+            .catch(() => {
+                throw new Error("Bla bla");
+            });
     }
 
     async getReadingList(): Promise<Paper[]> {
