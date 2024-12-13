@@ -18,10 +18,13 @@ export class StageController implements IStageController {
 
     // TODO: check, why no Promise<Paper[]> is returned
     async getPapers(): Promise<StageEntry[]> {
-        return this.client.get("papers").then((response) => {
-            console.log("papers ", response);
-            return response.json();
-        });
+        const response = await this.client.get("papers");
+        try {
+            const papers: StageEntry[] = await response.json();
+            return Promise.resolve(papers);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

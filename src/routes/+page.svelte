@@ -4,12 +4,6 @@
     import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
     import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
 
-    window.addEventListener("unhandledrejection", function (event) {
-        // the event object has two special properties:
-        console.error(event.promise); // [object Promise] - the promise that generated the error
-        console.error(event.reason); // Error: Whoops! - the unhandled error object
-    });
-
     const { data } = $props();
     const { user, projectMetadata } = data;
 </script>
@@ -24,23 +18,12 @@
     <section class="flex flex-col h-full w-full px-5 gap-y-4">
         <h2>Open Reviews</h2>
     </section>
-    <p>
-        {projectMetadata
-            .then(() => {
-                console.log(123);
-                return 123;
-            })
-            .catch(() => {
-                console.log(456);
-                return 456;
-            })}
-    </p>
-    <!--<NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
+    <NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
         {#snippet listItemComponent(componentData)}
             <ProjectListEntry {...componentData} />
         {/snippet}
         {#snippet listItemSkeleton()}
             <ProjectListEntrySkeleton />
         {/snippet}
-    </NamedList>-->
+    </NamedList>
 </main>

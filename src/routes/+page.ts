@@ -8,6 +8,7 @@ import {
     type StageEntry,
     type User,
 } from "$lib/model/backend";
+
 // import type { Project, ProjectMetadata } from "$lib/model/backend";
 
 /**
@@ -66,19 +67,26 @@ async function requestProjectMetadata(project: Project): Promise<ProjectMetadata
  * TODO: check, whether this can be handled with a single request, e.g. on route /projects/[id]/projectMetadata/.
  */
 export const load: PageLoad = () => {
-    const projectMetadata: Promise<ProjectMetadata[]> = new Promise((resolve, reject) => {
-        BackendController.getInstance()
-            .thisUser()
-            .getProjects()
-            .then((projects: Project[]) => {
-                Promise.all(projects.map((project: Project) => requestProjectMetadata(project)))
-                    .then((projectMetadata) => resolve(projectMetadata))
-                    .catch((error) => reject(error));
-            })
-            .catch(() => {
-                reject("Could not load projects.");
-            });
-    });
+    const projectMetadata = BackendController.getInstance()
+        .thisUser()
+        .getProjects()
+        .then(async (projects: Project[]) => {
+            try {
+                return await Promise.all(
+                    projects.map((project: Project) => requestProjectMetadata(project)),
+                );
+            } catch {
+                throw new Error("Could not load project details.");
+            }
+        })
+        .catch(() => {
+            throw new Error("Could not load projects.");
+        });
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    projectMetadata.catch(() => {});
+
+    return { projectMetadata };
 
     // uncomment the following lines, if you want to test the projects list with a lot of projects
     /* const Users = {
@@ -133,5 +141,5 @@ export const load: PageLoad = () => {
     );
     */
 
-    return { projectMetadata };
+    // return { projectMetadata };
 };
