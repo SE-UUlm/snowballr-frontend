@@ -88,3 +88,7 @@ export interface Author {
 }
 
 export type AuthorSpec = Omit<Author, "id">;
+
+export interface SignInResponse {
+    token: string;
+}

@@ -4,7 +4,7 @@
     import type { User } from "$lib/model/backend";
 
     interface Props {
-        user: User;
+        user?: User;
         backRef?: string | undefined;
         title: string;
         tabs?: Tab[] | undefined;

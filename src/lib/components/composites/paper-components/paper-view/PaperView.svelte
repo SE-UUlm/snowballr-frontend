@@ -10,7 +10,7 @@
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
 
     interface Props {
-        user: User;
+        user?: User;
         paper: Paper;
         isPaperBookmarked?: boolean;
         showButtonBar: boolean;

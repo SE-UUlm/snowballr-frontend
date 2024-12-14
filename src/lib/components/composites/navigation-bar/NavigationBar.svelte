@@ -8,7 +8,7 @@
     import type { User } from "$lib/model/backend";
 
     interface Props {
-        user: User;
+        user?: User;
         backRef?: string | undefined;
         tabs?: Tab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;

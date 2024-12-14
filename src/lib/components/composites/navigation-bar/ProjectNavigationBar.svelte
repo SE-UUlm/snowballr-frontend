@@ -5,7 +5,7 @@
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
-        user: User;
+        user?: User;
         project: Project;
         defaultTabValue: TabValue;
     }

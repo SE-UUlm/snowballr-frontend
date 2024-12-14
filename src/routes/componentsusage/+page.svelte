@@ -2,9 +2,11 @@
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
 
     const { data } = $props();
-    const { user, paper, paper2 } = data;
+    const { paper, paper2 } = data;
+    const user = getCurrentUser();
 
     const searchPlaceholderText: string = "Search paper";
 </script>

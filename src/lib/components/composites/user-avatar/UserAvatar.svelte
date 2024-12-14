@@ -5,14 +5,14 @@
     import X from "lucide-svelte/icons/x";
 
     interface Props {
-        user: User;
+        user?: User;
         reviewDecision?: ReviewDecision;
     }
 
     const { user, reviewDecision }: Props = $props();
 
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
-    const userInitials = `${getInitial(user.firstName)}${getInitial(user.lastName)}`;
+    const userInitials = `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`;
 </script>
 
 <!--

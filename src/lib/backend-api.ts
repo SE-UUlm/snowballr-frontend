@@ -90,7 +90,7 @@ export interface IAuthorController {
 }
 
 export interface IBackendController {
-    signIn(email: string, password: string): Promise<User>;
+    signIn(email: string, password: string): Promise<void>;
     signOut(): Promise<void>;
     requestEmailForgottenPassword(email: string): Promise<void>;
 
