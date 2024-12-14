@@ -1,5 +1,6 @@
 <script lang="ts">
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
 
     const { data } = $props();
     const {
@@ -13,6 +14,7 @@
         criteriaWithReviews,
         isReviewMode,
     } = data;
+    const user = getCurrentUser();
 </script>
 
 <svelte:head>

@@ -1,8 +1,8 @@
 <script lang="ts">
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
 
-    const { data } = $props();
-    const { user } = data;
+    const user = getCurrentUser();
 </script>
 
 <svelte:head>

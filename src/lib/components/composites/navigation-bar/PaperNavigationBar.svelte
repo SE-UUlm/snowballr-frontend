@@ -5,7 +5,7 @@
     import type { User } from "$lib/model/api/user";
 
     interface Props {
-        user: User;
+        user?: User;
         backRef?: string | undefined;
         loadingPaper: Promise<Paper | Omit<Paper, "id">>;
     }

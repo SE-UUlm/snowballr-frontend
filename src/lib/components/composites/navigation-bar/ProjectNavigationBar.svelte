@@ -6,7 +6,7 @@
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
-        user: User;
+        user?: User;
         projectId: string;
         loadingProject: Promise<Project>;
         defaultTabValue: TabValue;

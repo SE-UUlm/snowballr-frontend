@@ -32,7 +32,7 @@
     }
 
     export type IndependentPaperViewProps = ReferencesAndCitationsCardContentProps & {
-        user: User;
+        user?: User;
         showButtonBar?: boolean;
         backRef: string;
         userConfig: UserConfig;

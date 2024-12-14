@@ -6,10 +6,12 @@
     import ProjectInformation from "$lib/components/composites/statistics/ProjectInformation.svelte";
     import StageProgress from "$lib/components/composites/statistics/StageProgress.svelte";
     import { Separator } from "$lib/components/primitives/separator";
+    import { getCurrentUser } from "$lib/current-user.js";
 
     const { data } = $props();
     const { user, projectId, loadingProject, openReviews, projectInformation, stageProgress } =
         data;
+    const user = getCurrentUser();
 </script>
 
 <svelte:head>

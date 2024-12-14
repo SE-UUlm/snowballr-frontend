@@ -6,9 +6,11 @@
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
 
     const { data } = $props();
-    const { user, projectsMetadata, openReviews } = data;
+    const { projectsMetadata, openReviews } = data;
+    const user = getCurrentUser();
 </script>
 
 <svelte:head>

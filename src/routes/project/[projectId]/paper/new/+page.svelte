@@ -1,8 +1,11 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
+    import type { PaperSpec } from "$lib/model/backend";
 
     const { data } = $props();
     const { user, projectId, loadingProject } = data;
+    const user = getCurrentUser();
     const paper = {
         id: projectId,
         externalId: "EXT12345",

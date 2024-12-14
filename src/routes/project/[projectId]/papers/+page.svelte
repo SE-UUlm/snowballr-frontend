@@ -17,6 +17,7 @@
     import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
 
     let { data } = $props();
     const {
@@ -29,6 +30,7 @@
         loadingPublishers,
         loadingReviewers,
     } = data;
+    const user = getCurrentUser();
 
     let selectedPaper = $state<Project_Paper | undefined>(undefined);
 
