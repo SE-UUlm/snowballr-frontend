@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Paper, PaperSpec } from "$lib/model/backend";
+    import { displayAuthors } from "$lib/utils";
 
     interface Props {
         paper: Paper | PaperSpec;
@@ -17,9 +18,7 @@
     </div>
     <div class="flex flex-row items-center text-hint truncate">
         {#if paper.authors.length > 0}
-            <span class="place-content-start truncate"
-                >{paper.authors.map((a) => `${a.firstName} ${a.lastName}`).join(", ")}</span
-            >
+            <span class="place-content-start truncate">{displayAuthors(paper.authors)}</span>
         {:else}
             <span class="italic">unknown authors</span>
         {/if}

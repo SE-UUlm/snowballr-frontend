@@ -33,10 +33,10 @@ Usage:
 ```
 -->
 <Card.Root class="shadow-lg border-container-border-grey w-full h-full">
-    <section>
-        <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value}>
+    <section class="flex flex-col h-full">
+        <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value} class="flex flex-col h-full">
             <UnderlineTabsList {tabs} />
-            <Card.Content class="p-5">
+            <Card.Content class="p-5 flex flex-col h-full overflow-hidden">
                 {@render children()}
             </Card.Content>
         </Tabs.Root>
