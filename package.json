@@ -20,7 +20,7 @@
         "test:and-open-coverage": "npm run test && npm run show-coverage"
     },
     "devDependencies": {
-        "@playwright/test": "^1.49.0",
+        "@playwright/test": "^1.49.1",
         "@sveltejs/adapter-auto": "^3.0.0",
         "@sveltejs/kit": "^2.8.5",
         "@sveltejs/vite-plugin-svelte": "^4.0.0",
