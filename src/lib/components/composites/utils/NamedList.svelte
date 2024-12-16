@@ -44,6 +44,8 @@ as the props of `YourComponent`.
 If the option showNumberOfListItems is set to true (default: false),
 the number of list items (either given by 'numberOfItems' or automatically determined)
 is added to the list name / header, like 'yourListName (10)'.
+
+While the list is loading, it displays 10 skeleton list items.
 -->
 <div class="flex flex-col h-full w-full px-5 gap-y-5">
     {#await items}

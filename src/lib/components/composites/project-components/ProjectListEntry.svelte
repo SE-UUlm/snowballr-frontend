@@ -59,6 +59,10 @@ Usage:
         class="flex flex-row w-full gap-x-5 lg:gap-x-2.5 items-center justify-start lg:justify-end"
     >
         <span class="h-fit w-fit text-nowrap">Stage {stage}</span>
-        <Progress class="h-2.5 w-full min-w-16 lg:max-w-32" value={stageProgress} />
+        <Progress
+            class="h-2.5 w-full min-w-16 lg:max-w-32"
+            value={stageProgress}
+            data-testid="stage-progress-bar"
+        />
     </div>
 </button>

@@ -4,34 +4,12 @@ import {
     type Paper,
     type Project,
     type ProjectMetadata,
-    ReviewDecision,
     type StageEntry,
     type User,
 } from "$lib/model/backend";
+import { calculateStageProgress } from "$lib/utils/statistics-helper";
 
 // import type { Project, ProjectMetadata } from "$lib/model/backend";
-
-/**
- * Calculate the progress of a stage.
- *
- * The progress is defined as the number of papers that are already accepted or declined (so no further
- * decision need to be made) relative to the total number of papers (including the unreviewed a paper that need
- * the decision of the arbiter).
- *
- * @param papers
- * @return the progress as integer percentage (from 0 to 100)
- */
-function calculateStageProgress(papers: Paper[]) {
-    const totalPapers = papers.length;
-    const decidedPapers = papers.filter(
-        (paper) =>
-            paper.reviewData !== undefined &&
-            (paper.reviewData.finalDecision === ReviewDecision.Accepted ||
-                paper.reviewData.finalDecision === ReviewDecision.Declined),
-    ).length;
-
-    return Math.round((decidedPapers / totalPapers) * 100);
-}
 
 async function requestProjectMetadata(project: Project): Promise<ProjectMetadata> {
     const members: User[] = await BackendController.getInstance().project(project.id).getMembers();
