@@ -44,6 +44,8 @@ Usage:
     schema={Schema.password}
     onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
     buttonProps={{ "aria-label": "Toggle password visibility" }}
+    errorMessagePrefix="Password must contain"
+    validationDisplayMode="constant"
     bind:value
     bind:this={input}
     autocomplete={undefined}

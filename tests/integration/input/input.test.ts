@@ -6,7 +6,7 @@ import ExampleInput from "./ExampleInput.svelte";
 
 describe("Input", () => {
     test("When props are provided, then label, link and input is shown", () => {
-        const input = render(Input, {
+        const { component } = render(Input, {
             target: document.body,
             props: {
                 inputId: "input",
@@ -43,18 +43,18 @@ describe("Input", () => {
         expect(inputElement).toHaveValue("Example");
 
         // Error messages do not exist
-        let errorMessages = document.getElementsByTagName("p");
+        let errorMessages = screen.queryAllByTestId("error-message");
         expect(errorMessages).toHaveLength(0);
 
         // When input is validated, then no error messages are shown
-        expect(input.component.validate()).toBe(true);
-        errorMessages = document.getElementsByTagName("p");
+        expect(component.validate()).toBe(true);
+        errorMessages = screen.queryAllByTestId("error-message");
         expect(errorMessages).toHaveLength(0);
-        expect(input.component.getValue()).toBe("Example");
+        expect(component.getValue()).toBe("Example");
     });
 
     test("When props are provided and input is invalid, then error messages are shown", async () => {
-        const input = render(Input, {
+        const { component } = render(Input, {
             target: document.body,
             props: {
                 inputId: "input",
@@ -72,14 +72,14 @@ describe("Input", () => {
         });
 
         // Error messages do not exist
-        let errorMessages = document.getElementsByTagName("p");
+        let errorMessages = screen.queryAllByTestId("error-message");
         expect(errorMessages).toHaveLength(0);
 
         // When input is validated, then error messages are shown
-        expect(input.component.validate()).toBe(false);
+        expect(component.validate()).toBe(false);
         await waitFor(() => {
-            errorMessages = document.getElementsByTagName("p");
-            expect(errorMessages).toHaveLength(1);
+            errorMessages = screen.queryAllByTestId("error-message");
+            expect(errorMessages.length).toBeGreaterThan(0);
         });
         expect(errorMessages[0]).toHaveTextContent("String must contain at least 10 character(s)");
     });

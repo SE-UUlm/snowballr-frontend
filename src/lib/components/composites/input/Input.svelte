@@ -3,13 +3,14 @@
     import { Label } from "$lib/components/primitives/label/index.js";
     import { cn } from "$lib/utils";
     import type { WithElementRef } from "bits-ui";
-    import type { Snippet } from "svelte";
+    import { onMount, type Snippet } from "svelte";
     import type {
         HTMLButtonAttributes,
         HTMLInputAttributes,
         HTMLInputTypeAttribute,
     } from "svelte/elements";
     import { z } from "zod";
+    import InputValidationCriterion from "./InputValidationCriterion.svelte";
 
     type Props = WithElementRef<HTMLInputAttributes> & {
         inputId: string;
@@ -23,6 +24,8 @@
         onButtonClick?: () => void;
         buttonContent?: Snippet;
         buttonProps?: HTMLButtonAttributes;
+        errorMessagePrefix?: string;
+        validationDisplayMode?: "constant" | "onError";
     };
 
     let {
@@ -37,12 +40,58 @@
         onButtonClick,
         buttonContent,
         buttonProps,
+        errorMessagePrefix = "",
+        validationDisplayMode = "onError",
         value = $bindable(),
         class: className,
         ...restProps
     }: Props = $props();
 
-    let errorMessages = $state<string[]>([]);
+    interface ValidationCriterion {
+        code: string;
+        subCode?: string;
+        isMet: boolean;
+        message: string;
+    }
+
+    let validationCriteria: ValidationCriterion[] = $state([]);
+    /**
+     * Initialize the validation criteria with an empty input.
+     * This dynamically creates the validation criteria based on the schema.
+     */
+    function initValidationCriteria() {
+        if (!schema || validationDisplayMode === "onError") {
+            return;
+        }
+
+        const parsedSchema = schema.safeParse("");
+        validationCriteria = errorsToCriteria(parsedSchema.error?.errors ?? []);
+    }
+
+    function errorsToCriteria(errors: z.ZodIssue[]): ValidationCriterion[] {
+        return errors.map((error) => {
+            const code = error.code;
+            const subCode =
+                "params" in error && error.params !== undefined
+                    ? error.params["subCode"]
+                    : undefined;
+            return { code, subCode, isMet: false, message: error.message };
+        });
+    }
+
+    function doesIssueMatchCriterion(criterion: ValidationCriterion, issue: z.ZodIssue): boolean {
+        if (criterion.code !== issue.code) {
+            return false;
+        }
+
+        let subCode: string | undefined;
+        if ("params" in issue && issue.params !== undefined) {
+            subCode = issue.params["subCode"];
+        }
+
+        return criterion.subCode === subCode;
+    }
+
     let isFirstValidation = $state(true);
 
     /**
@@ -59,7 +108,20 @@
 
         isFirstValidation = false;
         const parsedSchema = schema.safeParse(value);
-        errorMessages = parsedSchema.error?.errors.map((error) => error.message) ?? [];
+        // Either update the criteria or recreate them based on the validation display mode
+        if (validationDisplayMode === "constant") {
+            validationCriteria = validationCriteria.map((criterion) => {
+                // If no error is found, the criterion is met
+                const isMet =
+                    parsedSchema.error?.errors.find((error) =>
+                        doesIssueMatchCriterion(criterion, error),
+                    ) === undefined;
+                return { ...criterion, isMet };
+            });
+        } else {
+            validationCriteria = errorsToCriteria(parsedSchema.error?.errors ?? []);
+        }
+
         return parsedSchema.success;
     }
 
@@ -74,10 +136,14 @@
      * After the initial input was validated, validate the input on every input event.
      */
     function onInput() {
-        if (!isFirstValidation) {
+        if (!isFirstValidation || validationDisplayMode === "constant") {
             validate();
         }
     }
+
+    onMount(() => {
+        initValidationCriteria();
+    });
 </script>
 
 <!--
@@ -102,6 +168,8 @@ Usage:
         required
         type="text"
         schema={myExampleSchema}
+        errorMessagePrefix="Example must contain"
+        validationDisplayMode="constant"
         bind:this={exampleInput}
         bind:value={exampleValue}
     />
@@ -133,7 +201,24 @@ Usage:
             </button>
         {/if}
     </div>
-    {#each errorMessages as errorMessage}
-        <p class="text-sm text-red-500">{errorMessage}</p>
-    {/each}
+    <!-- Display error messages either as constant checks or as list while on validation error -->
+    {#if validationDisplayMode === "onError"}
+        {#each validationCriteria.filter((criterion) => !criterion.isMet) as criterion}
+            <p class="text-sm text-red-500" data-testid="error-message">
+                {errorMessagePrefix}
+                {criterion.message}
+            </p>
+        {/each}
+    {:else}
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            {#each validationCriteria as criterion, i}
+                <InputValidationCriterion
+                    class={i === validationCriteria.length - 1 ? "col-span-2" : ""}
+                    isValid={criterion.isMet}
+                    description={criterion.message}
+                    data-testid="validation-criterion"
+                />
+            {/each}
+        </div>
+    {/if}
 </div>

@@ -1,6 +1,6 @@
 import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { describe, expect, test } from "vitest";
+import { assert, describe, expect, test } from "vitest";
 
 describe("PasswordInput", () => {
     const validPassword = "z's?c].e2x<@($\"<#;\\A]]3D@F)/^v^!";
@@ -25,13 +25,13 @@ describe("PasswordInput", () => {
         expect(inputElement).toHaveAttribute("required");
         expect(inputElement).toHaveAttribute("type", "password");
 
-        // Error messages do not exist
-        const errorMessages = document.getElementsByTagName("p");
-        expect(errorMessages).toHaveLength(0);
+        // Validation criteria is shown
+        const validationCriteria = screen.getAllByTestId("validation-criterion");
+        expect(validationCriteria.length).toBeGreaterThan(0);
     });
 
-    test("When valid password is inserted, then no error messages are shown", async () => {
-        const input = render(PasswordInput, {
+    test("When valid password is inserted, then validation criteria are met", async () => {
+        const { component } = render(PasswordInput, {
             target: document.body,
             props: {
                 value: validPassword,
@@ -39,16 +39,19 @@ describe("PasswordInput", () => {
         });
 
         // When input is validated, then no error messages are shown
-        expect(input.component.validate()).toBe(true);
+        expect(component.validate()).toBe(true);
         await waitFor(() => {
-            const errorMessages = document.getElementsByTagName("p");
-            expect(errorMessages).toHaveLength(0);
-            expect(input.component.getValue()).toBe(validPassword);
+            assert.doesNotThrow(() => screen.getAllByTestId("validation-criterion"));
         });
+        const validationCriteria = screen.getAllByTestId("validation-criterion");
+        expect(validationCriteria.length).toBeGreaterThan(0);
+        assert.doesNotThrow(() => screen.getAllByTestId("validation-success"));
+        assert.throws(() => screen.getAllByTestId("validation-fail"));
+        expect(component.getValue()).toBe(validPassword);
     });
 
     test("When invalid password is inserted, then error messages are shown", async () => {
-        const input = render(PasswordInput, {
+        const { component } = render(PasswordInput, {
             target: document.body,
             props: {
                 value: "aB 1!",
@@ -56,11 +59,14 @@ describe("PasswordInput", () => {
         });
 
         // When input is validated, then error messages are shown
-        expect(input.component.validate()).toBe(false);
+        expect(component.validate()).toBe(false);
         await waitFor(() => {
-            const errorMessages = document.getElementsByTagName("p");
-            expect(errorMessages.length).toBeGreaterThan(0);
+            assert.doesNotThrow(() => screen.getAllByTestId("validation-criterion"));
         });
+        const validationCriteria = screen.getAllByTestId("validation-criterion");
+        expect(validationCriteria.length).toBeGreaterThan(0);
+        assert.throws(() => screen.getAllByTestId("validation-success"));
+        assert.doesNotThrow(() => screen.getAllByTestId("validation-fail"));
     });
 
     test("When button is clicked, then password is displayed as text", async () => {

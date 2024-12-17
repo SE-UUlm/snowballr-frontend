@@ -56,6 +56,7 @@
                     required
                     type="text"
                     schema={Schema.firstName}
+                    errorMessagePrefix="First name must contain"
                     bind:this={firstNameInput}
                 />
                 <Input
@@ -66,6 +67,7 @@
                     required
                     type="text"
                     schema={Schema.lastName}
+                    errorMessagePrefix="Last name must contain"
                     bind:this={lastNameInput}
                 />
             </div>
@@ -77,6 +79,7 @@
                 required
                 type="email"
                 schema={Schema.email}
+                errorMessagePrefix="Email must have"
                 bind:this={emailInput}
             />
             <PasswordInput class="w-full" bind:this={passwordInput} />

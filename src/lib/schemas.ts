@@ -35,8 +35,8 @@ function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, mess
 const firsNameSchema = z
     .string()
     .trim()
-    .min(1, { message: "First Name must contain at least 1 non-whitespace character" })
-    .max(100, { message: "First Name must contain at most 100 non-whitespace characters" });
+    .min(1, { message: "at least 1 non-whitespace character" })
+    .max(100, { message: "at most 100 non-whitespace characters" });
 
 /**
  * Schema for the last name of a user.
@@ -44,20 +44,25 @@ const firsNameSchema = z
 const lastNameSchema = z
     .string()
     .trim()
-    .min(1, { message: "Last Name must contain at least 1 non-whitespace character" })
-    .max(100, { message: "Last Name must contain at most 100 non-whitespace characters" });
+    .min(1, { message: "at least 1 non-whitespace character" })
+    .max(100, { message: "at most 100 non-whitespace characters" });
 
 /**
  * Schema for the email of a user.
  */
-const emailSchema = z.string().email({ message: "Email must have valid format" });
+const emailSchema = z.string().email({ message: "a valid format" });
 
 const upperCaseLetters = "A-Z";
 const lowerCaseLetters = "a-z";
 const numbers = "0-9";
-const specialCharacters = "#$%&@^`~.,:;\"'\\\\/|_\\-<>*+!?={[()\\]}";
+const specialCharacters = "#$%&@^`~.,:;\"'\\/|_-<>*+!?={[()]}";
+// Keep specialCharacters to display, but escape characters for regex
+const specialCharactersRegex = specialCharacters
+    .replace("/", "\\/")
+    .replace("-", "\\-")
+    .replace("]", "\\]");
 const passwordRegex = new RegExp(
-    `^[${upperCaseLetters}${lowerCaseLetters}${numbers}${specialCharacters}]*$`,
+    `^[${upperCaseLetters}${lowerCaseLetters}${numbers}${specialCharactersRegex}]*$`,
 );
 function hasMinNumberOfCharacterSet(password: string, characterSet: string, minNumber: number) {
     const regExp = new RegExp(`[${characterSet}]`, "g");
@@ -69,14 +74,14 @@ function hasMinNumberOfCharacterSet(password: string, characterSet: string, minN
  */
 const passwordSchema = z
     .string()
-    .min(8, { message: "Password must contain at least 8 characters" })
-    .max(128, { message: "Password must contain at most 128 characters" })
+    .min(8, { message: "at least 8 characters" })
+    .max(128, { message: "at most 128 characters" })
     .superRefine((password, context) => {
         if (!passwordRegex.test(password)) {
             addCustomIssue(
                 context,
                 ZodIssueSubCode.invalid_characters,
-                `Password must contain only lower or upper case letters, numbers and the following special characters ${specialCharacters}`,
+                `only lower or upper case letters, numbers and the following special characters ${specialCharacters}`,
             );
         }
 
@@ -84,7 +89,7 @@ const passwordSchema = z
             addCustomIssue(
                 context,
                 ZodIssueSubCode.not_enough_upper_case_letters,
-                "Password must contain at least 2 upper case letter",
+                "at least 2 upper case letter",
             );
         }
 
@@ -92,23 +97,19 @@ const passwordSchema = z
             addCustomIssue(
                 context,
                 ZodIssueSubCode.not_enough_lower_case_letters,
-                "Password must contain at least 2 lower case letter",
+                "at least 2 lower case letter",
             );
         }
 
         if (!hasMinNumberOfCharacterSet(password, numbers, 2)) {
-            addCustomIssue(
-                context,
-                ZodIssueSubCode.not_enough_numbers,
-                "Password must contain at least 2 numbers",
-            );
+            addCustomIssue(context, ZodIssueSubCode.not_enough_numbers, "at least 2 numbers");
         }
 
-        if (!hasMinNumberOfCharacterSet(password, specialCharacters, 2)) {
+        if (!hasMinNumberOfCharacterSet(password, specialCharactersRegex, 2)) {
             addCustomIssue(
                 context,
                 ZodIssueSubCode.not_enough_special_characters,
-                `Password must contain at least 2 special characters (${specialCharacters})`,
+                `at least 2 special characters (${specialCharacters})`,
             );
         }
     });
