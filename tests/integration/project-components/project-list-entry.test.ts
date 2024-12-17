@@ -43,4 +43,24 @@ describe("ProjectListEntryComponent", () => {
         expect(screen.getByText("Stage 1")).toBeInTheDocument();
         expect(screen.queryByText("60")).not.toBeInTheDocument();
     });
+
+    test("When project is archived, then the list entry is opaque.", () => {
+        render(ProjectListEntry, {
+            props: {
+                project: createProject({
+                    name: "Demo Project",
+                    archived: true,
+                }),
+                members: [],
+                stage: 1,
+                stageProgress: 60,
+            },
+        });
+
+        expect(screen.getByText("Demo Project")).toBeInTheDocument();
+        expect(screen.getByText("no members")).toBeInTheDocument();
+        expect(screen.getByText("Stage 1")).toBeInTheDocument();
+
+        expect(screen.getByRole("button")).toHaveClass("opacity-25");
+    });
 });

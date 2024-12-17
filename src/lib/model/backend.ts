@@ -34,6 +34,7 @@ export interface Project {
     reviewDecisionMatrix: ReviewDecisionMatrix;
     similarityThreshold: number;
     paperFetchApis: string[];
+    archived: boolean;
 }
 
 export type ProjectSpec = Omit<Project, "id">;
