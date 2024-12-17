@@ -37,6 +37,27 @@ export class UserController implements IUserController {
         }
     }
 
+    async getArchivedProjects(): Promise<Project[]> {
+        const response = await this.client.get("archivedProjects");
+        try {
+            const projects: Project[] = await response.json();
+            return Promise.resolve(projects);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
+    }
+
+    async getAllProjects(): Promise<Project[]> {
+        try {
+            const activeProjects = await this.getProjects();
+            const archivedProjects = await this.getArchivedProjects();
+
+            return Promise.resolve(activeProjects.concat(archivedProjects));
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
+    }
+
     async getReadingList(): Promise<Paper[]> {
         throw new Error("Method not implemented.");
     }

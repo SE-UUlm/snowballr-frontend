@@ -47,7 +47,7 @@ async function requestProjectMetadata(project: Project): Promise<ProjectMetadata
 export const load: PageLoad = () => {
     const projectMetadata = BackendController.getInstance()
         .thisUser()
-        .getProjects()
+        .getAllProjects()
         .then(async (projects: Project[]) => {
             try {
                 return await Promise.all(

@@ -41,7 +41,10 @@ Usage:
 -->
 <button
     type="button"
-    class="flex flex-col lg:flex-row h-fit w-full gap-3 lg:gap-10 items-start lg:items-center justify-between px-5 py-2 border border-container-border-grey rounded-md hover:bg-container-border-grey/35"
+    class="flex flex-col lg:flex-row h-fit w-full gap-3 lg:gap-10 items-start lg:items-center justify-between px-5 py-2
+    border border-container-border-grey rounded-md hover:bg-container-border-grey/35 {project.archived
+        ? 'opacity-25'
+        : ''}"
     onclick={() => goto(`/project/${project.id}/dashboard`)}
 >
     <div class="flex flex-col h-fit w-fit items-start">

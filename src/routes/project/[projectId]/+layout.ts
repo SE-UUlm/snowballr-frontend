@@ -15,6 +15,7 @@ export const load: LayoutLoad = async ({ params }) => {
         },
         similarityThreshold: 0,
         paperFetchApis: [],
+        archived: false,
     };
     return {
         project,
