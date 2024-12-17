@@ -50,7 +50,7 @@
             <div class="flex flex-row gap-5 w-full">
                 <Input
                     class="w-full"
-                    inputId="first-name"
+                    inputId="first-name-input"
                     label="First Name"
                     placeholder="John"
                     required
@@ -60,7 +60,7 @@
                 />
                 <Input
                     class="w-full"
-                    inputId="last-name"
+                    inputId="last-name-input"
                     label="Last Name"
                     placeholder="Doe"
                     required
@@ -71,7 +71,7 @@
             </div>
             <Input
                 class="w-full"
-                inputId="email"
+                inputId="email-input"
                 label="Email"
                 placeholder="john.doe@example.com"
                 required

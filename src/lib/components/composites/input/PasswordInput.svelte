@@ -32,12 +32,12 @@ Customized {@link Input} component for password input.
 
 Usage:
 ```svelte
-    <PasswordInput bind:value={password} bind:this={passwordInput} showForgotPasswordLink />
+    <PasswordInput bind:value={password} bind:this={passwordInput} />
 ```
 -->
 <Input
     class={className}
-    inputId="password"
+    inputId="password-input"
     label="Password"
     required
     type={isPasswordVisible ? "text" : "password"}

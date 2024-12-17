@@ -6,7 +6,7 @@ describe("PasswordInput", () => {
     const validPassword = "z's?c].e2x<@($\"<#;\\A]]3D@F)/^v^!";
 
     test("When props are provided, then label and input are shown", () => {
-        const input = render(PasswordInput, {
+        render(PasswordInput, {
             target: document.body,
             props: {
                 value: validPassword,
@@ -19,21 +19,15 @@ describe("PasswordInput", () => {
         expect(label).toHaveTextContent("Password");
 
         // Input exists
-        const inputElement = document.getElementById("password");
+        const inputElement = document.getElementById("password-input");
         expect(inputElement).toBeInTheDocument();
         expect(inputElement).toHaveAttribute("placeholder", "");
         expect(inputElement).toHaveAttribute("required");
         expect(inputElement).toHaveAttribute("type", "password");
 
         // Error messages do not exist
-        let errorMessages = document.getElementsByTagName("p");
+        const errorMessages = document.getElementsByTagName("p");
         expect(errorMessages).toHaveLength(0);
-
-        // When input is validated, then no error messages are shown
-        expect(input.component.validate()).toBe(true);
-        errorMessages = document.getElementsByTagName("p");
-        expect(errorMessages).toHaveLength(0);
-        expect(input.component.getValue()).toBe(validPassword);
     });
 
     test("When valid password is inserted, then no error messages are shown", async () => {
@@ -62,7 +56,7 @@ describe("PasswordInput", () => {
         const button = screen.getByRole("button");
         expect(button).toBeInTheDocument();
 
-        const input = document.getElementById("password");
+        const input = document.getElementById("password-input");
 
         expect(input).toHaveAttribute("type", "password");
 

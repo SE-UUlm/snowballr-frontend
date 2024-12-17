@@ -84,7 +84,7 @@ describe("Input", () => {
         expect(errorMessages[0]).toHaveTextContent("String must contain at least 10 character(s)");
     });
 
-    test("When a button is provided, then button is shown", () => {
+    test("When a button is provided, then button is shown and can be clicked.", () => {
         let isClicked = false;
         render(ExampleInput, {
             target: document.body,

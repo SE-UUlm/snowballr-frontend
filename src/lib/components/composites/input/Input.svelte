@@ -46,11 +46,11 @@
     let isFirstValidation = $state(true);
 
     /**
-     * Validates the input value against the provided schema and returns whether the input was valid.
+     * Validates the input value against the provided schema.
      *
      * - If no schema is provided, this method always returns true
      *
-     * @returns {boolean} True if the input value is valid, false otherwise.
+     * @returns {boolean} True if the input value conforms to the schema, false otherwise.
      */
     export function validate(): boolean {
         if (!schema) {
