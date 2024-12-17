@@ -40,9 +40,27 @@ describe("PasswordInput", () => {
 
         // When input is validated, then no error messages are shown
         expect(input.component.validate()).toBe(true);
-        const errorMessages = document.getElementsByTagName("p");
-        expect(errorMessages).toHaveLength(0);
-        expect(input.component.getValue()).toBe(validPassword);
+        await waitFor(() => {
+            const errorMessages = document.getElementsByTagName("p");
+            expect(errorMessages).toHaveLength(0);
+            expect(input.component.getValue()).toBe(validPassword);
+        });
+    });
+
+    test("When invalid password is inserted, then error messages are shown", async () => {
+        const input = render(PasswordInput, {
+            target: document.body,
+            props: {
+                value: "aB 1!",
+            },
+        });
+
+        // When input is validated, then error messages are shown
+        expect(input.component.validate()).toBe(false);
+        await waitFor(() => {
+            const errorMessages = document.getElementsByTagName("p");
+            expect(errorMessages.length).toBeGreaterThan(0);
+        });
     });
 
     test("When button is clicked, then password is displayed as text", async () => {
