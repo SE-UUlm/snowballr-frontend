@@ -35,7 +35,13 @@ export class ProjectController implements IProjectController {
     }
 
     async getStageCount(): Promise<number> {
-        throw new Error("Method not implemented.");
+        const response = await this.client.get("stages");
+        try {
+            const stageCount: number = await response.json();
+            return Promise.resolve(stageCount);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
     }
 
     stage(stageIndex: number): IStageController {
@@ -43,7 +49,13 @@ export class ProjectController implements IProjectController {
     }
 
     async getMembers(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+        const response = await this.client.get("members");
+        try {
+            const members: User[] = await response.json();
+            return Promise.resolve(members);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

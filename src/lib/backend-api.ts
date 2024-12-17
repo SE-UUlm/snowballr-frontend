@@ -21,6 +21,8 @@ export interface IUserController {
     update(newSpec: UserSpec): Promise<User>;
 
     getProjects(): Promise<Project[]>;
+    getArchivedProjects(): Promise<Project[]>;
+    getAllProjects(): Promise<Project[]>;
     getReadingList(): Promise<Paper[]>;
     addToReadingList(paperId: number): Promise<void>;
     removeFromReadingList(paperId: number): Promise<void>;

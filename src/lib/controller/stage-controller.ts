@@ -16,8 +16,15 @@ export class StageController implements IStageController {
         throw new Error("Method not implemented.");
     }
 
+    // TODO: check, why no Promise<Paper[]> is returned
     async getPapers(): Promise<StageEntry[]> {
-        throw new Error("Method not implemented.");
+        const response = await this.client.get("papers");
+        try {
+            const papers: StageEntry[] = await response.json();
+            return Promise.resolve(papers);
+        } catch (error: unknown) {
+            return Promise.reject(error);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
