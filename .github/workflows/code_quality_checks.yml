@@ -14,7 +14,7 @@ env:
 
 jobs:
     linting:
-        name: Linting with Prettier and ESLint
+        name: Linting
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
