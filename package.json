@@ -2,6 +2,7 @@
     "name": "snowballr-frontend",
     "version": "0.0.1",
     "type": "module",
+    "license": "GPL-3.0-or-later",
     "scripts": {
         "dev": "vite dev --open",
         "build": "vite build",
@@ -9,7 +10,7 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "format": "prettier --write .",
-        "lint": "prettier --check . && eslint .",
+        "lint": "npm run license-check && prettier --check . && eslint .",
         "test": "vitest && npm run test:e2e",
         "show-coverage": "open coverage/index.html",
         "test:unit": "vitest --project unit",
@@ -17,7 +18,8 @@
         "test:integration": "vitest --project integration",
         "test:integration:ui": "npm run test:integration -- --ui --watch --open",
         "test:e2e": "playwright test",
-        "test:and-open-coverage": "npm run test && npm run show-coverage"
+        "test:and-open-coverage": "npm run test && npm run show-coverage",
+        "license-check": "license-checker --onlyAllow 'GPL-3.0-only;GPL-3.0-or-later;GPL-2.0-or-later;LGPL-3.0-only;LGPL-3.0-or-later;LGPL-2.1-only;LGPL-2.1-or-later;AGPL-3.0-only;AGPL-3.0-or-later;Apache-2.0;Artistic-2.0;ClArtistic;BSL-1.0;BSD-3-Clause;CC0-1.0;CECILL-2.0;BSD-3-Clause-Clear;ECL-2.0;EFL-2.0;EUDatagrid;MIT;BSD-2-Clause;FTL;HPND;iMatix;Imlib2;IJG;Intel;ISC;MPL-2.0;NCSA;OLDAP-2.7;Python-2.0;Ruby;SGI-B-2.0;SMLNJ;UPL-1.0;Unlicense;Vim;W3C;WTFPL;X11;XFree86-1.1;Zlib;ZPL-2.0;ZPL-2.1;CC-BY-4.0;BlueOak-1.0.0;0BSD' --excludePackages 'spdx-exceptions@2.5.0' --summary"
     },
     "devDependencies": {
         "@playwright/test": "^1.49.1",
@@ -39,6 +41,7 @@
         "eslint-plugin-svelte": "^2.46.1",
         "globals": "^15.13.0",
         "jsdom": "^25.0.1",
+        "license-checker": "^25.0.1",
         "lucide-svelte": "^0.456.0",
         "msw": "^2.6.9",
         "postcss": "^8.4.49",
