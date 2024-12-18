@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { render, screen } from "@testing-library/svelte";
+import { render, screen, waitFor } from "@testing-library/svelte";
 import NamedList from "$lib/components/composites/utils/NamedList.svelte";
 // @ts-expect-error "Snippets have implicetly type any"
 import { listItemComponent, listItemSkeleton } from "./ExampleSnippets.svelte";
@@ -22,15 +22,13 @@ describe("NamedListComponent", () => {
         // List title is shown
         expect(screen.getByText("Test List")).toBeInTheDocument();
 
-        setTimeout(() => {
-            // 15 list items are displayed
-            expect(screen.getAllByRole("span").length).toBe(15);
-
-            // list has an overflow, as not all items can be displayed
-            expect(
-                screen.getByRole("list").scrollHeight > screen.getByRole("list").clientHeight,
-            ).toBeTruthy();
-        }, 250);
+        await waitFor(
+            () => {
+                // 15 list items are displayed
+                expect(screen.queryAllByTestId("example-list-item").length).toBe(15);
+            },
+            { timeout: 250 },
+        );
     });
 
     test("When the number of items should be shown, then the name of the list is extended by the number of list items.", async () => {
@@ -48,10 +46,13 @@ describe("NamedListComponent", () => {
             },
         });
 
-        setTimeout(() => {
-            // List title is shown
-            expect(screen.getByText("Test List (5)")).toBeInTheDocument();
-        }, 250);
+        await waitFor(
+            () => {
+                // List title is shown
+                expect(screen.getByText("Test List (5)")).toBeInTheDocument();
+            },
+            { timeout: 250 },
+        );
     });
 
     test("When the number of items should be shown and is given explicitly, then the name of the list is extended by the given number of list items.", async () => {
@@ -70,10 +71,13 @@ describe("NamedListComponent", () => {
             },
         });
 
-        setTimeout(() => {
-            // List title is shown
-            expect(screen.getByText("Test List (10)")).toBeInTheDocument();
-        }, 250);
+        await waitFor(
+            () => {
+                // List title is shown
+                expect(screen.getByText("Test List (10)")).toBeInTheDocument();
+            },
+            { timeout: 250 },
+        );
     });
 
     test("When the list is loading, then skeleton elements are shown", async () => {
@@ -90,14 +94,14 @@ describe("NamedListComponent", () => {
             },
         });
 
-        expect(screen.queryAllByRole("span").length).toBe(0);
+        expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
         expect(screen.queryAllByTestId("skeleton").length).toBe(10);
     });
 
     test("When the list item could not be loaded, then the error message is shown", async () => {
-        const componentData: Promise<string[]> = new Promise<string[]>(() =>
+        const componentData: Promise<string[]> = new Promise<string[]>((_, reject) =>
             setTimeout(() => {
-                throw new Error("Test Error");
+                return reject(new Error("Test Error"));
             }, 100),
         );
 
@@ -110,11 +114,14 @@ describe("NamedListComponent", () => {
             },
         });
 
-        setTimeout(() => {
-            expect(screen.queryAllByRole("span").length).toBe(0);
-            expect(screen.queryAllByTestId("skeleton").length).toBe(0);
+        await waitFor(
+            () => {
+                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
+                expect(screen.queryAllByTestId("skeleton").length).toBe(0);
 
-            expect(screen.getByText("Test Error"));
-        }, 250);
+                expect(screen.getByText("Error: Test Error"));
+            },
+            { timeout: 250 },
+        );
     });
 });
