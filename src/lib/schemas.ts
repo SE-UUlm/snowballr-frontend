@@ -89,7 +89,7 @@ const passwordSchema = z
             addCustomIssue(
                 context,
                 ZodIssueSubCode.not_enough_upper_case_letters,
-                "at least 2 upper case letter",
+                "at least 2 uppercase letters",
             );
         }
 
@@ -97,7 +97,7 @@ const passwordSchema = z
             addCustomIssue(
                 context,
                 ZodIssueSubCode.not_enough_lower_case_letters,
-                "at least 2 lower case letter",
+                "at least 2 lowercase letters",
             );
         }
 
