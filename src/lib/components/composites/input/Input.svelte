@@ -92,7 +92,10 @@
         return criterion.subCode === subCode;
     }
 
+    // Track whether the first validation and input was made to provide UI feedback
     let isFirstValidation = $state(true);
+    let isFirstInput = $state(true);
+    let isValid = $state(true);
 
     /**
      * Validates the input value against the provided schema.
@@ -106,20 +109,28 @@
             return true;
         }
 
-        isFirstValidation = false;
+        if (isFirstValidation) {
+            isFirstValidation = false;
+        }
+
         const parsedSchema = schema.safeParse(value);
         // Either update the criteria or recreate them based on the validation display mode
         if (validationDisplayMode === "constant") {
+            let hasAtLeastOneError = false;
             validationCriteria = validationCriteria.map((criterion) => {
                 // If no error is found, the criterion is met
                 const isMet =
                     parsedSchema.error?.errors.find((error) =>
                         doesIssueMatchCriterion(criterion, error),
                     ) === undefined;
+
+                hasAtLeastOneError = hasAtLeastOneError || !isMet;
                 return { ...criterion, isMet };
             });
+            isValid = !hasAtLeastOneError;
         } else {
             validationCriteria = errorsToCriteria(parsedSchema.error?.errors ?? []);
+            isValid = validationCriteria.length === 0;
         }
 
         return parsedSchema.success;
@@ -138,6 +149,10 @@
      * before they even had the chance to enter a valid value.
      */
     function onInput() {
+        if (isFirstInput) {
+            isFirstInput = false;
+        }
+
         if (!isFirstValidation || validationDisplayMode === "constant") {
             validate();
         }
@@ -146,6 +161,10 @@
     onMount(() => {
         initValidationCriteria();
     });
+
+    // Border color is red if the input is invalid and not the first input
+    // This provides instant feedback on the first input
+    let borderColor = $derived(!isValid && !isFirstInput ? "border-red-500" : "");
 </script>
 
 <!--
@@ -194,7 +213,7 @@ Usage:
             {type}
             {placeholder}
             {required}
-            class={cn(inputClass, buttonContent ? "pr-12" : "")}
+            class={cn(inputClass, buttonContent ? "pr-12" : "", borderColor)}
             bind:value
             oninput={onInput}
             {...restProps}
