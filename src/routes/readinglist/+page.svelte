@@ -8,4 +8,4 @@
 <svelte:head>
     <title>Reading List</title>
 </svelte:head>
-<SimpleNavigationBar {user} title="Reading List" backRef="/" tabs={[]} defaultTabValue="" />
+<SimpleNavigationBar {user} title="Reading List" backRef="/" />

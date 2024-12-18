@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
     const { user, paper } = data;
@@ -8,4 +8,10 @@
 <svelte:head>
     <title>{paper.title}</title>
 </svelte:head>
-<PaperNavigationBar {user} backRef="/" {paper} />
+<PaperView
+    {user}
+    {paper}
+    showButtonBar={false}
+    backRef="/"
+    userConfig={{ isReviewMode: false, showMaybeButton: false }}
+/>

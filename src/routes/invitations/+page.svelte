@@ -8,4 +8,4 @@
 <svelte:head>
     <title>Project Invitations</title>
 </svelte:head>
-<SimpleNavigationBar {user} title="Invitations" backRef="/" tabs={[]} defaultTabValue="" />
+<SimpleNavigationBar {user} title="Invitations" backRef="/" />
