@@ -134,6 +134,8 @@
 
     /**
      * After the initial input was validated, validate the input on every input event.
+     * This has the reason that it would bother the user if the input is validated on every input event
+     * before they even had the chance to enter a valid value.
      */
     function onInput() {
         if (!isFirstValidation || validationDisplayMode === "constant") {
@@ -153,6 +155,8 @@ Highly customizable Input Element.
 When binding the component using the `bind:this` directive, following methods are available:
 - {@link validate} to validate the input value.
 - {@link getValue} to get the current value of the input.
+
+As soon as `validate` initially, the input will be validated on every input event to provide instant feedback.
 
 Customizations:
 - Use `link` prop to add a link above the input field.
