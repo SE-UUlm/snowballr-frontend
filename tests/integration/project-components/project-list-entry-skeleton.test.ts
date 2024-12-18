@@ -7,9 +7,6 @@ describe("ProjectListEntrySkeletonComponent", () => {
         render(ProjectListEntrySkeleton);
 
         // expect skeleton for project name, members and stage, but not progress
-        screen
-            .getAllByTestId("skeleton", { exact: false })
-            .forEach((skeleton) => expect(skeleton).toBeInTheDocument());
         expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBe(3);
 
         expect(screen.getByTestId("project-stage-progress")).toBeInTheDocument();

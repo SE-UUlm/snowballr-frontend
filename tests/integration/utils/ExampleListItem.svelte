@@ -2,4 +2,4 @@
     const { content }: { content: string } = $props();
 </script>
 
-<span>{content}</span>
+<span data-testid="example-list-item">{content}</span>
