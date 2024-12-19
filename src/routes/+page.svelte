@@ -5,7 +5,7 @@
     import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
 
     const { data } = $props();
-    const { user, projectMetadata } = data;
+    const { user, projectsMetadata } = data;
 </script>
 
 <svelte:head>
@@ -20,7 +20,12 @@
         </div>
     </section>
     <section class="h-full w-full">
-        <NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
+        <NamedList
+            listName="Projects"
+            items={projectsMetadata}
+            numberOfSkeletons={10}
+            showNumberOfListItems={true}
+        >
             {#snippet listItemComponent(componentData)}
                 <ProjectListEntry {...componentData} />
             {/snippet}

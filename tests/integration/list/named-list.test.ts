@@ -16,6 +16,7 @@ describe("NamedListComponent", () => {
                 items: componentData,
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
             },
         });
 
@@ -42,6 +43,7 @@ describe("NamedListComponent", () => {
                 items: componentData,
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
                 showNumberOfListItems: true,
             },
         });
@@ -66,6 +68,7 @@ describe("NamedListComponent", () => {
                 items: componentData,
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
                 showNumberOfListItems: true,
                 numberOfItems: 10,
             },
@@ -91,11 +94,12 @@ describe("NamedListComponent", () => {
                 items: componentData,
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 5,
             },
         });
 
         expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
-        expect(screen.queryAllByTestId("skeleton").length).toBe(10);
+        expect(screen.queryAllByTestId("skeleton").length).toBe(5);
     });
 
     test("When the list item could not be loaded, then the error message is shown", async () => {
@@ -111,6 +115,7 @@ describe("NamedListComponent", () => {
                 items: componentData,
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
             },
         });
 

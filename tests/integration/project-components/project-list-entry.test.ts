@@ -61,6 +61,6 @@ describe("ProjectListEntryComponent", () => {
         expect(screen.getByText("no members")).toBeInTheDocument();
         expect(screen.getByText("Stage 1")).toBeInTheDocument();
 
-        expect(screen.getByRole("button")).toHaveClass("opacity-25");
+        expect(screen.getByRole("link")).toHaveClass("opacity-25");
     });
 });
