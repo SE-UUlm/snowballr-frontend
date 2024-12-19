@@ -31,17 +31,17 @@ Usage:
 ```
 -->
 <a
-    class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 items-start lg:items-center justify-between px-5 py-2
+    class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 lg:items-center justify-between px-5 py-2
     border border-container-border-grey rounded-md highlight-on-hover {project.archived
         ? 'opacity-25'
         : ''}"
     href={`/project/${project.id}/dashboard`}
 >
-    <div class="flex flex-col h-fit w-fit items-start">
+    <div class="flex flex-col min-w-0 h-fit">
         <h2 class="truncate">{project.name}</h2>
 
         {#if members.length > 0}
-            <span class="text-hint">{getNames(members)}</span>
+            <span class="truncate text-hint">{getNames(members)}</span>
         {:else}
             <span class="italic">no members</span>
         {/if}
