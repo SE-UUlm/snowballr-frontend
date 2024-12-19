@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Progress } from "$lib/components/primitives/progress";
-    import { goto } from "$app/navigation";
     import type { Project, User } from "$lib/model/backend";
     import { getNames } from "$lib/utils/common-helper";
 
@@ -31,13 +30,12 @@ Usage:
     <ProjectListEntry project={demoProject} members={memberUserSpecArray} stage={3} stageProgress={70} />
 ```
 -->
-<button
-    type="button"
+<a
     class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 items-start lg:items-center justify-between px-5 py-2
     border border-container-border-grey rounded-md highlight-on-hover {project.archived
         ? 'opacity-25'
         : ''}"
-    onclick={() => goto(`/project/${project.id}/dashboard`)}
+    href={`/project/${project.id}/dashboard`}
 >
     <div class="flex flex-col h-fit w-fit items-start">
         <h2 class="truncate">{project.name}</h2>
@@ -58,4 +56,4 @@ Usage:
             data-testid="stage-progress-bar"
         />
     </div>
-</button>
+</a>

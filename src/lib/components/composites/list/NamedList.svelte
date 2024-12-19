@@ -8,6 +8,7 @@
         items: Promise<T[]>;
         listItemComponent: Snippet<[T]>;
         listItemSkeleton: Snippet;
+        numberOfSkeletons: number;
         showNumberOfListItems?: boolean;
         numberOfItems?: number;
     }
@@ -17,8 +18,9 @@
         items,
         listItemComponent,
         listItemSkeleton,
+        numberOfSkeletons,
         showNumberOfListItems = false,
-        numberOfItems = -1,
+        numberOfItems = undefined,
     }: NamedListProps = $props();
 </script>
 
@@ -30,7 +32,7 @@ Therefore use this component as following:
 
 Usage:
 ```svelte
-    <NamedList listName={yourListName} items={yourListItems} showNumberOfListItems={true} numberOfItems={10}>
+    <NamedList listName={yourListName} items={yourListItems} showNumberOfListItems={true} numberOfItems={10} numberOfSkeletons={10}>
         {#snippet listItemComponent(componentData)}
             <YourComponent {...componentData} />
         {/snippet}
@@ -45,14 +47,14 @@ If the option showNumberOfListItems is set to true (default: false),
 the number of list items (either given by 'numberOfItems' or automatically determined)
 is added to the list name / header, like 'yourListName (10)'.
 
-While the list is loading, it displays 10 skeleton list items.
+While the list is loading, it displays <numberOfSkeleton> skeleton list items.
 -->
 <div class="flex flex-col h-full w-full px-5 gap-y-5">
     {#await items}
         <h2>{listName}</h2>
         <ul class="space-y-4 pb-1 scroll-box">
             <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-            {#each Array(10) as _}
+            {#each Array(numberOfSkeletons) as _}
                 <li>
                     {@render listItemSkeleton()}
                 </li>
@@ -60,7 +62,7 @@ While the list is loading, it displays 10 skeleton list items.
         </ul>
     {:then loadedItems}
         {#if showNumberOfListItems}
-            <h2>{listName} ({numberOfItems < 0 ? loadedItems.length : numberOfItems})</h2>
+            <h2>{listName} ({numberOfItems === undefined ? loadedItems.length : numberOfItems})</h2>
         {:else}
             <h2>{listName}</h2>
         {/if}

@@ -10,12 +10,10 @@ import {
 import { calculateStageProgress } from "$lib/utils/statistics-helper";
 
 async function requestProjectMetadata(project: Project): Promise<ProjectMetadata> {
-    const members: User[] = await BackendController.getInstance().project(project.id).getMembers();
-    const currentStage: number = await BackendController.getInstance()
-        .project(project.id)
-        .getStageCount();
-    const allPapersInCurrentStage: StageEntry[] = await BackendController.getInstance()
-        .project(project.id)
+    const projectController = BackendController.getInstance().project(project.id);
+    const members: User[] = await projectController.getMembers();
+    const currentStage: number = await projectController.getStageCount();
+    const allPapersInCurrentStage: StageEntry[] = await projectController
         .stage(currentStage)
         .getPapers();
 
@@ -41,7 +39,7 @@ async function requestProjectMetadata(project: Project): Promise<ProjectMetadata
  * TODO: check, whether this can be handled with a single request, e.g. on route /projects/[id]/projectMetadata/.
  */
 export const load: PageLoad = () => {
-    const projectMetadata = BackendController.getInstance()
+    const projectsMetadata = BackendController.getInstance()
         .thisUser()
         .getAllProjects()
         .then(async (projects: Project[]) => {
@@ -58,9 +56,9 @@ export const load: PageLoad = () => {
         });
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    projectMetadata.catch(() => {});
+    projectsMetadata.catch(() => {});
 
-    return { projectMetadata };
+    return { projectsMetadata };
 
     // uncomment the following lines, if you want to test the projects list with a lot of projects
     /* const Users = {
@@ -96,7 +94,7 @@ export const load: PageLoad = () => {
         };
     }
 
-    const projectMetadataExamples: ProjectMetadata[] = Array(20)
+    const projectsMetadataExamples: ProjectMetadata[] = Array(20)
         .fill(0)
         .map((_, i) => {
             return {
@@ -107,7 +105,7 @@ export const load: PageLoad = () => {
             };
         });
 
-    const projectMetadata: Promise<ProjectMetadata[]> = new Promise((resolve, reject) =>
+    const projectsMetadata: Promise<ProjectMetadata[]> = new Promise((resolve, reject) =>
         setTimeout(() => {
             // resolve(projectMetadataExamples);
             reject(new Error("Bla bla"));
@@ -115,5 +113,5 @@ export const load: PageLoad = () => {
     );
     */
 
-    // return { projectMetadata };
+    // return { projectsMetadata };
 };
