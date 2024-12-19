@@ -1,6 +1,6 @@
 import { expect, test, describe } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import NamedList from "$lib/components/composites/utils/NamedList.svelte";
+import NamedList from "$lib/components/composites/list/NamedList.svelte";
 // @ts-expect-error "Snippets have implicetly type any"
 import { listItemComponent, listItemSkeleton } from "./ExampleSnippets.svelte";
 
