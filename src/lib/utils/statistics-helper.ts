@@ -4,10 +4,10 @@ import { type Paper, ReviewDecision } from "$lib/model/backend";
  * Calculate the progress of a stage.
  *
  * The progress is defined as the number of papers that are already accepted or declined (so no further
- * decision need to be made) relative to the total number of papers (including the unreviewed a paper that need
+ * decision is required) relative to the total number of papers (including the unreviewed papers that need
  * the decision of the arbiter).
  *
- * If no papers are provided, the progress is set to 0 per default.
+ * If no papers are provided, the progress is set to 0 by default.
  *
  * @return the progress as integer percentage (from 0 to 100)
  */

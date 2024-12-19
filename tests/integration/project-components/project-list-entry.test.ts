@@ -26,7 +26,7 @@ describe("ProjectListEntryComponent", () => {
         expect(screen.queryByTestId("stage-progress-bar")).toHaveValue(60);
     });
 
-    test("When all no members are provided, then the list entry shows a hint.", () => {
+    test("When no members are provided, then the list entry shows a hint.", () => {
         render(ProjectListEntry, {
             props: {
                 project: createProject({
