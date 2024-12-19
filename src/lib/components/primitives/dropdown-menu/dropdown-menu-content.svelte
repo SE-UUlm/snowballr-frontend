@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn } from "$lib/utils/clsx-helper";
+    import { cn } from "$lib/utils/shadcn-helper";
     import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
 
     let {
