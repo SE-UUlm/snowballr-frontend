@@ -2,6 +2,7 @@
     import { Progress } from "$lib/components/primitives/progress";
     import { goto } from "$app/navigation";
     import type { Project, User } from "$lib/model/backend";
+    import { getNames } from "$lib/utils/common-helper";
 
     interface ProjectListEntryProps {
         project: Project;
@@ -11,15 +12,6 @@
     }
 
     const { project, members, stage, stageProgress }: ProjectListEntryProps = $props();
-
-    /**
-     * Combine the first- and lastname of the members array into a string as following:
-     * [{firstName: "John", lastName: "Doe", email: "john@doe.com"}, ... ] -->
-     * "John Doe, ..."
-     */
-    const getMemberNames = () => {
-        return members.map((member: User) => `${member.firstName} ${member.lastName}`).join(", ");
-    };
 </script>
 
 <!--
@@ -51,7 +43,7 @@ Usage:
         <h2 class="truncate">{project.name}</h2>
 
         {#if members.length > 0}
-            <span class="text-hint">{getMemberNames()}</span>
+            <span class="text-hint">{getNames(members)}</span>
         {:else}
             <span class="italic">no members</span>
         {/if}
