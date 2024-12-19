@@ -34,11 +34,9 @@ async function requestProjectMetadata(project: Project): Promise<ProjectMetadata
  *
  * Therefore, request the project ids of the projects, the user logged in is member of and use
  * these ids to request:
- * <ul>
- *     <li>the project members</li>
- *     <li>the current project stage</li>
- *     <li>the progress of the current stage</li>
- * </ul>
+ * - the project members
+ * - the current project stage
+ * - the progress of the current stage
  *
  * TODO: check, whether this can be handled with a single request, e.g. on route /projects/[id]/projectMetadata/.
  */
