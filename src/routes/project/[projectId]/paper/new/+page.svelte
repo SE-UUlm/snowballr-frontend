@@ -1,9 +1,11 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import { getCurrentUser } from "$lib/current-user.js";
     import type { PaperSpec } from "$lib/model/backend";
 
     const { data } = $props();
-    const { user, project } = data;
+    const { project } = data;
+    const user = getCurrentUser();
     const paper: PaperSpec = {
         doi: "Doi",
         title: "Field-Sensitive Pointer Analysis for Static Dataflow in the R Programming Language",

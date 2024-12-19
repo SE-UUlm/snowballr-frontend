@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { PUBLIC_API_BASE_URL } from "$env/static/public";
 
 /**
@@ -37,12 +38,24 @@ export class HttpClient {
         body?: T,
         headers?: HeadersInit,
     ): Promise<Response> {
+        let jwt: string | null = null;
+        if (browser) {
+            jwt = localStorage.getItem("token");
+        }
+
+        const requestHeaders: Headers = new Headers({
+            "Content-Type": "application/json",
+            ...headers,
+        });
+        if (jwt) {
+            // TODO: Change to "Authorization" when backend is updated
+            // requestHeaders.set("Authorization", `Bearer ${jwt}`);
+            requestHeaders.set("authenticationToken", jwt);
+        }
+
         return fetch(`${this.basePath}/${path}`, {
             method,
-            headers: {
-                "Content-Type": "application/json",
-                ...headers,
-            },
+            headers: requestHeaders,
             body: body ? JSON.stringify(body) : undefined,
         });
     }

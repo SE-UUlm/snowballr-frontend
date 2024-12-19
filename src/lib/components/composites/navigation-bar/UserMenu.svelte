@@ -9,9 +9,10 @@
     import type { Icon } from "lucide-svelte";
     import type { User } from "$lib/model/backend";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
+    import { goto } from "$app/navigation";
 
     interface Props {
-        user: User;
+        user?: User;
     }
     const { user }: Props = $props();
 
@@ -47,6 +48,11 @@
             href: "/settings/account",
         },
     ];
+
+    function signOut() {
+        localStorage.removeItem("token");
+        goto("/signin");
+    }
 </script>
 
 <DropdownMenu.Root>
@@ -56,7 +62,11 @@
     <DropdownMenu.Content class="w-60" side="bottom" sideOffset={0} align="start">
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
-                {`${user.firstName} ${user.lastName}`}
+                {#if user}
+                    {`${user.firstName} ${user.lastName}`}
+                {:else}
+                    Loading User...
+                {/if}
             </DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
@@ -73,7 +83,7 @@
                 {/each}
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
+            <DropdownMenu.Item onclick={signOut}>
                 <LogOut class="mr-2 size-4" />
                 <span>Sign out</span>
                 <DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>

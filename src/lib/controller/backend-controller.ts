@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import type {
     IAuthorController,
     IBackendController,
@@ -14,6 +15,7 @@ import type {
     AuthorSpec,
     Paper,
     PaperSpec,
+    SignInResponse,
 } from "../model/backend";
 import { AuthorController } from "./author-controller";
 import { HttpClient } from "./http-client";
@@ -33,9 +35,16 @@ export class BackendController implements IBackendController {
         return BackendController.instance;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async signIn(email: string, password: string): Promise<User> {
-        throw new Error("Method not implemented.");
+    async signIn(email: string, password: string): Promise<void> {
+        const payload = {
+            email: email,
+            password: password,
+        };
+        // TODO: Omit trailing slash, when backend doesn't hardcode unauthorized routes anymore
+        const response: SignInResponse = await this.client
+            .post("login/", payload)
+            .then((response) => response.json());
+        localStorage.setItem("token", response.token);
     }
 
     async signOut(): Promise<void> {
@@ -82,7 +91,13 @@ export class BackendController implements IBackendController {
     }
 
     thisUser(): IUserController {
-        throw new Error("Method not implemented.");
+        const jwt = localStorage.getItem("token");
+        if (!jwt) {
+            throw new Error("No JWT stored in the local storage");
+        }
+
+        const user = jwtDecode(jwt) as User;
+        return new UserController(user.id);
     }
 
     async getAuthors(): Promise<Author[]> {
