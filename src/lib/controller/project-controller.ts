@@ -35,13 +35,7 @@ export class ProjectController implements IProjectController {
     }
 
     async getStageCount(): Promise<number> {
-        const response = await this.client.get("stages");
-        try {
-            const stageCount: number = await response.json();
-            return Promise.resolve(stageCount);
-        } catch (error: unknown) {
-            return Promise.reject(error);
-        }
+        return this.client.get("stages").then((response) => response.json());
     }
 
     stage(stageIndex: number): IStageController {
@@ -49,13 +43,7 @@ export class ProjectController implements IProjectController {
     }
 
     async getMembers(): Promise<User[]> {
-        const response = await this.client.get("members");
-        try {
-            const members: User[] = await response.json();
-            return Promise.resolve(members);
-        } catch (error: unknown) {
-            return Promise.reject(error);
-        }
+        return this.client.get("members").then((response) => response.json());
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
