@@ -27,7 +27,7 @@
 Container displaying important project information.
 
 This component shows the
-  - project id and name
+  - project name
   - members of the project
   - current stage
   - current stage progress (as progress bar, whereas the parameter must be provided as percentage)
@@ -41,8 +41,8 @@ Usage:
 -->
 <button
     type="button"
-    class="flex flex-col lg:flex-row h-fit w-full gap-3 lg:gap-10 items-start lg:items-center justify-between px-5 py-2
-    border border-container-border-grey rounded-md hover:bg-container-border-grey/35 {project.archived
+    class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 items-start lg:items-center justify-between px-5 py-2
+    border border-container-border-grey rounded-md highlight-on-hover {project.archived
         ? 'opacity-25'
         : ''}"
     onclick={() => goto(`/project/${project.id}/dashboard`)}
@@ -50,20 +50,18 @@ Usage:
     <div class="flex flex-col h-fit w-fit items-start">
         <h2 class="truncate">{project.name}</h2>
 
-        <div class="text-hint truncate">
-            {#if members.length > 0}
-                <span class="truncate">{getMemberNames()}</span>
-            {:else}
-                <span class="italic">no members</span>
-            {/if}
-        </div>
+        {#if members.length > 0}
+            <span class="text-hint">{getMemberNames()}</span>
+        {:else}
+            <span class="italic">no members</span>
+        {/if}
     </div>
     <div
         class="flex flex-row w-full gap-x-5 lg:gap-x-2.5 items-center justify-start lg:justify-end"
     >
         <span class="h-fit w-fit text-nowrap">Stage {stage}</span>
         <Progress
-            class="h-2.5 w-full min-w-16 lg:max-w-32"
+            class="h-2.5 w-full min-w-16 lg:max-w-32 bg-slate-200 group-hover/project-list-entry:bg-slate-300"
             value={stageProgress}
             data-testid="stage-progress-bar"
         />

@@ -71,11 +71,10 @@ While the list is loading, it displays 10 skeleton list items.
                 </li>
             {/each}
         </ul>
-        <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
     {:catch error}
         <h2>{listName}</h2>
         <div class="flex flex-row items-center gap-x-2 p-4">
-            <CircleAlert size={16} class="text-neutral-500" />
+            <CircleAlert size={20} class="text-neutral-500" />
             <span class="text-error">{error}</span>
         </div>
     {/await}

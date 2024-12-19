@@ -9,8 +9,6 @@ import {
 } from "$lib/model/backend";
 import { calculateStageProgress } from "$lib/utils/statistics-helper";
 
-// import type { Project, ProjectMetadata } from "$lib/model/backend";
-
 async function requestProjectMetadata(project: Project): Promise<ProjectMetadata> {
     const members: User[] = await BackendController.getInstance().project(project.id).getMembers();
     const currentStage: number = await BackendController.getInstance()

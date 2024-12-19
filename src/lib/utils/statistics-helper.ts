@@ -9,7 +9,6 @@ import { type Paper, ReviewDecision } from "$lib/model/backend";
  *
  * If no papers are provided, the progress is set to 0 per default.
  *
- * @param papers
  * @return the progress as integer percentage (from 0 to 100)
  */
 function calculateStageProgress(papers: Paper[]) {

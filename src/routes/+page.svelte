@@ -12,17 +12,21 @@
     <title>SnowballR</title>
 </svelte:head>
 <SimpleNavigationBar {user} title="SnowballR" />
-<main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
+<main class="flex flex-row h-full w-full mb-10 gap-x-5">
     <!-- TODO: exchange by the NamedList for the open reviews -->
-    <section class="flex flex-col h-full w-full px-5 gap-y-4">
-        <h2>Open Reviews</h2>
+    <section class="h-full w-full">
+        <div class="flex flex-col h-full w-full px-5 gap-y-4">
+            <h2>Open Reviews</h2>
+        </div>
     </section>
-    <NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
-        {#snippet listItemComponent(componentData)}
-            <ProjectListEntry {...componentData} />
-        {/snippet}
-        {#snippet listItemSkeleton()}
-            <ProjectListEntrySkeleton />
-        {/snippet}
-    </NamedList>
+    <section class="h-full w-full">
+        <NamedList listName="Projects" items={projectMetadata} showNumberOfListItems={true}>
+            {#snippet listItemComponent(componentData)}
+                <ProjectListEntry {...componentData} />
+            {/snippet}
+            {#snippet listItemSkeleton()}
+                <ProjectListEntrySkeleton />
+            {/snippet}
+        </NamedList>
+    </section>
 </main>
