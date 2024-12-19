@@ -19,7 +19,7 @@
             <h2>Open Reviews</h2>
         </div>
     </section>
-    <section class="h-full w-full">
+    <section class="h-full w-full min-w-0">
         <NamedList
             listName="Projects"
             items={projectsMetadata}
