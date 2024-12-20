@@ -25,6 +25,7 @@
             items={projectsMetadata}
             numberOfSkeletons={10}
             showNumberOfListItems={true}
+            emptyHint="No active or archived projects."
         >
             {#snippet listItemComponent(componentData)}
                 <ProjectListEntry {...componentData} />

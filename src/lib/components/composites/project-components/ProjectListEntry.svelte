@@ -49,7 +49,7 @@ Usage:
     <div class="flex flex-row w-fit gap-x-5 lg:gap-x-2.5 items-center justify-start lg:justify-end">
         <span class="h-fit w-fit text-nowrap">Stage {stage}</span>
         <Progress
-            class="h-2.5 sm:w-28 md:w-48 lg:w-28 xl:w-40 2xl:w-52 bg-slate-200 group-hover/project-list-entry:bg-slate-300"
+            class="h-2.5 w-24 sm:w-28 md:w-48 lg:w-28 xl:w-40 2xl:w-52 bg-slate-200 group-hover/project-list-entry:bg-slate-300"
             value={stageProgress}
             data-testid="stage-progress-bar"
         />

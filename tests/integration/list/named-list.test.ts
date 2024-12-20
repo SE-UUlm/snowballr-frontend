@@ -109,6 +109,58 @@ describe("NamedListComponent", () => {
         expect(screen.queryAllByTestId("skeleton").length).toBe(5);
     });
 
+    test("When the list was loaded successfully, but no items exist, then a hint is shown (if provided)", async () => {
+        const componentData: Promise<string[]> = Promise.resolve(
+            Array.from({ length: 0 }, (_, i) => `Hello world ${i}`),
+        );
+
+        const { unmount } = render(NamedList, {
+            props: {
+                listName: "Test List",
+                items: componentData,
+                listItemComponent: listItemComponent,
+                listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
+            },
+        });
+
+        // List title is shown
+        expect(screen.getByText("Test List")).toBeInTheDocument();
+
+        unmount();
+
+        await waitFor(
+            () => {
+                // 0 list items are displayed
+                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
+            },
+            { timeout: 250 },
+        );
+
+        render(NamedList, {
+            props: {
+                listName: "Test List",
+                items: componentData,
+                listItemComponent: listItemComponent,
+                listItemSkeleton: listItemSkeleton,
+                numberOfSkeletons: 10,
+                emptyHint: "Test hint for empty list",
+            },
+        });
+
+        // List title is shown
+        expect(screen.getByText("Test List")).toBeInTheDocument();
+
+        await waitFor(
+            () => {
+                // 0 list items are displayed
+                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
+                expect(screen.getByText("Test hint for empty list")).toBeInTheDocument();
+            },
+            { timeout: 250 },
+        );
+    });
+
     test("When the list item could not be loaded, then the error message is shown", async () => {
         const componentData: Promise<string[]> = new Promise<string[]>((_, reject) =>
             setTimeout(() => {

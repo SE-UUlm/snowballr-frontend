@@ -11,6 +11,7 @@
         numberOfSkeletons: number;
         showNumberOfListItems?: boolean;
         numberOfItems?: number;
+        emptyHint?: string;
     }
 
     const {
@@ -21,6 +22,7 @@
         numberOfSkeletons,
         showNumberOfListItems = false,
         numberOfItems = undefined,
+        emptyHint = "",
     }: NamedListProps = $props();
 </script>
 
@@ -48,6 +50,9 @@ the number of list items (either given by 'numberOfItems' or automatically deter
 is added to the list name / header, like 'yourListName (10)'.
 
 While the list is loading, it displays <numberOfSkeleton> skeleton list items.
+If the loading was successful it either shows the components, filled with the component data
+or an optional hint (provided with 'emptyHint') that the list is empty.
+Otherwise the error message is shown.
 -->
 <div class="flex flex-col h-full w-full px-5 gap-y-5">
     {#await items}
@@ -66,13 +71,17 @@ While the list is loading, it displays <numberOfSkeleton> skeleton list items.
         {:else}
             <h2>{listName}</h2>
         {/if}
-        <ul class="space-y-4 pb-1 scroll-box">
-            {#each loadedItems as item}
-                <li>
-                    {@render listItemComponent?.(item)}
-                </li>
-            {/each}
-        </ul>
+        {#if loadedItems.length === 0}
+            <span class="text-hint italic">{emptyHint}</span>
+        {:else}
+            <ul class="space-y-4 pb-1 scroll-box">
+                {#each loadedItems as item}
+                    <li>
+                        {@render listItemComponent?.(item)}
+                    </li>
+                {/each}
+            </ul>
+        {/if}
     {:catch error}
         <h2>{listName}</h2>
         <div class="flex flex-row items-center gap-x-2 p-4">
