@@ -1,7 +1,7 @@
 <script lang="ts">
     import { buttonVariants } from "$lib/components/primitives/button/index.js";
     import * as Tooltip from "$lib/components/primitives/tooltip/index.js";
-    import { cn } from "$lib/utils";
+    import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
 

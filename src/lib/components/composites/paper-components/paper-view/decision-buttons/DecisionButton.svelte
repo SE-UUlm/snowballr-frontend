@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn } from "$lib/utils";
+    import { cn } from "$lib/utils/shadcn-helper";
     import type { WithElementRef } from "svelte-toolbelt";
     import Tooltip from "../../../Tooltip.svelte";
     import type { TooltipTriggerProps } from "bits-ui";
