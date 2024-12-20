@@ -36,14 +36,9 @@ export class UserController implements IUserController {
     }
 
     async getAllProjects(): Promise<Project[]> {
-        try {
-            const activeProjects = await this.getProjects();
-            const archivedProjects = await this.getArchivedProjects();
-
-            return Promise.resolve(activeProjects.concat(archivedProjects));
-        } catch (error: unknown) {
-            return Promise.reject(error);
-        }
+        return Promise.all([this.getProjects(), this.getArchivedProjects()]).then(
+            ([projects, archivedProjects]) => projects.concat(archivedProjects),
+        );
     }
 
     async getReadingList(): Promise<Paper[]> {

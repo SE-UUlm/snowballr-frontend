@@ -1,8 +1,15 @@
 import { expect, test, describe } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import NamedList from "$lib/components/composites/list/NamedList.svelte";
-// @ts-expect-error "Snippets have implicetly type any"
-import { listItemComponent, listItemSkeleton } from "./ExampleSnippets.svelte";
+import { createRawSnippet } from "svelte";
+
+const listItemSkeleton = createRawSnippet(() => {
+    return { render: () => `<Skeleton class="h-5 w-20 rounded-full" data-testid="skeleton" />` };
+});
+
+const listItemComponent = createRawSnippet<[unknown]>((componentData) => {
+    return { render: () => `<span data-testid="example-list-item">${componentData}</span>` };
+});
 
 describe("NamedListComponent", () => {
     test("When all required props are provided, then the named list is completely shown.", async () => {
