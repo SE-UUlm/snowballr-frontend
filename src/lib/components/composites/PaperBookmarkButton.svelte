@@ -3,7 +3,7 @@
     import Bookmark from "lucide-svelte/icons/bookmark";
     import BookmarkPlus from "lucide-svelte/icons/bookmark-plus";
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
-    import { cn } from "$lib/utils";
+    import { cn } from "$lib/utils/shadcn-helper";
     import Tooltip from "./Tooltip.svelte";
 
     interface Props {

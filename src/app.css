@@ -76,6 +76,25 @@
 
 /**** Custom Styling ****/
 
+/** Scrollbar **/
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #e6e6e6;
+    border-radius: 5px;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #a6a6a6;
+}
+
 @layer components {
     /* Tag Styles */
     h1 {
@@ -94,6 +113,9 @@
     }
     .text-hint {
         @apply text-sm font-medium tracking-normal text-neutral-500;
+    }
+    .text-error {
+        @apply text-base font-medium tracking-normal text-neutral-500 italic;
     }
     .text-default {
         @apply text-default-nc text-primary;
@@ -118,5 +140,28 @@
     }
     .text-default-m-nc {
         @apply text-default-nc font-medium;
+    }
+
+    .highlight-on-hover {
+        @apply hover:bg-container-border-grey/35;
+    }
+
+    /* Credits to: https://lea.verou.me/blog/2012/04/background-attachment-local/ */
+    .scroll-box {
+        overflow-y: auto;
+
+        background:
+            linear-gradient(white 30%, rgba(255, 255, 255, 0)),
+            linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
+            radial-gradient(farthest-side at 50% 40%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)),
+            radial-gradient(farthest-side at 50% 60%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) 0 100%;
+        background-repeat: no-repeat;
+        background-size:
+            100% 40px,
+            100% 40px,
+            100% 10px,
+            100% 10px;
+
+        background-attachment: local, local, scroll, scroll;
     }
 }

@@ -47,6 +47,7 @@ export function createProject(project: Partial<Project> = {}): Project {
         },
         similarityThreshold: 0.7,
         paperFetchApis: ["bar"],
+        archived: false,
         ...project,
     };
 }

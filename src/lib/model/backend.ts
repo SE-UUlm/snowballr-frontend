@@ -34,9 +34,17 @@ export interface Project {
     reviewDecisionMatrix: ReviewDecisionMatrix;
     similarityThreshold: number;
     paperFetchApis: string[];
+    archived: boolean;
 }
 
 export type ProjectSpec = Omit<Project, "id">;
+
+export interface ProjectMetadata {
+    project: Project;
+    members: User[];
+    stage: number;
+    stageProgress: number;
+}
 
 export interface Criterion {
     id: number;
@@ -58,6 +66,7 @@ export interface Review {
 
 export type ReviewSpec = Omit<Review, "userId">;
 
+// TODO: figure out purpose of this interface
 export interface StageEntry {
     paper: Paper;
     stage: number;

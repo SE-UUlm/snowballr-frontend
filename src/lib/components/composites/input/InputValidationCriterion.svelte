@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn } from "$lib/utils";
+    import { cn } from "$lib/utils/shadcn-helper";
     import CircleCheck from "lucide-svelte/icons/circle-check";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import type { WithElementRef } from "bits-ui";

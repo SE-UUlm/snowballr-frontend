@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Input } from "$lib/components/primitives/input/index.js";
     import { Label } from "$lib/components/primitives/label/index.js";
-    import { cn } from "$lib/utils";
+    import { cn } from "$lib/utils/shadcn-helper";
     import type { WithElementRef } from "bits-ui";
     import { onMount, type Snippet } from "svelte";
     import type {
