@@ -11,7 +11,8 @@
 <PaperView
     {user}
     {paper}
-    showButtonBar={true}
+    showButtonBar
     backRef={`/project/${project.id}/dashboard`}
     userConfig={{ isReviewMode, showMaybeButton: true }}
+    allowEditModeToggle
 />

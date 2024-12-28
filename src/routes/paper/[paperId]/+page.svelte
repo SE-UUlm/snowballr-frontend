@@ -11,7 +11,7 @@
 <PaperView
     {user}
     {paper}
-    showButtonBar={false}
     backRef="/"
     userConfig={{ isReviewMode: false, showMaybeButton: false }}
+    allowEditModeToggle
 />

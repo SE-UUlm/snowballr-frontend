@@ -14,21 +14,25 @@
         user: User;
         paper: Paper;
         isPaperBookmarked?: boolean;
-        showButtonBar: boolean;
+        showButtonBar?: boolean;
         backRef: string;
         userConfig: {
             isReviewMode: boolean;
             showMaybeButton: boolean;
         };
+        allowEditModeToggle?: boolean;
+        startInEditMode?: boolean;
     }
 
     const {
         user,
         paper,
         isPaperBookmarked = false,
-        showButtonBar,
+        showButtonBar = false,
         backRef,
         userConfig,
+        allowEditModeToggle = false,
+        startInEditMode = false,
     }: Props = $props();
 </script>
 
@@ -42,17 +46,24 @@ Additonally, there are buttons to navigate to the previous or next paper.
 - when `userConfig.isReviewMode` is false, then no decision buttons are shown
 - when `userConfig.showMaybeButton` is false, then the maybe button is not shown
 
+Edit Mode:
+- in the edit mode, the user can edit the paper details. When the mode is turned off, the details are displayed as read-only.
+- when `allowEditModeToggle` is true, then the user can toggle the edit mode
+- when `startInEditMode` is true, then the paper details can be edited from the start
+
 Usage:
 ```svelte
     <PaperView
         user={user}
         paper={paper}
-        showButtonBar={true}
+        showButtonBar
         backRef="/"
         userConfig={{
             isReviewMode: true,
             showMaybeButton: true,
         }}
+        allowEditModeToggle
+        startInEditMode
     />
 ```
 -->
@@ -62,7 +73,7 @@ Usage:
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <PaperDetailsCard />
+        <PaperDetailsCard {paper} {allowEditModeToggle} {startInEditMode} />
         <PaperResearchContextCard />
     </div>
     {#if showButtonBar}
