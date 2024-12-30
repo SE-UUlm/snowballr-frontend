@@ -4,6 +4,9 @@ Frontend of the SnowballR project.
 
 ## Use Cases
 
+![Open Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aopen%20is%3Aissue%20label%3A%22use%20case%22%20&label=open)
+![GitHub issue custom search](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)
+
 To keep track of the use cases we are working on, we are using the GitHub project board feature. You can find them [here](https://github.com/orgs/SE-UUlm/projects/2/views/7).
 
 ## Environment Variables
@@ -65,3 +68,19 @@ End-to-end tests are used to test the functionality of the app as a whole. They 
 ```bash
 npm run test:e2e
 ```
+
+## Lighthouse
+
+We use Lighthouse to audit the performance, accessibility and best practices of our app. To install Lighthouse, run:
+
+```bash
+npm install -g lighthouse
+```
+
+To run a Lighthouse audit on the app, you can use:
+
+```bash
+npm run lighthouse -- http://localhost:4173/path
+```
+
+The report will be saved in the `./lighthouse-reports` directory.
