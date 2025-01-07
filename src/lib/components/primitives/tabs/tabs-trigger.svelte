@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Tabs as TabsPrimitive } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "$lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),
