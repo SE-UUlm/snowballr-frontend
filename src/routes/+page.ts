@@ -43,8 +43,8 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
         const allStageEntriesFromStageI: StageEntry[] = await projectController
             .stage(currentStage)
             .getPapers();
-        allUndecidedPapers.concat(
-            allStageEntriesFromStageI
+        allUndecidedPapers.push(
+            ...allStageEntriesFromStageI
                 .map((stageEntry) => ({
                     paper: stageEntry.paper,
                     projectId: project.id,
@@ -54,7 +54,6 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
                 .filter((paperInfo: PaperInfos) => isPaperUndecided(paperInfo.paper)),
         );
     }
-
     return allUndecidedPapers;
 }
 
