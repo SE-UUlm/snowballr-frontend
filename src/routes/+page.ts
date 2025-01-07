@@ -7,12 +7,18 @@ import {
     type StageEntry,
     type User,
 } from "$lib/model/backend";
-import { calculateStageProgress } from "$lib/utils/statistics-helper";
+import { calculateStageProgress, isPaperUndecided } from "$lib/utils/statistics-helper";
+
+interface PaperInfos {
+    paper: Paper;
+    projectId: number;
+    showReviewStatus: boolean;
+}
 
 async function requestProjectMetadata(project: Project): Promise<ProjectMetadata> {
     const projectController = BackendController.getInstance().project(project.id);
     const members: User[] = await projectController.getMembers();
-    const currentStage: number = await projectController.getStageCount();
+    const currentStage: number = await projectController.getCurrentStage();
     const allPapersInCurrentStage: StageEntry[] = await projectController
         .stage(currentStage)
         .getPapers();
@@ -27,25 +33,51 @@ async function requestProjectMetadata(project: Project): Promise<ProjectMetadata
     };
 }
 
+async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
+    const projectController = BackendController.getInstance().project(project.id);
+    const currentStage: number = await projectController.getCurrentStage();
+    const latestStage: number = await projectController.getStageCount();
+    const allUndecidedPapers: PaperInfos[] = [];
+
+    for (let i = currentStage; i <= latestStage; i++) {
+        const allStageEntriesFromStageI: StageEntry[] = await projectController
+            .stage(currentStage)
+            .getPapers();
+        allUndecidedPapers.concat(
+            allStageEntriesFromStageI
+                .map((stageEntry) => ({
+                    paper: stageEntry.paper,
+                    projectId: project.id,
+                    /// TODO: request this information, e.g. from local store
+                    showReviewStatus: false,
+                }))
+                .filter((paperInfo: PaperInfos) => isPaperUndecided(paperInfo.paper)),
+        );
+    }
+
+    return allUndecidedPapers;
+}
+
 /**
- * Loads projects for the user logged in.
+ * Loads projects and open reviews for the user logged in.
  *
  * Therefore, request the project ids of the projects, the user logged in is member of and use
  * these ids to request:
  * - the project members
  * - the current project stage
  * - the progress of the current stage
+ * - open reviews from the project
  *
  * TODO: check, whether this can be handled with a single request, e.g. on route /projects/[id]/projectMetadata/.
  */
 export const load: PageLoad = () => {
-    const projectsMetadata = BackendController.getInstance()
-        .thisUser()
-        .getAllProjects()
+    const allUserProjects = BackendController.getInstance().thisUser().getAllProjects();
+
+    const projectsMetadata: Promise<ProjectMetadata[]> = allUserProjects
         .then(async (projects: Project[]) => {
             try {
                 return await Promise.all(
-                    projects.map((project: Project) => requestProjectMetadata(project)),
+                    projects.map((project) => requestProjectMetadata(project)),
                 );
             } catch {
                 throw new Error("Could not load project details.");
@@ -58,5 +90,25 @@ export const load: PageLoad = () => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     projectsMetadata.catch(() => {});
 
-    return { projectsMetadata };
+    const openReviews: Promise<PaperInfos[]> = allUserProjects
+        .then(async (projects: Project[]) => {
+            try {
+                return await Promise.all(
+                    projects.map((project) => requestUndecidedPapers(project)),
+                );
+            } catch {
+                throw new Error("Could not load open reviews.");
+            }
+        })
+        .then((openReviews) => openReviews.flat())
+        .catch(() => {
+            throw new Error("Could not load open reviews.");
+        });
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    projectsMetadata.catch(() => {});
+
+    openReviews.catch(() => {});
+
+    return { projectsMetadata, openReviews };
 };

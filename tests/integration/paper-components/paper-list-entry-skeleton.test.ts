@@ -7,7 +7,7 @@ describe("PaperListEntrySkeletonComponent", () => {
         const { unmount } = render(ProjectListEntrySkeleton);
 
         // expect skeleton for paper id, paper title, authors
-        expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBeGreaterThan(3);
+        expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBeGreaterThan(2);
         unmount();
 
         // enforce rendering with user avatar skeleton

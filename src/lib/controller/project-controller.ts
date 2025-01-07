@@ -38,6 +38,10 @@ export class ProjectController implements IProjectController {
         return this.client.get("stages").then((response) => response.json());
     }
 
+    async getCurrentStage(): Promise<number> {
+        return this.client.get("currentStage").then((response) => response.json());
+    }
+
     stage(stageIndex: number): IStageController {
         return new StageController(this.path, stageIndex);
     }
