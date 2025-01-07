@@ -3,6 +3,8 @@
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
     import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
+    import { Button } from "$lib/components/primitives/button";
+    import { CirclePlus } from "lucide-svelte";
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 
@@ -15,6 +17,7 @@
 </svelte:head>
 <SimpleNavigationBar {user} title="SnowballR" />
 <main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
+    <!-- TODO: exchange by the NamedList for the open reviews -->
     <section class="h-full w-full">
         <NamedList
             listName="Open Reviews"
@@ -31,7 +34,7 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="h-full w-full min-w-0">
+    <section class="flex flex-col h-full w-full min-w-0 gap-y-5">
         <NamedList
             listName="Projects"
             items={projectsMetadata}
@@ -46,5 +49,13 @@
                 <ProjectListEntrySkeleton />
             {/snippet}
         </NamedList>
+        <div class="px-5">
+            <!-- need to overwrite svg size in button, as the shadcn default button sets a default size
+                 for possible icons, which cannot be overwritten by set the size inside the icon -->
+            <Button class="h-fit w-full py-4 gap-2.5 text-xl [&_svg]:size-5">
+                <CirclePlus strokeWidth="2.5" />
+                Create Project
+            </Button>
+        </div>
     </section>
 </main>
