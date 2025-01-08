@@ -7,12 +7,12 @@
     interface Props {
         user: User;
         backRef?: string | undefined;
-        paper: Paper | Omit<Paper, "id">;
+        loadingPaper: Promise<Paper | Omit<Paper, "id">>;
     }
 
-    const { user, backRef, paper }: Props = $props();
+    const { user, backRef, loadingPaper }: Props = $props();
 </script>
 
 <NavigationBar {user} {backRef}>
-    <PaperInfo {paper} />
+    <PaperInfo {loadingPaper} />
 </NavigationBar>

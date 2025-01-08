@@ -1,7 +1,8 @@
 import { assert, expect, test, describe } from "vitest";
 import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createProject, createUser } from "../../model-builder";
+import { createLoadingProject, createUser } from "../../model-builder";
+import { waitForComponentLoading } from "../test-helper";
 
 describe("ProjectNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
@@ -12,13 +13,16 @@ describe("ProjectNavigationBar", () => {
                     firstName: "John",
                     lastName: "Doe",
                 }),
-                project: createProject({
+                projectId: "123",
+                loadingProject: createLoadingProject({
                     id: "123",
                     name: "Example Project Title",
                 }),
                 defaultTabValue: "statistics",
             },
         });
+
+        await waitForComponentLoading();
 
         const linkTags = screen.getAllByRole("link");
         expect(linkTags).toHaveLength(5);

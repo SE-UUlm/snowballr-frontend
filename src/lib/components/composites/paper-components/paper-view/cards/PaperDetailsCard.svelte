@@ -8,14 +8,16 @@
     import ChevronDown from "lucide-svelte/icons/chevron-down";
     import ChevronUp from "lucide-svelte/icons/chevron-up";
     import Pencil from "lucide-svelte/icons/pencil";
+    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
 
     interface Props {
-        paper: Paper;
+        loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
     }
 
-    const { paper, allowEditModeToggle, startInEditMode }: Props = $props();
+    const { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
 
     let areDetailsInEditMode = $state(startInEditMode);
     let isAbstractInEditMode = $state(startInEditMode);
@@ -25,26 +27,55 @@
         { value: "2", label: "Document" },
     ];
 
-    interface Info {
-        label: string;
-        value: unknown;
+    interface BasicInfos {
+        Title: string;
+        Authors: string;
+        Year: string;
+        Publisher: string;
     }
+    // Initialize with width values for Skeletons
+    let basicInfos: BasicInfos = $state({
+        Title: "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
+        Authors: "w-[4rem] sm:w-[5rem] md:w-[7.3rem] lg:w-[13rem]",
+        Year: "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
+        Publisher: "w-[5rem] sm:w-[6rem] md:w-[8.6rem] lg:w-[15rem]",
+    });
+    loadingPaper
+        .then((paper) => {
+            basicInfos = {
+                Title: paper.title,
+                Authors: getNames(paper.authors),
+                Year: paper.year?.toString() ?? "N/A",
+                Publisher: "N/A",
+            };
+        })
+        .catch(() => {
+            basicInfos = { Title: "", Authors: "", Year: "", Publisher: "" };
+        });
 
-    const basicInfos: Info[] = [
-        { label: "Title", value: paper.title },
-        { label: "Authors", value: getNames(paper.authors) },
-        { label: "Year", value: paper.year },
-        { label: "Publisher", value: "..." },
-    ];
-    const additionalInfos: Info[] = [
-        { label: "Publication Type", value: paper.type },
-        { label: "Publication Name", value: "..." },
-        { label: "DOI", value: paper.doi },
-    ];
+    interface AdditionalInfos {
+        "Publication Type": string;
+        "Publication Name": string;
+        DOI: string;
+    }
+    // Initialize with width values for Skeletons
+    let additionalInfos: AdditionalInfos = $state({
+        "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
+        "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",
+        DOI: "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
+    });
+    loadingPaper
+        .then((paper) => {
+            additionalInfos = {
+                "Publication Type": paper.type ?? "N/A",
+                "Publication Name": "N/A",
+                DOI: paper.doi ?? "N/A",
+            };
+        })
+        .catch(() => {
+            additionalInfos = { "Publication Type": "", "Publication Name": "", DOI: "" };
+        });
     let showAdditionalInfos = $state(true);
-    let paperInfos: Info[] = $derived(
-        showAdditionalInfos ? [...basicInfos, ...additionalInfos] : basicInfos,
-    );
 
     function toggleAdditionalInfos() {
         showAdditionalInfos = !showAdditionalInfos;
@@ -74,15 +105,16 @@ Usage:
                 {/if}
             </div>
             <div class="flex flex-col gap-2">
-                {#each paperInfos as { label, value }}
-                    <div class="flex flex-row gap-2">
-                        <!-- Match top padding of input -->
-                        <span class="w-24 pt-[0.3125rem]">{label}</span>
-                        <ToggleableInput isEditable={areDetailsInEditMode} {value} />
-                    </div>
+                {#each Object.entries(basicInfos) as [key, value]}
+                    <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
                 {/each}
+                {#if showAdditionalInfos}
+                    {#each Object.entries(additionalInfos) as [key, value]}
+                        <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
+                    {/each}
+                {/if}
             </div>
-            <div class="flex justify-center">
+            <div class="flex justify-center pt-2">
                 <Button class="w-fit" variant="outline" onclick={toggleAdditionalInfos}>
                     {#if showAdditionalInfos}
                         <ChevronUp />
@@ -105,7 +137,19 @@ Usage:
                     />
                 {/if}
             </div>
-            <ToggleableInput isEditable={isAbstractInEditMode} value={paper.abstrakt} />
+            {#await loadingPaper}
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[100%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[95%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[70%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[82%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[50%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[75%]" />
+                <Skeleton class="flex h-[1.625rem] rounded-full w-[90%]" />
+            {:then paper}
+                <ToggleableInput isEditable={isAbstractInEditMode} value={paper.abstrakt} />
+            {:catch error}
+                <span class="text-error">Coudn't load abstract: {error}</span>
+            {/await}
         </section>
     </PaperCardContent>
     <PaperCardContent value="2">

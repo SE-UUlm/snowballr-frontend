@@ -2,11 +2,12 @@ import { expect, test, describe } from "vitest";
 import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
+import { waitForComponentLoading } from "../test-helper";
 import { Papers, Reviews } from "../../example-data";
 import { PaperDecision } from "$lib/model/api/project";
 
 describe("PaperListEntryComponent", () => {
-    test("When all required props are provided, then the paper list entry is completely shown (without review information)", () => {
+    test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
         render(PaperEntry, {
             props: {
                 projectPaper: {
@@ -20,6 +21,8 @@ describe("PaperListEntryComponent", () => {
             },
         });
 
+        await waitForComponentLoading();
+
         expect(screen.getByText("#0")).toBeInTheDocument();
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
@@ -30,7 +33,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByRole("button").childElementCount).toBe(1);
     });
 
-    test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", () => {
+    test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
         render(PaperEntry, {
             props: {
                 projectPaper: {
@@ -45,6 +48,8 @@ describe("PaperListEntryComponent", () => {
             },
         });
 
+        await waitForComponentLoading();
+
         expect(screen.getByText("#0")).toBeInTheDocument();
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
@@ -55,7 +60,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByRole("button").childElementCount).toBe(1);
     });
 
-    test("When review information are provided and should be shown, then the paper list entry is completely shown with review information", () => {
+    test("When review information are provided and should be shown, then the paper list entry is completely shown with review information", async () => {
         render(PaperEntry, {
             props: {
                 projectPaper: {
@@ -69,6 +74,8 @@ describe("PaperListEntryComponent", () => {
                 showReviewStatus: true,
             },
         });
+
+        await waitForComponentLoading();
 
         expect(screen.getByText("#0")).toBeInTheDocument();
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
@@ -95,6 +102,8 @@ describe("PaperListEntryComponent", () => {
                 onClick: () => (onClickExecuted = true),
             },
         });
+
+        await waitForComponentLoading();
 
         await userEvent.dblClick(screen.getByRole("button"));
         expect(onClickExecuted).equal(false);

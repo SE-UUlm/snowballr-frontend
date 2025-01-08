@@ -33,9 +33,9 @@ Usage:
     {#each tabs as tab}
         <Tabs.Trigger
             value={tab.value}
-            class="data-[state=active]:border-b-primary h-fit rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none"
+            class="data-[state=active]:border-b-primary h-fit rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none max-w-[50%]"
         >
-            {tab.label}
+            <div class="truncate">{tab.label}</div>
         </Tabs.Trigger>
     {/each}
 </Tabs.List>

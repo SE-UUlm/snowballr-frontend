@@ -2,12 +2,16 @@
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
     const { data } = $props();
-    const { user, project } = data;
+    const { user, projectId, loadingProject } = data;
 </script>
 
 <svelte:head>
-    <title>Statistics | {project.name}</title>
+    {#await loadingProject}
+        <title>Loading Project...</title>
+    {:then project}
+        <title>Statistics | {project.name}</title>
+    {:catch}
+        <title>Statistics</title>
+    {/await}
 </svelte:head>
-<ProjectNavigationBar {user} {project} defaultTabValue="statistics" />
-
-<h3>Project {project.id} Statistics</h3>
+<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="statistics" />

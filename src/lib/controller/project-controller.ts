@@ -14,7 +14,7 @@ export class ProjectController implements IProjectController {
     }
 
     async get(): Promise<Project> {
-        throw new Error("Method not implemented.");
+        return this.client.get().then((response) => response.json());
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

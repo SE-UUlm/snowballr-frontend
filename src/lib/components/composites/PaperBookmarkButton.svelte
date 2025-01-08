@@ -7,15 +7,17 @@
     import Tooltip from "./Tooltip.svelte";
 
     interface Props {
-        paperId: string;
+        loadingPaperId: Promise<string>;
         isBookmarkedDefault: boolean;
     }
 
-    const { paperId, isBookmarkedDefault }: Props = $props();
+    const { loadingPaperId, isBookmarkedDefault }: Props = $props();
 
     let isBookmarked = $state(isBookmarkedDefault);
     let isHovered = $state(false);
     const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
+    let paperId: string | undefined = $state(undefined);
+    loadingPaperId.then((id) => (paperId = id));
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);

@@ -100,7 +100,7 @@ Usage:
             ? `border-l-4 ${getReviewDecisionColor(projectPaper.decision, projectPaper.reviews.length)}`
             : ''} rounded-md px-3 py-1.5"
     >
-        <PaperInfo paper={projectPaper.paper!} />
+        <PaperInfo loadingPaper={Promise.resolve(projectPaper.paper!)} />
     </div>
     {#if showReviewStatus}
         {#each projectPaper.reviews as review}

@@ -32,7 +32,7 @@ Usage:
     </PaperCard>
 ```
 -->
-<Card.Root class="shadow-lg border-container-border-grey flex w-full h-full">
+<Card.Root class="shadow-lg border-container-border-grey flex w-full h-full max-w-[50%]">
     <section class="flex flex-col h-full w-full">
         <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value} class="flex flex-col h-full">
             <UnderlineTabsList {tabs} />

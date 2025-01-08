@@ -1,7 +1,13 @@
 <script lang="ts">
     import DecisionButton from "./DecisionButton.svelte";
 
-    const { paperId }: { paperId: string } = $props();
+    interface Props {
+        loadingPaperId: Promise<string>;
+    }
+
+    const { loadingPaperId }: Props = $props();
+    let paperId: string | undefined = $state(undefined);
+    loadingPaperId.then((id) => (paperId = id));
 
     function markPaperAsUndecided() {
         console.log(`Undecided paper with id ${paperId}`);

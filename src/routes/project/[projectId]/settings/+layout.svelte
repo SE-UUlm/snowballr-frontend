@@ -2,11 +2,9 @@
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
     const { children, data } = $props();
-    const { user, project } = data;
+    const { user, projectId, loadingProject } = data;
 </script>
 
-<ProjectNavigationBar {user} {project} defaultTabValue="settings" />
-
-<h3>Project {project.id} Settings</h3>
+<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="settings" />
 
 {@render children()}

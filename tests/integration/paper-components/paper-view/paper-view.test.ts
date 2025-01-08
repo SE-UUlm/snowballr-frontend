@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/svelte";
 import { assert, describe, expect, test } from "vitest";
 import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-import { createPaper, createUser } from "../../../model-builder";
+import { createLoadingPaper, createUser } from "../../../model-builder";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
         render(PaperView, {
             user: createUser(),
-            paper: createPaper(),
+            loadingPaper: createLoadingPaper(),
             showButtonBar: false,
             backRef: "",
             userConfig: {
@@ -22,7 +22,7 @@ describe("PaperView", () => {
     test("When `showButtonBar` is true, then navigation buttons are shown", () => {
         render(PaperView, {
             user: createUser(),
-            paper: createPaper(),
+            loadingPaper: createLoadingPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -38,7 +38,7 @@ describe("PaperView", () => {
     test("When navigation buttons are shown and `isReviewMode` is true, then the decision buttons are shown", () => {
         render(PaperView, {
             user: createUser(),
-            paper: createPaper(),
+            loadingPaper: createLoadingPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -57,7 +57,7 @@ describe("PaperView", () => {
     test("When navigation and decision buttons are shown but `showMaybeButton` is false, then only the accept and decline buttons are shown", () => {
         render(PaperView, {
             user: createUser(),
-            paper: createPaper(),
+            loadingPaper: createLoadingPaper(),
             showButtonBar: true,
             backRef: "",
             userConfig: {

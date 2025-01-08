@@ -12,8 +12,7 @@
 
     interface Props {
         user: User;
-        paper: Paper;
-        isPaperBookmarked?: boolean;
+        loadingPaper: Promise<Paper>;
         showButtonBar?: boolean;
         backRef: string;
         userConfig: {
@@ -26,14 +25,15 @@
 
     const {
         user,
-        paper,
-        isPaperBookmarked = false,
+        loadingPaper,
         showButtonBar = false,
         backRef,
         userConfig,
         allowEditModeToggle = false,
         startInEditMode = false,
     }: Props = $props();
+
+    let loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 
 <!--
@@ -55,7 +55,7 @@ Usage:
 ```svelte
     <PaperView
         user={user}
-        paper={paper}
+        loadingPaper={loadingPaper}
         showButtonBar
         backRef="/"
         userConfig={{
@@ -68,12 +68,12 @@ Usage:
 ```
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
-    <PaperNavigationBar {user} {backRef} {paper} />
-    <PaperBookmarkButton paperId={paper.id} isBookmarkedDefault={isPaperBookmarked} />
+    <PaperNavigationBar {user} {backRef} {loadingPaper} />
+    <PaperBookmarkButton {loadingPaperId} isBookmarkedDefault={false} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <PaperDetailsCard {paper} {allowEditModeToggle} {startInEditMode} />
+        <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
         <PaperResearchContextCard />
     </div>
     {#if showButtonBar}
@@ -84,11 +84,11 @@ Usage:
                 <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                 <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                 <div class="flex flex-grow-1000 max-w-[62rem] gap-[1rem] justify-center">
-                    <DeclineButton paperId={paper.id} />
+                    <DeclineButton {loadingPaperId} />
                     {#if userConfig.showMaybeButton}
-                        <MaybeButton paperId={paper.id} />
+                        <MaybeButton {loadingPaperId} />
                     {/if}
-                    <AcceptButton paperId={paper.id} />
+                    <AcceptButton {loadingPaperId} />
                 </div>
             {/if}
             <PaperNavigationButton direction="right" href="" />

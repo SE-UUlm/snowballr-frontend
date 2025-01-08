@@ -37,3 +37,11 @@ export function createProjectPaper(paper: Partial<Project_Paper> = {}): Project_
         ...paper,
     };
 }
+
+export function createLoadingPaper(paper: Partial<Paper> = {}): Promise<Paper> {
+    return Promise.resolve(createPaper(paper));
+}
+
+export function createLoadingProject(project: Partial<Project> = {}): Promise<Project> {
+    return Promise.resolve(createProject(project));
+}

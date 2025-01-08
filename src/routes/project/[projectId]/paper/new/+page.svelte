@@ -2,9 +2,9 @@
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 
     const { data } = $props();
-    const { user, project } = data;
+    const { user, projectId, loadingProject } = data;
     const paper = {
-        id: "0",
+        id: projectId,
         externalId: "EXT12345",
         title: "An Analysis of TypeScript Performance",
         abstrakt:
@@ -23,6 +23,22 @@
 </script>
 
 <svelte:head>
-    <title>Add Paper | {project.name}</title>
+    {#await loadingProject}
+        <title>Loading Project...</title>
+    {:then project}
+        <title>Add Paper | {project.name}</title>
+    {:catch}
+        <title>Add Paper</title>
+    {/await}
 </svelte:head>
-<PaperNavigationBar {user} backRef={`/project/${project.id}/dashboard`} {paper} />
+{#await loadingProject}
+    <p>Loading...</p>
+{:then}
+    <PaperNavigationBar
+        {user}
+        backRef={`/project/${projectId}/dashboard`}
+        loadingPaper={Promise.resolve(paper)}
+    />
+{:catch error}
+    <p>{error.message}</p>
+{/await}

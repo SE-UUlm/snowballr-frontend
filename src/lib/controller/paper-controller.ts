@@ -10,7 +10,7 @@ export class PaperController implements IPaperController {
     }
 
     async get(): Promise<Paper> {
-        throw new Error("Method not implemented.");
+        return this.client.get().then((response) => response.json());
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
