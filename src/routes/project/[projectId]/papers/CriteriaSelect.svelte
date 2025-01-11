@@ -1,0 +1,31 @@
+<script lang="ts">
+    import Select from "$lib/components/composites/select/Select.svelte";
+    import type { SelectOption } from "$lib/components/composites/select/types";
+    import type { Criterion } from "$lib/model/api/criterion";
+
+    interface Props {
+        loadingCriteria: Promise<Criterion[]>;
+    }
+
+    const { loadingCriteria }: Props = $props();
+
+    let criteria = $state<Criterion[] | undefined>(undefined);
+    let options = $derived<SelectOption[]>(
+        criteria?.map((criterion) => {
+            return {
+                value: `${criterion.id}`,
+                label: `${criterion.tag}: ${criterion.name}`,
+            };
+        }) ?? [],
+    );
+
+    loadingCriteria
+        .then((loadedCriteria) => {
+            criteria = loadedCriteria;
+        })
+        .catch((error) => {
+            console.error(`Failed to load criteria: ${error}`);
+        });
+</script>
+
+<Select {options} categoryLabel="Criteria" />
