@@ -41,7 +41,7 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
 
     for (let i = currentStage; i <= latestStage; i++) {
         const allStageEntriesFromStageI: StageEntry[] = await projectController
-            .stage(currentStage)
+            .stage(i)
             .getPapers();
         allUndecidedPapers.push(
             ...allStageEntriesFromStageI
@@ -105,8 +105,6 @@ export const load: PageLoad = () => {
         });
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    projectsMetadata.catch(() => {});
-
     openReviews.catch(() => {});
 
     return { projectsMetadata, openReviews };
