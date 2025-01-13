@@ -115,11 +115,22 @@ const passwordSchema = z
     });
 
 /**
- * Schemas, used for input validation.
+ * Schema for the name of a new project.
  */
+const projectNameSchema = z
+    .string()
+    .trim()
+    .min(1, { message: "Please provide a project name" })
+    .max(100, { message: "The project name is limited to 100 characters" });
+
 export const Schema = {
+    /**
+     * Schemas, used for input validation.
+     */
     firstName: firsNameSchema,
     lastName: lastNameSchema,
     email: emailSchema,
     password: passwordSchema,
+
+    projectName: projectNameSchema,
 };

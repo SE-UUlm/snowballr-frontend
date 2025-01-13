@@ -93,9 +93,10 @@
 }
 
 @utility scrollbar {
-    /* width */
+    /* width and height */
     &::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
     }
     /* Track */
     &::-webkit-scrollbar-track {
