@@ -4,10 +4,10 @@ import { render, screen } from "@testing-library/svelte";
 
 describe("PaperListEntrySkeletonComponent", () => {
     test("When paper list entry skeleton is rendered, then no data are displayed but only skeletons.", () => {
-        const { unmount } = render(ProjectListEntrySkeleton);
+        const { unmount } = render(ProjectListEntrySkeleton, { isSkeletonWithReview: false });
 
         // expect skeleton for paper id, paper title, authors
-        expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBeGreaterThan(2);
+        expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBe(3);
         unmount();
 
         // enforce rendering with user avatar skeleton
