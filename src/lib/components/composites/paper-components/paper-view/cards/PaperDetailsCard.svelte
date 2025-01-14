@@ -1,5 +1,4 @@
 <script lang="ts">
-    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import Button from "$lib/components/primitives/button/button.svelte";
     import type { Paper } from "$lib/model/backend";
     import { getNames } from "$lib/utils/common-helper";
@@ -10,14 +9,16 @@
     import Pencil from "lucide-svelte/icons/pencil";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
+    import AbstractToggleableInput from "$lib/components/composites/input/AbstractToggleableInput.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
+        showButtonBar: boolean;
     }
 
-    const { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+    const { loadingPaper, allowEditModeToggle, startInEditMode, showButtonBar }: Props = $props();
 
     let areDetailsInEditMode = $state(startInEditMode);
     let isAbstractInEditMode = $state(startInEditMode);
@@ -75,7 +76,7 @@
         .catch(() => {
             additionalInfos = { "Publication Type": "", "Publication Name": "", DOI: "" };
         });
-    let showAdditionalInfos = $state(true);
+    let showAdditionalInfos = $state(false);
 
     function toggleAdditionalInfos() {
         showAdditionalInfos = !showAdditionalInfos;
@@ -146,7 +147,11 @@ Usage:
                 <Skeleton class="flex h-[1.625rem] rounded-full w-[75%]" />
                 <Skeleton class="flex h-[1.625rem] rounded-full w-[90%]" />
             {:then paper}
-                <ToggleableInput isEditable={isAbstractInEditMode} value={paper.abstrakt} />
+                <AbstractToggleableInput
+                    isEditable={isAbstractInEditMode}
+                    maxHeightActionProps={{ showButtonBar, showAdditionalInfos }}
+                    value={paper.abstrakt}
+                />
             {:catch error}
                 <span class="text-error">Coudn't load abstract: {error}</span>
             {/await}

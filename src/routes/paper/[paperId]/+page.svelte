@@ -19,5 +19,4 @@
     {loadingPaper}
     backRef="/"
     userConfig={{ isReviewMode: false, showMaybeButton: false }}
-    allowEditModeToggle
 />
