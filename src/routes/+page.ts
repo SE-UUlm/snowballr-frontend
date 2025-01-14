@@ -39,6 +39,10 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
     const latestStage: number = await projectController.getStageCount();
     const allUndecidedPapers: PaperInfos[] = [];
 
+    const numberOfRequiredReviews = await projectController
+        .get()
+        .then((project) => project.reviewDecisionMatrix.numberOfReviewers);
+
     for (let i = currentStage; i <= latestStage; i++) {
         const allStageEntriesFromStageI: StageEntry[] = await projectController
             .stage(i)
@@ -51,7 +55,12 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
                     /// TODO: request this information, e.g. from local store
                     showReviewStatus: false,
                 }))
-                .filter((paperInfo: PaperInfos) => isPaperUndecided(paperInfo.paper)),
+                .filter(
+                    (paperInfo: PaperInfos) =>
+                        (isPaperUndecided(paperInfo.paper) ||
+                            paperInfo.paper.reviewData?.reviews.length) ??
+                        0 < numberOfRequiredReviews,
+                ),
         );
     }
     return allUndecidedPapers;

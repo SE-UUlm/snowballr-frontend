@@ -4,18 +4,23 @@ import { render, screen } from "@testing-library/svelte";
 
 describe("PaperListEntrySkeletonComponent", () => {
     test("When paper list entry skeleton is rendered, then no data are displayed but only skeletons.", () => {
-        const { unmount } = render(ProjectListEntrySkeleton, { isSkeletonWithReview: false });
+        render(ProjectListEntrySkeleton, { isSkeletonWithReview: false });
 
         // expect skeleton for paper id, paper title, authors
         expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBe(3);
-        unmount();
-
-        // enforce rendering with user avatar skeleton
-        render(ProjectListEntrySkeleton, { isSkeletonWithReview: true });
-
-        // expect skeleton for paper id, paper title, authors and one user avatar showing a review decision
-        expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBe(4);
     });
+
+    test(
+        "When paper list entry skeleton is rendered with review information, then no data are displayed but only skeletons" +
+            "(inclusive a skeleton for the review).",
+        () => {
+            // enforce rendering with user avatar skeleton
+            render(ProjectListEntrySkeleton, { isSkeletonWithReview: true });
+
+            // expect skeleton for paper id, paper title, authors and one user avatar showing a review decision
+            expect(screen.getAllByTestId("skeleton", { exact: false }).length).toBe(4);
+        },
+    );
 
     test("When paper list entry skeleton is rendered, then the project list entry has no behavior.", () => {
         render(ProjectListEntrySkeleton);
