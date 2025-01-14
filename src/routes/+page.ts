@@ -7,7 +7,8 @@ import {
     type StageEntry,
     type User,
 } from "$lib/model/backend";
-import { calculateStageProgress, isPaperUndecided } from "$lib/utils/statistics-helper";
+import { calculateStageProgress } from "$lib/utils/statistics-helper";
+import { doesPaperNeedReview } from "$lib/utils/common-helper";
 
 interface PaperInfos {
     paper: Paper;
@@ -39,9 +40,7 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
     const latestStage: number = await projectController.getStageCount();
     const allUndecidedPapers: PaperInfos[] = [];
 
-    const numberOfRequiredReviews = await projectController
-        .get()
-        .then((project) => project.reviewDecisionMatrix.numberOfReviewers);
+    const numberOfRequiredReviews = project.reviewDecisionMatrix.numberOfReviewers;
 
     for (let i = currentStage; i <= latestStage; i++) {
         const allStageEntriesFromStageI: StageEntry[] = await projectController
@@ -55,11 +54,8 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
                     /// TODO: request this information, e.g. from local store
                     showReviewStatus: false,
                 }))
-                .filter(
-                    (paperInfo: PaperInfos) =>
-                        (isPaperUndecided(paperInfo.paper) ||
-                            paperInfo.paper.reviewData?.reviews.length) ??
-                        0 < numberOfRequiredReviews,
+                .filter((paperInfo) =>
+                    doesPaperNeedReview(paperInfo.paper, numberOfRequiredReviews),
                 ),
         );
     }

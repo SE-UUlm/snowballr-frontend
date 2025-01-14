@@ -1,16 +1,5 @@
-import { type Paper, ReviewDecision } from "$lib/model/backend";
-
-/**
- * Checks, whether a given paper is undecided, i.e. unreviewed or has the review status
- * "Maybe".
- *
- * @return true, if the paper is either unreviewed or has the status "Maybe", otherwise false
- */
-function isPaperUndecided(paper: Paper): boolean {
-    return (
-        paper.reviewData === undefined || paper.reviewData.finalDecision === ReviewDecision.Maybe
-    );
-}
+import { type Paper } from "$lib/model/backend";
+import { isPaperUndecided } from "$lib/utils/common-helper";
 
 /**
  * Calculate the progress of a stage.
@@ -32,4 +21,4 @@ function calculateStageProgress(papers: Paper[]) {
     return Math.round((decidedPapers / totalPapers) * 100);
 }
 
-export { calculateStageProgress, isPaperUndecided };
+export { calculateStageProgress };

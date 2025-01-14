@@ -1,3 +1,5 @@
+import { type Paper, ReviewDecision } from "$lib/model/backend";
+
 function getNameAsString(person: { firstName: string; lastName: string }): string {
     return `${person.firstName} ${person.lastName}`;
 }
@@ -17,4 +19,28 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
     return persons.map((person) => getNameAsString(person)).join(", ");
 }
 
-export { getNames };
+/**
+ * Checks, whether a given paper is undecided, i.e. unreviewed or has the review status
+ * "Maybe".
+ *
+ * @return true, if the paper is either unreviewed or has the status "Maybe", otherwise false
+ */
+function isPaperUndecided(paper: Paper): boolean {
+    return (
+        paper.reviewData === undefined || paper.reviewData.finalDecision === ReviewDecision.Maybe
+    );
+}
+
+/**
+ * Checks, whether a given paper needs further reviews, i.e. it is either undecided (see {@link isPaperUndecided})
+ * or has less than the required number of reviews.
+ *
+ * @return true, if the paper needs further reviews, otherwise false
+ */
+function doesPaperNeedReview(paper: Paper, numberOfRequiredReviews: number): boolean {
+    return (
+        isPaperUndecided(paper) || (paper.reviewData?.reviews.length ?? 0) < numberOfRequiredReviews
+    );
+}
+
+export { getNames, isPaperUndecided, doesPaperNeedReview };
