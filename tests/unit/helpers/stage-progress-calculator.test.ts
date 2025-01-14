@@ -3,7 +3,7 @@ import { calculateStageProgress } from "$lib/utils/statistics-helper";
 import { type Paper, ReviewDecision } from "$lib/model/backend";
 import { createPaper } from "../../model-builder";
 
-describe("StageProgressCalculator", () => {
+describe("Calculate stage progress", () => {
     it("When no paper are provided, then the progress is zero", () => {
         const papers: Paper[] = [];
 

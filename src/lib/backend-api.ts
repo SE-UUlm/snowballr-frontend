@@ -74,6 +74,7 @@ export interface IProjectController {
     getAllPapersAsCsv(): Promise<Blob>;
 
     getStageCount(): Promise<number>;
+    getCurrentStage(): Promise<number>;
     stage(stageIndex: number): IStageController;
 
     getMembers(): Promise<User[]>;

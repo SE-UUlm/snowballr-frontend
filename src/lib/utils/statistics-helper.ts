@@ -1,4 +1,5 @@
-import { type Paper, ReviewDecision } from "$lib/model/backend";
+import { type Paper } from "$lib/model/backend";
+import { isPaperUndecided } from "$lib/utils/common-helper";
 
 /**
  * Calculate the progress of a stage.
@@ -15,12 +16,7 @@ function calculateStageProgress(papers: Paper[]) {
     const totalPapers = papers.length;
     if (totalPapers === 0) return 0;
 
-    const decidedPapers = papers.filter(
-        (paper) =>
-            paper.reviewData !== undefined &&
-            (paper.reviewData.finalDecision === ReviewDecision.Accepted ||
-                paper.reviewData.finalDecision === ReviewDecision.Declined),
-    ).length;
+    const decidedPapers = papers.filter((paper) => !isPaperUndecided(paper)).length;
 
     return Math.round((decidedPapers / totalPapers) * 100);
 }
