@@ -8,12 +8,14 @@
         class?: string;
         value?: string;
         showForgotPasswordLink?: boolean;
+        disableValidation?: boolean;
     };
 
     let {
         value = $bindable(),
         class: className = "",
         showForgotPasswordLink,
+        disableValidation = false,
         ...restProps
     }: Props = $props();
     let isPasswordVisible = $state(false);
@@ -60,6 +62,7 @@ Usage:
     schema={Schema.password}
     type={isPasswordVisible ? "text" : "password"}
     validationDisplayMode="constant"
+    {disableValidation}
     bind:value
     {...restProps}
 >

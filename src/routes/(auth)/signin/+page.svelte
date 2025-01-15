@@ -59,9 +59,15 @@
                 placeholder="john.doe@example.com"
                 required
                 type="email"
+                disableValidation
                 bind:value={email}
             />
-            <PasswordInput class="w-full" showForgotPasswordLink bind:value={password} />
+            <PasswordInput
+                class="w-full"
+                showForgotPasswordLink
+                disableValidation
+                bind:value={password}
+            />
             {#if loading}
                 <Button type="submit" class="w-full" disabled>
                     <LoaderCircle class="animate-spin" />

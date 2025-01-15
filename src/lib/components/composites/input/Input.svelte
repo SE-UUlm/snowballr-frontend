@@ -26,6 +26,7 @@
         buttonProps?: HTMLButtonAttributes;
         errorMessagePrefix?: string;
         validationDisplayMode?: "constant" | "onError";
+        disableValidation?: boolean;
     };
 
     let {
@@ -42,6 +43,7 @@
         buttonProps,
         errorMessagePrefix = "",
         validationDisplayMode = "onError",
+        disableValidation = false,
         value = $bindable(),
         class: className,
         ...restProps
@@ -60,7 +62,7 @@
      * This dynamically creates the validation criteria based on the schema.
      */
     function initValidationCriteria() {
-        if (!schema || validationDisplayMode === "onError") {
+        if (disableValidation || !schema || validationDisplayMode === "onError") {
             return;
         }
 
@@ -105,7 +107,7 @@
      * @returns True if the input value conforms to the schema, false otherwise.
      */
     export function validate(): boolean {
-        if (!schema) {
+        if (disableValidation || !schema) {
             return true;
         }
 
