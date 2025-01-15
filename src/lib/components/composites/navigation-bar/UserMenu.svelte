@@ -10,6 +10,7 @@
     import type { User } from "$lib/model/api/user";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
+    import { BackendController } from "$lib/controller/backend-controller";
 
     interface Props {
         user?: User;
@@ -49,9 +50,10 @@
         },
     ];
 
-    function signOut() {
-        localStorage.removeItem("token");
-        goto("/signin");
+    async function signOut(): Promise<void> {
+        await BackendController.getInstance()
+            .signOut()
+            .then(() => goto("/signin"));
     }
 </script>
 
