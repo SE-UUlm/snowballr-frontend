@@ -101,7 +101,7 @@ describe("PasswordInput", () => {
         });
     });
 
-    test("When `showForgotPasswordLink` is false, then link is not shown", () => {
+    test("When `showForgotPasswordLink` is false, then the link is not shown", () => {
         render(PasswordInput, {
             target: document.body,
             props: {

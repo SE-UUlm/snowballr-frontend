@@ -13,17 +13,21 @@
     let lastNameInput: Input;
     let emailInput: Input;
     let passwordInput: PasswordInput;
+    let error = $state<string | undefined>(undefined);
+    let loading = $state(false);
 
     let registrationError: ApiError | undefined = $state(undefined);
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
 
+        loading = true;
         const isFirstNameValid = firstNameInput.validate();
         const isLastNameValid = lastNameInput.validate();
         const isEmailValid = emailInput.validate();
         const isPasswordValid = passwordInput.validate();
         if (!(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid)) {
+            loading = false;
             return;
         }
 
@@ -55,6 +59,7 @@
                 }
                 console.error(error);
             });
+        loading = false;
     }
 </script>
 
@@ -66,7 +71,7 @@
         <Card.Title class="text-3xl">Sign Up</Card.Title>
         <Card.Description>Enter your information to create an account</Card.Description>
     </Card.Header>
-    <Card.Content class="flex w-full flex-col">
+    <Card.Content class="flex w-full flex-col gap-4">
         <form class="flex flex-col gap-5" onsubmit={handleSubmit}>
             <div class="flex w-full flex-row gap-5">
                 <Input
@@ -104,7 +109,14 @@
                 type="email"
             />
             <PasswordInput bind:this={passwordInput} class="w-full" />
-            <Button class="w-full" type="submit">Create an account</Button>
+            {#if loading}
+                <Button type="submit" class="w-full" disabled>
+                    <LoaderCircle class="animate-spin" />
+                    Creating account
+                </Button>
+            {:else}
+                <Button type="submit" class="w-full">Create an account</Button>
+            {/if}
             {#if registrationError}
                 <ErrorAlert
                     errorDetails={registrationError.errorDetails}
@@ -112,9 +124,15 @@
                 />
             {/if}
         </form>
-        <div class="mt-4 text-center text-sm">
+        <div class="text-center text-sm">
             Already have an account?
             <a class="underline" href="/signin"> Sign In </a>
         </div>
+        {#if error}
+            <Alert.Root variant="destructive">
+                <CircleAlert class="size-4" />
+                <Alert.Title>{error}</Alert.Title>
+            </Alert.Root>
+        {/if}
     </Card.Content>
 </Card.Root>

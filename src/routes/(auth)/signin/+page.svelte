@@ -84,8 +84,7 @@
         {#if error}
             <Alert.Root variant="destructive">
                 <CircleAlert class="size-4" />
-                <Alert.Title>Error</Alert.Title>
-                <Alert.Description>{error}</Alert.Description>
+                <Alert.Title>{error}</Alert.Title>
             </Alert.Root>
         {/if}
     </Card.Content>
