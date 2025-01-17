@@ -37,7 +37,9 @@ export interface Project {
     archived: boolean;
 }
 
-export type ProjectSpec = Omit<Project, "id">;
+export interface ProjectSpec {
+    name: string;
+}
 
 export interface ProjectMetadata {
     project: Project;

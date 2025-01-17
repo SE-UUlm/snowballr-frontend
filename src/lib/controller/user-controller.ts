@@ -10,7 +10,7 @@ export class UserController implements IUserController {
     }
 
     async get(): Promise<User> {
-        return this.client.get("/").then((response) => response.json());
+        return this.client.get("").then((response) => response.json());
     }
 
     async block(): Promise<void> {

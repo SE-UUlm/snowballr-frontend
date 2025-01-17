@@ -51,9 +51,12 @@ export class BackendController implements IBackendController {
         throw new Error("Method not implemented.");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async createProject(spec: ProjectSpec): Promise<Project> {
-        throw new Error("Method not implemented.");
+        const payload = {
+            name: spec.name,
+        };
+
+        return this.client.post("projects", payload).then((response) => response.json());
     }
 
     project(projectId: number): IProjectController {
@@ -61,7 +64,7 @@ export class BackendController implements IBackendController {
     }
 
     async getUsers(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+        return this.client.get("users").then((response) => response.json());
     }
 
     async createUser(personalInfo: UserSpec, password: string): Promise<User> {
