@@ -92,7 +92,7 @@ Usage:
     <PaperDetailsCard {paper} allowEditModeToggle startInEditMode />
 ```
 -->
-<PaperCard {tabs}>
+<PaperCard {tabs} data-testid="paper-details-card">
     <PaperCardContent value="1">
         <section class="flex flex-col gap-2 px-1">
             <div class="flex flex-row justify-between items-center">
@@ -116,7 +116,12 @@ Usage:
                 {/if}
             </div>
             <div class="flex justify-center pt-2">
-                <Button class="w-fit" variant="outline" onclick={toggleAdditionalInfos}>
+                <Button
+                    class="w-fit"
+                    variant="outline"
+                    onclick={toggleAdditionalInfos}
+                    data-testid="toggle-additional-infos-btn"
+                >
                     {#if showAdditionalInfos}
                         <ChevronUp />
                         Show less information
@@ -153,7 +158,7 @@ Usage:
                     value={paper.abstrakt}
                 />
             {:catch error}
-                <span class="text-error">Coudn't load abstract{error ? `: ${error}` : ""}</span>
+                <span class="text-error">Couldn't load abstract{error ? `: ${error}` : ""}</span>
             {/await}
         </section>
     </PaperCardContent>

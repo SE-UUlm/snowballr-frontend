@@ -45,4 +45,5 @@ Usage:
     rows="1"
     {value}
     readonly={!isEditable}
+    data-testid="toggleable-input"
 ></textarea>
