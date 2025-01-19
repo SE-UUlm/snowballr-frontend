@@ -17,7 +17,7 @@
     let isHovered = $state(false);
     const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
     let paperId: string | undefined = $state(undefined);
-    loadingPaperId.then((id) => (paperId = id));
+    loadingPaperId.then((id) => (paperId = id)).catch(() => (paperId = undefined));
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);

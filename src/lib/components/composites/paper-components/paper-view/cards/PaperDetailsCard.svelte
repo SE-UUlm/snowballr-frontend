@@ -153,7 +153,7 @@ Usage:
                     value={paper.abstrakt}
                 />
             {:catch error}
-                <span class="text-error">Coudn't load abstract: {error}</span>
+                <span class="text-error">Coudn't load abstract{error ? `: ${error}` : ""}</span>
             {/await}
         </section>
     </PaperCardContent>

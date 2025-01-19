@@ -35,6 +35,6 @@ Usage:
     {:then}
         <ToggleableInput isEditable={areDetailsInEditMode} {value} />
     {:catch error}
-        <span class="pt-2 text-error">Coudn't load {key}: {error}</span>
+        <span class="pt-2 text-error">Coudn't load {key}{error ? `: ${error}` : ""}</span>
     {/await}
 </div>

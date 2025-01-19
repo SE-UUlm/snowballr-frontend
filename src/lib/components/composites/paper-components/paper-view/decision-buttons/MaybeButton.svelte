@@ -6,15 +6,17 @@
     }
 
     const { loadingPaperId }: Props = $props();
-    let paperId: string | undefined = $state(undefined);
-    loadingPaperId.then((id) => (paperId = id));
 
-    function markPaperAsUndecided() {
+    function markPaperAsUndecided(paperId: string) {
         console.log(`Undecided paper with id ${paperId}`);
     }
 </script>
 
-<DecisionButton class="bg-maybe-yellow hover:bg-maybe-yellow-hover" onClick={markPaperAsUndecided}>
+<DecisionButton
+    class="bg-maybe-yellow hover:bg-maybe-yellow-hover"
+    onClick={markPaperAsUndecided}
+    {loadingPaperId}
+>
     {#snippet buttonContent()}
         <p>Maybe</p>
         <p class="text-maybe-yellow-shortcut">Ctrl+S</p>

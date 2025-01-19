@@ -7,11 +7,11 @@
 
 <svelte:head>
     {#await loadingPaper}
-        <title>Loading Paper...</title>
+        <title>Loading paper...</title>
     {:then paper}
         <title>{paper.title}</title>
     {:catch}
-        <title>Error</title>
+        <title>Failed loading paper</title>
     {/await}
 </svelte:head>
 <PaperView

@@ -8,16 +8,29 @@
     type Props = WithElementRef<TooltipTriggerProps> & {
         buttonContent: Snippet;
         tooltipContent: Snippet;
-        onClick: () => void;
+        loadingPaperId: Promise<number>;
+        onClick: (paperId: number) => void;
     };
 
     const {
         buttonContent,
         tooltipContent,
+        loadingPaperId,
         onClick,
         class: className,
         ...restProps
     }: Props = $props();
+
+    let paperId = $state<number | undefined>(undefined);
+    loadingPaperId.then((id) => (paperId = id)).catch(() => (paperId = undefined));
+
+    function onButtonClick() {
+        if (paperId) {
+            onClick(paperId);
+        } else {
+            console.error("Paper ID is not set");
+        }
+    }
 </script>
 
 <!-- max width is fixed, see PaperView component for reason -->
@@ -29,7 +42,11 @@ Rather use `AcceptButton` or `DeclineButton` or `MaybeButton` instead of this co
 
 Usage:
 ```svelte
-    <DecisionButton class="bg-decline-red" onClick={() => console.log("clicked button")}>
+    <DecisionButton
+        class="bg-decline-red"
+        onClick={(paperId) => console.log("clicked button")}
+        {loadingPaperId}
+    >
         {#snippet buttonContent()}
             <p>This is a button</p>
         {/snippet}
@@ -43,7 +60,7 @@ Usage:
     class={cn("text-primary max-w-[20rem] shadow-lg flex-grow-1000", className)}
     trigger={buttonContent}
     content={tooltipContent}
-    onclick={onClick}
+    onclick={onButtonClick}
     {...restProps}
     data-testid="decision-button"
 ></Tooltip>

@@ -6,15 +6,17 @@
     }
 
     const { loadingPaperId }: Props = $props();
-    let paperId: string | undefined = $state(undefined);
-    loadingPaperId.then((id) => (paperId = id));
 
-    function declinePaper() {
+    function declinePaper(paperId: string) {
         console.log(`Declined paper with id ${paperId}`);
     }
 </script>
 
-<DecisionButton class="bg-decline-red hover:bg-decline-red-hover" onClick={declinePaper}>
+<DecisionButton
+    class="bg-decline-red hover:bg-decline-red-hover"
+    onClick={declinePaper}
+    {loadingPaperId}
+>
     {#snippet buttonContent()}
         <p>Decline</p>
         <p class="text-decline-red-shortcut">Ctrl+D</p>

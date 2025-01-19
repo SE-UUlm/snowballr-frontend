@@ -7,13 +7,14 @@
 
 <svelte:head>
     {#await Promise.all([loadingProject, loadingPaper])}
-        <title>Loading Paper and Project...</title>
+        <title>Loading paper and project...</title>
     {:then [project, paper]}
         <title>{paper.title} | {project.name}</title>
     {:catch}
         <title>Failed loading data</title>
     {/await}
 </svelte:head>
+
 <PaperView
     {user}
     {loadingPaper}
