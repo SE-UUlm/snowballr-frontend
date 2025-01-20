@@ -3,8 +3,7 @@
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import { BackendController } from "$lib/controller/backend-controller";
-    import type { UserSpec } from "$lib/model/backend";
+    import { backend } from "$lib/grpc-backend-api";
     import { Schema } from "$lib/schemas";
 
     let firstNameInput: Input;
@@ -23,17 +22,19 @@
             return;
         }
 
-        const userSpec: UserSpec = {
+        const spec = {
             firstName: firstNameInput.getValue(),
             lastName: lastNameInput.getValue(),
             email: emailInput.getValue(),
-        };
-        const user = await BackendController.getInstance().createUser(
-            userSpec,
-            passwordInput.getValue(),
-        );
+            password: passwordInput.getValue(),
+        }
+
+        console.log(spec)
+        
+        backend.register(spec)
+            .then(user => console.log(user))
+            .catch(error => console.error(error));
         // TODO: Login and redirect to the home page
-        console.log(user);
     }
 </script>
 
