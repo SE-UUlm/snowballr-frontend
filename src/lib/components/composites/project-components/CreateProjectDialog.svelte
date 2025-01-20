@@ -2,6 +2,7 @@
     import { CirclePlus } from "lucide-svelte";
     import { Button, buttonVariants } from "$lib/components/primitives/button";
     import * as Dialog from "$lib/components/primitives/dialog";
+    import * as Alert from "$lib/components/primitives/alert";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -11,8 +12,12 @@
     import { BackendController } from "$lib/controller/backend-controller";
     import { distance } from "fastest-levenshtein";
     import { goto } from "$app/navigation";
+    import CircleAlert from "lucide-svelte/icons/circle-alert";
+
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
+
+    let errorOccurred = $state(false);
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
@@ -21,13 +26,20 @@
     // list of possible members (represented by their E-Mail) that can be invited
     let possibleMemberEMails: string[] = [];
     onMount(async () => {
-        let possibleMembers: User[] = await BackendController.getInstance().getUsers();
-        let thisUser: User = await BackendController.getInstance().thisUser().get();
+        try {
+            let possibleMembers: User[] = await BackendController.getInstance().getUsers();
+            // TODO: exchange by call to store or so, if login etc. is completely implemented
+            let thisUser: User = await BackendController.getInstance().thisUser().get();
 
-        possibleMemberEMails = possibleMembers
-            .filter((user) => user !== thisUser)
-            .map((user) => user.email)
-            .map((email) => email.toLowerCase());
+            possibleMemberEMails = possibleMembers
+                .filter((user) => user.id !== thisUser.id)
+                .map((user) => user.email)
+                .map((email) => email.toLowerCase());
+        } catch (error) {
+            // TODO: Question to reviewer: any better idea or further things to show?
+            // because the consequence is, no suggestions can be provided
+            console.log(`Could not get users from server (${error})`);
+        }
     });
 
     /**
@@ -38,7 +50,7 @@
      * appear at the top of the suggestions list).
      *
      * @param input the content of the input field, i.e. the search string
-     * @returns
+     * @returns list of E-Mail (sorted) of users that can be invited
      */
     function filterPossibleMembers(input: string): string[] {
         input = input.toLowerCase();
@@ -62,9 +74,16 @@
         }
 
         // create project
-        let project = await BackendController.getInstance().createProject({
-            name: projectNameInput.getValue(),
-        });
+        let project;
+        try {
+            project = await BackendController.getInstance().createProject({
+                name: projectNameInput.getValue(),
+            });
+        } catch (error) {
+            errorOccurred = true;
+            console.log(`Could not create project (${error})`);
+            return;
+        }
         // invite members (if necessary)
         membersInput.forEach((email) =>
             BackendController.getInstance().project(project.id).inviteUser(email),
@@ -77,7 +96,7 @@
 <Dialog.Root bind:open>
     <div class="px-5">
         <!-- need to overwrite svg size in button, as the shadcn default button sets a default size
-                 for possible icons, which cannot be overwritten by set the size inside the icon -->
+                for possible icons -->
         <Dialog.Trigger
             class={cn(
                 buttonVariants({ variant: "default" }),
@@ -117,6 +136,13 @@
                 searchSuggestions={filterPossibleMembers}
             />
         </form>
+        {#if errorOccurred}
+            <Alert.Root variant="destructive">
+                <CircleAlert class="size-4" />
+                <Alert.Title>Could not create project!</Alert.Title>
+                <Alert.Description>Check your connection to the server.</Alert.Description>
+            </Alert.Root>
+        {/if}
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
             <Button type="submit" form="project-creation">Create Project</Button>
