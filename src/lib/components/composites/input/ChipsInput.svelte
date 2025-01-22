@@ -1,21 +1,26 @@
 <script lang="ts">
     import { Label } from "$lib/components/primitives/label";
     import { Button } from "$lib/components/primitives/button";
+    import CircleAlert from "lucide-svelte/icons/circle-alert";
 
     interface ChipsInputProps {
         items: string[];
+        validate: (arg0: string) => boolean;
         label?: string;
         labelPosition?: "top" | "left";
         searchSuggestions?: (arg0: string) => string[];
         placeholder?: string;
+        resolveAlias?: (arg0: string) => string | undefined;
     }
 
     let {
         items = $bindable(),
+        validate,
         label,
         labelPosition = "top",
         searchSuggestions,
         placeholder = "",
+        resolveAlias,
     }: ChipsInputProps = $props();
 
     /**
@@ -24,6 +29,8 @@
      */
     let selectedChipIndex: number = $state(-1);
     let inputText: string = $state("");
+    // assume input is valid, until the opposite is not proven by a check
+    let isInputValid: boolean = $state(true);
 
     let suggestions: string[] = $state([]);
     /**
@@ -42,6 +49,13 @@
      */
     function addItem(item: string): void {
         if (item.trim() !== "" && !items.includes(item)) {
+            if (resolveAlias) {
+                const resolvedAlias = resolveAlias(item);
+                if (resolvedAlias == undefined) {
+                    return;
+                }
+                item = resolvedAlias;
+            }
             items = [...items, item];
             inputText = "";
         }
@@ -88,6 +102,7 @@
      * That means adding a new / removing an item or navigate between the items / suggestions.
      */
     function handleKeyDown(event: KeyboardEvent): void {
+        isInputValid = true;
         switch (event.key) {
             case "Backspace":
                 if (inputText === "" && items.length > 0) {
@@ -110,7 +125,11 @@
                 if (selectedSuggestionIndex !== -1) {
                     addItem(suggestions[selectedSuggestionIndex]);
                 } else {
-                    addItem(inputText);
+                    if (validate(inputText)) {
+                        addItem(inputText);
+                    } else {
+                        isInputValid = false;
+                    }
                 }
                 focusInput(true);
                 break;
@@ -157,19 +176,26 @@
 @component
 Input component with chips showing all given input.
 
-If the user provides an input and set it (using ",", "+", "Tab" or "Enter"), a chip will be added
-in the input field showing this input. The chip can be deleted either by clicking on the cross or
-pressing "Backspace". The user can navigate in the chips using the left and right arrow keys.
+If the user provides an input and set it (using ",", "+", "Tab" or "Enter"), a chip will be added,
+in the input field showing this input, if it is valid, i.e. pass the check by the provided `validate` function.
+The chip can be deleted either by clicking on the cross or pressing "Backspace".
+The user can navigate in the chips using the left and right arrow keys.
 
 Customizations:
 - `label` to provide a label, which will be positioned at `labelPosition` ("top" or "left") relative to the input
 - `placeholder` to show a placeholder text in the input field
-- `searchSuggestions` to propagate a function, which search for a input string and return a string array,
+- `searchSuggestions` to optionally propagate a function, which search for a input string and return a string array,
 representing an input text, which should be searched in a list of possible suggestions.
+- `resolveAlias` to optionally propagate a function, which map the input to a possibly different
+value shown.
 
 If the method `searchSuggestions` is given, the user gets a list of possible inputs beneath the
 input field, which can be selected by either clicking on the suggestions or add it like a normal item.
 Furthermore, the user can navigate in the suggestions using the up and down arrow keys.
+
+The method `resolveAlias` can be useful, if you want allow multiple inputs or aliases for one item,
+e. g. if allow to input either the full name or the email of a user (= data) to create a user item
+shown by the user's name (= representation).
 
 Usage:
 ```svelte
@@ -217,6 +243,14 @@ Usage:
             />
         </div>
     </div>
+    {#if !isInputValid}
+        <div class="flex flex-row w-full gap-2 text-red-500">
+            <CircleAlert class="w-5 h-5" data-testid="validation-fail" />
+            <p class="text-sm" data-testid="error-message">
+                Please enter a valid name or email address.
+            </p>
+        </div>
+    {/if}
     <!-- suggestions list -->
     {#if suggestions.length > 0 && inputText !== ""}
         <ul

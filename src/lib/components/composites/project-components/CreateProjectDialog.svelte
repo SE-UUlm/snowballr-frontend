@@ -14,6 +14,7 @@
     import { distance } from "fastest-levenshtein";
     import { goto } from "$app/navigation";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
+    import { getNames } from "$lib/utils/common-helper";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -29,8 +30,82 @@
     let membersInput: string[] = $state([]);
 
     // TODO: check, whether this solution scales as the backend contains hundreds / thousands of users
-    // list of possible members (represented by their E-Mail) that can be invited
-    let possibleMemberEmails: string[] = [];
+    // list of possible members that can be invited
+    let possibleMembers: User[] = [];
+    let possibleNamesOrEmails: string[] = [];
+
+    onMount(async () => {
+        try {
+            possibleMembers = await BackendController.getInstance().getUsers();
+            // TODO: exchange by call to store or so, if login etc. is completely implemented
+            let thisUser: User = await BackendController.getInstance().thisUser().get();
+
+            possibleMembers = possibleMembers.filter((user) => user.id !== thisUser.id);
+            possibleNamesOrEmails = possibleMembers
+                .map((user) => getNames([user]))
+                .concat(possibleMembers.map((user) => user.email));
+        } catch (error) {
+            isErrorOnUsersLoading = true;
+            console.error(`Could not get users from server (${error})`);
+        }
+    });
+
+    /**
+     * Filters all possible members by checking, whether their name or email contains the search string.
+     *
+     * Furthermore, the filtered list is sorted by the Levenshtein distance, i.e.
+     * the members with the best matching name or email are at the beginning of the list (and will
+     * appear at the top of the suggestions list).
+     *
+     * @param input the content of the input field, i.e. the search string
+     * @returns list of "name \<email\>" (sorted) representations of users that can be invited
+     */
+    function filterPossibleMembers(input: string): string[] {
+        input = input.toLowerCase();
+
+        return possibleMembers
+            .map((user) => `${getNames([user])} <${user.email}>`)
+            .filter((item) => item.includes(input))
+            .sort((a, b) => distance(a, input) - distance(b, input));
+    }
+
+    /**
+     * Checks, whether a given input is a valid name or email of a registered user.
+     */
+    function validateInput(input: string): boolean {
+        return possibleNamesOrEmails.includes(input.trim());
+    }
+
+    /**
+     * Maps a name of a user to its corresponding email.
+     */
+    function getEmailFromUserName(name: string): string | undefined {
+        return possibleMembers.find((user) => getNames([user]) === name)?.email;
+    }
+
+    /**
+     * Maps a valid name or email of a user to the name of the user.
+     *
+     * @example The user {firstName: "John", lastName: "Doe, email: "john.doe@example.com", ...}
+     * is in the list of possible members. Then the input
+     * - "John Doe"
+     * - "john.doe@example.com"
+     * - "John Doe <john.doe@example.com>"
+     * all are mapped to "John Doe"
+     */
+    function mapNameOrEmailToName(input: string): string | undefined {
+        let possibleMatchedUser = possibleMembers
+            .filter(
+                (user) =>
+                    getNames([user]) === input ||
+                    user.email === input ||
+                    `${getNames([user])} <${user.email}>` === input,
+            )
+            .at(0);
+
+        return possibleMatchedUser !== undefined ? getNames([possibleMatchedUser]) : undefined;
+    }
+
     /**
      * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
      */
@@ -40,39 +115,6 @@
         } else {
             projectWasCreated = false;
         }
-    }
-
-    onMount(async () => {
-        try {
-            let possibleMembers: User[] = await BackendController.getInstance().getUsers();
-            // TODO: exchange by call to store or so, if login etc. is completely implemented
-            let thisUser: User = await BackendController.getInstance().thisUser().get();
-
-            possibleMemberEmails = possibleMembers
-                .filter((user) => user.id !== thisUser.id)
-                .map((user) => user.email.toLowerCase());
-        } catch (error) {
-            isErrorOnUsersLoading = true;
-            console.error(`Could not get users from server (${error})`);
-        }
-    });
-
-    /**
-     * Filters all possible members by checking, whether their E-Mail contains the search string.
-     *
-     * Furthermore, the filtered list of E-Mails is sorted by the Levenshtein distance, i.e.
-     * the members with the best matching E-Mail are at the beginning of the list (and will
-     * appear at the top of the suggestions list).
-     *
-     * @param input the content of the input field, i.e. the search string
-     * @returns list of E-Mail (sorted) of users that can be invited
-     */
-    function filterPossibleMembers(input: string): string[] {
-        input = input.toLowerCase();
-
-        return possibleMemberEmails
-            .filter((item) => item.includes(input))
-            .sort((a, b) => distance(a, input) - distance(b, input));
     }
 
     /**
@@ -96,9 +138,14 @@
 
             if (project !== undefined) {
                 await Promise.all(
-                    membersInput.map((email) =>
-                        BackendController.getInstance().project(project!.id).inviteUser(email),
-                    ),
+                    membersInput.map((name) => {
+                        let email = getEmailFromUserName(name);
+                        if (email !== undefined) {
+                            return BackendController.getInstance()
+                                .project(project!.id)
+                                .inviteUser(email);
+                        }
+                    }),
                 );
             } else {
                 isErrorOnProjectCreation = true;
@@ -156,7 +203,9 @@
             <ChipsInput
                 bind:items={membersInput}
                 label="Members"
+                validate={validateInput}
                 searchSuggestions={filterPossibleMembers}
+                resolveAlias={mapNameOrEmailToName}
             />
             {#if isErrorOnUsersLoading}
                 <Alert.Root variant="destructive">
