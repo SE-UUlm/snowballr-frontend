@@ -1,14 +1,15 @@
 <script lang="ts">
-    import { CirclePlus } from "lucide-svelte";
+    import { CirclePlus, LoaderCircle } from "lucide-svelte";
     import { Button, buttonVariants } from "$lib/components/primitives/button";
     import * as Dialog from "$lib/components/primitives/dialog";
+    import * as AlertDialog from "$lib/components/primitives/alert-dialog";
     import * as Alert from "$lib/components/primitives/alert";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import type { User } from "$lib/model/backend";
+    import type { Project, User } from "$lib/model/backend";
     import { BackendController } from "$lib/controller/backend-controller";
     import { distance } from "fastest-levenshtein";
     import { goto } from "$app/navigation";
@@ -17,8 +18,12 @@
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
 
-    let isErrorOnProjectCreation = $state<boolean>(false);
-    let isErrorOnUsersLoading = $state<boolean>(false);
+    let isServerStillCreatingProject = $state(false);
+    let projectWasCreated = $state(false);
+    let project = $state<Project | undefined>(undefined);
+
+    let isErrorOnProjectCreation = $state(false);
+    let isErrorOnUsersLoading = $state(false);
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
@@ -26,6 +31,17 @@
     // TODO: check, whether this solution scales as the backend contains hundreds / thousands of users
     // list of possible members (represented by their E-Mail) that can be invited
     let possibleMemberEmails: string[] = [];
+    /**
+     * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
+     */
+    async function navigateToProject() {
+        if (project !== undefined) {
+            await goto(`/project/${project.id}/dashboard`);
+        } else {
+            projectWasCreated = false;
+        }
+    }
+
     onMount(async () => {
         try {
             let possibleMembers: User[] = await BackendController.getInstance().getUsers();
@@ -72,23 +88,31 @@
             return;
         }
 
-        // create project
-        let project;
+        isServerStillCreatingProject = true;
         try {
             project = await BackendController.getInstance().createProject({
                 name: projectNameInput.getValue(),
             });
+
+            if (project !== undefined) {
+                await Promise.all(
+                    membersInput.map((email) =>
+                        BackendController.getInstance().project(project!.id).inviteUser(email),
+                    ),
+                );
+            } else {
+                isErrorOnProjectCreation = true;
+                console.error("Could not create project (Project from server is undefined)");
+            }
         } catch (error) {
             isErrorOnProjectCreation = true;
             console.error(`Could not create project (${error})`);
             return;
         }
-        // invite members (if necessary)
-        membersInput.forEach((email) =>
-            BackendController.getInstance().project(project.id).inviteUser(email),
-        );
+        isServerStillCreatingProject = false;
 
-        await goto(`/project/${project.id}/dashboard`);
+        projectWasCreated = true;
+        open = false;
     }
 </script>
 
@@ -153,7 +177,32 @@
         {/if}
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
-            <Button type="submit" form="project-creation">Create Project</Button>
+            {#if isServerStillCreatingProject}
+                <Button type="submit" form="project-creation" disabled>
+                    <LoaderCircle class="animate-spin" />
+                    Creating Project
+                </Button>
+            {:else}
+                <Button type="submit" form="project-creation">Create Project</Button>
+            {/if}
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
+
+<AlertDialog.Root open={projectWasCreated}>
+    <AlertDialog.Content>
+        <AlertDialog.Header>
+            <AlertDialog.Title
+                >Success! Your new project has been created successfully.</AlertDialog.Title
+            >
+            <AlertDialog.Description>
+                The members were invited and you can now start with the new SLR by adding sources,
+                refine the review process or inviting further members.
+            </AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Footer>
+            <AlertDialog.Cancel>Back</AlertDialog.Cancel>
+            <AlertDialog.Action onclick={async () => navigateToProject()}>Open</AlertDialog.Action>
+        </AlertDialog.Footer>
+    </AlertDialog.Content>
+</AlertDialog.Root>

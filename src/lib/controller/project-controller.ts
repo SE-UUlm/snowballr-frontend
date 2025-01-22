@@ -55,7 +55,7 @@ export class ProjectController implements IProjectController {
             email: email,
         };
 
-        this.client.post("invite", payload).then((response) => response.json());
+        return this.client.post("invite", payload).then((response) => response.json());
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
