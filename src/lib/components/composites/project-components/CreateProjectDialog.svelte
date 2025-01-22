@@ -24,7 +24,7 @@
 
     // TODO: check, whether this solution scales as the backend contains hundreds / thousands of users
     // list of possible members (represented by their E-Mail) that can be invited
-    let possibleMemberEMails: string[] = [];
+    let possibleMemberEmails: string[] = [];
     onMount(async () => {
         try {
             let possibleMembers: User[] = await BackendController.getInstance().getUsers();
@@ -33,8 +33,7 @@
 
             possibleMemberEMails = possibleMembers
                 .filter((user) => user.id !== thisUser.id)
-                .map((user) => user.email)
-                .map((email) => email.toLowerCase());
+                .map((user) => user.email.toLowerCase());
         } catch (error) {
             // TODO: Question to reviewer: any better idea or further things to show?
             // because the consequence is, no suggestions can be provided

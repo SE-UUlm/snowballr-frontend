@@ -113,10 +113,6 @@
     }
 }
 
-@utility text-h3 {
-    @apply text-lg font-semibold tracking-normal text-primary;
-}
-
 @utility text-placeholder {
     /* Custom Style Classes */
     @apply text-base font-medium tracking-normal text-input-placeholder-slate;

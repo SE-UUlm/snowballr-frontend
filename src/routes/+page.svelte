@@ -16,7 +16,6 @@
 </svelte:head>
 <SimpleNavigationBar {user} title="SnowballR" />
 <main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
-    <!-- TODO: exchange by the NamedList for the open reviews -->
     <section class="h-full w-full">
         <NamedList
             listName="Open Reviews"

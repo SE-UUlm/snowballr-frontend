@@ -165,7 +165,7 @@ Usage:
             class="flex flex-wrap w-full items-center gap-2.5 px-4 {items.length === 0
                 ? 'py-2'
                 : 'py-1.5'}
-    text-default border-input-border-slate bg-background rounded-md border overflow-x-auto"
+                text-default border-input-border-slate bg-background rounded-md border overflow-x-auto"
         >
             <!-- chips -->
             {#each items as item, index}
