@@ -53,7 +53,7 @@ describe("PaperDetail", () => {
         expect(screen.queryByTestId("skeleton")).not.toBeNull();
     });
 
-    test("When paper loading failed without error, then errot text is shown", async () => {
+    test("When paper loading failed without error, then error text is shown", async () => {
         render(PaperDetail, {
             target: document.body,
             props: {
@@ -75,7 +75,7 @@ describe("PaperDetail", () => {
         expect(valueSpan.textContent).toEqual("Couldn't load Title");
     });
 
-    test("When paper loading failed with error, then errot text is shown", async () => {
+    test("When paper loading failed with error, then error text is shown", async () => {
         render(PaperDetail, {
             target: document.body,
             props: {

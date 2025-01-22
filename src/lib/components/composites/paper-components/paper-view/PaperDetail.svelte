@@ -20,6 +20,9 @@
 @component
 Paper Detail component to display a single detail of a paper.
 
+- `value` is used as class value for the skeleton loader while the promise `loadingPaper` is pending.
+    When the promise is resolved, the value is displayed as a text.
+
 Usage:
 ```svelte
     <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
