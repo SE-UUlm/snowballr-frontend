@@ -18,30 +18,30 @@
         placeholder = "",
     }: ChipsInputProps = $props();
 
-    /*
-        Index (from 0 - <length of items>) indicating, which chip is currently selected.
-        Index -1 represent the state, that no chip is selected.
-    */
+    /**
+     * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
+     * Index -1 represent the state, that no chip is selected.
+     */
     let selectedChipIndex: number = $state(-1);
     let inputText: string = $state("");
 
     let suggestions: string[] = $state([]);
-    /*
-        Index (from 0 - <length of suggestions>) indicating, which suggestion is currently selected.
-        Index -1 represent the state, that no suggestion is selected.
-    */
+    /**
+     * Index (from 0 - \<length of suggestions\>) indicating, which suggestion is currently selected.
+     * Index -1 represent the state, that no suggestion is selected.
+     */
     let selectedSuggestionIndex: number = $state(-1);
 
     /**
-     * Adds the input to the list of items and add a chip to the visualization,
-     * if the input is not a duplicate.
+     * Adds the input to the list of items and add a chip to the visualization.
      *
+     * The input is only added, if it is not a duplicate and not empty (after trimming).
      * Furthermore, it clears the input.
      *
      * @param item the item to add
      */
     function addItem(item: string): void {
-        if (item !== "" && !items.includes(item)) {
+        if (item.trim() !== "" && !items.includes(item)) {
             items = [...items, item];
             inputText = "";
         }
@@ -85,7 +85,7 @@
                 addItem(suggestions[selectedSuggestionIndex]);
                 selectedSuggestionIndex = -1;
             } else {
-                addItem(inputText.trim());
+                addItem(inputText);
             }
 
             document.getElementById("chips-input-" + label)?.focus();

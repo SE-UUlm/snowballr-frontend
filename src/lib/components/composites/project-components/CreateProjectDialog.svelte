@@ -31,7 +31,7 @@
             // TODO: exchange by call to store or so, if login etc. is completely implemented
             let thisUser: User = await BackendController.getInstance().thisUser().get();
 
-            possibleMemberEMails = possibleMembers
+            possibleMemberEmails = possibleMembers
                 .filter((user) => user.id !== thisUser.id)
                 .map((user) => user.email.toLowerCase());
         } catch (error) {
@@ -54,7 +54,7 @@
     function filterPossibleMembers(input: string): string[] {
         input = input.toLowerCase();
 
-        return possibleMemberEMails
+        return possibleMemberEmails
             .filter((item) => item.includes(input))
             .sort((a, b) => distance(a, input) - distance(b, input));
     }
