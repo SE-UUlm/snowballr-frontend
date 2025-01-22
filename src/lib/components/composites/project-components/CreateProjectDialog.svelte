@@ -17,7 +17,8 @@
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
 
-    let errorOccurred = $state(false);
+    let isErrorOnProjectCreation = $state<boolean>(false);
+    let isErrorOnUsersLoading = $state<boolean>(false);
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
@@ -35,9 +36,8 @@
                 .filter((user) => user.id !== thisUser.id)
                 .map((user) => user.email.toLowerCase());
         } catch (error) {
-            // TODO: Question to reviewer: any better idea or further things to show?
-            // because the consequence is, no suggestions can be provided
-            console.log(`Could not get users from server (${error})`);
+            isErrorOnUsersLoading = true;
+            console.error(`Could not get users from server (${error})`);
         }
     });
 
@@ -79,8 +79,8 @@
                 name: projectNameInput.getValue(),
             });
         } catch (error) {
-            errorOccurred = true;
-            console.log(`Could not create project (${error})`);
+            isErrorOnProjectCreation = true;
+            console.error(`Could not create project (${error})`);
             return;
         }
         // invite members (if necessary)
@@ -134,12 +134,21 @@
                 label="Members"
                 searchSuggestions={filterPossibleMembers}
             />
+            {#if isErrorOnUsersLoading}
+                <Alert.Root variant="destructive">
+                    <CircleAlert class="size-4" />
+                    <Alert.Title>Something went wrong while loading possible members.</Alert.Title>
+                    <Alert.Description
+                        >Please check your connection and try again.</Alert.Description
+                    >
+                </Alert.Root>
+            {/if}
         </form>
-        {#if errorOccurred}
+        {#if isErrorOnProjectCreation}
             <Alert.Root variant="destructive">
                 <CircleAlert class="size-4" />
-                <Alert.Title>Could not create project!</Alert.Title>
-                <Alert.Description>Check your connection to the server.</Alert.Description>
+                <Alert.Title>Something went wrong while creating the project.</Alert.Title>
+                <Alert.Description>Please check your connection and try again.</Alert.Description>
             </Alert.Root>
         {/if}
         <Dialog.Footer>
