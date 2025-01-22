@@ -155,8 +155,8 @@ Usage:
                     maxHeightActionProps={{ showButtonBar, showAdditionalInfos }}
                     value={paper.abstrakt}
                 />
-            {:catch error}
-                <span class="text-error">Couldn't load abstract{error ? `: ${error}` : ""}</span>
+            {:catch}
+                <span class="text-error">Couldn't load Abstract</span>
             {/await}
         </section>
     </PaperCardContent>

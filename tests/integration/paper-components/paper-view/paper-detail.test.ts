@@ -53,7 +53,7 @@ describe("PaperDetail", () => {
         expect(screen.queryByTestId("skeleton")).not.toBeNull();
     });
 
-    test("When paper loading failed without error, then error text is shown", async () => {
+    test("When paper loading failed, then error text is shown", async () => {
         render(PaperDetail, {
             target: document.body,
             props: {
@@ -73,27 +73,5 @@ describe("PaperDetail", () => {
 
         expect(keySpan.textContent).toEqual("Title");
         expect(valueSpan.textContent).toEqual("Couldn't load Title");
-    });
-
-    test("When paper loading failed with error, then error text is shown", async () => {
-        render(PaperDetail, {
-            target: document.body,
-            props: {
-                key: "Title",
-                value: "Example Title",
-                loadingPaper: Promise.reject(new Error("Network Error")),
-                areDetailsInEditMode: false,
-            },
-        });
-
-        await waitForComponentLoading();
-
-        const spans = document.getElementsByTagName("span");
-        expect(spans).toHaveLength(2);
-        const keySpan = spans[0];
-        const valueSpan = spans[1];
-
-        expect(keySpan.textContent).toEqual("Title");
-        expect(valueSpan.textContent).toEqual("Couldn't load Title: Error: Network Error");
     });
 });
