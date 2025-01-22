@@ -55,69 +55,92 @@
     }
 
     /**
+     * Calculate the next index based on a given step and maximal index (wrap around).
+     */
+    function nextIndex(step: number, current: number, max: number) {
+        return (current + step + max) % max;
+    }
+
+    /**
+     * Set the focus to the input field and reset the {@link selectedSuggestionIndex}
+     * and optionally the {@link selectedChipIndex} to -1.
+     *
+     * @param resetChipSelection if true, reset the {@link selectedChipIndex} to -1
+     */
+    function focusInput(resetChipSelection: boolean = false): void {
+        document.getElementById("chips-input-" + label)?.focus();
+        selectedSuggestionIndex = -1;
+        if (resetChipSelection) {
+            selectedChipIndex = -1;
+        }
+    }
+
+    /**
+     * Set the focus to the suggestions list and reset the {@link selectedChipIndex} to -1.
+     */
+    function focusSuggestionsList(): void {
+        document.getElementById("chips-suggestions-" + label)?.focus();
+        selectedChipIndex = -1;
+    }
+
+    /**
      * Handles a new (keyboard) input to this component.
      * That means adding a new / removing an item or navigate between the items / suggestions.
-     *
-     * TODO: for reviewer: if you have a better idea for this handler, i am open for ideas, because
-     * i dont like it.
      */
     function handleKeyDown(event: KeyboardEvent): void {
-        if (event.key === "Backspace" && inputText === "" && items.length > 0) {
-            // delete the last item
-            if (selectedChipIndex !== -1) {
-                removeItem(selectedChipIndex);
-            } else {
-                removeItem(items.length - 1);
-            }
+        switch (event.key) {
+            case "Backspace":
+                if (inputText === "" && items.length > 0) {
+                    // delete the last item
+                    if (selectedChipIndex !== -1) {
+                        removeItem(selectedChipIndex);
+                    } else {
+                        removeItem(items.length - 1);
+                    }
+                    focusInput(true);
+                }
+                break;
 
-            document.getElementById("chips-input-" + label)?.focus();
-            selectedSuggestionIndex = -1;
-            selectedChipIndex = -1;
-        } else if (
-            event.key === "Tab" ||
-            event.key === "Enter" ||
-            event.key === "," ||
-            event.key === "+"
-        ) {
-            // add a new item
-            event.preventDefault();
-            if (selectedSuggestionIndex !== -1) {
-                addItem(suggestions[selectedSuggestionIndex]);
-                selectedSuggestionIndex = -1;
-            } else {
-                addItem(inputText);
-            }
+            case "Tab":
+            case "Enter":
+            case ",":
+            case "+":
+                // add a new item
+                event.preventDefault();
+                if (selectedSuggestionIndex !== -1) {
+                    addItem(suggestions[selectedSuggestionIndex]);
+                } else {
+                    addItem(inputText);
+                }
+                focusInput(true);
+                break;
 
-            document.getElementById("chips-input-" + label)?.focus();
-            selectedSuggestionIndex = -1;
-            selectedChipIndex = -1;
-        } else if (event.key === "ArrowDown") {
-            selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestions.length;
+            case "ArrowDown":
+            case "ArrowUp":
+                selectedSuggestionIndex = nextIndex(
+                    event.key === "ArrowDown" ? 1 : -1,
+                    selectedSuggestionIndex,
+                    suggestions.length,
+                );
 
-            document.getElementById("chips-suggestions-" + label)?.focus();
-            selectedChipIndex = -1;
-        } else if (event.key === "ArrowUp") {
-            selectedSuggestionIndex =
-                (selectedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+                focusSuggestionsList();
+                break;
 
-            document.getElementById("chips-suggestions-" + label)?.focus();
-            selectedChipIndex = -1;
-        } else if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            if (selectedChipIndex === -1) {
-                // edge case: no previous selection, so set to last element
-                selectedChipIndex = items.length;
-            }
-            selectedChipIndex = (selectedChipIndex - 1 + items.length) % items.length;
+            case "ArrowLeft":
+            case "ArrowRight":
+                event.preventDefault();
+                if (event.key === "ArrowLeft" && selectedChipIndex === -1) {
+                    // edge case: no previous selection, so set to last element
+                    selectedChipIndex = items.length;
+                }
+                selectedChipIndex = nextIndex(
+                    event.key === "ArrowLeft" ? -1 : 1,
+                    selectedChipIndex,
+                    items.length,
+                );
 
-            document.getElementById("chips-input-" + label)?.focus();
-            selectedSuggestionIndex = -1;
-        } else if (event.key === "ArrowRight") {
-            event.preventDefault();
-            selectedChipIndex = (selectedChipIndex + 1) % items.length;
-
-            document.getElementById("chips-input-" + label)?.focus();
-            selectedSuggestionIndex = -1;
+                focusInput();
+                break;
         }
     }
 
@@ -161,7 +184,6 @@ Usage:
     <div class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row gap-4 items-center'}">
         <Label for={"chips-input-" + label}>{label}</Label>
         <div
-            id={"chips-input-" + label}
             class="flex flex-wrap w-full items-center gap-2.5 px-4 {items.length === 0
                 ? 'py-2'
                 : 'py-1.5'}
@@ -186,7 +208,7 @@ Usage:
 
             <!-- input for next chip -->
             <input
-                id={"chips-input-" + label}
+                id={"input-" + label}
                 type="text"
                 class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
                 bind:value={inputText}
@@ -197,7 +219,10 @@ Usage:
     </div>
     <!-- suggestions list -->
     {#if suggestions.length > 0 && inputText !== ""}
-        <ul id={"chips-suggestions-" + label}>
+        <ul
+            id={"chips-suggestions-" + label}
+            class="border rounded-md max-h-[160px] overflow-y-scroll"
+        >
             {#each suggestions as suggestion, i}
                 <Button
                     variant="ghostWithoutHover"
