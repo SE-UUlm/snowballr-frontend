@@ -27,7 +27,10 @@ jobs:
               with:
                   node_version: ${{ env.node_version }}
 
-            - name: Run Prettier & ESLint
+            - name: Run License Check
+              run: npm run license-check
+
+            - name: Linting
               run: npm run lint
 
     unit-test:
