@@ -26,8 +26,9 @@
         displayItem,
     }: ChipsInputProps = $props();
 
-    const INPUT_ID = "input-" + label;
-    const SUGGESTIONS_LIST_ID = "chips-suggestions-" + label;
+    const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
+    const SUGGESTIONS_LIST_ID =
+        label === undefined ? "chips-suggestions" : "chips-suggestions-" + label;
 
     /**
      * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
@@ -224,8 +225,11 @@ Usage:
     />
 ```
 -->
-<div class="flex flex-col w-full gap-2">
-    <div class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row gap-4 items-center'}">
+<div class="flex flex-col w-full gap-2" data-testid="chips-input-component">
+    <div
+        class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row gap-4 items-center'}"
+        data-testid="chips-input-container"
+    >
         <Label for={INPUT_ID}>{label}</Label>
         <div
             class="flex flex-wrap w-full items-center gap-2.5 px-4 {items.length === 0
@@ -239,6 +243,7 @@ Usage:
                     class="flex items-center {index === selectedChipIndex
                         ? 'bg-slate-300'
                         : 'bg-slate-200'} rounded-full px-3 py-0.5 w-max"
+                    data-testid={"chip-" + index}
                 >
                     {#if displayItem !== undefined && displayItem(item) !== undefined}
                         {displayItem(item)}
@@ -257,6 +262,7 @@ Usage:
             <!-- input for next chip -->
             <input
                 id={INPUT_ID}
+                data-testid={INPUT_ID}
                 type="text"
                 class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
                 bind:value={inputText}
@@ -275,14 +281,22 @@ Usage:
     {/if}
     <!-- suggestions list -->
     {#if suggestions.length > 0 && inputText !== ""}
-        <ul id={SUGGESTIONS_LIST_ID} class="border rounded-md max-h-[160px] overflow-y-scroll">
+        <ul
+            id={SUGGESTIONS_LIST_ID}
+            class="border rounded-md max-h-[160px] overflow-y-scroll"
+            data-testid={SUGGESTIONS_LIST_ID}
+        >
             {#each suggestions as suggestion, i}
                 <Button
                     variant="ghostWithoutHover"
                     class="flex w-full justify-start {selectedSuggestionIndex === i
                         ? 'bg-accent'
                         : ''} text-default"
-                    onclick={() => addItem(suggestion)}
+                    onclick={() => {
+                        addItem(suggestion);
+                        focusInput(true);
+                    }}
+                    data-testid={"suggestion-" + i}
                 >
                     {suggestion}
                 </Button>
