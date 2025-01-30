@@ -148,6 +148,7 @@
                     .catch((error) => {
                         isErrorOnProjectCreation = true;
                         console.error(`Could not invite users to project (${error})`);
+                        /// TODO: add hint in the *Members* page in the settings
                     });
             })
             .catch((error) => {

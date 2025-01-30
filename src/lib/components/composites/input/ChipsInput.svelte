@@ -5,12 +5,12 @@
 
     interface ChipsInputProps {
         items: string[];
-        validate: (arg0: string) => boolean;
+        validate: (input: string) => boolean;
         label?: string;
         labelPosition?: "top" | "left";
-        searchSuggestions?: (arg0: string) => string[];
+        searchSuggestions?: (searchString: string) => string[];
         placeholder?: string;
-        resolveAlias?: (arg0: string) => string | undefined;
+        resolveAlias?: (item: string) => string | undefined;
     }
 
     let {
