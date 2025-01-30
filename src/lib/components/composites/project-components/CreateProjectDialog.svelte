@@ -11,7 +11,7 @@
     import { onMount } from "svelte";
     import type { Project, User } from "$lib/model/backend";
     import { BackendController } from "$lib/controller/backend-controller";
-    import { distance } from "fastest-levenshtein";
+    import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import { getNames } from "$lib/utils/common-helper";
@@ -53,7 +53,7 @@
     /**
      * Filters all possible members by checking, whether their name or email contains the search string.
      *
-     * Furthermore, the filtered list is sorted by the Levenshtein distance, i.e.
+     * Furthermore, the filtered list is sorted by the score from the FZF algorithm, i.e.
      * the members with the best matching name or email are at the beginning of the list (and will
      * appear at the top of the suggestions list).
      *
@@ -63,10 +63,9 @@
     function filterPossibleMembers(input: string): string[] {
         input = input.toLowerCase();
 
-        return possibleMembers
-            .map((user) => `${getNames([user])} <${user.email}>`)
-            .filter((item) => item.includes(input))
-            .sort((a, b) => distance(a, input) - distance(b, input));
+        const fzf = new Fzf(possibleMembers.map((user) => `${getNames([user])} <${user.email}>`));
+
+        return fzf.find(input).map((result) => result.item);
     }
 
     /**
