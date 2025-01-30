@@ -23,6 +23,9 @@
         resolveAlias,
     }: ChipsInputProps = $props();
 
+    const INPUT_ID = "input-" + label;
+    const SUGGESTIONS_LIST_ID = "chips-suggestions-" + label;
+
     /**
      * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
      * Index -1 represent the state, that no chip is selected.
@@ -82,7 +85,7 @@
      * @param resetChipSelection if true, reset the {@link selectedChipIndex} to -1
      */
     function focusInput(resetChipSelection: boolean = false): void {
-        document.getElementById("chips-input-" + label)?.focus();
+        document.getElementById(INPUT_ID)?.focus();
         selectedSuggestionIndex = -1;
         if (resetChipSelection) {
             selectedChipIndex = -1;
@@ -93,7 +96,7 @@
      * Set the focus to the suggestions list and reset the {@link selectedChipIndex} to -1.
      */
     function focusSuggestionsList(): void {
-        document.getElementById("chips-suggestions-" + label)?.focus();
+        document.getElementById(SUGGESTIONS_LIST_ID)?.focus();
         selectedChipIndex = -1;
     }
 
@@ -208,7 +211,7 @@ Usage:
 -->
 <div class="flex flex-col w-full gap-2">
     <div class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row gap-4 items-center'}">
-        <Label for={"chips-input-" + label}>{label}</Label>
+        <Label for={INPUT_ID}>{label}</Label>
         <div
             class="flex flex-wrap w-full items-center gap-2.5 px-4 {items.length === 0
                 ? 'py-2'
@@ -234,7 +237,7 @@ Usage:
 
             <!-- input for next chip -->
             <input
-                id={"input-" + label}
+                id={INPUT_ID}
                 type="text"
                 class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
                 bind:value={inputText}
@@ -253,10 +256,7 @@ Usage:
     {/if}
     <!-- suggestions list -->
     {#if suggestions.length > 0 && inputText !== ""}
-        <ul
-            id={"chips-suggestions-" + label}
-            class="border rounded-md max-h-[160px] overflow-y-scroll"
-        >
+        <ul id={SUGGESTIONS_LIST_ID} class="border rounded-md max-h-[160px] overflow-y-scroll">
             {#each suggestions as suggestion, i}
                 <Button
                     variant="ghostWithoutHover"
