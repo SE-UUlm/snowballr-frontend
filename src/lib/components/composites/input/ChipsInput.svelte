@@ -158,6 +158,9 @@
 
             case "ArrowLeft":
             case "ArrowRight":
+                if (inputText !== "") {
+                    break;
+                }
                 event.preventDefault();
                 if (event.key === "ArrowLeft" && selectedChipIndex === -1) {
                     // edge case: no previous selection, so set to last element
