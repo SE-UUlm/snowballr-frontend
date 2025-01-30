@@ -2,15 +2,17 @@
     import { Label } from "$lib/components/primitives/label";
     import { Button } from "$lib/components/primitives/button";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
+    import type { ValidationResult } from "$lib/model/general";
 
     interface ChipsInputProps {
         items: string[];
-        validate: (input: string) => boolean;
+        validate: (input: string) => ValidationResult;
         label?: string;
         labelPosition?: "top" | "left";
         searchSuggestions?: (searchString: string) => string[];
         placeholder?: string;
         resolveAlias?: (item: string) => string | undefined;
+        displayItem?: (item: string) => string | undefined;
     }
 
     let {
@@ -21,6 +23,7 @@
         searchSuggestions,
         placeholder = "",
         resolveAlias,
+        displayItem,
     }: ChipsInputProps = $props();
 
     const INPUT_ID = "input-" + label;
@@ -32,8 +35,10 @@
      */
     let selectedChipIndex: number = $state(-1);
     let inputText: string = $state("");
+
     // assume input is valid, until the opposite is not proven by a check
     let isInputValid: boolean = $state(true);
+    let errorMessage: string = $state("");
 
     let suggestions: string[] = $state([]);
     /**
@@ -129,10 +134,12 @@
                 if (selectedSuggestionIndex !== -1) {
                     addItem(suggestions[selectedSuggestionIndex]);
                 } else {
-                    if (validate(inputText)) {
+                    let validationResult = validate(inputText);
+                    if (validationResult.success) {
                         addItem(inputText);
                     } else {
-                        isInputValid = false;
+                        isInputValid = validationResult.success;
+                        errorMessage = validationResult.error;
                     }
                 }
                 focusInput(true);
@@ -191,7 +198,9 @@ Customizations:
 - `searchSuggestions` to optionally propagate a function, which search for a input string and return a string array,
 representing an input text, which should be searched in a list of possible suggestions.
 - `resolveAlias` to optionally propagate a function, which map the input to a possibly different
-value shown.
+value.
+- `displayItem` to optionally propagate a function, which map the value of the item to a different
+value that is displayed in the chips list
 
 If the method `searchSuggestions` is given, the user gets a list of possible inputs beneath the
 input field, which can be selected by either clicking on the suggestions or add it like a normal item.
@@ -199,7 +208,9 @@ Furthermore, the user can navigate in the suggestions using the up and down arro
 
 The method `resolveAlias` can be useful, if you want allow multiple inputs or aliases for one item,
 e. g. if allow to input either the full name or the email of a user (= data) to create a user item
-shown by the user's name (= representation).
+represented by the email (= representation).
+If you want this representation to be shown by another value, you can use the `displayItem` method
+to map this value to another value shown to the user.
 
 Usage:
 ```svelte
@@ -226,7 +237,11 @@ Usage:
                         ? 'bg-slate-300'
                         : 'bg-slate-200'} rounded-full px-3 py-0.5 w-max"
                 >
-                    {item}
+                    {#if displayItem !== undefined && displayItem(item) !== undefined}
+                        {displayItem(item)}
+                    {:else}
+                        {item}
+                    {/if}
                     <button
                         class="ml-2 text-primary focus:outline-none"
                         onclick={() => removeItem(index)}
@@ -251,7 +266,7 @@ Usage:
         <div class="flex flex-row w-full gap-2 text-red-500">
             <CircleAlert class="w-5 h-5" data-testid="validation-fail" />
             <p class="text-sm" data-testid="error-message">
-                Please enter a valid name or email address.
+                {errorMessage}
             </p>
         </div>
     {/if}
