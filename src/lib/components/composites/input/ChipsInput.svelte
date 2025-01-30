@@ -51,17 +51,18 @@
      * @param item the item to add
      */
     function addItem(item: string): void {
-        if (item.trim() !== "" && !items.includes(item)) {
-            if (resolveAlias) {
-                const resolvedAlias = resolveAlias(item);
-                if (resolvedAlias == undefined) {
-                    return;
-                }
-                item = resolvedAlias;
-            }
-            items = [...items, item];
-            inputText = "";
+        const isValidNewItem = item.trim() !== "" && !items.includes(item);
+        if (!isValidNewItem) {
+            return;
         }
+
+        const resolvedAlias = resolveAlias?.(item);
+        if (resolvedAlias) {
+            item = resolvedAlias;
+        }
+
+        items = [...items, item];
+        inputText = "";
     }
 
     /**

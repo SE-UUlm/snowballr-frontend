@@ -130,31 +130,30 @@
         }
 
         isServerStillCreatingProject = true;
-        try {
-            project = await BackendController.getInstance().createProject({
+        await BackendController.getInstance()
+            .createProject({
                 name: projectNameInput.getValue(),
-            });
-
-            if (project !== undefined) {
-                await Promise.all(
-                    membersInput.map((name) => {
-                        let email = getEmailFromUserName(name);
-                        if (email !== undefined) {
-                            return BackendController.getInstance()
-                                .project(project!.id)
-                                .inviteUser(email);
-                        }
-                    }),
-                );
-            } else {
+            })
+            .then((project) => {
+                Promise.all(
+                    membersInput
+                        .map(getEmailFromUserName)
+                        .filter((email) => email !== undefined)
+                        .map(BackendController.getInstance().project(project.id).inviteUser),
+                )
+                    .then(() => {
+                        projectWasCreated = true;
+                        open = false;
+                    })
+                    .catch((error) => {
+                        isErrorOnProjectCreation = true;
+                        console.error(`Could not invite users to project (${error})`);
+                    });
+            })
+            .catch((error) => {
                 isErrorOnProjectCreation = true;
-                console.error("Could not create project (Project from server is undefined)");
-            }
-        } catch (error) {
-            isErrorOnProjectCreation = true;
-            console.error(`Could not create project (${error})`);
-            return;
-        }
+                console.error(`Could not create project (${error})`);
+            });
         isServerStillCreatingProject = false;
 
         projectWasCreated = true;
