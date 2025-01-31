@@ -31,7 +31,7 @@ Usage:
 ```
 -->
 <Tooltip
-    class="bg-slate-200 hover:bg-slate-400 text-primary flex-grow max-w-xs shadow-lg min-w-32"
+    class="bg-slate-200 hover:bg-slate-400 text-primary grow max-w-xs shadow-lg min-w-32"
     buttonVariant="link"
     onclick={() => {
         if (onClick) onClick();

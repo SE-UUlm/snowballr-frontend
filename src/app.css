@@ -1,6 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config '../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
 
 @layer base {
     :root {
@@ -74,25 +92,96 @@
     }
 }
 
-/**** Custom Styling ****/
+@utility scrollbar {
+    /* width */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #ffffff;
+    }
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #e6e6e6;
+        border-radius: 5px;
+    }
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #a6a6a6;
+    }
+}
 
-/** Scrollbar **/
-/* width */
-::-webkit-scrollbar {
-    width: 8px;
+@utility text-placeholder {
+    /* Custom Style Classes */
+    @apply text-base font-medium tracking-normal text-input-placeholder-slate;
 }
-/* Track */
-::-webkit-scrollbar-track {
-    background: #ffffff;
+
+@utility text-hint {
+    @apply text-sm font-medium tracking-normal text-neutral-500;
 }
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #e6e6e6;
-    border-radius: 5px;
+
+@utility text-error {
+    @apply text-base font-medium tracking-normal text-neutral-500 italic;
 }
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #a6a6a6;
+
+@utility text-default {
+    @apply text-default-nc text-primary;
+}
+
+@utility text-default-nc {
+    @apply text-base tracking-normal;
+}
+
+@utility text-default-b {
+    @apply text-default-b-nc text-primary;
+}
+
+@utility text-default-b-nc {
+    @apply text-default-nc font-bold;
+}
+
+@utility text-default-sb {
+    @apply text-default-sb-nc text-primary;
+}
+
+@utility text-default-sb-nc {
+    @apply text-default-nc font-semibold;
+}
+
+@utility text-default-m {
+    @apply text-default-m-nc text-primary;
+}
+
+@utility text-default-m-nc {
+    @apply text-default-nc font-medium;
+}
+
+@utility highlight-on-hover {
+    @apply hover:bg-container-border-grey/35;
+}
+
+@utility scroll-box {
+    /* Credits to: https://lea.verou.me/blog/2012/04/background-attachment-local/ */
+    overflow-y: auto;
+
+    background:
+        linear-gradient(white 30%, rgba(255, 255, 255, 0)),
+        linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
+        radial-gradient(farthest-side at 50% 40%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)),
+        radial-gradient(farthest-side at 50% 60%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) 0 100%;
+    background-repeat: no-repeat;
+    background-size:
+        100% 40px,
+        100% 40px,
+        100% 10px,
+        100% 10px;
+
+    background-attachment: local, local, scroll, scroll;
+}
+
+@utility review-decision-icon-bg {
+    @apply absolute top-6 left-6 h-5 w-5 flex justify-center items-center rounded-full;
 }
 
 @layer components {
@@ -105,63 +194,5 @@
     }
     h3 {
         @apply text-lg font-semibold tracking-normal text-primary;
-    }
-
-    /* Custom Style Classes */
-    .text-placeholder {
-        @apply text-base font-medium tracking-normal text-input-placeholder-slate;
-    }
-    .text-hint {
-        @apply text-sm font-medium tracking-normal text-neutral-500;
-    }
-    .text-error {
-        @apply text-base font-medium tracking-normal text-neutral-500 italic;
-    }
-    .text-default {
-        @apply text-default-nc text-primary;
-    }
-    .text-default-nc {
-        @apply text-base tracking-normal;
-    }
-    .text-default-b {
-        @apply text-default-b-nc text-primary;
-    }
-    .text-default-b-nc {
-        @apply text-default-nc font-bold;
-    }
-    .text-default-sb {
-        @apply text-default-sb-nc text-primary;
-    }
-    .text-default-sb-nc {
-        @apply text-default-nc font-semibold;
-    }
-    .text-default-m {
-        @apply text-default-m-nc text-primary;
-    }
-    .text-default-m-nc {
-        @apply text-default-nc font-medium;
-    }
-
-    .highlight-on-hover {
-        @apply hover:bg-container-border-grey/35;
-    }
-
-    /* Credits to: https://lea.verou.me/blog/2012/04/background-attachment-local/ */
-    .scroll-box {
-        overflow-y: auto;
-
-        background:
-            linear-gradient(white 30%, rgba(255, 255, 255, 0)),
-            linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
-            radial-gradient(farthest-side at 50% 40%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)),
-            radial-gradient(farthest-side at 50% 60%, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) 0 100%;
-        background-repeat: no-repeat;
-        background-size:
-            100% 40px,
-            100% 40px,
-            100% 10px,
-            100% 10px;
-
-        background-attachment: local, local, scroll, scroll;
     }
 }

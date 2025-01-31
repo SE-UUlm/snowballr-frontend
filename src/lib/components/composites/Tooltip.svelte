@@ -29,7 +29,7 @@ The tooltip can't be used as link. To still redirect on click, use the `onclick`
 Usage:
 ```svelte
     <Tooltip
-        class="text-primary shadow-sm"
+        class="text-primary shadow-xs"
         buttonVariant="default"
         onclick={() => goto(href)}
     >
