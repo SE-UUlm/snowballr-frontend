@@ -14,7 +14,7 @@
     import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
-    import { getNames } from "$lib/utils/common-helper";
+    import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
 
     // at the beginning the dialog should not be open
@@ -61,7 +61,7 @@
      * @returns list of "name \<email\>" (sorted) representations of users that can be invited
      */
     function filterPossibleMembers(input: string): string[] {
-        const fzf = new Fzf(possibleMembers.map((user) => `${getNames([user])} <${user.email}>`));
+        const fzf = new Fzf(possibleMembers.map((user) => `${getName(user)} <${user.email}>`));
         return fzf.find(input.toLowerCase()).map((result) => result.item);
     }
 
@@ -71,7 +71,7 @@
     function validateInput(input: string): ValidationResult {
         if (!Schema.email.safeParse(input.trim()).success) {
             const matchingMembers = possibleMembers.filter(
-                (member) => getNames([member]) === input.trim(),
+                (member) => getName(member) === input.trim(),
             );
             if (matchingMembers.length === 0) {
                 return { success: false, error: "Please enter a valid name or email." };
@@ -104,9 +104,9 @@
     function mapNameToEmail(input: string): string | undefined {
         let possibleMatchedUser = possibleMembers.filter(
             (user) =>
-                getNames([user]) === input ||
+                getName(user) === input ||
                 user.email === input ||
-                `${getNames([user])} <${user.email}>` === input,
+                `${getName(user)} <${user.email}>` === input,
         );
 
         return possibleMatchedUser !== undefined ? possibleMatchedUser.at(0)?.email : undefined;

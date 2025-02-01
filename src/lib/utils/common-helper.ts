@@ -1,6 +1,10 @@
 import { type Paper, ReviewDecision } from "$lib/model/backend";
 
-function getNameAsString(person: { firstName: string; lastName: string }): string {
+/**
+ * Convert a person object ({firstName: "...", lastName, "..."}) to its string representation
+ * "\<firstName\> \<lastName\>.
+ */
+function getName(person: { firstName: string; lastName: string }): string {
     return `${person.firstName} ${person.lastName}`;
 }
 
@@ -16,7 +20,7 @@ function getNameAsString(person: { firstName: string; lastName: string }): strin
  *          if there is no person, an empty string is returned.
  */
 function getNames(persons: { firstName: string; lastName: string }[]): string {
-    return persons.map((person) => getNameAsString(person)).join(", ");
+    return persons.map((person) => getName(person)).join(", ");
 }
 
 /**
@@ -43,4 +47,4 @@ function doesPaperNeedReview(paper: Paper, numberOfRequiredReviews: number): boo
     );
 }
 
-export { getNames, isPaperUndecided, doesPaperNeedReview };
+export { getName, getNames, isPaperUndecided, doesPaperNeedReview };
