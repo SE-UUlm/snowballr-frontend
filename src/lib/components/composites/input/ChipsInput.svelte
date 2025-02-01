@@ -132,7 +132,7 @@
             case "+":
                 // add a new item
                 event.preventDefault();
-                if (selectedSuggestionIndex !== -1) {
+                if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
                     addItem(suggestions[selectedSuggestionIndex]);
                 } else {
                     let validationResult = validate(inputText);
@@ -148,6 +148,9 @@
 
             case "ArrowDown":
             case "ArrowUp":
+                if (suggestions.length === 0) {
+                    break;
+                }
                 selectedSuggestionIndex = nextIndex(
                     event.key === "ArrowDown" ? 1 : -1,
                     selectedSuggestionIndex,
