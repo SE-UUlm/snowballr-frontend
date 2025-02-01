@@ -70,18 +70,18 @@
      */
     function validateInput(input: string): ValidationResult {
         if (!Schema.email.safeParse(input.trim()).success) {
-            if (!possibleMembers.map((member) => getNames([member])).includes(input.trim())) {
+            const matchingMembers = possibleMembers.filter(
+                (member) => getNames([member]) === input.trim(),
+            );
+            if (matchingMembers.length === 0) {
                 return { success: false, error: "Please enter a valid name or email." };
             }
-            if (
-                possibleMembers.filter((member) => getNames([member]) === input.trim()).length > 1
-            ) {
+            if (matchingMembers.length > 1) {
                 return {
                     success: false,
                     error: "There are multiple users with this name. Please specify the user.",
                 };
             }
-            return { success: true };
         }
         return { success: true };
     }
