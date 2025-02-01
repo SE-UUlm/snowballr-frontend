@@ -267,7 +267,13 @@
             </AlertDialog.Description>
         </AlertDialog.Header>
         <AlertDialog.Footer>
-            <AlertDialog.Cancel>Back</AlertDialog.Cancel>
+            <AlertDialog.Cancel
+                onclick={() => {
+                    projectWasCreated = false;
+                    projectId = undefined;
+                    membersInput = [];
+                }}>Back</AlertDialog.Cancel
+            >
             <AlertDialog.Action onclick={async () => navigateToProject()}>Open</AlertDialog.Action>
         </AlertDialog.Footer>
     </AlertDialog.Content>
