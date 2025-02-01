@@ -23,7 +23,7 @@
         searchSuggestions,
         placeholder = "",
         resolveAlias,
-        displayItem,
+        displayItem = (item) => item,
     }: ChipsInputProps = $props();
 
     const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
@@ -245,11 +245,7 @@ Usage:
                         : 'bg-slate-200'} rounded-full px-3 py-0.5 w-max"
                     data-testid={"chip-" + index}
                 >
-                    {#if displayItem !== undefined && displayItem(item) !== undefined}
-                        {displayItem(item)}
-                    {:else}
-                        {item}
-                    {/if}
+                    {displayItem(item)}
                     <button
                         class="ml-2 text-primary focus:outline-none"
                         onclick={() => removeItem(index)}
