@@ -272,3 +272,27 @@ schemaTest("Password Schema", Schema.password, (testValid, testInvalid) => {
         testValid(input);
     });
 });
+
+schemaTest("Project name Schema", Schema.projectName, (testValid, testInvalid) => {
+    test.each(["", " ", "  "])("When project name is blank, then validation fails", (input) => {
+        testInvalid(input, { codes: [z.ZodIssueCode.too_small] });
+    });
+
+    test("When the project name is more than 100 characters long, then validation fails", () => {
+        testInvalid("a".repeat(101), { codes: [z.ZodIssueCode.too_big] });
+    });
+
+    test.each(Array.from({ length: 100 }, (_, i) => i + 1))(
+        "When project name is %f character(s) long, then validation passes",
+        (length) => {
+            testValid("a".repeat(length));
+        },
+    );
+
+    test.each(["Test", "Demo project", "Project 42", "SLR 1"])(
+        "When valid project name '%s' is tested, then validation passes",
+        (input) => {
+            testValid(input);
+        },
+    );
+});

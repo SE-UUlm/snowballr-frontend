@@ -187,6 +187,7 @@
                 buttonVariants({ variant: "default" }),
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             )}
+            data-testid="dialog-trigger-button"
         >
             <div class="flex flex-row items-center justify-center gap-2.5">
                 <CirclePlus strokeWidth="2.5" />
@@ -194,7 +195,7 @@
             </div>
         </Dialog.Trigger>
     </div>
-    <Dialog.Content>
+    <Dialog.Content id="dialog-content">
         <Dialog.Header>
             <Dialog.Title>Create Project</Dialog.Title>
             <Dialog.Description>Start a new SLR and invite other members.</Dialog.Description>
