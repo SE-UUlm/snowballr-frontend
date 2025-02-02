@@ -195,7 +195,7 @@
             </div>
         </Dialog.Trigger>
     </div>
-    <Dialog.Content id="dialog-content">
+    <Dialog.Content data-testid="dialog-content">
         <Dialog.Header>
             <Dialog.Title>Create Project</Dialog.Title>
             <Dialog.Description>Start a new SLR and invite other members.</Dialog.Description>
@@ -208,6 +208,7 @@
             <Input
                 class="w-full"
                 inputId="project-name-input"
+                data-testid="project-name-input"
                 label="Name"
                 placeholder="Demo"
                 required={true}

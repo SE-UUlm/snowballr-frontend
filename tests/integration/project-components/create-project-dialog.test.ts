@@ -19,15 +19,11 @@ describe("CreateProjectDialog", () => {
         await userEvent.click(screen.getByTestId("dialog-trigger-button"));
 
         await waitFor(() => {
-            expect(screen.getByTestId("dialog-trigger-button")).toHaveAttribute(
-                "data-state",
-                "closed",
-            );
+            expect(screen.getByTestId("dialog-content")).toHaveAttribute("data-state", "open");
         });
 
-        // expect(screen.getByText("Start a new SLR and invite other members.")).toBeInTheDocument();
-        // expect(screen.getByRole("form")).toBeInTheDocument();
-
-        /// TODO: fix problem, that dialog can not be found
+        expect(screen.getByText("Start a new SLR and invite other members.")).toBeInTheDocument();
+        expect(screen.getByTestId("project-name-input")).toBeInTheDocument();
+        expect(screen.getByText("Cancel")).toBeInTheDocument();
     });
 });
