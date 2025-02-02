@@ -120,7 +120,7 @@
      */
     function mapEmailToName(input: string): string | undefined {
         let name = getNames(initialPossibleMembers.filter((user) => input === user.email));
-        return name !== "" ? name : undefined;
+        return name !== "" ? name : input;
     }
 
     /**
