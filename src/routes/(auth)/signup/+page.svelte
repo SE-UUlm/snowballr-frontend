@@ -27,13 +27,14 @@
             lastName: lastNameInput.getValue(),
             email: emailInput.getValue(),
             password: passwordInput.getValue(),
-        }
+        };
 
-        console.log(spec)
-        
-        backend.register(spec)
-            .then(user => console.log(user))
-            .catch(error => console.error(error));
+        console.log(spec);
+
+        backend
+            .register(spec)
+            .then((user) => console.log(user))
+            .catch((error) => console.error(error));
         // TODO: Login and redirect to the home page
     }
 </script>

@@ -15,3 +15,7 @@ runs:
         - name: Install dependencies
           shell: bash
           run: npm ci
+
+        - name: Generate gRPC web client code
+          shell: bash
+          run: npm run compile:proto

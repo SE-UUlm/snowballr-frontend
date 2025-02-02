@@ -28,6 +28,13 @@ export default ts.config(
         },
     },
     {
-        ignores: ["build/", ".svelte-kit/", "dist/", "coverage/", "node_modules/"],
+        ignores: [
+            "build/",
+            ".svelte-kit/",
+            "dist/",
+            "coverage/",
+            "node_modules/",
+            "src/lib/model/api/",
+        ],
     },
 );
