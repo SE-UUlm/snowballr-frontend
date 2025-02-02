@@ -54,7 +54,7 @@ If the loading was successful it either shows the components, filled with the co
 or an optional hint (provided with 'emptyHint') that the list is empty.
 Otherwise the error message is shown.
 -->
-<div class="flex flex-col h-full w-full px-5 gap-y-5">
+<div class="flex flex-col h-full w-full px-5 gap-y-5 overflow-hidden">
     {#await items}
         <h2>{listName}</h2>
         <ul class="space-y-4 pb-1 scroll-box">

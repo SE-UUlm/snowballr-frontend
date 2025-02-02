@@ -50,9 +50,12 @@ export class ProjectController implements IProjectController {
         return this.client.get("members").then((response) => response.json());
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async inviteUser(email: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        const payload = {
+            email: email,
+        };
+
+        return this.client.post("invite", payload).then(() => {});
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

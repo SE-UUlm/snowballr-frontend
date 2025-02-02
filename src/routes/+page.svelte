@@ -5,6 +5,7 @@
     import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+    import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 
     const { data } = $props();
     const { user, projectsMetadata, openReviews } = data;
@@ -31,7 +32,7 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="h-full w-full min-w-0">
+    <section class="flex flex-col h-full w-full min-w-0 gap-y-5">
         <NamedList
             listName="Projects"
             items={projectsMetadata}
@@ -46,5 +47,6 @@
                 <ProjectListEntrySkeleton />
             {/snippet}
         </NamedList>
+        <CreateProjectDialog />
     </section>
 </main>
