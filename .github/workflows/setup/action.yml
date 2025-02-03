@@ -1,0 +1,17 @@
+name: Setup
+description: Setup Frontend CI/CD pipeline
+inputs:
+    node_version:
+        description: "Node.js version"
+        required: true
+runs:
+    using: composite
+    steps:
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+              node-version: ${{ inputs.node_version }}
+
+        - name: Install dependencies
+          shell: bash
+          run: npm ci
