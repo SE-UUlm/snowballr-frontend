@@ -3,7 +3,6 @@
     import { Button, buttonVariants } from "$lib/components/primitives/button";
     import * as Dialog from "$lib/components/primitives/dialog";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog";
-    import * as Alert from "$lib/components/primitives/alert";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -13,9 +12,9 @@
     import { BackendController } from "$lib/controller/backend-controller";
     import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
-    import CircleAlert from "lucide-svelte/icons/circle-alert";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
+    import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -226,21 +225,11 @@
                 displayItem={mapEmailToName}
             />
             {#if isErrorOnUsersLoading}
-                <Alert.Root variant="destructive">
-                    <CircleAlert class="size-4" />
-                    <Alert.Title>Something went wrong while loading possible members.</Alert.Title>
-                    <Alert.Description
-                        >Please check your connection and try again.</Alert.Description
-                    >
-                </Alert.Root>
+                <ErrorAlert errorTitle="Something went wrong while loading possible members." />
             {/if}
         </form>
         {#if isErrorOnProjectCreation}
-            <Alert.Root variant="destructive">
-                <CircleAlert class="size-4" />
-                <Alert.Title>Something went wrong while creating the project.</Alert.Title>
-                <Alert.Description>Please check your connection and try again.</Alert.Description>
-            </Alert.Root>
+            <ErrorAlert errorTitle="Something went wrong while creating the project." />
         {/if}
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
