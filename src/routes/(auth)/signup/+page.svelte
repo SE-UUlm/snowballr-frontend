@@ -5,11 +5,15 @@
     import * as Card from "$lib/components/primitives/card/index.js";
     import { BACKEND } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
+    import type { ApiLoadError } from "$lib/model/general";
+    import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
     let emailInput: Input;
     let passwordInput: PasswordInput;
+
+    let registrationError: ApiLoadError | undefined = $state(undefined);
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -38,7 +42,17 @@
                     `New user was registered with the following token: ${accessToken} (refreshToken: ${refreshToken})`,
                 );
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {
+                if (error.code == "ALREADY_EXISTS") {
+                    registrationError = {
+                        errorTitle: "An account with this email address already exists.",
+                        errorDetails: "Try logging in or resetting your password",
+                    };
+                    return;
+                }
+                registrationError = { errorTitle: "Something went wrong while registration." };
+                console.error(error);
+            });
     }
 </script>
 
@@ -89,6 +103,12 @@
             />
             <PasswordInput class="w-full" bind:this={passwordInput} />
             <Button type="submit" class="w-full">Create an account</Button>
+            {#if registrationError}
+                <ErrorAlert
+                    errorTitle={registrationError.errorTitle}
+                    errorDetails={registrationError.errorDetails}
+                />
+            {/if}
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?
