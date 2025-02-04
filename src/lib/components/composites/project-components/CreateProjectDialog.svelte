@@ -8,20 +8,21 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import type { User } from "$lib/model/backend";
-    import { BackendController } from "$lib/controller/backend-controller";
     import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
+    import { BACKEND } from "$lib/grpc-api";
+    import { Nothing } from "$lib/model/api/base";
+    import type { User } from "$lib/model/api/user";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
 
     let isServerStillCreatingProject = $state(false);
     let projectWasCreated = $state(false);
-    let projectId = $state<number | undefined>(undefined);
+    let projectId = $state<string | undefined>(undefined);
 
     let isErrorOnProjectCreation = $state(false);
     let isErrorOnUsersLoading = $state(false);
@@ -36,17 +37,25 @@
         initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
     );
 
-    onMount(async () => {
-        try {
-            // TODO: exchange by call to store or so, if login etc. is completely implemented
-            let thisUser: User = await BackendController.getInstance().thisUser().get();
-            initialPossibleMembers = await BackendController.getInstance()
-                .getUsers()
-                .then((users) => users.filter((user) => user.id !== thisUser.id));
-        } catch (error) {
-            isErrorOnUsersLoading = true;
-            console.error(`Could not get users from server (${error})`);
-        }
+    onMount(() => {
+        BACKEND.getCurrentUser(Nothing)
+            .then((userResponse) => {
+                BACKEND.getAllUsers(Nothing)
+                    .then(
+                        (allUsersResponse) =>
+                            (initialPossibleMembers = allUsersResponse.response.users.filter(
+                                (user) => user.id !== userResponse.response.id,
+                            )),
+                    )
+                    .catch((error) => {
+                        isErrorOnUsersLoading = true;
+                        console.error(`Could not get users from server (${error})`);
+                    });
+            })
+            .catch((error) => {
+                isErrorOnUsersLoading = true;
+                console.error(`Could not get user currently logged in from server (${error})`);
+            });
     });
 
     /**
@@ -147,16 +156,26 @@
         }
 
         isServerStillCreatingProject = true;
-        await BackendController.getInstance()
-            .createProject({
-                name: projectNameInput.getValue(),
-            })
-            .then(async (project) => {
-                projectId = project.id;
+
+        // TODO: Question to the reviewer: do we want this style,
+        // or do we want to try to develop wrapper to make the code more readable
+        BACKEND.createProject({
+            name: projectNameInput.getValue(),
+        })
+            .then(async (projectResponse) => {
+                projectId = projectResponse.response.id;
 
                 return Promise.all(
-                    membersInput.map((member) =>
-                        BackendController.getInstance().project(projectId!).inviteUser(member),
+                    membersInput.map(
+                        (member) =>
+                            new Promise((resolve, reject) => {
+                                BACKEND.inviteUserToProject({
+                                    projectId: projectId!,
+                                    userEmail: member,
+                                })
+                                    .then((response) => resolve(response))
+                                    .catch((error) => reject(error));
+                            }),
                     ),
                 )
                     .then(() => {
