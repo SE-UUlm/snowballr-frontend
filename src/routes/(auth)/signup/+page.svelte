@@ -3,7 +3,7 @@
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import { backend } from "$lib/grpc-backend-api";
+    import { BACKEND } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
 
     let firstNameInput: Input;
@@ -22,20 +22,23 @@
             return;
         }
 
-        const spec = {
+        const userData = {
             firstName: firstNameInput.getValue(),
             lastName: lastNameInput.getValue(),
             email: emailInput.getValue(),
             password: passwordInput.getValue(),
         };
 
-        console.log(spec);
-
-        backend
-            .register(spec)
-            .then((user) => console.log(user))
+        BACKEND.register(userData)
+            .then((user) => {
+                const { accessToken, refreshToken } = user.response;
+                // TODO: Login with accessToken, store both tokens and redirect to the home page,
+                // will be completed in #134
+                console.log(
+                    `New user was registered with the following token: ${accessToken} (refreshToken: ${refreshToken})`,
+                );
+            })
             .catch((error) => console.error(error));
-        // TODO: Login and redirect to the home page
     }
 </script>
 

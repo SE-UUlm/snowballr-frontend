@@ -3,7 +3,7 @@ import { SnowballRClient } from "./model/api/main.client";
 import { PUBLIC_API_BASE_URL } from "$env/static/public";
 
 const transport = new GrpcWebFetchTransport({
-    baseUrl: `${PUBLIC_API_BASE_URL}`,
+    baseUrl: PUBLIC_API_BASE_URL,
 });
 
-export const backend = new SnowballRClient(transport);
+export const BACKEND = new SnowballRClient(transport);
