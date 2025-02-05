@@ -1,32 +1,52 @@
 <script lang="ts">
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import { type Paper, ReviewDecision } from "$lib/model/backend";
+    import { type PaperListEntryInterface } from "$lib/model/general";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
+    import { PaperDecision } from "$lib/model/api/project";
+    import { BACKEND } from "$lib/grpc-api";
+    import type { User } from "$lib/model/api/user";
 
-    interface PaperListEntryProps {
-        paper: Paper;
-        projectId: number;
-        showReviewStatus?: boolean;
+    type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;
-    }
+    };
 
-    const navigateToPaperView = () => goto(`/project/${projectId}/paper/${paper.id}`);
+    const navigateToPaperView = () => goto(`/project/${projectId}/paper/${projectPaper.id}`);
 
     const {
-        paper,
+        projectPaper,
         projectId,
         showReviewStatus = false,
         onClick = navigateToPaperView,
     }: PaperListEntryProps = $props();
 
     // Mapping of review decision to border color of paper list entry
-    const reviewDecisionColor: Record<ReviewDecision | "unreviewed", string> = {
-        [ReviewDecision.Accepted]: "border-accept-green",
-        [ReviewDecision.Maybe]: "border-maybe-yellow",
-        [ReviewDecision.Declined]: "border-decline-red",
-        ["unreviewed"]: "border-unreviewed-gray",
-    };
+    function getReviewDecisionColor(
+        decisionStatus: PaperDecision,
+        numberOfReviews: number,
+    ): string {
+        switch (decisionStatus) {
+            case PaperDecision.ACCEPTED:
+                return "border-accept-green";
+            case PaperDecision.DECLINED:
+                return "border-decline-red";
+            case PaperDecision.UNDECIDED:
+                return numberOfReviews > 0 ? "border-maybe-yellow" : "border-unreviewed-gray";
+            default:
+                return "border-unreviewed-gray";
+        }
+    }
+
+    async function getReviewUserById(id: string): Promise<User | undefined> {
+        let reviewingUser: undefined | User = undefined;
+        try {
+            reviewingUser = await BACKEND.getUserById({ id: id }).response;
+        } catch (error) {
+            console.error(`Could not load review user with: ${id} (error: ${error})`);
+        }
+
+        return reviewingUser;
+    }
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     /**
@@ -61,11 +81,11 @@ This component shows the
 as well as, if not in review mode, the review information about this paper.
 
 Furthermore this component is clickable and navigates to the corresponding paper view,
-if the event handler is not overridden.
+if the onClick() event handler is not overridden.
 
 Usage:
 ```svelte
-    <PaperListEntry paper={paper} projectId={1} showReviewStatus={true} />
+    <PaperListEntry paper={paper} projectId={"1"} showReviewStatus={true} />
 ```
 -->
 <button
@@ -77,14 +97,16 @@ Usage:
 >
     <div
         class="flex flex-auto {showReviewStatus
-            ? `border-l-4 ${reviewDecisionColor[paper.reviewData?.finalDecision ?? 'unreviewed']}`
+            ? `border-l-4 ${getReviewDecisionColor(projectPaper.decision, projectPaper.reviews.length)}`
             : ''} rounded-md px-3 py-1.5"
     >
-        <PaperInfo {paper} />
+        <PaperInfo paper={projectPaper.paper!} />
     </div>
-    {#if paper.reviewData !== undefined && showReviewStatus}
-        {#each paper.reviewData.reviews as review}
-            <UserAvatar user={review.user} reviewDecision={review.decision} />
+    {#if projectPaper.reviews.length !== 0 && showReviewStatus}
+        {#each projectPaper.reviews as review}
+            {#await getReviewUserById(review.userId) then user}
+                <UserAvatar {user} reviewDecision={review.decision} />
+            {/await}
         {/each}
     {/if}
 </button>

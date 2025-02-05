@@ -37,25 +37,16 @@
         initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
     );
 
-    onMount(() => {
-        BACKEND.getCurrentUser(Nothing)
-            .then((userResponse) => {
-                BACKEND.getAllUsers(Nothing)
-                    .then(
-                        (allUsersResponse) =>
-                            (initialPossibleMembers = allUsersResponse.response.users.filter(
-                                (user) => user.id !== userResponse.response.id,
-                            )),
-                    )
-                    .catch((error) => {
-                        isErrorOnUsersLoading = true;
-                        console.error(`Could not get users from server (${error})`);
-                    });
-            })
-            .catch((error) => {
-                isErrorOnUsersLoading = true;
-                console.error(`Could not get user currently logged in from server (${error})`);
-            });
+    onMount(async () => {
+        try {
+            const currentUser = await BACKEND.getCurrentUser(Nothing).response;
+            const allUsers = await BACKEND.getAllUsers(Nothing).response;
+
+            initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
+        } catch (error) {
+            isErrorOnUsersLoading = true;
+            console.error(`Could not get users from server (${error})`);
+        }
     });
 
     /**
@@ -157,25 +148,19 @@
 
         isServerStillCreatingProject = true;
 
-        // TODO: Question to the reviewer: do we want this style,
-        // or do we want to try to develop wrapper to make the code more readable
         BACKEND.createProject({
             name: projectNameInput.getValue(),
         })
-            .then(async (projectResponse) => {
-                projectId = projectResponse.response.id;
+            .response.then(async (project) => {
+                projectId = project.id;
 
                 return Promise.all(
                     membersInput.map(
                         (member) =>
-                            new Promise((resolve, reject) => {
-                                BACKEND.inviteUserToProject({
-                                    projectId: projectId!,
-                                    userEmail: member,
-                                })
-                                    .then((response) => resolve(response))
-                                    .catch((error) => reject(error));
-                            }),
+                            BACKEND.inviteUserToProject({
+                                projectId: projectId!,
+                                userEmail: member,
+                            }).response,
                     ),
                 )
                     .then(() => {
