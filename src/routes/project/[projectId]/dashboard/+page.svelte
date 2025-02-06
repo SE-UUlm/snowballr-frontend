@@ -15,3 +15,9 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />
+
+{#await loadingProject}
+    <h3>Project loading</h3>
+    {:then project}
+    <h3>Project {project.name} Dashboard</h3>
+{/await}
