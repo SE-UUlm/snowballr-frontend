@@ -1,5 +1,5 @@
 import { UserRole, UserStatus } from "$lib/model/api/user";
-import { ProjectStatus } from "$lib/model/api/project";
+import { PaperDecision, ProjectStatus } from "$lib/model/api/project";
 import { ReviewDecision } from "$lib/model/api/review";
 
 export const Users = {
@@ -28,6 +28,7 @@ export const Authors = {
     bobJohnson: { firstName: "Bob", lastName: "Johnson", orcid: "0000-0004-5678-9012" },
     emilyDavis: { firstName: "Emily", lastName: "Davis", orcid: "0000-0005-6789-0123" },
 };
+
 export const Projects = {
     demoProject: {
         id: "0",
@@ -98,5 +99,41 @@ export const Reviews = {
         userId: "0",
         decision: ReviewDecision.DECLINED,
         selectedCriteriaIds: ["0"],
+    },
+    demoReview2: {
+        id: "1",
+        userId: "1",
+        decision: ReviewDecision.MAYBE,
+        selectedCriteriaIds: ["0"],
+    },
+    demoReview3: {
+        id: "2",
+        userId: "1",
+        decision: ReviewDecision.ACCEPTED,
+        selectedCriteriaIds: ["0"],
+    },
+};
+
+export const ProjectPapers = {
+    demoProjectPaper1: {
+        id: "0",
+        paper: Papers.demoPaper1,
+        stage: 0n,
+        decision: PaperDecision.UNDECIDED,
+        reviews: [],
+    },
+    demoProjectPaper2: {
+        id: "1",
+        paper: Papers.demoPaper2,
+        stage: 0n,
+        decision: PaperDecision.UNDECIDED,
+        reviews: [Reviews.demoReview1, Reviews.demoReview3],
+    },
+    demoProjectPaper3: {
+        id: "2",
+        paper: Papers.demoPaper3,
+        stage: 0n,
+        decision: PaperDecision.ACCEPTED,
+        reviews: [Reviews.demoReview3],
     },
 };

@@ -2,7 +2,6 @@ import { expect, test, describe } from "vitest";
 import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { createPaper, Users } from "../../model-builder";
 import { Papers, Reviews } from "../../example-data";
 import { PaperDecision } from "$lib/model/api/project";
 

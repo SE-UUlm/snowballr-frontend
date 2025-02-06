@@ -2,12 +2,13 @@
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { Paper, User } from "$lib/model/backend";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
     import MaybeButton from "./decision-buttons/MaybeButton.svelte";
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
+    import type { User } from "$lib/model/api/user";
+    import type { Paper } from "$lib/model/api/paper";
 
     interface Props {
         user: User;

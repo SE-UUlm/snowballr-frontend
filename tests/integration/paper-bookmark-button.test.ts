@@ -8,7 +8,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                paperId: 1,
+                paperId: "1",
                 isBookmarkedDefault: false,
             },
         });
@@ -22,7 +22,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                paperId: 1,
+                paperId: "1",
                 isBookmarkedDefault: true,
             },
         });
@@ -37,7 +37,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                paperId: 1,
+                paperId: "1",
                 isBookmarkedDefault: false,
             },
         });
@@ -59,7 +59,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                paperId: 1,
+                paperId: "1",
                 isBookmarkedDefault: true,
             },
         });

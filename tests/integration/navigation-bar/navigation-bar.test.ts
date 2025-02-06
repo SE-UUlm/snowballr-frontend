@@ -1,7 +1,8 @@
 import { assert, expect, test, describe } from "vitest";
 import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createUser, Users } from "../../model-builder";
+import { createUser } from "../../model-builder";
+import { Users } from "../../example-data";
 
 describe("NavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", () => {

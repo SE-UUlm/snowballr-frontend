@@ -7,7 +7,7 @@
     import Tooltip from "./Tooltip.svelte";
 
     interface Props {
-        paperId: number;
+        paperId: string;
         isBookmarkedDefault: boolean;
     }
 

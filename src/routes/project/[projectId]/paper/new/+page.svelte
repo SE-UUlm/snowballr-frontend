@@ -1,24 +1,24 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
-    import type { PaperSpec } from "$lib/model/backend";
 
     const { data } = $props();
     const { user, project } = data;
-    const paper: PaperSpec = {
-        doi: "Doi",
-        title: "Field-Sensitive Pointer Analysis for Static Dataflow in the R Programming Language",
-        abstrakt: "Abstrakt",
-        year: 2015,
-        type: "Paper",
+    const paper = {
+        id: "0",
+        externalId: "EXT12345",
+        title: "An Analysis of TypeScript Performance",
+        abstrakt:
+            "This paper examines the performance characteristics of TypeScript in large-scale applications.",
+        year: 2023,
+        publisher: "Tech Journal",
+        publicationName: "Journal of Modern Programming",
+        publicationType: "Journal Article",
+        hasPdf: true,
         authors: [
-            { id: 0, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 1, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 2, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 3, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 4, firstName: "Foo", lastName: "Bar", orcid: "" },
+            { firstName: "John", lastName: "Doe", orcid: "0000-0001-2345-6789" },
+            { firstName: "Jane", lastName: "Smith", orcid: "0000-0002-3456-7890" },
         ],
-        backwardReferencedPaperIds: [],
-        forwardReferencedPaperIds: [],
+        backwardReferencedIds: ["1", "2"],
     };
 </script>
 

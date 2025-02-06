@@ -13,7 +13,7 @@ describe("ProjectNavigationBar", () => {
                     lastName: "Doe",
                 }),
                 project: createProject({
-                    id: 123,
+                    id: "123",
                     name: "Example Project Title",
                 }),
                 defaultTabValue: "statistics",

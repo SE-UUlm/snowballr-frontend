@@ -7,7 +7,7 @@ describe("MaybeButton", () => {
         render(MaybeButton, {
             target: document.body,
             props: {
-                paperId: 1,
+                paperId: "1",
             },
         });
 

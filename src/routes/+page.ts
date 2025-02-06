@@ -38,9 +38,9 @@ async function requestUndecidedPapers(project: Project): Promise<PaperListEntryI
  */
 export const load: PageLoad = async () => {
     const thisUserId = "0";
-    const allUserProjects = BACKEND.getAllProjectsForUser({ id: thisUserId });
+    const allUserProjects = BACKEND.getAllProjectsForUser({ id: thisUserId }).response;
 
-    const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects.response
+    const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {
             try {
                 return await Promise.all(
@@ -57,7 +57,7 @@ export const load: PageLoad = async () => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     projectsMetadata.catch(() => {});
 
-    const openReviews: Promise<PaperListEntryInterface[]> = allUserProjects.response
+    const openReviews: Promise<PaperListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {
             try {
                 return await Promise.all(

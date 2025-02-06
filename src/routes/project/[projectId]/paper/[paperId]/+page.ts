@@ -1,4 +1,3 @@
-import type { Paper } from "$lib/model/backend";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
@@ -6,25 +5,24 @@ export const load: PageLoad = ({ params }) => {
     if (Number.isNaN(paperId)) {
         throw new Error(`Invalid paperId ${params.paperId}`);
     }
-    const paper: Paper = {
-        doi: "Doi",
-        id: paperId,
-        title: "Field-Sensitive Pointer Analysis for Static Dataflow in the R Programming Language",
-        abstrakt: "Abstrakt",
-        year: 2015,
-        type: "Paper",
-        authors: [
-            { id: 0, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 1, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 2, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 3, firstName: "Foo", lastName: "Bar", orcid: "" },
-            { id: 4, firstName: "Foo", lastName: "Bar", orcid: "" },
-        ],
-        backwardReferencedPaperIds: [],
-        forwardReferencedPaperIds: [],
-    };
     return {
-        paper,
+        paper: {
+            id: `${paperId}`,
+            externalId: "EXT12345",
+            title: "An Analysis of TypeScript Performance",
+            abstrakt:
+                "This paper examines the performance characteristics of TypeScript in large-scale applications.",
+            year: 2023,
+            publisher: "Tech Journal",
+            publicationName: "Journal of Modern Programming",
+            publicationType: "Journal Article",
+            hasPdf: true,
+            authors: [
+                { firstName: "John", lastName: "Doe", orcid: "0000-0001-2345-6789" },
+                { firstName: "Jane", lastName: "Smith", orcid: "0000-0002-3456-7890" },
+            ],
+            backwardReferencedIds: ["1", "2"],
+        },
         isReviewMode: true,
     };
 };

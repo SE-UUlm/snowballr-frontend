@@ -1,4 +1,4 @@
-import { type Paper, ReviewDecision } from "$lib/model/backend";
+import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 
 /**
  * Convert a person object ({firstName: "...", lastName, "..."}) to its string representation
@@ -29,10 +29,8 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
  *
  * @return true, if the paper is either unreviewed or has the status "Maybe", otherwise false
  */
-function isPaperUndecided(paper: Paper): boolean {
-    return (
-        paper.reviewData === undefined || paper.reviewData.finalDecision === ReviewDecision.Maybe
-    );
+function isPaperUndecided(paper: Project_Paper): boolean {
+    return paper.decision === PaperDecision.UNDECIDED;
 }
 
 /**
@@ -41,10 +39,8 @@ function isPaperUndecided(paper: Paper): boolean {
  *
  * @return true, if the paper needs further reviews, otherwise false
  */
-function doesPaperNeedReview(paper: Paper, numberOfRequiredReviews: number): boolean {
-    return (
-        isPaperUndecided(paper) || (paper.reviewData?.reviews.length ?? 0) < numberOfRequiredReviews
-    );
+function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: number): boolean {
+    return isPaperUndecided(paper) || paper.reviews.length < numberOfRequiredReviews;
 }
 
 export { getName, getNames, isPaperUndecided, doesPaperNeedReview };
