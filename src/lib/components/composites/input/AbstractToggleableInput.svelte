@@ -25,4 +25,5 @@ Same as ToggleableInput, but configured for the abstract textarea on the paper d
     inputAction={maxHeight}
     inputActionProps={maxHeightActionProps}
     {value}
+    placeholder="No abstract available"
 />
