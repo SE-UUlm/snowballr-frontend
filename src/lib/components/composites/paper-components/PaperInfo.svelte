@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { Paper, PaperSpec } from "$lib/model/backend";
+    import type { Paper } from "$lib/model/api/paper";
+    import { getNames } from "$lib/utils/common-helper";
 
     interface Props {
-        paper: Paper | PaperSpec;
+        paper: Paper | Omit<Paper, "id">;
     }
 
     const { paper }: Props = $props();
@@ -17,9 +18,7 @@
     </div>
     <div class="flex flex-row items-center text-hint truncate">
         {#if paper.authors.length > 0}
-            <span class="place-content-start truncate"
-                >{paper.authors.map((a) => `${a.firstName} ${a.lastName}`).join(", ")}</span
-            >
+            <span class="place-content-start truncate">{getNames(paper.authors)}</span>
         {:else}
             <span class="italic">unknown authors</span>
         {/if}

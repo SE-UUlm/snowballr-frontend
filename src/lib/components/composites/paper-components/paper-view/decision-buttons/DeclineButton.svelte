@@ -1,7 +1,7 @@
 <script lang="ts">
     import DecisionButton from "./DecisionButton.svelte";
 
-    const { paperId }: { paperId: number } = $props();
+    const { paperId }: { paperId: string } = $props();
 
     function declinePaper() {
         console.log(`Declined paper with id ${paperId}`);

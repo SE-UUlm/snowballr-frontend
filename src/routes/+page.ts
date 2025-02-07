@@ -1,65 +1,29 @@
 import type { PageLoad } from "./$types";
-import { BackendController } from "$lib/controller/backend-controller";
-import {
-    type Paper,
-    type Project,
-    type ProjectMetadata,
-    type StageEntry,
-    type User,
-} from "$lib/model/backend";
-import { calculateStageProgress } from "$lib/utils/statistics-helper";
-import { doesPaperNeedReview } from "$lib/utils/common-helper";
+import { backendService } from "$lib/grpc-api";
+import { Nothing } from "$lib/model/api/base";
+import { type Project } from "$lib/model/api/project";
+import type { PaperListEntryInterface, ProjectListEntryInterface } from "$lib/model/general";
 
-interface PaperInfos {
-    paper: Paper;
-    projectId: number;
-    showReviewStatus: boolean;
-}
-
-async function requestProjectMetadata(project: Project): Promise<ProjectMetadata> {
-    const projectController = BackendController.getInstance().project(project.id);
-    const members: User[] = await projectController.getMembers();
-    const currentStage: number = await projectController.getCurrentStage();
-    const allPapersInCurrentStage: StageEntry[] = await projectController
-        .stage(currentStage)
-        .getPapers();
+async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
+    const members = await backendService.getProjectMembers({ id: project.id }).response;
+    const statistics = await backendService.getProjectStatistics({
+        projectId: project.id,
+    }).response;
 
     return {
         project: project,
-        members: members,
-        stage: currentStage,
-        stageProgress: calculateStageProgress(
-            allPapersInCurrentStage.map((stageEntry: StageEntry): Paper => stageEntry.paper),
-        ),
+        membersList: members,
+        statistics: statistics,
     };
 }
 
-async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
-    const projectController = BackendController.getInstance().project(project.id);
-    const currentStage: number = await projectController.getCurrentStage();
-    const latestStage: number = await projectController.getStageCount();
-    const allUndecidedPapers: PaperInfos[] = [];
+async function requestUndecidedPapers(project: Project): Promise<PaperListEntryInterface[]> {
+    const allUndecidedPapers = await backendService.getAllPapersToReview(Nothing).response;
 
-    const numberOfRequiredReviews = project.reviewDecisionMatrix.numberOfReviewers;
-
-    for (let i = currentStage; i <= latestStage; i++) {
-        const allStageEntriesFromStageI: StageEntry[] = await projectController
-            .stage(i)
-            .getPapers();
-        allUndecidedPapers.push(
-            ...allStageEntriesFromStageI
-                .map((stageEntry) => ({
-                    paper: stageEntry.paper,
-                    projectId: project.id,
-                    /// TODO: request this information, e.g. from local store
-                    showReviewStatus: false,
-                }))
-                .filter((paperInfo) =>
-                    doesPaperNeedReview(paperInfo.paper, numberOfRequiredReviews),
-                ),
-        );
-    }
-    return allUndecidedPapers;
+    return allUndecidedPapers.projectPapers.map((projectPaper) => ({
+        projectPaper: projectPaper,
+        projectId: project.id,
+    }));
 }
 
 /**
@@ -71,17 +35,16 @@ async function requestUndecidedPapers(project: Project): Promise<PaperInfos[]> {
  * - the current project stage
  * - the progress of the current stage
  * - open reviews from the project
- *
- * TODO: check, whether this can be handled with a single request, e.g. on route /projects/[id]/projectMetadata/.
  */
-export const load: PageLoad = () => {
-    const allUserProjects = BackendController.getInstance().thisUser().getAllProjects();
+export const load: PageLoad = async () => {
+    const thisUserId = "0";
+    const allUserProjects = backendService.getAllProjectsForUser({ id: thisUserId }).response;
 
-    const projectsMetadata: Promise<ProjectMetadata[]> = allUserProjects
-        .then(async (projects: Project[]) => {
+    const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
+        .then(async (projectsResponse) => {
             try {
                 return await Promise.all(
-                    projects.map((project) => requestProjectMetadata(project)),
+                    projectsResponse.projects.map((project) => requestProjectInformation(project)),
                 );
             } catch {
                 throw new Error("Could not load project details.");
@@ -94,11 +57,11 @@ export const load: PageLoad = () => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     projectsMetadata.catch(() => {});
 
-    const openReviews: Promise<PaperInfos[]> = allUserProjects
-        .then(async (projects: Project[]) => {
+    const openReviews: Promise<PaperListEntryInterface[]> = allUserProjects
+        .then(async (projectsResponse) => {
             try {
                 return await Promise.all(
-                    projects.map((project) => requestUndecidedPapers(project)),
+                    projectsResponse.projects.map((project) => requestUndecidedPapers(project)),
                 );
             } catch {
                 throw new Error("Could not load open reviews.");

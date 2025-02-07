@@ -20,10 +20,13 @@
         "test:e2e": "playwright test",
         "test:and-open-coverage": "npm run test && npm run show-coverage",
         "license-check": "license-checker --onlyAllow 'GPL-3.0-only;GPL-3.0-or-later;GPL-2.0-or-later;LGPL-3.0-only;LGPL-3.0-or-later;LGPL-2.1-only;LGPL-2.1-or-later;AGPL-3.0-only;AGPL-3.0-or-later;Apache-2.0;Artistic-2.0;ClArtistic;BSL-1.0;BSD-3-Clause;CC0-1.0;CECILL-2.0;BSD-3-Clause-Clear;ECL-2.0;EFL-2.0;EUDatagrid;MIT;BSD-2-Clause;FTL;HPND;iMatix;Imlib2;IJG;Intel;ISC;MPL-2.0;NCSA;OLDAP-2.7;Python-2.0;Ruby;SGI-B-2.0;SMLNJ;UPL-1.0;Unlicense;Vim;W3C;WTFPL;X11;XFree86-1.1;Zlib;ZPL-2.0;ZPL-2.1;CC-BY-4.0;BlueOak-1.0.0;0BSD' --excludePackages 'spdx-exceptions@2.5.0' --summary",
-        "lighthouse": "lighthouse --config-path .github/lighthouse.config.js --chrome-flags=\"--headless\" --output-path=./lighthouse-reports/report.html --view"
+        "lighthouse": "lighthouse --config-path .github/lighthouse.config.js --chrome-flags=\"--headless\" --output-path=./lighthouse-reports/report.html --view",
+        "compile:proto": "protoc --ts_out src/lib/model/api --ts_opt generate_dependencies --proto_path api/proto/ api/proto/main.proto"
     },
     "devDependencies": {
         "@playwright/test": "^1.49.1",
+        "@protobuf-ts/grpcweb-transport": "^2.9.4",
+        "@protobuf-ts/plugin": "^2.9.4",
         "@sveltejs/adapter-auto": "^4.0.0",
         "@sveltejs/kit": "^2.17.1",
         "@sveltejs/vite-plugin-svelte": "^5.0.3",
@@ -55,6 +58,7 @@
         "tailwind-variants": "^0.3.1",
         "tailwindcss": "^4.0.0",
         "tailwindcss-animate": "^1.0.7",
+        "ts-protoc-gen": "^0.15.0",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.19.0",
         "vite": "^6.0.0",

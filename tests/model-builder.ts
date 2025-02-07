@@ -1,104 +1,39 @@
-import {
-    type Author,
-    type Paper,
-    type Project,
-    ReviewDecision,
-    type User,
-} from "$lib/model/backend";
+import type { User } from "$lib/model/api/user";
+import type { Author, Paper } from "$lib/model/api/paper";
+import type { Project, Project_Paper } from "$lib/model/api/project";
+import { Authors, Papers, ProjectPapers, Projects, Users } from "./example-data";
 
 export function createUser(user: Partial<User> = {}): User {
     return {
-        id: 0,
-        firstName: "John",
-        lastName: "Doe",
-        email: "john.doe@example.com",
-        isAdmin: false,
-        status: "active",
+        ...Users.johnDoe,
         ...user,
-    };
-}
-
-export const Users = {
-    johnDoe: {
-        id: 0,
-        firstName: "John",
-        lastName: "Doe",
-        email: "john.doe@example.com",
-        isAdmin: true,
-        status: "active",
-    },
-    janeDoe: {
-        id: 1,
-        firstName: "Jane",
-        lastName: "Doe",
-        email: "jane.doe@example.com",
-        isAdmin: false,
-        status: "active",
-    },
-};
-
-export function createProject(project: Partial<Project> = {}): Project {
-    return {
-        id: 0,
-        name: "Foo",
-        reviewDecisionMatrix: {
-            numberOfReviewers: 2,
-            patterns: new Map(),
-        },
-        similarityThreshold: 0.7,
-        paperFetchApis: ["bar"],
-        archived: false,
-        ...project,
     };
 }
 
 export function createAuthor(author: Partial<Author> = {}): Author {
     return {
-        id: 0,
-        firstName: "John",
-        lastName: "Doe",
-        orcid: "foo",
+        ...Authors.johnDoe,
         ...author,
     };
 }
 
-export const Authors = {
-    johnDoe: {
-        id: 0,
-        firstName: "John",
-        lastName: "Doe",
-        orcid: "foo",
-    },
-    janeDoe: {
-        id: 1,
-        firstName: "Jane",
-        lastName: "Doe",
-        orcid: "bar",
-    },
-};
+export function createProject(project: Partial<Project> = {}): Project {
+    return {
+        ...Projects.demoProject,
+        ...project,
+    };
+}
 
 export function createPaper(paper: Partial<Paper> = {}): Paper {
     return {
-        id: 0,
-        doi: "doi",
-        title: "Foo",
-        abstrakt: "Bar",
-        year: 1912,
-        type: "paper",
-        authors: [Authors.johnDoe],
-        backwardReferencedPaperIds: [],
-        forwardReferencedPaperIds: [],
-        reviewData: {
-            finalDecision: ReviewDecision.Declined,
-            reviews: [
-                {
-                    user: Users.johnDoe,
-                    finished: true,
-                    decision: ReviewDecision.Declined,
-                    selectedCriteriaIds: [],
-                },
-            ],
-        },
+        ...Papers.demoPaper1,
+        ...paper,
+    };
+}
+
+export function createProjectPaper(paper: Partial<Project_Paper> = {}): Project_Paper {
+    return {
+        ...ProjectPapers.demoProjectPaper1,
         ...paper,
     };
 }

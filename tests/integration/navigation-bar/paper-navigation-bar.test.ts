@@ -1,7 +1,8 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { Authors, createPaper, Users } from "../../model-builder";
+import { createPaper } from "../../model-builder";
+import { Authors, Users } from "../../example-data";
 
 describe("PaperNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
@@ -11,9 +12,9 @@ describe("PaperNavigationBar", () => {
                 user: Users.johnDoe,
                 backRef: "/",
                 paper: createPaper({
-                    id: 123,
+                    id: "123",
                     title: "Example Paper Title",
-                    authors: [Authors.johnDoe, Authors.janeDoe],
+                    authors: [Authors.johnDoe, Authors.janeSmith],
                 }),
             },
         });
@@ -41,7 +42,7 @@ describe("PaperNavigationBar", () => {
         expect(paperTitle).toBeInTheDocument();
 
         // Paper authors are shown
-        const paperAuthors = screen.getByText("John Doe, Jane Doe");
+        const paperAuthors = screen.getByText("John Doe, Jane Smith");
         expect(paperAuthors).toBeInTheDocument();
 
         // Paper ID is shown
@@ -57,7 +58,7 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 paper: createPaper({
                     title: "Example Paper Title",
-                    authors: [Authors.johnDoe, Authors.janeDoe],
+                    authors: [Authors.johnDoe, Authors.janeSmith],
                 }),
             },
         });
@@ -72,7 +73,7 @@ describe("PaperNavigationBar", () => {
                 user: Users.johnDoe,
                 backRef: "/",
                 paper: createPaper({
-                    id: 123,
+                    id: "123",
                     title: "Example Paper Title",
                     authors: [],
                 }),

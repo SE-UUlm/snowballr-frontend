@@ -7,7 +7,7 @@
     import LogOut from "lucide-svelte/icons/log-out";
     import type { ComponentType } from "svelte";
     import type { Icon } from "lucide-svelte";
-    import type { User } from "$lib/model/backend";
+    import type { User } from "$lib/model/api/user";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
 
     interface Props {

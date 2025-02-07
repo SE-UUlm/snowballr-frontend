@@ -3,26 +3,26 @@
     import { Button, buttonVariants } from "$lib/components/primitives/button";
     import * as Dialog from "$lib/components/primitives/dialog";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog";
-    import * as Alert from "$lib/components/primitives/alert";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import type { User } from "$lib/model/backend";
-    import { BackendController } from "$lib/controller/backend-controller";
     import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
-    import CircleAlert from "lucide-svelte/icons/circle-alert";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
+    import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
+    import { backendService } from "$lib/grpc-api";
+    import { Nothing } from "$lib/model/api/base";
+    import type { User } from "$lib/model/api/user";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
 
     let isServerStillCreatingProject = $state(false);
     let projectWasCreated = $state(false);
-    let projectId = $state<number | undefined>(undefined);
+    let projectId = $state<string | undefined>(undefined);
 
     let isErrorOnProjectCreation = $state(false);
     let isErrorOnUsersLoading = $state(false);
@@ -39,11 +39,10 @@
 
     onMount(async () => {
         try {
-            // TODO: exchange by call to store or so, if login etc. is completely implemented
-            let thisUser: User = await BackendController.getInstance().thisUser().get();
-            initialPossibleMembers = await BackendController.getInstance()
-                .getUsers()
-                .then((users) => users.filter((user) => user.id !== thisUser.id));
+            const currentUser = await backendService.getCurrentUser(Nothing).response;
+            const allUsers = await backendService.getAllUsers(Nothing).response;
+
+            initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
         } catch (error) {
             isErrorOnUsersLoading = true;
             console.error(`Could not get users from server (${error})`);
@@ -148,16 +147,21 @@
         }
 
         isServerStillCreatingProject = true;
-        await BackendController.getInstance()
+
+        backendService
             .createProject({
                 name: projectNameInput.getValue(),
             })
-            .then(async (project) => {
+            .response.then(async (project) => {
                 projectId = project.id;
 
                 return Promise.all(
-                    membersInput.map((member) =>
-                        BackendController.getInstance().project(projectId!).inviteUser(member),
+                    membersInput.map(
+                        (memberEmail) =>
+                            backendService.inviteUserToProject({
+                                projectId: projectId!,
+                                userEmail: memberEmail,
+                            }).response,
                     ),
                 )
                     .then(() => {
@@ -226,21 +230,11 @@
                 displayItem={mapEmailToName}
             />
             {#if isErrorOnUsersLoading}
-                <Alert.Root variant="destructive">
-                    <CircleAlert class="size-4" />
-                    <Alert.Title>Something went wrong while loading possible members.</Alert.Title>
-                    <Alert.Description
-                        >Please check your connection and try again.</Alert.Description
-                    >
-                </Alert.Root>
+                <ErrorAlert errorTitle="Something went wrong while loading possible members." />
             {/if}
         </form>
         {#if isErrorOnProjectCreation}
-            <Alert.Root variant="destructive">
-                <CircleAlert class="size-4" />
-                <Alert.Title>Something went wrong while creating the project.</Alert.Title>
-                <Alert.Description>Please check your connection and try again.</Alert.Description>
-            </Alert.Root>
+            <ErrorAlert errorTitle="Something went wrong while creating the project." />
         {/if}
         <Dialog.Footer>
             <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>

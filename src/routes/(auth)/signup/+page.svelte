@@ -3,14 +3,18 @@
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import { BackendController } from "$lib/controller/backend-controller";
-    import type { UserSpec } from "$lib/model/backend";
+    import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
+    import type { ApiError } from "$lib/model/general";
+    import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
+    import { StatusCodes } from "$lib/model/error-codes";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
     let emailInput: Input;
     let passwordInput: PasswordInput;
+
+    let registrationError: ApiError | undefined = $state(undefined);
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -23,17 +27,34 @@
             return;
         }
 
-        const userSpec: UserSpec = {
+        const userData = {
             firstName: firstNameInput.getValue(),
             lastName: lastNameInput.getValue(),
             email: emailInput.getValue(),
+            password: passwordInput.getValue(),
         };
-        const user = await BackendController.getInstance().createUser(
-            userSpec,
-            passwordInput.getValue(),
-        );
-        // TODO: Login and redirect to the home page
-        console.log(user);
+
+        backendService
+            .register(userData)
+            .then((user) => {
+                const { accessToken, refreshToken } = user.response;
+                // TODO: Login with accessToken, store both tokens and redirect to the home page,
+                // will be completed in #134
+                console.log(
+                    `New user was registered with the following token: ${accessToken} (refreshToken: ${refreshToken})`,
+                );
+            })
+            .catch((error) => {
+                if (error.code === StatusCodes.ALREADY_EXISTS) {
+                    registrationError = {
+                        errorTitle: "An account with this email address already exists.",
+                        errorDetails: "Try logging in or resetting your password",
+                    };
+                } else {
+                    registrationError = { errorTitle: "Something went wrong while registration." };
+                }
+                console.error(error);
+            });
     }
 </script>
 
@@ -84,6 +105,12 @@
             />
             <PasswordInput class="w-full" bind:this={passwordInput} />
             <Button type="submit" class="w-full">Create an account</Button>
+            {#if registrationError}
+                <ErrorAlert
+                    errorTitle={registrationError.errorTitle}
+                    errorDetails={registrationError.errorDetails}
+                />
+            {/if}
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?
