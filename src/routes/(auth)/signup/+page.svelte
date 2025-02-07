@@ -7,6 +7,7 @@
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
+    import { StatusCodes } from "$lib/model/api/error-codes";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -44,7 +45,7 @@
                 );
             })
             .catch((error) => {
-                if (error.code == "ALREADY_EXISTS") {
+                if (error.code === StatusCodes.ALREADY_EXISTS) {
                     registrationError = {
                         errorTitle: "An account with this email address already exists.",
                         errorDetails: "Try logging in or resetting your password",
