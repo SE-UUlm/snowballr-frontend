@@ -25,7 +25,7 @@ cd snowballr-frontend
 npm install
 ```
 
-Next the API need to be integrated by initializing the corresponding submodule and compile the
+Next the API need to be integrated by initializing the corresponding submodule[^tag-checkout] and compile the
 proto files containing the API specification:
 
 ```bash
@@ -54,6 +54,8 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > **Note**: To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+[^tag-checkout]: The used API version need to be set manually to the desired stable version, e.g. by `cd api && git checkout v0.1.0`
 
 ## Testing
 
