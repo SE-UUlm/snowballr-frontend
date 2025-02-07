@@ -1,12 +1,12 @@
 import type { PageLoad } from "./$types";
-import { BACKEND } from "$lib/grpc-api";
+import { backendService } from "$lib/grpc-api";
 import { Nothing } from "$lib/model/api/base";
 import { type Project } from "$lib/model/api/project";
 import type { PaperListEntryInterface, ProjectListEntryInterface } from "$lib/model/general";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
-    const members = await BACKEND.getProjectMembers({ id: project.id }).response;
-    const statistics = await BACKEND.getProjectStatistics({
+    const members = await backendService.getProjectMembers({ id: project.id }).response;
+    const statistics = await backendService.getProjectStatistics({
         projectId: project.id,
     }).response;
 
@@ -18,7 +18,7 @@ async function requestProjectInformation(project: Project): Promise<ProjectListE
 }
 
 async function requestUndecidedPapers(project: Project): Promise<PaperListEntryInterface[]> {
-    const allUndecidedPapers = await BACKEND.getAllPapersToReview(Nothing).response;
+    const allUndecidedPapers = await backendService.getAllPapersToReview(Nothing).response;
 
     return allUndecidedPapers.projectPapers.map((projectPaper) => ({
         projectPaper: projectPaper,
@@ -38,7 +38,7 @@ async function requestUndecidedPapers(project: Project): Promise<PaperListEntryI
  */
 export const load: PageLoad = async () => {
     const thisUserId = "0";
-    const allUserProjects = BACKEND.getAllProjectsForUser({ id: thisUserId }).response;
+    const allUserProjects = backendService.getAllProjectsForUser({ id: thisUserId }).response;
 
     const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {

@@ -13,7 +13,7 @@
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
-    import { BACKEND } from "$lib/grpc-api";
+    import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";
 
@@ -39,8 +39,8 @@
 
     onMount(async () => {
         try {
-            const currentUser = await BACKEND.getCurrentUser(Nothing).response;
-            const allUsers = await BACKEND.getAllUsers(Nothing).response;
+            const currentUser = await backendService.getCurrentUser(Nothing).response;
+            const allUsers = await backendService.getAllUsers(Nothing).response;
 
             initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
         } catch (error) {
@@ -148,16 +148,17 @@
 
         isServerStillCreatingProject = true;
 
-        BACKEND.createProject({
-            name: projectNameInput.getValue(),
-        })
+        backendService
+            .createProject({
+                name: projectNameInput.getValue(),
+            })
             .response.then(async (project) => {
                 projectId = project.id;
 
                 return Promise.all(
                     membersInput.map(
                         (memberEmail) =>
-                            BACKEND.inviteUserToProject({
+                            backendService.inviteUserToProject({
                                 projectId: projectId!,
                                 userEmail: memberEmail,
                             }).response,

@@ -4,7 +4,7 @@
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
     import { PaperDecision } from "$lib/model/api/project";
-    import { BACKEND } from "$lib/grpc-api";
+    import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
 
     type PaperListEntryProps = PaperListEntryInterface & {
@@ -40,7 +40,7 @@
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
         try {
-            reviewingUser = await BACKEND.getUserById({ id: id }).response;
+            reviewingUser = await backendService.getUserById({ id: id }).response;
         } catch (error) {
             console.error(`Could not load review user with: ${id} (error: ${error})`);
         }

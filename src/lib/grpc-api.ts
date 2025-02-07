@@ -6,4 +6,4 @@ const transport = new GrpcWebFetchTransport({
     baseUrl: PUBLIC_API_BASE_URL,
 });
 
-export const BACKEND = new SnowballRClient(transport);
+export const backendService = new SnowballRClient(transport);

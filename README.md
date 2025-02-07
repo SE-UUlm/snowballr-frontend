@@ -2,7 +2,7 @@
 
 **SnowballR** is a web-based tool supporting _Systematic Literature Reviews (SLR)_.
 
-### SnowballR's use cases
+## SnowballR's use cases
 
 ![Open Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aopen%20is%3Aissue%20label%3A%22use%20case%22%20&label=open)
 ![GitHub issue custom search](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)

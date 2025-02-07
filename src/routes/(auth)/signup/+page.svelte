@@ -3,7 +3,7 @@
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import { BACKEND } from "$lib/grpc-api";
+    import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
@@ -33,7 +33,8 @@
             password: passwordInput.getValue(),
         };
 
-        BACKEND.register(userData)
+        backendService
+            .register(userData)
             .then((user) => {
                 const { accessToken, refreshToken } = user.response;
                 // TODO: Login with accessToken, store both tokens and redirect to the home page,
