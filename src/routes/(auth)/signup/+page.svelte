@@ -7,7 +7,7 @@
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
-    import { StatusCodes } from "$lib/model/api/error-codes";
+    import { StatusCodes } from "$lib/model/error-codes";
 
     let firstNameInput: Input;
     let lastNameInput: Input;

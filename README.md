@@ -29,6 +29,7 @@ Next the API need to be integrated by initializing the corresponding submodule[^
 proto files containing the API specification:
 
 ```bash
+git pull
 git submodule update --init --recursive
 npm run compile:proto
 ```
@@ -55,7 +56,7 @@ You can preview the production build with `npm run preview`.
 
 > **Note**: To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 
-[^tag-checkout]: The used API version need to be set manually to the desired stable version, e.g. by `cd api && git checkout v0.1.0`
+[^tag-checkout]: Make sure, that the used API version was manually set to the desired stable version, otherwise set it (see [here](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247) for further hints).
 
 ## Testing
 
