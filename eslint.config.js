@@ -35,6 +35,7 @@ export default ts.config(
             "coverage/",
             "node_modules/",
             "src/lib/model/api/",
+            "api/",
         ],
     },
 );

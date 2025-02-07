@@ -4,4 +4,5 @@ pnpm-lock.yaml
 yarn.lock
 
 # API
-api/
+api/**
+src/lib/model/api/**
