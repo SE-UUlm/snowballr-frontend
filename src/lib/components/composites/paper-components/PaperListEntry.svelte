@@ -102,7 +102,7 @@ Usage:
     >
         <PaperInfo paper={projectPaper.paper!} />
     </div>
-    {#if projectPaper.reviews.length !== 0 && showReviewStatus}
+    {#if showReviewStatus}
         {#each projectPaper.reviews as review}
             {#await getReviewUserById(review.userId) then user}
                 <UserAvatar {user} reviewDecision={review.decision} />

@@ -21,7 +21,7 @@ Furthermore this component is clickable and navigates to the corresponding proje
 
 Usage:
 ```svelte
-    <ProjectListEntry project={demoProject} members={memberUserSpecArray} statistics={{projectProgress: 0.3}} />
+    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} statistics={{projectProgress: 0.3}} />
 ```
 -->
 <a
@@ -36,13 +36,13 @@ Usage:
         <h2 class="truncate">{project.name}</h2>
 
         {#if membersList.members.length > 0}
-            <span class="truncate text-hint"
-                >{getNames(
+            <span class="truncate text-hint">
+                {getNames(
                     membersList.members
                         .map((member) => member.user)
                         .filter((user) => user !== undefined),
-                )}</span
-            >
+                )}
+            </span>
         {:else}
             <span class="italic">no members</span>
         {/if}

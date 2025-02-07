@@ -7,8 +7,7 @@ import type {
 
 type ValidationResult = { success: true } | { success: false; error: string };
 
-// TODO: find better name
-interface ApiLoadError {
+interface ApiError {
     errorTitle: string;
     errorDetails?: string;
 }
@@ -25,4 +24,4 @@ interface PaperListEntryInterface {
     showReviewStatus?: boolean;
 }
 
-export type { ValidationResult, ApiLoadError, ProjectListEntryInterface, PaperListEntryInterface };
+export type { ValidationResult, ApiError, ProjectListEntryInterface, PaperListEntryInterface };

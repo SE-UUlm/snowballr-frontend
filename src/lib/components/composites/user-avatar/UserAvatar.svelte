@@ -37,7 +37,7 @@ Usage:
         email: "john@doe.com",
         firstName: "John",
         lastName: "Doe",
-    }} reviewDecision={ReviewDecision.ACCEPT} />
+    }} reviewDecision={ReviewDecision.ACCEPTED} />
 ```
 -->
 <div class="relative">

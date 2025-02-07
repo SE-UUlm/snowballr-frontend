@@ -1,12 +1,10 @@
 <script lang="ts">
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import * as Alert from "$lib/components/primitives/alert";
-    import type { ApiLoadError } from "$lib/model/general";
+    import type { ApiError } from "$lib/model/general";
 
-    const {
-        errorTitle,
-        errorDetails = "Please check your connection and try again.",
-    }: ApiLoadError = $props();
+    const { errorTitle, errorDetails = "Please check your connection and try again." }: ApiError =
+        $props();
 </script>
 
 <Alert.Root variant="destructive">

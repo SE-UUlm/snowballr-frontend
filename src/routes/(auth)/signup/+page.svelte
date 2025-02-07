@@ -5,7 +5,7 @@
     import * as Card from "$lib/components/primitives/card/index.js";
     import { BACKEND } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
-    import type { ApiLoadError } from "$lib/model/general";
+    import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
 
     let firstNameInput: Input;
@@ -13,7 +13,7 @@
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
-    let registrationError: ApiLoadError | undefined = $state(undefined);
+    let registrationError: ApiError | undefined = $state(undefined);
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -48,9 +48,9 @@
                         errorTitle: "An account with this email address already exists.",
                         errorDetails: "Try logging in or resetting your password",
                     };
-                    return;
+                } else {
+                    registrationError = { errorTitle: "Something went wrong while registration." };
                 }
-                registrationError = { errorTitle: "Something went wrong while registration." };
                 console.error(error);
             });
     }

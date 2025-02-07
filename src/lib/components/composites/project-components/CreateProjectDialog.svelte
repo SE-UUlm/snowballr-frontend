@@ -156,10 +156,10 @@
 
                 return Promise.all(
                     membersInput.map(
-                        (member) =>
+                        (memberEmail) =>
                             BACKEND.inviteUserToProject({
                                 projectId: projectId!,
-                                userEmail: member,
+                                userEmail: memberEmail,
                             }).response,
                     ),
                 )
