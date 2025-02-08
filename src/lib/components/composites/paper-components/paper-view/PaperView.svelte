@@ -74,7 +74,7 @@ Usage:
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} {showButtonBar} />
+        <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
         <PaperResearchContextCard />
     </div>
     {#if showButtonBar}

@@ -2,24 +2,12 @@
     import type { HTMLInputAttributes } from "svelte/elements";
     import type { WithElementRef } from "bits-ui";
     import { cn } from "$lib/utils/shadcn-helper";
-    import autosize from "svelte-autosize";
-    import type { Action } from "svelte/action";
 
     type Props = WithElementRef<HTMLInputAttributes> & {
         isEditable: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        inputAction?: Action<HTMLTextAreaElement, any>;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        inputActionProps?: any;
     };
 
-    let {
-        isEditable = $bindable(false),
-        inputAction = () => {},
-        inputActionProps = {},
-        value = $bindable(),
-        class: className,
-    }: Props = $props();
+    let { isEditable = $bindable(false), value = $bindable(), class: className }: Props = $props();
 </script>
 
 <!--
@@ -35,8 +23,6 @@ Usage:
 ```
 -->
 <textarea
-    use:autosize
-    use:inputAction={inputActionProps}
     class={cn(
         "bg-background px-1.5 py-1 min-h-8 w-full resize-none text-default focus-visible:outline-hidden border",
         isEditable ? "border-input rounded-md" : "border-transparent",

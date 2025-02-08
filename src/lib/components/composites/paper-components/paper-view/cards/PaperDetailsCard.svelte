@@ -9,17 +9,16 @@
     import Pencil from "lucide-svelte/icons/pencil";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
-    import AbstractToggleableInput from "$lib/components/composites/input/AbstractToggleableInput.svelte";
     import { resource } from "$lib/resource.svelte";
+    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
-        showButtonBar: boolean;
     }
 
-    const { loadingPaper, allowEditModeToggle, startInEditMode, showButtonBar }: Props = $props();
+    const { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
 
     let areDetailsInEditMode = $state(startInEditMode);
     let isAbstractInEditMode = $state(startInEditMode);
@@ -134,7 +133,7 @@ Usage:
                 </Button>
             </div>
         </section>
-        <section class="flex flex-col gap-2 px-1">
+        <section class="flex flex-col gap-2 px-1 flex-[1_1_0]">
             <div class="flex flex-row justify-between items-center">
                 <h2>Abstract</h2>
                 {#if allowEditModeToggle}
@@ -150,10 +149,11 @@ Usage:
                     <Skeleton class="flex h-[1.625rem] rounded-full w-[{width}%]" />
                 {/each}
             {:then paper}
-                <AbstractToggleableInput
+                <ToggleableInput
+                    class="h-full"
                     isEditable={isAbstractInEditMode}
-                    maxHeightActionProps={{ showButtonBar, showAdditionalInfos }}
                     value={paper.abstrakt}
+                    placeholder="No abstract available"
                 />
             {:catch}
                 <span class="text-error">Couldn't load Abstract</span>

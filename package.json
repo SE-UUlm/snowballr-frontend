@@ -54,7 +54,6 @@
         "prettier": "^3.3.2",
         "prettier-plugin-svelte": "^3.3.3",
         "svelte": "^5.16.0",
-        "svelte-autosize": "^1.1.5",
         "svelte-check": "^4.1.4",
         "tailwind-merge": "^3.0.1",
         "tailwind-variants": "^0.3.1",

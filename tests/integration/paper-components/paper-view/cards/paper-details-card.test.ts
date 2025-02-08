@@ -14,7 +14,6 @@ describe("PaperDetailsCard", () => {
                 loadingPaper: Promise.resolve(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
-                showButtonBar: true,
             },
         });
 
@@ -57,7 +56,6 @@ describe("PaperDetailsCard", () => {
                 loadingPaper: Promise.resolve(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
-                showButtonBar: true,
             },
         });
 
@@ -94,7 +92,6 @@ describe("PaperDetailsCard", () => {
                 loadingPaper: Promise.resolve(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
-                showButtonBar: true,
             },
         });
 
@@ -168,7 +165,6 @@ describe("PaperDetailsCard", () => {
                 loadingPaper: Promise.resolve(createPaper()),
                 allowEditModeToggle: false,
                 startInEditMode: false,
-                showButtonBar: true,
             },
         });
 
@@ -198,7 +194,6 @@ describe("PaperDetailsCard", () => {
                 }),
                 allowEditModeToggle: true,
                 startInEditMode: false,
-                showButtonBar: true,
             },
         });
 
