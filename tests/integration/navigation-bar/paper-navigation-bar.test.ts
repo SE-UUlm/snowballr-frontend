@@ -1,7 +1,8 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createPaper } from "../../model-builder";
+import { createLoadingPaper } from "../../model-builder";
+import { waitForComponentLoading } from "../test-helper";
 import { Authors, Users } from "../../example-data";
 
 describe("PaperNavigationBar", () => {
@@ -11,13 +12,15 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                paper: createPaper({
+                loadingPaper: createLoadingPaper({
                     id: "123",
                     title: "Example Paper Title",
                     authors: [Authors.johnDoe, Authors.janeSmith],
                 }),
             },
         });
+
+        await waitForComponentLoading();
 
         const header = screen.getByRole("banner");
         expect(header).toBeInTheDocument();
@@ -56,12 +59,14 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                paper: createPaper({
+                loadingPaper: createLoadingPaper({
                     title: "Example Paper Title",
                     authors: [Authors.johnDoe, Authors.janeSmith],
                 }),
             },
         });
+
+        await waitForComponentLoading();
 
         assert.throws(() => screen.getByText("#123"));
     });
@@ -72,13 +77,15 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                paper: createPaper({
+                loadingPaper: createLoadingPaper({
                     id: "123",
                     title: "Example Paper Title",
                     authors: [],
                 }),
             },
         });
+
+        await waitForComponentLoading();
 
         const paperAuthors = screen.getByText("unknown authors");
         expect(paperAuthors).toBeInTheDocument();

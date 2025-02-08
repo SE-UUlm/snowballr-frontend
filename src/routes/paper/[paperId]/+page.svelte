@@ -2,16 +2,21 @@
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
-    const { user, paper } = data;
+    const { user, loadingPaper } = data;
 </script>
 
 <svelte:head>
-    <title>{paper.title}</title>
+    {#await loadingPaper}
+        <title>Loading paper...</title>
+    {:then paper}
+        <title>{paper.title}</title>
+    {:catch}
+        <title>Failed loading paper</title>
+    {/await}
 </svelte:head>
 <PaperView
     {user}
-    {paper}
-    showButtonBar={false}
+    {loadingPaper}
     backRef="/"
     userConfig={{ isReviewMode: false, showMaybeButton: false }}
 />

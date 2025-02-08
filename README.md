@@ -5,7 +5,7 @@
 ## SnowballR's use cases
 
 ![Open Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aopen%20is%3Aissue%20label%3A%22use%20case%22%20&label=open)
-![GitHub issue custom search](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)
+![Closed Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)
 
 To keep track of the use cases we are working on, we are using the GitHub project board feature. You can find them [here](https://github.com/orgs/SE-UUlm/projects/2/views/7).
 
@@ -36,9 +36,10 @@ npm run compile:proto
 
 To run the app, you need to create a `.env` file in the root directory of the project. The file should contain the following environment variables (see [.env.example](./.env.example) for an example):
 
-| Variable              | Description                 |
-| --------------------- | --------------------------- |
-| `PUBLIC_API_BASE_URL` | The URL of the backend API. |
+| Variable              |      Required      | Default | Description                                                                            |
+| --------------------- | :----------------: | :-----: | -------------------------------------------------------------------------------------- |
+| `PUBLIC_API_BASE_URL` | :white_check_mark: |    -    | The URL of the backend API.                                                            |
+| `PUBLIC_IS_DEV_MODE`  |        :x:         |  false  | Whether the app is in development mode. This may enable additional development tooling |
 
 After completing these steps, you can start a development server with:
 

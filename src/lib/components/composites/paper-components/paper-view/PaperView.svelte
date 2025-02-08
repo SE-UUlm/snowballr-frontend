@@ -12,24 +12,28 @@
 
     interface Props {
         user: User;
-        paper: Paper;
-        isPaperBookmarked?: boolean;
-        showButtonBar: boolean;
+        loadingPaper: Promise<Paper>;
+        showButtonBar?: boolean;
         backRef: string;
         userConfig: {
             isReviewMode: boolean;
             showMaybeButton: boolean;
         };
+        allowEditModeToggle?: boolean;
+        startInEditMode?: boolean;
     }
 
     const {
         user,
-        paper,
-        isPaperBookmarked = false,
-        showButtonBar,
+        loadingPaper,
+        showButtonBar = false,
         backRef,
         userConfig,
+        allowEditModeToggle = false,
+        startInEditMode = false,
     }: Props = $props();
+
+    let loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 
 <!--
@@ -42,27 +46,35 @@ Additonally, there are buttons to navigate to the previous or next paper.
 - when `userConfig.isReviewMode` is false, then no decision buttons are shown
 - when `userConfig.showMaybeButton` is false, then the maybe button is not shown
 
+Edit Mode:
+- in the edit mode, the user can edit the paper details. When the mode is turned off, the details are displayed as read-only.
+- when `allowEditModeToggle` is true, then the user can toggle the edit mode
+- when `startInEditMode` is true, then the paper details can be edited from the start
+
 Usage:
 ```svelte
     <PaperView
         user={user}
-        paper={paper}
-        showButtonBar={true}
+        loadingPaper={loadingPaper}
+        showButtonBar
         backRef="/"
         userConfig={{
             isReviewMode: true,
             showMaybeButton: true,
         }}
+        allowEditModeToggle
+        startInEditMode
     />
 ```
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
-    <PaperNavigationBar {user} {backRef} {paper} />
-    <PaperBookmarkButton paperId={paper.id} isBookmarkedDefault={isPaperBookmarked} />
+    <PaperNavigationBar {user} {backRef} {loadingPaper} />
+    <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
+    <PaperBookmarkButton {loadingPaperId} isBookmarkedDefault={false} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <PaperDetailsCard />
+        <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
         <PaperResearchContextCard />
     </div>
     {#if showButtonBar}
@@ -73,11 +85,11 @@ Usage:
                 <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                 <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                 <div class="flex flex-grow-1000 max-w-[62rem] gap-[1rem] justify-center">
-                    <DeclineButton paperId={paper.id} />
+                    <DeclineButton {loadingPaperId} />
                     {#if userConfig.showMaybeButton}
-                        <MaybeButton paperId={paper.id} />
+                        <MaybeButton {loadingPaperId} />
                     {/if}
-                    <AcceptButton paperId={paper.id} />
+                    <AcceptButton {loadingPaperId} />
                 </div>
             {/if}
             <PaperNavigationButton direction="right" href="" />

@@ -1,14 +1,22 @@
 <script lang="ts">
     import DecisionButton from "./DecisionButton.svelte";
 
-    const { paperId }: { paperId: string } = $props();
+    interface Props {
+        loadingPaperId: Promise<string>;
+    }
 
-    function acceptPaper() {
+    const { loadingPaperId }: Props = $props();
+
+    function acceptPaper(paperId: string) {
         console.log(`Accepted paper with id ${paperId}`);
     }
 </script>
 
-<DecisionButton class="bg-accept-green hover:bg-accept-green-hover" onClick={acceptPaper}>
+<DecisionButton
+    class="bg-accept-green hover:bg-accept-green-hover"
+    onClick={acceptPaper}
+    {loadingPaperId}
+>
     {#snippet buttonContent()}
         <p>Accept</p>
         <p class="text-accept-green-shortcut">Ctrl+A</p>

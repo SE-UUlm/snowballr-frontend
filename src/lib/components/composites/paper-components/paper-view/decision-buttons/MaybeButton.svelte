@@ -1,14 +1,22 @@
 <script lang="ts">
     import DecisionButton from "./DecisionButton.svelte";
 
-    const { paperId }: { paperId: string } = $props();
+    interface Props {
+        loadingPaperId: Promise<string>;
+    }
 
-    function markPaperAsUndecided() {
+    const { loadingPaperId }: Props = $props();
+
+    function markPaperAsUndecided(paperId: string) {
         console.log(`Undecided paper with id ${paperId}`);
     }
 </script>
 
-<DecisionButton class="bg-maybe-yellow hover:bg-maybe-yellow-hover" onClick={markPaperAsUndecided}>
+<DecisionButton
+    class="bg-maybe-yellow hover:bg-maybe-yellow-hover"
+    onClick={markPaperAsUndecided}
+    {loadingPaperId}
+>
     {#snippet buttonContent()}
         <p>Maybe</p>
         <p class="text-maybe-yellow-shortcut">Ctrl+S</p>

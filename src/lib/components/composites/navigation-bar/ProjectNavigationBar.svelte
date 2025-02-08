@@ -7,31 +7,32 @@
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
         user: User;
-        project: Project;
+        projectId: string;
+        loadingProject: Promise<Project>;
         defaultTabValue: TabValue;
     }
 
-    const { user, project, defaultTabValue }: Props = $props();
+    const { user, projectId, loadingProject, defaultTabValue }: Props = $props();
     const tabs = [
         {
             value: "dashboard",
             label: "Dashboard",
-            href: `/project/${project.id}/dashboard`,
+            href: `/project/${projectId}/dashboard`,
         },
         {
             value: "papers",
             label: "Papers",
-            href: `/project/${project.id}/papers`,
+            href: `/project/${projectId}/papers`,
         },
         {
             value: "statistics",
             label: "Statistics",
-            href: `/project/${project.id}/statistics`,
+            href: `/project/${projectId}/statistics`,
         },
         {
             value: "settings",
             label: "Settings",
-            href: `/project/${project.id}/settings/general`,
+            href: `/project/${projectId}/settings/general`,
         },
     ] as const;
 </script>
@@ -39,7 +40,7 @@
 <SimpleNavigationBar
     {user}
     backRef="/"
-    title={project.name}
+    loadingTitle={loadingProject.then((project) => project.name)}
     tabs={tabs as unknown as Tab[]}
     {defaultTabValue}
 />

@@ -1,14 +1,22 @@
 <script lang="ts">
     import DecisionButton from "./DecisionButton.svelte";
 
-    const { paperId }: { paperId: string } = $props();
+    interface Props {
+        loadingPaperId: Promise<string>;
+    }
 
-    function declinePaper() {
+    const { loadingPaperId }: Props = $props();
+
+    function declinePaper(paperId: string) {
         console.log(`Declined paper with id ${paperId}`);
     }
 </script>
 
-<DecisionButton class="bg-decline-red hover:bg-decline-red-hover" onClick={declinePaper}>
+<DecisionButton
+    class="bg-decline-red hover:bg-decline-red-hover"
+    onClick={declinePaper}
+    {loadingPaperId}
+>
     {#snippet buttonContent()}
         <p>Decline</p>
         <p class="text-decline-red-shortcut">Ctrl+D</p>

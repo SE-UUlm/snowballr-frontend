@@ -2,9 +2,10 @@ import { expect, test, describe } from "vitest";
 import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { createUser } from "../../model-builder";
+import { waitForComponentLoading } from "../test-helper";
 
 describe("SimpleNavigationBar", () => {
-    test("When all props are provided, then whole navigation bar is shown", () => {
+    test("When all props are provided, then whole navigation bar is shown", async () => {
         render(SimpleNavigationBar, {
             target: document.body,
             props: {
@@ -13,9 +14,11 @@ describe("SimpleNavigationBar", () => {
                     lastName: "Doe",
                 }),
                 backRef: "/",
-                title: "Simple Navigation Bar",
+                loadingTitle: Promise.resolve("Simple Navigation Bar"),
             },
         });
+
+        await waitForComponentLoading();
 
         // Title is shown
         const title = screen.getByText("Simple Navigation Bar");

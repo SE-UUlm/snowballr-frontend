@@ -7,7 +7,7 @@ describe("DeclineButton", () => {
         render(DeclineButton, {
             target: document.body,
             props: {
-                paperId: "1",
+                loadingPaperId: Promise.resolve("1"),
             },
         });
 

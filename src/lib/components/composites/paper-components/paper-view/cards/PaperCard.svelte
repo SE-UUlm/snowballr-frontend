@@ -3,13 +3,17 @@
     import UnderlineTabsList from "$lib/components/composites/tabs/UnderlineTabsList.svelte";
     import * as Card from "$lib/components/primitives/card/index.js";
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
+    import { cn } from "$lib/utils/shadcn-helper";
+    import type { WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
+    import type { HTMLAttributes } from "svelte/elements";
 
-    interface Props {
+    type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         tabs: Tab[];
         children: Snippet;
-    }
-    const { tabs, children }: Props = $props();
+    };
+
+    const { tabs, children, class: className, ...restProps }: Props = $props();
 </script>
 
 <!-- Use PaperCardContent elements as children with values according to the tabs props -->
@@ -32,11 +36,14 @@ Usage:
     </PaperCard>
 ```
 -->
-<Card.Root class="shadow-lg border-container-border-grey w-full h-full">
-    <section>
-        <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value}>
+<Card.Root
+    class={cn(className, "shadow-lg border-container-border-grey flex w-full h-full max-w-[50%]")}
+    {...restProps}
+>
+    <section class="flex flex-col h-full w-full">
+        <Tabs.Root value={tabs.length == 0 ? "" : tabs[0].value} class="flex flex-col h-full">
             <UnderlineTabsList {tabs} />
-            <Card.Content class="p-5">
+            <Card.Content class="p-5 flex flex-col h-full">
                 {@render children()}
             </Card.Content>
         </Tabs.Root>

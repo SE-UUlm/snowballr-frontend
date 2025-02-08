@@ -5,17 +5,23 @@
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
     import { cn } from "$lib/utils/shadcn-helper";
     import Tooltip from "./Tooltip.svelte";
+    import { resource } from "$lib/resource.svelte";
 
     interface Props {
-        paperId: string;
+        loadingPaperId: Promise<string>;
         isBookmarkedDefault: boolean;
     }
 
-    const { paperId, isBookmarkedDefault }: Props = $props();
+    const { loadingPaperId, isBookmarkedDefault }: Props = $props();
 
     let isBookmarked = $state(isBookmarkedDefault);
     let isHovered = $state(false);
     const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
+    let paperId = resource<string, string | undefined>(loadingPaperId, {
+        initialValue: undefined,
+        onSuccess: (id) => id,
+        onErrorValue: undefined,
+    });
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);
@@ -31,12 +37,12 @@
     function addPaperToReadingList() {
         // TODO: Will be implemented in #99
         isBookmarked = true;
-        console.log(`Added paper with id ${paperId} to reading list`);
+        console.log(`Added paper with id ${paperId.value} to reading list`);
     }
     function removePaperFromReadingList() {
         // TODO: Will be implemented in #100
         isBookmarked = false;
-        console.log(`Removed paper with id ${paperId} from reading list`);
+        console.log(`Removed paper with id ${paperId.value} from reading list`);
     }
 </script>
 

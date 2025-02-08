@@ -8,7 +8,7 @@ export default defineConfig({
     resolve: process.env.VITEST ? { conditions: ["browser"] } : undefined,
     test: {
         watch: false,
-        reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["default"],
+        reporters: process.env.GITHUB_ACTIONS ? ["default", "github-actions"] : ["dot"],
         sequence: {
             shuffle: true,
         },

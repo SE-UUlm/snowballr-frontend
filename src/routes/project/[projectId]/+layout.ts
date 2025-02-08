@@ -1,19 +1,15 @@
+import { backendService } from "$lib/grpc-api";
 import type { LayoutLoad } from "./$types";
-import { ProjectStatus } from "$lib/model/api/project";
 
 export const load: LayoutLoad = async ({ params }) => {
-    const projectId = Number(params.projectId);
-    if (Number.isNaN(projectId)) {
-        throw new Error(`Invalid projectId ${params.projectId}`);
-    }
+    const projectId = params.projectId;
+    const loadingProject = backendService.getProjectById({ id: projectId }).response;
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    loadingProject.catch(() => {});
+
     return {
-        project: {
-            id: "0",
-            name: "Demo Project",
-            status: ProjectStatus.ACTIVE,
-            currentStage: 0n,
-            maxStage: 1n,
-            settings: undefined,
-        },
+        projectId,
+        loadingProject,
     };
 };

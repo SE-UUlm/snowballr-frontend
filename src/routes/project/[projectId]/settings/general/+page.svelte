@@ -1,9 +1,14 @@
 <script lang="ts">
     let { data } = $props();
-    const { project } = data;
+    const { loadingProject } = data;
 </script>
 
 <svelte:head>
-    <title>General | Settings | {project.name}</title>
+    {#await loadingProject}
+        <title>Loading Project...</title>
+    {:then project}
+        <title>General | Settings | {project.name}</title>
+    {:catch}
+        <title>General | Settings</title>
+    {/await}
 </svelte:head>
-<h4>Project {project.id} Settings - General</h4>
