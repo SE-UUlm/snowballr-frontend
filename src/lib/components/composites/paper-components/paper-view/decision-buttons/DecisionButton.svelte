@@ -4,6 +4,7 @@
     import Tooltip from "../../../Tooltip.svelte";
     import type { TooltipTriggerProps } from "bits-ui";
     import type { Snippet } from "svelte";
+    import { resource } from "$lib/resource.svelte";
 
     type Props = WithElementRef<TooltipTriggerProps> & {
         buttonContent: Snippet;
@@ -21,12 +22,15 @@
         ...restProps
     }: Props = $props();
 
-    let paperId = $state<string | undefined>(undefined);
-    loadingPaperId.then((id) => (paperId = id)).catch(() => (paperId = undefined));
+    let paperId = resource<string, string | undefined>(loadingPaperId, {
+        initialValue: undefined,
+        onSuccess: (id) => id,
+        onErrorValue: undefined,
+    });
 
     function onButtonClick() {
-        if (paperId) {
-            onClick(paperId);
+        if (paperId.value) {
+            onClick(paperId.value);
         } else {
             console.error("Paper ID is not set");
         }

@@ -12,17 +12,15 @@ export const resource = <TPromise, TValue>(
         value: initialValue,
     });
 
-    $effect(() => {
-        loadingResource
-            .then((value) => {
-                rune.value = onSuccess(value);
-            })
-            .catch(() => {
-                if (onErrorValue) {
-                    rune.value = onErrorValue;
-                }
-            });
-    });
+    loadingResource
+        .then((value) => {
+            rune.value = onSuccess(value);
+        })
+        .catch(() => {
+            if (onErrorValue) {
+                rune.value = onErrorValue;
+            }
+        });
 
     return rune;
 };
