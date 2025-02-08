@@ -49,7 +49,7 @@ If the option showNumberOfListItems is set to true (default: false),
 the number of list items (either given by 'numberOfItems' or automatically determined)
 is added to the list name / header, like 'yourListName (10)'.
 
-While the list is loading, it displays <numberOfSkeleton> skeleton list items.
+While the list is loading, it displays \<numberOfSkeleton\> skeleton list items.
 If the loading was successful it either shows the components, filled with the component data
 or an optional hint (provided with 'emptyHint') that the list is empty.
 Otherwise the error message is shown.

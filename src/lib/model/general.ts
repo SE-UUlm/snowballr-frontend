@@ -20,7 +20,7 @@ interface ProjectListEntryInterface {
 
 interface PaperListEntryInterface {
     projectPaper: Project_Paper;
-    projectId: string;
+    projectId?: string;
     showReviewStatus?: boolean;
 }
 

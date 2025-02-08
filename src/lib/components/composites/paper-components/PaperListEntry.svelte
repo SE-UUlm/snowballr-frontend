@@ -11,7 +11,13 @@
         onClick?: () => void;
     };
 
-    const navigateToPaperView = () => goto(`/project/${projectId}/paper/${projectPaper.id}`);
+    const navigateToPaperView = () => {
+        const paperLink =
+            projectId !== undefined
+                ? `/project/${projectId}/paper/${projectPaper.id}`
+                : `/paper/${projectPaper.id}`;
+        goto(paperLink);
+    };
 
     const {
         projectPaper,

@@ -12,31 +12,31 @@
     let { projectId, loadingPaper }: Props = $props();
 
     const tabs = [
-        { value: "1", label: "Forward/Backward References" },
-        { value: "2", label: "Review Information" },
+        { value: "1", label: "Review Criteria" },
+        { value: "2", label: "References/Citations" },
     ];
 </script>
 
 <!--
 @component
-Paper Card for paper research context in the Paper View component.
+Paper Card for paper review information in the Paper View component.
 
 Usage:
 ```svelte
-    <PaperResearchContextCard {projectId} {loadingPaper} />
+    <PaperReviewCard {projectId} {loadingPaper} />
 ```
 -->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
-        <ReferencesAndCitationsCardContent {projectId} {loadingPaper} />
-    </PaperCardContent>
-    <PaperCardContent value="2">
         <span>
             Will be implemented in
-            <a class="text-blue-400" href="https://github.com/SE-UUlm/snowballr-frontend/issues/45">
-                #45
+            <a class="text-blue-400" href="https://github.com/SE-UUlm/snowballr-frontend/issues/53">
+                #53
             </a>
             .
         </span>
+    </PaperCardContent>
+    <PaperCardContent value="2">
+        <ReferencesAndCitationsCardContent {projectId} {loadingPaper} />
     </PaperCardContent>
 </PaperCard>

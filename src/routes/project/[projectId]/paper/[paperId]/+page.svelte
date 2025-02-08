@@ -17,6 +17,7 @@
 
 <PaperView
     {user}
+    {projectId}
     {loadingPaper}
     showButtonBar
     backRef={`/project/${projectId}/dashboard`}

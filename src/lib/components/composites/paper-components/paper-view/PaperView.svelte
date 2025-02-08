@@ -3,6 +3,7 @@
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
+    import PaperReviewCard from "./cards/PaperReviewCard.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
     import MaybeButton from "./decision-buttons/MaybeButton.svelte";
@@ -12,6 +13,7 @@
 
     interface Props {
         user: User;
+        projectId?: string;
         loadingPaper: Promise<Paper>;
         showButtonBar?: boolean;
         backRef: string;
@@ -25,6 +27,7 @@
 
     const {
         user,
+        projectId,
         loadingPaper,
         showButtonBar = false,
         backRef,
@@ -40,7 +43,7 @@
 @component
 Whole page component to display information about a paper.
 In the bottom, there are buttons to accept, decline or mark the paper as undecided.
-Additonally, there are buttons to navigate to the previous or next paper.
+Additionally, there are buttons to navigate to the previous or next paper.
 
 - when `showButtonBar` is false, then no buttons are shown at the bottom of the page
 - when `userConfig.isReviewMode` is false, then no decision buttons are shown
@@ -75,7 +78,11 @@ Usage:
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
         <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
-        <PaperResearchContextCard />
+        {#if userConfig.isReviewMode}
+            <PaperReviewCard {projectId} {loadingPaper} />
+        {:else}
+            <PaperResearchContextCard {projectId} {loadingPaper} />
+        {/if}
     </div>
     {#if showButtonBar}
         <div class="flex flex-row w-full h-fit justify-between gap-4" data-testid="button-bar">
