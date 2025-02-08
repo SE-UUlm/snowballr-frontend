@@ -5,13 +5,13 @@
     interface Props {
         placeholderText?: string;
         onSearch: (searchText: string) => void;
+        timeoutInMs?: number;
     }
-    const { placeholderText = "Search", onSearch }: Props = $props();
+
+    const { placeholderText = "Search", onSearch, timeoutInMs = 500 }: Props = $props();
 
     let searchInput: string = $state("");
 
-    // timeout in ms to wait after last key input before start search
-    const timeoutInMs: number = 500;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const handleNewInput = () => {
