@@ -1,6 +1,5 @@
 <script lang="ts">
     import Button from "$lib/components/primitives/button/button.svelte";
-    import type { Paper } from "$lib/model/backend";
     import { getNames } from "$lib/utils/common-helper";
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
@@ -11,6 +10,7 @@
     import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
     import { resource } from "$lib/resource.svelte";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
+    import type { Paper } from "$lib/model/api/paper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -46,8 +46,8 @@
             return {
                 Title: paper.title,
                 Authors: getNames(paper.authors),
-                Year: paper.year?.toString() ?? "N/A",
-                Publisher: "N/A",
+                Year: paper.year.toString(),
+                Publisher: paper.publisher,
             };
         },
         onErrorValue: { Title: "", Authors: "", Year: "", Publisher: "" },
@@ -56,24 +56,24 @@
     interface AdditionalInfos {
         "Publication Type": string;
         "Publication Name": string;
-        DOI: string;
+        "External ID": string;
     }
     // Initialize with width values for Skeletons
     let additionalInfos = resource<Paper, AdditionalInfos>(loadingPaper, {
         initialValue: {
             "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
             "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",
-            DOI: "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
+            "External ID": "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
         },
         onSuccess: (paper) => ({
-            "Publication Type": paper.type ?? "N/A",
+            "Publication Type": paper.publicationType,
             "Publication Name": "N/A",
-            DOI: paper.doi ?? "N/A",
+            "External ID": paper.externalId,
         }),
         onErrorValue: {
             "Publication Type": "",
             "Publication Name": "",
-            DOI: "",
+            "External ID": "",
         },
     });
 

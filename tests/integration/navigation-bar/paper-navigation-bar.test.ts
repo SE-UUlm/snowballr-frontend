@@ -1,9 +1,8 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { Authors, createLoadingPaper, Users } from "../../model-builder";
+import { createLoadingPaper } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
-import { createPaper } from "../../model-builder";
 import { Authors, Users } from "../../example-data";
 
 describe("PaperNavigationBar", () => {

@@ -38,8 +38,15 @@ export function createProjectPaper(paper: Partial<Project_Paper> = {}): Project_
     };
 }
 
-export function createLoadingPaper(paper: Partial<Paper> = {}): Promise<Paper> {
-    return Promise.resolve(createPaper(paper));
+export function createLoadingPaper(
+    paper: Partial<Paper> = {},
+    timeoutInMs: number = 0,
+): Promise<Paper> {
+    return new Promise<Paper>((resolve) => {
+        setTimeout(() => {
+            resolve(createPaper(paper));
+        }, timeoutInMs);
+    });
 }
 
 export function createLoadingProject(project: Partial<Project> = {}): Promise<Project> {

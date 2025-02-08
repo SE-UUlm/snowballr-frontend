@@ -8,8 +8,8 @@
     type Props = WithElementRef<TooltipTriggerProps> & {
         buttonContent: Snippet;
         tooltipContent: Snippet;
-        loadingPaperId: Promise<number>;
-        onClick: (paperId: number) => void;
+        loadingPaperId: Promise<string>;
+        onClick: (paperId: string) => void;
     };
 
     const {
@@ -21,7 +21,7 @@
         ...restProps
     }: Props = $props();
 
-    let paperId = $state<number | undefined>(undefined);
+    let paperId = $state<string | undefined>(undefined);
     loadingPaperId.then((id) => (paperId = id)).catch(() => (paperId = undefined));
 
     function onButtonClick() {

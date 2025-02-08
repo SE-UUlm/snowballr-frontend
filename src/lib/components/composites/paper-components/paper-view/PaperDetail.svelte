@@ -1,10 +1,10 @@
 <script lang="ts">
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import type { Paper } from "$lib/model/backend";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { WithElementRef } from "bits-ui";
-    import ToggleableInput from "../../input/ToggleableInput.svelte";
+    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
+    import type { Paper } from "$lib/model/api/paper";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         key: string;
