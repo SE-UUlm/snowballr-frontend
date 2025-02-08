@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Progress } from "$lib/components/primitives/progress";
     import { getNames } from "$lib/utils/common-helper";
-    import type { ProjectListEntryInterface } from "$lib/model/general";
     import { ProjectStatus } from "$lib/model/api/project";
+    import type { ProjectListEntryInterface } from "$lib/model/general";
 
     const { project, membersList, statistics }: ProjectListEntryInterface = $props();
 </script>

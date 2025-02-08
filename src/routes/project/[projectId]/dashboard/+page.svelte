@@ -3,9 +3,10 @@
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+    import ProjectInformation from "$lib/components/composites/statistics-components/ProjectInformation.svelte";
 
     const { data } = $props();
-    const { user, projectId, loadingProject, openReviews } = data;
+    const { user, projectId, loadingProject, openReviews, projectInformation } = data;
 </script>
 
 <svelte:head>
@@ -36,5 +37,11 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="flex flex-col h-full w-full min-w-0 gap-y-5">Hallo</section>
+    <section class="flex flex-col h-full w-full p-5 min-w-0 gap-y-5">
+        <div id="project-information-section" class="flex flex-col gap-y-3">
+            <h2>Project Information</h2>
+            <hr class="solid" />
+            <ProjectInformation projectInfos={projectInformation} />
+        </div>
+    </section>
 </main>

@@ -7,8 +7,9 @@ export const load: LayoutLoad = async ({ params }) => {
     const loadingProject = backendService.getProjectById({ id: projectId }).response;
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    loadingProject.catch(() => {
-        error(404, "Project not found");
+    loadingProject.catch((err) => {
+        console.error(`Could not load project with id ${projectId} (${err})`);
+        error(404, { message: "Project not found" });
     });
 
     return {
