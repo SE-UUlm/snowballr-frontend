@@ -5,66 +5,37 @@
     import PaperListEntry from "../../PaperListEntry.svelte";
     import PaperListEntrySkeleton from "../../PaperListEntrySkeleton.svelte";
     import type { Paper } from "$lib/model/api/paper";
-    import { backendService } from "$lib/grpc-api";
-    import type { Project_Paper } from "$lib/model/api/project";
-    import { resource } from "$lib/resource.svelte";
 
     interface Props {
         projectId?: string;
-        loadingPaper: Promise<Paper>;
+        backwardReferencedPapers: Promise<Paper[]>;
+        forwardReferencedPapers: Promise<Paper[]>;
     }
 
-    let { projectId, loadingPaper }: Props = $props();
+    let {
+        projectId,
+        backwardReferencedPapers: allBackwardReferencedPapers,
+        forwardReferencedPapers: allForwardReferencedPapers,
+    }: Props = $props();
 
-    async function getReferencedPapers(paperIds: string[]): Promise<Project_Paper[]> {
-        try {
-            return await Promise.all(
-                paperIds.map((id) => backendService.getProjectPaperById({ id }).response),
-            );
-        } catch (error) {
-            console.error(`An error occurred while fetching referenced papers: ${error}`);
-            return [];
-        }
-    }
+    let backwardReferencedPapers = $state<Promise<Paper[]>>(allBackwardReferencedPapers);
+    let forwardReferencedPapers = $state<Promise<Paper[]>>(allForwardReferencedPapers);
 
-    // References
-    let allBackwardReferencedPapers = resource<Paper, Promise<Project_Paper[]>>(loadingPaper, {
-        initialValue: Promise.resolve([]),
-        onSuccess: (paper) => {
-            backwardReferencedPapers = getReferencedPapers(paper.backwardReferencedIds);
-            return backwardReferencedPapers;
-        },
-        onErrorValue: Promise.resolve([]),
-    });
-    let backwardReferencedPapers = $state<Promise<Project_Paper[]>>(Promise.resolve([]));
-
-    // Citations
-    let allForwardReferencedPapers = resource<Paper, Promise<Project_Paper[]>>(loadingPaper, {
-        initialValue: Promise.resolve([]),
-        onSuccess: (paper) => {
-            // TODO: Replace with forwardReferencedIds
-            forwardReferencedPapers = getReferencedPapers(paper.backwardReferencedIds);
-            return forwardReferencedPapers;
-        },
-        onErrorValue: Promise.resolve([]),
-    });
-    let forwardReferencedPapers = $state<Promise<Project_Paper[]>>(Promise.resolve([]));
-
-    function filterPapers(allPapers: Project_Paper[], searchText: string) {
+    function filterPapers(allPapers: Paper[], searchText: string) {
         const fzf = new Fzf(allPapers, {
-            selector: ({ paper }) => `#${paper!.id} ${paper!.title}`,
+            selector: (paper) => `#${paper!.id} ${paper!.title}`,
         });
         return fzf.find(searchText).map((result) => result.item);
     }
 
     function filterBackwardReferencedPapers(searchText: string) {
-        backwardReferencedPapers = allBackwardReferencedPapers.value.then((allPapers) =>
+        backwardReferencedPapers = allBackwardReferencedPapers.then((allPapers) =>
             filterPapers(allPapers, searchText),
         );
     }
 
     function filterForwardReferencedPapers(searchText: string) {
-        forwardReferencedPapers = allForwardReferencedPapers.value.then((allPapers) =>
+        forwardReferencedPapers = allForwardReferencedPapers.then((allPapers) =>
             filterPapers(allPapers, searchText),
         );
     }

@@ -15,6 +15,8 @@
         user: User;
         projectId?: string;
         loadingPaper: Promise<Paper>;
+        backwardReferencedPapers: Promise<Paper[]>;
+        forwardReferencedPapers: Promise<Paper[]>;
         showButtonBar?: boolean;
         backRef: string;
         userConfig: {
@@ -29,6 +31,8 @@
         user,
         projectId,
         loadingPaper,
+        backwardReferencedPapers,
+        forwardReferencedPapers,
         showButtonBar = false,
         backRef,
         userConfig,
@@ -59,6 +63,8 @@ Usage:
     <PaperView
         user={user}
         loadingPaper={loadingPaper}
+        backwardReferencedPapers={backwardReferencedPapers}
+        forwardReferencedPapers={forwardReferencedPapers}
         showButtonBar
         backRef="/"
         userConfig={{
@@ -79,9 +85,13 @@ Usage:
     <div class="flex flex-row w-full h-full gap-5">
         <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
         {#if userConfig.isReviewMode}
-            <PaperReviewCard {projectId} {loadingPaper} />
+            <PaperReviewCard {projectId} {backwardReferencedPapers} {forwardReferencedPapers} />
         {:else}
-            <PaperResearchContextCard {projectId} {loadingPaper} />
+            <PaperResearchContextCard
+                {projectId}
+                {backwardReferencedPapers}
+                {forwardReferencedPapers}
+            />
         {/if}
     </div>
     {#if showButtonBar}

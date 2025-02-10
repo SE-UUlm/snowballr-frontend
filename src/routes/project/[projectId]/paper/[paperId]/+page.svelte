@@ -2,7 +2,15 @@
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
-    const { user, projectId, loadingProject, loadingPaper, isReviewMode } = data;
+    const {
+        user,
+        projectId,
+        loadingProject,
+        loadingPaper,
+        backwardReferencedPapers,
+        forwardReferencedPapers,
+        isReviewMode,
+    } = data;
 </script>
 
 <svelte:head>
@@ -19,6 +27,8 @@
     {user}
     {projectId}
     {loadingPaper}
+    {backwardReferencedPapers}
+    {forwardReferencedPapers}
     showButtonBar
     backRef={`/project/${projectId}/dashboard`}
     userConfig={{ isReviewMode, showMaybeButton: true }}

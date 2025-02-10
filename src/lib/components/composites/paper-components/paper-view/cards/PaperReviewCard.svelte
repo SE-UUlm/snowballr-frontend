@@ -6,10 +6,11 @@
 
     interface Props {
         projectId?: string;
-        loadingPaper: Promise<Paper>;
+        backwardReferencedPapers: Promise<Paper[]>;
+        forwardReferencedPapers: Promise<Paper[]>;
     }
 
-    let { projectId, loadingPaper }: Props = $props();
+    let { projectId, backwardReferencedPapers, forwardReferencedPapers }: Props = $props();
 
     const tabs = [
         { value: "1", label: "Review Criteria" },
@@ -23,7 +24,7 @@ Paper Card for paper review information in the Paper View component.
 
 Usage:
 ```svelte
-    <PaperReviewCard {projectId} {loadingPaper} />
+    <PaperReviewCard {projectId} {backwardReferencedPapers} {forwardReferencedPapers} />
 ```
 -->
 <PaperCard {tabs}>
@@ -37,6 +38,10 @@ Usage:
         </span>
     </PaperCardContent>
     <PaperCardContent value="2">
-        <ReferencesAndCitationsCardContent {projectId} {loadingPaper} />
+        <ReferencesAndCitationsCardContent
+            {projectId}
+            {backwardReferencedPapers}
+            {forwardReferencedPapers}
+        />
     </PaperCardContent>
 </PaperCard>
