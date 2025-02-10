@@ -1,6 +1,7 @@
 import { UserRole, UserStatus } from "$lib/model/api/user";
-import { PaperDecision, ProjectStatus } from "$lib/model/api/project";
+import { MemberRole, PaperDecision, ProjectStatus } from "$lib/model/api/project";
 import { ReviewDecision } from "$lib/model/api/review";
+import { CriterionCategory } from "$lib/model/api/criterion";
 
 export const Users = {
     johnDoe: {
@@ -135,5 +136,40 @@ export const ProjectPapers = {
         stage: 0n,
         decision: PaperDecision.ACCEPTED,
         reviews: [Reviews.demoReview3],
+    },
+};
+
+export const Criteria = {
+    demoCriterion1: {
+        id: "0",
+        tag: "E0",
+        name: "Relevance",
+        description: "How relevant is the paper to the project?",
+        category: CriterionCategory.EXCLUSION,
+    },
+    demoCriterion2: {
+        id: "1",
+        tag: "HE0",
+        name: "Quality",
+        description: "How well is the paper written and structured?",
+        category: CriterionCategory.HARD_EXCLUSION,
+    },
+    demoCriterion3: {
+        id: "2",
+        tag: "I0",
+        name: "Novelty",
+        description: "How novel are the ideas presented in the paper?",
+        category: CriterionCategory.INCLUSION,
+    },
+};
+
+export const Members = {
+    demoMember1: {
+        user: Users.johnDoe,
+        role: MemberRole.ADMIN,
+    },
+    demoMember2: {
+        user: Users.janeDoe,
+        role: MemberRole.DEFAULT,
     },
 };

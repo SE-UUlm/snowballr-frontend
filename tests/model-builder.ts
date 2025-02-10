@@ -1,7 +1,9 @@
 import type { User } from "$lib/model/api/user";
 import type { Author, Paper } from "$lib/model/api/paper";
 import type { Project, Project_Paper } from "$lib/model/api/project";
-import { Authors, Papers, ProjectPapers, Projects, Users } from "./example-data";
+import { Authors, Criteria, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+import type { Review } from "$lib/model/api/review";
+import type { Criterion } from "$lib/model/api/criterion";
 
 export function createUser(user: Partial<User> = {}): User {
     return {
@@ -35,6 +37,20 @@ export function createProjectPaper(paper: Partial<Project_Paper> = {}): Project_
     return {
         ...ProjectPapers.demoProjectPaper1,
         ...paper,
+    };
+}
+
+export function createReview(review: Partial<Review> = {}): Review {
+    return {
+        ...Reviews.demoReview1,
+        ...review,
+    };
+}
+
+export function createCriterion(criterion: Partial<Criterion> = {}): Criterion {
+    return {
+        ...Criteria.demoCriterion1,
+        ...criterion,
     };
 }
 

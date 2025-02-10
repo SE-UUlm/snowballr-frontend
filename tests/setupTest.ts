@@ -1,11 +1,22 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
-import { expect, vi } from "vitest";
+import { expect, vi, type Mock } from "vitest";
 import type { Navigation, Page } from "@sveltejs/kit";
 import { readable } from "svelte/store";
 import * as environment from "$app/environment";
 import * as navigation from "$app/navigation";
 import * as stores from "$app/stores";
+import {
+    createCriterion,
+    createPaper,
+    createProject,
+    createProjectPaper,
+    createReview,
+    createUser,
+} from "./model-builder";
+import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+import type { ISnowballRClient } from "$lib/model/api/main.client";
+import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -78,4 +89,115 @@ vi.mock("$app/stores", (): typeof stores => {
         page,
         updated,
     };
+});
+
+// This type takes the SnowballRClient interface and returns a new type where each function returns a MockUnaryCall i.e. a mocked backend API
+type MockReturnType<T> = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    [K in keyof T]: T[K] extends (...args: infer A) => UnaryCall<infer _I, infer R>
+        ? Mock<(...args: A) => MockUnaryCall<R>>
+        : T[K];
+};
+type MockApi = MockReturnType<ISnowballRClient>;
+interface MockUnaryCall<T> {
+    response: Promise<T>;
+}
+
+/**
+ * Mock a backend API call
+ *
+ * Usage:
+ * ```ts
+ * getUserById: mock(({ id }) => createUser({ id })),
+ * getAllUsers: mock(Object.values(Users)),
+ * ```
+ *
+ * @param fn - Either a function that takes an argument and returns a value or a constant value
+ * @returns A mocked backend API call
+ */
+function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R>> {
+    return vi.fn((input: T) => {
+        if (typeof fn === "function") {
+            return {
+                response: Promise.resolve((fn as (arg: T) => R)(input)),
+            };
+        } else {
+            return {
+                response: Promise.resolve(fn),
+            };
+        }
+    });
+}
+
+// Mock Backend API
+vi.mock("$lib/grpc-api", () => {
+    const mockBackend: { backendService: MockApi } = {
+        backendService: {
+            getAvailableFetcherApis: mock({ fetcherApis: [] }),
+            register: vi.fn(),
+            login: vi.fn(),
+            logout: vi.fn(),
+            isAuthenticated: mock({ value: true }),
+            renewSession: vi.fn(),
+            requestPasswordReset: vi.fn(),
+            resetPassword: vi.fn(),
+            changePassword: vi.fn(),
+            getAllUsers: mock({ users: Object.values(Users) }),
+            getCurrentUser: mock(Users.johnDoe),
+            getUserById: mock(({ id }) => createUser({ id })),
+            getUserByEmail: mock(({ id }) => createUser({ email: id })),
+            updateUser: vi.fn(),
+            softDeleteUser: vi.fn(),
+            softUndeleteUser: vi.fn(),
+            getAllPapersToReview: mock({ projectPapers: Object.values(ProjectPapers) }),
+            getPapersToReviewForProject: mock({ projectPapers: Object.values(ProjectPapers) }),
+            getUserSettings: vi.fn(),
+            updateUserSettings: vi.fn(),
+            getReadingList: mock({ papers: Object.values(Papers) }),
+            isPaperOnReadingList: vi.fn(),
+            addPaperToReadingList: vi.fn(),
+            removePaperFromReadingList: vi.fn(),
+            getPendingInvitationsForUser: mock({ projects: Object.values(Projects) }),
+            inviteUserToProject: vi.fn(),
+            getPendingInvitationsForProject: mock({ users: Object.values(Users) }),
+            getProjectMembers: mock({ members: Object.values(Members) }),
+            removeProjectMember: vi.fn(),
+            getAllProjects: mock({ projects: Object.values(Projects) }),
+            getAllDeletedProjects: mock({ projects: Object.values(Projects) }),
+            getAllDeletedProjectsForUser: mock({ projects: Object.values(Projects) }),
+            getAllArchivedProjects: mock({ projects: Object.values(Projects) }),
+            getAllProjectsForUser: mock({ projects: Object.values(Projects) }),
+            getAllArchivedProjectsForUser: mock({ projects: Object.values(Projects) }),
+            createProject: vi.fn(),
+            getProjectById: mock(({ id }) => createProject({ id })),
+            updateProject: vi.fn(),
+            exportProject: vi.fn(),
+            softDeleteProject: vi.fn(),
+            softUndeleteProject: vi.fn(),
+            getProjectStatistics: vi.fn(),
+            getCriterionById: mock(({ id }) => createCriterion({ id })),
+            getAllCriteriaForProject: mock({ criteria: Object.values(Criteria) }),
+            createCriterion: vi.fn(),
+            updateCriterion: vi.fn(),
+            deleteCriterion: vi.fn(),
+            getProjectPaperById: mock(({ id }) => createProjectPaper({ id })),
+            getAllProjectPapersForProject: mock({ projectPapers: Object.values(ProjectPapers) }),
+            addPaperToProject: vi.fn(),
+            updateProjectPaper: vi.fn(),
+            removePaperFromProject: vi.fn(),
+            getReviewById: mock(({ id }) => createReview({ id })),
+            getAllReviewsForProjectPaper: mock({ reviews: Object.values(Reviews) }),
+            createReview: vi.fn(),
+            updateReview: vi.fn(),
+            deleteReview: vi.fn(),
+            getPaperById: mock(({ id }) => createPaper({ id })),
+            createPaper: vi.fn(),
+            updatePaper: vi.fn(),
+            getForwardReferencedPapers: mock({ papers: Object.values(Papers) }),
+            getBackwardReferencedPapers: mock({ papers: Object.values(Papers) }),
+            getPaperPdf: vi.fn(),
+            setPaperPdf: vi.fn(),
+        },
+    };
+    return mockBackend;
 });
