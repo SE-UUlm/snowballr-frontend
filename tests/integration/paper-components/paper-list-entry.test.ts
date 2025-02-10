@@ -10,14 +10,9 @@ describe("PaperListEntryComponent", () => {
     test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
         render(PaperEntry, {
             props: {
-                projectPaper: {
-                    id: "0",
-                    paper: Papers.demoPaper1,
-                    stage: 0n,
-                    decision: PaperDecision.UNDECIDED,
-                    reviews: [],
-                },
+                paper: Papers.demoPaper1,
                 projectId: "0",
+                showReviewStatus: false,
             },
         });
 
@@ -36,7 +31,7 @@ describe("PaperListEntryComponent", () => {
     test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
         render(PaperEntry, {
             props: {
-                projectPaper: {
+                paper: {
                     id: "0",
                     paper: Papers.demoPaper1,
                     stage: 0n,
@@ -63,7 +58,7 @@ describe("PaperListEntryComponent", () => {
     test("When review information are provided and should be shown, then the paper list entry is completely shown with review information", async () => {
         render(PaperEntry, {
             props: {
-                projectPaper: {
+                paper: {
                     id: "0",
                     paper: Papers.demoPaper1,
                     stage: 0n,
@@ -91,13 +86,7 @@ describe("PaperListEntryComponent", () => {
 
         render(PaperEntry, {
             props: {
-                projectPaper: {
-                    id: "0",
-                    paper: Papers.demoPaper1,
-                    stage: 0n,
-                    decision: PaperDecision.UNDECIDED,
-                    reviews: [Reviews.demoReview1],
-                },
+                paper: Papers.demoPaper1,
                 projectId: "0",
                 showReviewStatus: false,
                 onClick: () => (onClickExecuted = true),

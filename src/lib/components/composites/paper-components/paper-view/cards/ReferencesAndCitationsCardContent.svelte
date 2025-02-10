@@ -81,8 +81,8 @@
             {#snippet preListContent()}
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
-            {#snippet listItemComponent(projectPaper)}
-                <PaperListEntry {projectPaper} {projectId} />
+            {#snippet listItemComponent(paper)}
+                <PaperListEntry {paper} {projectId} showReviewStatus={false} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />
@@ -99,8 +99,8 @@
             {#snippet preListContent()}
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
-            {#snippet listItemComponent(projectPaper)}
-                <PaperListEntry {projectPaper} {projectId} />
+            {#snippet listItemComponent(paper)}
+                <PaperListEntry {paper} {projectId} showReviewStatus={false} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />

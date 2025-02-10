@@ -21,8 +21,9 @@ async function requestUndecidedPapers(project: Project): Promise<PaperListEntryI
     const allUndecidedPapers = await backendService.getAllPapersToReview(Nothing).response;
 
     return allUndecidedPapers.projectPapers.map((projectPaper) => ({
-        projectPaper: projectPaper,
+        paper: projectPaper,
         projectId: project.id,
+        showReviewStatus: false,
     }));
 }
 

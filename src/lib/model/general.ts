@@ -4,6 +4,7 @@ import type {
     Project_Paper,
     Project_Statistics,
 } from "$lib/model/api/project";
+import type { Paper } from "./api/paper";
 
 type ValidationResult = { success: true } | { success: false; error: string };
 
@@ -18,10 +19,22 @@ interface ProjectListEntryInterface {
     statistics: Project_Statistics;
 }
 
-interface PaperListEntryInterface {
-    projectPaper: Project_Paper;
+type PaperListEntryInterface = {
     projectId?: string;
-    showReviewStatus?: boolean;
+} & (
+    | {
+          paper: Paper;
+          showReviewStatus: false;
+      }
+    | {
+          paper: Project_Paper;
+          showReviewStatus: boolean;
+      }
+);
+
+function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {
+    return "paper" in paper;
 }
 
 export type { ValidationResult, ApiError, ProjectListEntryInterface, PaperListEntryInterface };
+export { isProjectPaper };
