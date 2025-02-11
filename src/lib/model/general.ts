@@ -4,7 +4,9 @@ import {
     type Project_Member_List,
     type Project_Statistics,
 } from "$lib/model/api/project";
-import type { Paper } from "$lib/model/api/paper";
+import type { Criterion } from "./api/criterion";
+import type { Paper } from "./api/paper";
+import type { Review } from "./api/review";
 
 type ValidationResult = { success: true } | { success: false; error: string };
 
@@ -46,5 +48,18 @@ function asPaper(paper: Project_Paper | Paper): Paper {
     return isProjectPaper(paper) ? paper.paper! : paper;
 }
 
-export type { ValidationResult, ApiError, ProjectListEntryInterface, PaperListEntryInterface };
+/**
+ * A review with resolved criterion references.
+ */
+type ReviewedCriterion = Criterion & {
+    reviews: Omit<Review, "selectedCriteriaIds">[];
+};
+
+export type {
+    ValidationResult,
+    ApiError,
+    ProjectListEntryInterface,
+    PaperListEntryInterface,
+    ReviewedCriterion,
+};
 export { asPaper };

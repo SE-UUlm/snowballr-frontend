@@ -65,6 +65,8 @@ Usage:
     content={tooltipContent}
     onclick={onButtonClick}
     trigger={buttonContent}
+    triggerSize="default"
+    triggerVariant="default"
     {...restProps}
     data-testid="decision-button"
 ></Tooltip>

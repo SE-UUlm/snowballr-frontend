@@ -1,5 +1,9 @@
 <script lang="ts">
-    import { buttonVariants } from "$lib/components/primitives/button/index.js";
+    import {
+        buttonVariants,
+        type ButtonSize,
+        type ButtonVariant,
+    } from "$lib/components/primitives/button/index.js";
     import * as Tooltip from "$lib/components/primitives/tooltip/index.js";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
@@ -8,17 +12,18 @@
     type Props = WithElementRef<TooltipTriggerProps> & {
         trigger: Snippet;
         content: Snippet;
-        buttonVariant?:
-            | "default"
-            | "link"
-            | "destructive"
-            | "outline"
-            | "secondary"
-            | "ghost"
-            | undefined;
+        triggerVariant?: ButtonVariant;
+        triggerSize?: ButtonSize;
     };
 
-    const { trigger, content, buttonVariant, class: className, ...restProps }: Props = $props();
+    const {
+        trigger,
+        content,
+        triggerVariant = "none",
+        triggerSize = "fit",
+        class: className,
+        ...restProps
+    }: Props = $props();
 </script>
 
 <!--
@@ -30,7 +35,7 @@ Usage:
 ```svelte
     <Tooltip
         class="text-primary shadow-xs"
-        buttonVariant="default"
+        triggerVariant="default"
         onclick={() => goto(href)}
     >
         {#snippet trigger()}
@@ -45,7 +50,7 @@ Usage:
 <Tooltip.Provider>
     <Tooltip.Root>
         <Tooltip.Trigger
-            class={cn(buttonVariants({ variant: buttonVariant }), className)}
+            class={cn(buttonVariants({ variant: triggerVariant, size: triggerSize }), className)}
             {...restProps}
         >
             {@render trigger()}

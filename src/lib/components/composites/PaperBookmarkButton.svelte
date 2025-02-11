@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { buttonVariants } from "$lib/components/primitives/button/index.js";
     import Bookmark from "lucide-svelte/icons/bookmark";
     import BookmarkPlus from "lucide-svelte/icons/bookmark-plus";
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
-    import { cn } from "$lib/utils/shadcn-helper";
     import Tooltip from "./Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
 
@@ -59,14 +57,13 @@ Usage:
 ```
 -->
 <Tooltip
-    class={cn(
-        buttonVariants(),
-        "border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit",
-    )}
+    class="border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit"
     aria-label={tooltipText}
     onclick={onClick}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
+    triggerSize="default"
+    triggerVariant="default"
 >
     {#snippet trigger()}
         {#if isHovered}

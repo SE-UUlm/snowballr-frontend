@@ -32,7 +32,7 @@ in the PaperEntry component.
 
 Usage:
 ```svelte
-    <UserAvatar userId={{
+    <UserAvatar user={{
         id: "1",
         email: "john@doe.com",
         firstName: "John",
