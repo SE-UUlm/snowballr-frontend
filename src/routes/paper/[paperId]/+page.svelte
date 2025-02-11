@@ -19,6 +19,9 @@
     {backwardReferencedPapers}
     {forwardReferencedPapers}
     {loadingPaper}
+    loadingProject={undefined}
+    reviewedCriteria={undefined}
+    reviewers={undefined}
     {user}
-    userConfig={{ isReviewMode: false, showMaybeButton: false }}
+    userConfig={{ isReviewMode: false }}
 />

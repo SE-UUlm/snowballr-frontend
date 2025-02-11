@@ -28,23 +28,23 @@
 </script>
 
 <CriteriaList
-    listTitle="Hard Exclusion"
-    {inReviewMode}
-    {reviewers}
     criteria={hardExclusions}
     emptyHint="No hard exclusion criteria."
+    {inReviewMode}
+    listTitle="Hard Exclusion"
+    {reviewers}
 />
 <CriteriaList
-    listTitle="Soft Exclusion"
-    {inReviewMode}
-    {reviewers}
     criteria={exclusions}
     emptyHint="No soft exclusion criteria."
+    {inReviewMode}
+    listTitle="Soft Exclusion"
+    {reviewers}
 />
 <CriteriaList
-    listTitle="Inclusion"
-    {inReviewMode}
-    {reviewers}
     criteria={inclusions}
     emptyHint="No inclusion criteria."
+    {inReviewMode}
+    listTitle="Inclusion"
+    {reviewers}
 />

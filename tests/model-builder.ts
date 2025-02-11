@@ -1,7 +1,18 @@
 import type { User } from "$lib/model/api/user";
 import type { Author, Paper } from "$lib/model/api/paper";
-import type { Project, Project_Paper } from "$lib/model/api/project";
+import {
+    SnowballingType,
+    type Project,
+    type Project_Paper,
+    type Project_Settings,
+} from "$lib/model/api/project";
 import { Authors, Criteria, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+import type {
+    IndependentPaperViewProps,
+    NonProjectPaperViewProps,
+    PaperViewProps,
+    ProjectPaperViewProps,
+} from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import type { Review } from "$lib/model/api/review";
 import type { ReviewedCriterion } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
@@ -69,4 +80,50 @@ export function loading<T>(value: T, timeoutInMs: number = 0): Promise<T> {
             resolve(value);
         }, timeoutInMs);
     });
+}
+
+export function createProjectPaperViewProps(
+    props: Partial<ProjectPaperViewProps> = {},
+): ProjectPaperViewProps {
+    return {
+        loadingPaper: loading(createProjectPaper()),
+        loadingProject: loading(createProject()),
+        reviewers: Promise.resolve([]),
+        reviewedCriteria: Promise.resolve([]),
+        ...props,
+    };
+}
+
+export function createProjectSettings(props: Partial<Project_Settings> = {}): Project_Settings {
+    return {
+        reviewMaybeAllowed: true,
+        similarityThreshold: 0.5,
+        fetcherApis: [],
+        snowballingType: SnowballingType.BOTH,
+        ...props,
+    };
+}
+
+export function createPaperViewProps(
+    props: Partial<IndependentPaperViewProps> = {},
+    dependentProps?: ProjectPaperViewProps | NonProjectPaperViewProps,
+): PaperViewProps {
+    return {
+        user: createUser(),
+        backwardReferencedPapers: Promise.resolve([]),
+        forwardReferencedPapers: Promise.resolve([]),
+        showButtonBar: false,
+        backRef: "",
+        userConfig: {
+            isReviewMode: false,
+        },
+        ...(dependentProps ?? {
+            loadingPaper: loading(createProjectPaper()),
+            loadingProject: loading(createProject()),
+            reviewers: Promise.resolve([]),
+            reviewedCriteria: Promise.resolve([]),
+            isProjectPaperView: true,
+        }),
+        ...props,
+    };
 }

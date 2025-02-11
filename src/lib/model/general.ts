@@ -55,11 +55,16 @@ type ReviewedCriterion = Criterion & {
     reviews: Omit<Review, "selectedCriteriaIds">[];
 };
 
+interface UserConfig {
+    isReviewMode: boolean;
+}
+
 export type {
     ValidationResult,
     ApiError,
     ProjectListEntryInterface,
     PaperListEntryInterface,
     ReviewedCriterion,
+    UserConfig,
 };
 export { asPaper };

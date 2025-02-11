@@ -9,6 +9,8 @@
         loadingProjectPaper,
         backwardReferencedPapers,
         forwardReferencedPapers,
+        reviewers,
+        reviewedCriteria,
         isReviewMode,
     } = data;
 </script>
@@ -29,7 +31,10 @@
     {backwardReferencedPapers}
     {forwardReferencedPapers}
     loadingPaper={loadingProjectPaper}
+    {loadingProject}
+    {reviewedCriteria}
+    {reviewers}
     showButtonBar
     {user}
-    userConfig={{ isReviewMode, showMaybeButton: true }}
+    userConfig={{ isReviewMode }}
 />

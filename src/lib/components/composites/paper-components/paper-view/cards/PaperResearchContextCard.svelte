@@ -1,15 +1,24 @@
 <script lang="ts">
+    import { Separator } from "$lib/components/primitives/separator";
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
     import ReferencesAndCitationsCardContent, {
         type ReferencesAndCitationsCardContentProps,
     } from "./ReferencesAndCitationsCardContent.svelte";
+    import ReviewCriteriaList, { type ReviewCriteriaListProps } from "./ReviewCriteriaList.svelte";
 
-    type Props = {
+    export type PaperResearchContextCardProps = {
         inReviewMode: boolean;
-    } & ReferencesAndCitationsCardContentProps;
+    } & ReferencesAndCitationsCardContentProps &
+        Omit<ReviewCriteriaListProps, "inReviewMode">;
 
-    let { inReviewMode, backwardReferencedPapers, forwardReferencedPapers }: Props = $props();
+    let {
+        inReviewMode,
+        backwardReferencedPapers,
+        forwardReferencedPapers,
+        reviewers,
+        reviewedCriteria,
+    }: PaperResearchContextCardProps = $props();
 
     const tabs = inReviewMode
         ? [
@@ -34,6 +43,8 @@ Usage:
 <PaperCard {tabs}>
     <PaperCardContent value="1">
         {#if inReviewMode}
+            <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
+            <Separator />
             <span>
                 Will be implemented in
                 <a
@@ -58,16 +69,9 @@ Usage:
                 {forwardReferencedPapers}
             />
         {:else}
-            <span>
-                Will be implemented in
-                <a
-                    class="text-blue-400"
-                    href="https://github.com/SE-UUlm/snowballr-frontend/issues/45"
-                >
-                    #45
-                </a>
-                .
-            </span>
+            <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
+            <Separator />
+            <span>Final decision</span>
         {/if}
     </PaperCardContent>
 </PaperCard>

@@ -46,8 +46,8 @@ Usage:
                 />
             {/each}
         {:then [reviewers, criteria]}
-            {#each criteria as criterion}
-                <CriterionListEntry {inReviewMode} {reviewers} {criterion} />
+            {#each criteria as criterion (criterion.id)}
+                <CriterionListEntry {criterion} {inReviewMode} {reviewers} />
             {/each}
             {#if criteria.length === 0}
                 <span class="text-hint italic">{emptyHint}</span>
