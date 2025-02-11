@@ -46,7 +46,6 @@ export function createReview(review: Partial<Review> = {}): Review {
         ...review,
     };
 }
-
 export function createCriterion(criterion: Partial<Criterion> = {}): Criterion {
     return {
         ...Criteria.demoCriterion1,
@@ -54,17 +53,10 @@ export function createCriterion(criterion: Partial<Criterion> = {}): Criterion {
     };
 }
 
-export function createLoadingPaper(
-    paper: Partial<Paper> = {},
-    timeoutInMs: number = 0,
-): Promise<Paper> {
-    return new Promise<Paper>((resolve) => {
+export function loading<T>(value: T, timeoutInMs: number = 0): Promise<T> {
+    return new Promise<T>((resolve) => {
         setTimeout(() => {
-            resolve(createPaper(paper));
+            resolve(value);
         }, timeoutInMs);
     });
-}
-
-export function createLoadingProject(project: Partial<Project> = {}): Promise<Project> {
-    return Promise.resolve(createProject(project));
 }

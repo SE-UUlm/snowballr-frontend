@@ -1,7 +1,7 @@
 import { assert, expect, test, describe } from "vitest";
 import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createLoadingProject, createUser } from "../../model-builder";
+import { loading, createProject, createUser } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
 
 describe("ProjectNavigationBar", () => {
@@ -14,10 +14,12 @@ describe("ProjectNavigationBar", () => {
                     lastName: "Doe",
                 }),
                 projectId: "123",
-                loadingProject: createLoadingProject({
-                    id: "123",
-                    name: "Example Project Title",
-                }),
+                loadingProject: loading(
+                    createProject({
+                        id: "123",
+                        name: "Example Project Title",
+                    }),
+                ),
                 defaultTabValue: "statistics",
             },
         });

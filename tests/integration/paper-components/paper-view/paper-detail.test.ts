@@ -1,7 +1,7 @@
 import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createLoadingPaper } from "../../../model-builder";
+import { loading, createPaper } from "../../../model-builder";
 import { waitForComponentLoading } from "../../test-helper";
 
 describe("PaperDetail", () => {
@@ -11,7 +11,7 @@ describe("PaperDetail", () => {
             props: {
                 key: "Title",
                 value: "Example Title",
-                loadingPaper: createLoadingPaper(),
+                loadingPaper: loading(createPaper()),
                 areDetailsInEditMode: false,
             },
         });
@@ -35,7 +35,7 @@ describe("PaperDetail", () => {
             props: {
                 key: "Title",
                 value: "Example Title",
-                loadingPaper: createLoadingPaper({}, 1000),
+                loadingPaper: loading(createPaper(), 1000),
                 areDetailsInEditMode: false,
             },
         });
