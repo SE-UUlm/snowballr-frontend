@@ -49,13 +49,13 @@
         userConfig,
         allowEditModeToggle = false,
         startInEditMode = false,
-        loadingPaper: initialLoadingPaper,
+        loadingPaper: loadingPaperWrapper,
         loadingProject,
         reviewers,
         reviewedCriteria,
     }: PaperViewProps = $props();
 
-    const loadingPaper = initialLoadingPaper.then(asPaper);
+    const loadingPaper = loadingPaperWrapper.then(asPaper);
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 
@@ -108,6 +108,7 @@ Usage:
                 {backwardReferencedPapers}
                 {forwardReferencedPapers}
                 inReviewMode={userConfig.isReviewMode}
+                loadingProjectPaper={loadingPaperWrapper}
                 {reviewedCriteria}
                 {reviewers}
             />

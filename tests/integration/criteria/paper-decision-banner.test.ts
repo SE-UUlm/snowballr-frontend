@@ -1,0 +1,97 @@
+import PaperDecisionBanner from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
+import { render, screen } from "@testing-library/svelte";
+import { describe, expect, test } from "vitest";
+import { createProjectPaper, loading } from "../../model-builder";
+import { PaperDecision } from "$lib/model/api/project";
+import { waitForComponentLoading } from "../test-helper";
+
+describe("PaperDecisionBanner", () => {
+    test("When the paper is accepted, it should display the accepted banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.ACCEPTED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Accepted");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the paper is declined, it should display the declined banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.DECLINED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Declined");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the paper is undecided, it should display the undecided banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.UNDECIDED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Undecided");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the paper is unspecified, it should display the undecided banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.UNSPECIFIED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Undecided");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the banner is loading, then skeletons are shown", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(createProjectPaper()),
+            },
+        });
+
+        const skeletons = screen.queryAllByTestId("skeleton");
+        expect(skeletons.length).toBeGreaterThan(0);
+    });
+});

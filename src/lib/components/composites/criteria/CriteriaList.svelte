@@ -40,10 +40,7 @@ Usage:
     <ul class="flex flex-col gap-4 pl-2">
         {#await Promise.all([loadingReviewers, loadingCriteria])}
             {#each { length: numberOfSkeletons }, i}
-                <CriterionListEntrySkeleton
-                    {inReviewMode}
-                    numberOfReviews={i % 2 ? i / 2 : (i % 3) + 1}
-                />
+                <CriterionListEntrySkeleton {inReviewMode} numberOfReviews={i % 2} />
             {/each}
         {:then [reviewers, criteria]}
             {#each criteria as criterion (criterion.id)}

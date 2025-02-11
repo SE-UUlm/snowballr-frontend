@@ -1,4 +1,7 @@
 <script lang="ts">
+    import PaperDecisionBanner, {
+        type PaperDecisionBannerProps,
+    } from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
     import { Separator } from "$lib/components/primitives/separator";
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
@@ -10,7 +13,8 @@
     export type PaperResearchContextCardProps = {
         inReviewMode: boolean;
     } & ReferencesAndCitationsCardContentProps &
-        Omit<ReviewCriteriaListProps, "inReviewMode">;
+        Omit<ReviewCriteriaListProps, "inReviewMode"> &
+        PaperDecisionBannerProps;
 
     let {
         inReviewMode,
@@ -18,6 +22,7 @@
         forwardReferencedPapers,
         reviewers,
         reviewedCriteria,
+        loadingProjectPaper,
     }: PaperResearchContextCardProps = $props();
 
     const tabs = inReviewMode
@@ -71,7 +76,9 @@ Usage:
         {:else}
             <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
             <Separator />
-            <span>Final decision</span>
+            <div class="px-15">
+                <PaperDecisionBanner {loadingProjectPaper} {reviewers} />
+            </div>
         {/if}
     </PaperCardContent>
 </PaperCard>
