@@ -1,16 +1,14 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import ReferencesAndCitationsCardContent from "./ReferencesAndCitationsCardContent.svelte";
-    import type { Paper } from "$lib/model/api/paper";
+    import ReferencesAndCitationsCardContent, {
+        type ReferencesAndCitationsCardContentProps,
+    } from "./ReferencesAndCitationsCardContent.svelte";
 
-    interface Props {
-        projectId?: string;
-        backwardReferencedPapers: Promise<Paper[]>;
-        forwardReferencedPapers: Promise<Paper[]>;
-    }
-
-    let { projectId, backwardReferencedPapers, forwardReferencedPapers }: Props = $props();
+    let {
+        backwardReferencedPapers,
+        forwardReferencedPapers,
+    }: ReferencesAndCitationsCardContentProps = $props();
 
     const tabs = [
         { value: "1", label: "Forward/Backward References" },
@@ -24,16 +22,12 @@ Paper Card for paper research context in the Paper View component.
 
 Usage:
 ```svelte
-    <PaperResearchContextCard {projectId} {backwardReferencedPapers} {forwardReferencedPapers} />
+    <PaperResearchContextCard {backwardReferencedPapers} {forwardReferencedPapers} />
 ```
 -->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
-        <ReferencesAndCitationsCardContent
-            {projectId}
-            {backwardReferencedPapers}
-            {forwardReferencedPapers}
-        />
+        <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
     </PaperCardContent>
     <PaperCardContent value="2">
         <span>

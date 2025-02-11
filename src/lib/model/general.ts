@@ -19,18 +19,17 @@ interface ProjectListEntryInterface {
     statistics: Project_Statistics;
 }
 
-type PaperListEntryInterface = {
-    projectId?: string;
-} & (
+type PaperListEntryInterface =
     | {
+          projectId: undefined;
           paper: Paper;
           showReviewStatus: false;
       }
     | {
+          projectId: string;
           paper: Project_Paper;
           showReviewStatus: boolean;
-      }
-);
+      };
 
 function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {
     return "paper" in paper;

@@ -25,7 +25,6 @@
 
 <PaperView
     {user}
-    {projectId}
     loadingPaper={loadingProjectPaper}
     {backwardReferencedPapers}
     {forwardReferencedPapers}

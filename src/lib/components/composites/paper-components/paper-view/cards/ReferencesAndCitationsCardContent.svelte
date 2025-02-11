@@ -6,17 +6,15 @@
     import PaperListEntrySkeleton from "../../PaperListEntrySkeleton.svelte";
     import type { Paper } from "$lib/model/api/paper";
 
-    interface Props {
-        projectId?: string;
+    export interface ReferencesAndCitationsCardContentProps {
         backwardReferencedPapers: Promise<Paper[]>;
         forwardReferencedPapers: Promise<Paper[]>;
     }
 
     let {
-        projectId,
         backwardReferencedPapers: allBackwardReferencedPapers,
         forwardReferencedPapers: allForwardReferencedPapers,
-    }: Props = $props();
+    }: ReferencesAndCitationsCardContentProps = $props();
 
     let backwardReferencedPapers = $state<Promise<Paper[]>>(allBackwardReferencedPapers);
     let forwardReferencedPapers = $state<Promise<Paper[]>>(allForwardReferencedPapers);
@@ -54,7 +52,7 @@
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
             {#snippet listItemComponent(paper)}
-                <PaperListEntry {paper} {projectId} showReviewStatus={false} />
+                <PaperListEntry {paper} projectId={undefined} showReviewStatus={false} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />
@@ -72,7 +70,7 @@
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
             {#snippet listItemComponent(paper)}
-                <PaperListEntry {paper} {projectId} showReviewStatus={false} />
+                <PaperListEntry {paper} projectId={undefined} showReviewStatus={false} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />

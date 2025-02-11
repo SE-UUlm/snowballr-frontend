@@ -10,7 +10,6 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                projectId: "0",
                 backwardReferencedPapers: Promise.resolve([Papers.demoPaper1]),
                 forwardReferencedPapers: Promise.resolve([Papers.demoPaper2]),
             },
@@ -37,7 +36,6 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                projectId: "0",
                 backwardReferencedPapers: Promise.resolve([Papers.demoPaper1, Papers.demoPaper2]),
                 forwardReferencedPapers: Promise.resolve([]),
             },
@@ -60,7 +58,6 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                projectId: "0",
                 backwardReferencedPapers: Promise.resolve([]),
                 forwardReferencedPapers: Promise.resolve([Papers.demoPaper1, Papers.demoPaper2]),
             },

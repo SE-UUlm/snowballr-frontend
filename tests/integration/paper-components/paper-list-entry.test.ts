@@ -11,7 +11,7 @@ describe("PaperListEntryComponent", () => {
         render(PaperEntry, {
             props: {
                 paper: Papers.demoPaper1,
-                projectId: "0",
+                projectId: undefined,
                 showReviewStatus: false,
             },
         });
@@ -87,7 +87,7 @@ describe("PaperListEntryComponent", () => {
         render(PaperEntry, {
             props: {
                 paper: Papers.demoPaper1,
-                projectId: "0",
+                projectId: undefined,
                 showReviewStatus: false,
                 onClick: () => (onClickExecuted = true),
             },

@@ -12,13 +12,11 @@
     import type { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
     import { isProjectPaper } from "$lib/model/general";
+    import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
 
-    interface Props {
+    type Props = ReferencesAndCitationsCardContentProps & {
         user: User;
-        projectId?: string;
         loadingPaper: Promise<Project_Paper | Paper>;
-        backwardReferencedPapers: Promise<Paper[]>;
-        forwardReferencedPapers: Promise<Paper[]>;
         showButtonBar?: boolean;
         backRef: string;
         userConfig: {
@@ -27,11 +25,10 @@
         };
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
-    }
+    };
 
     const {
         user,
-        projectId,
         loadingPaper: initialLoadingPaper,
         backwardReferencedPapers,
         forwardReferencedPapers,
@@ -90,13 +87,9 @@ Usage:
     <div class="flex flex-row w-full h-full gap-5">
         <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
         {#if userConfig.isReviewMode}
-            <PaperReviewCard {projectId} {backwardReferencedPapers} {forwardReferencedPapers} />
+            <PaperReviewCard {backwardReferencedPapers} {forwardReferencedPapers} />
         {:else}
-            <PaperResearchContextCard
-                {projectId}
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-            />
+            <PaperResearchContextCard {backwardReferencedPapers} {forwardReferencedPapers} />
         {/if}
     </div>
     {#if showButtonBar}
