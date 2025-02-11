@@ -31,7 +31,7 @@ Usage:
     </ul>
 ```
 -->
-<li class="flex flex-row gap-2.5 items-center">
+<li class="flex flex-row gap-2.5 items-center" data-testid="criterion-list-entry">
     {#if inReviewMode}
         <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
         <Checkbox data-testid="criterion-checkbox" />
