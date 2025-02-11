@@ -6,7 +6,7 @@
         user,
         projectId,
         loadingProject,
-        loadingPaper,
+        loadingProjectPaper,
         backwardReferencedPapers,
         forwardReferencedPapers,
         isReviewMode,
@@ -14,10 +14,10 @@
 </script>
 
 <svelte:head>
-    {#await Promise.all([loadingProject, loadingPaper])}
+    {#await Promise.all([loadingProject, loadingProjectPaper])}
         <title>Loading paper and project...</title>
-    {:then [project, paper]}
-        <title>{paper.title} | {project.name}</title>
+    {:then [project, { paper }]}
+        <title>{paper!.title} | {project.name}</title>
     {:catch}
         <title>Failed loading data</title>
     {/await}
@@ -26,7 +26,7 @@
 <PaperView
     {user}
     {projectId}
-    {loadingPaper}
+    loadingPaper={loadingProjectPaper}
     {backwardReferencedPapers}
     {forwardReferencedPapers}
     showButtonBar

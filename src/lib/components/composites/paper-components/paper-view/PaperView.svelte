@@ -10,11 +10,13 @@
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
+    import type { Project_Paper } from "$lib/model/api/project";
+    import { isProjectPaper } from "$lib/model/general";
 
     interface Props {
         user: User;
         projectId?: string;
-        loadingPaper: Promise<Paper>;
+        loadingPaper: Promise<Project_Paper | Paper>;
         backwardReferencedPapers: Promise<Paper[]>;
         forwardReferencedPapers: Promise<Paper[]>;
         showButtonBar?: boolean;
@@ -30,7 +32,7 @@
     const {
         user,
         projectId,
-        loadingPaper,
+        loadingPaper: initialLoadingPaper,
         backwardReferencedPapers,
         forwardReferencedPapers,
         showButtonBar = false,
@@ -40,6 +42,9 @@
         startInEditMode = false,
     }: Props = $props();
 
+    let loadingPaper = initialLoadingPaper.then((paper) =>
+        isProjectPaper(paper) ? paper!.paper! : paper,
+    );
     let loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 

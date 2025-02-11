@@ -24,6 +24,7 @@
     function filterPapers(allPapers: Paper[], searchText: string) {
         const fzf = new Fzf(allPapers, {
             selector: (paper) => `#${paper!.id} ${paper!.title}`,
+            casing: "case-insensitive",
         });
         return fzf.find(searchText).map((result) => result.item);
     }
