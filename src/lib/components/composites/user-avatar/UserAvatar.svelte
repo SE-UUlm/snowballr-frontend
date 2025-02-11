@@ -40,7 +40,7 @@ Usage:
     }} reviewDecision={ReviewDecision.ACCEPTED} />
 ```
 -->
-<div class="relative">
+<div class="relative" data-testid="user-avatar">
     <Avatar.Root>
         <Avatar.Fallback class="group-hover/paper-list-entry:bg-slate-200">
             {userInitials}

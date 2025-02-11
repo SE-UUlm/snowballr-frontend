@@ -34,7 +34,7 @@ Usage:
 <li class="flex flex-row gap-2.5 items-center">
     {#if inReviewMode}
         <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
-        <Checkbox />
+        <Checkbox data-testid="criterion-checkbox" />
     {/if}
     <div class="flex flex-row gap-1.5">
         <span class="font-bold">{criterion.tag}</span>

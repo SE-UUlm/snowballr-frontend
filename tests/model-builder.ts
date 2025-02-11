@@ -3,6 +3,7 @@ import type { Author, Paper } from "$lib/model/api/paper";
 import type { Project, Project_Paper } from "$lib/model/api/project";
 import { Authors, Criteria, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
 import type { Review } from "$lib/model/api/review";
+import type { ReviewedCriterion } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
 
 export function createUser(user: Partial<User> = {}): User {
@@ -46,6 +47,15 @@ export function createReview(review: Partial<Review> = {}): Review {
         ...review,
     };
 }
+
+export function createReviewedCriterion(props: Partial<ReviewedCriterion> = {}): ReviewedCriterion {
+    return {
+        ...Criteria.demoCriterion1,
+        reviews: [Reviews.demoReview1, Reviews.demoReview2],
+        ...props,
+    };
+}
+
 export function createCriterion(criterion: Partial<Criterion> = {}): Criterion {
     return {
         ...Criteria.demoCriterion1,
