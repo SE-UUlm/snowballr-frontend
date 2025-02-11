@@ -68,6 +68,7 @@ Usage:
         oninput={handleNewInput}
         onkeyup={handleSpecialButtons}
         class="pr-10"
+        data-testid="search-bar-input"
     />
     <button
         class="absolute right-4 top-1/2 transform -translate-y-1/2"
