@@ -17,6 +17,7 @@ import {
 import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
 import type { ISnowballRClient } from "$lib/model/api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
+import { PaperDecision } from "$lib/model/api/project";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -130,10 +131,16 @@ function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R
 }
 
 // Mock Backend API
+// Here we mock the backend API calls that are used in the application for the integration tests.
+// Note: This is only a base mock, you can/should override this mock in your tests according to your needs.
+// For example, you can mock the backend API to return an error, or to return a specific response.
+// It is not necessary to mock all the API calls, only the ones that are used in the test.
 vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
-            getAvailableFetcherApis: mock({ fetcherApis: [] }),
+            getAvailableFetcherApis: mock({
+                fetcherApis: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
+            }),
             register: vi.fn(),
             login: vi.fn(),
             logout: vi.fn(),
@@ -149,25 +156,33 @@ vi.mock("$lib/grpc-api", () => {
             updateUser: vi.fn(),
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
-            getAllPapersToReview: mock({ projectPapers: Object.values(ProjectPapers) }),
-            getPapersToReviewForProject: mock({ projectPapers: Object.values(ProjectPapers) }),
+            getAllPapersToReview: mock({
+                projectPapers: Object.values(ProjectPapers).filter(
+                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                ),
+            }),
+            getPapersToReviewForProject: mock({
+                projectPapers: Object.values(ProjectPapers).filter(
+                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                ),
+            }),
             getUserSettings: vi.fn(),
             updateUserSettings: vi.fn(),
             getReadingList: mock({ papers: Object.values(Papers) }),
             isPaperOnReadingList: vi.fn(),
             addPaperToReadingList: vi.fn(),
             removePaperFromReadingList: vi.fn(),
-            getPendingInvitationsForUser: mock({ projects: Object.values(Projects) }),
+            getPendingInvitationsForUser: mock({ projects: [Object.values(Projects).at(0)!] }),
             inviteUserToProject: vi.fn(),
-            getPendingInvitationsForProject: mock({ users: Object.values(Users) }),
+            getPendingInvitationsForProject: mock({ users: [Object.values(Users).at(0)!] }),
             getProjectMembers: mock({ members: Object.values(Members) }),
             removeProjectMember: vi.fn(),
             getAllProjects: mock({ projects: Object.values(Projects) }),
-            getAllDeletedProjects: mock({ projects: Object.values(Projects) }),
-            getAllDeletedProjectsForUser: mock({ projects: Object.values(Projects) }),
-            getAllArchivedProjects: mock({ projects: Object.values(Projects) }),
+            getAllDeletedProjects: mock({ projects: [] }),
+            getAllDeletedProjectsForUser: mock({ projects: [] }),
+            getAllArchivedProjects: mock({ projects: [Object.values(Projects).at(-1)!] }),
             getAllProjectsForUser: mock({ projects: Object.values(Projects) }),
-            getAllArchivedProjectsForUser: mock({ projects: Object.values(Projects) }),
+            getAllArchivedProjectsForUser: mock({ projects: [Object.values(Projects).at(-1)!] }),
             createProject: vi.fn(),
             getProjectById: mock(({ id }) => createProject({ id })),
             updateProject: vi.fn(),
@@ -193,8 +208,8 @@ vi.mock("$lib/grpc-api", () => {
             getPaperById: mock(({ id }) => createPaper({ id })),
             createPaper: vi.fn(),
             updatePaper: vi.fn(),
-            getForwardReferencedPapers: mock({ papers: Object.values(Papers) }),
-            getBackwardReferencedPapers: mock({ papers: Object.values(Papers) }),
+            getForwardReferencedPapers: mock({ papers: Object.values(Papers).slice(0, 3) }),
+            getBackwardReferencedPapers: mock({ papers: Object.values(Papers).slice(0, 3) }),
             getPaperPdf: vi.fn(),
             setPaperPdf: vi.fn(),
         },
