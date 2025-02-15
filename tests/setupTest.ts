@@ -91,7 +91,7 @@ vi.mock("$app/stores", (): typeof stores => {
     };
 });
 
-// This type takes the SnowballRClient interface and returns a new type where each function returns a MockUnaryCall i.e. a mocked backend API
+// This type takes the SnowballRClient interface and returns a new "interface" type where each api function returns a MockUnaryCall, i.e. a mocked API call, instead of a normal UnaryCall.
 type MockReturnType<T> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [K in keyof T]: T[K] extends (...args: infer A) => UnaryCall<infer _I, infer R>
@@ -104,7 +104,7 @@ interface MockUnaryCall<T> {
 }
 
 /**
- * Mock a backend API call
+ * Mocks a backend API call
  *
  * Usage:
  * ```ts
@@ -112,7 +112,7 @@ interface MockUnaryCall<T> {
  * getAllUsers: mock(Object.values(Users)),
  * ```
  *
- * @param fn - Either a function that takes an argument and returns a value or a constant value
+ * @param fn - Either a function that takes an argument and returns a value or a constant value that is returned
  * @returns A mocked backend API call
  */
 function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R>> {
@@ -145,7 +145,7 @@ vi.mock("$lib/grpc-api", () => {
             getAllUsers: mock({ users: Object.values(Users) }),
             getCurrentUser: mock(Users.johnDoe),
             getUserById: mock(({ id }) => createUser({ id })),
-            getUserByEmail: mock(({ id }) => createUser({ email: id })),
+            getUserByEmail: mock(({ id: email }) => createUser({ email: email })),
             updateUser: vi.fn(),
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
