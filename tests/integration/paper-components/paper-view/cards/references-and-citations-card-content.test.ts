@@ -31,7 +31,7 @@ describe("ReferencesAndCitationsCardContent", () => {
         expect(searchBars).toHaveLength(2);
     });
 
-    test("When references are searched, then only search results are shown", async () => {
+    test("When references are searched, then only matching reference papers are shown", async () => {
         const user = userEvent.setup();
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
@@ -53,7 +53,7 @@ describe("ReferencesAndCitationsCardContent", () => {
         expect(paper2).not.toBeInTheDocument();
     });
 
-    test("When citations are searched, then only search results are shown", async () => {
+    test("When citations are searched, then only matching citation papers are shown", async () => {
         const user = userEvent.setup();
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
