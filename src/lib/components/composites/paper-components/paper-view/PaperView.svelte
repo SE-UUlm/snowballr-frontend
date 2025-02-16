@@ -11,7 +11,7 @@
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
-    import { isProjectPaper } from "$lib/model/general";
+    import { asPaper } from "$lib/model/general";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
 
     type Props = ReferencesAndCitationsCardContentProps & {
@@ -39,9 +39,7 @@
         startInEditMode = false,
     }: Props = $props();
 
-    let loadingPaper = initialLoadingPaper.then((paper) =>
-        isProjectPaper(paper) ? paper!.paper! : paper,
-    );
+    let loadingPaper = initialLoadingPaper.then(asPaper);
     let loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 

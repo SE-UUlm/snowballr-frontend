@@ -1,6 +1,6 @@
 <script lang="ts">
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import { isProjectPaper, type PaperListEntryInterface } from "$lib/model/general";
+    import { asPaper, type PaperListEntryInterface } from "$lib/model/general";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
     import { PaperDecision } from "$lib/model/api/project";
@@ -12,7 +12,7 @@
     };
 
     const navigateToPaperView = () => {
-        const paperId = isProjectPaper(paper) ? paper.paper!.id : paper.id;
+        const paperId = asPaper(paper).id;
         const paperLink =
             projectId !== undefined
                 ? `/project/${projectId}/paper/${paperId}`
@@ -107,7 +107,7 @@ Usage:
             ? `border-l-4 ${getReviewDecisionColor(paper.decision, paper.reviews.length)}`
             : ''} rounded-md px-3 py-1.5"
     >
-        <PaperInfo loadingPaper={Promise.resolve(isProjectPaper(paper) ? paper.paper! : paper)} />
+        <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
     </div>
     {#if showReviewStatus}
         {#each paper.reviews as review}

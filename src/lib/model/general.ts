@@ -1,10 +1,10 @@
-import type {
-    Project,
-    Project_Member_List,
+import {
     Project_Paper,
-    Project_Statistics,
+    type Project,
+    type Project_Member_List,
+    type Project_Statistics,
 } from "$lib/model/api/project";
-import type { Paper } from "./api/paper";
+import type { Paper } from "$lib/model/api/paper";
 
 type ValidationResult = { success: true } | { success: false; error: string };
 
@@ -35,5 +35,9 @@ function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {
     return "paper" in paper;
 }
 
+function asPaper(paper: Project_Paper | Paper): Paper {
+    return isProjectPaper(paper) ? paper.paper! : paper;
+}
+
 export type { ValidationResult, ApiError, ProjectListEntryInterface, PaperListEntryInterface };
-export { isProjectPaper };
+export { isProjectPaper, asPaper };
