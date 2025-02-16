@@ -1,10 +1,10 @@
 <script lang="ts">
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import { Fzf } from "fzf";
     import PaperListEntry from "../../PaperListEntry.svelte";
     import PaperListEntrySkeleton from "../../PaperListEntrySkeleton.svelte";
     import type { Paper } from "$lib/model/api/paper";
+    import { filterPapers } from "$lib/filters";
 
     export interface ReferencesAndCitationsCardContentProps {
         backwardReferencedPapers: Promise<Paper[]>;
@@ -18,14 +18,6 @@
 
     let backwardReferencedPapers = $state<Promise<Paper[]>>(allBackwardReferencedPapers);
     let forwardReferencedPapers = $state<Promise<Paper[]>>(allForwardReferencedPapers);
-
-    function filterPapers(allPapers: Paper[], searchText: string) {
-        const fzf = new Fzf(allPapers, {
-            selector: (paper) => `#${paper!.id} ${paper!.title}`,
-            casing: "case-insensitive",
-        });
-        return fzf.find(searchText).map((result) => result.item);
-    }
 
     function filterBackwardReferencedPapers(searchText: string) {
         backwardReferencedPapers = allBackwardReferencedPapers.then((allPapers) =>
