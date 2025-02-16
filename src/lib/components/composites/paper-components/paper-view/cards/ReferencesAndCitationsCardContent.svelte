@@ -33,7 +33,7 @@
 </script>
 
 <section class="flex flex-col h-full gap-5">
-    <div class="flex h-full overflow-hidden">
+    <div class="flex h-full overflow-hidden flex-[1_1_0]">
         <NamedList
             listName="References"
             items={backwardReferencedPapers}
@@ -51,7 +51,7 @@
             {/snippet}
         </NamedList>
     </div>
-    <div class="flex h-full overflow-hidden">
+    <div class="flex h-full overflow-hidden flex-[1_1_0]">
         <NamedList
             listName="Citations"
             items={forwardReferencedPapers}
