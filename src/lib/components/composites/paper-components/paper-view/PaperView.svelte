@@ -3,7 +3,6 @@
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
-    import PaperReviewCard from "./cards/PaperReviewCard.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
     import MaybeButton from "./decision-buttons/MaybeButton.svelte";
@@ -84,11 +83,11 @@ Usage:
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
         <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
-        {#if userConfig.isReviewMode}
-            <PaperReviewCard {backwardReferencedPapers} {forwardReferencedPapers} />
-        {:else}
-            <PaperResearchContextCard {backwardReferencedPapers} {forwardReferencedPapers} />
-        {/if}
+        <PaperResearchContextCard
+            inReviewMode={userConfig.isReviewMode}
+            {backwardReferencedPapers}
+            {forwardReferencedPapers}
+        />
     </div>
     {#if showButtonBar}
         <div class="flex flex-row w-full h-fit justify-between gap-4" data-testid="button-bar">

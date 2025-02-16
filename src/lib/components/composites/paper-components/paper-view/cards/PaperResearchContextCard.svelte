@@ -5,37 +5,69 @@
         type ReferencesAndCitationsCardContentProps,
     } from "./ReferencesAndCitationsCardContent.svelte";
 
-    let {
-        backwardReferencedPapers,
-        forwardReferencedPapers,
-    }: ReferencesAndCitationsCardContentProps = $props();
+    type Props = {
+        inReviewMode: boolean;
+    } & ReferencesAndCitationsCardContentProps;
 
-    const tabs = [
-        { value: "1", label: "Forward/Backward References" },
-        { value: "2", label: "Review Information" },
-    ];
+    let { inReviewMode, backwardReferencedPapers, forwardReferencedPapers }: Props = $props();
+
+    const tabs = inReviewMode
+        ? [
+              { value: "1", label: "Review Information" },
+              { value: "2", label: "Forward/Backward References" },
+          ]
+        : [
+              { value: "1", label: "Forward/Backward References" },
+              { value: "2", label: "Review Information" },
+          ];
 </script>
 
 <!--
 @component
-Paper Card for paper research context in the Paper View component.
+Paper Card for review information of a paper in the Paper View component.
 
 Usage:
 ```svelte
-    <PaperResearchContextCard {backwardReferencedPapers} {forwardReferencedPapers} />
+    <PaperResearchContextCard {inReviewMode} {backwardReferencedPapers} {forwardReferencedPapers} />
 ```
 -->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
-        <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
+        {#if inReviewMode}
+            <span>
+                Will be implemented in
+                <a
+                    class="text-blue-400"
+                    href="https://github.com/SE-UUlm/snowballr-frontend/issues/53"
+                >
+                    #53
+                </a>
+                .
+            </span>
+        {:else}
+            <ReferencesAndCitationsCardContent
+                {backwardReferencedPapers}
+                {forwardReferencedPapers}
+            />
+        {/if}
     </PaperCardContent>
     <PaperCardContent value="2">
-        <span>
-            Will be implemented in
-            <a class="text-blue-400" href="https://github.com/SE-UUlm/snowballr-frontend/issues/45">
-                #45
-            </a>
-            .
-        </span>
+        {#if inReviewMode}
+            <ReferencesAndCitationsCardContent
+                {backwardReferencedPapers}
+                {forwardReferencedPapers}
+            />
+        {:else}
+            <span>
+                Will be implemented in
+                <a
+                    class="text-blue-400"
+                    href="https://github.com/SE-UUlm/snowballr-frontend/issues/45"
+                >
+                    #45
+                </a>
+                .
+            </span>
+        {/if}
     </PaperCardContent>
 </PaperCard>
