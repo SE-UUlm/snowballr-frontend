@@ -12,6 +12,7 @@
         showNumberOfListItems?: boolean;
         numberOfItems?: number;
         emptyHint?: string;
+        errorHint?: string;
         preListContent?: Snippet;
     }
 
@@ -23,7 +24,8 @@
         numberOfSkeletons,
         showNumberOfListItems = false,
         numberOfItems = undefined,
-        emptyHint = "",
+        emptyHint = "No items found.",
+        errorHint,
         preListContent = undefined,
     }: NamedListProps = $props();
 </script>
@@ -90,11 +92,12 @@ This can be e.g. a search bar.
             </ul>
         {/if}
     {:catch error}
+        {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
         {@render preListContent?.()}
         <div class="flex flex-row items-center gap-x-2 p-4">
             <CircleAlert size={20} class="text-neutral-500" />
-            <span class="text-error">{error}</span>
+            <span class="text-error">{errorHint ? errorHint : error}</span>
         </div>
     {/await}
 </div>

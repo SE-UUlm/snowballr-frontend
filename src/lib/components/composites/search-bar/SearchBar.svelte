@@ -54,9 +54,12 @@ and the search method is triggered with an empty string,
 so if no further handling exist, all elements are retrieved
 by the search.
 
+To limit the amount of calls (if used with backend calls), the search only starts after a
+specified timout in which no other events occur. The default for this is 500 ms.
+
 Usage:
 ```svelte
-    <SearchBar placeholderText={yourText} onSearch={yourCallback} />
+    <SearchBar placeholderText={yourText} onSearch={yourCallback} timeoutInMs={500} />
 ```
 -->
 <div class="relative w-full">

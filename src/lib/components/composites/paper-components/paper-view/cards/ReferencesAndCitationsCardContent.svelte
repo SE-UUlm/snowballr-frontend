@@ -39,6 +39,8 @@
             items={backwardReferencedPapers}
             showNumberOfListItems
             numberOfSkeletons={3}
+            emptyHint="No references found."
+            errorHint="Couldn't load references."
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
@@ -57,6 +59,8 @@
             items={forwardReferencedPapers}
             showNumberOfListItems
             numberOfSkeletons={3}
+            emptyHint="No citations found."
+            errorHint="Couldn't load citations."
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />

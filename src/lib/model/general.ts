@@ -19,6 +19,13 @@ interface ProjectListEntryInterface {
     statistics: Project_Statistics;
 }
 
+/**
+ * Interface for the paper list entries.
+ *
+ * It either takes a Paper or a Project_Paper object.
+ * According to this the projectId is either undefined or a string
+ * and the showReviewStatus is either false or a boolean value.
+ */
 type PaperListEntryInterface =
     | {
           projectId: undefined;
