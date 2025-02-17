@@ -74,4 +74,38 @@ describe("ReferencesAndCitationsCardContent", () => {
         const paper2 = screen.queryByText(Papers.demoPaper2.title, { exact: false });
         expect(paper2).not.toBeInTheDocument();
     });
+
+    test("When references and citations are empty, then hint is shown", async () => {
+        render(ReferencesAndCitationsCardContent, {
+            target: document.body,
+            props: {
+                backwardReferencedPapers: Promise.resolve([]),
+                forwardReferencedPapers: Promise.resolve([]),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const referencesHint = screen.getByText("No references found.");
+        expect(referencesHint).toBeInTheDocument();
+        const citationsHint = screen.getByText("No citations found.");
+        expect(citationsHint).toBeInTheDocument();
+    });
+
+    test("When loading references and citations failed, then an error hint is shown", async () => {
+        render(ReferencesAndCitationsCardContent, {
+            target: document.body,
+            props: {
+                backwardReferencedPapers: Promise.reject("error"),
+                forwardReferencedPapers: Promise.reject("error"),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const referencesHint = screen.getByText("Couldn't load references.");
+        expect(referencesHint).toBeInTheDocument();
+        const citationsHint = screen.getByText("Couldn't load citations.");
+        expect(citationsHint).toBeInTheDocument();
+    });
 });
