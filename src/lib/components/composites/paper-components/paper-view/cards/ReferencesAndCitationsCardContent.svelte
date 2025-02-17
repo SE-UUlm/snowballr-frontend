@@ -4,7 +4,7 @@
     import PaperListEntry from "../../PaperListEntry.svelte";
     import PaperListEntrySkeleton from "../../PaperListEntrySkeleton.svelte";
     import type { Paper } from "$lib/model/api/paper";
-    import { filterPapers } from "$lib/filters";
+    import { filterPapers } from "$lib/utils/filters";
 
     export interface ReferencesAndCitationsCardContentProps {
         backwardReferencedPapers: Promise<Paper[]>;

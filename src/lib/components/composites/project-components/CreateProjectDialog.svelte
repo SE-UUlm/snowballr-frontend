@@ -15,7 +15,7 @@
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";
-    import { filterUsers } from "$lib/filters";
+    import { filterUsers } from "$lib/utils/filters";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);

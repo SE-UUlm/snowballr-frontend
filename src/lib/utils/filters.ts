@@ -1,7 +1,7 @@
 import { Fzf, type Selector } from "fzf";
-import type { Paper } from "./model/api/paper";
-import { getName, getNames } from "./utils/common-helper";
-import type { User } from "./model/api/user";
+import type { Paper } from "../model/api/paper";
+import { getName, getNames } from "./common-helper";
+import type { User } from "../model/api/user";
 
 /**
  * Generic filter function using Fzf.
