@@ -94,7 +94,6 @@ This can be e.g. a search bar.
     {:catch error}
         {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
-        {@render preListContent?.()}
         <div class="flex flex-row items-center gap-x-2 p-4">
             <CircleAlert size={20} class="text-neutral-500" />
             <span class="text-error">{errorHint ? errorHint : error}</span>
