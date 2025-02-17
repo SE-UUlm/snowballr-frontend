@@ -19,7 +19,7 @@
 <!-- Use PaperCardContent elements as children with values according to the tabs props -->
 <!--
 @component
-Paper Card used in the Paper View component.
+Paper Card used in the `PaperView` component.
 
 For each tab in the tabs prop, a tab is created with the label and value of the tab.
 The children of the PaperCard component are rendered in the content of the tab.

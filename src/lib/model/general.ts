@@ -47,4 +47,4 @@ function asPaper(paper: Project_Paper | Paper): Paper {
 }
 
 export type { ValidationResult, ApiError, ProjectListEntryInterface, PaperListEntryInterface };
-export { isProjectPaper, asPaper };
+export { asPaper };

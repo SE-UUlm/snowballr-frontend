@@ -24,7 +24,7 @@
 
 <!--
 @component
-Paper Card for review information of a paper in the Paper View component.
+`PaperCard` for displaying the review information and forward/backward references of a paper in the `PaperView` component.
 
 Usage:
 ```svelte

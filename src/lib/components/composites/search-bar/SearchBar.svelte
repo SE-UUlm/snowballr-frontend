@@ -55,7 +55,7 @@ so if no further handling exist, all elements are retrieved
 by the search.
 
 To limit the amount of calls (if used with backend calls), the search only starts after a
-specified timout in which no other events occur. The default for this is 500 ms.
+specified timeout in which no other events occur. The default timeout is 500 ms.
 
 Usage:
 ```svelte

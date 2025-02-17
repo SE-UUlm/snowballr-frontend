@@ -86,7 +86,7 @@
 
 <!--
 @component
-Paper Card for paper details in the Paper View component.
+`PaperCard` for displaying the details of a paper in the `PaperView` component.
 
 Usage:
 ```svelte

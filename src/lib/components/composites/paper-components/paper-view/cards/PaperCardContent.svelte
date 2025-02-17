@@ -13,7 +13,7 @@
 <!-- flex cannot be applied to the Tabs.Content element directly, which is why the content is wrapped in another div -->
 <!--
 @component
-Card content used in the Paper Card component.
+Card content used in the `PaperCard` component.
 
 Usage:
 ```svelte

@@ -32,6 +32,15 @@
     }
 </script>
 
+<!--
+@component
+Card Content for references and citations of a paper, used by `PaperResearchContextCard`.
+
+Usage:
+```svelte
+    <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
+```
+-->
 <section class="flex flex-col h-full gap-5">
     <div class="flex h-full overflow-hidden flex-[1_1_0]">
         <NamedList
