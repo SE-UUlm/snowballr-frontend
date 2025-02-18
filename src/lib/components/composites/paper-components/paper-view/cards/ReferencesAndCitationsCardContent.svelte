@@ -50,6 +50,7 @@ Usage:
             numberOfSkeletons={3}
             emptyHint="No references found."
             errorHint="Couldn't load references."
+            keySelector={(paper) => paper.id}
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
@@ -70,6 +71,7 @@ Usage:
             numberOfSkeletons={3}
             emptyHint="No citations found."
             errorHint="Couldn't load citations."
+            keySelector={(paper) => paper.id}
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />

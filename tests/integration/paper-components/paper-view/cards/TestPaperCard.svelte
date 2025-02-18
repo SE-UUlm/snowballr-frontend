@@ -13,7 +13,7 @@
 </script>
 
 <PaperCard {tabs}>
-    {#each tabs as tab}
+    {#each tabs as tab (tab.value)}
         <PaperCardContent value={tab.value}>
             <p>{tab.label} content</p>
         </PaperCardContent>

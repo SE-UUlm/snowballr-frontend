@@ -60,7 +60,7 @@
             </DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
-                {#each menuItems as item}
+                {#each menuItems as item (item.label)}
                     <a href={item.href}>
                         <DropdownMenu.Item>
                             <item.icon class="mr-2 size-4" />

@@ -241,7 +241,7 @@ Usage:
                 text-default border-input-border-slate bg-background rounded-md border overflow-x-auto"
         >
             <!-- chips -->
-            {#each items as item, index}
+            {#each items as item, index (item)}
                 <div
                     class="flex items-center {index === selectedChipIndex
                         ? 'bg-slate-300'
@@ -285,7 +285,7 @@ Usage:
             class="border rounded-md max-h-[160px] overflow-y-scroll"
             data-testid={SUGGESTIONS_LIST_ID}
         >
-            {#each suggestions as suggestion, i}
+            {#each suggestions as suggestion, i (suggestion)}
                 <Button
                     variant="ghostWithoutHover"
                     class="flex w-full justify-start {selectedSuggestionIndex === i

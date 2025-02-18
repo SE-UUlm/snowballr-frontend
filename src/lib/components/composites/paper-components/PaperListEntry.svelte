@@ -110,7 +110,7 @@ Usage:
         <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
     </div>
     {#if showReviewStatus}
-        {#each paper.reviews as review}
+        {#each paper.reviews as review (review.id)}
             {#await getReviewUserById(review.userId) then user}
                 <UserAvatar {user} reviewDecision={review.decision} />
             {/await}

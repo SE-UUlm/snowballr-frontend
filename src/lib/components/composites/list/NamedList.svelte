@@ -14,6 +14,7 @@
         emptyHint?: string;
         errorHint?: string;
         preListContent?: Snippet;
+        keySelector: (item: T) => string | number;
     }
 
     const {
@@ -27,6 +28,7 @@
         emptyHint = "No items found.",
         errorHint,
         preListContent = undefined,
+        keySelector,
     }: NamedListProps = $props();
 </script>
 
@@ -66,8 +68,7 @@ This can be e.g. a search bar.
         <h2>{listName}</h2>
         {@render preListContent?.()}
         <ul class="space-y-4 pb-1 scroll-box">
-            <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-            {#each Array(numberOfSkeletons) as _}
+            {#each { length: numberOfSkeletons }}
                 <li>
                     {@render listItemSkeleton()}
                 </li>
@@ -84,7 +85,7 @@ This can be e.g. a search bar.
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
             <ul class="space-y-4 pb-1 scroll-box">
-                {#each loadedItems as item}
+                {#each loadedItems as item (keySelector(item))}
                     <li>
                         {@render listItemComponent?.(item)}
                     </li>

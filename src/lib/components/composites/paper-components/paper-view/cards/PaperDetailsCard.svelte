@@ -107,11 +107,11 @@ Usage:
                 {/if}
             </div>
             <div class="flex flex-col gap-2">
-                {#each Object.entries(basicInfos.value) as [key, value]}
+                {#each Object.entries(basicInfos.value) as [key, value] (key)}
                     <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
                 {/each}
                 {#if showAdditionalInfos}
-                    {#each Object.entries(additionalInfos.value) as [key, value]}
+                    {#each Object.entries(additionalInfos.value) as [key, value] (key)}
                         <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
                     {/each}
                 {/if}
@@ -145,7 +145,7 @@ Usage:
                 {/if}
             </div>
             {#await loadingPaper}
-                {#each [100, 95, 70, 82, 50, 75, 90] as width}
+                {#each [100, 95, 70, 82, 50, 75, 90] as width, i (i)}
                     <Skeleton class="flex h-[1.625rem] rounded-full w-[{width}%]" />
                 {/each}
             {:then paper}

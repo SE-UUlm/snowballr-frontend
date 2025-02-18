@@ -30,7 +30,7 @@ Usage:
 <Tabs.List
     class="w-full h-fit justify-start rounded-none border-b b-2 bg-transparent p-0 px-3 pt-3"
 >
-    {#each tabs as tab}
+    {#each tabs as tab (tab.value)}
         <Tabs.Trigger
             value={tab.value}
             class="data-[state=active]:border-b-primary h-fit rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none max-w-[50%]"

@@ -38,7 +38,7 @@
             {#if tabs.length > 0}
                 <Tabs.Root value={defaultTabValue}>
                     <Tabs.List>
-                        {#each tabs as tab}
+                        {#each tabs as tab (tab.value)}
                             <a href={tab.href}>
                                 <Tabs.Trigger value={tab.value}>
                                     <span>{tab.label}</span>

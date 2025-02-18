@@ -23,6 +23,7 @@
             numberOfSkeletons={10}
             showNumberOfListItems={true}
             emptyHint="No open reviews."
+            keySelector={(review) => review.paper.id}
         >
             {#snippet listItemComponent(componentData)}
                 <PaperListEntry {...componentData} />
@@ -39,6 +40,7 @@
             numberOfSkeletons={5}
             showNumberOfListItems={true}
             emptyHint="No active or archived projects."
+            keySelector={(projectMetadata) => projectMetadata.project.id}
         >
             {#snippet listItemComponent(componentData)}
                 <ProjectListEntry {...componentData} />
