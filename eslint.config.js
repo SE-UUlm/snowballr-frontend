@@ -53,6 +53,7 @@ export default ts.config(
             "svelte/button-has-type": "error",
             "svelte/prefer-const": "error",
             "svelte/html-closing-bracket-new-line": "error",
+            "svelte/prefer-class-directive": "warn",
         },
     },
 );

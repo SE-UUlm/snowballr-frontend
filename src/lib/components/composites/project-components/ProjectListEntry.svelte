@@ -26,10 +26,8 @@ Usage:
 -->
 <a
     class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 lg:items-center justify-between px-5 py-2
-    border border-container-border-grey rounded-md highlight-on-hover {project.status ===
-    ProjectStatus.ARCHIVED
-        ? 'opacity-25'
-        : ''}"
+    border border-container-border-grey rounded-md highlight-on-hover"
+    class:opacity-25={project.status === ProjectStatus.ARCHIVED}
     href={`/project/${project.id}/dashboard`}
 >
     <div class="flex flex-col min-w-0 h-fit">

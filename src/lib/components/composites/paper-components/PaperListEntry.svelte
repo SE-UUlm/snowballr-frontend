@@ -97,9 +97,8 @@ Usage:
 -->
 <button
     type="button"
-    class="flex flex-row items-center justify-end pe-3 gap-3 w-full border {showReviewStatus
-        ? 'border-l-0'
-        : ''} border-container-border-grey rounded-md highlight-on-hover group/paper-list-entry"
+    class="flex flex-row items-center justify-end pe-3 gap-3 w-full border border-container-border-grey rounded-md highlight-on-hover group/paper-list-entry"
+    class:border-l-0={showReviewStatus}
     onclick={handleClick}
 >
     <div
