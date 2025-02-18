@@ -35,7 +35,7 @@
         Publisher: string;
     }
     // Initialize with width values for Skeletons
-    let basicInfos = resource<Paper, BasicInfos>(loadingPaper, {
+    const basicInfos = resource<Paper, BasicInfos>(loadingPaper, {
         initialValue: {
             Title: "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
             Authors: "w-[4rem] sm:w-[5rem] md:w-[7.3rem] lg:w-[13rem]",
@@ -59,7 +59,7 @@
         "External ID": string;
     }
     // Initialize with width values for Skeletons
-    let additionalInfos = resource<Paper, AdditionalInfos>(loadingPaper, {
+    const additionalInfos = resource<Paper, AdditionalInfos>(loadingPaper, {
         initialValue: {
             "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
             "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",

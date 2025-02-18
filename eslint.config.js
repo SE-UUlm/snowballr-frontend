@@ -51,6 +51,7 @@ export default ts.config(
     {
         rules: {
             "svelte/button-has-type": "error",
+            "svelte/prefer-const": "error",
         },
     },
 );

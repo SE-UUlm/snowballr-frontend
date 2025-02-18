@@ -102,7 +102,7 @@
      * @returns the corresponding email of the user identified by the given name, email or name + email combination
      */
     function mapNameToEmail(input: string): string | undefined {
-        let possibleMatchedUser = possibleMembers.filter(
+        const possibleMatchedUser = possibleMembers.filter(
             (user) =>
                 getName(user) === input ||
                 user.email === input ||
@@ -119,7 +119,7 @@
      * @return the name of the user or undefined, if the no user with the given email was found
      */
     function mapEmailToName(input: string): string | undefined {
-        let name = getNames(initialPossibleMembers.filter((user) => input === user.email));
+        const name = getNames(initialPossibleMembers.filter((user) => input === user.email));
         return name !== "" ? name : input;
     }
 

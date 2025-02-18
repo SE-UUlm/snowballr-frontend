@@ -22,7 +22,7 @@
         ...restProps
     }: Props = $props();
 
-    let paperId = resource<string, string | undefined>(loadingPaperId, {
+    const paperId = resource<string, string | undefined>(loadingPaperId, {
         initialValue: undefined,
         onSuccess: (id) => id,
         onErrorValue: undefined,

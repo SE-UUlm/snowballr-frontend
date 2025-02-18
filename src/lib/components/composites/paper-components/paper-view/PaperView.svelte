@@ -38,8 +38,8 @@
         startInEditMode = false,
     }: Props = $props();
 
-    let loadingPaper = initialLoadingPaper.then(asPaper);
-    let loadingPaperId = loadingPaper.then((paper) => paper.id);
+    const loadingPaper = initialLoadingPaper.then(asPaper);
+    const loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 
 <!--

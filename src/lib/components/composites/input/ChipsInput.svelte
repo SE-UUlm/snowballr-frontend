@@ -135,7 +135,7 @@
                 if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
                     addItem(suggestions[selectedSuggestionIndex]);
                 } else {
-                    let validationResult = validate(inputText);
+                    const validationResult = validate(inputText);
                     if (validationResult.success) {
                         addItem(inputText);
                     } else {
@@ -184,7 +184,7 @@
     // reapply filter on suggestions after each new input
     $effect(() => {
         if (searchSuggestions !== undefined) {
-            let possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
+            const possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
             suggestions = possibleSuggestions.filter((suggestion) => !items.includes(suggestion));
         }
     });
