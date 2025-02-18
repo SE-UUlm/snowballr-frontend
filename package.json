@@ -50,7 +50,7 @@
         "license-checker": "^25.0.1",
         "lucide-svelte": "^0.475.0",
         "msw": "^2.6.9",
-        "postcss": "^8.4.49",
+        "postcss": "^8.5.2",
         "prettier": "^3.5.0",
         "prettier-plugin-svelte": "^3.3.3",
         "svelte": "^5.20.1",
