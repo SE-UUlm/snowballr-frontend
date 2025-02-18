@@ -55,6 +55,11 @@ export default ts.config(
             "svelte/html-closing-bracket-new-line": "error",
             "svelte/prefer-class-directive": "warn",
             "svelte/spaced-html-comment": "warn",
+            "svelte/prefer-destructured-store-props": "error",
+            "svelte/prefer-style-directive": "warn",
+            "svelte/shorthand-attribute": "warn",
+            "svelte/shorthand-directive": "warn",
+            "svelte/html-quotes": "error",
         },
     },
 );
