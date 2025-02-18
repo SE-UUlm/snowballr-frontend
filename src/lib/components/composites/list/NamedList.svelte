@@ -32,7 +32,8 @@
     }: NamedListProps = $props();
 </script>
 
-<!--@component
+<!--
+@component
 Named list with a header and custom list items of type `YourComponent`.
 
 This list component can be used to uniformly format named lists.
