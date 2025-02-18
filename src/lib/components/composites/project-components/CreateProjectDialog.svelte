@@ -254,9 +254,9 @@
 <AlertDialog.Root open={projectWasCreated}>
     <AlertDialog.Content>
         <AlertDialog.Header>
-            <AlertDialog.Title
-                >Success! Your new project has been created successfully.</AlertDialog.Title
-            >
+            <AlertDialog.Title>
+                Success! Your new project has been created successfully.
+            </AlertDialog.Title>
             <AlertDialog.Description>
                 The members were invited and you can now start with the new SLR by adding sources,
                 refine the review process or inviting further members.
@@ -268,8 +268,10 @@
                     projectWasCreated = false;
                     projectId = undefined;
                     membersInput = [];
-                }}>Back</AlertDialog.Cancel
+                }}
             >
+                Back
+            </AlertDialog.Cancel>
             <AlertDialog.Action onclick={async () => navigateToProject()}>Open</AlertDialog.Action>
         </AlertDialog.Footer>
     </AlertDialog.Content>
