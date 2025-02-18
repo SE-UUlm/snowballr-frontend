@@ -12,6 +12,8 @@
         showNumberOfListItems?: boolean;
         numberOfItems?: number;
         emptyHint?: string;
+        errorHint?: string;
+        preListContent?: Snippet;
     }
 
     const {
@@ -22,7 +24,9 @@
         numberOfSkeletons,
         showNumberOfListItems = false,
         numberOfItems = undefined,
-        emptyHint = "",
+        emptyHint = "No items found.",
+        errorHint,
+        preListContent = undefined,
     }: NamedListProps = $props();
 </script>
 
@@ -49,14 +53,18 @@ If the option showNumberOfListItems is set to true (default: false),
 the number of list items (either given by 'numberOfItems' or automatically determined)
 is added to the list name / header, like 'yourListName (10)'.
 
-While the list is loading, it displays <numberOfSkeleton> skeleton list items.
+While the list is loading, it displays \<numberOfSkeleton\> skeleton list items.
 If the loading was successful it either shows the components, filled with the component data
 or an optional hint (provided with 'emptyHint') that the list is empty.
 Otherwise the error message is shown.
+
+You can render additional content between the title and the list by providing `preListContent`.
+This can be e.g. a search bar.
 -->
 <div class="flex flex-col h-full w-full px-5 gap-y-5 overflow-hidden">
     {#await items}
         <h2>{listName}</h2>
+        {@render preListContent?.()}
         <ul class="space-y-4 pb-1 scroll-box">
             <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
             {#each Array(numberOfSkeletons) as _}
@@ -71,6 +79,7 @@ Otherwise the error message is shown.
         {:else}
             <h2>{listName}</h2>
         {/if}
+        {@render preListContent?.()}
         {#if loadedItems.length === 0}
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
@@ -83,10 +92,11 @@ Otherwise the error message is shown.
             </ul>
         {/if}
     {:catch error}
+        {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
         <div class="flex flex-row items-center gap-x-2 p-4">
             <CircleAlert size={20} class="text-neutral-500" />
-            <span class="text-error">{error}</span>
+            <span class="text-error">{errorHint ? errorHint : error}</span>
         </div>
     {/await}
 </div>

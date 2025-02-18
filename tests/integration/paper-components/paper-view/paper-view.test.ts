@@ -8,6 +8,8 @@ describe("PaperView", () => {
         render(PaperView, {
             user: createUser(),
             loadingPaper: createLoadingPaper(),
+            backwardReferencedPapers: Promise.resolve([]),
+            forwardReferencedPapers: Promise.resolve([]),
             showButtonBar: false,
             backRef: "",
             userConfig: {
@@ -23,6 +25,8 @@ describe("PaperView", () => {
         render(PaperView, {
             user: createUser(),
             loadingPaper: createLoadingPaper(),
+            backwardReferencedPapers: Promise.resolve([]),
+            forwardReferencedPapers: Promise.resolve([]),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -39,6 +43,8 @@ describe("PaperView", () => {
         render(PaperView, {
             user: createUser(),
             loadingPaper: createLoadingPaper(),
+            backwardReferencedPapers: Promise.resolve([]),
+            forwardReferencedPapers: Promise.resolve([]),
             showButtonBar: true,
             backRef: "",
             userConfig: {
@@ -58,6 +64,8 @@ describe("PaperView", () => {
         render(PaperView, {
             user: createUser(),
             loadingPaper: createLoadingPaper(),
+            backwardReferencedPapers: Promise.resolve([]),
+            forwardReferencedPapers: Promise.resolve([]),
             showButtonBar: true,
             backRef: "",
             userConfig: {

@@ -8,7 +8,6 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import { Fzf } from "fzf";
     import { goto } from "$app/navigation";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
@@ -16,6 +15,7 @@
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";
+    import { filterUsers } from "$lib/utils/filters";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -60,8 +60,9 @@
      * @returns list of "name \<email\>" (sorted) representations of users that can be invited
      */
     function filterPossibleMembers(input: string): string[] {
-        const fzf = new Fzf(possibleMembers.map((user) => `${getName(user)} <${user.email}>`));
-        return fzf.find(input.toLowerCase()).map((result) => result.item);
+        return filterUsers(possibleMembers, input).map(
+            (member) => `${getName(member)} <${member.email}>`,
+        );
     }
 
     /**

@@ -5,13 +5,13 @@
     interface Props {
         placeholderText?: string;
         onSearch: (searchText: string) => void;
+        timeoutInMs?: number;
     }
-    const { placeholderText = "Search", onSearch }: Props = $props();
+
+    const { placeholderText = "Search", onSearch, timeoutInMs = 500 }: Props = $props();
 
     let searchInput: string = $state("");
 
-    // timeout in ms to wait after last key input before start search
-    const timeoutInMs: number = 500;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const handleNewInput = () => {
@@ -54,9 +54,12 @@ and the search method is triggered with an empty string,
 so if no further handling exist, all elements are retrieved
 by the search.
 
+To limit the amount of calls (if used with backend calls), the search only starts after a
+specified timeout in which no other events occur. The default timeout is 500 ms.
+
 Usage:
 ```svelte
-    <SearchBar placeholderText={yourText} onSearch={yourCallback} />
+    <SearchBar placeholderText={yourText} onSearch={yourCallback} timeoutInMs={500} />
 ```
 -->
 <div class="relative w-full">
@@ -68,6 +71,7 @@ Usage:
         oninput={handleNewInput}
         onkeyup={handleSpecialButtons}
         class="pr-10"
+        data-testid="search-bar-input"
     />
     <button
         class="absolute right-4 top-1/2 transform -translate-y-1/2"

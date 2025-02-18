@@ -2,13 +2,29 @@ import { backendService } from "$lib/grpc-api";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
-    const loadingPaper = backendService.getPaperById({ id: params.paperId }).response;
+    const loadingProjectPaper = backendService.getProjectPaperById({ id: params.paperId }).response;
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    loadingPaper.catch(() => {});
+    loadingProjectPaper.catch(() => {});
+
+    const backwardReferencedPapers = loadingProjectPaper
+        .then(({ paper }) => backendService.getBackwardReferencedPapers({ id: paper!.id }).response)
+        .then((paperList) => paperList.papers);
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    backwardReferencedPapers.catch(() => {});
+
+    const forwardReferencedPapers = loadingProjectPaper
+        .then(({ paper }) => backendService.getForwardReferencedPapers({ id: paper!.id }).response)
+        .then((paperList) => paperList.papers);
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    forwardReferencedPapers.catch(() => {});
 
     return {
-        loadingPaper,
+        loadingProjectPaper,
+        backwardReferencedPapers,
+        forwardReferencedPapers,
         isReviewMode: true,
     };
 };
