@@ -11,6 +11,7 @@
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "format": "prettier --write .",
         "lint": "npm run license-check && prettier --check . && eslint .",
+        "lint:fix": "eslint --fix .",
         "test": "npm run test:no-e2e && npm run test:e2e",
         "show-coverage": "open coverage/index.html",
         "test:unit": "vitest --project unit",
