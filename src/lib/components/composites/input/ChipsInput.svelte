@@ -250,6 +250,7 @@ Usage:
                 >
                     {displayItem(item)}
                     <button
+                        type="button"
                         class="ml-2 text-primary focus:outline-none"
                         onclick={() => removeItem(index)}
                     >

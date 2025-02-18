@@ -48,4 +48,9 @@ export default ts.config(
             "api/",
         ],
     },
+    {
+        rules: {
+            "svelte/button-has-type": "error",
+        },
+    },
 );
