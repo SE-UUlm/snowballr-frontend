@@ -1,6 +1,10 @@
 <script lang="ts">
     import * as Select from "$lib/components/primitives/select/index.js";
-    import type { SelectOption } from "./types";
+
+    export interface SelectOption {
+        value: string;
+        label: string;
+    }
 
     interface Props {
         options: SelectOption[];

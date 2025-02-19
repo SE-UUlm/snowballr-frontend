@@ -1,6 +1,5 @@
 <script lang="ts">
-    import Select from "$lib/components/composites/select/Select.svelte";
-    import type { SelectOption } from "$lib/components/composites/select/types";
+    import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
     import type { User } from "$lib/model/api/user";
     import { getName } from "$lib/utils/common-helper";
 
