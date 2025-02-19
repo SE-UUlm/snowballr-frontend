@@ -32,8 +32,8 @@ Usage:
 >
     {#each tabs as tab (tab.value)}
         <Tabs.Trigger
-            value={tab.value}
             class="data-[state=active]:border-b-primary h-fit rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none max-w-[50%]"
+            value={tab.value}
         >
             <div class="truncate">{tab.label}</div>
         </Tabs.Trigger>

@@ -63,10 +63,10 @@ Usage:
         buttonVariants(),
         "border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit",
     )}
+    aria-label={tooltipText}
+    onclick={onClick}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
-    onclick={onClick}
-    aria-label={tooltipText}
 >
     {#snippet trigger()}
         {#if isHovered}

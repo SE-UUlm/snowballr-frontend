@@ -12,11 +12,11 @@
 </script>
 
 <DropdownMenuPrimitive.RadioItem
-    bind:ref
     class={cn(
         "data-highlighted:bg-accent data-highlighted:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50",
         className,
     )}
+    bind:ref
     {...restProps}
 >
     {#snippet children({ checked })}

@@ -211,24 +211,24 @@
             onsubmit={handleSubmit}
         >
             <Input
+                bind:this={projectNameInput}
                 class="w-full"
-                inputId="project-name-input"
                 data-testid="project-name-input"
+                inputId="project-name-input"
                 label="Name"
                 placeholder="Demo"
                 required={true}
-                type="text"
                 schema={Schema.projectName}
-                bind:this={projectNameInput}
+                type="text"
             />
 
             <ChipsInput
-                bind:items={membersInput}
-                label="Members"
-                validate={validateInput}
-                searchSuggestions={filterPossibleMembers}
-                resolveAlias={mapNameToEmail}
                 displayItem={mapEmailToName}
+                label="Members"
+                resolveAlias={mapNameToEmail}
+                searchSuggestions={filterPossibleMembers}
+                validate={validateInput}
+                bind:items={membersInput}
             />
             {#if isErrorOnUsersLoading}
                 <ErrorAlert errorTitle="Something went wrong while loading possible members." />
@@ -238,14 +238,14 @@
             <ErrorAlert errorTitle="Something went wrong while creating the project." />
         {/if}
         <Dialog.Footer>
-            <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
+            <Button onclick={() => (open = false)} variant="outline">Cancel</Button>
             {#if isServerStillCreatingProject}
-                <Button type="submit" form="project-creation" disabled>
+                <Button disabled form="project-creation" type="submit">
                     <LoaderCircle class="animate-spin" />
                     Creating Project
                 </Button>
             {:else}
-                <Button type="submit" form="project-creation">Create Project</Button>
+                <Button form="project-creation" type="submit">Create Project</Button>
             {/if}
         </Dialog.Footer>
     </Dialog.Content>

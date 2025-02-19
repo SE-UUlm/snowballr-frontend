@@ -21,7 +21,7 @@
     }: Props = $props();
 </script>
 
-<NavigationBar {user} {backRef} {tabs} {defaultTabValue}>
+<NavigationBar {backRef} {defaultTabValue} {tabs} {user}>
     {#await loadingTitle}
         <Skeleton class="h-7 w-56 rounded-full" />
     {:then title}

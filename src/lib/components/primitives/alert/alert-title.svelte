@@ -15,10 +15,10 @@
 </script>
 
 <div
-    role="heading"
-    aria-level={level}
     bind:this={ref}
     class={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    aria-level={level}
+    role="heading"
     {...restProps}
 >
     {@render children?.()}

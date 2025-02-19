@@ -205,7 +205,7 @@ Usage:
     <div class="flex flex-row items-center justify-between">
         <Label for={inputId}>{label}</Label>
         {#if link}
-            <a href={link.href} class="text-sm underline">
+            <a class="text-sm underline" href={link.href}>
                 {link.text}
             </a>
         {/if}
@@ -213,12 +213,12 @@ Usage:
     <div class="relative flex flex-row items-center">
         <Input
             id={inputId}
-            {type}
+            class={cn(inputClass, buttonContent ? "pr-12" : "", borderColor)}
+            oninput={onInput}
             {placeholder}
             {required}
-            class={cn(inputClass, buttonContent ? "pr-12" : "", borderColor)}
+            {type}
             bind:value
-            oninput={onInput}
             {...restProps}
         />
         {#if buttonContent}
@@ -240,9 +240,9 @@ Usage:
             {#each validationCriteria as criterion, i (criterionSelector(criterion))}
                 <InputValidationCriterion
                     class={i === validationCriteria.length - 1 ? "col-span-2" : ""}
-                    isValid={criterion.isMet}
-                    description={criterion.message}
                     data-testid="validation-criterion"
+                    description={criterion.message}
+                    isValid={criterion.isMet}
                 />
             {/each}
         </div>

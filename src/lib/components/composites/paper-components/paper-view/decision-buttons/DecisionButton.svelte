@@ -62,9 +62,9 @@ Usage:
 -->
 <Tooltip
     class={cn("text-primary max-w-[20rem] shadow-lg flex-grow-1000", className)}
-    trigger={buttonContent}
     content={tooltipContent}
     onclick={onButtonClick}
+    trigger={buttonContent}
     {...restProps}
     data-testid="decision-button"
 ></Tooltip>

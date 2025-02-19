@@ -5,6 +5,6 @@
     const { user } = data;
 </script>
 
-<SimpleNavigationBar {user} loadingTitle={Promise.resolve("Settings")} backRef="/" />
+<SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Settings")} {user} />
 
 {@render children()}

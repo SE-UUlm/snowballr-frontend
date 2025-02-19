@@ -10,4 +10,4 @@
     }: AlertDialogPrimitive.ActionProps = $props();
 </script>
 
-<AlertDialogPrimitive.Action bind:ref class={cn(buttonVariants(), className)} {...restProps} />
+<AlertDialogPrimitive.Action class={cn(buttonVariants(), className)} bind:ref {...restProps} />

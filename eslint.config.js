@@ -60,6 +60,7 @@ export default ts.config(
             "svelte/shorthand-attribute": "warn",
             "svelte/shorthand-directive": "warn",
             "svelte/html-quotes": "error",
+            "svelte/sort-attributes": "error",
         },
     },
 );

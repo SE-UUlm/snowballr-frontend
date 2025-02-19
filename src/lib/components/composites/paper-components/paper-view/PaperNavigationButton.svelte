@@ -32,13 +32,13 @@ Usage:
 -->
 <Tooltip
     class="bg-slate-200 hover:bg-slate-400 text-primary grow max-w-xs shadow-lg min-w-32"
+    aria-label={tooltipText}
     buttonVariant="link"
+    data-testid="navigation-button"
     onclick={() => {
         if (onClick) onClick();
         goto(href);
     }}
-    aria-label={tooltipText}
-    data-testid="navigation-button"
 >
     {#snippet trigger()}
         {#if direction === "left"}

@@ -96,10 +96,10 @@ Usage:
 ```
 -->
 <button
-    type="button"
     class="flex flex-row items-center justify-end pe-3 gap-3 w-full border border-container-border-grey rounded-md highlight-on-hover group/paper-list-entry"
     class:border-l-0={showReviewStatus}
     onclick={handleClick}
+    type="button"
 >
     <div
         class="flex flex-auto {showReviewStatus
@@ -111,7 +111,7 @@ Usage:
     {#if showReviewStatus}
         {#each paper.reviews as review (review.id)}
             {#await getReviewUserById(review.userId) then user}
-                <UserAvatar {user} reviewDecision={review.decision} />
+                <UserAvatar reviewDecision={review.decision} {user} />
             {/await}
         {/each}
     {/if}

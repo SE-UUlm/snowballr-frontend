@@ -250,9 +250,9 @@ Usage:
                 >
                     {displayItem(item)}
                     <button
-                        type="button"
                         class="ml-2 text-primary focus:outline-none"
                         onclick={() => removeItem(index)}
+                        type="button"
                     >
                         &times;
                     </button>
@@ -262,12 +262,12 @@ Usage:
             <!-- input for next chip -->
             <input
                 id={INPUT_ID}
-                data-testid={INPUT_ID}
-                type="text"
                 class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
-                bind:value={inputText}
+                data-testid={INPUT_ID}
                 onkeydown={handleKeyDown}
                 {placeholder}
+                type="text"
+                bind:value={inputText}
             />
         </div>
     </div>
@@ -288,15 +288,15 @@ Usage:
         >
             {#each suggestions as suggestion, i (suggestion)}
                 <Button
-                    variant="ghostWithoutHover"
                     class="flex w-full justify-start {selectedSuggestionIndex === i
                         ? 'bg-accent'
                         : ''} text-default"
+                    data-testid={"suggestion-" + i}
                     onclick={() => {
                         addItem(suggestion);
                         focusInput(true);
                     }}
-                    data-testid={"suggestion-" + i}
+                    variant="ghostWithoutHover"
                 >
                     {suggestion}
                 </Button>

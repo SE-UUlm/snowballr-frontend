@@ -97,7 +97,7 @@ This can be e.g. a search bar.
         {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
         <div class="flex flex-row items-center gap-x-2 p-4">
-            <CircleAlert size={20} class="text-neutral-500" />
+            <CircleAlert class="text-neutral-500" size={20} />
             <span class="text-error">{errorHint ? errorHint : error}</span>
         </div>
     {/await}

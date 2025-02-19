@@ -15,10 +15,10 @@
     {/await}
 </svelte:head>
 <PaperView
-    {user}
-    {loadingPaper}
+    backRef="/"
     {backwardReferencedPapers}
     {forwardReferencedPapers}
-    backRef="/"
+    {loadingPaper}
+    {user}
     userConfig={{ isReviewMode: false, showMaybeButton: false }}
 />

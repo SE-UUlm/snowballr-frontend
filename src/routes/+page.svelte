@@ -14,16 +14,16 @@
 <svelte:head>
     <title>SnowballR</title>
 </svelte:head>
-<SimpleNavigationBar {user} loadingTitle={Promise.resolve("SnowballR")} />
+<SimpleNavigationBar loadingTitle={Promise.resolve("SnowballR")} {user} />
 <main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
     <section class="h-full w-full">
         <NamedList
-            listName="Open Reviews"
+            emptyHint="No open reviews."
             items={openReviews}
+            keySelector={(review) => review.paper.id}
+            listName="Open Reviews"
             numberOfSkeletons={10}
             showNumberOfListItems={true}
-            emptyHint="No open reviews."
-            keySelector={(review) => review.paper.id}
         >
             {#snippet listItemComponent(componentData)}
                 <PaperListEntry {...componentData} />
@@ -35,12 +35,12 @@
     </section>
     <section class="flex flex-col h-full w-full min-w-0 gap-y-5">
         <NamedList
-            listName="Projects"
+            emptyHint="No active or archived projects."
             items={projectsMetadata}
+            keySelector={(projectMetadata) => projectMetadata.project.id}
+            listName="Projects"
             numberOfSkeletons={5}
             showNumberOfListItems={true}
-            emptyHint="No active or archived projects."
-            keySelector={(projectMetadata) => projectMetadata.project.id}
         >
             {#snippet listItemComponent(componentData)}
                 <ProjectListEntry {...componentData} />

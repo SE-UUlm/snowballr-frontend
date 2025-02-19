@@ -14,4 +14,4 @@
         <title>Project Dashboard</title>
     {/await}
 </svelte:head>
-<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="dashboard" />
+<ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />

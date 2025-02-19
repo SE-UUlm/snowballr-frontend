@@ -14,8 +14,8 @@
 
 <DecisionButton
     class="bg-maybe-yellow hover:bg-maybe-yellow-hover"
-    onClick={markPaperAsUndecided}
     {loadingPaperId}
+    onClick={markPaperAsUndecided}
 >
     {#snippet buttonContent()}
         <p>Maybe</p>

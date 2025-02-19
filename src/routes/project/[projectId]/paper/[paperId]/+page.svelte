@@ -24,12 +24,12 @@
 </svelte:head>
 
 <PaperView
-    {user}
-    loadingPaper={loadingProjectPaper}
+    allowEditModeToggle
+    backRef={`/project/${projectId}/dashboard`}
     {backwardReferencedPapers}
     {forwardReferencedPapers}
+    loadingPaper={loadingProjectPaper}
     showButtonBar
-    backRef={`/project/${projectId}/dashboard`}
+    {user}
     userConfig={{ isReviewMode, showMaybeButton: true }}
-    allowEditModeToggle
 />
