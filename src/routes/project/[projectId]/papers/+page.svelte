@@ -1,11 +1,10 @@
 <script lang="ts">
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
-    import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import * as Accordion from "$lib/components/primitives/accordion/index.js";
     import Button from "$lib/components/primitives/button/button.svelte";
     import ChevronDown from "lucide-svelte/icons/chevron-down";
     import ChevronUp from "lucide-svelte/icons/chevron-up";
+    import * as Accordion from "$lib/components/primitives/accordion/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
     import StagesSelect from "./StagesSelect.svelte";
     import ReviewersSelect from "./ReviewersSelect.svelte";
@@ -13,10 +12,9 @@
     import YearsSelect from "./YearsSelect.svelte";
     import DecisionsSelect from "./DecisionsSelect.svelte";
     import CriteriaSelect from "./CriteriaSelect.svelte";
-    import { resource } from "$lib/resource.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
-    import CirclePlus from "lucide-svelte/icons/circle-plus";
     import Trash from "lucide-svelte/icons/trash-2";
+    import StageEntry from "$lib/components/composites/papers-view/StageEntry.svelte";
 
     let { data } = $props();
     const {
@@ -133,38 +131,7 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <Accordion.Item value={`stage-${stage.stageIndex}`}>
-                            <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
-                            <Accordion.Trigger>
-                                <div class="flex flex-row w-full justify-between">
-                                    <span>Stage {stage.stageIndex}</span>
-                                    <span>({stage.papers.length} papers)</span>
-                                </div>
-                            </Accordion.Trigger>
-                            <Accordion.Content>
-                                <div class="flex flex-col pl-5 gap-4">
-                                    {#each stage.papers as paper (paper.id)}
-                                        <PaperListEntry
-                                            {paper}
-                                            {projectId}
-                                            showReviewStatus
-                                            onClick={() => {
-                                                selectedPaper = paper;
-                                            }}
-                                        />
-                                    {/each}
-                                    <Button
-                                        onclick={() => {
-                                            // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
-                                            console.log(`Add paper to stage ${stage.stageIndex}`);
-                                        }}
-                                    >
-                                        <CirclePlus strokeWidth="2.5" />
-                                        Add Paper
-                                    </Button>
-                                </div>
-                            </Accordion.Content>
-                        </Accordion.Item>
+                        <StageEntry {projectId} {stage} bind:selectedPaper />
                     {/each}
                 </Accordion.Root>
             {:catch error}
