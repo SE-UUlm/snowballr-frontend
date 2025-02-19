@@ -26,10 +26,8 @@ Usage:
 -->
 <a
     class="flex flex-col lg:flex-row h-fit w-full gap-2 lg:gap-10 lg:items-center justify-between px-5 py-2
-    border border-container-border-grey rounded-md highlight-on-hover {project.status ===
-    ProjectStatus.ARCHIVED
-        ? 'opacity-25'
-        : ''}"
+    border border-container-border-grey rounded-md highlight-on-hover"
+    class:opacity-25={project.status === ProjectStatus.ARCHIVED}
     href={`/project/${project.id}/dashboard`}
 >
     <div class="flex flex-col min-w-0 h-fit">
@@ -51,9 +49,9 @@ Usage:
         <span class="h-fit w-fit text-nowrap">Stage {project.currentStage}</span>
         <Progress
             class="h-2.5 w-24 sm:w-28 md:w-48 lg:w-28 xl:w-40 2xl:w-52 bg-slate-200 group-hover/project-list-entry:bg-slate-300"
-            value={statistics.projectProgress}
-            data-testid="stage-progress-bar"
             aria-label="Stage Progress"
+            data-testid="stage-progress-bar"
+            value={statistics.projectProgress}
         />
     </div>
 </a>

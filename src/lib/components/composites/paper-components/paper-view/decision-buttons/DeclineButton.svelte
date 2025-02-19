@@ -14,8 +14,8 @@
 
 <DecisionButton
     class="bg-decline-red hover:bg-decline-red-hover"
-    onClick={declinePaper}
     {loadingPaperId}
+    onClick={declinePaper}
 >
     {#snippet buttonContent()}
         <p>Decline</p>

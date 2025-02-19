@@ -28,8 +28,8 @@ Usage:
         isEditable ? "border-input rounded-md" : "border-transparent",
         className,
     )}
+    data-testid="toggleable-input"
+    readonly={!isEditable}
     rows="1"
     {value}
-    readonly={!isEditable}
-    data-testid="toggleable-input"
 ></textarea>

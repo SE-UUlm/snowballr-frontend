@@ -165,6 +165,9 @@
     // Border color is red if the input is invalid and not the first input
     // This provides instant feedback on the first input
     let borderColor = $derived(!isValid && !isFirstInput ? "border-red-500" : "");
+
+    const criterionSelector = (criterion: ValidationCriterion) =>
+        `${criterion.code}${criterion.subCode ? "-" + criterion.subCode : ""}`;
 </script>
 
 <!--
@@ -202,7 +205,7 @@ Usage:
     <div class="flex flex-row items-center justify-between">
         <Label for={inputId}>{label}</Label>
         {#if link}
-            <a href={link.href} class="text-sm underline">
+            <a class="text-sm underline" href={link.href}>
                 {link.text}
             </a>
         {/if}
@@ -210,12 +213,12 @@ Usage:
     <div class="relative flex flex-row items-center">
         <Input
             id={inputId}
-            {type}
+            class={cn(inputClass, buttonContent ? "pr-12" : "", borderColor)}
+            oninput={onInput}
             {placeholder}
             {required}
-            class={cn(inputClass, buttonContent ? "pr-12" : "", borderColor)}
+            {type}
             bind:value
-            oninput={onInput}
             {...restProps}
         />
         {#if buttonContent}
@@ -226,7 +229,7 @@ Usage:
     </div>
     <!-- Display error messages either as constant checks or as list while on validation error -->
     {#if validationDisplayMode === "onError"}
-        {#each validationCriteria.filter((criterion) => !criterion.isMet) as criterion}
+        {#each validationCriteria.filter((criterion) => !criterion.isMet) as criterion (criterionSelector(criterion))}
             <p class="text-sm text-red-500" data-testid="error-message">
                 {errorMessagePrefix}
                 {criterion.message}
@@ -234,12 +237,12 @@ Usage:
         {/each}
     {:else}
         <div class="grid grid-cols-1 sm:grid-cols-2">
-            {#each validationCriteria as criterion, i}
+            {#each validationCriteria as criterion, i (criterionSelector(criterion))}
                 <InputValidationCriterion
                     class={i === validationCriteria.length - 1 ? "col-span-2" : ""}
-                    isValid={criterion.isMet}
-                    description={criterion.message}
                     data-testid="validation-criterion"
+                    description={criterion.message}
+                    isValid={criterion.isMet}
                 />
             {/each}
         </div>

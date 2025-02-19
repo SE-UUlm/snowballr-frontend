@@ -29,7 +29,7 @@
         <nav class="grid grid-flow-col gap-3 items-center px-4 py-3">
             <UserMenu {user} />
             {#if backRef !== undefined}
-                <a href={backRef} aria-label={`Back to ${backRef}`}>
+                <a aria-label={`Back to ${backRef}`} href={backRef}>
                     <ArrowLeft class="w-6 h-6" />
                 </a>
             {/if}
@@ -38,7 +38,7 @@
             {#if tabs.length > 0}
                 <Tabs.Root value={defaultTabValue}>
                     <Tabs.List>
-                        {#each tabs as tab}
+                        {#each tabs as tab (tab.value)}
                             <a href={tab.href}>
                                 <Tabs.Trigger value={tab.value}>
                                     <span>{tab.label}</span>

@@ -48,11 +48,11 @@ Usage:
     </Avatar.Root>
     {#if reviewDecision === ReviewDecision.ACCEPTED}
         <div class="review-decision-icon-bg bg-accept-green">
-            <Check size={16} color="#ffffff" strokeWidth="3" />
+            <Check color="#ffffff" size={16} strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.DECLINED}
         <div class="review-decision-icon-bg bg-decline-red">
-            <X size={16} color="#ffffff" strokeWidth="3" />
+            <X color="#ffffff" size={16} strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.MAYBE}
         <div class="review-decision-icon-bg bg-maybe-yellow">

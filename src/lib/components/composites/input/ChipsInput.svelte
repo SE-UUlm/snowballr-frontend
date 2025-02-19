@@ -135,7 +135,7 @@
                 if (suggestions.length > 0 && selectedSuggestionIndex !== -1) {
                     addItem(suggestions[selectedSuggestionIndex]);
                 } else {
-                    let validationResult = validate(inputText);
+                    const validationResult = validate(inputText);
                     if (validationResult.success) {
                         addItem(inputText);
                     } else {
@@ -184,7 +184,7 @@
     // reapply filter on suggestions after each new input
     $effect(() => {
         if (searchSuggestions !== undefined) {
-            let possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
+            const possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
             suggestions = possibleSuggestions.filter((suggestion) => !items.includes(suggestion));
         }
     });
@@ -241,7 +241,7 @@ Usage:
                 text-default border-input-border-slate bg-background rounded-md border overflow-x-auto"
         >
             <!-- chips -->
-            {#each items as item, index}
+            {#each items as item, index (item)}
                 <div
                     class="flex items-center {index === selectedChipIndex
                         ? 'bg-slate-300'
@@ -252,6 +252,7 @@ Usage:
                     <button
                         class="ml-2 text-primary focus:outline-none"
                         onclick={() => removeItem(index)}
+                        type="button"
                     >
                         &times;
                     </button>
@@ -261,12 +262,12 @@ Usage:
             <!-- input for next chip -->
             <input
                 id={INPUT_ID}
-                data-testid={INPUT_ID}
-                type="text"
                 class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
-                bind:value={inputText}
+                data-testid={INPUT_ID}
                 onkeydown={handleKeyDown}
                 {placeholder}
+                type="text"
+                bind:value={inputText}
             />
         </div>
     </div>
@@ -285,17 +286,17 @@ Usage:
             class="border rounded-md max-h-[160px] overflow-y-scroll"
             data-testid={SUGGESTIONS_LIST_ID}
         >
-            {#each suggestions as suggestion, i}
+            {#each suggestions as suggestion, i (suggestion)}
                 <Button
-                    variant="ghostWithoutHover"
                     class="flex w-full justify-start {selectedSuggestionIndex === i
                         ? 'bg-accent'
                         : ''} text-default"
+                    data-testid={"suggestion-" + i}
                     onclick={() => {
                         addItem(suggestion);
                         focusInput(true);
                     }}
-                    data-testid={"suggestion-" + i}
+                    variant="ghostWithoutHover"
                 >
                     {suggestion}
                 </Button>

@@ -13,7 +13,7 @@
 </script>
 
 <DropdownMenuPrimitive.GroupHeading
-    bind:ref
     class={cn("px-2 py-1.5 text-default-sb", inset && "pl-8", className)}
+    bind:ref
     {...restProps}
 />

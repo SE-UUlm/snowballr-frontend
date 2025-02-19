@@ -14,8 +14,8 @@
 
 <DecisionButton
     class="bg-accept-green hover:bg-accept-green-hover"
-    onClick={acceptPaper}
     {loadingPaperId}
+    onClick={acceptPaper}
 >
     {#snippet buttonContent()}
         <p>Accept</p>

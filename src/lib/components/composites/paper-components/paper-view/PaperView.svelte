@@ -38,8 +38,8 @@
         startInEditMode = false,
     }: Props = $props();
 
-    let loadingPaper = initialLoadingPaper.then(asPaper);
-    let loadingPaperId = loadingPaper.then((paper) => paper.id);
+    const loadingPaper = initialLoadingPaper.then(asPaper);
+    const loadingPaperId = loadingPaper.then((paper) => paper.id);
 </script>
 
 <!--
@@ -76,17 +76,17 @@ Usage:
 ```
 -->
 <div class="flex flex-row justify-between h-fit w-full gap-4">
-    <PaperNavigationBar {user} {backRef} {loadingPaper} />
+    <PaperNavigationBar {backRef} {loadingPaper} {user} />
     <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
-    <PaperBookmarkButton {loadingPaperId} isBookmarkedDefault={false} />
+    <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
-        <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
+        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
-            inReviewMode={userConfig.isReviewMode}
             {backwardReferencedPapers}
             {forwardReferencedPapers}
+            inReviewMode={userConfig.isReviewMode}
         />
     </div>
     {#if showButtonBar}

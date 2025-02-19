@@ -11,10 +11,10 @@
 <Input
     inputId="input-id"
     label="Input Label"
+    onButtonClick={onClick}
     placeholder="Input Placeholder"
     required
     type="text"
-    onButtonClick={onClick}
 >
     {#snippet buttonContent()}
         <span>This is the button</span>

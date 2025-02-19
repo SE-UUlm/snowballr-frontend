@@ -22,7 +22,7 @@
         ...restProps
     }: Props = $props();
 
-    let paperId = resource<string, string | undefined>(loadingPaperId, {
+    const paperId = resource<string, string | undefined>(loadingPaperId, {
         initialValue: undefined,
         onSuccess: (id) => id,
         onErrorValue: undefined,
@@ -62,9 +62,9 @@ Usage:
 -->
 <Tooltip
     class={cn("text-primary max-w-[20rem] shadow-lg flex-grow-1000", className)}
-    trigger={buttonContent}
     content={tooltipContent}
     onclick={onButtonClick}
+    trigger={buttonContent}
     {...restProps}
     data-testid="decision-button"
 ></Tooltip>

@@ -53,14 +53,14 @@
     <DropdownMenu.Trigger>
         <UserAvatar {user} />
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="w-60" side="bottom" sideOffset={0} align="start">
+    <DropdownMenu.Content class="w-60" align="start" side="bottom" sideOffset={0}>
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
                 {`${user.firstName} ${user.lastName}`}
             </DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
-                {#each menuItems as item}
+                {#each menuItems as item (item.label)}
                     <a href={item.href}>
                         <DropdownMenu.Item>
                             <item.icon class="mr-2 size-4" />

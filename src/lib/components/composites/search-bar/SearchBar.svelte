@@ -65,19 +65,20 @@ Usage:
 <div class="relative w-full">
     <!-- inspired by https://github.com/shadcn-ui/ui/issues/1562 -->
     <Input
-        type="text"
-        placeholder={placeholderText}
-        bind:value={searchInput}
-        oninput={handleNewInput}
-        onkeyup={handleSpecialButtons}
         class="pr-10"
         data-testid="search-bar-input"
+        oninput={handleNewInput}
+        onkeyup={handleSpecialButtons}
+        placeholder={placeholderText}
+        type="text"
+        bind:value={searchInput}
     />
     <button
         class="absolute right-4 top-1/2 transform -translate-y-1/2"
         onclick={() => {
             if (searchInput !== "") onSearch(searchInput);
         }}
+        type="button"
     >
         <Search class="h-4 w-4 text-muted-foreground" />
     </button>

@@ -36,21 +36,21 @@ Usage:
 ```
 -->
 <Input
+    bind:this={input}
     class={className}
-    inputId="password-input"
-    label="Password"
-    required
-    type={isPasswordVisible ? "text" : "password"}
-    schema={Schema.password}
-    onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
+    autocapitalize="off"
+    autocomplete={undefined}
+    autocorrect="off"
     buttonProps={{ "aria-label": "Toggle password visibility" }}
     errorMessagePrefix="Password must contain"
+    inputId="password-input"
+    label="Password"
+    onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
+    required
+    schema={Schema.password}
+    type={isPasswordVisible ? "text" : "password"}
     validationDisplayMode="constant"
     bind:value
-    bind:this={input}
-    autocomplete={undefined}
-    autocapitalize="off"
-    autocorrect="off"
     {...restProps}
 >
     {#snippet buttonContent()}

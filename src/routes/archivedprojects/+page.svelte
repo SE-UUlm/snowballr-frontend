@@ -8,4 +8,4 @@
 <svelte:head>
     <title>Archived Projects</title>
 </svelte:head>
-<SimpleNavigationBar {user} loadingTitle={Promise.resolve("Archived Projects")} backRef="/" />
+<SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Archived Projects")} {user} />

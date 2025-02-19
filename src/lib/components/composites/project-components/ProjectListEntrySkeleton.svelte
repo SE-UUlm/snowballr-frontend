@@ -22,8 +22,8 @@
         <Skeleton class="h-4 w-full max-w-14 rounded-full" data-testid="project-stage-skeleton" />
         <Progress
             class="h-2.5 w-full min-w-16 lg:max-w-32"
-            value={0}
             data-testid="project-stage-progress"
+            value={0}
         />
     </div>
 </div>

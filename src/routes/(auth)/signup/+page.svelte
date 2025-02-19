@@ -70,51 +70,51 @@
         <form class="flex flex-col gap-5" onsubmit={handleSubmit}>
             <div class="flex flex-row gap-5 w-full">
                 <Input
+                    bind:this={firstNameInput}
                     class="w-full"
+                    errorMessagePrefix="First name must contain"
                     inputId="first-name-input"
                     label="First Name"
                     placeholder="John"
                     required
-                    type="text"
                     schema={Schema.firstName}
-                    errorMessagePrefix="First name must contain"
-                    bind:this={firstNameInput}
+                    type="text"
                 />
                 <Input
+                    bind:this={lastNameInput}
                     class="w-full"
+                    errorMessagePrefix="Last name must contain"
                     inputId="last-name-input"
                     label="Last Name"
                     placeholder="Doe"
                     required
-                    type="text"
                     schema={Schema.lastName}
-                    errorMessagePrefix="Last name must contain"
-                    bind:this={lastNameInput}
+                    type="text"
                 />
             </div>
             <Input
+                bind:this={emailInput}
                 class="w-full"
+                errorMessagePrefix="Email must have"
                 inputId="email-input"
                 label="Email"
                 placeholder="john.doe@example.com"
                 required
-                type="email"
                 schema={Schema.email}
-                errorMessagePrefix="Email must have"
-                bind:this={emailInput}
+                type="email"
             />
-            <PasswordInput class="w-full" bind:this={passwordInput} />
-            <Button type="submit" class="w-full">Create an account</Button>
+            <PasswordInput bind:this={passwordInput} class="w-full" />
+            <Button class="w-full" type="submit">Create an account</Button>
             {#if registrationError}
                 <ErrorAlert
-                    errorTitle={registrationError.errorTitle}
                     errorDetails={registrationError.errorDetails}
+                    errorTitle={registrationError.errorTitle}
                 />
             {/if}
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?
-            <a href="/signin" class="underline"> Sign In </a>
+            <a class="underline" href="/signin"> Sign In </a>
         </div>
     </Card.Content>
 </Card.Root>

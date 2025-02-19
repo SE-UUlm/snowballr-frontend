@@ -14,6 +14,11 @@
         emptyHint?: string;
         errorHint?: string;
         preListContent?: Snippet;
+        /**
+         * Selects a key of the passed item.
+         * All keys created by this function must be unique.
+         */
+        keySelector: (item: T) => string | number;
     }
 
     const {
@@ -27,10 +32,12 @@
         emptyHint = "No items found.",
         errorHint,
         preListContent = undefined,
+        keySelector,
     }: NamedListProps = $props();
 </script>
 
-<!--@component
+<!--
+@component
 Named list with a header and custom list items of type `YourComponent`.
 
 This list component can be used to uniformly format named lists.
@@ -66,8 +73,7 @@ This can be e.g. a search bar.
         <h2>{listName}</h2>
         {@render preListContent?.()}
         <ul class="space-y-4 pb-1 scroll-box">
-            <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-            {#each Array(numberOfSkeletons) as _}
+            {#each { length: numberOfSkeletons }}
                 <li>
                     {@render listItemSkeleton()}
                 </li>
@@ -84,7 +90,7 @@ This can be e.g. a search bar.
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
             <ul class="space-y-4 pb-1 scroll-box">
-                {#each loadedItems as item}
+                {#each loadedItems as item (keySelector(item))}
                     <li>
                         {@render listItemComponent?.(item)}
                     </li>
@@ -95,7 +101,7 @@ This can be e.g. a search bar.
         {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
         <div class="flex flex-row items-center gap-x-2 p-4">
-            <CircleAlert size={20} class="text-neutral-500" />
+            <CircleAlert class="text-neutral-500" size={20} />
             <span class="text-error">{errorHint ? errorHint : error}</span>
         </div>
     {/await}

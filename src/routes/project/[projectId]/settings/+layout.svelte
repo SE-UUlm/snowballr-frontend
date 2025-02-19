@@ -5,6 +5,6 @@
     const { user, projectId, loadingProject } = data;
 </script>
 
-<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="settings" />
+<ProjectNavigationBar defaultTabValue="settings" {loadingProject} {projectId} {user} />
 
 {@render children()}

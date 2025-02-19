@@ -13,6 +13,6 @@
     const { user, backRef, loadingPaper }: Props = $props();
 </script>
 
-<NavigationBar {user} {backRef}>
+<NavigationBar {backRef} {user}>
     <PaperInfo {loadingPaper} />
 </NavigationBar>

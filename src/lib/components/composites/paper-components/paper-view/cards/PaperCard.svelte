@@ -41,7 +41,7 @@ Usage:
     {...restProps}
 >
     <section class="flex flex-col h-full w-full">
-        <Tabs.Root value={tabs.length === 0 ? "" : tabs[0].value} class="flex flex-col h-full">
+        <Tabs.Root class="flex flex-col h-full" value={tabs.length === 0 ? "" : tabs[0].value}>
             <UnderlineTabsList {tabs} />
             <Card.Content class="p-5 flex flex-col h-full">
                 {@render children()}

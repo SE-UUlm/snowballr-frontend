@@ -44,12 +44,13 @@ Usage:
 <section class="flex flex-col h-full gap-5">
     <div class="flex h-full overflow-hidden flex-[1_1_0]">
         <NamedList
-            listName="References"
-            items={backwardReferencedPapers}
-            showNumberOfListItems
-            numberOfSkeletons={3}
             emptyHint="No references found."
             errorHint="Couldn't load references."
+            items={backwardReferencedPapers}
+            keySelector={(paper) => paper.id}
+            listName="References"
+            numberOfSkeletons={3}
+            showNumberOfListItems
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
@@ -64,12 +65,13 @@ Usage:
     </div>
     <div class="flex h-full overflow-hidden flex-[1_1_0]">
         <NamedList
-            listName="Citations"
-            items={forwardReferencedPapers}
-            showNumberOfListItems
-            numberOfSkeletons={3}
             emptyHint="No citations found."
             errorHint="Couldn't load citations."
+            items={forwardReferencedPapers}
+            keySelector={(paper) => paper.id}
+            listName="Citations"
+            numberOfSkeletons={3}
+            showNumberOfListItems
         >
             {#snippet preListContent()}
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />

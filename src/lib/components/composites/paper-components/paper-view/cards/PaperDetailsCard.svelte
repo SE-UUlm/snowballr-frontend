@@ -35,7 +35,7 @@
         Publisher: string;
     }
     // Initialize with width values for Skeletons
-    let basicInfos = resource<Paper, BasicInfos>(loadingPaper, {
+    const basicInfos = resource<Paper, BasicInfos>(loadingPaper, {
         initialValue: {
             Title: "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
             Authors: "w-[4rem] sm:w-[5rem] md:w-[7.3rem] lg:w-[13rem]",
@@ -59,7 +59,7 @@
         "External ID": string;
     }
     // Initialize with width values for Skeletons
-    let additionalInfos = resource<Paper, AdditionalInfos>(loadingPaper, {
+    const additionalInfos = resource<Paper, AdditionalInfos>(loadingPaper, {
         initialValue: {
             "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
             "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",
@@ -93,35 +93,35 @@ Usage:
     <PaperDetailsCard {paper} allowEditModeToggle startInEditMode />
 ```
 -->
-<PaperCard {tabs} data-testid="paper-details-card">
+<PaperCard data-testid="paper-details-card" {tabs}>
     <PaperCardContent value="1">
         <section class="flex flex-col gap-2 px-1">
             <div class="flex flex-row justify-between items-center">
                 <h2>General Information</h2>
                 {#if allowEditModeToggle}
                     <Pencil
-                        size={20}
-                        onclick={() => (areDetailsInEditMode = !areDetailsInEditMode)}
                         class="hover:cursor-pointer select-none"
+                        onclick={() => (areDetailsInEditMode = !areDetailsInEditMode)}
+                        size={20}
                     />
                 {/if}
             </div>
             <div class="flex flex-col gap-2">
-                {#each Object.entries(basicInfos.value) as [key, value]}
-                    <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
+                {#each Object.entries(basicInfos.value) as [key, value] (key)}
+                    <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
                 {/each}
                 {#if showAdditionalInfos}
-                    {#each Object.entries(additionalInfos.value) as [key, value]}
-                        <PaperDetail id={key} {key} {value} {loadingPaper} {areDetailsInEditMode} />
+                    {#each Object.entries(additionalInfos.value) as [key, value] (key)}
+                        <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
                     {/each}
                 {/if}
             </div>
             <div class="flex justify-center pt-2">
                 <Button
                     class="w-fit"
-                    variant="outline"
-                    onclick={toggleAdditionalInfos}
                     data-testid="toggle-additional-infos-btn"
+                    onclick={toggleAdditionalInfos}
+                    variant="outline"
                 >
                     {#if showAdditionalInfos}
                         <ChevronUp />
@@ -138,22 +138,22 @@ Usage:
                 <h2>Abstract</h2>
                 {#if allowEditModeToggle}
                     <Pencil
-                        size={20}
-                        onclick={() => (isAbstractInEditMode = !isAbstractInEditMode)}
                         class="hover:cursor-pointer select-none"
+                        onclick={() => (isAbstractInEditMode = !isAbstractInEditMode)}
+                        size={20}
                     />
                 {/if}
             </div>
             {#await loadingPaper}
-                {#each [100, 95, 70, 82, 50, 75, 90] as width}
+                {#each [100, 95, 70, 82, 50, 75, 90] as width, i (i)}
                     <Skeleton class="flex h-[1.625rem] rounded-full w-[{width}%]" />
                 {/each}
             {:then paper}
                 <ToggleableInput
                     class="h-full"
                     isEditable={isAbstractInEditMode}
-                    value={paper.abstrakt}
                     placeholder="No abstract available"
+                    value={paper.abstrakt}
                 />
             {:catch}
                 <span class="text-error">Couldn't load Abstract</span>

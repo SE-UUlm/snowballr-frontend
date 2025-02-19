@@ -102,7 +102,7 @@
      * @returns the corresponding email of the user identified by the given name, email or name + email combination
      */
     function mapNameToEmail(input: string): string | undefined {
-        let possibleMatchedUser = possibleMembers.filter(
+        const possibleMatchedUser = possibleMembers.filter(
             (user) =>
                 getName(user) === input ||
                 user.email === input ||
@@ -119,7 +119,7 @@
      * @return the name of the user or undefined, if the no user with the given email was found
      */
     function mapEmailToName(input: string): string | undefined {
-        let name = getNames(initialPossibleMembers.filter((user) => input === user.email));
+        const name = getNames(initialPossibleMembers.filter((user) => input === user.email));
         return name !== "" ? name : input;
     }
 
@@ -211,24 +211,24 @@
             onsubmit={handleSubmit}
         >
             <Input
+                bind:this={projectNameInput}
                 class="w-full"
-                inputId="project-name-input"
                 data-testid="project-name-input"
+                inputId="project-name-input"
                 label="Name"
                 placeholder="Demo"
                 required={true}
-                type="text"
                 schema={Schema.projectName}
-                bind:this={projectNameInput}
+                type="text"
             />
 
             <ChipsInput
-                bind:items={membersInput}
-                label="Members"
-                validate={validateInput}
-                searchSuggestions={filterPossibleMembers}
-                resolveAlias={mapNameToEmail}
                 displayItem={mapEmailToName}
+                label="Members"
+                resolveAlias={mapNameToEmail}
+                searchSuggestions={filterPossibleMembers}
+                validate={validateInput}
+                bind:items={membersInput}
             />
             {#if isErrorOnUsersLoading}
                 <ErrorAlert errorTitle="Something went wrong while loading possible members." />
@@ -238,14 +238,14 @@
             <ErrorAlert errorTitle="Something went wrong while creating the project." />
         {/if}
         <Dialog.Footer>
-            <Button variant="outline" onclick={() => (open = false)}>Cancel</Button>
+            <Button onclick={() => (open = false)} variant="outline">Cancel</Button>
             {#if isServerStillCreatingProject}
-                <Button type="submit" form="project-creation" disabled>
+                <Button disabled form="project-creation" type="submit">
                     <LoaderCircle class="animate-spin" />
                     Creating Project
                 </Button>
             {:else}
-                <Button type="submit" form="project-creation">Create Project</Button>
+                <Button form="project-creation" type="submit">Create Project</Button>
             {/if}
         </Dialog.Footer>
     </Dialog.Content>
@@ -254,9 +254,9 @@
 <AlertDialog.Root open={projectWasCreated}>
     <AlertDialog.Content>
         <AlertDialog.Header>
-            <AlertDialog.Title
-                >Success! Your new project has been created successfully.</AlertDialog.Title
-            >
+            <AlertDialog.Title>
+                Success! Your new project has been created successfully.
+            </AlertDialog.Title>
             <AlertDialog.Description>
                 The members were invited and you can now start with the new SLR by adding sources,
                 refine the review process or inviting further members.
@@ -268,8 +268,10 @@
                     projectWasCreated = false;
                     projectId = undefined;
                     membersInput = [];
-                }}>Back</AlertDialog.Cancel
+                }}
             >
+                Back
+            </AlertDialog.Cancel>
             <AlertDialog.Action onclick={async () => navigateToProject()}>Open</AlertDialog.Action>
         </AlertDialog.Footer>
     </AlertDialog.Content>

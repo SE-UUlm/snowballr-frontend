@@ -35,9 +35,9 @@
     <p>Loading...</p>
 {:then}
     <PaperNavigationBar
-        {user}
         backRef={`/project/${projectId}/dashboard`}
         loadingPaper={Promise.resolve(paper)}
+        {user}
     />
 {:catch error}
     <p>{error.message}</p>

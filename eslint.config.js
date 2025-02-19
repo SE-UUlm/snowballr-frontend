@@ -1,6 +1,7 @@
 import prettier from "eslint-config-prettier";
 import js from "@eslint/js";
 import svelte from "eslint-plugin-svelte";
+import svelteParser from "svelte-eslint-parser";
 import globals from "globals";
 import ts from "typescript-eslint";
 
@@ -19,9 +20,18 @@ export default ts.config(
         },
     },
     {
-        files: ["**/*.svelte"],
-
+        files: ["**/*.svelte", "*.svelte"],
         languageOptions: {
+            parser: svelteParser,
+            parserOptions: {
+                parser: ts.parser,
+            },
+        },
+    },
+    {
+        files: ["**/*.svelte.ts", "*.svelte.ts"],
+        languageOptions: {
+            parser: svelteParser,
             parserOptions: {
                 parser: ts.parser,
             },
@@ -37,5 +47,21 @@ export default ts.config(
             "src/lib/model/api/",
             "api/",
         ],
+    },
+    {
+        rules: {
+            "svelte/button-has-type": "error",
+            "svelte/prefer-const": "error",
+            "svelte/html-closing-bracket-new-line": "error",
+            "svelte/prefer-class-directive": "warn",
+            "svelte/spaced-html-comment": "warn",
+            "svelte/prefer-destructured-store-props": "error",
+            "svelte/prefer-style-directive": "warn",
+            "svelte/shorthand-attribute": "warn",
+            "svelte/shorthand-directive": "warn",
+            "svelte/html-quotes": "error",
+            "svelte/sort-attributes": "error",
+            "svelte/no-ignored-unsubscribe": "error",
+        },
     },
 );

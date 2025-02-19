@@ -14,4 +14,4 @@
         <title>Statistics</title>
     {/await}
 </svelte:head>
-<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="statistics" />
+<ProjectNavigationBar defaultTabValue="statistics" {loadingProject} {projectId} {user} />

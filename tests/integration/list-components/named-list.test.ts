@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import NamedList from "$lib/components/composites/list/NamedList.svelte";
 import { createRawSnippet } from "svelte";
@@ -11,7 +11,14 @@ const listItemComponent = createRawSnippet<[unknown]>((componentData) => {
     return { render: () => `<span data-testid="example-list-item">${componentData}</span>` };
 });
 
+let deterministicKey = 0;
+const deterministicKeySelector = () => deterministicKey++;
+
 describe("NamedListComponent", () => {
+    beforeEach(() => {
+        deterministicKey = 0;
+    });
+
     test("When all required props are provided, then the named list is completely shown.", async () => {
         const componentData: Promise<string[]> = Promise.resolve(
             Array.from({ length: 15 }, (_, i) => `Hello world ${i}`),
@@ -24,6 +31,7 @@ describe("NamedListComponent", () => {
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 10,
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -52,6 +60,7 @@ describe("NamedListComponent", () => {
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -78,6 +87,7 @@ describe("NamedListComponent", () => {
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
                 numberOfItems: 10,
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -102,6 +112,7 @@ describe("NamedListComponent", () => {
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 5,
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -121,6 +132,7 @@ describe("NamedListComponent", () => {
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 10,
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -145,6 +157,7 @@ describe("NamedListComponent", () => {
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 10,
                 emptyHint: "Test hint for empty list",
+                keySelector: deterministicKeySelector,
             },
         });
 
@@ -175,6 +188,7 @@ describe("NamedListComponent", () => {
                 listItemComponent: listItemComponent,
                 listItemSkeleton: listItemSkeleton,
                 numberOfSkeletons: 10,
+                keySelector: deterministicKeySelector,
             },
         });
 

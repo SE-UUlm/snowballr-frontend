@@ -38,9 +38,9 @@
 </script>
 
 <SimpleNavigationBar
-    {user}
     backRef="/"
+    {defaultTabValue}
     loadingTitle={loadingProject.then((project) => project.name)}
     tabs={tabs as unknown as Tab[]}
-    {defaultTabValue}
+    {user}
 />
