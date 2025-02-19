@@ -61,6 +61,7 @@ export default ts.config(
             "svelte/shorthand-directive": "warn",
             "svelte/html-quotes": "error",
             "svelte/sort-attributes": "error",
+            "svelte/no-ignored-unsubscribe": "error",
         },
     },
 );
