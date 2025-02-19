@@ -12,7 +12,7 @@
         selectedValues?: string[];
     }
 
-    let { options, categoryLabel = "category", selectedValues = $bindable([]) }: Props = $props();
+    let { options, categoryLabel = "categories", selectedValues = $bindable([]) }: Props = $props();
     let label = $derived(getSelectLabel(selectedValues));
 
     function getSelectLabel(selectedValues: string[] | undefined): string {
@@ -21,7 +21,7 @@
             selectedValues.length === 0 ||
             selectedValues.length === options.length
         ) {
-            return `All ${categoryLabel} (${options?.length ?? 0})`;
+            return `All ${categoryLabel} (${options.length})`;
         }
 
         return `${categoryLabel}: ${selectedValues.length} selected`;

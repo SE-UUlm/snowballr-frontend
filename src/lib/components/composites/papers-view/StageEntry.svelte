@@ -17,7 +17,7 @@
 
 <Accordion.Item value={`stage-${stage.stageIndex}`}>
     <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
-    <Accordion.Trigger>
+    <Accordion.Trigger data-testid="stage-entry-trigger">
         <div class="flex flex-row w-full justify-between">
             <span>Stage {stage.stageIndex}</span>
             <span>({stage.papers.length} papers)</span>
