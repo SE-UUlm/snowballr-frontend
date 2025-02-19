@@ -14,6 +14,10 @@
         emptyHint?: string;
         errorHint?: string;
         preListContent?: Snippet;
+        /**
+         * Selects a key of the passed item.
+         * All keys created by this function must be unique.
+         */
         keySelector: (item: T) => string | number;
     }
 
