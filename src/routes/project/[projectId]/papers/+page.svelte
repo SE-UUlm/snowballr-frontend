@@ -30,15 +30,6 @@
         loadingReviewers,
     } = data;
 
-    const stagesResource = resource(loadingStages, {
-        initialValue: [],
-        onSuccess: (stages) => stages,
-        onErrorValue: [],
-    });
-    let stagesHint = $derived.by(() => {
-        const stagesCount = stagesResource.value.length;
-        return `${stagesCount} Stage${stagesCount > 1 ? "s" : ""}`;
-    });
     let selectedPaper = $state<Project_Paper | undefined>(undefined);
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
@@ -134,45 +125,52 @@
             {/if}
         </div>
         <div class="w-full h-full">
-            <span class="text-hint">
-                {stagesHint}
-            </span>
-            <Accordion.Root type="multiple">
-                {#each stagesResource.value as stage (stage.stageIndex)}
-                    <Accordion.Item value={`stage-${stage.stageIndex}`}>
-                        <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
-                        <Accordion.Trigger>
-                            <div class="flex flex-row w-full justify-between">
-                                <span>Stage {stage.stageIndex}</span>
-                                <span>({stage.papers.length} papers)</span>
-                            </div>
-                        </Accordion.Trigger>
-                        <Accordion.Content>
-                            <div class="flex flex-col pl-5 gap-4">
-                                {#each stage.papers as paper (paper.id)}
-                                    <PaperListEntry
-                                        {paper}
-                                        {projectId}
-                                        showReviewStatus
-                                        onClick={() => {
-                                            selectedPaper = paper;
+            {#await loadingStages}
+                <span class="text-hint">Loading stages...</span>
+            {:then stages}
+                <span class="text-hint">
+                    {`${stages.length} Stage${stages.length !== 1 ? "s" : ""}`}
+                </span>
+                <Accordion.Root type="multiple">
+                    {#each stages as stage (stage.stageIndex)}
+                        <Accordion.Item value={`stage-${stage.stageIndex}`}>
+                            <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
+                            <Accordion.Trigger>
+                                <div class="flex flex-row w-full justify-between">
+                                    <span>Stage {stage.stageIndex}</span>
+                                    <span>({stage.papers.length} papers)</span>
+                                </div>
+                            </Accordion.Trigger>
+                            <Accordion.Content>
+                                <div class="flex flex-col pl-5 gap-4">
+                                    {#each stage.papers as paper (paper.id)}
+                                        <PaperListEntry
+                                            {paper}
+                                            {projectId}
+                                            showReviewStatus
+                                            onClick={() => {
+                                                selectedPaper = paper;
+                                            }}
+                                        />
+                                    {/each}
+                                    <Button
+                                        onclick={() => {
+                                            // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
+                                            console.log(`Add paper to stage ${stage.stageIndex}`);
                                         }}
-                                    />
-                                {/each}
-                                <Button
-                                    onclick={() => {
-                                        // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
-                                        console.log(`Add paper to stage ${stage.stageIndex}`);
-                                    }}
-                                >
-                                    <CirclePlus strokeWidth="2.5" />
-                                    Add Paper
-                                </Button>
-                            </div>
-                        </Accordion.Content>
-                    </Accordion.Item>
-                {/each}
-            </Accordion.Root>
+                                    >
+                                        <CirclePlus strokeWidth="2.5" />
+                                        Add Paper
+                                    </Button>
+                                </div>
+                            </Accordion.Content>
+                        </Accordion.Item>
+                    {/each}
+                </Accordion.Root>
+            {:catch error}
+                {console.error(`Failed to load stages: ${error}`)}
+                <span class="text-error">Failed to load stages</span>
+            {/await}
         </div>
     </div>
     {#if selectedPaper}
