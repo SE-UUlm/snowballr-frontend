@@ -6,12 +6,12 @@
     import ChevronUp from "lucide-svelte/icons/chevron-up";
     import * as Accordion from "$lib/components/primitives/accordion/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import StagesSelect from "./StagesSelect.svelte";
-    import ReviewersSelect from "./ReviewersSelect.svelte";
-    import PublishersSelect from "./PublishersSelect.svelte";
-    import YearsSelect from "./YearsSelect.svelte";
-    import DecisionsSelect from "./DecisionsSelect.svelte";
-    import CriteriaSelect from "./CriteriaSelect.svelte";
+    import StagesSelect from "$lib/components/composites/papers-view/StagesSelect.svelte";
+    import ReviewersSelect from "$lib/components/composites/papers-view/ReviewersSelect.svelte";
+    import PublishersSelect from "$lib/components/composites/papers-view/PublishersSelect.svelte";
+    import YearsSelect from "$lib/components/composites/papers-view/YearsSelect.svelte";
+    import DecisionsSelect from "$lib/components/composites/papers-view/DecisionsSelect.svelte";
+    import CriteriaSelect from "$lib/components/composites/papers-view/CriteriaSelect.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/papers-view/StageEntry.svelte";
