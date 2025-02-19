@@ -29,4 +29,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Reviewers" bind:selectedValues={selectedReviewers} />
+<Select categoryLabel="Reviewers" {options} bind:selectedValues={selectedReviewers} />

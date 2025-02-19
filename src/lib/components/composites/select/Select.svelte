@@ -47,11 +47,11 @@ Usage:
 <Select.Root type="multiple" bind:value={selectedValues}>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
     <Select.Content>
-        {#each options as option}
+        {#each options as option (option.value)}
             <Select.Item value={option.value}>{option.label}</Select.Item>
         {/each}
         {#if options.length === 0}
-            <Select.Item value={"no-options"} disabled>
+            <Select.Item disabled value="no-options">
                 {`No ${categoryLabel.toLowerCase()} available`}
             </Select.Item>
         {/if}

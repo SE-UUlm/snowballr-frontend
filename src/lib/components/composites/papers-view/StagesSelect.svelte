@@ -28,4 +28,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Stages" bind:selectedValues={selectedStages} />
+<Select categoryLabel="Stages" {options} bind:selectedValues={selectedStages} />

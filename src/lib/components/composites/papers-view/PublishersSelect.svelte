@@ -27,4 +27,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Publishers" bind:selectedValues={selectedPublishers} />
+<Select categoryLabel="Publishers" {options} bind:selectedValues={selectedPublishers} />

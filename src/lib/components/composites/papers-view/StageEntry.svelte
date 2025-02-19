@@ -27,12 +27,12 @@
         <div class="flex flex-col pl-5 gap-4">
             {#each stage.papers as paper (paper.id)}
                 <PaperListEntry
-                    {paper}
-                    {projectId}
-                    showReviewStatus
                     onClick={() => {
                         selectedPaper = paper;
                     }}
+                    {paper}
+                    {projectId}
+                    showReviewStatus
                 />
             {/each}
             <Button

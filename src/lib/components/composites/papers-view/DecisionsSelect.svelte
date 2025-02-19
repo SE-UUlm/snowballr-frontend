@@ -7,11 +7,11 @@
 
     let { selectedDecisions = $bindable(undefined) }: Props = $props();
 
-    let options = $state<SelectOption[]>([
+    const options = $state<SelectOption[]>([
         { value: "accepted", label: "Accepted" },
         { value: "declined", label: "Declined" },
         { value: "maybe", label: "Maybe" },
     ]);
 </script>
 
-<Select {options} categoryLabel="Decisions" bind:selectedValues={selectedDecisions} />
+<Select categoryLabel="Decisions" {options} bind:selectedValues={selectedDecisions} />

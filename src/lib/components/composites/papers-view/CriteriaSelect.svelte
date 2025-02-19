@@ -28,4 +28,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Criteria" bind:selectedValues={selectedCriteria} />
+<Select categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />

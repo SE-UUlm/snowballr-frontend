@@ -40,4 +40,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Years" bind:selectedValues={selectedYears} />
+<Select categoryLabel="Years" {options} bind:selectedValues={selectedYears} />

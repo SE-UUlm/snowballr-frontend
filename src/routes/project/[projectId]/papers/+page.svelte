@@ -71,7 +71,7 @@
         <title>Failed loading project</title>
     {/await}
 </svelte:head>
-<ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="papers" />
+<ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} {user} />
 <main class="flex flex-row h-full w-full px-4 py-2 gap-10">
     <div class="flex flex-col w-full h-full gap-5">
         <div class="flex flex-col w-full h-fit gap-2.5">
@@ -85,13 +85,13 @@
                     {/if}
                 </Button>
                 <SearchBar
-                    placeholderText="Search paper"
                     onSearch={(searchText) => {
                         // TODO: build filters from search text
                         // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
                         // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
-                        console.log(searchText, $state.snapshot(papersFilters));
+                        console.log(searchText);
                     }}
+                    placeholderText="Search paper"
                 />
             </div>
             {#if showFilters}
