@@ -15,6 +15,8 @@
     import CriteriaSelect from "./CriteriaSelect.svelte";
     import { resource } from "$lib/resource.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
+    import CirclePlus from "lucide-svelte/icons/circle-plus";
+    import Trash from "lucide-svelte/icons/trash-2";
 
     let { data } = $props();
     const {
@@ -52,19 +54,22 @@
         criteria: string[];
     }
 
-    let papersFilters = $state<PapersFilters>({
+    const emptyFilters: PapersFilters = {
         stages: [],
         reviewers: [],
         publishers: [],
         years: [],
         decisions: [],
         criteria: [],
-    });
+    };
+    let papersFilters = $state<PapersFilters>(emptyFilters);
 
     $effect(() => {
         const filters = Object.assign({}, $state.snapshot(papersFilters));
         console.log(filters);
-        // Filter existing papers
+        // TODO: Filter existing papers
+        // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
+        // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
     });
 </script>
 
@@ -94,6 +99,8 @@
                     placeholderText="Search paper"
                     onSearch={(searchText) => {
                         // TODO: build filters from search text
+                        // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
+                        // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
                         console.log(searchText, $state.snapshot(papersFilters));
                     }}
                 />
@@ -115,6 +122,14 @@
                         {loadingCriteria}
                         bind:selectedCriteria={papersFilters.criteria}
                     />
+                    <Button
+                        onclick={() => {
+                            papersFilters = emptyFilters;
+                        }}
+                    >
+                        <Trash />
+                        Clear Filters
+                    </Button>
                 </div>
             {/if}
         </div>
@@ -144,7 +159,15 @@
                                         }}
                                     />
                                 {/each}
-                                <!-- TODO: Add 'add paper' button -->
+                                <Button
+                                    onclick={() => {
+                                        // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
+                                        console.log(`Add paper to stage ${stage.stageIndex}`);
+                                    }}
+                                >
+                                    <CirclePlus strokeWidth="2.5" />
+                                    Add Paper
+                                </Button>
                             </div>
                         </Accordion.Content>
                     </Accordion.Item>
@@ -153,24 +176,11 @@
         </div>
     </div>
     {#if selectedPaper}
-        <Card.Root class="flex flex-col w-[60%] h-full gap-5 shadow-lg">
+        <Card.Root class="flex flex-col w-[60%] h-full gap-5 shadow-lg overflow-hidden">
             <Card.Content>
                 <!-- TODO: replace with paper details card -->
-                <h2>General Information</h2>
-                <div class="flex flex-col gap-2.5">
-                    <div class="flex flex-row justify-between items-center">
-                        <h3>Number of Papers</h3>
-                        <p>4</p>
-                    </div>
-                    <div class="flex flex-row justify-between items-center">
-                        <h3>Number of Reviews</h3>
-                        <p>8</p>
-                    </div>
-                    <div class="flex flex-row justify-between items-center">
-                        <h3>Number of Decisions</h3>
-                        <p>4</p>
-                    </div>
-                </div>
+                <!-- This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/219 -->
+                <pre>{JSON.stringify(selectedPaper.paper!, undefined, 2)}</pre>
             </Card.Content>
         </Card.Root>
     {/if}
