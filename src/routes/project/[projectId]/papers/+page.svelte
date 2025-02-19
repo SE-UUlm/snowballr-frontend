@@ -14,6 +14,7 @@
     import DecisionsSelect from "./DecisionsSelect.svelte";
     import CriteriaSelect from "./CriteriaSelect.svelte";
     import { resource } from "$lib/resource.svelte";
+    import type { Project_Paper } from "$lib/model/api/project";
 
     let { data } = $props();
     const {
@@ -32,19 +33,48 @@
         onSuccess: (stages) => stages,
         onErrorValue: [],
     });
+    let stagesHint = $derived.by(() => {
+        const stagesCount = stagesResource.value.length;
+        return `${stagesCount} Stage${stagesCount > 1 ? "s" : ""}`;
+    });
+    let selectedPaper = $state<Project_Paper | undefined>(undefined);
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
     let showFilters = $state(true);
+
+    interface PapersFilters {
+        stages: string[];
+        reviewers: string[];
+        publishers: string[];
+        years: string[];
+        decisions: string[];
+        criteria: string[];
+    }
+
+    let papersFilters = $state<PapersFilters>({
+        stages: [],
+        reviewers: [],
+        publishers: [],
+        years: [],
+        decisions: [],
+        criteria: [],
+    });
+
+    $effect(() => {
+        const filters = Object.assign({}, $state.snapshot(papersFilters));
+        console.log(filters);
+        // Filter existing papers
+    });
 </script>
 
 <svelte:head>
     {#await loadingProject}
-        <title>Loading Project...</title>
+        <title>Loading project...</title>
     {:then project}
         <title>Papers | {project.name}</title>
     {:catch}
-        <title>Papers</title>
+        <title>Failed loading project</title>
     {/await}
 </svelte:head>
 <ProjectNavigationBar {user} {projectId} {loadingProject} defaultTabValue="papers" />
@@ -60,29 +90,61 @@
                         <ChevronDown class="size-4" />
                     {/if}
                 </Button>
-                <SearchBar placeholderText="Search paper" onSearch={() => {}} />
+                <SearchBar
+                    placeholderText="Search paper"
+                    onSearch={(searchText) => {
+                        // TODO: build filters from search text
+                        console.log(searchText, $state.snapshot(papersFilters));
+                    }}
+                />
             </div>
             {#if showFilters}
                 <div class="flex flex-row items-center gap-2.5 flex-wrap">
-                    <StagesSelect {loadingStageCount} />
-                    <ReviewersSelect {loadingReviewers} />
-                    <PublishersSelect {loadingPublishers} />
-                    <YearsSelect {loadingYears} />
-                    <DecisionsSelect />
-                    <CriteriaSelect {loadingCriteria} />
+                    <StagesSelect {loadingStageCount} bind:selectedStages={papersFilters.stages} />
+                    <ReviewersSelect
+                        {loadingReviewers}
+                        bind:selectedReviewers={papersFilters.reviewers}
+                    />
+                    <PublishersSelect
+                        {loadingPublishers}
+                        bind:selectedPublishers={papersFilters.publishers}
+                    />
+                    <YearsSelect {loadingYears} bind:selectedYears={papersFilters.years} />
+                    <DecisionsSelect bind:selectedDecisions={papersFilters.decisions} />
+                    <CriteriaSelect
+                        {loadingCriteria}
+                        bind:selectedCriteria={papersFilters.criteria}
+                    />
                 </div>
             {/if}
         </div>
         <div class="w-full h-full">
+            <span class="text-hint">
+                {stagesHint}
+            </span>
             <Accordion.Root type="multiple">
                 {#each stagesResource.value as stage (stage.stageIndex)}
                     <Accordion.Item value={`stage-${stage.stageIndex}`}>
-                        <Accordion.Trigger>Stage {stage.stageIndex}</Accordion.Trigger>
+                        <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
+                        <Accordion.Trigger>
+                            <div class="flex flex-row w-full justify-between">
+                                <span>Stage {stage.stageIndex}</span>
+                                <span>({stage.papers.length} papers)</span>
+                            </div>
+                        </Accordion.Trigger>
                         <Accordion.Content>
                             <div class="flex flex-col pl-5 gap-4">
-                                {#each stage.papers as paper}
-                                    <PaperListEntry {paper} {projectId} showReviewStatus />
+                                {#each stage.papers as paper (paper.id)}
+                                    <PaperListEntry
+                                        {paper}
+                                        {projectId}
+                                        showReviewStatus
+                                        onClick={() => {
+                                            selectedPaper = paper;
+                                        }}
+                                    />
                                 {/each}
+                                <!-- TODO: Add 'add paper' button -->
                             </div>
                         </Accordion.Content>
                     </Accordion.Item>
@@ -90,23 +152,26 @@
             </Accordion.Root>
         </div>
     </div>
-    <Card.Root class="flex flex-col w-[60%] h-full gap-5 shadow-lg hidden">
-        <Card.Content>
-            <h2>General Information</h2>
-            <div class="flex flex-col gap-2.5">
-                <div class="flex flex-row justify-between items-center">
-                    <h3>Number of Papers</h3>
-                    <p>4</p>
+    {#if selectedPaper}
+        <Card.Root class="flex flex-col w-[60%] h-full gap-5 shadow-lg">
+            <Card.Content>
+                <!-- TODO: replace with paper details card -->
+                <h2>General Information</h2>
+                <div class="flex flex-col gap-2.5">
+                    <div class="flex flex-row justify-between items-center">
+                        <h3>Number of Papers</h3>
+                        <p>4</p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center">
+                        <h3>Number of Reviews</h3>
+                        <p>8</p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center">
+                        <h3>Number of Decisions</h3>
+                        <p>4</p>
+                    </div>
                 </div>
-                <div class="flex flex-row justify-between items-center">
-                    <h3>Number of Reviews</h3>
-                    <p>8</p>
-                </div>
-                <div class="flex flex-row justify-between items-center">
-                    <h3>Number of Decisions</h3>
-                    <p>4</p>
-                </div>
-            </div>
-        </Card.Content>
-    </Card.Root>
+            </Card.Content>
+        </Card.Root>
+    {/if}
 </main>

@@ -5,10 +5,10 @@
     interface Props {
         options: SelectOption[];
         categoryLabel?: string;
+        selectedValues?: string[];
     }
 
-    const { options, categoryLabel = "category" }: Props = $props();
-    let selectedValues = $state<string[] | undefined>(undefined);
+    let { options, categoryLabel = "category", selectedValues = $bindable([]) }: Props = $props();
     let label = $derived(getSelectLabel(selectedValues));
 
     function getSelectLabel(selectedValues: string[] | undefined): string {

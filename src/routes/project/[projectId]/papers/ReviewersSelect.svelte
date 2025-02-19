@@ -6,9 +6,10 @@
 
     interface Props {
         loadingReviewers: Promise<User[]>;
+        selectedReviewers?: string[];
     }
 
-    const { loadingReviewers }: Props = $props();
+    let { loadingReviewers, selectedReviewers = $bindable(undefined) }: Props = $props();
 
     let reviewers = $state<User[] | undefined>(undefined);
     let options = $derived<SelectOption[]>(
@@ -29,4 +30,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Reviewers" />
+<Select {options} categoryLabel="Reviewers" bind:selectedValues={selectedReviewers} />

@@ -4,9 +4,10 @@
 
     interface Props {
         loadingYears: Promise<number[]>;
+        selectedYears?: string[];
     }
 
-    const { loadingYears }: Props = $props();
+    let { loadingYears, selectedYears = $bindable(undefined) }: Props = $props();
 
     let years = $state<number[] | undefined>(undefined);
     let options = $derived<SelectOption[]>(
@@ -40,4 +41,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Years" />
+<Select {options} categoryLabel="Years" bind:selectedValues={selectedYears} />

@@ -4,9 +4,10 @@
 
     interface Props {
         loadingPublishers: Promise<string[]>;
+        selectedPublishers?: string[];
     }
 
-    const { loadingPublishers }: Props = $props();
+    let { loadingPublishers, selectedPublishers = $bindable(undefined) }: Props = $props();
 
     let publishers = $state<string[] | undefined>(undefined);
     let options = $derived<SelectOption[]>(
@@ -27,4 +28,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Publishers" />
+<Select {options} categoryLabel="Publishers" bind:selectedValues={selectedPublishers} />

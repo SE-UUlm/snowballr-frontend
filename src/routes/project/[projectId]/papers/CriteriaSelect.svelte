@@ -5,9 +5,10 @@
 
     interface Props {
         loadingCriteria: Promise<Criterion[]>;
+        selectedCriteria?: string[];
     }
 
-    const { loadingCriteria }: Props = $props();
+    let { loadingCriteria, selectedCriteria = $bindable(undefined) }: Props = $props();
 
     let criteria = $state<Criterion[] | undefined>(undefined);
     let options = $derived<SelectOption[]>(
@@ -28,4 +29,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Criteria" />
+<Select {options} categoryLabel="Criteria" bind:selectedValues={selectedCriteria} />

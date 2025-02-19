@@ -4,9 +4,10 @@
 
     interface Props {
         loadingStageCount: Promise<bigint>;
+        selectedStages?: string[];
     }
 
-    const { loadingStageCount }: Props = $props();
+    let { loadingStageCount, selectedStages = $bindable(undefined) }: Props = $props();
 
     let stageCount = $state<bigint | undefined>(undefined);
     let options = $derived<SelectOption[]>(
@@ -28,4 +29,4 @@
         });
 </script>
 
-<Select {options} categoryLabel="Stages" />
+<Select {options} categoryLabel="Stages" bind:selectedValues={selectedStages} />
