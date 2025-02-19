@@ -1,6 +1,7 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
-    import type { Criterion } from "$lib/model/api/criterion";
+    import { Criterion } from "$lib/model/api/criterion";
+    import { resource } from "$lib/resource.svelte";
 
     interface Props {
         loadingCriteria: Promise<Criterion[]>;
@@ -9,23 +10,19 @@
 
     let { loadingCriteria, selectedCriteria = $bindable(undefined) }: Props = $props();
 
-    let criteria = $state<Criterion[] | undefined>(undefined);
+    const criteria = resource<Criterion[], Criterion[]>(loadingCriteria, {
+        initialValue: [],
+        ressourceName: "criteria",
+    });
+
     let options = $derived<SelectOption[]>(
-        criteria?.map((criterion) => {
+        criteria.value.map((criterion) => {
             return {
                 value: `${criterion.id}`,
                 label: `${criterion.tag}: ${criterion.name}`,
             };
-        }) ?? [],
+        }),
     );
-
-    loadingCriteria
-        .then((loadedCriteria) => {
-            criteria = loadedCriteria;
-        })
-        .catch((error) => {
-            console.error(`Failed to load criteria: ${error}`);
-        });
 </script>
 
 <Select categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />

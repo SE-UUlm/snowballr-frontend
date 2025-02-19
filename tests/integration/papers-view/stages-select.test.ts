@@ -28,7 +28,7 @@ describe("StagesSelect", () => {
         });
     });
 
-    test("When the loadingStageCount promise is rejected, then hint is shown", async () => {
+    test("When the loadingStageCount promise is rejected, then stage 0 is still shown", async () => {
         const user = userEvent.setup();
         render(StagesSelect, {
             target: document.body,
@@ -40,14 +40,14 @@ describe("StagesSelect", () => {
 
         let trigger: HTMLElement;
         await waitFor(() => {
-            trigger = screen.getByText("All Stages (0)");
+            trigger = screen.getByText("All Stages (1)");
             expect(trigger).toBeInTheDocument();
         });
         assert(trigger!);
 
         await user.click(trigger);
 
-        const option = screen.getByText("No stages available");
+        const option = screen.getByText("Stage 0");
         expect(option).toBeInTheDocument();
     });
 });

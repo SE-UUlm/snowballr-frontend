@@ -1,5 +1,6 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import { resource } from "$lib/resource.svelte";
 
     interface Props {
         loadingPublishers: Promise<string[]>;
@@ -8,23 +9,19 @@
 
     let { loadingPublishers, selectedPublishers = $bindable(undefined) }: Props = $props();
 
-    let publishers = $state<string[] | undefined>(undefined);
+    const publishers = resource<string[], string[]>(loadingPublishers, {
+        initialValue: [],
+        ressourceName: "publishers",
+    });
+
     let options = $derived<SelectOption[]>(
-        publishers?.map((publisher) => {
+        publishers.value.map((publisher) => {
             return {
                 value: publisher,
                 label: publisher,
             };
-        }) ?? [],
+        }),
     );
-
-    loadingPublishers
-        .then((loadedPublishers) => {
-            publishers = loadedPublishers;
-        })
-        .catch((error) => {
-            console.error(`Failed to load publishers: ${error}`);
-        });
 </script>
 
 <Select categoryLabel="Publishers" {options} bind:selectedValues={selectedPublishers} />

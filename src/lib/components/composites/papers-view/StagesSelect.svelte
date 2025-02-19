@@ -1,5 +1,6 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import { resource } from "$lib/resource.svelte";
 
     interface Props {
         loadingStageCount: Promise<bigint>;
@@ -8,24 +9,20 @@
 
     let { loadingStageCount, selectedStages = $bindable(undefined) }: Props = $props();
 
-    let stageCount = $state<bigint | undefined>(undefined);
+    const stageCount = resource<bigint, bigint>(loadingStageCount, {
+        initialValue: 0n,
+        ressourceName: "stages",
+    });
+
     let options = $derived<SelectOption[]>(
         // Create Stage options; If stageCount is undefined, create an empty array
-        Array.from({ length: Number(stageCount ?? -1) + 1 }, (_, i) => {
+        Array.from({ length: Number(stageCount.value + 1n) }, (_, i) => {
             return {
                 value: `${i}`,
                 label: `Stage ${i}`,
             };
         }),
     );
-
-    loadingStageCount
-        .then((count) => {
-            stageCount = count;
-        })
-        .catch((error) => {
-            console.error(`Failed to load stages: ${error}`);
-        });
 </script>
 
 <Select categoryLabel="Stages" {options} bind:selectedValues={selectedStages} />

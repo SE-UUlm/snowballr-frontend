@@ -1,6 +1,7 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
     import type { User } from "$lib/model/api/user";
+    import { resource } from "$lib/resource.svelte";
     import { getName } from "$lib/utils/common-helper";
 
     interface Props {
@@ -10,23 +11,19 @@
 
     let { loadingReviewers, selectedReviewers = $bindable(undefined) }: Props = $props();
 
-    let reviewers = $state<User[] | undefined>(undefined);
+    const reviewers = resource<User[], User[]>(loadingReviewers, {
+        initialValue: [],
+        ressourceName: "reviewers",
+    });
+
     let options = $derived<SelectOption[]>(
-        reviewers?.map((reviewer) => {
+        reviewers.value.map((reviewer) => {
             return {
                 value: `${reviewer.id}`,
                 label: getName(reviewer),
             };
-        }) ?? [],
+        }),
     );
-
-    loadingReviewers
-        .then((loadedReviewers) => {
-            reviewers = loadedReviewers;
-        })
-        .catch((error) => {
-            console.error(`Failed to load reviewers: ${error}`);
-        });
 </script>
 
 <Select categoryLabel="Reviewers" {options} bind:selectedValues={selectedReviewers} />

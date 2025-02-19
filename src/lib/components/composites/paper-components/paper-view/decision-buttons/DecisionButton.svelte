@@ -24,8 +24,7 @@
 
     const paperId = resource<string, string | undefined>(loadingPaperId, {
         initialValue: undefined,
-        onSuccess: (id) => id,
-        onErrorValue: undefined,
+        ressourceName: "paper ID",
     });
 
     function onButtonClick() {
