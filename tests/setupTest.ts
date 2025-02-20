@@ -18,6 +18,7 @@ import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } fr
 import type { ISnowballRClient } from "$lib/model/api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$lib/model/api/project";
+import { backendService } from "$lib/grpc-api";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -92,7 +93,8 @@ vi.mock("$app/stores", (): typeof stores => {
     };
 });
 
-// This type takes the SnowballRClient interface and returns a new "interface" type where each api function returns a MockUnaryCall, i.e. a mocked API call, instead of a normal UnaryCall.
+// This type takes the SnowballRClient interface and returns a new "interface" type where each api function returns a MockUnaryCall,
+// i.e. a mocked API call, instead of a normal UnaryCall.
 type MockReturnType<T> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [K in keyof T]: T[K] extends (...args: infer A) => UnaryCall<infer _I, infer R>
@@ -135,6 +137,7 @@ function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R
 // Note: This is only a base mock, you can/should override this mock in your tests according to your needs.
 // For example, you can mock the backend API to return an error, or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
+// See `invite-users-input.test.ts` for an example of how to override the mock.
 vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
@@ -152,7 +155,7 @@ vi.mock("$lib/grpc-api", () => {
             getAllUsers: mock({ users: Object.values(Users) }),
             getCurrentUser: mock(Users.johnDoe),
             getUserById: mock(({ id }) => createUser({ id })),
-            getUserByEmail: mock(({ id: email }) => createUser({ email: email })),
+            getUserByEmail: mock(({ id: email }) => createUser({ email })),
             updateUser: vi.fn(),
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
@@ -216,6 +219,54 @@ vi.mock("$lib/grpc-api", () => {
     };
     return mockBackend;
 });
+
+type InferPromiseType<T> = T extends Promise<infer U> ? U : never;
+/**
+ * Infers the return type of an API call.
+ * I.e. an API call always returns a UnaryCall with a response property that is a Promise.
+ * This type infers the type of the response promise.
+ *
+ * Usage:
+ * ```ts
+ * type ReturnType = InferApiReturnType<"getAllUsers">;
+ * // ReturnType is now:
+ * // {
+ * //     users: User[];
+ * // }
+ * ```
+ */
+type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType<
+    ReturnType<ISnowballRClient[T]>["response"]
+>;
+
+/**
+ * Mocks an API call to return a specific value.
+ *
+ * @param methodName - The name of the method to mock
+ * @param value - The value to return
+ */
+export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApiCallReturnType<T>>(
+    methodName: T,
+    value: R,
+) {
+    vi.spyOn(backendService, methodName).mockImplementation(() => {
+        return { response: Promise.resolve(value) } as ReturnType<(typeof backendService)[T]>;
+    });
+}
+
+/**
+ * Mocks an API call to return an error.
+ *
+ * @param methodName - The name of the method to mock
+ * @param errorMessage - The error message to return
+ */
+export function mockFailedApiCall(methodName: keyof ISnowballRClient, errorMessage = "") {
+    vi.spyOn(backendService, methodName).mockImplementation(() => {
+        return { response: Promise.reject(new Error(errorMessage)) } as ReturnType<
+            (typeof backendService)[typeof methodName]
+        >;
+    });
+}
 
 // If window is defined, mock matchMedia
 // window is not defined in unit tests i.e. when running in node environment
