@@ -9,8 +9,23 @@ if (!env.PUBLIC_API_BASE_URL) {
     process.exit(1);
 }
 
+let fetch = globalThis.fetch;
+const customFetch = (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response> =>
+    fetch(input, init);
+
+export function setFetch(newFetch: typeof fetch) {
+    fetch = newFetch;
+}
+
 const transport = new GrpcWebFetchTransport({
     baseUrl: env.PUBLIC_API_BASE_URL,
+    fetchInit: {
+        credentials: "include", // same-origin?
+        // DO NOT SET: mode: "no-cors"
+        // It'll break things with @grpc-web/proxy in the backend and will
+        // not work. 404 and 500 errors will be thrown without proper reason.
+    },
+    fetch: customFetch,
 });
 
 export const backendService = new SnowballRClient(transport);

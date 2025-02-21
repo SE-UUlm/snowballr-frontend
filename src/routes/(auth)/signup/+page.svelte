@@ -8,6 +8,7 @@
     import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { StatusCodes } from "$lib/model/error-codes";
+    import { goto } from "$app/navigation";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -34,12 +35,11 @@
             password: passwordInput.getValue(),
         };
 
-        backendService
+        await backendService
             .register(userData)
             .then(() => {
-                // TODO: Login with accessToken, store both tokens and redirect to the home page,
-                // will be completed in !220
                 console.log("New user was registered.");
+                goto("/");
             })
             .catch((error) => {
                 if (error.code === StatusCodes.ALREADY_EXISTS) {
