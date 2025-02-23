@@ -2,6 +2,7 @@
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import type { Paper } from "$lib/model/api/paper";
     import { getNames } from "$lib/utils/common-helper";
+    import ErrorIndicator from "../ErrorIndicator.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper | Omit<Paper, "id">>;
@@ -32,5 +33,5 @@
         </div>
     </div>
 {:catch}
-    <span class="text-error">Failed to load paper</span>
+    <ErrorIndicator errorMessage="Couldn't load paper" />
 {/await}

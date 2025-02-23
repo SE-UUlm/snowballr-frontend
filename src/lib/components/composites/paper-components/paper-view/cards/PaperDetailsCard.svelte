@@ -11,6 +11,7 @@
     import { resource } from "$lib/resource.svelte";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
+    import ErrorIndicator from "$lib/components/composites/ErrorIndicator.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -156,7 +157,7 @@ Usage:
                     value={paper.abstrakt}
                 />
             {:catch}
-                <span class="text-error">Couldn't load Abstract</span>
+                <ErrorIndicator errorMessage="Couldn't load Abstract" />
             {/await}
         </section>
     </PaperCardContent>

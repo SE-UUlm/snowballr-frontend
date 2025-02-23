@@ -6,6 +6,7 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
+    import ErrorIndicator from "../ErrorIndicator.svelte";
 
     export interface PaperDecisionBannerProps {
         reviewers: Promise<User[]>;
@@ -74,6 +75,6 @@
         </div>
     {:catch error}
         {console.error(`Failed to load paper decision: ${error}`)}
-        <span class="text-error text-white">Couldn't load Paper Decision</span>
+        <ErrorIndicator errorMessage="Couldn't load Paper Decision" />
     {/await}
 </div>

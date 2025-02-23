@@ -3,6 +3,7 @@
     import type { ReviewedCriterion } from "$lib/model/general";
     import type { User } from "$lib/model/api/user";
     import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
+    import ErrorIndicator from "../ErrorIndicator.svelte";
 
     interface Props {
         listTitle: string;
@@ -51,7 +52,7 @@ Usage:
             {/if}
         {:catch error}
             {console.error(`Failed to load criteria: ${error}`)}
-            <span class="text-error">Couldn't load Criteria</span>
+            <ErrorIndicator errorMessage="Couldn't load criteria" />
         {/await}
     </ul>
 </section>
