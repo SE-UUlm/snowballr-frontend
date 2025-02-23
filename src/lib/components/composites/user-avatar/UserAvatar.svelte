@@ -4,16 +4,32 @@
     import X from "lucide-svelte/icons/x";
     import { ReviewDecision } from "$lib/model/api/review";
     import type { User } from "$lib/model/api/user";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface Props {
         user?: User;
         reviewDecision?: ReviewDecision;
+        size?: "default" | "small";
     }
 
-    const { user, reviewDecision }: Props = $props();
+    const { user, reviewDecision, size = "default" }: Props = $props();
 
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`;
+    const style =
+        size === "default"
+            ? {
+                  iconSize: 16,
+                  avatarSize: "size-10",
+                  textSize: "text-[1rem]",
+                  reviewIndicatorClass: "review-decision-icon-bg-default",
+              }
+            : {
+                  iconSize: 12.8,
+                  avatarSize: "size-8",
+                  textSize: "text-[.8rem]",
+                  reviewIndicatorClass: "review-decision-icon-bg-small",
+              };
 </script>
 
 <!--
@@ -30,6 +46,10 @@ Optionally, a reviewDecision can be added, which visualizes
 a decision of the associated user, which can be used for example
 in the PaperEntry component.
 
+There are two different sizes:
+- "default": 40x40px (default)
+- "small": 80% of "default" i.e. 32x32px
+
 Usage:
 ```svelte
     <UserAvatar user={{
@@ -41,22 +61,22 @@ Usage:
 ```
 -->
 <div class="relative" data-testid="user-avatar">
-    <Avatar.Root>
-        <Avatar.Fallback class="group-hover/paper-list-entry:bg-slate-200">
+    <Avatar.Root class={style.avatarSize}>
+        <Avatar.Fallback class={cn("group-hover/paper-list-entry:bg-slate-200", style.textSize)}>
             {userInitials}
         </Avatar.Fallback>
     </Avatar.Root>
     {#if reviewDecision === ReviewDecision.ACCEPTED}
-        <div class="review-decision-icon-bg bg-accept-green">
-            <Check color="#ffffff" size={16} strokeWidth="3" />
+        <div class={cn(style.reviewIndicatorClass, "bg-accept-green")}>
+            <Check color="#ffffff" size={style.iconSize} strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.DECLINED}
-        <div class="review-decision-icon-bg bg-decline-red">
-            <X color="#ffffff" size={16} strokeWidth="3" />
+        <div class={cn(style.reviewIndicatorClass, "bg-decline-red")}>
+            <X color="#ffffff" size={style.iconSize} strokeWidth="3" />
         </div>
     {:else if reviewDecision === ReviewDecision.MAYBE}
-        <div class="review-decision-icon-bg bg-maybe-yellow">
-            <text class="text-white">?</text>
+        <div class={cn(style.reviewIndicatorClass, "bg-maybe-yellow")}>
+            <text class={cn("text-white", style.textSize)}>?</text>
         </div>
     {/if}
 </div>

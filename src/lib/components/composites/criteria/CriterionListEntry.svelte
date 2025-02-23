@@ -57,6 +57,7 @@ Usage:
         {#each criterion.reviews as review (review.id)}
             <UserAvatar
                 reviewDecision={review.decision}
+                size="small"
                 user={reviewers.find((reviewer) => review.userId === reviewer.id)}
             />
         {/each}

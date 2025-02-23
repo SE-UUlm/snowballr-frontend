@@ -58,8 +58,8 @@
     {#await Promise.all([loadingReviewers, loadingProjectPaper])}
         <Skeleton class="h-6 w-28 rounded-full" />
         <div class="flex flex-row gap-2">
-            <UserAvatarSkeleton />
-            <UserAvatarSkeleton />
+            <UserAvatarSkeleton size="small" />
+            <UserAvatarSkeleton size="small" />
         </div>
     {:then [reviewers, projectPaper]}
         <h2 class={projectPaper.decision === PaperDecision.ACCEPTED ? "text-black" : "text-white"}>
@@ -69,6 +69,7 @@
             {#each projectPaper.reviews as review (review.id)}
                 <UserAvatar
                     reviewDecision={review.decision}
+                    size="small"
                     user={reviewers.find((reviewer) => review.userId === reviewer.id)}
                 />
             {/each}

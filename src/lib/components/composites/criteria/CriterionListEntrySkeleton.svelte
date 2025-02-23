@@ -21,7 +21,7 @@
     </div>
     {#if !inReviewMode}
         {#each { length: numberOfReviews }}
-            <UserAvatarSkeleton />
+            <UserAvatarSkeleton size="small" />
         {/each}
     {/if}
 </li>
