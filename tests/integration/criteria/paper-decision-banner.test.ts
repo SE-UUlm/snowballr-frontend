@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { createProjectPaper, loading } from "../../model-builder";
 import { PaperDecision } from "$lib/model/api/project";
 import { waitForComponentLoading } from "../test-helper";
+import { Reviews, Users } from "../../example-data";
 
 describe("PaperDecisionBanner", () => {
     test("When the paper is accepted, it should display the accepted banner", async () => {
@@ -93,5 +94,27 @@ describe("PaperDecisionBanner", () => {
 
         const skeletons = screen.queryAllByTestId("skeleton");
         expect(skeletons.length).toBeGreaterThan(0);
+    });
+
+    test("When paper has reviewers, then the reviewers are shown in the banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([Users.johnDoe]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        reviews: [Reviews.demoReview1],
+                        decision: PaperDecision.ACCEPTED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const userAvatar = screen.getByTestId("user-avatar");
+        expect(userAvatar).toBeInTheDocument();
+        const userInitials = screen.getByText("JD");
+        expect(userInitials).toBeInTheDocument();
     });
 });

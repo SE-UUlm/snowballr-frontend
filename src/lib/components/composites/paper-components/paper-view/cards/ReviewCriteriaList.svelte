@@ -27,24 +27,26 @@
     );
 </script>
 
-<CriteriaList
-    criteria={hardExclusions}
-    emptyHint="No hard exclusion criteria."
-    {inReviewMode}
-    listTitle="Hard Exclusion"
-    {reviewers}
-/>
-<CriteriaList
-    criteria={exclusions}
-    emptyHint="No soft exclusion criteria."
-    {inReviewMode}
-    listTitle="Soft Exclusion"
-    {reviewers}
-/>
-<CriteriaList
-    criteria={inclusions}
-    emptyHint="No inclusion criteria."
-    {inReviewMode}
-    listTitle="Inclusion"
-    {reviewers}
-/>
+<div class="flex flex-col gap-5">
+    <CriteriaList
+        criteria={hardExclusions}
+        emptyHint="No hard exclusion criteria."
+        {inReviewMode}
+        listTitle="Hard Exclusion"
+        {reviewers}
+    />
+    <CriteriaList
+        criteria={exclusions}
+        emptyHint="No soft exclusion criteria."
+        {inReviewMode}
+        listTitle="Soft Exclusion"
+        {reviewers}
+    />
+    <CriteriaList
+        criteria={inclusions}
+        emptyHint="No inclusion criteria."
+        {inReviewMode}
+        listTitle="Inclusion"
+        {reviewers}
+    />
+</div>

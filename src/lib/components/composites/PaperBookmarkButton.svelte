@@ -62,8 +62,6 @@ Usage:
     onclick={onClick}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
-    triggerSize="default"
-    triggerVariant="default"
 >
     {#snippet trigger()}
         {#if isHovered}

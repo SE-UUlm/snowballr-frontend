@@ -5,7 +5,7 @@ import { createReviewedCriterion, loading } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
 
 describe("CriteriaList", () => {
-    test("When props are provided, then component is shown", async () => {
+    test("When props are provided, then the component is shown", async () => {
         render(CriteriaList, {
             target: document.body,
             props: {
@@ -26,7 +26,7 @@ describe("CriteriaList", () => {
         expect(criterion).toBeInTheDocument();
     });
 
-    test("When no criteria are provided, then empty hint is shown", async () => {
+    test("When no criteria are provided, then an empty hint is shown", async () => {
         render(CriteriaList, {
             target: document.body,
             props: {
@@ -44,7 +44,7 @@ describe("CriteriaList", () => {
         expect(hint).toBeInTheDocument();
     });
 
-    test("When criteria failed to load, then error message is shown", async () => {
+    test("When criteria failed to load, then the error message is shown", async () => {
         render(CriteriaList, {
             target: document.body,
             props: {
@@ -58,11 +58,11 @@ describe("CriteriaList", () => {
 
         await waitForComponentLoading();
 
-        const error = screen.getByText("Couldn't load Criteria");
+        const error = screen.getByText("Couldn't load criteria");
         expect(error).toBeInTheDocument();
     });
 
-    test("When criteria are loading, then skeletons are shown", () => {
+    test("When criteria are loading, then the skeletons are shown", () => {
         render(CriteriaList, {
             target: document.body,
             props: {

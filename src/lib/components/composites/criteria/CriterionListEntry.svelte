@@ -17,7 +17,7 @@
 
 <!--
 @component
-Single Criterion List Element.
+Single list element for a criterion.
 
 - When `inReviewMode` is true, a checkbox is shown in front of the list element.
   When checked, this means that the criterion applies to the current paper.
@@ -31,14 +31,14 @@ Usage:
     </ul>
 ```
 -->
-<li class="flex flex-row gap-2.5 items-center" data-testid="criterion-list-entry">
+<li class="flex flex-row gap-4 items-center" data-testid="criterion-list-entry">
     {#if inReviewMode}
         <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
         <Checkbox data-testid="criterion-checkbox" />
     {/if}
-    <div class="flex flex-row gap-1.5">
+    <div class="flex flex-row gap-2 truncate">
         <span class="font-bold">{criterion.tag}</span>
-        <span>{criterion.name}</span>
+        <span class="truncate" title={criterion.name}>{criterion.name}</span>
     </div>
     <Tooltip
         class="[&_svg]:size-6 p-0"

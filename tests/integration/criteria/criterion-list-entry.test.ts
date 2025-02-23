@@ -25,13 +25,15 @@ describe("CriterionListEntry", () => {
         expect(name).toBeInTheDocument();
     });
 
-    test("When `isReviewMode` is true, then the checkbox is shown", () => {
+    test("When `inReviewMode` is true, then the checkbox is but no user avatars are shown", () => {
         render(CriterionListEntry, {
             target: document.body,
             props: {
                 inReviewMode: true,
-                reviewers: [],
-                criterion: createReviewedCriterion(),
+                reviewers: [Users.johnDoe],
+                criterion: createReviewedCriterion({
+                    reviews: [Reviews.demoReview1],
+                }),
             },
         });
 
@@ -42,7 +44,7 @@ describe("CriterionListEntry", () => {
         expect(userAvatar).not.toBeInTheDocument();
     });
 
-    test("When `isReviewMode` is false, then the reviews are shown", () => {
+    test("When `inReviewMode` is false, then the reviews are shown", () => {
         render(CriterionListEntry, {
             target: document.body,
             props: {
@@ -62,7 +64,7 @@ describe("CriterionListEntry", () => {
         const userInitials = screen.getByText("JD");
         expect(userInitials).toBeInTheDocument();
 
-        const reviewDecision = document.querySelector(".review-decision-icon-bg");
+        const reviewDecision = document.querySelector(".review-decision-icon-bg-small");
         expect(reviewDecision).toHaveClass("bg-decline-red");
     });
 });

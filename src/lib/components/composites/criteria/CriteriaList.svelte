@@ -6,7 +6,7 @@
     import ErrorIndicator from "../ErrorIndicator.svelte";
 
     interface Props {
-        listTitle: string;
+        listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
         inReviewMode: boolean;
         reviewers: Promise<User[]>;
         criteria: Promise<ReviewedCriterion[]>;
@@ -30,6 +30,9 @@ A list of criteria.
 
 - `inReviewMode`: whether the criteria is shown in review mode or not
 - `listTitle` is displayed as header of the list
+
+`inReviewMode` only has an effect on the nested `CriteriaListEntry` component.
+Refer to its documentation to see the changes depending on the `inReviewMode` flag.
 
 Usage:
 ```svelte

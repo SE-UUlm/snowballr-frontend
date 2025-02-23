@@ -71,22 +71,17 @@ async function createReviewedCriteria(
 ): Promise<ReviewedCriterion[]> {
     const reviewedCriteria: ReviewedCriterion[] = [];
     for (const criterion of criteria) {
-        const criterionReviews: Omit<Review, "selectedCriteriaIds">[] = [];
-
         const filteredReviews = reviews.filter((review) =>
             review.selectedCriteriaIds.includes(criterion.id),
         );
-        for (const review of filteredReviews) {
-            criterionReviews.push({
-                id: review.id,
-                decision: review.decision,
-                userId: review.userId,
-            });
-        }
 
         reviewedCriteria.push({
             ...criterion,
-            reviews: criterionReviews,
+            reviews: filteredReviews.map((review) => ({
+                id: review.id,
+                decision: review.decision,
+                userId: review.userId,
+            })),
         });
     }
 

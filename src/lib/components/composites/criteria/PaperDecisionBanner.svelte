@@ -51,7 +51,7 @@
 
 <div
     class={cn(
-        "flex flex-row w-full rounded-2xl items-center justify-center p-2.5 gap-5",
+        "flex flex-col lg:flex-row w-full rounded-2xl items-center justify-center p-2.5 gap-3 lg:gap-5",
         bannerColor.value,
     )}
 >
@@ -65,7 +65,7 @@
         <h2 class={projectPaper.decision === PaperDecision.ACCEPTED ? "text-black" : "text-white"}>
             {bannerLabel.value}
         </h2>
-        <div class="flex flex-row gap-2">
+        <div class="flex flex-row gap-3">
             {#each projectPaper.reviews as review (review.id)}
                 <UserAvatar
                     reviewDecision={review.decision}
@@ -76,6 +76,6 @@
         </div>
     {:catch error}
         {console.error(`Failed to load paper decision: ${error}`)}
-        <ErrorIndicator errorMessage="Couldn't load Paper Decision" />
+        <ErrorIndicator errorMessage="Couldn't load paper decision" />
     {/await}
 </div>
