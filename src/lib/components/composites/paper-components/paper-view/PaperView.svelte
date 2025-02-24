@@ -1,7 +1,10 @@
 <script lang="ts">
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
     import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
-    import PaperResearchContextCard from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
+    import PaperResearchContextCard, {
+        type NonProjectResearchContextCardProps,
+        type ProjectResearchContextCardProps,
+    } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { ReviewedCriterion, UserConfig } from "$lib/model/general";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
@@ -57,6 +60,25 @@
 
     const loadingPaper = loadingPaperWrapper.then(asPaper);
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
+
+    // svelte-ignore non_reactive_update
+    // statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
+    let researchContextCardProps:
+        | ProjectResearchContextCardProps
+        | NonProjectResearchContextCardProps;
+    if (reviewers) {
+        researchContextCardProps = {
+            reviewers,
+            reviewedCriteria,
+            loadingProjectPaper: loadingPaperWrapper,
+        };
+    } else {
+        researchContextCardProps = {
+            reviewers,
+            reviewedCriteria,
+            loadingProjectPaper: loadingPaperWrapper,
+        };
+    }
 </script>
 
 <!--
@@ -102,17 +124,12 @@ Usage:
 <main class="flex flex-col h-full w-full px-2 py-4 gap-5">
     <div class="flex flex-row w-full h-full gap-5">
         <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
-        <!-- TODO: figure out what to show when it's the project independent paper view -->
-        {#if reviewers !== undefined}
-            <PaperResearchContextCard
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-                inReviewMode={userConfig.isReviewMode}
-                loadingProjectPaper={loadingPaperWrapper}
-                {reviewedCriteria}
-                {reviewers}
-            />
-        {/if}
+        <PaperResearchContextCard
+            {backwardReferencedPapers}
+            {forwardReferencedPapers}
+            inReviewMode={userConfig.isReviewMode}
+            {...researchContextCardProps}
+        />
     </div>
     {#if showButtonBar}
         <div class="flex flex-row w-full h-fit justify-between gap-4" data-testid="button-bar">
@@ -121,7 +138,7 @@ Usage:
             {#if userConfig.isReviewMode}
                 <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                 <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                <div class="flex flex-grow-1000 max-w-[62rem] gap-[1rem] justify-center">
+                <div class="flex flex-grow-1000 max-w-[62rem] gap-4 justify-center">
                     <DeclineButton {loadingPaperId} />
                     {#if loadingProject}
                         {#await loadingProject}
