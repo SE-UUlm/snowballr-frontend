@@ -52,7 +52,7 @@
         "lucide-svelte": "^0.475.0",
         "msw": "^2.6.9",
         "postcss": "^8.5.2",
-        "prettier": "^3.5.0",
+        "prettier": "^3.5.2",
         "prettier-plugin-svelte": "^3.3.3",
         "svelte": "^5.20.1",
         "svelte-check": "^4.1.4",
