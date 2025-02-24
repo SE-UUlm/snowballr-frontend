@@ -14,6 +14,7 @@
         content: Snippet;
         triggerVariant?: ButtonVariant;
         triggerSize?: ButtonSize;
+        openOnClick?: boolean;
     };
 
     const {
@@ -21,15 +22,29 @@
         content,
         triggerVariant = "none",
         triggerSize = "fit",
+        openOnClick = false,
         class: className,
         ...restProps
     }: Props = $props();
+
+    let open = $state(false);
+
+    function handleClick(event: Event) {
+        if (!openOnClick) {
+            return;
+        }
+
+        event.preventDefault();
+        open = true;
+    }
 </script>
 
 <!--
 @component
 Reusable tooltip component that wraps a trigger and content component.
 The tooltip can't be used as link. To still redirect on click, use the `onclick` prop.
+
+- if `openOnClick` is set, the tooltip is immediately shown when it's clicked.
 
 Usage:
 ```svelte
@@ -48,9 +63,10 @@ Usage:
 ```
 -->
 <Tooltip.Provider>
-    <Tooltip.Root>
+    <Tooltip.Root bind:open>
         <Tooltip.Trigger
             class={cn(buttonVariants({ variant: triggerVariant, size: triggerSize }), className)}
+            onclick={handleClick}
             {...restProps}
         >
             {@render trigger()}

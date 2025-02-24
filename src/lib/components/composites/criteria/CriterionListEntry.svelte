@@ -43,6 +43,7 @@ Usage:
     <Tooltip
         class="[&_svg]:size-6 p-0"
         aria-label={criterion.description}
+        openOnClick
         triggerSize="fit"
         triggerVariant="none"
     >
