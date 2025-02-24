@@ -96,6 +96,18 @@ export function createProjectPaperViewProps(
     };
 }
 
+export function createNonProjectPaperViewProps(
+    props: Partial<NonProjectPaperViewProps> = {},
+): NonProjectPaperViewProps {
+    return {
+        loadingPaper: loading(createPaper()),
+        loadingProject: undefined,
+        reviewers: undefined,
+        criteriaWithReviews: undefined,
+        ...props,
+    };
+}
+
 export function createProjectSettings(props: Partial<Project_Settings> = {}): Project_Settings {
     return {
         reviewMaybeAllowed: true,

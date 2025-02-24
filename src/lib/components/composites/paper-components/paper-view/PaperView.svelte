@@ -62,20 +62,23 @@
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
 
     // svelte-ignore non_reactive_update
-    // statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
     let researchContextCardProps:
         | ProjectResearchContextCardProps
         | NonProjectResearchContextCardProps;
+    // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
+    // Note: this is ugly, but otherwise the types of these properties can't be inferred.
     if (reviewers) {
+        // This now of type `ProjectResearchContextCardProps`
         researchContextCardProps = {
             reviewers,
-            criteriaWithReviews: criteriaWithReviews,
+            criteriaWithReviews,
             loadingProjectPaper: loadingPaperWrapper,
         };
     } else {
+        // This is now of type `NonProjectResearchContextCardProps`
         researchContextCardProps = {
             reviewers,
-            criteriaWithReviews: criteriaWithReviews,
+            criteriaWithReviews,
             loadingProjectPaper: loadingPaperWrapper,
         };
     }

@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { assert, describe, expect, test } from "vitest";
 import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import {
+    createNonProjectPaperViewProps,
     createPaperViewProps,
     createProject,
     createProjectPaperViewProps,
@@ -89,5 +90,12 @@ describe("PaperView", () => {
         const decisionButtons = screen.getAllByTestId("decision-button");
         expect(decisionButtons).toHaveLength(2);
         expect(document.body).not.toHaveTextContent("Maybe");
+    });
+
+    test("When non-project paper view is shown, then review information tab is not shown", () => {
+        render(PaperView, createPaperViewProps({}, createNonProjectPaperViewProps()));
+
+        const reviewInfoTab = screen.queryByText("Review Information");
+        expect(reviewInfoTab).toBeNull();
     });
 });

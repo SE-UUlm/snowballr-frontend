@@ -55,12 +55,14 @@ Usage:
         {/snippet}
     </Tooltip>
     {#if !inReviewMode}
-        {#each criterion.reviews as review (review.id)}
-            <UserAvatar
-                reviewDecision={review.decision}
-                size="small"
-                user={reviewers.find((reviewer) => review.userId === reviewer.id)}
-            />
-        {/each}
+        <div class="flex flex-row gap-2.5 pl-2">
+            {#each criterion.reviews as review (review.id)}
+                <UserAvatar
+                    reviewDecision={review.decision}
+                    size="small"
+                    user={reviewers.find((reviewer) => review.userId === reviewer.id)}
+                />
+            {/each}
+        </div>
     {/if}
 </li>

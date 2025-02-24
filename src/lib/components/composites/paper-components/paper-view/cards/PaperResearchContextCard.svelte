@@ -77,7 +77,7 @@ Usage:
                     .
                 </span>
             {:else}
-                <div class="px-15">
+                <div class="md:px-8 lg:px-15">
                     <PaperDecisionBanner {loadingProjectPaper} {reviewers} />
                 </div>
             {/if}

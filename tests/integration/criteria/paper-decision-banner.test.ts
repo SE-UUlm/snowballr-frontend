@@ -45,7 +45,7 @@ describe("PaperDecisionBanner", () => {
         expect(label).toBeInTheDocument();
     });
 
-    test("When the paper is undecided, it should display the undecided banner", async () => {
+    test("When the paper is undecided and has reviews, it should display the undecided banner", async () => {
         render(PaperDecisionBanner, {
             target: document.body,
             props: {
@@ -53,6 +53,7 @@ describe("PaperDecisionBanner", () => {
                 loadingProjectPaper: loading(
                     createProjectPaper({
                         decision: PaperDecision.UNDECIDED,
+                        reviews: [Reviews.demoReview1],
                     }),
                 ),
             },
@@ -64,7 +65,7 @@ describe("PaperDecisionBanner", () => {
         expect(label).toBeInTheDocument();
     });
 
-    test("When the paper is unspecified, it should display the undecided banner", async () => {
+    test("When the paper is unspecified and has reviews, it should display the undecided banner", async () => {
         render(PaperDecisionBanner, {
             target: document.body,
             props: {
@@ -72,6 +73,7 @@ describe("PaperDecisionBanner", () => {
                 loadingProjectPaper: loading(
                     createProjectPaper({
                         decision: PaperDecision.UNSPECIFIED,
+                        reviews: [Reviews.demoReview1],
                     }),
                 ),
             },
@@ -80,6 +82,46 @@ describe("PaperDecisionBanner", () => {
         await waitForComponentLoading();
 
         const label = screen.getByText("Undecided");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the paper is undecided and has no reviews, it should display the unreviewed banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.UNDECIDED,
+                        reviews: [],
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Unreviewed");
+        expect(label).toBeInTheDocument();
+    });
+
+    test("When the paper is unspecified and has no reviews, it should display the unreviewed banner", async () => {
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        decision: PaperDecision.UNSPECIFIED,
+                        reviews: [],
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const label = screen.getByText("Unreviewed");
         expect(label).toBeInTheDocument();
     });
 
