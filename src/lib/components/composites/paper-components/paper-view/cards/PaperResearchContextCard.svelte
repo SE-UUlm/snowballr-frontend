@@ -17,7 +17,7 @@
     export interface NonProjectResearchContextCardProps {
         loadingProjectPaper: Promise<Paper>;
         reviewers: undefined;
-        reviewedCriteria: undefined;
+        criteriaWithReviews: undefined;
     }
 
     export type PaperResearchContextCardProps = {
@@ -30,7 +30,7 @@
         backwardReferencedPapers,
         forwardReferencedPapers,
         reviewers,
-        reviewedCriteria,
+        criteriaWithReviews,
         loadingProjectPaper,
     }: PaperResearchContextCardProps = $props();
 
@@ -63,7 +63,7 @@ Usage:
 <PaperCard {tabs}>
     <PaperCardContent value="1">
         {#if reviewers !== undefined}
-            <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
+            <ReviewCriteriaList {criteriaWithReviews} {inReviewMode} {reviewers} />
             <Separator />
             {#if inReviewMode}
                 <span>

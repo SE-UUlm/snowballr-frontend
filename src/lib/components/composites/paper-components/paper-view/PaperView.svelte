@@ -5,7 +5,7 @@
         type NonProjectResearchContextCardProps,
         type ProjectResearchContextCardProps,
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { ReviewedCriterion, UserConfig } from "$lib/model/general";
+    import type { CriterionWithReviews, UserConfig } from "$lib/model/general";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
@@ -21,14 +21,14 @@
         loadingPaper: Promise<Project_Paper>;
         loadingProject: Promise<Project>;
         reviewers: Promise<User[]>;
-        reviewedCriteria: Promise<ReviewedCriterion[]>;
+        criteriaWithReviews: Promise<CriterionWithReviews[]>;
     }
 
     export interface NonProjectPaperViewProps {
         loadingPaper: Promise<Paper>;
         loadingProject: undefined;
         reviewers: undefined;
-        reviewedCriteria: undefined;
+        criteriaWithReviews: undefined;
     }
 
     export type IndependentPaperViewProps = ReferencesAndCitationsCardContentProps & {
@@ -55,7 +55,7 @@
         loadingPaper: loadingPaperWrapper,
         loadingProject,
         reviewers,
-        reviewedCriteria,
+        criteriaWithReviews,
     }: PaperViewProps = $props();
 
     const loadingPaper = loadingPaperWrapper.then(asPaper);
@@ -69,13 +69,13 @@
     if (reviewers) {
         researchContextCardProps = {
             reviewers,
-            reviewedCriteria,
+            criteriaWithReviews: criteriaWithReviews,
             loadingProjectPaper: loadingPaperWrapper,
         };
     } else {
         researchContextCardProps = {
             reviewers,
-            reviewedCriteria,
+            criteriaWithReviews: criteriaWithReviews,
             loadingProjectPaper: loadingPaperWrapper,
         };
     }

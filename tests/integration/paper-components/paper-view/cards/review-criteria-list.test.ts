@@ -12,7 +12,7 @@ describe("ReviewCriteriaList", () => {
             props: {
                 inReviewMode: true,
                 reviewers: loading([]),
-                reviewedCriteria: loading([]),
+                criteriaWithReviews: loading([]),
             },
         });
 
@@ -30,7 +30,7 @@ describe("ReviewCriteriaList", () => {
             props: {
                 inReviewMode: true,
                 reviewers: loading([]),
-                reviewedCriteria: loading([
+                criteriaWithReviews: loading([
                     createReviewedCriterion({
                         name: "Criterion 1",
                         category: CriterionCategory.HARD_EXCLUSION,
@@ -66,7 +66,7 @@ describe("ReviewCriteriaList", () => {
             props: {
                 inReviewMode: true,
                 reviewers: loading([]),
-                reviewedCriteria: loading([
+                criteriaWithReviews: loading([
                     createReviewedCriterion({
                         name: "Criterion 1",
                         category: CriterionCategory.EXCLUSION,
@@ -102,7 +102,7 @@ describe("ReviewCriteriaList", () => {
             props: {
                 inReviewMode: true,
                 reviewers: loading([]),
-                reviewedCriteria: loading([
+                criteriaWithReviews: loading([
                     createReviewedCriterion({
                         name: "Criterion 1",
                         category: CriterionCategory.INCLUSION,
@@ -138,7 +138,7 @@ describe("ReviewCriteriaList", () => {
             props: {
                 inReviewMode: true,
                 reviewers: loading([]),
-                reviewedCriteria: loading([
+                criteriaWithReviews: loading([
                     createReviewedCriterion({
                         name: "Criterion 1",
                         category: CriterionCategory.UNSPECIFIED,

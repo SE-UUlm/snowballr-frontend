@@ -14,7 +14,7 @@ import type {
     ProjectPaperViewProps,
 } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import type { Review } from "$lib/model/api/review";
-import type { ReviewedCriterion } from "$lib/model/general";
+import type { CriterionWithReviews } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
 
 export function createUser(user: Partial<User> = {}): User {
@@ -59,7 +59,9 @@ export function createReview(review: Partial<Review> = {}): Review {
     };
 }
 
-export function createReviewedCriterion(props: Partial<ReviewedCriterion> = {}): ReviewedCriterion {
+export function createReviewedCriterion(
+    props: Partial<CriterionWithReviews> = {},
+): CriterionWithReviews {
     return {
         ...Criteria.demoCriterion1,
         reviews: [Reviews.demoReview1, Reviews.demoReview2],
@@ -89,7 +91,7 @@ export function createProjectPaperViewProps(
         loadingPaper: loading(createProjectPaper()),
         loadingProject: loading(createProject()),
         reviewers: Promise.resolve([]),
-        reviewedCriteria: Promise.resolve([]),
+        criteriaWithReviews: Promise.resolve([]),
         ...props,
     };
 }
@@ -121,7 +123,7 @@ export function createPaperViewProps(
             loadingPaper: loading(createProjectPaper()),
             loadingProject: loading(createProject()),
             reviewers: Promise.resolve([]),
-            reviewedCriteria: Promise.resolve([]),
+            criteriaWithReviews: Promise.resolve([]),
             isProjectPaperView: true,
         }),
         ...props,

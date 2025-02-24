@@ -49,9 +49,9 @@ function asPaper(paper: Project_Paper | Paper): Paper {
 }
 
 /**
- * A review with resolved criterion references.
+ * A criterion with resolved review references.
  */
-type ReviewedCriterion = Criterion & {
+type CriterionWithReviews = Criterion & {
     reviews: Omit<Review, "selectedCriteriaIds">[];
 };
 
@@ -64,7 +64,7 @@ export type {
     ApiError,
     ProjectListEntryInterface,
     PaperListEntryInterface,
-    ReviewedCriterion,
+    CriterionWithReviews,
     UserConfig,
 };
 export { asPaper };

@@ -17,10 +17,10 @@
 <PaperView
     backRef="/"
     {backwardReferencedPapers}
+    criteriaWithReviews={undefined}
     {forwardReferencedPapers}
     {loadingPaper}
     loadingProject={undefined}
-    reviewedCriteria={undefined}
     reviewers={undefined}
     {user}
     userConfig={{ isReviewMode: false }}

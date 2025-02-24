@@ -2,7 +2,7 @@ import { backendService } from "$lib/grpc-api";
 import type { Criterion } from "$lib/model/api/criterion";
 import { Review } from "$lib/model/api/review";
 import type { User } from "$lib/model/api/user";
-import type { ReviewedCriterion } from "$lib/model/general";
+import type { CriterionWithReviews } from "$lib/model/general";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
@@ -25,15 +25,15 @@ export const load: PageLoad = ({ params }) => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     forwardReferencedPapers.catch(() => {});
 
-    const reviewedCriteria: Promise<ReviewedCriterion[]> = Promise.all([
+    const criteriaWithReviews: Promise<CriterionWithReviews[]> = Promise.all([
         backendService.getAllCriteriaForProject({ id: params.projectId }).response,
         backendService.getAllReviewsForProjectPaper({ id: params.paperId }).response,
-    ]).then(async ([{ criteria }, { reviews }]) => createReviewedCriteria(criteria, reviews));
+    ]).then(async ([{ criteria }, { reviews }]) => createCriteriaWithReviews(criteria, reviews));
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    reviewedCriteria.catch(() => {});
+    criteriaWithReviews.catch(() => {});
 
-    const reviewers: Promise<User[]> = reviewedCriteria.then(async (criteria) => {
+    const reviewers: Promise<User[]> = criteriaWithReviews.then(async (criteria) => {
         const users: User[] = [];
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
         for (const review of reviews) {
@@ -52,30 +52,30 @@ export const load: PageLoad = ({ params }) => {
         backwardReferencedPapers,
         forwardReferencedPapers,
         reviewers,
-        reviewedCriteria,
+        criteriaWithReviews,
         isReviewMode: false,
     };
 };
 
 /**
- * Takes a list of criteria and reviews and creates a list of reviewed criteria by attaching the reviews to the criteria.
+ * Takes a list of criteria and reviews and creates a list of criteria with reviews by attaching the reviews to the criteria.
  * The reviews are filtered by the selected criteria ids.
  *
  * @param criteria - List of criteria
  * @param reviews - List of reviews
- * @returns List of reviewed criteria
+ * @returns List of criteria with their respective reviews
  */
-async function createReviewedCriteria(
+async function createCriteriaWithReviews(
     criteria: Criterion[],
     reviews: Review[],
-): Promise<ReviewedCriterion[]> {
-    const reviewedCriteria: ReviewedCriterion[] = [];
+): Promise<CriterionWithReviews[]> {
+    const criteriaWithReviews: CriterionWithReviews[] = [];
     for (const criterion of criteria) {
         const filteredReviews = reviews.filter((review) =>
             review.selectedCriteriaIds.includes(criterion.id),
         );
 
-        reviewedCriteria.push({
+        criteriaWithReviews.push({
             ...criterion,
             reviews: filteredReviews.map((review) => ({
                 id: review.id,
@@ -85,5 +85,5 @@ async function createReviewedCriteria(
         });
     }
 
-    return reviewedCriteria;
+    return criteriaWithReviews;
 }

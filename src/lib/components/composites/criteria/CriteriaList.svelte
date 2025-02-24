@@ -1,6 +1,6 @@
 <script lang="ts">
     import CriterionListEntry from "./CriterionListEntry.svelte";
-    import type { ReviewedCriterion } from "$lib/model/general";
+    import type { CriterionWithReviews } from "$lib/model/general";
     import type { User } from "$lib/model/api/user";
     import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
     import ErrorIndicator from "../ErrorIndicator.svelte";
@@ -9,7 +9,7 @@
         listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
         inReviewMode: boolean;
         reviewers: Promise<User[]>;
-        criteria: Promise<ReviewedCriterion[]>;
+        criteria: Promise<CriterionWithReviews[]>;
         numberOfSkeletons?: number;
         emptyHint: string;
     }

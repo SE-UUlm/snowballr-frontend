@@ -2,18 +2,18 @@
     import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
     import { CriterionCategory } from "$lib/model/api/criterion";
     import { type User } from "$lib/model/api/user";
-    import type { ReviewedCriterion } from "$lib/model/general";
+    import type { CriterionWithReviews } from "$lib/model/general";
 
     export interface ReviewCriteriaListProps {
         inReviewMode: boolean;
         reviewers: Promise<User[]>;
-        reviewedCriteria: Promise<ReviewedCriterion[]>;
+        criteriaWithReviews: Promise<CriterionWithReviews[]>;
     }
 
     let {
         inReviewMode,
         reviewers,
-        reviewedCriteria: loadingCriteria,
+        criteriaWithReviews: loadingCriteria,
     }: ReviewCriteriaListProps = $props();
 
     const hardExclusions = loadingCriteria.then((criteria) =>

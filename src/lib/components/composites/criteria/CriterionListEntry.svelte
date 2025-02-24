@@ -2,14 +2,14 @@
     import Checkbox from "$lib/components/primitives/checkbox/checkbox.svelte";
     import CircleHelp from "lucide-svelte/icons/circle-help";
     import Tooltip from "../Tooltip.svelte";
-    import type { ReviewedCriterion } from "$lib/model/general";
+    import type { CriterionWithReviews } from "$lib/model/general";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
 
     interface Props {
         inReviewMode: boolean;
         reviewers: User[];
-        criterion: ReviewedCriterion;
+        criterion: CriterionWithReviews;
     }
 
     let { inReviewMode, reviewers, criterion }: Props = $props();
