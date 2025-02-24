@@ -13,7 +13,7 @@ import type { User } from "../model/api/user";
  */
 function filter<T>(items: T[], selector: (item: T) => string, searchText: string) {
     // Here we cast the items to string[] and selector to Selector<string> because we can't just use a selector
-    // with a generic type. This is weird but it's the only way to make it work.
+    // with a generic type. This is weird, but it's the only way to make it work.
     const fzf = new Fzf(items as string[], {
         selector: selector as Selector<string>,
         casing: "case-insensitive",
