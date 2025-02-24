@@ -25,15 +25,10 @@
         loadingProjectPaper,
     }: PaperResearchContextCardProps = $props();
 
-    const tabs = inReviewMode
-        ? [
-              { value: "1", label: "Review Information" },
-              { value: "2", label: "Forward/Backward References" },
-          ]
-        : [
-              { value: "1", label: "Forward/Backward References" },
-              { value: "2", label: "Review Information" },
-          ];
+    const reviewInfoTab = { value: "1", label: "Review Information" };
+    const referencesTab = { value: "2", label: "Forward/Backward References" };
+
+    const tabs = inReviewMode ? [reviewInfoTab, referencesTab] : [referencesTab, reviewInfoTab];
 </script>
 
 <!--
@@ -47,9 +42,9 @@ Usage:
 -->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
+        <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
+        <Separator />
         {#if inReviewMode}
-            <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
-            <Separator />
             <span>
                 Will be implemented in
                 <a
@@ -61,24 +56,12 @@ Usage:
                 .
             </span>
         {:else}
-            <ReferencesAndCitationsCardContent
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-            />
-        {/if}
-    </PaperCardContent>
-    <PaperCardContent value="2">
-        {#if inReviewMode}
-            <ReferencesAndCitationsCardContent
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-            />
-        {:else}
-            <ReviewCriteriaList {inReviewMode} {reviewedCriteria} {reviewers} />
-            <Separator />
             <div class="px-15">
                 <PaperDecisionBanner {loadingProjectPaper} {reviewers} />
             </div>
         {/if}
+    </PaperCardContent>
+    <PaperCardContent value="2">
+        <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
     </PaperCardContent>
 </PaperCard>
