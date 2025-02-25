@@ -1,5 +1,6 @@
 import DecisionsSelect from "$lib/components/composites/papers-view/DecisionsSelect.svelte";
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 describe("DecisionsSelect", () => {
@@ -13,6 +14,7 @@ describe("DecisionsSelect", () => {
     });
 
     test("When all props are provided, then component is shown correctly", async () => {
+        const user = userEvent.setup();
         render(DecisionsSelect, {
             target: document.body,
             props: {
@@ -20,9 +22,18 @@ describe("DecisionsSelect", () => {
             },
         });
 
-        await waitFor(() => {
-            const trigger = screen.getByText("All Decisions (3)");
-            expect(trigger).toBeInTheDocument();
-        });
+        const trigger = await screen.findByText("All Decisions (4)");
+        expect(trigger).toBeInTheDocument();
+
+        await user.click(trigger);
+
+        const option1 = screen.getByText("Accepted");
+        expect(option1).toBeInTheDocument();
+        const option2 = screen.getByText("Declined");
+        expect(option2).toBeInTheDocument();
+        const option3 = screen.getByText("Undecided");
+        expect(option3).toBeInTheDocument();
+        const option4 = screen.getByText("Unreviewed");
+        expect(option4).toBeInTheDocument();
     });
 });
