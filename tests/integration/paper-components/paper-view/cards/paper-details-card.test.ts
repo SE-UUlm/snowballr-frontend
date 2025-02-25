@@ -1,7 +1,7 @@
 import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createLoadingPaper, createPaper } from "../../../../model-builder";
+import { loading, createPaper } from "../../../../model-builder";
 import { waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
 
@@ -10,7 +10,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: createLoadingPaper(),
+                loadingPaper: loading(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -186,7 +186,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: createLoadingPaper({}, 1000),
+                loadingPaper: loading(createPaper(), 1000),
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },

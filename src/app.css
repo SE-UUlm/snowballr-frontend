@@ -182,7 +182,15 @@
 }
 
 @utility review-decision-icon-bg {
-    @apply absolute top-6 left-6 h-5 w-5 flex justify-center items-center rounded-full;
+    @apply absolute flex justify-center items-center rounded-full;
+}
+
+@utility review-decision-icon-bg-default {
+    @apply review-decision-icon-bg top-6 left-6 h-5 w-5;
+}
+
+@utility review-decision-icon-bg-small {
+    @apply review-decision-icon-bg top-[1.25rem] left-[1.25rem] h-4 w-4;
 }
 
 @layer components {

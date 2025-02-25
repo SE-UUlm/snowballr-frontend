@@ -1,7 +1,7 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createLoadingPaper } from "../../model-builder";
+import { loading, createPaper } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
 import { Authors, Users } from "../../example-data";
 
@@ -12,11 +12,13 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                loadingPaper: createLoadingPaper({
-                    id: "123",
-                    title: "Example Paper Title",
-                    authors: [Authors.johnDoe, Authors.janeSmith],
-                }),
+                loadingPaper: loading(
+                    createPaper({
+                        id: "123",
+                        title: "Example Paper Title",
+                        authors: [Authors.johnDoe, Authors.janeSmith],
+                    }),
+                ),
             },
         });
 
@@ -59,10 +61,12 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                loadingPaper: createLoadingPaper({
-                    title: "Example Paper Title",
-                    authors: [Authors.johnDoe, Authors.janeSmith],
-                }),
+                loadingPaper: loading(
+                    createPaper({
+                        title: "Example Paper Title",
+                        authors: [Authors.johnDoe, Authors.janeSmith],
+                    }),
+                ),
             },
         });
 
@@ -77,11 +81,13 @@ describe("PaperNavigationBar", () => {
             props: {
                 user: Users.johnDoe,
                 backRef: "/",
-                loadingPaper: createLoadingPaper({
-                    id: "123",
-                    title: "Example Paper Title",
-                    authors: [],
-                }),
+                loadingPaper: loading(
+                    createPaper({
+                        id: "123",
+                        title: "Example Paper Title",
+                        authors: [],
+                    }),
+                ),
             },
         });
 

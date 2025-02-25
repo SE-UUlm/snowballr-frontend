@@ -9,6 +9,8 @@
         loadingProjectPaper,
         backwardReferencedPapers,
         forwardReferencedPapers,
+        reviewers,
+        criteriaWithReviews,
         isReviewMode,
     } = data;
 </script>
@@ -27,9 +29,12 @@
     allowEditModeToggle
     backRef={`/project/${projectId}/dashboard`}
     {backwardReferencedPapers}
+    {criteriaWithReviews}
     {forwardReferencedPapers}
     loadingPaper={loadingProjectPaper}
+    {loadingProject}
+    {reviewers}
     showButtonBar
     {user}
-    userConfig={{ isReviewMode, showMaybeButton: true }}
+    userConfig={{ isReviewMode }}
 />

@@ -5,6 +5,7 @@
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
     import type { Paper } from "$lib/model/api/paper";
+    import ErrorIndicator from "../../ErrorIndicator.svelte";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         key: string;
@@ -38,6 +39,6 @@ Usage:
     {:then}
         <ToggleableInput isEditable={areDetailsInEditMode} {value} />
     {:catch}
-        <span class="pt-2 text-error">Couldn't load {key}</span>
+        <ErrorIndicator errorMessage={`Couldn't load ${key}`} />
     {/await}
 </div>

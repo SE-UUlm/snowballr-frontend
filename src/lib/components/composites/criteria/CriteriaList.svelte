@@ -1,0 +1,61 @@
+<script lang="ts">
+    import CriterionListEntry from "./CriterionListEntry.svelte";
+    import type { CriterionWithReviews } from "$lib/model/general";
+    import type { User } from "$lib/model/api/user";
+    import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
+    import ErrorIndicator from "../ErrorIndicator.svelte";
+
+    interface Props {
+        listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
+        inReviewMode: boolean;
+        reviewers: Promise<User[]>;
+        criteria: Promise<CriterionWithReviews[]>;
+        numberOfSkeletons?: number;
+        emptyHint: string;
+    }
+
+    let {
+        listTitle,
+        inReviewMode,
+        reviewers: loadingReviewers,
+        criteria: loadingCriteria,
+        numberOfSkeletons = 2,
+        emptyHint,
+    }: Props = $props();
+</script>
+
+<!--
+@component
+A list of criteria.
+
+- `inReviewMode`: whether the criteria is shown in review mode or not
+- `listTitle` is displayed as header of the list
+
+`inReviewMode` only has an effect on the nested `CriteriaListEntry` component.
+Refer to its documentation to see the changes depending on the `inReviewMode` flag.
+
+Usage:
+```svelte
+    <CriteriaList listTitle="Hard Exclusion" {inReviewMode} {reviewers} {criteria} />
+```
+-->
+<section class="flex flex-col gap-5">
+    <h2>{listTitle}</h2>
+    <ul class="flex flex-col gap-4 pl-2">
+        {#await Promise.all([loadingReviewers, loadingCriteria])}
+            {#each { length: numberOfSkeletons }, i}
+                <CriterionListEntrySkeleton {inReviewMode} numberOfReviews={i % 2} />
+            {/each}
+        {:then [reviewers, criteria]}
+            {#each criteria as criterion (criterion.id)}
+                <CriterionListEntry {criterion} {inReviewMode} {reviewers} />
+            {/each}
+            {#if criteria.length === 0}
+                <span class="text-hint italic">{emptyHint}</span>
+            {/if}
+        {:catch error}
+            {console.error(`Failed to load criteria: ${error}`)}
+            <ErrorIndicator errorMessage="Couldn't load criteria" />
+        {/await}
+    </ul>
+</section>

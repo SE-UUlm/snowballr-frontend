@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Skeleton } from "$lib/components/primitives/skeleton";
+    import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
 
     // IMPORTANT: overwrite this property only for testing purpose
     const { isSkeletonWithReview = Math.random() < 0.25 } = $props();
@@ -20,6 +21,6 @@
         </div>
     </div>
     {#if isSkeletonWithReview}
-        <Skeleton class="size-10 rounded-full" data-testid="user-avatar-skeleton" />
+        <UserAvatarSkeleton />
     {/if}
 </div>

@@ -1,25 +1,47 @@
 <script lang="ts">
+    import PaperDecisionBanner, {
+        type PaperDecisionBannerProps,
+    } from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
+    import { Separator } from "$lib/components/primitives/separator";
+    import type { Paper } from "$lib/model/api/paper";
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
     import ReferencesAndCitationsCardContent, {
         type ReferencesAndCitationsCardContentProps,
     } from "./ReferencesAndCitationsCardContent.svelte";
+    import ReviewCriteriaList, { type ReviewCriteriaListProps } from "./ReviewCriteriaList.svelte";
 
-    type Props = {
+    export type ProjectResearchContextCardProps = Omit<ReviewCriteriaListProps, "inReviewMode"> &
+        PaperDecisionBannerProps;
+
+    export interface NonProjectResearchContextCardProps {
+        loadingProjectPaper: Promise<Paper>;
+        reviewers: undefined;
+        criteriaWithReviews: undefined;
+    }
+
+    export type PaperResearchContextCardProps = {
         inReviewMode: boolean;
-    } & ReferencesAndCitationsCardContentProps;
+    } & ReferencesAndCitationsCardContentProps &
+        (ProjectResearchContextCardProps | NonProjectResearchContextCardProps);
 
-    let { inReviewMode, backwardReferencedPapers, forwardReferencedPapers }: Props = $props();
+    const {
+        inReviewMode,
+        backwardReferencedPapers,
+        forwardReferencedPapers,
+        reviewers,
+        criteriaWithReviews,
+        loadingProjectPaper,
+    }: PaperResearchContextCardProps = $props();
 
-    const tabs = inReviewMode
-        ? [
-              { value: "1", label: "Review Information" },
-              { value: "2", label: "Forward/Backward References" },
-          ]
-        : [
-              { value: "1", label: "Forward/Backward References" },
-              { value: "2", label: "Review Information" },
-          ];
+    const reviewInfoTab = { value: "1", label: "Review Information" };
+    const referencesTab = { value: "2", label: "Forward/Backward References" };
+
+    const tabs = reviewers
+        ? inReviewMode
+            ? [reviewInfoTab, referencesTab]
+            : [referencesTab, reviewInfoTab]
+        : [referencesTab];
 </script>
 
 <!--
@@ -28,46 +50,40 @@
 
 Usage:
 ```svelte
-    <PaperResearchContextCard {inReviewMode} {backwardReferencedPapers} {forwardReferencedPapers} />
+    <PaperResearchContextCard
+        {backwardReferencedPapers}
+        {forwardReferencedPapers}
+        {inReviewMode}
+        {loadingProjectPaper}
+        {reviewedCriteria}
+        {reviewers}
+    />
 ```
 -->
 <PaperCard {tabs}>
     <PaperCardContent value="1">
-        {#if inReviewMode}
-            <span>
-                Will be implemented in
-                <a
-                    class="text-blue-400"
-                    href="https://github.com/SE-UUlm/snowballr-frontend/issues/53"
-                >
-                    #53
-                </a>
-                .
-            </span>
-        {:else}
-            <ReferencesAndCitationsCardContent
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-            />
+        {#if reviewers !== undefined}
+            <ReviewCriteriaList {criteriaWithReviews} {inReviewMode} {reviewers} />
+            <Separator />
+            {#if inReviewMode}
+                <span>
+                    Will be implemented in
+                    <a
+                        class="text-blue-400"
+                        href="https://github.com/SE-UUlm/snowballr-frontend/issues/53"
+                    >
+                        #53
+                    </a>
+                    .
+                </span>
+            {:else}
+                <div class="md:px-8 lg:px-15">
+                    <PaperDecisionBanner {loadingProjectPaper} {reviewers} />
+                </div>
+            {/if}
         {/if}
     </PaperCardContent>
     <PaperCardContent value="2">
-        {#if inReviewMode}
-            <ReferencesAndCitationsCardContent
-                {backwardReferencedPapers}
-                {forwardReferencedPapers}
-            />
-        {:else}
-            <span>
-                Will be implemented in
-                <a
-                    class="text-blue-400"
-                    href="https://github.com/SE-UUlm/snowballr-frontend/issues/45"
-                >
-                    #45
-                </a>
-                .
-            </span>
-        {/if}
+        <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
     </PaperCardContent>
 </PaperCard>

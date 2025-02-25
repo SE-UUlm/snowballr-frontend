@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import { CircleAlert } from "lucide-svelte";
+    import ErrorIndicator from "../ErrorIndicator.svelte";
+
     type T = $$Generic; /* eslint-disable-line no-undef */
 
     interface NamedListProps {
@@ -100,9 +101,6 @@ This can be e.g. a search bar.
     {:catch error}
         {console.error(`Could not load items: ${error}`)}
         <h2>{listName}</h2>
-        <div class="flex flex-row items-center gap-x-2 p-4">
-            <CircleAlert class="text-neutral-500" size={20} />
-            <span class="text-error">{errorHint ? errorHint : error}</span>
-        </div>
+        <ErrorIndicator errorMessage={errorHint ? errorHint : error} />
     {/await}
 </div>

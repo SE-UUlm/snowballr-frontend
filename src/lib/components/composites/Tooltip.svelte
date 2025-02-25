@@ -1,5 +1,9 @@
 <script lang="ts">
-    import { buttonVariants } from "$lib/components/primitives/button/index.js";
+    import {
+        buttonVariants,
+        type ButtonSize,
+        type ButtonVariant,
+    } from "$lib/components/primitives/button/index.js";
     import * as Tooltip from "$lib/components/primitives/tooltip/index.js";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
@@ -8,17 +12,31 @@
     type Props = WithElementRef<TooltipTriggerProps> & {
         trigger: Snippet;
         content: Snippet;
-        buttonVariant?:
-            | "default"
-            | "link"
-            | "destructive"
-            | "outline"
-            | "secondary"
-            | "ghost"
-            | undefined;
+        triggerVariant?: ButtonVariant;
+        triggerSize?: ButtonSize;
+        openOnClick?: boolean;
     };
 
-    const { trigger, content, buttonVariant, class: className, ...restProps }: Props = $props();
+    const {
+        trigger,
+        content,
+        triggerVariant = "none",
+        triggerSize = "fit",
+        openOnClick = false,
+        class: className,
+        ...restProps
+    }: Props = $props();
+
+    let open = $state(false);
+
+    function handleClick(event: Event) {
+        if (!openOnClick) {
+            return;
+        }
+
+        event.preventDefault();
+        open = true;
+    }
 </script>
 
 <!--
@@ -26,11 +44,13 @@
 Reusable tooltip component that wraps a trigger and content component.
 The tooltip can't be used as link. To still redirect on click, use the `onclick` prop.
 
+- if `openOnClick` is set, the tooltip is immediately shown when it's clicked.
+
 Usage:
 ```svelte
     <Tooltip
         class="text-primary shadow-xs"
-        buttonVariant="default"
+        triggerVariant="default"
         onclick={() => goto(href)}
     >
         {#snippet trigger()}
@@ -43,9 +63,10 @@ Usage:
 ```
 -->
 <Tooltip.Provider>
-    <Tooltip.Root>
+    <Tooltip.Root bind:open>
         <Tooltip.Trigger
-            class={cn(buttonVariants({ variant: buttonVariant }), className)}
+            class={cn(buttonVariants({ variant: triggerVariant, size: triggerSize }), className)}
+            onclick={handleClick}
             {...restProps}
         >
             {@render trigger()}
