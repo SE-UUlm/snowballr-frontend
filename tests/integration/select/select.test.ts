@@ -51,7 +51,7 @@ describe("Select", () => {
         expect(option2).toBeInTheDocument();
     });
 
-    test("When option is clicked, then options are hidden and info is shown", async () => {
+    test("When option is selected, then select label is updated", async () => {
         const user = userEvent.setup();
         render(Select, {
             target: document.body,

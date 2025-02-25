@@ -1,7 +1,7 @@
 import StagesSelect from "$lib/components/composites/papers-view/StagesSelect.svelte";
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { assert, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 describe("StagesSelect", () => {
     beforeEach(() => {
@@ -22,10 +22,8 @@ describe("StagesSelect", () => {
             },
         });
 
-        await waitFor(() => {
-            const trigger = screen.getByText("All Stages (3)");
-            expect(trigger).toBeInTheDocument();
-        });
+        const trigger = await screen.findByText("All Stages (3)");
+        expect(trigger).toBeInTheDocument();
     });
 
     test("When the loadingStageCount promise is rejected, then stage 0 is still shown", async () => {
@@ -38,16 +36,15 @@ describe("StagesSelect", () => {
             },
         });
 
-        let trigger: HTMLElement;
-        await waitFor(() => {
-            trigger = screen.getByText("All Stages (1)");
-            expect(trigger).toBeInTheDocument();
-        });
-        assert(trigger!);
+        const trigger = await screen.findByText("All Stages (1)");
+        expect(trigger).toBeInTheDocument();
 
         await user.click(trigger);
 
         const option = screen.getByText("Stage 0");
         expect(option).toBeInTheDocument();
+
+        const noStagesOption = screen.queryByText("No stages available");
+        expect(noStagesOption).not.toBeInTheDocument();
     });
 });

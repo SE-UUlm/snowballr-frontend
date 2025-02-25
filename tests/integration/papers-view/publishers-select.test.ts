@@ -1,7 +1,7 @@
 import PublishersSelect from "$lib/components/composites/papers-view/PublishersSelect.svelte";
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { assert, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 describe("PublishersSelect", () => {
     beforeEach(() => {
@@ -22,10 +22,8 @@ describe("PublishersSelect", () => {
             },
         });
 
-        await waitFor(() => {
-            const trigger = screen.getByText("All Publishers (2)");
-            expect(trigger).toBeInTheDocument();
-        });
+        const trigger = await screen.findByText("All Publishers (2)");
+        expect(trigger).toBeInTheDocument();
     });
 
     test("When the loadingPublishers promise is rejected, then hint is shown", async () => {
@@ -38,12 +36,8 @@ describe("PublishersSelect", () => {
             },
         });
 
-        let trigger: HTMLElement;
-        await waitFor(() => {
-            trigger = screen.getByText("All Publishers (0)");
-            expect(trigger).toBeInTheDocument();
-        });
-        assert(trigger!);
+        const trigger = await screen.findByText("All Publishers (0)");
+        expect(trigger).toBeInTheDocument();
 
         await user.click(trigger);
 

@@ -1,8 +1,9 @@
 import CriteriaSelect from "$lib/components/composites/papers-view/CriteriaSelect.svelte";
-import { Criterion, CriterionCategory } from "$lib/model/api/criterion";
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { Criterion } from "$lib/model/api/criterion";
+import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { assert, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { Criteria } from "../../example-data";
 
 describe("CriteriaSelect", () => {
     beforeEach(() => {
@@ -19,29 +20,15 @@ describe("CriteriaSelect", () => {
             target: document.body,
             props: {
                 loadingCriteria: Promise.resolve<Criterion[]>([
-                    {
-                        id: "1",
-                        tag: "tag1",
-                        name: "name1",
-                        description: "description1",
-                        category: CriterionCategory.EXCLUSION,
-                    },
-                    {
-                        id: "2",
-                        tag: "tag2",
-                        name: "name2",
-                        description: "description2",
-                        category: CriterionCategory.INCLUSION,
-                    },
+                    Criteria.demoCriterion1,
+                    Criteria.demoCriterion2,
                 ]),
                 selectedCriteria: [],
             },
         });
 
-        await waitFor(() => {
-            const trigger = screen.getByText("All Criteria (2)");
-            expect(trigger).toBeInTheDocument();
-        });
+        const trigger = await screen.findByText("All Criteria (2)");
+        expect(trigger).toBeInTheDocument();
     });
 
     test("When the loadingCriteria promise is rejected, then hint is shown", async () => {
@@ -54,12 +41,8 @@ describe("CriteriaSelect", () => {
             },
         });
 
-        let trigger: HTMLElement;
-        await waitFor(() => {
-            trigger = screen.getByText("All Criteria (0)");
-            expect(trigger).toBeInTheDocument();
-        });
-        assert(trigger!);
+        const trigger = await screen.findByText("All Criteria (0)");
+        expect(trigger).toBeInTheDocument();
 
         await user.click(trigger);
 
