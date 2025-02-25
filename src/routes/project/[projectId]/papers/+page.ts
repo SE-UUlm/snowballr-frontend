@@ -38,23 +38,9 @@ export const load: PageLoad = ({ params }) => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     loadingPublishers.catch(() => {});
 
-    const loadingMembers = backendService
+    const loadingReviewers = backendService
         .getProjectMembers({ id: params.projectId })
-        .response.then(({ members }) => members);
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    loadingMembers.catch(() => {});
-
-    const loadingReviewers = Promise.all([loadingPapers, loadingMembers]).then(
-        ([projectPapers, members]) => {
-            const allReviewerIds = projectPapers
-                .flatMap((projectPaper) => projectPaper.reviews)
-                .map((review) => review.userId);
-            const uniqueReviewerIds = new Set(allReviewerIds);
-            return members
-                .map((member) => member.user!)
-                .filter((user) => uniqueReviewerIds.has(user.id));
-        },
-    );
+        .response.then(({ members }) => members.flatMap((member) => member.user!));
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     loadingReviewers.catch(() => {});
 
