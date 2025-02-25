@@ -13,8 +13,9 @@
  *
  * const state = resource(loadingResource, {
  *    initialValue: [],
- *    onSuccess: (data) => data,
+ *    onSuccess: (data) => data.property,
  *    onErrorValue: undefined,
+ *    ressourceName: "SomeData",
  * });
  *
  * ...
@@ -26,7 +27,7 @@
  *
  * @param loadingResource - The promise representing the loading resource.
  * @param options.initialValue - The initial value of the state.
- * @param options.onSuccess - The function that is called when the promise resolves and sets the value of the state. Default is the identity function.
+ * @param options.onSuccess - The function that is called when the promise resolves and sets the value of the state. Defaults to the identity function.
  * @param options.onErrorValue - The value that is set when the promise rejects.
  * @param options.ressourceName - The name of the resource that is used for error logging. Default is "resource".
  * @returns The state that represents the loading resource.

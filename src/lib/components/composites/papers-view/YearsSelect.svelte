@@ -22,13 +22,6 @@
             .slice()
             .sort()
             .map((year) => {
-                if (year === -1) {
-                    return {
-                        value: "-1",
-                        label: "N/A",
-                    };
-                }
-
                 return {
                     value: `${year}`,
                     label: `${year}`,

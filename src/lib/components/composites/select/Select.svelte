@@ -40,7 +40,7 @@ Usage:
 ```svelte
     <Select
         {options}
-        allOptionsLabel="All Years"
+        categoryLabel="Years"
     />
 ```
 -->
