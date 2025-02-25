@@ -43,4 +43,26 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
     return isPaperUndecided(paper) || paper.reviews.length < numberOfRequiredReviews;
 }
 
-export { getName, getNames, isPaperUndecided, doesPaperNeedReview };
+/**
+ * Use to check for exhaustiveness of a switch statement.
+ *
+ * Usage:
+ * ```ts
+ * const value: 'a' | 'b' = ...;
+ * switch (value) {
+ *    case 'a':
+ *      return 1;
+ *   case 'b':
+ *     return 2;
+ *  default:
+ *   return exhaustiveCheck(value);
+ * }
+ * ```
+ *
+ * @param x The value that should not be reached.
+ */
+function exhaustiveCheck(x: never): never {
+    throw new Error(`Unhandled case: ${x}`);
+}
+
+export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck };
