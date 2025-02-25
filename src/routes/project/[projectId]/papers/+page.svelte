@@ -85,6 +85,14 @@
                         <ChevronDown class="size-4" />
                     {/if}
                 </Button>
+                <Button
+                    onclick={() => {
+                        papersFilters = emptyFilters;
+                    }}
+                >
+                    <Trash />
+                    Clear
+                </Button>
                 <SearchBar
                     onSearch={(searchText) => {
                         // TODO: build filters from search text
@@ -112,14 +120,6 @@
                         {loadingCriteria}
                         bind:selectedCriteria={papersFilters.criteria}
                     />
-                    <Button
-                        onclick={() => {
-                            papersFilters = emptyFilters;
-                        }}
-                    >
-                        <Trash />
-                        Clear Filters
-                    </Button>
                 </div>
             {/if}
         </div>
