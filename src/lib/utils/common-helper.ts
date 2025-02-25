@@ -59,10 +59,22 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
  * }
  * ```
  *
- * @param x The value that should not be reached.
+ * @param x - The value that should not be reached.
  */
 function exhaustiveCheck(x: never): never {
     throw new Error(`Unhandled case: ${x}`);
 }
 
-export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck };
+/**
+ * Pluralize a word based on the count.
+ *
+ * @param count - the number of items
+ * @param singular - the singular form of the word
+ * @param plural - the plural form of the word
+ * @returns the pluralized word
+ */
+function pluralize(count: number, singular: string, plural: string): string {
+    return count === 1 ? singular : plural;
+}
+
+export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck, pluralize };

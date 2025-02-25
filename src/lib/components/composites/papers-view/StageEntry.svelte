@@ -4,6 +4,7 @@
     import Button from "$lib/components/primitives/button/button.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
     import type { Stage } from "$lib/model/general";
+    import { pluralize } from "$lib/utils/common-helper";
     import CirclePlus from "lucide-svelte/icons/circle-plus";
 
     interface Props {
@@ -20,7 +21,7 @@
     <Accordion.Trigger data-testid="stage-entry-trigger">
         <div class="flex flex-row w-full justify-between">
             <span>Stage {stage.stageIndex}</span>
-            <span>({stage.papers.length} papers)</span>
+            <span>({stage.papers.length} {pluralize(stage.papers.length, "paper", "papers")})</span>
         </div>
     </Accordion.Trigger>
     <Accordion.Content>

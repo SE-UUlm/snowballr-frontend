@@ -15,6 +15,7 @@
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/papers-view/StageEntry.svelte";
+    import { pluralize } from "$lib/utils/common-helper.js";
 
     let { data } = $props();
     const {
@@ -127,7 +128,8 @@
                 <span class="text-hint">Loading stages...</span>
             {:then stages}
                 <span class="text-hint">
-                    {`${stages.length} Stage${stages.length !== 1 ? "s" : ""}`}
+                    {stages.length}
+                    {pluralize(stages.length, "Stage", "Stages")}
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
