@@ -17,7 +17,7 @@
     const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
     const paperId = resource<string, string | undefined>(loadingPaperId, {
         initialValue: undefined,
-        ressourceName: "paper ID",
+        resourceName: "paper ID",
     });
 
     const onMouseEnter = () => (isHovered = true);

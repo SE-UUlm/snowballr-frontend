@@ -11,7 +11,7 @@
 
     const publishers = resource<string[], string[]>(loadingPublishers, {
         initialValue: [],
-        ressourceName: "publishers",
+        resourceName: "publishers",
     });
 
     let options = $derived<SelectOption[]>(

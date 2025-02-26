@@ -11,7 +11,7 @@
 
     const stageCount = resource<bigint, bigint>(loadingStageCount, {
         initialValue: 0n,
-        ressourceName: "stages",
+        resourceName: "stages",
     });
 
     let options = $derived<SelectOption[]>(

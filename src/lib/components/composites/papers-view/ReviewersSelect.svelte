@@ -13,7 +13,7 @@
 
     const reviewers = resource<User[], User[]>(loadingReviewers, {
         initialValue: [],
-        ressourceName: "reviewers",
+        resourceName: "reviewers",
     });
 
     let options = $derived<SelectOption[]>(

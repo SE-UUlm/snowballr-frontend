@@ -15,7 +15,7 @@
  *    initialValue: [],
  *    onSuccess: (data) => data.property,
  *    onErrorValue: undefined,
- *    ressourceName: "SomeData",
+ *    resourceName: "SomeData",
  * });
  *
  * ...
@@ -29,7 +29,7 @@
  * @param options.initialValue - The initial value of the state.
  * @param options.onSuccess - The function that is called when the promise resolves and sets the value of the state. Defaults to the identity function.
  * @param options.onErrorValue - The value that is set when the promise rejects.
- * @param options.ressourceName - The name of the resource that is used for error logging. Default is "resource".
+ * @param options.resourceName - The name of the resource that is used for error logging. Default is "resource".
  * @returns The state that represents the loading resource.
  */
 export const resource = <TPromise, TValue>(
@@ -38,14 +38,14 @@ export const resource = <TPromise, TValue>(
         initialValue: TValue;
         onSuccess?: (value: TPromise) => TValue;
         onErrorValue?: TValue;
-        ressourceName?: string;
+        resourceName?: string;
     },
 ) => {
     const {
         initialValue,
         onSuccess = (v) => v as unknown as TValue,
         onErrorValue,
-        ressourceName = "resource",
+        resourceName = "resource",
     } = options;
 
     const rune = $state<{ value: TValue }>({
@@ -60,7 +60,7 @@ export const resource = <TPromise, TValue>(
             if (onErrorValue) {
                 rune.value = onErrorValue;
             }
-            console.error(`Failed to load ${ressourceName}`);
+            console.error(`Failed to load ${resourceName}`);
         });
 
     return rune;

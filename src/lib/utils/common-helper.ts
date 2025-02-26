@@ -66,12 +66,12 @@ function exhaustiveCheck(x: never): never {
 }
 
 /**
- * Pluralize a word based on the count.
+ * Returns either the plural or singular form of a word based on the count.
  *
  * @param count - the number of items
  * @param singular - the singular form of the word
  * @param plural - the plural form of the word
- * @returns the pluralized word
+ * @returns the singular form if count is 1, otherwise the plural form
  */
 function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;

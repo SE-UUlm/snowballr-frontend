@@ -11,7 +11,7 @@
 
     const years = resource<number[], number[]>(loadingYears, {
         initialValue: [],
-        ressourceName: "years",
+        resourceName: "years",
     });
 
     let options = $derived<SelectOption[]>(

@@ -24,7 +24,7 @@
 
     const paperId = resource<string, string | undefined>(loadingPaperId, {
         initialValue: undefined,
-        ressourceName: "paper ID",
+        resourceName: "paper ID",
     });
 
     function onButtonClick() {

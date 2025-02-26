@@ -12,7 +12,7 @@
 
     const criteria = resource<Criterion[], Criterion[]>(loadingCriteria, {
         initialValue: [],
-        ressourceName: "criteria",
+        resourceName: "criteria",
     });
 
     let options = $derived<SelectOption[]>(
