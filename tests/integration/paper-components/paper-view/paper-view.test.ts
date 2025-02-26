@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
 import { assert, describe, expect, test } from "vitest";
 import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import {
@@ -10,7 +10,7 @@ import {
     loading,
 } from "../../../model-builder";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import { waitForComponentLoading } from "../../test-helper";
+import { waitForComponentLoading } from "$tests/integration/test-helper";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
@@ -57,13 +57,13 @@ describe("PaperView", () => {
             ),
         );
 
-        await waitFor(() => {
-            const decisionButtons = screen.getAllByTestId("decision-button");
-            expect(decisionButtons).toHaveLength(3);
-            expect(decisionButtons[0]).toHaveTextContent("Decline");
-            expect(decisionButtons[1]).toHaveTextContent("Maybe");
-            expect(decisionButtons[2]).toHaveTextContent("Accept");
-        });
+        await waitForComponentLoading();
+
+        const decisionButtons = screen.getAllByTestId("decision-button");
+        expect(decisionButtons).toHaveLength(3);
+        expect(decisionButtons[0]).toHaveTextContent("Decline");
+        expect(decisionButtons[1]).toHaveTextContent("Maybe");
+        expect(decisionButtons[2]).toHaveTextContent("Accept");
     });
 
     test("When navigation and decision buttons are shown but `project.settings.reviewMaybeAllowed` is false, then only the accept and decline buttons are shown", async () => {
