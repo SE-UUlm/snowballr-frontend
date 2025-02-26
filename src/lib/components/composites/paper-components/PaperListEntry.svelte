@@ -6,6 +6,7 @@
     import { PaperDecision } from "$lib/model/api/project";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
+    import { exhaustiveCheck } from "$lib/utils/common-helper";
 
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;
@@ -39,8 +40,10 @@
                 return "border-decline-red";
             case PaperDecision.UNDECIDED:
                 return numberOfReviews > 0 ? "border-maybe-yellow" : "border-unreviewed-gray";
-            default:
+            case PaperDecision.UNSPECIFIED:
                 return "border-unreviewed-gray";
+            default:
+                exhaustiveCheck(decisionStatus);
         }
     }
 
@@ -49,7 +52,7 @@
         try {
             reviewingUser = await backendService.getUserById({ id: id }).response;
         } catch (error) {
-            console.error(`Could not load review user with: ${id} (error: ${error})`);
+            console.error(`Couldn't load review user with: ${id} (error: ${error})`);
         }
 
         return reviewingUser;

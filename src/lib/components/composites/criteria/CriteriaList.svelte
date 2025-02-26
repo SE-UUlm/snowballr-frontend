@@ -54,7 +54,7 @@ Usage:
                 <span class="text-hint italic">{emptyHint}</span>
             {/if}
         {:catch error}
-            {console.error(`Failed to load criteria: ${error}`)}
+            {console.error(`Couldn't load criteria: ${error}`)}
             <ErrorIndicator errorMessage="Couldn't load criteria" />
         {/await}
     </ul>

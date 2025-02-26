@@ -43,4 +43,38 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
     return isPaperUndecided(paper) || paper.reviews.length < numberOfRequiredReviews;
 }
 
-export { getName, getNames, isPaperUndecided, doesPaperNeedReview };
+/**
+ * Use to check for exhaustiveness of a switch statement.
+ *
+ * Usage:
+ * ```ts
+ * const value: 'a' | 'b' = ...;
+ * switch (value) {
+ *    case 'a':
+ *      return 1;
+ *   case 'b':
+ *     return 2;
+ *  default:
+ *   return exhaustiveCheck(value);
+ * }
+ * ```
+ *
+ * @param x - The value that should not be reached.
+ */
+function exhaustiveCheck(x: never): never {
+    throw new Error(`Unhandled case: ${x}`);
+}
+
+/**
+ * Returns either the plural or singular form of a word based on the count.
+ *
+ * @param count - the number of items
+ * @param singular - the singular form of the word
+ * @param plural - the plural form of the word
+ * @returns the singular form if count is 1, otherwise the plural form
+ */
+function pluralize(count: number, singular: string, plural: string): string {
+    return count === 1 ? singular : plural;
+}
+
+export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck, pluralize };

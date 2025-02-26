@@ -59,6 +59,11 @@ interface UserConfig {
     isReviewMode: boolean;
 }
 
+interface Stage {
+    stageIndex: bigint;
+    papers: Project_Paper[];
+}
+
 export type {
     ValidationResult,
     ApiError,
@@ -66,5 +71,6 @@ export type {
     PaperListEntryInterface,
     CriterionWithReviews,
     UserConfig,
+    Stage,
 };
 export { asPaper };

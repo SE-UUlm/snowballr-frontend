@@ -45,7 +45,7 @@
             initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
         } catch (error) {
             isErrorOnUsersLoading = true;
-            console.error(`Could not get users from server (${error})`);
+            console.error(`Couldn't get users from server (${error})`);
         }
     });
 
@@ -171,13 +171,13 @@
                     })
                     .catch((error) => {
                         isErrorOnProjectCreation = true;
-                        console.error(`Could not invite users to project (${error})`);
+                        console.error(`Couldn't invite users to project (${error})`);
                         /// TODO: add hint in the *Members* page in the settings
                     });
             })
             .catch((error) => {
                 isErrorOnProjectCreation = true;
-                console.error(`Could not create project (${error})`);
+                console.error(`Couldn't create project (${error})`);
             });
         isServerStillCreatingProject = false;
     }

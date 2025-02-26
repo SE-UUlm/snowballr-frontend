@@ -99,7 +99,7 @@ This can be e.g. a search bar.
             </ul>
         {/if}
     {:catch error}
-        {console.error(`Could not load items: ${error}`)}
+        {console.error(`Couldn't load items: ${error}`)}
         <h2>{listName}</h2>
         <ErrorIndicator errorMessage={errorHint ? errorHint : error} />
     {/await}

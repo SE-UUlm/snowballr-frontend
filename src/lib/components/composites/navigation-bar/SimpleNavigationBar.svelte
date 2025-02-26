@@ -27,6 +27,6 @@
     {:then title}
         <h2 class="place-content-center truncate">{title}</h2>
     {:catch}
-        <h2 class="place-content-center">Error</h2>
+        <h2 class="place-content-center">Loading failed</h2>
     {/await}
 </NavigationBar>

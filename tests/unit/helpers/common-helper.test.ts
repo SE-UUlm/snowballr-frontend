@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { doesPaperNeedReview, getNames, isPaperUndecided } from "$lib/utils/common-helper";
+import {
+    doesPaperNeedReview,
+    getNames,
+    isPaperUndecided,
+    pluralize,
+} from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
@@ -71,5 +76,19 @@ describe("Check the (review) status of a paper", () => {
 
         expect(doesPaperNeedReview(paper, 1)).toBe(false);
         expect(doesPaperNeedReview(paper, 2)).toBe(true);
+    });
+});
+
+describe("Pluralize a word based on the count", () => {
+    it("When the count is 1, the singular form of the word is returned", () => {
+        expect(pluralize(1, "item", "items")).toBe("item");
+    });
+
+    it("When the count is greater than 1, the plural form of the word is returned", () => {
+        expect(pluralize(2, "item", "items")).toBe("items");
+    });
+
+    it("When the count is 0, the plural form of the word is returned", () => {
+        expect(pluralize(0, "item", "items")).toBe("items");
     });
 });

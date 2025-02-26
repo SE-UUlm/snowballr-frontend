@@ -7,6 +7,7 @@
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
     import ErrorIndicator from "../ErrorIndicator.svelte";
+    import { exhaustiveCheck } from "$lib/utils/common-helper";
 
     export interface PaperDecisionBannerProps {
         reviewers: Promise<User[]>;
@@ -32,8 +33,11 @@
                 return "Accepted";
             case PaperDecision.DECLINED:
                 return "Declined";
-            default:
+            case PaperDecision.UNDECIDED:
+            case PaperDecision.UNSPECIFIED:
                 return paper.reviews.length > 0 ? "Undecided" : "Unreviewed";
+            default:
+                exhaustiveCheck(paper.decision);
         }
     }
 
@@ -43,8 +47,11 @@
                 return "bg-accept-green";
             case PaperDecision.DECLINED:
                 return "bg-decline-red";
-            default:
+            case PaperDecision.UNDECIDED:
+            case PaperDecision.UNSPECIFIED:
                 return paper.reviews.length > 0 ? "bg-maybe-yellow" : "bg-unreviewed-gray";
+            default:
+                exhaustiveCheck(paper.decision);
         }
     }
 </script>
@@ -75,7 +82,7 @@
             {/each}
         </div>
     {:catch error}
-        {console.error(`Failed to load paper decision: ${error}`)}
+        {console.error(`Couldn't load paper decision: ${error}`)}
         <ErrorIndicator errorMessage="Couldn't load paper decision" />
     {/await}
 </div>
