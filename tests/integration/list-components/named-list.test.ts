@@ -174,7 +174,7 @@ describe("NamedListComponent", () => {
         );
     });
 
-    test("When the list item could not be loaded, then the error message is shown", async () => {
+    test("When the list item couldn't be loaded, then the error message is shown", async () => {
         const componentData: Promise<string[]> = new Promise<string[]>((_, reject) =>
             setTimeout(() => {
                 return reject(new Error("Test Error"));

@@ -75,7 +75,7 @@
             {/each}
         </div>
     {:catch error}
-        {console.error(`Failed to load paper decision: ${error}`)}
+        {console.error(`Couldn't load paper decision: ${error}`)}
         <ErrorIndicator errorMessage="Couldn't load paper decision" />
     {/await}
 </div>

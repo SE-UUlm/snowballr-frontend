@@ -16,6 +16,7 @@
     import Trash from "lucide-svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/papers-view/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
+    import ErrorIndicator from "$lib/components/composites/ErrorIndicator.svelte";
 
     let { data } = $props();
     const {
@@ -137,8 +138,8 @@
                     {/each}
                 </Accordion.Root>
             {:catch error}
-                {console.error(`Failed to load stages: ${error}`)}
-                <span class="text-error">Failed to load stages</span>
+                {console.error(`Couldn't load stages: ${error}`)}
+                <ErrorIndicator errorMessage="Couldn't load stages" />
             {/await}
         </div>
     </div>

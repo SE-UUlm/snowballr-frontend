@@ -52,7 +52,7 @@
         try {
             reviewingUser = await backendService.getUserById({ id: id }).response;
         } catch (error) {
-            console.error(`Could not load review user with: ${id} (error: ${error})`);
+            console.error(`Couldn't load review user with: ${id} (error: ${error})`);
         }
 
         return reviewingUser;

@@ -48,11 +48,11 @@ export const load: PageLoad = async () => {
                     projectsResponse.projects.map((project) => requestProjectInformation(project)),
                 );
             } catch {
-                throw new Error("Could not load project details.");
+                throw new Error("Couldn't load project details.");
             }
         })
         .catch(() => {
-            throw new Error("Could not load projects.");
+            throw new Error("Couldn't load projects.");
         });
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
@@ -65,12 +65,12 @@ export const load: PageLoad = async () => {
                     projectsResponse.projects.map((project) => requestUndecidedPapers(project)),
                 );
             } catch {
-                throw new Error("Could not load open reviews.");
+                throw new Error("Couldn't load open reviews.");
             }
         })
         .then((openReviews) => openReviews.flat())
         .catch(() => {
-            throw new Error("Could not load open reviews.");
+            throw new Error("Couldn't load open reviews.");
         });
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)

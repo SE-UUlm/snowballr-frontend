@@ -60,7 +60,7 @@ export const resource = <TPromise, TValue>(
             if (onErrorValue) {
                 rune.value = onErrorValue;
             }
-            console.error(`Failed to load ${resourceName}`);
+            console.error(`Couldn't load ${resourceName}`);
         });
 
     return rune;
