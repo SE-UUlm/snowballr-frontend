@@ -186,11 +186,11 @@
 }
 
 @utility review-decision-icon-bg-default {
-    @apply review-decision-icon-bg top-6 left-6 h-5 w-5;
+    @apply review-decision-icon-bg top-6 left-6 size-5;
 }
 
 @utility review-decision-icon-bg-small {
-    @apply review-decision-icon-bg top-[1.25rem] left-[1.25rem] h-4 w-4;
+    @apply review-decision-icon-bg top-[1.25rem] left-[1.25rem] size-4;
 }
 
 @layer components {

@@ -34,9 +34,9 @@ Usage:
 >
     <div>
         {#if isValid}
-            <CircleCheck class="h-5 w-5" data-testid="validation-success" />
+            <CircleCheck class="size-5" data-testid="validation-success" />
         {:else}
-            <CircleAlert class="h-5 w-5" data-testid="validation-fail" />
+            <CircleAlert class="size-5" data-testid="validation-fail" />
         {/if}
     </div>
     <p class="wrap">{prettyDescription}</p>

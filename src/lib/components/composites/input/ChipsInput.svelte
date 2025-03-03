@@ -273,7 +273,7 @@ Usage:
     </div>
     {#if !isInputValid}
         <div class="flex w-full flex-row gap-2 text-red-500">
-            <CircleAlert class="h-5 w-5" data-testid="validation-fail" />
+            <CircleAlert class="size-5" data-testid="validation-fail" />
             <p class="text-sm" data-testid="error-message">
                 {errorMessage}
             </p>

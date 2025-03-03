@@ -30,7 +30,7 @@
             <UserMenu {user} />
             {#if backRef !== undefined}
                 <a aria-label={`Back to ${backRef}`} href={backRef}>
-                    <ArrowLeft class="h-6 w-6" />
+                    <ArrowLeft class="size-6" />
                 </a>
             {/if}
             <!-- Children can be e.g. a title element -->

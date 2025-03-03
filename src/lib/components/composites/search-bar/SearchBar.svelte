@@ -80,6 +80,6 @@ Usage:
         }}
         type="button"
     >
-        <Search class="text-muted-foreground h-4 w-4" />
+        <Search class="text-muted-foreground size-4" />
     </button>
 </div>
