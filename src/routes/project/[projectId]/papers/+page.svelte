@@ -74,9 +74,9 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} {user} />
-<main class="flex flex-row h-full w-full px-4 py-2 gap-10">
-    <div class="flex flex-col w-full h-full gap-5">
-        <div class="flex flex-col w-full h-fit gap-2.5">
+<main class="flex h-full w-full flex-row gap-10 px-4 py-2">
+    <div class="flex h-full w-full flex-col gap-5">
+        <div class="flex h-fit w-full flex-col gap-2.5">
             <div class="flex flex-row items-center gap-2.5">
                 <Button onclick={() => (showFilters = !showFilters)}>
                     Filters
@@ -105,7 +105,7 @@
                 />
             </div>
             {#if showFilters}
-                <div class="flex flex-row items-center gap-2.5 flex-wrap">
+                <div class="flex flex-row flex-wrap items-center gap-2.5">
                     <StagesSelect {loadingStageCount} bind:selectedStages={papersFilters.stages} />
                     <ReviewersSelect
                         {loadingReviewers}
@@ -124,7 +124,7 @@
                 </div>
             {/if}
         </div>
-        <div class="w-full h-full">
+        <div class="h-full w-full">
             {#await loadingStages}
                 <span class="text-hint">Loading stages...</span>
             {:then stages}
@@ -144,7 +144,7 @@
         </div>
     </div>
     {#if selectedPaper}
-        <Card.Root class="flex flex-col w-[60%] h-full gap-5 shadow-lg overflow-hidden">
+        <Card.Root class="flex h-full w-[60%] flex-col gap-5 overflow-hidden shadow-lg">
             <Card.Content>
                 <!-- TODO: replace with paper details card -->
                 <!-- This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/219 -->

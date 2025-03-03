@@ -61,14 +61,14 @@
 <svelte:head>
     <title>Sign Up</title>
 </svelte:head>
-<Card.Root class="flex flex-col w-full border-slate-500 shadow-lg max-w-xl">
-    <Card.Header class="flex flex-col w-full">
+<Card.Root class="flex w-full max-w-xl flex-col border-slate-500 shadow-lg">
+    <Card.Header class="flex w-full flex-col">
         <Card.Title class="text-3xl">Sign Up</Card.Title>
         <Card.Description>Enter your information to create an account</Card.Description>
     </Card.Header>
-    <Card.Content class="flex flex-col w-full">
+    <Card.Content class="flex w-full flex-col">
         <form class="flex flex-col gap-5" onsubmit={handleSubmit}>
-            <div class="flex flex-row gap-5 w-full">
+            <div class="flex w-full flex-row gap-5">
                 <Input
                     bind:this={firstNameInput}
                     class="w-full"

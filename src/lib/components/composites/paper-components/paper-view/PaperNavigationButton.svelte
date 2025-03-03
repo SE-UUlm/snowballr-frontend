@@ -31,7 +31,7 @@ Usage:
 ```
 -->
 <Tooltip
-    class="bg-slate-200 hover:bg-slate-400 text-primary grow max-w-xs shadow-lg min-w-32"
+    class="text-primary max-w-xs min-w-32 grow bg-slate-200 shadow-lg hover:bg-slate-400"
     aria-label={tooltipText}
     data-testid="navigation-button"
     onclick={() => {

@@ -10,7 +10,7 @@
     let { inReviewMode, numberOfReviews = 0 }: Props = $props();
 </script>
 
-<li class="flex flex-row gap-4 items-center">
+<li class="flex flex-row items-center gap-4">
     {#if inReviewMode}
         <div class="size-4.5"></div>
     {/if}

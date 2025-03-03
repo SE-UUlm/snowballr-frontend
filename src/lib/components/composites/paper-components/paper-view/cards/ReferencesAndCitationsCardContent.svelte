@@ -41,8 +41,8 @@ Usage:
     <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
 ```
 -->
-<section class="flex flex-col h-full gap-5">
-    <div class="flex h-full overflow-hidden flex-[1_1_0]">
+<section class="flex h-full flex-col gap-5">
+    <div class="flex h-full flex-[1_1_0] overflow-hidden">
         <NamedList
             emptyHint="No references found."
             errorHint="Couldn't load references."
@@ -63,7 +63,7 @@ Usage:
             {/snippet}
         </NamedList>
     </div>
-    <div class="flex h-full overflow-hidden flex-[1_1_0]">
+    <div class="flex h-full flex-[1_1_0] overflow-hidden">
         <NamedList
             emptyHint="No citations found."
             errorHint="Couldn't load citations."

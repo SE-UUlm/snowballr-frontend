@@ -28,11 +28,11 @@ Usage:
 -->
 <!-- Set p-0 first to override inherited padding -->
 <Tabs.List
-    class="w-full h-fit justify-start rounded-none border-b b-2 bg-transparent p-0 px-3 pt-3"
+    class="b-2 h-fit w-full justify-start rounded-none border-b bg-transparent p-0 px-3 pt-3"
 >
     {#each tabs as tab (tab.value)}
         <Tabs.Trigger
-            class="data-[state=active]:border-b-primary h-fit rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none max-w-[50%]"
+            class="data-[state=active]:border-b-primary h-fit max-w-[50%] rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-2 transition-none"
             value={tab.value}
         >
             <div class="truncate">{tab.label}</div>

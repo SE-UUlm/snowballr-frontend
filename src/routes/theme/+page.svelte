@@ -20,10 +20,10 @@
     <div class="text-warning-amber">This is a warning-amber colored text</div>
 </div>
 
-<div class="p-3 bg-white w-fit">
-    <div class="border-container-border-grey border rounded-md p-2 shadow-lg">
+<div class="w-fit bg-white p-3">
+    <div class="border-container-border-grey rounded-md border p-2 shadow-lg">
         <div
-            class="border-input-border-slate border w-fit p-2 m-2 rounded-md text-input-placeholder-slate"
+            class="border-input-border-slate text-input-placeholder-slate m-2 w-fit rounded-md border p-2"
         >
             This is a container with an input-border-slate border and an input-placeholder-slate
             text inside a container with a container-border-grey border (and shadow)

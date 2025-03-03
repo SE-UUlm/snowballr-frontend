@@ -56,7 +56,7 @@ Usage:
 ```
 -->
 <Tooltip
-    class="border border-container-border-grey bg-transparent hover:bg-transparent text-primary p-1.5 w-fit h-fit"
+    class="border-container-border-grey text-primary h-fit w-fit border bg-transparent p-1.5 hover:bg-transparent"
     aria-label={tooltipText}
     onclick={onClick}
     onmouseenter={onMouseEnter}

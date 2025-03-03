@@ -31,7 +31,7 @@ Usage:
     </ul>
 ```
 -->
-<li class="flex flex-row gap-4 items-center" data-testid="criterion-list-entry">
+<li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
     {#if inReviewMode}
         <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
         <Checkbox data-testid="criterion-checkbox" />
@@ -41,7 +41,7 @@ Usage:
         <span class="truncate" title={criterion.name}>{criterion.name}</span>
     </div>
     <Tooltip
-        class="[&_svg]:size-6 p-0"
+        class="p-0 [&_svg]:size-6"
         aria-label={criterion.description}
         openOnClick
         triggerSize="fit"

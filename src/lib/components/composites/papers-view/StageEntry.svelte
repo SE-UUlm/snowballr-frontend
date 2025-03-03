@@ -19,13 +19,13 @@
 <Accordion.Item value={`stage-${stage.stageIndex}`}>
     <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
     <Accordion.Trigger data-testid="stage-entry-trigger">
-        <div class="flex flex-row w-full justify-between">
+        <div class="flex w-full flex-row justify-between">
             <span>Stage {stage.stageIndex}</span>
             <span>({stage.papers.length} {pluralize(stage.papers.length, "paper", "papers")})</span>
         </div>
     </Accordion.Trigger>
     <Accordion.Content>
-        <div class="flex flex-col pl-5 gap-4">
+        <div class="flex flex-col gap-4 pl-5">
             {#each stage.papers as paper (paper.id)}
                 <PaperListEntry
                     onClick={() => {

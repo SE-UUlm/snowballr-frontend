@@ -119,13 +119,13 @@ Usage:
     />
 ```
 -->
-<div class="flex flex-row justify-between h-fit w-full gap-4">
+<div class="flex h-fit w-full flex-row justify-between gap-4">
     <PaperNavigationBar {backRef} {loadingPaper} {user} />
     <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
     <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>
-<main class="flex flex-col h-full w-full px-2 py-4 gap-5">
-    <div class="flex flex-row w-full h-full gap-5">
+<main class="flex h-full w-full flex-col gap-5 px-2 py-4">
+    <div class="flex h-full w-full flex-row gap-5">
         <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
             {backwardReferencedPapers}
@@ -135,13 +135,13 @@ Usage:
         />
     </div>
     {#if showButtonBar}
-        <div class="flex flex-row w-full h-fit justify-between gap-4" data-testid="button-bar">
+        <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
             {#if userConfig.isReviewMode}
                 <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                 <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                <div class="flex flex-grow-1000 max-w-[62rem] gap-4 justify-center">
+                <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                     <DeclineButton {loadingPaperId} />
                     {#if loadingProject}
                         {#await loadingProject}

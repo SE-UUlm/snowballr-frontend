@@ -17,7 +17,7 @@
 <AccordionPrimitive.Header class="flex" {level}>
     <AccordionPrimitive.Trigger
         class={cn(
-            "flex flex-1 items-center py-4 gap-2 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
+            "flex flex-1 items-center gap-2 py-4 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
             className,
         )}
         bind:ref

@@ -74,12 +74,12 @@ Usage:
         bind:value={searchInput}
     />
     <button
-        class="absolute right-4 top-1/2 transform -translate-y-1/2"
+        class="absolute top-1/2 right-4 -translate-y-1/2 transform"
         onclick={() => {
             if (searchInput !== "") onSearch(searchInput);
         }}
         type="button"
     >
-        <Search class="h-4 w-4 text-muted-foreground" />
+        <Search class="text-muted-foreground h-4 w-4" />
     </button>
 </div>

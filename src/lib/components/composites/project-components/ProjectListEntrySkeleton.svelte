@@ -4,9 +4,9 @@
 </script>
 
 <div
-    class="flex flex-col lg:flex-row h-fit w-full gap-3 lg:gap-10 items-start lg:items-center justify-between px-5 py-2 border border-container-border-grey rounded-md hover:bg-container-border-grey/35"
+    class="border-container-border-grey hover:bg-container-border-grey/35 flex h-fit w-full flex-col items-start justify-between gap-3 rounded-md border px-5 py-2 lg:flex-row lg:items-center lg:gap-10"
 >
-    <div class="flex flex-col h-fit w-full items-start gap-y-1">
+    <div class="flex h-fit w-full flex-col items-start gap-y-1">
         <Skeleton
             class="h-7 w-full max-w-[100px] rounded-full"
             data-testid="project-name-skeleton"
@@ -17,7 +17,7 @@
         />
     </div>
     <div
-        class="flex flex-row w-full gap-x-5 lg:gap-x-2.5 items-center justify-start lg:justify-end"
+        class="flex w-full flex-row items-center justify-start gap-x-5 lg:justify-end lg:gap-x-2.5"
     >
         <Skeleton class="h-4 w-full max-w-14 rounded-full" data-testid="project-stage-skeleton" />
         <Progress

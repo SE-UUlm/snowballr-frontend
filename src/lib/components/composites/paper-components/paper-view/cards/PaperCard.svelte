@@ -37,13 +37,13 @@ Usage:
 ```
 -->
 <Card.Root
-    class={cn(className, "shadow-lg border-container-border-grey flex w-full h-full max-w-[50%]")}
+    class={cn(className, "border-container-border-grey flex h-full w-full max-w-[50%] shadow-lg")}
     {...restProps}
 >
-    <section class="flex flex-col h-full w-full">
-        <Tabs.Root class="flex flex-col h-full" value={tabs.length === 0 ? "" : tabs[0].value}>
+    <section class="flex h-full w-full flex-col">
+        <Tabs.Root class="flex h-full flex-col" value={tabs.length === 0 ? "" : tabs[0].value}>
             <UnderlineTabsList {tabs} />
-            <Card.Content class="p-5 flex flex-col h-full">
+            <Card.Content class="flex h-full flex-col p-5">
                 {@render children()}
             </Card.Content>
         </Tabs.Root>

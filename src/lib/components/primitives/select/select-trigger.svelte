@@ -13,7 +13,7 @@
 
 <SelectPrimitive.Trigger
     class={cn(
-        "border-input bg-background flex h-10 w-full items-center justify-between rounded-md border px-3 py-2 text-sm focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 gap-1.5",
+        "border-input bg-background flex h-10 w-full items-center justify-between gap-1.5 rounded-md border px-3 py-2 text-sm focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
         className,
     )}
     bind:ref

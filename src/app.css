@@ -115,7 +115,7 @@
 
 @utility text-placeholder {
     /* Custom Style Classes */
-    @apply text-base font-medium tracking-normal text-input-placeholder-slate;
+    @apply text-input-placeholder-slate text-base font-medium tracking-normal;
 }
 
 @utility text-hint {
@@ -182,7 +182,7 @@
 }
 
 @utility review-decision-icon-bg {
-    @apply absolute flex justify-center items-center rounded-full;
+    @apply absolute flex items-center justify-center rounded-full;
 }
 
 @utility review-decision-icon-bg-default {
@@ -196,12 +196,12 @@
 @layer components {
     /* Tag Styles */
     h1 {
-        @apply text-2xl font-bold tracking-normal text-primary;
+        @apply text-primary text-2xl font-bold tracking-normal;
     }
     h2 {
-        @apply text-xl font-semibold tracking-normal text-primary;
+        @apply text-primary text-xl font-semibold tracking-normal;
     }
     h3 {
-        @apply text-lg font-semibold tracking-normal text-primary;
+        @apply text-primary text-lg font-semibold tracking-normal;
     }
 }

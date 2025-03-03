@@ -58,7 +58,7 @@
 
 <div
     class={cn(
-        "flex flex-wrap flex-row w-full rounded-2xl items-center justify-center p-2.5 gap-3 sm:gap-5",
+        "flex w-full flex-row flex-wrap items-center justify-center gap-3 rounded-2xl p-2.5 sm:gap-5",
         bannerColor.value,
     )}
 >
@@ -72,7 +72,7 @@
         <h2 class={projectPaper.decision === PaperDecision.ACCEPTED ? "text-black" : "text-white"}>
             {bannerLabel.value}
         </h2>
-        <div class="flex flex-row flex-wrap gap-3 justify-center">
+        <div class="flex flex-row flex-wrap justify-center gap-3">
             {#each projectPaper.reviews as review (review.id)}
                 <UserAvatar
                     reviewDecision={review.decision}

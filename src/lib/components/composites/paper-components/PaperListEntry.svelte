@@ -99,7 +99,7 @@ Usage:
 ```
 -->
 <button
-    class="flex flex-row items-center justify-end pe-3 gap-3 w-full border border-container-border-grey rounded-md highlight-on-hover group/paper-list-entry"
+    class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={showReviewStatus}
     onclick={handleClick}
     type="button"
