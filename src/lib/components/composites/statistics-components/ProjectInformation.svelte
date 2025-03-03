@@ -2,6 +2,7 @@
     import type { ProjectInformationInterface } from "$lib/model/component-interfaces";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import { pluralize } from "$lib/utils/common-helper";
+    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
 
     interface ProjectInformationProps {
         projectInformation: Promise<ProjectInformationInterface>;
@@ -34,5 +35,7 @@
         time {pluralize(information.estimatedRemainingDays, "is", "are")}
         <span class="text-emphasized">{information.estimatedRemainingDays}</span>
         {pluralize(information.estimatedRemainingDays, "day", "days")}.
+    {:catch}
+        <ErrorIndicator errorMessage="Couldn't load project information." />
     {/await}
 </div>

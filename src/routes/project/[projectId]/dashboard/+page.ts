@@ -48,8 +48,8 @@ export const load: PageLoad = async ({ params, parent }) => {
 
     const projectInformation: Promise<ProjectInformationInterface> = loadingProject.then(
         (project) =>
-            new Promise((resolve) =>
-                setTimeout(() => resolve(requestProjectInformation(project)), 2000),
+            new Promise((resolve, reject) =>
+                setTimeout(() => reject(requestProjectInformation(project)), 2000),
             ),
     );
 
