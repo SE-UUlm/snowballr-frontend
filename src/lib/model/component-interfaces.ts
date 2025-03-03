@@ -1,15 +1,16 @@
+import {
+    type Project,
+    type Project_Member_List,
+    type Project_Paper,
+    type Project_Statistics,
+} from "$lib/model/api/project";
+import type { Paper } from "$lib/model/api/paper";
+import type { PaperStatus } from "$lib/model/general";
+
 /*
 Contains interfaces or types that specify the interface of components.
 These are not defined locally so that these types can be used at the point where the data for the components is loaded or created too.
  */
-
-import {
-    type Project,
-    type Project_Member_List,
-    Project_Paper,
-    type Project_Statistics,
-} from "$lib/model/api/project";
-import type { Paper } from "$lib/model/api/paper";
 
 interface ProjectInformationInterface {
     projectName: string;
@@ -19,6 +20,11 @@ interface ProjectInformationInterface {
     estimatedRemainingDays: number;
     totalPapersInStage: number;
     reviewedPapersInStage: number;
+}
+
+interface StageProgressInterface {
+    stage: bigint;
+    decisions: Record<PaperStatus, number>;
 }
 
 interface ProjectListEntryInterface {
@@ -46,4 +52,9 @@ type PaperListEntryInterface =
           showReviewStatus: boolean;
       };
 
-export type { PaperListEntryInterface, ProjectListEntryInterface, ProjectInformationInterface };
+export type {
+    PaperListEntryInterface,
+    ProjectListEntryInterface,
+    ProjectInformationInterface,
+    StageProgressInterface,
+};

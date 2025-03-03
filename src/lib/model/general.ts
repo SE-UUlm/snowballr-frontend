@@ -14,6 +14,8 @@ interface ApiError {
     errorDetails?: string;
 }
 
+type PaperStatus = "Not reviewed" | "Undecided" | "Accepted" | "Declined";
+
 /**
  * A criterion with resolved review references.
  */
@@ -42,5 +44,5 @@ function asPaper(paper: Project_Paper | Paper): Paper {
     return isProjectPaper(paper) ? paper.paper! : paper;
 }
 
-export type { ValidationResult, ApiError, CriterionWithReviews, UserConfig, Stage };
+export type { ValidationResult, ApiError, CriterionWithReviews, UserConfig, Stage, PaperStatus };
 export { asPaper };

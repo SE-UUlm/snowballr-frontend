@@ -11,6 +11,21 @@
     const { projectInformation }: ProjectInformationProps = $props();
 </script>
 
+<!--
+@component
+Displays all important information of a project, including
+- project name
+- project start
+- project stage and stage progress
+- time in stage and estimated remaining time
+
+Usage:
+```svelte
+    <ProjectInformation
+        {projectInformation}
+    />
+```
+-->
 <div class="w-full px-5 py-2 break-words">
     {#await projectInformation}
         <div class="flex flex-col gap-y-3">

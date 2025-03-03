@@ -77,4 +77,29 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck, pluralize };
+/**
+ * Groups a list by keys.
+ * The keys are indirectly given by the keySelector function.
+ *
+ * Inspired by: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+ *
+ * @param list - The list to be grouped
+ * @param keySelector - Function that map a (list) item to a certain key
+ * @return The grouped list
+ */
+function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string]: T[] } {
+    return list.reduce((result: { [key: string]: T[] }, item: T) => {
+        (result[keySelector(item)] ??= []).push(item);
+        return result;
+    }, {});
+}
+
+export {
+    getName,
+    getNames,
+    isPaperUndecided,
+    doesPaperNeedReview,
+    exhaustiveCheck,
+    pluralize,
+    groupBy,
+};
