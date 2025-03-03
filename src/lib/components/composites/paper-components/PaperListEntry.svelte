@@ -7,6 +7,7 @@
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
     import { exhaustiveCheck } from "$lib/utils/common-helper";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;
@@ -99,15 +100,18 @@ Usage:
 ```
 -->
 <button
-    class="flex flex-row items-center justify-end pe-3 gap-3 w-full border border-container-border-grey rounded-md highlight-on-hover group/paper-list-entry"
+    class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={showReviewStatus}
     onclick={handleClick}
     type="button"
 >
     <div
-        class="flex flex-auto {showReviewStatus
-            ? `border-l-4 ${getReviewDecisionColor(paper.decision, paper.reviews.length)}`
-            : ''} rounded-md px-3 py-1.5"
+        class={cn(
+            "flex flex-auto rounded-md px-3 py-1.5",
+            showReviewStatus
+                ? `border-l-4 ${getReviewDecisionColor(paper.decision, paper.reviews.length)}`
+                : "",
+        )}
     >
         <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
     </div>

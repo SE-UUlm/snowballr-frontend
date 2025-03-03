@@ -97,11 +97,11 @@ Usage:
 <PaperCard data-testid="paper-details-card" {tabs}>
     <PaperCardContent value="1">
         <section class="flex flex-col gap-2 px-1">
-            <div class="flex flex-row justify-between items-center">
+            <div class="flex flex-row items-center justify-between">
                 <h2>General Information</h2>
                 {#if allowEditModeToggle}
                     <Pencil
-                        class="hover:cursor-pointer select-none"
+                        class="select-none hover:cursor-pointer"
                         onclick={() => (areDetailsInEditMode = !areDetailsInEditMode)}
                         size={20}
                     />
@@ -134,12 +134,12 @@ Usage:
                 </Button>
             </div>
         </section>
-        <section class="flex flex-col gap-2 px-1 flex-[1_1_0]">
-            <div class="flex flex-row justify-between items-center">
+        <section class="flex flex-[1_1_0] flex-col gap-2 px-1">
+            <div class="flex flex-row items-center justify-between">
                 <h2>Abstract</h2>
                 {#if allowEditModeToggle}
                     <Pencil
-                        class="hover:cursor-pointer select-none"
+                        class="select-none hover:cursor-pointer"
                         onclick={() => (isAbstractInEditMode = !isAbstractInEditMode)}
                         size={20}
                     />

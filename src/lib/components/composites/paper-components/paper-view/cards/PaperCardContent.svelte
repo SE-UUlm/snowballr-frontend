@@ -23,7 +23,7 @@ Usage:
 ```
 -->
 <Tabs.Content class="h-full overflow-hidden" {value}>
-    <div class="flex flex-col gap-5 h-full">
+    <div class="flex h-full flex-col gap-5">
         {@render children()}
     </div>
 </Tabs.Content>

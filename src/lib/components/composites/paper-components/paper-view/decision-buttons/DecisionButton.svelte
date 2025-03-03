@@ -60,7 +60,7 @@ Usage:
 ```
 -->
 <Tooltip
-    class={cn("text-primary max-w-[20rem] shadow-lg flex-grow-1000", className)}
+    class={cn("text-primary max-w-[20rem] flex-grow-1000 shadow-lg", className)}
     content={tooltipContent}
     onclick={onButtonClick}
     trigger={buttonContent}

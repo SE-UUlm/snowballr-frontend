@@ -69,11 +69,11 @@ Otherwise the error message is shown.
 You can render additional content between the title and the list by providing `preListContent`.
 This can be e.g. a search bar.
 -->
-<div class="flex flex-col h-full w-full px-5 gap-y-5 overflow-hidden">
+<div class="flex h-full w-full flex-col gap-y-5 overflow-hidden px-5">
     {#await items}
         <h2>{listName}</h2>
         {@render preListContent?.()}
-        <ul class="space-y-4 pb-1 scroll-box">
+        <ul class="scroll-box space-y-4 pb-1">
             {#each { length: numberOfSkeletons }}
                 <li>
                     {@render listItemSkeleton()}
@@ -90,7 +90,7 @@ This can be e.g. a search bar.
         {#if loadedItems.length === 0}
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
-            <ul class="space-y-4 pb-1 scroll-box">
+            <ul class="scroll-box space-y-4 pb-1">
                 {#each loadedItems as item (keySelector(item))}
                     <li>
                         {@render listItemComponent?.(item)}

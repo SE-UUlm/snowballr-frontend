@@ -24,7 +24,7 @@ Usage:
 -->
 <textarea
     class={cn(
-        "bg-background px-1.5 py-1 min-h-8 w-full resize-none text-default focus-visible:outline-hidden border",
+        "bg-background text-default min-h-8 w-full resize-none border px-1.5 py-1 focus-visible:outline-hidden",
         isEditable ? "border-input rounded-md" : "border-transparent",
         className,
     )}

@@ -115,7 +115,7 @@
 
 @utility text-placeholder {
     /* Custom Style Classes */
-    @apply text-base font-medium tracking-normal text-input-placeholder-slate;
+    @apply text-input-placeholder-slate text-base font-medium tracking-normal;
 }
 
 @utility text-hint {
@@ -182,26 +182,26 @@
 }
 
 @utility review-decision-icon-bg {
-    @apply absolute flex justify-center items-center rounded-full;
+    @apply absolute flex items-center justify-center rounded-full;
 }
 
 @utility review-decision-icon-bg-default {
-    @apply review-decision-icon-bg top-6 left-6 h-5 w-5;
+    @apply review-decision-icon-bg top-6 left-6 size-5;
 }
 
 @utility review-decision-icon-bg-small {
-    @apply review-decision-icon-bg top-[1.25rem] left-[1.25rem] h-4 w-4;
+    @apply review-decision-icon-bg top-[1.25rem] left-[1.25rem] size-4;
 }
 
 @layer components {
     /* Tag Styles */
     h1 {
-        @apply text-2xl font-bold tracking-normal text-primary;
+        @apply text-primary text-2xl font-bold tracking-normal;
     }
     h2 {
-        @apply text-xl font-semibold tracking-normal text-primary;
+        @apply text-primary text-xl font-semibold tracking-normal;
     }
     h3 {
-        @apply text-lg font-semibold tracking-normal text-primary;
+        @apply text-primary text-lg font-semibold tracking-normal;
     }
 }

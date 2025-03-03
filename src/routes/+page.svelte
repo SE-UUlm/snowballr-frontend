@@ -15,7 +15,7 @@
     <title>SnowballR</title>
 </svelte:head>
 <SimpleNavigationBar loadingTitle={Promise.resolve("SnowballR")} {user} />
-<main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
+<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden">
     <section class="h-full w-full">
         <NamedList
             emptyHint="No open reviews."
@@ -33,7 +33,7 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="flex flex-col h-full w-full min-w-0 gap-y-5">
+    <section class="flex h-full w-full min-w-0 flex-col gap-y-5">
         <NamedList
             emptyHint="No active or archived projects."
             items={projectsMetadata}

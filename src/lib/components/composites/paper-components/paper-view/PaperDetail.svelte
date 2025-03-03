@@ -31,7 +31,7 @@ Usage:
 -->
 <div class="flex flex-row gap-2" data-testid="paper-detail">
     <!-- Match top padding of input -->
-    <span class="w-24 xl:w-42 pt-[0.3125rem]">{key}</span>
+    <span class="w-24 pt-[0.3125rem] xl:w-42">{key}</span>
     {#await loadingPaper}
         <div class="pt-2">
             <Skeleton class={cn("flex h-[1.625rem] rounded-full", value as string)} />

@@ -207,7 +207,7 @@
         </Dialog.Header>
         <form
             id="project-creation"
-            class="flex flex-col w-full h-full gap-5 overflow-x-auto"
+            class="flex h-full w-full flex-col gap-5 overflow-x-auto"
             onsubmit={handleSubmit}
         >
             <Input

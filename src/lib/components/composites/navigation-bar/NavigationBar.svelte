@@ -25,12 +25,12 @@
 </script>
 
 <header>
-    <Card.Root class="shadow-lg w-fit">
-        <nav class="grid grid-flow-col gap-3 items-center px-4 py-3">
+    <Card.Root class="w-fit shadow-lg">
+        <nav class="grid grid-flow-col items-center gap-3 px-4 py-3">
             <UserMenu {user} />
             {#if backRef !== undefined}
                 <a aria-label={`Back to ${backRef}`} href={backRef}>
-                    <ArrowLeft class="w-6 h-6" />
+                    <ArrowLeft class="size-6" />
                 </a>
             {/if}
             <!-- Children can be e.g. a title element -->

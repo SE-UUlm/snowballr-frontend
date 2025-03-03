@@ -3,6 +3,7 @@
     import { Button } from "$lib/components/primitives/button";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import type { ValidationResult } from "$lib/model/general";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface ChipsInputProps {
         items: string[];
@@ -228,29 +229,30 @@ Usage:
     />
 ```
 -->
-<div class="flex flex-col w-full gap-2" data-testid="chips-input-component">
+<div class="flex w-full flex-col gap-2" data-testid="chips-input-component">
     <div
-        class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row gap-4 items-center'}"
+        class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row items-center gap-4'}"
         data-testid="chips-input-container"
     >
         <Label for={INPUT_ID}>{label}</Label>
         <div
-            class="flex flex-wrap w-full items-center gap-2.5 px-4 {items.length === 0
+            class="flex w-full flex-wrap items-center gap-2.5 px-4 {items.length === 0
                 ? 'py-2'
                 : 'py-1.5'}
-                text-default border-input-border-slate bg-background rounded-md border overflow-x-auto"
+                text-default border-input-border-slate bg-background overflow-x-auto rounded-md border"
         >
             <!-- chips -->
             {#each items as item, index (item)}
                 <div
-                    class="flex items-center {index === selectedChipIndex
-                        ? 'bg-slate-300'
-                        : 'bg-slate-200'} rounded-full px-3 py-0.5 w-max"
+                    class={cn(
+                        "flex w-max items-center rounded-full px-3 py-0.5",
+                        index === selectedChipIndex ? "bg-slate-300" : "bg-slate-200",
+                    )}
                     data-testid={"chip-" + index}
                 >
                     {displayItem(item)}
                     <button
-                        class="ml-2 text-primary focus:outline-none"
+                        class="text-primary ml-2 focus:outline-none"
                         onclick={() => removeItem(index)}
                         type="button"
                     >
@@ -262,7 +264,7 @@ Usage:
             <!-- input for next chip -->
             <input
                 id={INPUT_ID}
-                class="flex-1 min-w-10 max-w-full placeholder:text-placeholder focus:outline-none"
+                class="placeholder:text-placeholder max-w-full min-w-10 flex-1 focus:outline-none"
                 data-testid={INPUT_ID}
                 onkeydown={handleKeyDown}
                 {placeholder}
@@ -272,8 +274,8 @@ Usage:
         </div>
     </div>
     {#if !isInputValid}
-        <div class="flex flex-row w-full gap-2 text-red-500">
-            <CircleAlert class="w-5 h-5" data-testid="validation-fail" />
+        <div class="flex w-full flex-row gap-2 text-red-500">
+            <CircleAlert class="size-5" data-testid="validation-fail" />
             <p class="text-sm" data-testid="error-message">
                 {errorMessage}
             </p>
@@ -283,14 +285,15 @@ Usage:
     {#if suggestions.length > 0 && inputText !== ""}
         <ul
             id={SUGGESTIONS_LIST_ID}
-            class="border rounded-md max-h-[160px] overflow-y-scroll"
+            class="max-h-[160px] overflow-y-scroll rounded-md border"
             data-testid={SUGGESTIONS_LIST_ID}
         >
             {#each suggestions as suggestion, i (suggestion)}
                 <Button
-                    class="flex w-full justify-start {selectedSuggestionIndex === i
-                        ? 'bg-accent'
-                        : ''} text-default"
+                    class={cn(
+                        "text-default flex w-full justify-start",
+                        selectedSuggestionIndex === i ? "bg-accent" : "",
+                    )}
                     data-testid={"suggestion-" + i}
                     onclick={() => {
                         addItem(suggestion);

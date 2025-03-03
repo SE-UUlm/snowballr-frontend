@@ -26,7 +26,7 @@ Usage:
 -->
 <div
     class={cn(
-        "flex flex-row gap-2 w-full px-0.5 py-0.5 text-sm items-start",
+        "flex w-full flex-row items-start gap-2 px-0.5 py-0.5 text-sm",
         isValid ? "text-green-500" : "text-red-500",
         className,
     )}
@@ -34,9 +34,9 @@ Usage:
 >
     <div>
         {#if isValid}
-            <CircleCheck class="w-5 h-5" data-testid="validation-success" />
+            <CircleCheck class="size-5" data-testid="validation-success" />
         {:else}
-            <CircleAlert class="w-5 h-5" data-testid="validation-fail" />
+            <CircleAlert class="size-5" data-testid="validation-fail" />
         {/if}
     </div>
     <p class="wrap">{prettyDescription}</p>
