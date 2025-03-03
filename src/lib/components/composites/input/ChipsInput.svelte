@@ -3,6 +3,7 @@
     import { Button } from "$lib/components/primitives/button";
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import type { ValidationResult } from "$lib/model/general";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface ChipsInputProps {
         items: string[];
@@ -243,9 +244,10 @@ Usage:
             <!-- chips -->
             {#each items as item, index (item)}
                 <div
-                    class="flex items-center {index === selectedChipIndex
-                        ? 'bg-slate-300'
-                        : 'bg-slate-200'} w-max rounded-full px-3 py-0.5"
+                    class={cn(
+                        "flex w-max items-center rounded-full px-3 py-0.5",
+                        index === selectedChipIndex ? "bg-slate-300" : "bg-slate-200",
+                    )}
                     data-testid={"chip-" + index}
                 >
                     {displayItem(item)}
@@ -288,9 +290,10 @@ Usage:
         >
             {#each suggestions as suggestion, i (suggestion)}
                 <Button
-                    class="flex w-full justify-start {selectedSuggestionIndex === i
-                        ? 'bg-accent'
-                        : ''} text-default"
+                    class={cn(
+                        "text-default flex w-full justify-start",
+                        selectedSuggestionIndex === i ? "bg-accent" : "",
+                    )}
                     data-testid={"suggestion-" + i}
                     onclick={() => {
                         addItem(suggestion);
