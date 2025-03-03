@@ -1,7 +1,7 @@
 <script lang="ts">
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import ArrowRight from "lucide-svelte/icons/arrow-right";
-    import Tooltip from "../../Tooltip.svelte";
+    import Tooltip from "../../utils/Tooltip.svelte";
     import { goto } from "$app/navigation";
 
     interface Props {

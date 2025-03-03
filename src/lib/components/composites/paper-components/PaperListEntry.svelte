@@ -1,6 +1,6 @@
 <script lang="ts">
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import { asPaper, type PaperListEntryInterface } from "$lib/model/general";
+    import { asPaper } from "$lib/model/general";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
     import { PaperDecision } from "$lib/model/api/project";
@@ -8,6 +8,7 @@
     import type { User } from "$lib/model/api/user";
     import { exhaustiveCheck } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
+    import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
 
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;

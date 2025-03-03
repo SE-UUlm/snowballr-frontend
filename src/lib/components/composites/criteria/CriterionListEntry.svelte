@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from "$lib/components/primitives/checkbox/checkbox.svelte";
     import CircleHelp from "lucide-svelte/icons/circle-help";
-    import Tooltip from "../Tooltip.svelte";
+    import Tooltip from "../utils/Tooltip.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";

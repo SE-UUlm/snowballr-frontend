@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import ErrorIndicator from "../ErrorIndicator.svelte";
+    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
 
     type T = $$Generic; /* eslint-disable-line no-undef */
 
@@ -69,7 +69,7 @@ Otherwise the error message is shown.
 You can render additional content between the title and the list by providing `preListContent`.
 This can be e.g. a search bar.
 -->
-<div class="flex h-full w-full flex-col gap-y-5 overflow-hidden px-5 py-5">
+<div class="p5 flex h-full w-full flex-col gap-y-5 overflow-hidden px-5">
     {#await items}
         <h2>{listName}</h2>
         {@render preListContent?.()}

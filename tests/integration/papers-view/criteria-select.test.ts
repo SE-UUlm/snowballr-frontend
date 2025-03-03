@@ -1,4 +1,4 @@
-import CriteriaSelect from "$lib/components/composites/papers-view/CriteriaSelect.svelte";
+import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
 import { Criterion } from "$lib/model/api/criterion";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";

@@ -4,6 +4,7 @@
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import ProjectInformation from "$lib/components/composites/statistics-components/ProjectInformation.svelte";
+    import { Separator } from "$lib/components/primitives/separator";
 
     const { data } = $props();
     const { user, projectId, loadingProject, openReviews, projectInformation } = data;
@@ -19,7 +20,7 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />
-<main class="flex flex-row h-full w-full mb-10 gap-x-5 overflow-hidden">
+<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden">
     <section class="h-full w-full">
         <NamedList
             emptyHint="No open reviews."
@@ -37,11 +38,11 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="flex flex-col h-full w-full p-5 min-w-0 gap-y-5">
+    <section class="flex h-full w-full flex-col gap-y-5 p-5">
         <div id="project-information-section" class="flex flex-col gap-y-3">
             <h2>Project Information</h2>
-            <hr class="solid" />
-            <ProjectInformation projectInfos={projectInformation} />
+            <Separator />
+            <ProjectInformation {projectInformation} />
         </div>
     </section>
 </main>

@@ -2,7 +2,7 @@
     import Bookmark from "lucide-svelte/icons/bookmark";
     import BookmarkPlus from "lucide-svelte/icons/bookmark-plus";
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
-    import Tooltip from "./Tooltip.svelte";
+    import Tooltip from "./utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
 
     interface Props {

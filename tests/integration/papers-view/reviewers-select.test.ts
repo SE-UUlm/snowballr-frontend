@@ -1,4 +1,4 @@
-import ReviewersSelect from "$lib/components/composites/papers-view/ReviewersSelect.svelte";
+import ReviewersSelect from "$lib/components/composites/select/ReviewersSelect.svelte";
 import { type User } from "$lib/model/api/user";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";

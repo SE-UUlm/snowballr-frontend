@@ -1,7 +1,7 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
     import { Criterion } from "$lib/model/api/criterion";
-    import { resource } from "$lib/resource.svelte";
+    import { resource } from "$lib/resource.svelte.js";
 
     interface Props {
         loadingCriteria: Promise<Criterion[]>;

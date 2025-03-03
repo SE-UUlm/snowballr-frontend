@@ -1,4 +1,4 @@
-import StagesSelect from "$lib/components/composites/papers-view/StagesSelect.svelte";
+import StagesSelect from "$lib/components/composites/select/StagesSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

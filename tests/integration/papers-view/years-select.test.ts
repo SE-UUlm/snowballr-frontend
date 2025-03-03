@@ -1,4 +1,4 @@
-import YearsSelect from "$lib/components/composites/papers-view/YearsSelect.svelte";
+import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

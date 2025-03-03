@@ -6,7 +6,7 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
-    import ErrorIndicator from "../ErrorIndicator.svelte";
+    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
     import { exhaustiveCheck } from "$lib/utils/common-helper";
 
     export interface PaperDecisionBannerProps {

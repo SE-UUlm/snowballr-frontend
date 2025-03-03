@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Tooltip from "$lib/components/composites/Tooltip.svelte";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 
     interface Props {
         triggerText: string;

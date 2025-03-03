@@ -26,6 +26,7 @@
  * ```
  *
  * @param loadingResource - The promise representing the loading resource.
+ * @param options
  * @param options.initialValue - The initial value of the state.
  * @param options.onSuccess - The function that is called when the promise resolves and sets the value of the state. Defaults to the identity function.
  * @param options.onErrorValue - The value that is set when the promise rejects.

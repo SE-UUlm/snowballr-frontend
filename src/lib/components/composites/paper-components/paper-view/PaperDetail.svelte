@@ -5,7 +5,7 @@
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
     import type { Paper } from "$lib/model/api/paper";
-    import ErrorIndicator from "../../ErrorIndicator.svelte";
+    import ErrorIndicator from "../../utils/ErrorIndicator.svelte";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         key: string;

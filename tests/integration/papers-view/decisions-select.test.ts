@@ -1,4 +1,4 @@
-import DecisionsSelect from "$lib/components/composites/papers-view/DecisionsSelect.svelte";
+import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

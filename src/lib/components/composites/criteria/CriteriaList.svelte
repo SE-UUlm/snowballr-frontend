@@ -3,7 +3,7 @@
     import type { CriterionWithReviews } from "$lib/model/general";
     import type { User } from "$lib/model/api/user";
     import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
-    import ErrorIndicator from "../ErrorIndicator.svelte";
+    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
 
     interface Props {
         listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
