@@ -1,4 +1,5 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import type { PaperStatus } from "$lib/model/general";
 
 /**
  * Convert a person object ({firstName: "...", lastName, "..."}) to its string representation
@@ -94,6 +95,27 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string
     }, {});
 }
 
+/**
+ * Mapping of the paper status to the corresponding color.
+ *
+ * @param status - The status of the paper
+ * @return The color accordingly to the status
+ */
+function getStatusColor(status: PaperStatus): string {
+    switch (status) {
+        case "Accepted":
+            return "text-accept-green";
+        case "Declined":
+            return "text-decline-red";
+        case "Undecided":
+            return "text-maybe-yellow";
+        case "Not reviewed":
+            return "text-unreviewed-gray";
+        default:
+            exhaustiveCheck(status);
+    }
+}
+
 export {
     getName,
     getNames,
@@ -102,4 +124,5 @@ export {
     exhaustiveCheck,
     pluralize,
     groupBy,
+    getStatusColor,
 };

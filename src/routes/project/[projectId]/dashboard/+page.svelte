@@ -4,7 +4,7 @@
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import ProjectInformation from "$lib/components/composites/statistics-components/ProjectInformation.svelte";
-    import StageProgressChart from "$lib/components/composites/statistics-components/StageProgressChart.svelte";
+    import StageProgress from "$lib/components/composites/statistics-components/StageProgress.svelte";
     import { Separator } from "$lib/components/primitives/separator";
 
     const { data } = $props();
@@ -49,7 +49,7 @@
         <div id="stage-progress-section" class="flex flex-col gap-y-3">
             <h2>Stage Status</h2>
             <Separator />
-            <StageProgressChart {stageProgress} />
+            <StageProgress {stageProgress} />
         </div>
     </section>
 </main>

@@ -19,7 +19,7 @@ export default defineConfig({
                 "src/routes/**/+*.{svelte,ts}",
                 "src/lib/components/primitives/**",
                 "**/*.d.ts",
-                "src/lib/model/api/**",
+                "src/lib/model/**",
             ],
             provider: "v8",
             enabled: true,
