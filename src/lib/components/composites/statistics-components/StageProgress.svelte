@@ -2,10 +2,10 @@
     import type { StageProgressInterface } from "$lib/model/component-interfaces";
     import Circle from "lucide-svelte/icons/circle";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import StageProgressSkeleton from "$lib/components/composites/statistics-components/StageProgressSkeleton.svelte";
     import { getStatusColor } from "$lib/utils/common-helper";
     import { type PaperStatus } from "$lib/model/general";
     import StageProgressChart from "$lib/components/composites/statistics-components/StageProgressChart.svelte";
+    import { Skeleton } from "$lib/components/primitives/skeleton";
 
     interface StageProgressChartProps {
         stageProgress: Promise<StageProgressInterface>;
@@ -18,8 +18,8 @@
 @component
 Displays the stage progress, i.e. the number of papers unreviewed, undecided, accepted and declined in the current stage.
 The stage progress is visualized using
-1) a list
-2) a donut chart
+1) a donut chart
+2) and a corresponding legend (= list of decisions with their count)
 
 Usage:
 ```svelte
@@ -30,7 +30,12 @@ Usage:
 -->
 <div class="flex flex-row items-center gap-x-4 p-5">
     {#await stageProgress}
-        <StageProgressSkeleton />
+        <Skeleton class="h-[150px] w-[150px] rounded-full" />
+        <div class="mx-10 flex flex-col gap-y-3">
+            {#each { length: 4 }}
+                <Skeleton class="flex h-6 min-w-[190px] rounded-full" />
+            {/each}
+        </div>
     {:then { stage, decisions }}
         <StageProgressChart {decisions} {stage} />
         <ul class="mx-10 space-y-3">

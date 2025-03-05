@@ -29,9 +29,9 @@ Usage:
 <div class="w-full px-5 py-2 break-words">
     {#await projectInformation}
         <div class="flex flex-col gap-y-3">
-            <Skeleton class="flex h-[1.5rem] rounded-full" />
-            <Skeleton class="flex h-[1.5rem] rounded-full" />
-            <Skeleton class="flex h-[1.5rem] rounded-full" />
+            {#each { length: 4 }}
+                <Skeleton class="flex h-6 rounded-full" />
+            {/each}
         </div>
     {:then information}
         The project <span class="text-emphasized">{information.projectName}</span> started at

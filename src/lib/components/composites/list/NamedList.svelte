@@ -69,7 +69,7 @@ Otherwise the error message is shown.
 You can render additional content between the title and the list by providing `preListContent`.
 This can be e.g. a search bar.
 -->
-<div class="p5 flex h-full w-full flex-col gap-y-5 overflow-hidden px-5">
+<div class="flex h-full w-full flex-col gap-y-5 overflow-hidden p-5">
     {#await items}
         <h2>{listName}</h2>
         {@render preListContent?.()}
