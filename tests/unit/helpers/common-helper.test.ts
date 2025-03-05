@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
     doesPaperNeedReview,
     getNames,
+    groupBy,
     isPaperUndecided,
     pluralize,
 } from "$lib/utils/common-helper";
@@ -90,5 +91,40 @@ describe("Pluralize a word based on the count", () => {
 
     it("When the count is 0, the plural form of the word is returned", () => {
         expect(pluralize(0, "item", "items")).toBe("items");
+    });
+});
+
+describe("Group items of a list by a key (function)", () => {
+    it("When list is empty,then no items are grouped", () => {
+        expect(groupBy([], (i) => i)).toStrictEqual({});
+    });
+
+    it("When the key selector function is given, then the items are grouped by their corresponding key determined by the key selector function", () => {
+        const list = [
+            { type: "a", value: 1 },
+            { type: "a", value: 2 },
+            { type: "b", value: 3 },
+            { type: "a", value: 1 },
+        ];
+        expect(groupBy(list, (i) => i.type)).toStrictEqual({
+            a: [
+                { type: "a", value: 1 },
+                { type: "a", value: 2 },
+                { type: "a", value: 1 },
+            ],
+            b: [{ type: "b", value: 3 }],
+        });
+        expect(groupBy(list, (i) => "" + i.value)).toStrictEqual({
+            "1": [
+                { type: "a", value: 1 },
+                { type: "a", value: 1 },
+            ],
+            "2": [{ type: "a", value: 2 }],
+            "3": [{ type: "b", value: 3 }],
+        });
+    });
+
+    it("When the key selector function is the identity, then every item has its own key", () => {
+        expect(groupBy([1, 2, 3], (i) => "" + i)).toStrictEqual({ "1": [1], "2": [2], "3": [3] });
     });
 });
