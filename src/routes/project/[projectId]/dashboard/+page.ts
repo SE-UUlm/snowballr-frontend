@@ -1,6 +1,6 @@
 import { backendService } from "$lib/grpc-api";
 import type { PageLoad } from "./$types";
-import { PaperDecision, type Project } from "$lib/model/api/project";
+import { PaperDecision, type Project, type Project_Paper } from "$lib/model/api/project";
 import type {
     PaperListEntryInterface,
     ProjectInformationInterface,
@@ -9,30 +9,18 @@ import type {
 import { exhaustiveCheck, groupBy } from "$lib/utils/common-helper";
 import type { PaperStatus } from "$lib/model/general";
 
-function requestProjectInformation(project: Project): ProjectInformationInterface {
-    // TODO: add a real call to the backend (extend API + extend mock backend)
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 5);
-
-    return {
-        projectName: project.name,
-        projectStart: startDate,
-        projectStage: project.currentStage,
-        daysInStage: 2,
-        estimatedRemainingDays: 14,
-        totalPapersInStage: 100,
-        reviewedPapersInStage: 20,
-    };
-}
-
-async function requestStageProgress(project: Project): Promise<StageProgressInterface> {
-    const stage = project.currentStage;
+async function groupProjectPapersInStageByDecision(
+    project: Project,
+): Promise<{ [key: string]: Project_Paper[] }> {
     const papersOfStage = await backendService
         .getAllProjectPapersForProject({ id: project.id })
         .response.then((papers) =>
-            papers.projectPapers.filter((projectPaper) => projectPaper.stage === stage),
+            papers.projectPapers.filter(
+                (projectPaper) => projectPaper.stage === project.currentStage,
+            ),
         );
-    const groupedPapersOfStage = groupBy(papersOfStage, (projectPaper): PaperStatus => {
+
+    return groupBy(papersOfStage, (projectPaper): PaperStatus => {
         switch (projectPaper.decision) {
             case PaperDecision.ACCEPTED:
                 return "Accepted";
@@ -45,20 +33,50 @@ async function requestStageProgress(project: Project): Promise<StageProgressInte
                 exhaustiveCheck(projectPaper.decision);
         }
     });
+}
+
+async function requestProjectInformation(project: Project): Promise<ProjectInformationInterface> {
+    // TODO: add a real call to the backend (extend API + extend mock backend)
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 5);
+    const daysInStage = 2;
+
+    const papersByDecision = await groupProjectPapersInStageByDecision(project);
+    const numberOfReviewedPapers =
+        (papersByDecision["Accepted"] ?? []).length + (papersByDecision["Declined"] ?? []).length;
+    const numberOfPapers = Object.entries(papersByDecision).reduce(
+        (acc, currentValue) => acc + currentValue[1].length,
+        0,
+    );
+
+    return {
+        projectName: project.name,
+        projectStart: startDate,
+        projectStage: project.currentStage,
+        daysInStage: daysInStage,
+        estimatedRemainingDays:
+            (daysInStage * numberOfPapers) / numberOfReviewedPapers - daysInStage,
+        totalPapersInStage: numberOfPapers,
+        reviewedPapersInStage: numberOfReviewedPapers,
+    };
+}
+
+async function requestStageProgress(project: Project): Promise<StageProgressInterface> {
+    const papersByDecision = await groupProjectPapersInStageByDecision(project);
     const decisions = {
-        "Not reviewed": (groupedPapersOfStage["Not reviewed"] ?? []).length,
-        Undecided: (groupedPapersOfStage["Undecided"] ?? []).length,
-        Accepted: (groupedPapersOfStage["Accepted"] ?? []).length,
-        Declined: (groupedPapersOfStage["Declined"] ?? []).length,
+        "Not reviewed": (papersByDecision["Not reviewed"] ?? []).length,
+        Undecided: (papersByDecision["Undecided"] ?? []).length,
+        Accepted: (papersByDecision["Accepted"] ?? []).length,
+        Declined: (papersByDecision["Declined"] ?? []).length,
     };
     return {
-        stage: stage,
+        stage: project.currentStage,
         decisions: decisions,
     };
 }
 
 /**
- * Loads open reviews for the currently opened project.
+ * Loads project information and open reviews for the currently opened project.
  */
 export const load: PageLoad = async ({ params, parent }) => {
     const { loadingProject } = await parent();
@@ -81,18 +99,11 @@ export const load: PageLoad = async ({ params, parent }) => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     openReviews.catch(() => {});
 
-    /// TODO: delete delays before review (is used for only for testing purpose
     const projectInformation: Promise<ProjectInformationInterface> = loadingProject.then(
-        (project) =>
-            new Promise((resolve) =>
-                setTimeout(() => resolve(requestProjectInformation(project)), 2000),
-            ),
+        (project) => requestProjectInformation(project),
     );
-    const stageProgress: Promise<StageProgressInterface> = loadingProject.then(
-        (project) =>
-            new Promise((resolve) =>
-                setTimeout(() => resolve(requestStageProgress(project)), 2000),
-            ),
+    const stageProgress: Promise<StageProgressInterface> = loadingProject.then((project) =>
+        requestStageProgress(project),
     );
 
     return { openReviews, projectInformation, stageProgress };
