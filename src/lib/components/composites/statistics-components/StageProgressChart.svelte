@@ -39,7 +39,7 @@
         .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus)));
 </script>
 
-<svg height={HEIGHT} width={WIDTH}>
+<svg data-testid="stage-progress-chart" height={HEIGHT} width={WIDTH}>
     <!-- donut chart -->
     <g fill="none" transform={`translate(${WIDTH / 2}, ${HEIGHT / 2})`}>
         {#each pie(segments) as s, i (i)}

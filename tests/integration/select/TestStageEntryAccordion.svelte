@@ -1,6 +1,6 @@
 <script lang="ts">
     import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
-    import * as Accordion from "$lib/components/primitives/accordion/index.js";
+    import * as Accordion from "$lib/components/primitives/accordion";
     import type { Project_Paper } from "$lib/model/api/project";
     import type { Stage } from "$lib/model/general";
 

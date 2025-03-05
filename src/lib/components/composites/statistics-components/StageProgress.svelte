@@ -28,7 +28,7 @@ Usage:
     />
 ```
 -->
-<div class="flex flex-row items-center gap-x-4 p-5">
+<div class="flex flex-row items-center gap-x-4 p-5" data-testid="stage-progress">
     {#await stageProgress}
         <Skeleton class="h-[150px] w-[150px] rounded-full" />
         <div class="mx-10 flex flex-col gap-y-3">
