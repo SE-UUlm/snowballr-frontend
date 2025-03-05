@@ -1,7 +1,7 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
     import type { User } from "$lib/model/api/user";
-    import { resource } from "$lib/resource.svelte.js";
+    import { resource } from "$lib/resource.svelte";
     import { getName } from "$lib/utils/common-helper";
 
     interface Props {

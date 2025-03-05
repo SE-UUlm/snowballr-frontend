@@ -12,7 +12,7 @@ export const load: LayoutLoad = async () => {
         };
     } catch (err) {
         console.error(`Current user could not be loaded ${err}`);
-        /// TODO: find better code
+        /// TODO: find better error code
         error(500, "Could not load current user!");
     }
 };

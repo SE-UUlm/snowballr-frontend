@@ -14,9 +14,9 @@ function getName(person: { firstName: string; lastName: string }): string {
  * [{firstName: "John", lastName: "Doe", ...}, ... ] -->
  * "John Doe, ..."
  *
- * @param persons The list of objects, which at least have a firstName (of type string) and a lastName (of type string)
+ * @param persons the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
- * @return The names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
+ * @return the names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
@@ -60,7 +60,7 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
  * }
  * ```
  *
- * @param x - The value that should not be reached.
+ * @param x the value that should not be reached.
  */
 function exhaustiveCheck(x: never): never {
     throw new Error(`Unhandled case: ${x}`);
@@ -72,7 +72,7 @@ function exhaustiveCheck(x: never): never {
  * @param count - the number of items
  * @param singular - the singular form of the word
  * @param plural - the plural form of the word
- * @returns the singular form if count is 1, otherwise the plural form
+ * @return the singular form if count is 1, otherwise the plural form
  */
 function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
@@ -84,9 +84,9 @@ function pluralize(count: number, singular: string, plural: string): string {
  *
  * Inspired by: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
  *
- * @param list - The list to be grouped
- * @param keySelector - Function that map a (list) item to a certain key
- * @return The grouped list
+ * @param list the list to be grouped
+ * @param keySelector function that map a (list) item to a certain key
+ * @return the grouped list as an object with the association key: \<list of items associated to key\>
  */
 function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string]: T[] } {
     return list.reduce((result: { [key: string]: T[] }, item: T) => {
@@ -96,10 +96,10 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string
 }
 
 /**
- * Mapping of the paper status to the corresponding color.
+ * Maps the paper status to the corresponding color.
  *
- * @param status - The status of the paper
- * @return The color accordingly to the status
+ * @param status the status of the paper
+ * @return the color according to the status
  */
 function getStatusColor(status: PaperStatus): string {
     switch (status) {
