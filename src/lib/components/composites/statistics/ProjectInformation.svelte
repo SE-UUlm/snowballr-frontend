@@ -36,18 +36,20 @@ Usage:
     {:then information}
         The project <span class="text-emphasized">{information.projectName}</span> started on
         <span class="text-emphasized">
-            {information.projectStart.toLocaleString().split(",")[0]}
+            {information.projectStart.toLocaleDateString()}
         </span>
-        and you are currently in stage
-        <span class="front-medium relative top-1 text-3xl">{information.projectStage}</span>. You
-        are working
+        and you are in stage
+        <span class="text-emphasized">{information.projectStage}</span>. You are currently working
         <span class="text-emphasized">{information.daysInStage}</span>
-        {pluralize(information.daysInStage, "day", "days")} in this stage and reviewed
+        {pluralize(information.daysInStage, "day", "days")} in this stage and have reviewed
         <span class="text-emphasized">{information.reviewedPapersInStage}</span>
         /
         <span class="text-emphasized">{information.totalPapersInStage}</span>
-        {pluralize(information.totalPapersInStage, "paper", "papers")} so far, so your estimated remaining
-        time is <span class="text-emphasized">{information.estimatedRemainingDays}</span>
+        {pluralize(information.totalPapersInStage, "paper", "papers")} so far. Based on your progress,
+        your estimated remaining time will be
+        <span class="text-emphasized">
+            {Math.round(information.estimatedRemainingDays * 10) / 10}
+        </span>
         {pluralize(information.estimatedRemainingDays, "day", "days")}.
     {:catch}
         <ErrorIndicator errorMessage="Couldn't load project information." />

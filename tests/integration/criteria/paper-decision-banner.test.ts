@@ -101,7 +101,7 @@ describe("PaperDecisionBanner", () => {
 
         await waitForComponentLoading();
 
-        const label = screen.getByText("Unreviewed");
+        const label = screen.getByText("Not reviewed");
         expect(label).toBeInTheDocument();
     });
 
@@ -121,7 +121,7 @@ describe("PaperDecisionBanner", () => {
 
         await waitForComponentLoading();
 
-        const label = screen.getByText("Unreviewed");
+        const label = screen.getByText("Not reviewed");
         expect(label).toBeInTheDocument();
     });
 

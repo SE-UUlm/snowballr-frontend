@@ -28,8 +28,10 @@ describe("ProjectInformation", () => {
         expect(screen.getByTestId("project-information")).toHaveTextContent("in stage 1");
         expect(screen.getByTestId("project-information")).toHaveTextContent("working 3 days");
         expect(screen.getByTestId("project-information")).toHaveTextContent("5 / 10");
-        expect(screen.getByTestId("project-information")).toHaveTextContent("time is 1 day");
-        expect(screen.getByTestId("project-information")).not.toHaveTextContent("time is 1 days");
+        expect(screen.getByTestId("project-information")).toHaveTextContent("time will be 1 day");
+        expect(screen.getByTestId("project-information")).not.toHaveTextContent(
+            "time will be 1 days",
+        );
 
         expect(screen.getByTestId("project-information")).not.toHaveTextContent(
             "Couldn't load project information.",

@@ -30,7 +30,7 @@ Usage:
 -->
 <div class="flex flex-row items-center gap-x-4 p-5" data-testid="stage-progress">
     {#await stageProgress}
-        <Skeleton class="h-[150px] w-[150px] rounded-full" />
+        <Skeleton class="size-38 rounded-full" />
         <div class="mx-10 flex flex-col gap-y-3">
             {#each { length: 4 }}
                 <Skeleton class="flex h-6 min-w-[190px] rounded-full" />
@@ -42,11 +42,11 @@ Usage:
             {#each Object.entries(decisions) as [decision, number] (decision)}
                 <li class="flex flex-row items-center">
                     <Circle
-                        class="mr-2 {getStatusColor(decision as PaperStatus)}"
+                        class="mr-2 {`fill-current ${getStatusColor(decision as PaperStatus)}`}"
+                        fill="currentColor"
                         size={14}
-                        strokeWidth={4}
                     />
-                    <span class="text-default-sb min-w-[150px]">{decision}:</span>
+                    <span class="text-default-sb min-w-38">{decision}:</span>
                     <span class="text-align">{number}</span>
                 </li>
             {/each}

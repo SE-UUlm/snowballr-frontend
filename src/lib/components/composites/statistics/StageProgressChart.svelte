@@ -17,9 +17,8 @@
         value: numOfDecisions / totalNumberOfDecisions,
     }));
 
-    const WIDTH = 150;
-    const HEIGHT = 150;
-    const radius = WIDTH / 2;
+    const SIZE = 152;
+    const radius = SIZE / 2;
 
     const arc = d3
         .arc<d3.PieArcDatum<Segment>>()
@@ -39,9 +38,9 @@
         .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus)));
 </script>
 
-<svg data-testid="stage-progress-chart" height={HEIGHT} width={WIDTH}>
+<svg data-testid="stage-progress-chart" height={SIZE} width={SIZE}>
     <!-- donut chart -->
-    <g fill="none" transform={`translate(${WIDTH / 2}, ${HEIGHT / 2})`}>
+    <g fill="none" transform={`translate(${SIZE / 2}, ${SIZE / 2})`}>
         {#each pie(segments) as s, i (i)}
             <path
                 class={`fill-current ${colorScale(s.data.decision)}`}
