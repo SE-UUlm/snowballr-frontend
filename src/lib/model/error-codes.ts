@@ -1,5 +1,5 @@
-/*
- gRPC status (= error) codes, see https://grpc.github.io/grpc/core/md_doc_statuscodes.html
+/**
+ * gRPC status (= error) codes, see https://grpc.github.io/grpc/core/md_doc_statuscodes.html
  */
 export enum StatusCodes {
     OK = "OK",

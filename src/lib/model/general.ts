@@ -3,8 +3,8 @@ import type { Criterion } from "./api/criterion";
 import type { Paper } from "./api/paper";
 import type { Review } from "./api/review";
 
-/*
-Contains general types that are used in several components or pages but cannot be categorised anywhere else.
+/**
+ * Contains general types that are used in several components or pages but cannot be categorized anywhere else.
  */
 
 type ValidationResult = { success: true } | { success: false; error: string };

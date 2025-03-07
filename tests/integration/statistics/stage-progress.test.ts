@@ -2,10 +2,10 @@ import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import { waitForComponentLoading } from "../test-helper";
 import { loading } from "../../model-builder";
-import StageProgress from "$lib/components/composites/statistics-components/StageProgress.svelte";
+import StageProgress from "$lib/components/composites/statistics/StageProgress.svelte";
 import type { StageProgressInterface } from "$lib/model/component-interfaces";
 
-describe("StageProgressComponent", () => {
+describe("StageProgress", () => {
     test("When all required props are provided, then the stage progress component is completely shown.", async () => {
         render(StageProgress, {
             props: {

@@ -16,7 +16,7 @@ function getName(person: { firstName: string; lastName: string }): string {
  *
  * @param persons the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
- * @return the names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
+ * @returns the names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
@@ -28,7 +28,7 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
  * Checks, whether a given paper is undecided, i.e. unreviewed or has the review status
  * "Maybe".
  *
- * @return true, if the paper is either unreviewed or has the status "Maybe", otherwise false
+ * @returns true, if the paper is either unreviewed or has the status "Maybe", otherwise false
  */
 function isPaperUndecided(paper: Project_Paper): boolean {
     return paper.decision === PaperDecision.UNDECIDED;
@@ -38,7 +38,7 @@ function isPaperUndecided(paper: Project_Paper): boolean {
  * Checks, whether a given paper needs further reviews, i.e. it is either undecided (see {@link isPaperUndecided})
  * or has less than the required number of reviews.
  *
- * @return true, if the paper needs further reviews, otherwise false
+ * @returns true, if the paper needs further reviews, otherwise false
  */
 function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: number): boolean {
     return isPaperUndecided(paper) || paper.reviews.length < numberOfRequiredReviews;
@@ -72,7 +72,7 @@ function exhaustiveCheck(x: never): never {
  * @param count - the number of items
  * @param singular - the singular form of the word
  * @param plural - the plural form of the word
- * @return the singular form if count is 1, otherwise the plural form
+ * @returns the singular form if count is 1, otherwise the plural form
  */
 function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
@@ -86,10 +86,10 @@ function pluralize(count: number, singular: string, plural: string): string {
  *
  * @param list the list to be grouped
  * @param keySelector function that map a (list) item to a certain key
- * @return the grouped list as an object with the association key: \<list of items associated to key\>
+ * @returns the grouped list as an object with the association key: \<list of items associated to key\>
  */
-function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string]: T[] } {
-    return list.reduce((result: { [key: string]: T[] }, item: T) => {
+function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string, T[]> {
+    return list.reduce((result: Record<string, T[]>, item: T) => {
         (result[keySelector(item)] ??= []).push(item);
         return result;
     }, {});
@@ -99,7 +99,7 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): { [key: string
  * Maps the paper status to the corresponding color.
  *
  * @param status the status of the paper
- * @return the color according to the status
+ * @returns the color according to the status
  */
 function getStatusColor(status: PaperStatus): string {
     switch (status) {

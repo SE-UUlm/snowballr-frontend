@@ -36,7 +36,7 @@ async function groupProjectPapersInStageByDecision(
 }
 
 async function requestProjectInformation(project: Project): Promise<ProjectInformationInterface> {
-    // TODO: add a real call to the backend (extend API + extend mock backend)
+    // TODO: add a real call to the backend (extend API + extend mock backend), waiting for #7 in snowballr-api
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 5);
     const daysInStage = 2;

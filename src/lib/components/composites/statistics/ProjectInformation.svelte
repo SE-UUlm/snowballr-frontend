@@ -34,7 +34,7 @@ Usage:
             {/each}
         </div>
     {:then information}
-        The project <span class="text-emphasized">{information.projectName}</span> started at
+        The project <span class="text-emphasized">{information.projectName}</span> started on
         <span class="text-emphasized">
             {information.projectStart.toLocaleString().split(",")[0]}
         </span>
@@ -47,8 +47,7 @@ Usage:
         /
         <span class="text-emphasized">{information.totalPapersInStage}</span>
         {pluralize(information.totalPapersInStage, "paper", "papers")} so far, so your estimated remaining
-        time {pluralize(information.estimatedRemainingDays, "is", "are")}
-        <span class="text-emphasized">{information.estimatedRemainingDays}</span>
+        time is <span class="text-emphasized">{information.estimatedRemainingDays}</span>
         {pluralize(information.estimatedRemainingDays, "day", "days")}.
     {:catch}
         <ErrorIndicator errorMessage="Couldn't load project information." />

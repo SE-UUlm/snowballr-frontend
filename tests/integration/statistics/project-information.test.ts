@@ -1,10 +1,10 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import ProjectInformation from "$lib/components/composites/statistics-components/ProjectInformation.svelte";
+import ProjectInformation from "$lib/components/composites/statistics/ProjectInformation.svelte";
 import { waitForComponentLoading } from "../test-helper";
 import { loading } from "../../model-builder";
 
-describe("ProjectInformationComponent", () => {
+describe("ProjectInformation", () => {
     test("When all required props are provided, then the project information component is completely shown.", async () => {
         render(ProjectInformation, {
             props: {
@@ -24,7 +24,7 @@ describe("ProjectInformationComponent", () => {
 
         // Project information are shown
         expect(screen.getByTestId("project-information")).toHaveTextContent("project Demo");
-        expect(screen.getByTestId("project-information")).toHaveTextContent("started at 1/1/2020");
+        expect(screen.getByTestId("project-information")).toHaveTextContent("started on 1/1/2020");
         expect(screen.getByTestId("project-information")).toHaveTextContent("in stage 1");
         expect(screen.getByTestId("project-information")).toHaveTextContent("working 3 days");
         expect(screen.getByTestId("project-information")).toHaveTextContent("5 / 10");

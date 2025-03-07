@@ -95,7 +95,7 @@ describe("Pluralize a word based on the count", () => {
 });
 
 describe("Group items of a list by a key (function)", () => {
-    it("When list is empty,then no items are grouped", () => {
+    it("When list is empty, then no items are grouped", () => {
         expect(groupBy([], (i) => i)).toStrictEqual({});
     });
 
@@ -114,7 +114,7 @@ describe("Group items of a list by a key (function)", () => {
             ],
             b: [{ type: "b", value: 3 }],
         });
-        expect(groupBy(list, (i) => "" + i.value)).toStrictEqual({
+        expect(groupBy(list, (i) => `${i.value}`)).toStrictEqual({
             "1": [
                 { type: "a", value: 1 },
                 { type: "a", value: 1 },

@@ -1,7 +1,7 @@
 <script lang="ts">
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-    import * as Accordion from "$lib/components/primitives/accordion";
-    import Button from "../../primitives/button/button.svelte";
+    import * as Accordion from "$lib/components/primitives/accordion/index";
+    import Button from "$lib/components/primitives/button/button.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
     import type { Stage } from "$lib/model/general";
     import { pluralize } from "$lib/utils/common-helper";

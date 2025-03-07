@@ -4,7 +4,7 @@
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { getStatusColor } from "$lib/utils/common-helper";
     import { type PaperStatus } from "$lib/model/general";
-    import StageProgressChart from "$lib/components/composites/statistics-components/StageProgressChart.svelte";
+    import StageProgressChart from "$lib/components/composites/statistics/StageProgressChart.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
 
     interface StageProgressChartProps {

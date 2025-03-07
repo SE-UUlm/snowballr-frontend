@@ -7,9 +7,9 @@ import {
 import type { Paper } from "$lib/model/api/paper";
 import type { PaperStatus } from "$lib/model/general";
 
-/*
-Contains interfaces or types that specify the interface of components.
-These are not defined locally so that these types can be used at the point where the data for the components is loaded or created too.
+/**
+ * Contains interfaces or types that specify the interface of components.
+ * These are not defined locally so that these types can be used at the point where the data for the components is loaded or created too.
  */
 
 interface ProjectInformationInterface {
