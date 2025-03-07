@@ -79,7 +79,7 @@ async function requestStageProgress(project: Project): Promise<StageProgressInte
  * Loads project information and open reviews for the currently opened project.
  */
 export const load: PageLoad = async ({ params, parent }) => {
-    const { loadingProject } = await parent();
+    const loadingProject = parent().then((project) => project.loadingProject);
 
     const openReviews: Promise<PaperListEntryInterface[]> = backendService
         .getPapersToReviewForProject({
@@ -99,12 +99,23 @@ export const load: PageLoad = async ({ params, parent }) => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     openReviews.catch(() => {});
 
-    const projectInformation: Promise<ProjectInformationInterface> = loadingProject.then(
-        (project) => requestProjectInformation(project),
-    );
-    const stageProgress: Promise<StageProgressInterface> = loadingProject.then((project) =>
-        requestStageProgress(project),
-    );
+    const projectInformation: Promise<ProjectInformationInterface> = loadingProject
+        .then((project) => requestProjectInformation(project))
+        .catch(() => {
+            throw new Error("Couldn't load project information.");
+        });
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    projectInformation.catch(() => {});
+
+    const stageProgress: Promise<StageProgressInterface> = loadingProject
+        .then((project) => requestStageProgress(project))
+        .catch(() => {
+            throw new Error("Couldn't load stage progress.");
+        });
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    stageProgress.catch(() => {});
 
     return { openReviews, projectInformation, stageProgress };
 };
