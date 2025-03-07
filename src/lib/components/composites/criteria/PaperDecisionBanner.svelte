@@ -7,7 +7,7 @@
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
-    import { exhaustiveCheck } from "$lib/utils/common-helper";
+    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
 
     export interface PaperDecisionBannerProps {
         reviewers: Promise<User[]>;
@@ -18,42 +18,14 @@
 
     const bannerColor = resource<Project_Paper, string>(loadingProjectPaper, {
         initialValue: "bg-unreviewed-gray",
-        onSuccess: (paper) => getDecisionColor(paper),
+        onSuccess: (paper) => getStatusColor(getStatusText(paper)).replace("text", "bg"),
         onErrorValue: "bg-unreviewed-gray",
     });
     const bannerLabel = resource<Project_Paper, string>(loadingProjectPaper, {
         initialValue: "",
-        onSuccess: (paper) => getDecisionLabel(paper),
+        onSuccess: (paper) => getStatusText(paper),
         onErrorValue: "Couldn't load paper decision",
     });
-
-    function getDecisionLabel(paper: Project_Paper) {
-        switch (paper.decision) {
-            case PaperDecision.ACCEPTED:
-                return "Accepted";
-            case PaperDecision.DECLINED:
-                return "Declined";
-            case PaperDecision.UNDECIDED:
-            case PaperDecision.UNSPECIFIED:
-                return paper.reviews.length > 0 ? "Undecided" : "Unreviewed";
-            default:
-                exhaustiveCheck(paper.decision);
-        }
-    }
-
-    function getDecisionColor(paper: Project_Paper) {
-        switch (paper.decision) {
-            case PaperDecision.ACCEPTED:
-                return "bg-accept-green";
-            case PaperDecision.DECLINED:
-                return "bg-decline-red";
-            case PaperDecision.UNDECIDED:
-            case PaperDecision.UNSPECIFIED:
-                return paper.reviews.length > 0 ? "bg-maybe-yellow" : "bg-unreviewed-gray";
-            default:
-                exhaustiveCheck(paper.decision);
-        }
-    }
 </script>
 
 <div

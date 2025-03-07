@@ -1,13 +1,12 @@
 import { backendService } from "$lib/grpc-api";
 import type { PageLoad } from "./$types";
-import { PaperDecision, type Project, type Project_Paper } from "$lib/model/api/project";
+import { type Project, type Project_Paper } from "$lib/model/api/project";
 import type {
     PaperListEntryInterface,
     ProjectInformationInterface,
     StageProgressInterface,
 } from "$lib/model/component-interfaces";
-import { exhaustiveCheck, groupBy } from "$lib/utils/common-helper";
-import type { PaperStatus } from "$lib/model/general";
+import { getStatusText, groupBy } from "$lib/utils/common-helper";
 
 async function groupProjectPapersInStageByDecision(
     project: Project,
@@ -20,19 +19,7 @@ async function groupProjectPapersInStageByDecision(
             ),
         );
 
-    return groupBy(papersOfStage, (projectPaper): PaperStatus => {
-        switch (projectPaper.decision) {
-            case PaperDecision.ACCEPTED:
-                return "Accepted";
-            case PaperDecision.DECLINED:
-                return "Declined";
-            case PaperDecision.UNDECIDED:
-            case PaperDecision.UNSPECIFIED:
-                return projectPaper.reviews.length > 0 ? "Undecided" : "Not reviewed";
-            default:
-                exhaustiveCheck(projectPaper.decision);
-        }
-    });
+    return groupBy(papersOfStage, getStatusText);
 }
 
 async function requestProjectInformation(project: Project): Promise<ProjectInformationInterface> {
