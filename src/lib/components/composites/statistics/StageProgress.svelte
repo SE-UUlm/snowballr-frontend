@@ -28,7 +28,10 @@ Usage:
     />
 ```
 -->
-<div class="flex flex-row items-center gap-x-4 p-5" data-testid="stage-progress">
+<div
+    class="flex flex-row items-center gap-x-4 p-5 max-md:flex-col max-md:gap-y-7"
+    data-testid="stage-progress"
+>
     {#await stageProgress}
         <Skeleton class="size-38 rounded-full" />
         <div class="mx-10 flex flex-col gap-y-3">
@@ -38,7 +41,7 @@ Usage:
         </div>
     {:then { stage, decisions }}
         <StageProgressChart {decisions} {stage} />
-        <ul class="mx-10 space-y-3">
+        <ul class="mx-10 space-y-3 max-sm:mx-2 md:max-lg:mx-4">
             {#each Object.entries(decisions) as [decision, number] (decision)}
                 <li class="flex flex-row items-center">
                     <Circle
@@ -46,7 +49,7 @@ Usage:
                         fill="currentColor"
                         size={14}
                     />
-                    <span class="text-default-sb min-w-38">{decision}:</span>
+                    <span class="text-default-sb min-w-38 md:max-lg:min-w-30">{decision}:</span>
                     <span class="text-align">{number}</span>
                 </li>
             {/each}
