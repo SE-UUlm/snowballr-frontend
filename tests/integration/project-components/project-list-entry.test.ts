@@ -15,7 +15,7 @@ describe("ProjectListEntryComponent", () => {
                         { user: Users.janeDoe, role: MemberRole.DEFAULT },
                     ],
                 },
-                statistics: { projectProgress: 20 },
+                statistics: { projectProgress: 0.2 },
             },
         });
 
