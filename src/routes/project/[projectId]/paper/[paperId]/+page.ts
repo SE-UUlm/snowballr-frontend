@@ -38,7 +38,8 @@ export const load: PageLoad = ({ params }) => {
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
         for (const review of reviews) {
             if (!users.some((user) => user.id === review.userId)) {
-                await backendService.getUserById({ id: review.userId }).response;
+                const user = await backendService.getUserById({ id: review.userId }).response;
+                users.push(user);
             }
         }
         return users;
