@@ -99,18 +99,19 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
  * Maps the paper status to the corresponding color.
  *
  * @param status the status of the paper
+ * @param prefix the prefix indicating wherefore the color should be used, e.g. fill or text
  * @returns the color according to the status
  */
-function getStatusColor(status: PaperStatus): string {
+function getStatusColor(status: PaperStatus, prefix: string = ""): string {
     switch (status) {
         case "Accepted":
-            return "text-accept-green";
+            return `${prefix}-accept-green`;
         case "Declined":
-            return "text-decline-red";
+            return `${prefix}-decline-red`;
         case "Undecided":
-            return "text-maybe-yellow";
+            return `${prefix}-maybe-yellow`;
         case "Not reviewed":
-            return "text-unreviewed-gray";
+            return `${prefix}-unreviewed-gray`;
         default:
             exhaustiveCheck(status);
     }

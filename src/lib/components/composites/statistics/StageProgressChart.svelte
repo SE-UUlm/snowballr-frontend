@@ -35,7 +35,7 @@
     const colorScale = d3
         .scaleOrdinal<string>()
         .domain(Object.keys(decisions))
-        .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus)));
+        .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus, "text")));
 </script>
 
 <svg data-testid="stage-progress-chart" height={SIZE} width={SIZE}>

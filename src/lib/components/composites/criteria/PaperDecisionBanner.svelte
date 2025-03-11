@@ -18,7 +18,7 @@
 
     const bannerColor = resource<Project_Paper, string>(loadingProjectPaper, {
         initialValue: "bg-unreviewed-gray",
-        onSuccess: (paper) => getStatusColor(getStatusText(paper)).replace("text", "bg"),
+        onSuccess: (paper) => getStatusColor(getStatusText(paper), "bg"),
         onErrorValue: "bg-unreviewed-gray",
     });
     const bannerLabel = resource<Project_Paper, string>(loadingProjectPaper, {

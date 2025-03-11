@@ -45,7 +45,7 @@ Usage:
             {#each Object.entries(decisions) as [decision, number] (decision)}
                 <li class="flex flex-row items-center">
                     <Circle
-                        class="mr-2 {`fill-current ${getStatusColor(decision as PaperStatus)}`}"
+                        class={`mr-2 fill-current ${getStatusColor(decision as PaperStatus, "text")}`}
                         fill="currentColor"
                         size={14}
                     />
