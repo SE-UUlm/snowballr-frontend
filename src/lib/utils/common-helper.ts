@@ -95,28 +95,28 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
     }, {});
 }
 
-type colorPrefix = "" | "text" | "bg" | "fill";
+type colorPrefix = "border" | "text" | "bg" | "fill";
 const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
     Accepted: {
-        "": "accept-green",
+        border: "border-accept-green",
         text: "text-accept-green",
         fill: "fill-accept-green",
         bg: "bg-accept-green",
     },
     Declined: {
-        "": "decline-red",
+        border: "border-decline-red",
         text: "text-decline-red",
         fill: "fill-decline-red",
         bg: "bg-decline-red",
     },
     Undecided: {
-        "": "maybe-yellow",
+        border: "border-maybe-yellow",
         text: "text-maybe-yellow",
         fill: "fill-maybe-yellow",
         bg: "bg-maybe-yellow",
     },
     "Not reviewed": {
-        "": "unreviewed-gray",
+        border: "border-unreviewed-gray",
         text: "text-unreviewed-gray",
         fill: "fill-unreviewed-gray",
         bg: "bg-unreviewed-gray",
@@ -127,10 +127,10 @@ const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
  * Maps the paper status to the corresponding color.
  *
  * @param status the status of the paper
- * @param prefix the prefix indicating wherefore the color should be used (possible values: "", "fill", "text" or "bg")
+ * @param prefix the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
  * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
  */
-function getStatusColor(status: PaperStatus, prefix: colorPrefix = ""): string {
+function getStatusColor(status: PaperStatus, prefix: colorPrefix = "text"): string {
     return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
 }
 

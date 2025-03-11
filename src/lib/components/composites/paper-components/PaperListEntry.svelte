@@ -2,10 +2,9 @@
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
-    import { PaperDecision } from "$lib/model/api/project";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
-    import { exhaustiveCheck } from "$lib/utils/common-helper";
+    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
     import { asPaper } from "$lib/utils/model-helper";
@@ -29,25 +28,6 @@
         showReviewStatus,
         onClick = navigateToPaperView,
     }: PaperListEntryProps = $props();
-
-    // Mapping of review decision to border color of paper list entry
-    function getReviewDecisionColor(
-        decisionStatus: PaperDecision,
-        numberOfReviews: number,
-    ): string {
-        switch (decisionStatus) {
-            case PaperDecision.ACCEPTED:
-                return "border-accept-green";
-            case PaperDecision.DECLINED:
-                return "border-decline-red";
-            case PaperDecision.UNDECIDED:
-                return numberOfReviews > 0 ? "border-maybe-yellow" : "border-unreviewed-gray";
-            case PaperDecision.UNSPECIFIED:
-                return "border-unreviewed-gray";
-            default:
-                exhaustiveCheck(decisionStatus);
-        }
-    }
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
@@ -109,9 +89,7 @@ Usage:
     <div
         class={cn(
             "flex flex-auto rounded-md px-3 py-1.5",
-            showReviewStatus
-                ? `border-l-4 ${getReviewDecisionColor(paper.decision, paper.reviews.length)}`
-                : "",
+            showReviewStatus ? `border-l-4 ${getStatusColor(getStatusText(paper), "border")}` : "",
         )}
     >
         <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
