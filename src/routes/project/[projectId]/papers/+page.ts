@@ -1,6 +1,7 @@
 import { backendService } from "$lib/grpc-api";
 import { Project_Paper } from "$lib/model/api/project";
 import { type Stage } from "$lib/model/general";
+import { comparePaperId } from "$lib/utils/common-helper";
 import type { PageLoad } from "./$types";
 import { asPaper } from "$lib/utils/model-helper";
 
@@ -71,5 +72,6 @@ function organizePapersByStage(papers: Project_Paper[]): Stage[] {
 
         stage.papers.push(paper);
     }
-    return stages.toSorted((a, b) => Number(a.stageIndex - b.stageIndex));
+    stages.forEach((stage) => stage.papers.sort((a, b) => comparePaperId(b.id, a.id)));
+    return stages.sort((a, b) => Number(a.stageIndex - b.stageIndex));
 }
