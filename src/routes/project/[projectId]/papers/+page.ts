@@ -71,5 +71,5 @@ function organizePapersByStage(papers: Project_Paper[]): Stage[] {
 
         stage.papers.push(paper);
     }
-    return stages;
+    return stages.toSorted((a, b) => Number(a.stageIndex - b.stageIndex));
 }
