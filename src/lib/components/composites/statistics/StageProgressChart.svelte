@@ -59,6 +59,8 @@
         y="50%"
     >
         Stage
-        <tspan class="text-3xl" dy="1.25em" x="50%">{stage}</tspan>
+    </text>
+    <text class="text-3xl" dominant-baseline="middle" dy="3em" text-anchor="middle" x="50%">
+        {stage}
     </text>
 </svg>

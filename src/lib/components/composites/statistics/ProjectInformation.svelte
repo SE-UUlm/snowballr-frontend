@@ -34,10 +34,8 @@ Usage:
             {/each}
         </div>
     {:then information}
-        The project <span class="text-emphasized">{information.projectName}</span> started on
-        <span class="text-emphasized">
-            {information.projectStart.toLocaleDateString()}
-        </span>
+        The project started on
+        <span class="text-emphasized">{information.projectStart.toLocaleDateString()}</span>
         and you are in stage
         <span class="text-emphasized">{information.projectStage}</span>. You are currently working
         <span class="text-emphasized">{information.daysInStage}</span>

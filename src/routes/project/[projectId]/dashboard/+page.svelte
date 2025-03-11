@@ -23,7 +23,7 @@
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />
 <main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden">
-    <section class="h-full w-full">
+    <section class="h-full w-full py-5">
         <NamedList
             emptyHint="No open reviews."
             items={openReviews}
