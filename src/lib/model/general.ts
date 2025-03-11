@@ -1,6 +1,5 @@
 import { Project_Paper } from "$lib/model/api/project";
 import type { Criterion } from "./api/criterion";
-import type { Paper } from "./api/paper";
 import type { Review } from "./api/review";
 
 /**
@@ -32,17 +31,4 @@ interface Stage {
     papers: Project_Paper[];
 }
 
-/*
-Functions related to the (general) types.
- */
-
-function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {
-    return "paper" in paper;
-}
-
-function asPaper(paper: Project_Paper | Paper): Paper {
-    return isProjectPaper(paper) ? paper.paper! : paper;
-}
-
 export type { ValidationResult, ApiError, CriterionWithReviews, UserConfig, Stage, PaperStatus };
-export { asPaper };

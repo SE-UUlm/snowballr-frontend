@@ -14,8 +14,8 @@
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project, Project_Paper } from "$lib/model/api/project";
-    import { asPaper } from "$lib/model/general";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
+    import { asPaper } from "$lib/utils/model-helper";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
