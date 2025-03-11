@@ -95,26 +95,43 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
     }, {});
 }
 
+type colorPrefix = "" | "text" | "bg" | "fill";
+const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
+    Accepted: {
+        "": "accept-green",
+        text: "text-accept-green",
+        fill: "fill-accept-green",
+        bg: "bg-accept-green",
+    },
+    Declined: {
+        "": "decline-red",
+        text: "text-decline-red",
+        fill: "fill-decline-red",
+        bg: "bg-decline-red",
+    },
+    Undecided: {
+        "": "maybe-yellow",
+        text: "text-maybe-yellow",
+        fill: "fill-maybe-yellow",
+        bg: "bg-maybe-yellow",
+    },
+    "Not reviewed": {
+        "": "unreviewed-gray",
+        text: "text-unreviewed-gray",
+        fill: "fill-unreviewed-gray",
+        bg: "bg-unreviewed-gray",
+    },
+};
+
 /**
  * Maps the paper status to the corresponding color.
  *
  * @param status the status of the paper
- * @param prefix the prefix indicating wherefore the color should be used, e.g. fill or text
- * @returns the color according to the status
+ * @param prefix the prefix indicating wherefore the color should be used (possible values: "", "fill", "text" or "bg")
+ * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
  */
-function getStatusColor(status: PaperStatus, prefix: string = ""): string {
-    switch (status) {
-        case "Accepted":
-            return `${prefix}-accept-green`;
-        case "Declined":
-            return `${prefix}-decline-red`;
-        case "Undecided":
-            return `${prefix}-maybe-yellow`;
-        case "Not reviewed":
-            return `${prefix}-unreviewed-gray`;
-        default:
-            exhaustiveCheck(status);
-    }
+function getStatusColor(status: PaperStatus, prefix: colorPrefix = ""): string {
+    return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
 }
 
 /**
