@@ -34,14 +34,13 @@ export const load: PageLoad = ({ params }) => {
     criteriaWithReviews.catch(() => {});
 
     const reviewers: Promise<User[]> = criteriaWithReviews.then(async (criteria) => {
-        const users: User[] = [];
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
-        for (const review of reviews) {
-            if (!users.some((user) => user.id === review.userId)) {
-                const user = await backendService.getUserById({ id: review.userId }).response;
-                users.push(user);
-            }
-        }
+        const userIds: Set<string> = new Set(reviews.map((review) => review.userId));
+        const users: User[] = await Promise.all(
+            Array.from(userIds)
+                .map((id) => backendService.getUserById({ id }).response.catch(() => undefined))
+                .filter((user) => user !== undefined) as Promise<User>[],
+        );
         return users;
     });
 
