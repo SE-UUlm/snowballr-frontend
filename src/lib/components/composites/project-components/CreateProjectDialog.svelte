@@ -11,7 +11,7 @@
     import { goto } from "$app/navigation";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
-    import ErrorAlert from "$lib/components/composites/ErrorAlert.svelte";
+    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";

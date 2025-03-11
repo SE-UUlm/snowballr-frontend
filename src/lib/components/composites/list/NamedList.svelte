@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import ErrorIndicator from "../ErrorIndicator.svelte";
+    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
 
     type T = $$Generic; /* eslint-disable-line no-undef */
 

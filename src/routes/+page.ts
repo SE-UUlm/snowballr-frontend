@@ -1,8 +1,11 @@
 import type { PageLoad } from "./$types";
 import { backendService } from "$lib/grpc-api";
-import { Nothing } from "$lib/model/api/base";
 import { type Project } from "$lib/model/api/project";
-import type { PaperListEntryInterface, ProjectListEntryInterface } from "$lib/model/general";
+import { Nothing } from "$lib/model/api/base";
+import type {
+    PaperListEntryInterface,
+    ProjectListEntryInterface,
+} from "$lib/model/component-interfaces";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
     const members = await backendService.getProjectMembers({ id: project.id }).response;
@@ -18,7 +21,8 @@ async function requestProjectInformation(project: Project): Promise<ProjectListE
 }
 
 async function requestUndecidedPapers(project: Project): Promise<PaperListEntryInterface[]> {
-    const allUndecidedPapers = await backendService.getAllPapersToReview(Nothing).response;
+    const allUndecidedPapers = await backendService.getPapersToReviewForProject({ id: project.id })
+        .response;
 
     return allUndecidedPapers.projectPapers.map((projectPaper) => ({
         paper: projectPaper,
@@ -38,8 +42,12 @@ async function requestUndecidedPapers(project: Project): Promise<PaperListEntryI
  * - open reviews from the project
  */
 export const load: PageLoad = async () => {
-    const thisUserId = "0";
-    const allUserProjects = backendService.getAllProjectsForUser({ id: thisUserId }).response;
+    const allUserProjects = backendService
+        .getCurrentUser(Nothing)
+        .response.then((user) => backendService.getAllProjectsForUser({ id: user.id }).response);
+
+    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
+    allUserProjects.catch(() => {});
 
     const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {

@@ -1,4 +1,5 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import type { PaperStatus } from "$lib/model/general";
 
 /**
  * Convert a person object ({firstName: "...", lastName, "..."}) to its string representation
@@ -13,9 +14,9 @@ function getName(person: { firstName: string; lastName: string }): string {
  * [{firstName: "John", lastName: "Doe", ...}, ... ] -->
  * "John Doe, ..."
  *
- * @param persons The list of objects, which at least have a firstName (of type string) and a lastName (of type string)
+ * @param persons the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
- * @return The names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
+ * @returns the names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
@@ -27,7 +28,7 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
  * Checks, whether a given paper is undecided, i.e. unreviewed or has the review status
  * "Maybe".
  *
- * @return true, if the paper is either unreviewed or has the status "Maybe", otherwise false
+ * @returns true, if the paper is either unreviewed or has the status "Maybe", otherwise false
  */
 function isPaperUndecided(paper: Project_Paper): boolean {
     return paper.decision === PaperDecision.UNDECIDED;
@@ -37,7 +38,7 @@ function isPaperUndecided(paper: Project_Paper): boolean {
  * Checks, whether a given paper needs further reviews, i.e. it is either undecided (see {@link isPaperUndecided})
  * or has less than the required number of reviews.
  *
- * @return true, if the paper needs further reviews, otherwise false
+ * @returns true, if the paper needs further reviews, otherwise false
  */
 function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: number): boolean {
     return isPaperUndecided(paper) || paper.reviews.length < numberOfRequiredReviews;
@@ -59,7 +60,7 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
  * }
  * ```
  *
- * @param x - The value that should not be reached.
+ * @param x the value that should not be reached.
  */
 function exhaustiveCheck(x: never): never {
     throw new Error(`Unhandled case: ${x}`);
@@ -77,4 +78,90 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-export { getName, getNames, isPaperUndecided, doesPaperNeedReview, exhaustiveCheck, pluralize };
+/**
+ * Groups a list by keys.
+ * The keys are indirectly given by the keySelector function.
+ *
+ * Inspired by: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+ *
+ * @param list the list to be grouped
+ * @param keySelector function that map a (list) item to a certain key
+ * @returns the grouped list as an object with the association key: \<list of items associated to key\>
+ */
+function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string, T[]> {
+    return list.reduce((result: Record<string, T[]>, item: T) => {
+        (result[keySelector(item)] ??= []).push(item);
+        return result;
+    }, {});
+}
+
+type colorPrefix = "border" | "text" | "bg" | "fill";
+const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
+    Accepted: {
+        border: "border-accept-green",
+        text: "text-accept-green",
+        fill: "fill-accept-green",
+        bg: "bg-accept-green",
+    },
+    Declined: {
+        border: "border-decline-red",
+        text: "text-decline-red",
+        fill: "fill-decline-red",
+        bg: "bg-decline-red",
+    },
+    Undecided: {
+        border: "border-maybe-yellow",
+        text: "text-maybe-yellow",
+        fill: "fill-maybe-yellow",
+        bg: "bg-maybe-yellow",
+    },
+    "Not reviewed": {
+        border: "border-unreviewed-gray",
+        text: "text-unreviewed-gray",
+        fill: "fill-unreviewed-gray",
+        bg: "bg-unreviewed-gray",
+    },
+};
+
+/**
+ * Maps the paper status to the corresponding color.
+ *
+ * @param status the status of the paper
+ * @param prefix the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
+ * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
+ */
+function getStatusColor(status: PaperStatus, prefix: colorPrefix = "text"): string {
+    return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
+}
+
+/**
+ * Maps the paper status to the corresponding text.
+ *
+ * @param paper the paper whose review status should be determined
+ * @returns the review status ("Accepted", "Declined", "Undecided" or "Not reviewed")
+ */
+function getStatusText(paper: Project_Paper): PaperStatus {
+    switch (paper.decision) {
+        case PaperDecision.ACCEPTED:
+            return "Accepted";
+        case PaperDecision.DECLINED:
+            return "Declined";
+        case PaperDecision.UNDECIDED:
+        case PaperDecision.UNSPECIFIED:
+            return paper.reviews.length > 0 ? "Undecided" : "Not reviewed";
+        default:
+            exhaustiveCheck(paper.decision);
+    }
+}
+
+export {
+    getName,
+    getNames,
+    isPaperUndecided,
+    doesPaperNeedReview,
+    exhaustiveCheck,
+    pluralize,
+    groupBy,
+    getStatusColor,
+    getStatusText,
+};

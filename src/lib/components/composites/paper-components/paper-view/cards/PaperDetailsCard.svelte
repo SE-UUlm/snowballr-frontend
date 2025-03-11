@@ -11,7 +11,7 @@
     import { resource } from "$lib/resource.svelte";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
-    import ErrorIndicator from "$lib/components/composites/ErrorIndicator.svelte";
+    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper>;

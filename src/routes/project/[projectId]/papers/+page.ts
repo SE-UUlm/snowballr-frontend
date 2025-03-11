@@ -1,7 +1,8 @@
 import { backendService } from "$lib/grpc-api";
 import { Project_Paper } from "$lib/model/api/project";
-import { asPaper, type Stage } from "$lib/model/general";
+import { type Stage } from "$lib/model/general";
 import type { PageLoad } from "./$types";
+import { asPaper } from "$lib/utils/model-helper";
 
 export const load: PageLoad = ({ params }) => {
     const projectId = { id: params.projectId };

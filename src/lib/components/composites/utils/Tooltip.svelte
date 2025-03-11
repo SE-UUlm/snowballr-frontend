@@ -3,8 +3,8 @@
         buttonVariants,
         type ButtonSize,
         type ButtonVariant,
-    } from "$lib/components/primitives/button/index.js";
-    import * as Tooltip from "$lib/components/primitives/tooltip/index.js";
+    } from "$lib/components/primitives/button/index";
+    import * as Tooltip from "$lib/components/primitives/tooltip/index";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";

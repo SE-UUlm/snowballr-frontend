@@ -2,7 +2,7 @@
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import type { Paper } from "$lib/model/api/paper";
     import { getNames } from "$lib/utils/common-helper";
-    import ErrorIndicator from "../ErrorIndicator.svelte";
+    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper | Omit<Paper, "id">>;

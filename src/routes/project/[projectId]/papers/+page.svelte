@@ -6,17 +6,17 @@
     import ChevronUp from "lucide-svelte/icons/chevron-up";
     import * as Accordion from "$lib/components/primitives/accordion/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import StagesSelect from "$lib/components/composites/papers-view/StagesSelect.svelte";
-    import ReviewersSelect from "$lib/components/composites/papers-view/ReviewersSelect.svelte";
-    import PublishersSelect from "$lib/components/composites/papers-view/PublishersSelect.svelte";
-    import YearsSelect from "$lib/components/composites/papers-view/YearsSelect.svelte";
-    import DecisionsSelect from "$lib/components/composites/papers-view/DecisionsSelect.svelte";
-    import CriteriaSelect from "$lib/components/composites/papers-view/CriteriaSelect.svelte";
+    import StagesSelect from "$lib/components/composites/select/StagesSelect.svelte";
+    import ReviewersSelect from "$lib/components/composites/select/ReviewersSelect.svelte";
+    import PublishersSelect from "$lib/components/composites/select/PublishersSelect.svelte";
+    import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
+    import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
+    import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
-    import StageEntry from "$lib/components/composites/papers-view/StageEntry.svelte";
+    import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
-    import ErrorIndicator from "$lib/components/composites/ErrorIndicator.svelte";
+    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
 
     let { data } = $props();
     const {

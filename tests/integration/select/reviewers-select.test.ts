@@ -1,9 +1,11 @@
-import StagesSelect from "$lib/components/composites/papers-view/StagesSelect.svelte";
+import ReviewersSelect from "$lib/components/composites/select/ReviewersSelect.svelte";
+import { type User } from "$lib/model/api/user";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { Users } from "../../example-data";
 
-describe("StagesSelect", () => {
+describe("ReviewersSelect", () => {
     beforeEach(() => {
         // Apparently, these methods are not implemented in jsdom but used by the Select component
         // See https://github.com/testing-library/user-event/discussions/1087
@@ -14,37 +16,34 @@ describe("StagesSelect", () => {
     });
 
     test("When all props are provided, then component is shown correctly", async () => {
-        render(StagesSelect, {
+        render(ReviewersSelect, {
             target: document.body,
             props: {
-                loadingStageCount: Promise.resolve<bigint>(2n),
-                selectedStages: [],
+                loadingReviewers: Promise.resolve<User[]>([Users.johnDoe, Users.janeDoe]),
+                selectedReviewers: [],
             },
         });
 
-        const trigger = await screen.findByText("All Stages (3)");
+        const trigger = await screen.findByText("All Reviewers (2)");
         expect(trigger).toBeInTheDocument();
     });
 
-    test("When the loadingStageCount promise is rejected, then stage 0 is still shown", async () => {
+    test("When the loadingReviewers promise is rejected, then hint is shown", async () => {
         const user = userEvent.setup();
-        render(StagesSelect, {
+        render(ReviewersSelect, {
             target: document.body,
             props: {
-                loadingStageCount: Promise.reject("Error"),
-                selectedStages: [],
+                loadingReviewers: Promise.reject("Error"),
+                selectedReviewers: [],
             },
         });
 
-        const trigger = await screen.findByText("All Stages (1)");
+        const trigger = await screen.findByText("All Reviewers (0)");
         expect(trigger).toBeInTheDocument();
 
         await user.click(trigger);
 
-        const option = screen.getByText("Stage 0");
+        const option = screen.getByText("No reviewers available");
         expect(option).toBeInTheDocument();
-
-        const noStagesOption = screen.queryByText("No stages available");
-        expect(noStagesOption).not.toBeInTheDocument();
     });
 });

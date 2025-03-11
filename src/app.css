@@ -126,6 +126,10 @@
     @apply text-base font-medium tracking-normal text-neutral-500 italic;
 }
 
+@utility text-emphasized {
+    @apply text-lg font-semibold tracking-normal;
+}
+
 @utility text-default {
     @apply text-default-nc text-primary;
 }
