@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+    comparePaperId,
     doesPaperNeedReview,
     getNames,
     groupBy,
@@ -126,5 +127,30 @@ describe("Group items of a list by a key (function)", () => {
 
     it("When the key selector function is the identity, then every item has its own key", () => {
         expect(groupBy([1, 2, 3], (i) => "" + i)).toStrictEqual({ "1": [1], "2": [2], "3": [3] });
+    });
+});
+
+describe("Compare paper ids", () => {
+    it("When the paper ids are the same, then they are equal", () => {
+        const compare = comparePaperId("#123", "#123");
+        expect(compare).toBe(0);
+    });
+
+    it("When the first paper id is smaller than the second, then the comparison is negative", () => {
+        const compare = comparePaperId("#9", "#10");
+        expect(compare).toBeLessThan(0);
+    });
+
+    it("When the first paper id is greater than the second, then the comparison is positive", () => {
+        const compare = comparePaperId("#42", "#8");
+        expect(compare).toBeGreaterThan(0);
+    });
+
+    it("When both paper ids are malformed, then the comparison is 0", () => {
+        const compare1 = comparePaperId("#", "#");
+        expect(compare1).toBe(0);
+
+        const compare2 = comparePaperId("#a", "#b");
+        expect(compare2).toBe(0);
     });
 });

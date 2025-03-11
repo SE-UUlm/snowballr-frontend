@@ -154,6 +154,22 @@ function getStatusText(paper: Project_Paper): PaperStatus {
     }
 }
 
+/**
+ * Compares two paper ids.
+ *
+ * Both ids are expected to be in the format '#<number>'. The comparison is done by comparing the numbers.
+ *
+ * @param a - Id of the first paper
+ * @param b - Id of the second paper
+ * @returns a negative number if a is less than b, a positive number if a is greater than b, and 0 if a is equal to b
+ */
+function comparePaperId(a: string, b: string): number {
+    const idA = parseInt(a.slice(1), 10);
+    const idB = parseInt(b.slice(1), 10);
+    const compare = idA - idB;
+    return isNaN(compare) ? 0 : compare;
+}
+
 export {
     getName,
     getNames,
@@ -164,4 +180,5 @@ export {
     groupBy,
     getStatusColor,
     getStatusText,
+    comparePaperId,
 };
