@@ -1,4 +1,4 @@
-import { defineConfig } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
     testDir: "tests/e2e",
@@ -19,4 +19,20 @@ export default defineConfig({
         command: "npm run build && npm run preview",
         port: 4173,
     },
+    projects: [
+        {
+            name: "chromium",
+            use: { ...devices["Desktop Chrome"] },
+        },
+
+        {
+            name: "firefox",
+            use: { ...devices["Desktop Firefox"] },
+        },
+
+        {
+            name: "webkit",
+            use: { ...devices["Desktop Safari"] },
+        },
+    ],
 });
