@@ -55,7 +55,7 @@
      * The input is only added, if it is not a duplicate and not empty (after trimming).
      * Furthermore, it clears the input.
      *
-     * @param item the item to add
+     * @param item - the item to add
      */
     function addItem(item: string): void {
         const isValidNewItem = item.trim() !== "" && !items.includes(item);
@@ -90,7 +90,7 @@
      * Set the focus to the input field and reset the {@link selectedSuggestionIndex}
      * and optionally the {@link selectedChipIndex} to -1.
      *
-     * @param resetChipSelection if true, reset the {@link selectedChipIndex} to -1
+     * @param resetChipSelection - if true, reset the {@link selectedChipIndex} to -1
      */
     function focusInput(resetChipSelection: boolean = false): void {
         document.getElementById(INPUT_ID)?.focus();

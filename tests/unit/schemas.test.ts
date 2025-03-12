@@ -24,8 +24,8 @@ function schemaTest(
     /**
      * Test for successful validation.
      *
-     * @param input The input to validate.
-     * @param expectedOutput The expected output of the validation.
+     * @param input - The input to validate.
+     * @param expectedOutput - The expected output of the validation.
      */
     function _testValid(input: string, expectedOutput: string = input) {
         const result = schema.safeParse(input);
@@ -47,9 +47,9 @@ function schemaTest(
     /**
      * Test for failed validation.
      *
-     * @param input The input to validate.
-     * @param codes The error codes that should be included in the validation.
-     * @param checkAllCodes If true, all error codes must be present in the validation and no other codes should be present.
+     * @param input - The input to validate.
+     * @param codes - The error codes that should be included in the validation.
+     * @param checkAllCodes - If true, all error codes must be present in the validation and no other codes should be present.
      */
     function _testInvalid(input: string, config: { codes: string[]; checkAllCodes?: boolean }) {
         const { codes, checkAllCodes } = { checkAllCodes: true, ...config };

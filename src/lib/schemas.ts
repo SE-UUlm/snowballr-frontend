@@ -17,9 +17,9 @@ export type ZodIssueSubCode = keyof typeof ZodIssueSubCode;
  * Instead, we use the `custom` issue code and add a `subCode` parameter to distinguish
  * between different custom issues.
  *
- * @param context The context to add the issue to.
- * @param subCode The sub code of the issue.
- * @param message The message of the issue.
+ * @param context - The context to add the issue to.
+ * @param subCode - The sub code of the issue.
+ * @param message - The message of the issue.
  */
 function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, message?: string) {
     return context.addIssue({
