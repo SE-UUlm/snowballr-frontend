@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { DevHomePage } from "./pom/home-page-model";
+import { DevCreateProjectDialog } from "./pom/create-project-dialog-model";
 
 test.describe("Creating a new project", () => {
     test.beforeEach(async ({ page }) => {
@@ -12,7 +13,7 @@ test.describe("Creating a new project", () => {
         const homepage = new DevHomePage(page);
         await homepage.openCreateProjectDialog();
 
-        await expect(homepage.projectCreateDialog).toBeVisible();
+        await expect(homepage.createProjectDialog).toBeVisible();
     });
 
     test("When the dialog is opened, then the user can input the project name and possible members.", async ({
@@ -20,9 +21,10 @@ test.describe("Creating a new project", () => {
     }) => {
         const homepage = new DevHomePage(page);
         await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
 
-        await page.getByLabel("Name").fill("Demo project 1");
-        await page.getByLabel("Members").fill("max@mustermann.de");
+        await dialog.projectNameInput.fill("Demo project 1");
+        await dialog.projectMemberInput.fill("max@mustermann.de");
     });
 
     test("When the process is cancelled, then the dialog is closed, no project is created and all inputs are reset", async ({
@@ -30,29 +32,33 @@ test.describe("Creating a new project", () => {
     }) => {
         const homepage = new DevHomePage(page);
         await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
 
-        await page.getByLabel("Name").fill("Demo project 1");
-        await page.getByLabel("Members").fill("max@mustermann.de");
+        await dialog.projectNameInput.fill("Demo project 1");
+        await dialog.projectMemberInput.fill("max@mustermann.de");
 
-        await homepage.closeCreateProjectDialog();
+        await dialog.closeCreateProjectDialog();
 
         // dialog is closed
-        await expect(homepage.projectCreateDialog).not.toBeVisible();
+        await expect(homepage.createProjectDialog).not.toBeVisible();
 
         // no new project was created
         await expect(page.getByText("Demo project 1")).not.toBeVisible();
 
         // all inputs are reset
         await homepage.openCreateProjectDialog();
-        await expect(page.getByLabel("Name")).toContainText("");
-        await expect(page.getByLabel("Members")).toContainText("");
+        await expect(dialog.projectNameInput).toContainText("");
+        await expect(dialog.projectMemberInput).toContainText("");
     });
 
     test("When the project was successfully created and the user navigates to the project dashboard, then it shows an empty project.", async ({
         page,
     }) => {
         const homepage = new DevHomePage(page);
-        await homepage.createProject();
+        await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
+
+        await dialog.createProject();
 
         /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
     });
@@ -61,7 +67,10 @@ test.describe("Creating a new project", () => {
         page,
     }) => {
         const homepage = new DevHomePage(page);
-        await homepage.createProject();
+        await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
+
+        await dialog.createProject();
 
         /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
     });
@@ -70,7 +79,10 @@ test.describe("Creating a new project", () => {
         page,
     }) => {
         const homepage = new DevHomePage(page);
-        await homepage.createProject();
+        await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
+
+        await dialog.createProject();
 
         /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
     });
