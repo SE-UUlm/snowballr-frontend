@@ -102,7 +102,7 @@
      *
      * - If no schema is provided, this method always returns true
      *
-     * @returns {boolean} True if the input value conforms to the schema, false otherwise.
+     * @returns True if the input value conforms to the schema, false otherwise.
      */
     export function validate(): boolean {
         if (!schema) {

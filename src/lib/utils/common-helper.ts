@@ -2,7 +2,7 @@ import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import type { PaperStatus } from "$lib/model/general";
 
 /**
- * Convert a person object ({firstName: "...", lastName, "..."}) to its string representation
+ * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
  * "\<firstName\> \<lastName\>.
  */
 function getName(person: { firstName: string; lastName: string }): string {
@@ -10,13 +10,12 @@ function getName(person: { firstName: string; lastName: string }): string {
 }
 
 /**
- * Combine the first- and lastname of the persons array into a string as following:
- * [{firstName: "John", lastName: "Doe", ...}, ... ] -->
- * "John Doe, ..."
+ * Combine the first- and last name of the persons array into a string as following:
+ * [\{ firstName: "John", lastName: "Doe", ... \}, ... ] --\> "John Doe, ..."
  *
- * @param persons the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
+ * @param persons - the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
- * @returns the names of the persons as string (<first name> <last name>) concatenated and separated by an ','.
+ * @returns the names of the persons as string (\<first name\> \<last name\>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
@@ -60,7 +59,7 @@ function doesPaperNeedReview(paper: Project_Paper, numberOfRequiredReviews: numb
  * }
  * ```
  *
- * @param x the value that should not be reached.
+ * @param x - the value that should not be reached.
  */
 function exhaustiveCheck(x: never): never {
     throw new Error(`Unhandled case: ${x}`);
@@ -84,8 +83,8 @@ function pluralize(count: number, singular: string, plural: string): string {
  *
  * Inspired by: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
  *
- * @param list the list to be grouped
- * @param keySelector function that map a (list) item to a certain key
+ * @param list - the list to be grouped
+ * @param keySelector - function that map a (list) item to a certain key
  * @returns the grouped list as an object with the association key: \<list of items associated to key\>
  */
 function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string, T[]> {
@@ -95,8 +94,8 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
     }, {});
 }
 
-type colorPrefix = "border" | "text" | "bg" | "fill";
-const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
+type ColorPrefix = "border" | "text" | "bg" | "fill";
+const statusColors: Record<PaperStatus, Record<ColorPrefix, string>> = {
     Accepted: {
         border: "border-accept-green",
         text: "text-accept-green",
@@ -126,18 +125,18 @@ const statusColors: Record<PaperStatus, Record<colorPrefix, string>> = {
 /**
  * Maps the paper status to the corresponding color.
  *
- * @param status the status of the paper
- * @param prefix the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
+ * @param status - the status of the paper
+ * @param prefix - the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
  * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
  */
-function getStatusColor(status: PaperStatus, prefix: colorPrefix = "text"): string {
+function getStatusColor(status: PaperStatus, prefix: ColorPrefix = "text"): string {
     return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
 }
 
 /**
  * Maps the paper status to the corresponding text.
  *
- * @param paper the paper whose review status should be determined
+ * @param paper - the paper whose review status should be determined
  * @returns the review status ("Accepted", "Declined", "Undecided" or "Not reviewed")
  */
 function getStatusText(paper: Project_Paper): PaperStatus {

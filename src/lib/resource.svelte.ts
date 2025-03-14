@@ -1,3 +1,14 @@
+interface ResourceOptions<TPromise, TValue> {
+    /** The initial value of the state */
+    initialValue: TValue;
+    /** The function that is called when the promise resolves and sets the value of the state */
+    onSuccess?: (value: TPromise) => TValue;
+    /** The value that is set when the promise rejects */
+    onErrorValue?: TValue;
+    /** The name of the resource that is used for error logging */
+    resourceName?: string;
+}
+
 /**
  * Wrapper for a resource state that is loading.
  *
@@ -6,6 +17,11 @@
  * If the promise rejects, the state will be set to {@link options.onErrorValue} if it is defined.
  *
  * The value of the state can be accessed via the `value` property.
+ *
+ * The default value of {@link options.onSuccess} is the identity function
+ * (**Note:** This might cause errors when {@link TPromise} and {@link TValue} are not they same).
+ *
+ * The default value of {@link options.resourceName} is "resource".
  *
  * Usage:
  * ```ts
@@ -26,21 +42,12 @@
  * ```
  *
  * @param loadingResource - The promise representing the loading resource.
- * @param options
- * @param options.initialValue - The initial value of the state.
- * @param options.onSuccess - The function that is called when the promise resolves and sets the value of the state. Defaults to the identity function.
- * @param options.onErrorValue - The value that is set when the promise rejects.
- * @param options.resourceName - The name of the resource that is used for error logging. Default is "resource".
+ * @param options - The options for the resource state.
  * @returns The state that represents the loading resource.
  */
 export const resource = <TPromise, TValue>(
     loadingResource: Promise<TPromise>,
-    options: {
-        initialValue: TValue;
-        onSuccess?: (value: TPromise) => TValue;
-        onErrorValue?: TValue;
-        resourceName?: string;
-    },
+    options: ResourceOptions<TPromise, TValue>,
 ) => {
     const {
         initialValue,

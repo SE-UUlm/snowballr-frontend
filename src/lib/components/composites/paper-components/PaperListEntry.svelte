@@ -45,8 +45,8 @@
      * Handles the click event of the paper entry component by checking
      * whether it was a single click (so no further click after 350ms) or a double click
      * and call the corresponding functions:
-     *  - single click => onClick() (possible overridden, otherwise navigateToPaperView())
-     *  - double click => navigateToPaperView() (default)
+     *  - single click =\> onClick() (possible overridden, otherwise navigateToPaperView())
+     *  - double click =\> navigateToPaperView() (default)
      */
     const handleClick = () => {
         if (timeoutId === null) {

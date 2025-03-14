@@ -56,7 +56,7 @@
      * the members with the best matching name or email are at the beginning of the list (and will
      * appear at the top of the suggestions list).
      *
-     * @param input the content of the input field, i.e. the search string
+     * @param input - the content of the input field, i.e. the search string
      * @returns list of "name \<email\>" (sorted) representations of users that can be invited
      */
     function filterPossibleMembers(input: string): string[] {
@@ -91,14 +91,14 @@
      *
      * If multiple users with the given name exist, the name can not be mapped and a hint is displayed.
      *
-     * @example The user {firstName: "John", lastName: "Doe, email: "john.doe@example.com", ...}
+     * @example The user \{ firstName: "John", lastName: "Doe, email: "john.doe\@example.com", ... \}
      * is in the list of possible members. Then the input
      * - "John Doe"
-     * - "john.doe@example.com"
-     * - "John Doe <john.doe@example.com>"
-     * all are mapped to "john.doe@example.com"
+     * - "john.doe\@example.com"
+     * - "John Doe \<john.doe\@example.com\>"
+     * all are mapped to "john.doe\@example.com"
      *
-     * @param input the name, email or combination of name \<email\> of a known user
+     * @param input - the name, email or combination of name \<email\> of a known user
      * @returns the corresponding email of the user identified by the given name, email or name + email combination
      */
     function mapNameToEmail(input: string): string | undefined {
@@ -115,8 +115,8 @@
     /**
      * Get the name of a user identified by its email.
      *
-     * @param input the email of the user
-     * @return the name of the user or undefined, if the no user with the given email was found
+     * @param input - the email of the user
+     * @returns the name of the user or undefined, if the no user with the given email was found
      */
     function mapEmailToName(input: string): string | undefined {
         const name = getNames(initialPossibleMembers.filter((user) => input === user.email));

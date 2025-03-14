@@ -4,6 +4,7 @@ import svelte from "eslint-plugin-svelte";
 import svelteParser from "svelte-eslint-parser";
 import globals from "globals";
 import ts from "typescript-eslint";
+import tsdoc from "eslint-plugin-tsdoc";
 
 export default ts.config(
     js.configs.recommended,
@@ -27,6 +28,12 @@ export default ts.config(
                 parser: ts.parser,
             },
         },
+        plugins: {
+            tsdoc,
+        },
+        rules: {
+            "tsdoc/syntax": "warn",
+        },
     },
     {
         files: ["**/*.svelte.ts", "*.svelte.ts"],
@@ -35,6 +42,24 @@ export default ts.config(
             parserOptions: {
                 parser: ts.parser,
             },
+        },
+        plugins: {
+            tsdoc,
+        },
+        rules: {
+            "tsdoc/syntax": "warn",
+        },
+    },
+    {
+        files: ["**/*.ts", "*.ts"],
+        languageOptions: {
+            parser: ts.parser,
+        },
+        plugins: {
+            tsdoc,
+        },
+        rules: {
+            "tsdoc/syntax": "warn",
         },
     },
     {
