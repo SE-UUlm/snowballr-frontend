@@ -28,18 +28,30 @@ export class DevCreateProjectDialog {
     }
 
     /**
-     * Creates a new project called "Demo project 1" with the two members "max@mustermann.de" and "john.doe@example.com".
+     * Creates a new project with the two members "john\@doe.com" and "julia.clark\@example.com".
      *
      * @remarks
      * This function can only fill the input fields in the corresponding project creation dialog and submit the form.
      * It neither navigates to the newly created project nor close the dialog, but requires the dialog to be open.
+     *
+     * @param projectName - the name of the project
      */
-    async createProject() {
-        await this.projectNameInput.fill("Demo project 1");
-        await this.projectMemberInput.fill("max@mustermann.de");
-        await this.projectMemberInput.pressSequentially("john");
+    async createProject(projectName: string) {
+        await this.projectNameInput.fill(projectName);
+        await this.projectMemberInput.fill("john@doe.com");
+        await this.projectMemberInput.press("Tab");
+        await this.projectMemberInput.pressSequentially("julia");
+        await this.projectMemberInput.press("ArrowDown");
         await this.projectMemberInput.press("Tab");
 
         await this.createProjectButton.click();
+    }
+
+    /**
+     * Checks, whether an error occurred during the process of the project creation, i.e. whether
+     * an error alert is shown in the dialog.
+     */
+    async checkForErrors() {
+        await expect(this.page.getByRole("alert")).not.toBeVisible();
     }
 }

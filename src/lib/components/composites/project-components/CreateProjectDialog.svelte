@@ -37,14 +37,18 @@
         initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
     );
 
+    let loadingPossibleMembers = $state(true);
+
     onMount(async () => {
         try {
             const currentUser = await backendService.getCurrentUser(Nothing).response;
             const allUsers = await backendService.getAllUsers(Nothing).response;
 
             initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
+            loadingPossibleMembers = false;
         } catch (error) {
             isErrorOnUsersLoading = true;
+            loadingPossibleMembers = false;
             console.error(`Couldn't get users from server (${error})`);
         }
     });
@@ -193,6 +197,7 @@
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             )}
             data-testid="dialog-trigger-button"
+            disabled={loadingPossibleMembers}
         >
             <div class="flex flex-row items-center justify-center gap-2.5">
                 <CirclePlus strokeWidth="2.5" />
@@ -268,6 +273,9 @@
                     projectWasCreated = false;
                     projectId = undefined;
                     membersInput = [];
+
+                    // trigger reload of the homepage, so the created project is shown in the projects list
+                    window.location.reload();
                 }}
             >
                 Back

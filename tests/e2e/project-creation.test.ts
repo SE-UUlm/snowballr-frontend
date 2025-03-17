@@ -3,7 +3,29 @@ import { DevHomePage } from "./pom/home-page-model";
 import { DevCreateProjectDialog } from "./pom/create-project-dialog-model";
 
 test.describe("Creating a new project", () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, browserName }) => {
+        await page.route("**/snowballr.SnowballR/**", (route, request) => {
+            let mockBackendURL;
+            switch (browserName) {
+                case "chromium":
+                    mockBackendURL = "http://localhost:3002";
+                    break;
+                case "firefox":
+                    mockBackendURL = "http://localhost:3003";
+                    break;
+                case "webkit":
+                    mockBackendURL = "http://localhost:3004";
+                    break;
+                default:
+                    mockBackendURL = "http://localhost:3001";
+                    break;
+            }
+
+            route.continue({
+                url: `${mockBackendURL}/${request.url().substring(request.url().indexOf("snowballr.SnowballR"))}`,
+            });
+        });
+
         await page.goto("/");
     });
 
@@ -23,8 +45,10 @@ test.describe("Creating a new project", () => {
         await homepage.openCreateProjectDialog();
         const dialog = new DevCreateProjectDialog(page);
 
-        await dialog.projectNameInput.fill("Demo project 1");
-        await dialog.projectMemberInput.fill("max@mustermann.de");
+        await dialog.projectNameInput.fill("Demo project 0");
+        await dialog.projectMemberInput.fill("john@doe.com");
+
+        await dialog.checkForErrors();
     });
 
     test("When the process is cancelled, then the dialog is closed, no project is created and all inputs are reset", async ({
@@ -35,9 +59,10 @@ test.describe("Creating a new project", () => {
         const dialog = new DevCreateProjectDialog(page);
 
         await dialog.projectNameInput.fill("Demo project 1");
-        await dialog.projectMemberInput.fill("max@mustermann.de");
+        await dialog.projectMemberInput.fill("john@doe.com");
 
         await dialog.closeCreateProjectDialog();
+        await dialog.checkForErrors();
 
         // dialog is closed
         await expect(homepage.createProjectDialog).not.toBeVisible();
@@ -51,30 +76,6 @@ test.describe("Creating a new project", () => {
         await expect(dialog.projectMemberInput).toContainText("");
     });
 
-    test("When the project was successfully created and the user navigates to the project dashboard, then it shows an empty project.", async ({
-        page,
-    }) => {
-        const homepage = new DevHomePage(page);
-        await homepage.openCreateProjectDialog();
-        const dialog = new DevCreateProjectDialog(page);
-
-        await dialog.createProject();
-
-        /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
-    });
-
-    test("When the project was successfully created, then the user can navigate to the project dashboard of the new project.", async ({
-        page,
-    }) => {
-        const homepage = new DevHomePage(page);
-        await homepage.openCreateProjectDialog();
-        const dialog = new DevCreateProjectDialog(page);
-
-        await dialog.createProject();
-
-        /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
-    });
-
     test("When the project was successfully created, but the user dont want to open it, then the user stays on the homepage.", async ({
         page,
     }) => {
@@ -82,11 +83,36 @@ test.describe("Creating a new project", () => {
         await homepage.openCreateProjectDialog();
         const dialog = new DevCreateProjectDialog(page);
 
-        await dialog.createProject();
+        await dialog.createProject("Demo project 2");
+        await dialog.checkForErrors();
+        await page.getByRole("button", { name: "Back" }).click();
 
-        /// TODO: add expects as soon as mock backend doesnt respond with error (invitation process is not implemented yet)
+        // the user stays on the project and the project is shown in the list of active projects
+        await expect(page.getByText("SnowballR")).toBeVisible();
+        await expect(page.getByRole("link", { name: "Demo project 2" })).toBeVisible();
     });
 
-    /// TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members
-    /// were invited and the settings are the same as the default settings for new project from the user
+    test("When the project was successfully created and the user navigates to the project dashboard, then it shows an empty project.", async ({
+        page,
+    }) => {
+        const homepage = new DevHomePage(page);
+        await homepage.openCreateProjectDialog();
+        const dialog = new DevCreateProjectDialog(page);
+
+        await dialog.createProject("Demo project 3");
+        await dialog.checkForErrors();
+        await page.getByRole("button", { name: "Open" }).click();
+
+        // the user is not on the homepage but the project dashboard
+        await expect(page.getByText("SnowballR")).not.toBeVisible();
+        await expect(page.locator("nav", { has: page.getByText("Demo project 3") })).toBeVisible();
+        await expect(page.getByRole("link", { name: "Demo project 3" })).not.toBeVisible();
+
+        await expect(page.getByText("stage 0")).toBeVisible();
+        await expect(page.getByText("reviewed 0 / 0")).toBeVisible();
+        await expect(page.getByText("No open reviews")).toBeVisible();
+    });
+
+    /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members
+       were invited and the settings are the same as the default settings for new project from the user */
 });
