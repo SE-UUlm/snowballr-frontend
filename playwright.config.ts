@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import type { TestOptions } from "./tests/e2e/fixtures/general-fixture";
 
-export default defineConfig({
+export default defineConfig<TestOptions>({
     testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
@@ -23,17 +24,31 @@ export default defineConfig({
     projects: [
         {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: {
+                ...devices["Desktop Chrome"],
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
+                    "http://localhost:3002",
+            },
         },
 
         {
             name: "firefox",
-            use: { ...devices["Desktop Firefox"] },
+            use: {
+                ...devices["Desktop Firefox"],
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
+                    "http://localhost:3003",
+            },
         },
 
         {
             name: "webkit",
-            use: { ...devices["Desktop Safari"] },
+            use: {
+                ...devices["Desktop Safari"],
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
+            },
         },
     ],
 });

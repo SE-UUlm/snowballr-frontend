@@ -1,31 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "./fixtures/general-fixture";
 import { DevHomePage } from "./pom/home-page-model";
 import { DevCreateProjectDialog } from "./pom/create-project-dialog-model";
 
 test.describe("Creating a new project", () => {
-    test.beforeEach(async ({ page, browserName }) => {
-        await page.route("**/snowballr.SnowballR/**", (route, request) => {
-            let mockBackendURL;
-            switch (browserName) {
-                case "chromium":
-                    mockBackendURL = "http://localhost:3002";
-                    break;
-                case "firefox":
-                    mockBackendURL = "http://localhost:3003";
-                    break;
-                case "webkit":
-                    mockBackendURL = "http://localhost:3004";
-                    break;
-                default:
-                    mockBackendURL = "http://localhost:3001";
-                    break;
-            }
-
-            route.continue({
-                url: `${mockBackendURL}/${request.url().substring(request.url().indexOf("snowballr.SnowballR"))}`,
-            });
-        });
-
+    test.beforeEach(async ({ page }) => {
         await page.goto("/");
     });
 
