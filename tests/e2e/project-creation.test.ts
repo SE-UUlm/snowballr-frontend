@@ -111,6 +111,7 @@ test.describe("Creating a new project", () => {
         await expect(page.getByText("stage 0")).toBeVisible();
         await expect(page.getByText("reviewed 0 / 0")).toBeVisible();
         await expect(page.getByText("No open reviews")).toBeVisible();
+        await expect(page.getByText("estimated remaining time")).not.toBeVisible();
     });
 
     /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members

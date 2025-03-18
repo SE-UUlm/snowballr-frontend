@@ -31,4 +31,28 @@ describe("StageProgress", () => {
             "Couldn't load project information.",
         );
     });
+
+    test("When no decisions are provided, then the stage progress component is shown but with a complete ring.", async () => {
+        render(StageProgress, {
+            props: {
+                stageProgress: loading<StageProgressInterface>({
+                    stage: 0n,
+                    decisions: { "Not reviewed": 0, Accepted: 0, Undecided: 0, Declined: 0 },
+                }),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByRole("list").childElementCount).toBe(4); // = number of items in the legend
+
+        const chart = screen.getByTestId("stage-progress-chart");
+        expect(chart).toBeInTheDocument();
+        expect(chart.children[0].childElementCount).toBe(1); // = number of segments
+        expect(chart.children[0].children[0]).toHaveClass("text-gray-200"); // = color of segment
+
+        expect(screen.getByTestId("stage-progress")).not.toHaveTextContent(
+            "Couldn't load project information.",
+        );
+    });
 });
