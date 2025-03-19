@@ -6,7 +6,6 @@ export type TestOptions = {
 
 export const test = base.extend<{ forEachTest: void } & TestOptions>({
     mockBackendUrl: ["http://localhost:3001", { option: true }],
-
     forEachTest: [
         async ({ page, mockBackendUrl }, use) => {
             await page.route("**/snowballr.SnowballR/**", (route, request) => {

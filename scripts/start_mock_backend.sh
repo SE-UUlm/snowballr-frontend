@@ -10,11 +10,12 @@ IMAGE="ghcr.io/se-uulm/snowballr-mock-backend:main"
 CONTAINER_PREFIX="snowballr-mock-backend"
 
 help() {
-  echo -e "usage: bash $(basename "$0") [-c] port1 [port2 ... portN] \n"
+  echo -e "usage: bash $(basename "$0") [-c] [-e] port1 [port2 ... portN] \n"
   echo -e "Start a single or multiple mock backends. \n"
   echo    "Options:"
   echo    "  port               The port on which the web proxy of the mock backend should listen (must be 3000-3999)."
   echo    "  -c                 Whether to delete all currently running mock backend containers (where names start with $CONTAINER_PREFIX)."
+  echo    "  -e                 Whether to start the mock backend with the standard example data."
   exit 1
 }
 
@@ -38,9 +39,11 @@ cleanup_running_mock_backends() {
 }
 
 do_cleanup=false
-while getopts ":hc" option; do
+load_with_example_data=false
+while getopts ":hce" option; do
     case ${option} in
         c) do_cleanup=true ;;
+        e) load_with_example_data=true ;;
         h | *)
             help
         ;;
@@ -68,14 +71,19 @@ for WEB_PROXY_PORT in "${ports[@]}"; do
     CONTAINER_NAME="$CONTAINER_PREFIX-$index"
 
     echo "Starting mock backend $CONTAINER_NAME on ports $WEB_PROXY_PORT (web proxy) and $NATIVE_SERVER_PORT (native server) ..."
-    docker run -d -q \
-        -e EXAMPLE_DATA_FILE=standardData.ts \
-        -e ENABLE_DUMMY_ADMIN=true \
-        -e GRPC_PORT="$NATIVE_SERVER_PORT" \
-        -e GRPC_WEB_PORT="$WEB_PROXY_PORT" \
-        --name "$CONTAINER_NAME" \
-        -p "$WEB_PROXY_PORT:$WEB_PROXY_PORT" -p "$NATIVE_SERVER_PORT:$NATIVE_SERVER_PORT"  \
-        "$IMAGE" || {
+    runArgs=()
+    if $load_with_example_data; then
+        runArgs+=( -e EXAMPLE_DATA_FILE=standardData.ts)
+    fi
+    runArgs+=( -d -q \
+                -e ENABLE_DUMMY_ADMIN=true \
+                -e GRPC_PORT="$NATIVE_SERVER_PORT" \
+                -e GRPC_WEB_PORT="$WEB_PROXY_PORT" \
+                --name "$CONTAINER_NAME" \
+                -p "$WEB_PROXY_PORT:$WEB_PROXY_PORT" -p "$NATIVE_SERVER_PORT:$NATIVE_SERVER_PORT"  \
+                "$IMAGE"
+            )
+    docker run "${runArgs[@]}" || {
             echo "Error: Failed to start mock backend for port $WEB_PROXY_PORT"
             help
         }

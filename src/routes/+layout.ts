@@ -20,8 +20,6 @@ export const load: LayoutLoad = async () => {
         };
     }
 
-    console.log(user);
-
     return {
         user,
     };

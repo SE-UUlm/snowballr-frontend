@@ -22,6 +22,35 @@ export default defineConfig<TestOptions>({
         reuseExistingServer: !process.env.CI,
     },
     projects: [
+        // Setup projects
+        {
+            name: "chromium setup",
+            testMatch: /.*\.setup\.ts/,
+            use: {
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
+                    "http://localhost:3002",
+            },
+        },
+        {
+            name: "firefox setup",
+            testMatch: /.*\.setup\.ts/,
+            use: {
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
+                    "http://localhost:3003",
+            },
+        },
+        {
+            name: "webkit setup",
+            testMatch: /.*\.setup\.ts/,
+            use: {
+                mockBackendUrl:
+                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
+            },
+        },
+
+        // Browser tests
         {
             name: "chromium",
             use: {
@@ -30,8 +59,8 @@ export default defineConfig<TestOptions>({
                     process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
                     "http://localhost:3002",
             },
+            dependencies: ["chromium setup"],
         },
-
         {
             name: "firefox",
             use: {
@@ -40,6 +69,7 @@ export default defineConfig<TestOptions>({
                     process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
                     "http://localhost:3003",
             },
+            dependencies: ["firefox setup"],
         },
 
         {
@@ -49,6 +79,7 @@ export default defineConfig<TestOptions>({
                 mockBackendUrl:
                     process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
             },
+            dependencies: ["webkit setup"],
         },
     ],
 });
