@@ -13,7 +13,7 @@ export default defineConfig<TestOptions>({
     ],
     use: {
         baseURL: "http://localhost:4173",
-        screenshot: "only-on-failure",
+        screenshot: "on",
         trace: "on-first-retry",
     },
     webServer: {
