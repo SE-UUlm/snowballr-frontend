@@ -7,7 +7,7 @@
 
 <!--
 @component
-Component for change the review mode setting.
+Component for changing the review mode setting.
 
 Usage:
 ```svelte

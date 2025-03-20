@@ -26,7 +26,10 @@ Usage:
     </SettingsSection>
 ```
 -->
-<section class="flex h-fit w-full flex-col gap-3 overflow-y-auto">
+<section
+    class="flex h-fit w-full flex-col gap-3 overflow-y-auto"
+    data-testid={`settings-section-${sectionTitle.toLowerCase().replace(" ", "-")}`}
+>
     <h2>{sectionTitle}</h2>
     <Separator />
     {@render children?.()}
