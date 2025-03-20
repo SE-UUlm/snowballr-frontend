@@ -48,7 +48,7 @@ Usage:
     class="flex h-full w-full flex-row gap-4 overflow-hidden px-0 py-2.5 md:px-[1.75rem] lg:px-[3.75rem]"
 >
     <nav class="flex h-full w-full max-w-[20%] min-w-[9rem] flex-col gap-2.5 px-1.5 py-2.5">
-        {#each tabs as tab}
+        {#each tabs as tab, i (i)}
             <a
                 class={cn(
                     "flex h-12 w-full flex-row items-center gap-3 px-3",
