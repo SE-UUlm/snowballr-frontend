@@ -1,4 +1,4 @@
-import ProjectSettingsLayout from "$lib/components/composites/settings/ProjectSettingsLayout.svelte";
+import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
 import TestProjectSettingslayout from "./TestProjectSettingslayout.svelte";

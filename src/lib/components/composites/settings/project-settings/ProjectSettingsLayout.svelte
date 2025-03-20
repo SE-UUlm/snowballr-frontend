@@ -5,7 +5,7 @@
     import Snowflake from "lucide-svelte/icons/snowflake";
     import ClipboardCheck from "lucide-svelte/icons/clipboard-check";
     import type { IconLinkTab } from "$lib/model/tabs";
-    import SettingsLayout from "./SettingsLayout.svelte";
+    import SettingsLayout from "../SettingsLayout.svelte";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
