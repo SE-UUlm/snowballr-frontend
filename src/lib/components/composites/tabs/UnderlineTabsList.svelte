@@ -11,7 +11,7 @@
 
 <!--
 @component
-{@link Tabs.List} but with underlinded abd transparent tabs.
+{@link Tabs.List} but with underlined abd transparent tabs.
 
 Usage:
 ```svelte

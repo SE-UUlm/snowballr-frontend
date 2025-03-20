@@ -2,6 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Checkbox } from "$lib/components/primitives/checkbox";
     import { Label } from "$lib/components/primitives/label";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte.js";
 </script>
 
 <!--
@@ -15,7 +16,7 @@ Usage:
 -->
 <SettingsSection sectionTitle="Review mode">
     <div class="items-top flex flex-row space-x-2">
-        <Checkbox id="review-mode-checkbox" />
+        <Checkbox id="review-mode-checkbox" bind:checked={reviewMode.isActivated} />
         <div class="grid gap-1.5 leading-none">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

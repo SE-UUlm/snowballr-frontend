@@ -11,7 +11,6 @@
         forwardReferencedPapers,
         reviewers,
         criteriaWithReviews,
-        isReviewMode,
     } = data;
 </script>
 
@@ -36,5 +35,4 @@
     {reviewers}
     showButtonBar
     {user}
-    userConfig={{ isReviewMode }}
 />

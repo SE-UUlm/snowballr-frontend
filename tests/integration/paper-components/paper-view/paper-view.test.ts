@@ -9,6 +9,7 @@ import {
     createProjectSettings,
     loading,
 } from "../../../model-builder";
+import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
@@ -34,15 +35,14 @@ describe("PaperView", () => {
         expect(navButtons).toHaveLength(2);
     });
 
-    test("When navigation buttons are shown and `isReviewMode` is true, then the decision buttons are shown", async () => {
+    test("When navigation buttons are shown and `reviewMode.isActivated` is true, then the decision buttons are shown", async () => {
+        reviewMode.isActivated = true;
+
         render(
             PaperView,
             createPaperViewProps(
                 {
                     showButtonBar: true,
-                    userConfig: {
-                        isReviewMode: true,
-                    },
                 },
                 createProjectPaperViewProps({
                     loadingProject: loading(
@@ -66,14 +66,13 @@ describe("PaperView", () => {
     });
 
     test("When navigation and decision buttons are shown but `project.settings.reviewMaybeAllowed` is false, then only the accept and decline buttons are shown", () => {
+        reviewMode.isActivated = true;
+
         render(
             PaperView,
             createPaperViewProps(
                 {
                     showButtonBar: true,
-                    userConfig: {
-                        isReviewMode: true,
-                    },
                 },
                 createProjectPaperViewProps({
                     loadingProject: loading(

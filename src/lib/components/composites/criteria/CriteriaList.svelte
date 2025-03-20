@@ -7,7 +7,6 @@
 
     interface Props {
         listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
-        inReviewMode: boolean;
         reviewers: Promise<User[]>;
         criteria: Promise<CriterionWithReviews[]>;
         numberOfSkeletons?: number;
@@ -16,7 +15,6 @@
 
     let {
         listTitle,
-        inReviewMode,
         reviewers: loadingReviewers,
         criteria: loadingCriteria,
         numberOfSkeletons = 2,
@@ -28,15 +26,11 @@
 @component
 A list of criteria.
 
-- `inReviewMode`: whether the criteria is shown in review mode or not
 - `listTitle` is displayed as header of the list
-
-`inReviewMode` only has an effect on the nested `CriteriaListEntry` component.
-Refer to its documentation to see the changes depending on the `inReviewMode` flag.
 
 Usage:
 ```svelte
-    <CriteriaList listTitle="Hard Exclusion" {inReviewMode} {reviewers} {criteria} />
+    <CriteriaList listTitle="Hard Exclusion" {reviewers} {criteria} />
 ```
 -->
 <section class="flex flex-col gap-5">
@@ -44,11 +38,11 @@ Usage:
     <ul class="flex flex-col gap-4 pl-2">
         {#await Promise.all([loadingReviewers, loadingCriteria])}
             {#each { length: numberOfSkeletons }, i}
-                <CriterionListEntrySkeleton {inReviewMode} numberOfReviews={i % 2} />
+                <CriterionListEntrySkeleton numberOfReviews={i % 2} />
             {/each}
         {:then [reviewers, criteria]}
             {#each criteria as criterion (criterion.id)}
-                <CriterionListEntry {criterion} {inReviewMode} {reviewers} />
+                <CriterionListEntry {criterion} {reviewers} />
             {/each}
             {#if criteria.length === 0}
                 <span class="text-hint italic">{emptyHint}</span>

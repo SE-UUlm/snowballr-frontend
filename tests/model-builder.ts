@@ -128,9 +128,6 @@ export function createPaperViewProps(
         forwardReferencedPapers: Promise.resolve([]),
         showButtonBar: false,
         backRef: "",
-        userConfig: {
-            isReviewMode: false,
-        },
         ...(dependentProps ?? {
             loadingPaper: loading(createProjectPaper()),
             loadingProject: loading(createProject()),
