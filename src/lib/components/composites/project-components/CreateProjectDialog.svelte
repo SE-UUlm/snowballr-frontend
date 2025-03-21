@@ -8,7 +8,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import { goto } from "$app/navigation";
+    import { goto, invalidate } from "$app/navigation";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
@@ -45,12 +45,11 @@
             const allUsers = await backendService.getAllUsers(Nothing).response;
 
             initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
-            loadingPossibleMembers = false;
         } catch (error) {
             isErrorOnUsersLoading = true;
-            loadingPossibleMembers = false;
             console.error(`Couldn't get users from server (${error})`);
         }
+        loadingPossibleMembers = false;
     });
 
     /**
@@ -275,7 +274,8 @@
                     membersInput = [];
 
                     // trigger reload of the homepage, so the created project is shown in the projects list
-                    window.location.reload();
+                    // window.location.reload();
+                    invalidate("data:allProjectsForUser");
                 }}
             >
                 Back

@@ -67,7 +67,7 @@ test.describe("Creating a new project", () => {
         await page.getByRole("button", { name: "Back" }).click();
 
         // the user stays on the project and the project is shown in the list of active projects
-        await expect(page.getByText("SnowballR")).toBeVisible();
+        await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
         await expect(page.getByRole("link", { name: "Demo project 2" })).toBeVisible();
     });
 

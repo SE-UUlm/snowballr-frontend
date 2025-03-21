@@ -7,8 +7,9 @@
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 
-    const { data } = $props();
-    const { user, projectsMetadata, openReviews } = data;
+    let { data } = $props();
+    const { user, openReviews } = data;
+    const { projectsMetadata } = $derived(data);
 </script>
 
 <svelte:head>
