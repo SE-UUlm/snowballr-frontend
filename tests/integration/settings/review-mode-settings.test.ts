@@ -1,4 +1,4 @@
-import ReviewModeSettings from "$lib/components/composites/settings/project-settings/ReviewModeSettings.svelte";
+import ReviewModeSettings from "$lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
@@ -13,16 +13,16 @@ describe("ReviewModeSettings", () => {
         expect(screen.queryByText("Review mode")).toBeInTheDocument();
         expect(screen.queryByText('Activate the "Review" mode')).toBeInTheDocument();
 
-        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+        expect(screen.getByRole("switch")).toBeInTheDocument();
     });
 
     it("When checkbox is toggled, then the global review mode state changes", () => {
         render(ReviewModeSettings);
 
-        screen.getByRole("checkbox").click();
+        screen.getByRole("switch").click();
         expect(reviewMode.isActivated).toBe(true);
 
-        screen.getByRole("checkbox").click();
+        screen.getByRole("switch").click();
         expect(reviewMode.isActivated).toBe(false);
     });
 });

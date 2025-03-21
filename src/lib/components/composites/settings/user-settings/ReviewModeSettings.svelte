@@ -1,7 +1,7 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte.js";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { Switch } from "$lib/components/primitives/switch";
 </script>
 
