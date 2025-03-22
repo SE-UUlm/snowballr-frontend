@@ -2,6 +2,8 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { env } from "$env/dynamic/public";
     import "../app.css";
+    import { onMount } from "svelte";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     let { children } = $props();
 
@@ -10,6 +12,16 @@
     if (isDevMode) {
         console.warn("Running in development mode");
     }
+
+    onMount(() => {
+        const loadedState = localStorage.getItem("reviewMode");
+        if (loadedState) {
+            reviewMode.isActivated = JSON.parse(loadedState) as boolean;
+        } else {
+            // if no preference was stored yet, set review mode per default to active
+            reviewMode.isActivated = true;
+        }
+    });
 </script>
 
 <div class="flex h-screen w-screen flex-col items-start gap-4 p-4">

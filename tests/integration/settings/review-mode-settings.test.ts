@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("ReviewModeSettings", () => {
-    it("When component is rendered, then a checkbox is shown allowing to toggle the review mode", () => {
+    it("When component is rendered, then a switch is shown allowing to toggle the review mode", () => {
         render(ReviewModeSettings);
 
         const reviewModeSection = screen.getByTestId("settings-section-review-mode");
@@ -16,13 +16,14 @@ describe("ReviewModeSettings", () => {
         expect(screen.getByRole("switch")).toBeInTheDocument();
     });
 
-    it("When checkbox is toggled, then the global review mode state changes", () => {
+    it("When switch is toggled, then the global review mode state changes", () => {
         render(ReviewModeSettings);
-
-        screen.getByRole("switch").click();
-        expect(reviewMode.isActivated).toBe(true);
+        expect(reviewMode.isActivated).toBe(true); // default to true
 
         screen.getByRole("switch").click();
         expect(reviewMode.isActivated).toBe(false);
+
+        screen.getByRole("switch").click();
+        expect(reviewMode.isActivated).toBe(true);
     });
 });

@@ -134,21 +134,21 @@ Usage:
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
             {#if reviewMode.isActivated}
-                <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
-                <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                    <DeclineButton {loadingPaperId} />
-                    {#if loadingProject}
-                        {#await loadingProject}
-                            <!-- show nothing while loading -->
-                        {:then project}
+                {#if loadingProject}
+                    {#await loadingProject}
+                        <!-- show nothing while loading -->
+                    {:then project}
+                        <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
+                        <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
+                        <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
+                            <DeclineButton {loadingPaperId} />
                             {#if project.settings?.reviewMaybeAllowed}
                                 <MaybeButton {loadingPaperId} />
                             {/if}
-                        {/await}
-                    {/if}
-                    <AcceptButton {loadingPaperId} />
-                </div>
+                            <AcceptButton {loadingPaperId} />
+                        </div>
+                    {/await}
+                {/if}
             {/if}
             <PaperNavigationButton direction="right" href="" />
         </div>
