@@ -18,6 +18,9 @@
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    import { ExternalLink } from "lucide-svelte";
+    import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 
     let { data } = $props();
     const {
@@ -31,10 +34,9 @@
         loadingReviewers,
     } = data;
 
-    let selectedProjectPaper = $state<Project_Paper | undefined>(undefined);
-    let loadingPaper = $derived(
-        selectedProjectPaper ? Promise.resolve(selectedProjectPaper.paper!) : undefined,
-    );
+    let selectedPaper = $state<Project_Paper | undefined>(undefined);
+    // wrap the selected paper in a promise, as the `PaperDetailsCardContent` needs a loading paper
+    let loadingPaper = $derived(selectedPaper ? Promise.resolve(selectedPaper.paper!) : undefined);
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
@@ -138,7 +140,7 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <StageEntry {projectId} {stage} bind:selectedPaper={selectedProjectPaper} />
+                        <StageEntry {projectId} {stage} bind:selectedPaper />
                     {/each}
                 </Accordion.Root>
             {:catch error}
@@ -147,11 +149,23 @@
             {/await}
         </div>
     </div>
-    {#if loadingPaper}
+    {#if loadingPaper && selectedPaper}
         <Card.Root
-            class="border-container-border-grey flex h-full w-[60%] flex-col gap-5 p-5 shadow-lg"
+            class="border-container-border-grey relative flex h-full w-[65%] flex-col gap-5 p-5 shadow-lg"
         >
             <PaperDetailsCardContent {loadingPaper} />
+            <div class="absolute top-5 right-5 flex flex-row gap-2.5">
+                <a href={`/project/${projectId}/paper/${selectedPaper.id}`}>
+                    <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
+                        {#snippet trigger()}
+                            <ExternalLink />
+                        {/snippet}
+                        {#snippet content()}
+                            <p>Open paper</p>
+                        {/snippet}
+                    </Tooltip>
+                </a>
+            </div>
         </Card.Root>
     {/if}
 </main>
