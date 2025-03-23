@@ -17,6 +17,7 @@
     import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
 
     let { data } = $props();
     const {
@@ -30,7 +31,10 @@
         loadingReviewers,
     } = data;
 
-    let selectedPaper = $state<Project_Paper | undefined>(undefined);
+    let selectedProjectPaper = $state<Project_Paper | undefined>(undefined);
+    let loadingPaper = $derived(
+        selectedProjectPaper ? Promise.resolve(selectedProjectPaper.paper!) : undefined,
+    );
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
@@ -134,7 +138,7 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <StageEntry {projectId} {stage} bind:selectedPaper />
+                        <StageEntry {projectId} {stage} bind:selectedPaper={selectedProjectPaper} />
                     {/each}
                 </Accordion.Root>
             {:catch error}
@@ -143,13 +147,11 @@
             {/await}
         </div>
     </div>
-    {#if selectedPaper}
-        <Card.Root class="flex h-full w-[60%] flex-col gap-5 overflow-hidden shadow-lg">
-            <Card.Content>
-                <!-- TODO: replace with paper details card -->
-                <!-- This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/219 -->
-                <pre>{JSON.stringify(selectedPaper.paper!, undefined, 2)}</pre>
-            </Card.Content>
+    {#if loadingPaper}
+        <Card.Root
+            class="border-container-border-grey flex h-full w-[60%] flex-col gap-5 p-5 shadow-lg"
+        >
+            <PaperDetailsCardContent {loadingPaper} />
         </Card.Root>
     {/if}
 </main>
