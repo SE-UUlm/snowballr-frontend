@@ -4,26 +4,32 @@
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
     import Tooltip from "./utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
+    import { onMount } from "svelte";
 
     interface Props {
         loadingPaperId: Promise<string>;
-        isBookmarkedDefault: boolean;
+        isBookmarkedDefault?: boolean;
     }
 
-    const { loadingPaperId, isBookmarkedDefault }: Props = $props();
+    const { loadingPaperId, isBookmarkedDefault = false }: Props = $props();
 
     let isBookmarked = $state(isBookmarkedDefault);
     let isHovered = $state(false);
-    const tooltipText = $derived(isBookmarked ? "Remove from Reading List" : "Add to Reading List");
-    const paperId = resource<string, string | undefined>(loadingPaperId, {
-        initialValue: undefined,
-        resourceName: "paper ID",
-    });
+    const tooltipText = $derived(isBookmarked ? "Remove from reading list" : "Add to reading list");
+    const paperId = $derived(
+        resource<string, string | undefined>(loadingPaperId, {
+            initialValue: undefined,
+            resourceName: "paper ID",
+        }),
+    );
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);
 
-    function onClick() {
+    /**
+     * Adds the paper to the reading list, if it is not added yet, otherwise removes it.
+     */
+    function toggleBookmarkState() {
         if (isBookmarked) {
             removePaperFromReadingList();
         } else {
@@ -41,6 +47,12 @@
         isBookmarked = false;
         console.log(`Removed paper with id ${paperId.value} from reading list`);
     }
+
+    onMount(() => {
+        if (isBookmarkedDefault) {
+            addPaperToReadingList();
+        }
+    });
 </script>
 
 <!--
@@ -50,15 +62,18 @@ Button to add a paper to or remove a paper from the reading list.
 This component will handle the API calls itself.
 According to bookmark state of the paper (isBookmarked), the button will change its appearance.
 
+By setting the `isBookmarkedDefault` property, the default state for the button can be set, i.e.
+if set to true, the paper with the given id is added to the reading list per default.
+
 Usage:
 ```svelte
-<PaperBookmarkButton loadingPaperId={Promise.resolve("42")} isBookmarked={false} />
+<PaperBookmarkButton loadingPaperId={Promise.resolve("42")} isBookmarkedDefault={true} />
 ```
 -->
 <Tooltip
-    class="border-container-border-grey text-primary h-fit w-fit border bg-transparent p-1.5 hover:bg-transparent"
+    class="text-primary bg-transparent [&_svg]:size-6"
     aria-label={tooltipText}
-    onclick={onClick}
+    onclick={toggleBookmarkState}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
 >

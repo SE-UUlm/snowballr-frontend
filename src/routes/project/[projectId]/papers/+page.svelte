@@ -155,7 +155,11 @@
         >
             <PaperDetailsCardContent {loadingPaper} />
             <div class="absolute top-5 right-5 flex flex-row gap-2.5">
-                <a href={`/project/${projectId}/paper/${selectedPaper.id}`}>
+                <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
+                <a
+                    class="flex items-center"
+                    href={`/project/${projectId}/paper/${selectedPaper.id}`}
+                >
                     <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
                         {#snippet trigger()}
                             <ExternalLink />
