@@ -22,6 +22,7 @@
     import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
+    import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
 
     let { data } = $props();
     const {
@@ -151,7 +152,14 @@
         </div>
     </div>
     {#if loadingPaper && selectedPaper}
-        <div class="h-full w-[65%]" transition:fly={{ x: 100, opacity: 0 }}>
+        <div
+            class="h-full w-[65%] min-w-75"
+            onClickedOutsideOrEscape={() => {
+                selectedPaper = undefined;
+            }}
+            use:clickOutsideOrEscape
+            transition:fly={{ duration: 100, x: 100, opacity: 0 }}
+        >
             <Card.Root
                 class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
             >
