@@ -12,7 +12,15 @@ You can find all use cases
 
 ## Getting Started
 
-> **Note**: Currently it is only possible to build from source.
+The fastest way to get started is to use the provided Docker setup. To do so, clone this repository and run the following commands:
+
+```bash
+git clone git@github.com:SE-UUlm/snowballr-frontend.git
+cd snowballr-frontend
+docker-compose --profile run up
+```
+
+Be sure to have the environment variables set or create a `.env` file in the root directory of the project (see below).
 
 To build the project from source, run the following commands:
 

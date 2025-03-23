@@ -1,0 +1,19 @@
+services:
+    frontend:
+        build:
+            context: .
+            args:
+                PUBLIC_API_BASE_URL: ${PUBLIC_API_BASE_URL}
+        environment:
+            NODE_ENV: production
+        ports:
+            - ${PORT:-4173}:4173
+        profiles:
+            - run
+            - run-mock-local
+
+    # use when mock-backend is publicly available
+    # mock-backend:
+    #     image: ghcr.io/se-uulm/snowballr-mock-backend:main
+    #     profiles:
+    #         - run-mock-local
