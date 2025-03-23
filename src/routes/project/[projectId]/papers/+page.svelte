@@ -21,6 +21,7 @@
     import { ExternalLink } from "lucide-svelte";
     import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
+    import { fly } from "svelte/transition";
 
     let { data } = $props();
     const {
@@ -150,26 +151,28 @@
         </div>
     </div>
     {#if loadingPaper && selectedPaper}
-        <Card.Root
-            class="border-container-border-grey relative flex h-full w-[65%] flex-col gap-5 p-5 shadow-lg"
-        >
-            <PaperDetailsCardContent {loadingPaper} />
-            <div class="absolute top-5 right-5 flex flex-row gap-2.5">
-                <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
-                <a
-                    class="flex items-center"
-                    href={`/project/${projectId}/paper/${selectedPaper.id}`}
-                >
-                    <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
-                        {#snippet trigger()}
-                            <ExternalLink />
-                        {/snippet}
-                        {#snippet content()}
-                            <p>Open paper</p>
-                        {/snippet}
-                    </Tooltip>
-                </a>
-            </div>
-        </Card.Root>
+        <div class="h-full w-[65%]" transition:fly={{ x: 100, opacity: 0 }}>
+            <Card.Root
+                class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
+            >
+                <PaperDetailsCardContent {loadingPaper} />
+                <div class="absolute top-5 right-5 flex flex-row gap-2.5">
+                    <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
+                    <a
+                        class="flex items-center"
+                        href={`/project/${projectId}/paper/${selectedPaper.id}`}
+                    >
+                        <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
+                            {#snippet trigger()}
+                                <ExternalLink />
+                            {/snippet}
+                            {#snippet content()}
+                                <p>Open paper</p>
+                            {/snippet}
+                        </Tooltip>
+                    </a>
+                </div>
+            </Card.Root>
+        </div>
     {/if}
 </main>
