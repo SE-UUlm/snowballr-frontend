@@ -76,7 +76,7 @@ export const load: PageLoad = async ({ params, parent }) => {
             allUndecidedPapers.projectPapers.map((projectPaper) => ({
                 projectId: params.projectId,
                 paper: projectPaper,
-                showReviewStatus: false,
+                showReviewStatus: true,
             })),
         )
         .catch(() => {
