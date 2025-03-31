@@ -32,7 +32,7 @@
         "@sveltejs/adapter-auto": "^5.0.0",
         "@sveltejs/kit": "^2.20.2",
         "@sveltejs/vite-plugin-svelte": "^5.0.3",
-        "@tailwindcss/postcss": "^4.0.14",
+        "@tailwindcss/postcss": "^4.0.17",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/svelte": "^5.2.6",
         "@testing-library/user-event": "^14.6.0",
