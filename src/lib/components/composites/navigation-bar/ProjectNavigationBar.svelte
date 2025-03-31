@@ -13,7 +13,7 @@
     }
 
     const { user, projectId, loadingProject, defaultTabValue }: Props = $props();
-    const tabs = [
+    const tabs: LinkTab[] = [
         {
             value: "dashboard",
             label: "Dashboard",
@@ -41,6 +41,6 @@
     backRef="/"
     {defaultTabValue}
     loadingTitle={loadingProject.then((project) => project.name)}
-    tabs={tabs as unknown as LinkTab[]}
+    {tabs}
     {user}
 />
