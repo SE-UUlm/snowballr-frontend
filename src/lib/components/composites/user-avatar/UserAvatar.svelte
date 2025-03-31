@@ -62,6 +62,8 @@ Usage:
         email: "john@doe.com",
         firstName: "John",
         lastName: "Doe",
+        role: UserRole.DEFAULT,
+        status: UserStatus.ACTIVE,
     }} reviewDecision={ReviewDecision.ACCEPTED} showUsernameOnHover={false} />
 ```
 -->

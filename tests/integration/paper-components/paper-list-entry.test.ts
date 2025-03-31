@@ -76,9 +76,11 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
 
-        expect(screen.getByRole("button").childElementCount).toBe(2);
-        expect(screen.getByRole("button").children[0]).toHaveClass("border-l-4 border-decline-red");
-        expect(screen.getByRole("button").children[1]).toHaveTextContent("JD");
+        expect(screen.getByTestId("paper-list-entry").childElementCount).toBe(2);
+        expect(screen.getByTestId("paper-list-entry").children[0]).toHaveClass(
+            "border-l-4 border-decline-red",
+        );
+        expect(screen.getByTestId("paper-list-entry").children[1]).toHaveTextContent("JD");
     });
 
     test("When the user provides a custom onclick function, then it is executed on a single click (and not on double click)", async () => {
