@@ -26,7 +26,7 @@
 
 <header>
     <Card.Root class="w-fit shadow-lg">
-        <nav class="grid grid-flow-col items-center gap-3 px-4 py-3">
+        <nav class="grid h-18 grid-flow-col items-center gap-3 px-4 py-2">
             <UserMenu {user} />
             {#if backRef !== undefined}
                 <a aria-label={`Back to ${backRef}`} href={backRef}>
