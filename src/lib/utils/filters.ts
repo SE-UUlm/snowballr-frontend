@@ -2,6 +2,7 @@ import { Fzf, type Selector } from "fzf";
 import type { Paper } from "../model/api/paper";
 import { getName, getNames } from "./common-helper";
 import type { User } from "../model/api/user";
+import type { ReadingListEntryInterface } from "$lib/model/component-interfaces";
 
 /**
  * Generic filter function using Fzf.
@@ -56,4 +57,28 @@ function filterUsers(allUsers: User[], searchText: string) {
     return filter(allUsers, (user) => `${getName(user)} ${user.email}`, searchText);
 }
 
-export { filterPapers, filterUsers };
+/**
+ * Filters reading list entries (wrapper around a paper) based on search text and sorts them by best match.
+ *
+ * The search text is matched against the following fields:
+ * - paper title
+ * - paper authors
+ *
+ * @param allEntries - List of all reading list entries
+ * @param searchText - Search text
+ * @returns List of all reading list entries that match the search text
+ */
+function filterReadingListEntries(
+    allEntries: ReadingListEntryInterface[],
+    searchText: string,
+): ReadingListEntryInterface[] {
+    return filter(
+        allEntries.map((entry) => entry.paper),
+        (paper) => `${paper.title} ${getNames(paper.authors)}`,
+        searchText,
+    ).map((paper) => ({
+        paper: paper,
+    }));
+}
+
+export { filterPapers, filterUsers, filterReadingListEntries };
