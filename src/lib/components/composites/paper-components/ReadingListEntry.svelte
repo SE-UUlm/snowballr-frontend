@@ -43,7 +43,12 @@ Usage:
 <div
     class="border-container-border-grey highlight-on-hover flex w-full flex-row items-center gap-16 rounded-md border-b px-5 py-1.5"
 >
-    <button class="flex flex-auto" onclick={handleClick} type="button">
+    <button
+        class="flex flex-auto"
+        aria-label="Paper info for reading list entry"
+        onclick={handleClick}
+        type="button"
+    >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
     </button>
     <div class="flex flex-row items-center gap-4">
