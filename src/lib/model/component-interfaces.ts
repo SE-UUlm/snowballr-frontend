@@ -49,9 +49,14 @@ type PaperListEntryInterface =
           paper: Project_Paper;
       };
 
+interface ReadingListEntryInterface {
+    paper: Paper;
+}
+
 export type {
     PaperListEntryInterface,
     ProjectListEntryInterface,
     ProjectInformationInterface,
     StageProgressInterface,
+    ReadingListEntryInterface,
 };
