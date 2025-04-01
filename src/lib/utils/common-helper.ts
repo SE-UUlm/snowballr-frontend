@@ -169,6 +169,32 @@ function comparePaperId(a: string, b: string): number {
     return isNaN(compare) ? 0 : compare;
 }
 
+/**
+ * Handles a click event by checking
+ * whether it was a single click (so no further click after 350ms) or a double click
+ * and call the corresponding functions:
+ *  - single click =\> onSingleClick()
+ *  - double click =\> onDoubleClick()
+ */
+function handleSingleOrDoubleClick(
+    timeoutId: ReturnType<typeof setTimeout> | null,
+    onSingleClick: () => void,
+    onDoubleClick: () => void,
+): ReturnType<typeof setTimeout> | null {
+    if (timeoutId === null) {
+        timeoutId = setTimeout(() => {
+            timeoutId = null;
+            onSingleClick();
+        }, 350);
+    } else {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+        onDoubleClick();
+    }
+
+    return timeoutId;
+}
+
 export {
     getName,
     getNames,
@@ -180,4 +206,5 @@ export {
     getStatusColor,
     getStatusText,
     comparePaperId,
+    handleSingleOrDoubleClick,
 };

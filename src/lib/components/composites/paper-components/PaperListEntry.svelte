@@ -4,7 +4,11 @@
     import { goto } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
-    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
+    import {
+        getStatusColor,
+        getStatusText,
+        handleSingleOrDoubleClick,
+    } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
     import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
@@ -36,25 +40,9 @@
         return reviewingUser;
     }
 
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    /**
-     * Handles the click event of the paper entry component by checking
-     * whether it was a single click (so no further click after 350ms) or a double click
-     * and call the corresponding functions:
-     *  - single click =\> onClick() (possible overridden, otherwise navigateToPaperView())
-     *  - double click =\> navigateToPaperView() (default)
-     */
+    let timeoutId: ReturnType<typeof setTimeout> | null = $state(null);
     const handleClick = () => {
-        if (timeoutId === null) {
-            timeoutId = setTimeout(() => {
-                timeoutId = null;
-                onClick();
-            }, 350);
-        } else {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-            navigateToPaperView();
-        }
+        timeoutId = handleSingleOrDoubleClick(timeoutId, onClick, navigateToPaperView);
     };
 </script>
 
@@ -69,7 +57,8 @@ This component shows the
 as well as, if not in review mode, the review information about this paper.
 
 Furthermore this component is clickable and navigates to the corresponding paper view,
-if the onClick() event handler is not overridden.
+if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
+on a single click. A double click always causes the navigation to the paper view.
 
 Usage:
 ```svelte
