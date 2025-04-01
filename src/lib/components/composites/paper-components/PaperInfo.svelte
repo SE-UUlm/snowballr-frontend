@@ -1,23 +1,23 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton";
     import type { Paper } from "$lib/model/api/paper";
     import { getNames } from "$lib/utils/common-helper";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
+    import type { WithElementRef } from "bits-ui";
+    import type { HTMLAttributes } from "svelte/elements";
+    import { cn } from "$lib/utils/shadcn-helper";
+    import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
 
-    interface Props {
+    type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         loadingPaper: Promise<Paper | Omit<Paper, "id">>;
-    }
+    };
 
-    const { loadingPaper }: Props = $props();
+    const { loadingPaper, class: className }: Props = $props();
 </script>
 
 {#await loadingPaper}
-    <div class="grid grid-flow-row gap-1.5">
-        <Skeleton class="h-6 w-56 rounded-full sm:w-80 md:w-[30rem] lg:w-[44rem]" />
-        <Skeleton class="h-[1.125rem] w-28 rounded-full sm:w-40 md:w-[15rem] lg:w-[22rem]" />
-    </div>
+    <PaperInfoSkeleton />
 {:then paper}
-    <div class="grid grid-flow-row gap-0">
+    <div class={cn("grid grid-flow-row gap-0", className)}>
         <div class="flex flex-row items-center gap-1 truncate">
             {#if "id" in paper}
                 <div class="text-default-sb-nc w-fit text-neutral-500">#{paper.id}</div>
