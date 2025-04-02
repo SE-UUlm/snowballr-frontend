@@ -4,13 +4,13 @@
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
-    import type { Tab } from "$lib/components/composites/navigation-bar/types";
     import type { User } from "$lib/model/api/user";
+    import type { LinkTab } from "$lib/model/tabs";
 
     interface Props {
         user: User;
         backRef?: string | undefined;
-        tabs?: Tab[] | undefined;
+        tabs?: LinkTab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
         children?: Snippet | undefined;
     }
@@ -26,7 +26,7 @@
 
 <header>
     <Card.Root class="w-fit shadow-lg">
-        <nav class="grid grid-flow-col items-center gap-3 px-4 py-3">
+        <nav class="grid h-18 grid-flow-col items-center gap-3 px-4 py-2">
             <UserMenu {user} />
             {#if backRef !== undefined}
                 <a aria-label={`Back to ${backRef}`} href={backRef}>

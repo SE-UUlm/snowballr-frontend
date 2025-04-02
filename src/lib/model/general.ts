@@ -22,13 +22,9 @@ type CriterionWithReviews = Criterion & {
     reviews: Omit<Review, "selectedCriteriaIds">[];
 };
 
-interface UserConfig {
-    isReviewMode: boolean;
-}
-
 interface Stage {
     stageIndex: bigint;
     papers: Project_Paper[];
 }
 
-export type { ValidationResult, ApiError, CriterionWithReviews, UserConfig, Stage, PaperStatus };
+export type { ValidationResult, ApiError, CriterionWithReviews, Stage, PaperStatus };

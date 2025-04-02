@@ -1,18 +1,22 @@
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, beforeEach } from "vitest";
 import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "../test-helper";
 import { Papers, Reviews } from "../../example-data";
 import { PaperDecision } from "$lib/model/api/project";
+import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("PaperListEntryComponent", () => {
+    beforeEach(() => {
+        reviewMode.isActivated = true;
+    });
+
     test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
         render(PaperEntry, {
             props: {
                 paper: Papers.demoPaper1,
                 projectId: undefined,
-                showReviewStatus: false,
             },
         });
 
@@ -39,7 +43,6 @@ describe("PaperListEntryComponent", () => {
                     reviews: [Reviews.demoReview1],
                 },
                 projectId: "0",
-                showReviewStatus: false,
             },
         });
 
@@ -56,6 +59,8 @@ describe("PaperListEntryComponent", () => {
     });
 
     test("When review information are provided and should be shown, then the paper list entry is completely shown with review information", async () => {
+        reviewMode.isActivated = false;
+
         render(PaperEntry, {
             props: {
                 paper: {
@@ -66,7 +71,6 @@ describe("PaperListEntryComponent", () => {
                     reviews: [Reviews.demoReview1],
                 },
                 projectId: "0",
-                showReviewStatus: true,
             },
         });
 
@@ -90,7 +94,6 @@ describe("PaperListEntryComponent", () => {
             props: {
                 paper: Papers.demoPaper1,
                 projectId: undefined,
-                showReviewStatus: false,
                 onClick: () => (onClickExecuted = true),
             },
         });

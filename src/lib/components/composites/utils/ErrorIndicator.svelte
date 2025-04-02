@@ -17,7 +17,7 @@ Usage:
     <ErrorIndicator errorMessage="Couldn't load data" />
 ```
 -->
-<div class="flex flex-row items-center gap-x-2 p-4">
+<div class="flex flex-row items-center gap-x-2 p-2">
     <CircleAlert class="text-neutral-500" size={20} />
     <span class="text-error">{errorMessage}</span>
 </div>

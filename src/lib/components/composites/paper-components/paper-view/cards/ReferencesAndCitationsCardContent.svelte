@@ -56,7 +56,7 @@ Usage:
                 <SearchBar onSearch={filterBackwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
             {#snippet listItemComponent(paper)}
-                <PaperListEntry {paper} projectId={undefined} showReviewStatus={false} />
+                <PaperListEntry {paper} projectId={undefined} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />
@@ -77,7 +77,7 @@ Usage:
                 <SearchBar onSearch={filterForwardReferencedPapers} timeoutInMs={0} />
             {/snippet}
             {#snippet listItemComponent(paper)}
-                <PaperListEntry {paper} projectId={undefined} showReviewStatus={false} />
+                <PaperListEntry {paper} projectId={undefined} />
             {/snippet}
             {#snippet listItemSkeleton()}
                 <PaperListEntrySkeleton />

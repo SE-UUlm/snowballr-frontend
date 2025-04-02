@@ -33,7 +33,6 @@
                     }}
                     {paper}
                     {projectId}
-                    showReviewStatus
                 />
             {/each}
             <Button

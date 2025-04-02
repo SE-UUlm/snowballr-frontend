@@ -5,46 +5,43 @@
     import Inbox from "lucide-svelte/icons/inbox";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
-    import type { ComponentType } from "svelte";
-    import type { Icon } from "lucide-svelte";
     import type { User } from "$lib/model/api/user";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
+    import type { UserMenuTab } from "$lib/model/tabs";
 
     interface Props {
         user: User;
     }
     const { user }: Props = $props();
 
-    const menuItems: {
-        // The icon library still uses the deprecated ComponentType type
-        icon: ComponentType<Icon>;
-        label: string;
-        shortcut: string;
-        href: string;
-    }[] = [
+    const menuItems: UserMenuTab[] = [
         {
-            icon: BookOpen,
+            value: "reading-list",
             label: "Reading List",
-            shortcut: "⌘⇧R",
             href: "/readinglist",
+            icon: BookOpen,
+            shortcut: "⌘⇧R",
         },
         {
-            icon: Archive,
+            value: "archived-projects",
             label: "Archived Projects",
-            shortcut: "⌘⇧A",
             href: "/archivedprojects",
+            icon: Archive,
+            shortcut: "⌘⇧A",
         },
         {
-            icon: Inbox,
+            value: "invitations",
             label: "Invitations",
-            shortcut: "⌘⇧I",
             href: "/invitations",
+            icon: Inbox,
+            shortcut: "⌘⇧I",
         },
         {
-            icon: Settings,
+            value: "settings",
             label: "Settings",
-            shortcut: "⌘⇧S",
             href: "/settings/account",
+            icon: Settings,
+            shortcut: "⌘⇧S",
         },
     ];
 </script>
@@ -60,7 +57,7 @@
             </DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
-                {#each menuItems as item (item.label)}
+                {#each menuItems as item (item.value)}
                     <a href={item.href}>
                         <DropdownMenu.Item>
                             <item.icon class="mr-2 size-4" />

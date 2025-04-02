@@ -1,8 +1,8 @@
 <script lang="ts">
     import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
-    import type { Tab } from "$lib/components/composites/navigation-bar/types";
     import type { User } from "$lib/model/api/user";
     import type { Project } from "$lib/model/api/project";
+    import type { LinkTab } from "$lib/model/tabs";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
@@ -13,7 +13,7 @@
     }
 
     const { user, projectId, loadingProject, defaultTabValue }: Props = $props();
-    const tabs = [
+    const tabs: LinkTab[] = [
         {
             value: "dashboard",
             label: "Dashboard",
@@ -41,6 +41,6 @@
     backRef="/"
     {defaultTabValue}
     loadingTitle={loadingProject.then((project) => project.name)}
-    tabs={tabs as unknown as Tab[]}
+    {tabs}
     {user}
 />

@@ -7,7 +7,8 @@
     import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
-    import { asPaper } from "$lib/utils/model-helper";
+    import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;
@@ -22,12 +23,7 @@
         goto(paperLink);
     };
 
-    const {
-        paper,
-        projectId,
-        showReviewStatus,
-        onClick = navigateToPaperView,
-    }: PaperListEntryProps = $props();
+    const { paper, projectId, onClick = navigateToPaperView }: PaperListEntryProps = $props();
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
@@ -77,12 +73,12 @@ if the onClick() event handler is not overridden.
 
 Usage:
 ```svelte
-    <PaperListEntry paper={paper} projectId={"1"} showReviewStatus={true} />
+    <PaperListEntry paper={paper} projectId={"1"} />
 ```
 -->
 <button
     class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
-    class:border-l-0={showReviewStatus}
+    class:border-l-0={!reviewMode.isActivated}
     data-testid="paper-list-entry"
     onclick={handleClick}
     type="button"
@@ -90,12 +86,14 @@ Usage:
     <div
         class={cn(
             "flex flex-auto rounded-md px-3 py-1.5",
-            showReviewStatus ? `border-l-4 ${getStatusColor(getStatusText(paper), "border")}` : "",
+            !reviewMode.isActivated && isProjectPaper(paper)
+                ? `border-l-4 ${getStatusColor(getStatusText(paper), "border")}`
+                : "",
         )}
     >
         <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
     </div>
-    {#if showReviewStatus}
+    {#if !reviewMode.isActivated && isProjectPaper(paper)}
         {#each paper.reviews as review (review.id)}
             {#await getReviewUserById(review.userId) then user}
                 <UserAvatar reviewDecision={review.decision} {user} />

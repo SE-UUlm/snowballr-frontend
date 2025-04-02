@@ -1,14 +1,14 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
-    import type { Tab } from "$lib/components/composites/navigation-bar/types";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import type { User } from "$lib/model/api/user";
+    import type { LinkTab } from "$lib/model/tabs";
 
     interface Props {
         user: User;
         backRef?: string | undefined;
         loadingTitle: Promise<string>;
-        tabs?: Tab[] | undefined;
+        tabs?: LinkTab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
     }
 

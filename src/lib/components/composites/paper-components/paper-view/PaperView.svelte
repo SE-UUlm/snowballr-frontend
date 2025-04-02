@@ -5,7 +5,7 @@
         type NonProjectResearchContextCardProps,
         type ProjectResearchContextCardProps,
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { CriterionWithReviews, UserConfig } from "$lib/model/general";
+    import type { CriterionWithReviews } from "$lib/model/general";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
     import AcceptButton from "./decision-buttons/AcceptButton.svelte";
     import DeclineButton from "./decision-buttons/DeclineButton.svelte";
@@ -16,6 +16,7 @@
     import type { Project, Project_Paper } from "$lib/model/api/project";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
     import { asPaper } from "$lib/utils/model-helper";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -35,7 +36,6 @@
         user: User;
         showButtonBar?: boolean;
         backRef: string;
-        userConfig: UserConfig;
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
     };
@@ -49,7 +49,6 @@
         forwardReferencedPapers,
         showButtonBar = false,
         backRef,
-        userConfig,
         allowEditModeToggle = false,
         startInEditMode = false,
         loadingPaper: loadingPaperWrapper,
@@ -91,7 +90,7 @@ In the bottom, there are buttons to accept, decline or mark the paper as undecid
 Additionally, there are buttons to navigate to the previous or next paper.
 
 - when `showButtonBar` is false, then no buttons are shown at the bottom of the page
-- when `userConfig.isReviewMode` is false, then no decision buttons are shown
+- when `reviewMode.isActivated` is false, then no decision buttons are shown
 - when `project.settings.reviewMaybeAllowed` is false, then the maybe button is not shown
 
 Edit Mode:
@@ -111,9 +110,6 @@ Usage:
         {reviewedCriteria}
         showButtonBar
         backRef="/"
-        userConfig={{
-            isReviewMode: true,
-        }}
         allowEditModeToggle
         startInEditMode
     />
@@ -130,7 +126,6 @@ Usage:
         <PaperResearchContextCard
             {backwardReferencedPapers}
             {forwardReferencedPapers}
-            inReviewMode={userConfig.isReviewMode}
             {...researchContextCardProps}
         />
     </div>
@@ -138,22 +133,22 @@ Usage:
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
-            {#if userConfig.isReviewMode}
-                <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
-                <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                    <DeclineButton {loadingPaperId} />
-                    {#if loadingProject}
-                        {#await loadingProject}
-                            <!-- show nothing while loading -->
-                        {:then project}
+            {#if reviewMode.isActivated}
+                {#if loadingProject}
+                    {#await loadingProject}
+                        <!-- show nothing while loading -->
+                    {:then project}
+                        <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
+                        <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
+                        <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
+                            <DeclineButton {loadingPaperId} />
                             {#if project.settings?.reviewMaybeAllowed}
                                 <MaybeButton {loadingPaperId} />
                             {/if}
-                        {/await}
-                    {/if}
-                    <AcceptButton {loadingPaperId} />
-                </div>
+                            <AcceptButton {loadingPaperId} />
+                        </div>
+                    {/await}
+                {/if}
             {/if}
             <PaperNavigationButton direction="right" href="" />
         </div>

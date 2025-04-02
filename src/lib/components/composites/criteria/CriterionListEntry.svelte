@@ -5,34 +5,35 @@
     import type { CriterionWithReviews } from "$lib/model/general";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     interface Props {
-        inReviewMode: boolean;
         reviewers: User[];
         criterion: CriterionWithReviews;
     }
 
-    let { inReviewMode, reviewers, criterion }: Props = $props();
+    let { reviewers, criterion }: Props = $props();
 </script>
 
 <!--
 @component
 Single list element for a criterion.
 
-- When `inReviewMode` is true, a checkbox is shown in front of the list element.
-  When checked, this means that the criterion applies to the current paper.
-  Otherwise, the list of reviewers, who already checked this checkbox are listed.
 - `reviewers` should contain all users that are referenced in the reviews of `criterion`.
+
+When `reviewMode.isActivated` is true, a checkbox is shown in front of the list element.
+When checked, this means that the criterion applies to the current paper.
+Otherwise, the list of reviewers, who already checked this checkbox are listed.
 
 Usage:
 ```svelte
     <ul>
-        <CriterionListEntry inReviewMode={true} {reviewers} {criterion} />
+        <CriterionListEntry {reviewers} {criterion} />
     </ul>
 ```
 -->
 <li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
-    {#if inReviewMode}
+    {#if reviewMode.isActivated}
         <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
         <Checkbox data-testid="criterion-checkbox" />
     {/if}
@@ -54,7 +55,7 @@ Usage:
             {criterion.description}
         {/snippet}
     </Tooltip>
-    {#if !inReviewMode}
+    {#if !reviewMode.isActivated}
         <div class="flex flex-row gap-2.5 pl-2">
             {#each criterion.reviews as review (review.id)}
                 <UserAvatar
