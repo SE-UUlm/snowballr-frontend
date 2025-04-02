@@ -90,7 +90,7 @@ In the bottom, there are buttons to accept, decline or mark the paper as undecid
 Additionally, there are buttons to navigate to the previous or next paper.
 
 - when `showButtonBar` is false, then no buttons are shown at the bottom of the page
-- when `reviewMode.inReviewMode` is false, then no decision buttons are shown
+- when `reviewMode.isActivated` is false, then no decision buttons are shown
 - when `project.settings.reviewMaybeAllowed` is false, then the maybe button is not shown
 
 Edit Mode:
