@@ -68,22 +68,7 @@ Usage:
 ```
 -->
 <div class="relative" data-testid="user-avatar">
-    {#if showUsernameOnHover}
-        <Tooltip>
-            {#snippet trigger()}
-                <Avatar.Root class={style.avatarSize}>
-                    <Avatar.Fallback
-                        class={cn("group-hover/paper-list-entry:bg-slate-200", style.textSize)}
-                    >
-                        {userInitials}
-                    </Avatar.Fallback>
-                </Avatar.Root>
-            {/snippet}
-            {#snippet content()}
-                {user === undefined ? "Unknown" : `${user.firstName} ${user.lastName}`}
-            {/snippet}
-        </Tooltip>
-    {:else}
+    {#snippet avatar()}
         <Avatar.Root class={style.avatarSize}>
             <Avatar.Fallback
                 class={cn("group-hover/paper-list-entry:bg-slate-200", style.textSize)}
@@ -91,6 +76,18 @@ Usage:
                 {userInitials}
             </Avatar.Fallback>
         </Avatar.Root>
+    {/snippet}
+    {#if showUsernameOnHover}
+        <Tooltip>
+            {#snippet trigger()}
+                {@render avatar()}
+            {/snippet}
+            {#snippet content()}
+                {user === undefined ? "Unknown" : `${user.firstName} ${user.lastName}`}
+            {/snippet}
+        </Tooltip>
+    {:else}
+        {@render avatar()}
     {/if}
     {#if reviewDecision === ReviewDecision.ACCEPTED}
         <div class={cn(style.reviewIndicatorClass, "bg-accept-green")}>
