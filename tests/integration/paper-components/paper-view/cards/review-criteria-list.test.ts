@@ -1,16 +1,20 @@
 import ReviewCriteriaList from "$lib/components/composites/paper-components/paper-view/cards/ReviewCriteriaList.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { createReviewedCriterion, loading } from "../../../../model-builder";
 import { CriterionCategory } from "$lib/model/api/criterion";
 import { waitForComponentLoading } from "../../../test-helper";
+import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("ReviewCriteriaList", () => {
+    beforeEach(() => {
+        reviewMode.isActivated = true;
+    });
+
     test("When props are provided, then component is shown", () => {
         render(ReviewCriteriaList, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteriaWithReviews: loading([]),
             },
@@ -28,7 +32,6 @@ describe("ReviewCriteriaList", () => {
         render(ReviewCriteriaList, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
                     createReviewedCriterion({
@@ -64,7 +67,6 @@ describe("ReviewCriteriaList", () => {
         render(ReviewCriteriaList, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
                     createReviewedCriterion({
@@ -100,7 +102,6 @@ describe("ReviewCriteriaList", () => {
         render(ReviewCriteriaList, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
                     createReviewedCriterion({
@@ -136,7 +137,6 @@ describe("ReviewCriteriaList", () => {
         render(ReviewCriteriaList, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
                     createReviewedCriterion({

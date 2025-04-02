@@ -1,4 +1,9 @@
+<script>
+    import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+</script>
+
 <svelte:head>
     <title>Project Setup | Settings</title>
 </svelte:head>
-<h3>Project Setup</h3>
+
+<UserSettingsLayout selectedTab="projectsetup"></UserSettingsLayout>

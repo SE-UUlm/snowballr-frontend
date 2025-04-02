@@ -10,8 +10,9 @@
         type ReferencesAndCitationsCardContentProps,
     } from "./ReferencesAndCitationsCardContent.svelte";
     import ReviewCriteriaList, { type ReviewCriteriaListProps } from "./ReviewCriteriaList.svelte";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
-    export type ProjectResearchContextCardProps = Omit<ReviewCriteriaListProps, "inReviewMode"> &
+    export type ProjectResearchContextCardProps = ReviewCriteriaListProps &
         PaperDecisionBannerProps;
 
     export interface NonProjectResearchContextCardProps {
@@ -20,13 +21,10 @@
         criteriaWithReviews: undefined;
     }
 
-    export type PaperResearchContextCardProps = {
-        inReviewMode: boolean;
-    } & ReferencesAndCitationsCardContentProps &
+    export type PaperResearchContextCardProps = ReferencesAndCitationsCardContentProps &
         (ProjectResearchContextCardProps | NonProjectResearchContextCardProps);
 
     const {
-        inReviewMode,
         backwardReferencedPapers,
         forwardReferencedPapers,
         reviewers,
@@ -38,7 +36,7 @@
     const referencesTab = { value: "2", label: "Forward/Backward References" };
 
     const tabs = reviewers
-        ? inReviewMode
+        ? reviewMode.isActivated
             ? [reviewInfoTab, referencesTab]
             : [referencesTab, reviewInfoTab]
         : [referencesTab];
@@ -53,7 +51,6 @@ Usage:
     <PaperResearchContextCard
         {backwardReferencedPapers}
         {forwardReferencedPapers}
-        {inReviewMode}
         {loadingProjectPaper}
         {reviewedCriteria}
         {reviewers}
@@ -63,9 +60,9 @@ Usage:
 <PaperCard {tabs}>
     <PaperCardContent value="1">
         {#if reviewers !== undefined}
-            <ReviewCriteriaList {criteriaWithReviews} {inReviewMode} {reviewers} />
+            <ReviewCriteriaList {criteriaWithReviews} {reviewers} />
             <Separator />
-            {#if inReviewMode}
+            {#if reviewMode.isActivated}
                 <span>
                     Will be implemented in
                     <a

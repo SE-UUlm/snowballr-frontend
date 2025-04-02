@@ -3,13 +3,15 @@ import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createReviewedCriterion } from "../../model-builder";
 import { Reviews, Users } from "../../example-data";
+import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("CriterionListEntry", () => {
     test("When props are provided, then component is shown", () => {
+        reviewMode.isActivated = true;
+
         render(CriterionListEntry, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: [],
                 criterion: createReviewedCriterion({
                     tag: "C1",
@@ -25,11 +27,12 @@ describe("CriterionListEntry", () => {
         expect(name).toBeInTheDocument();
     });
 
-    test("When `inReviewMode` is true, then the checkbox is but no user avatars are shown", () => {
+    test("When `reviewMode.isActivated` is true, then the checkbox is but no user avatars are shown", () => {
+        reviewMode.isActivated = true;
+
         render(CriterionListEntry, {
             target: document.body,
             props: {
-                inReviewMode: true,
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({
                     reviews: [Reviews.demoReview1],
@@ -44,11 +47,12 @@ describe("CriterionListEntry", () => {
         expect(userAvatar).not.toBeInTheDocument();
     });
 
-    test("When `inReviewMode` is false, then the reviews are shown", () => {
+    test("When `reviewMode.isActivated` is false, then the reviews are shown", () => {
+        reviewMode.isActivated = false;
+
         render(CriterionListEntry, {
             target: document.body,
             props: {
-                inReviewMode: false,
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({
                     reviews: [Reviews.demoReview1],

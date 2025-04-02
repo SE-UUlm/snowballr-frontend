@@ -53,7 +53,6 @@ export const load: PageLoad = ({ params }) => {
         forwardReferencedPapers,
         reviewers,
         criteriaWithReviews,
-        isReviewMode: false,
     };
 };
 

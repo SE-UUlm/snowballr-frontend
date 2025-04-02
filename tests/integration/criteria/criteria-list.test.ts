@@ -10,7 +10,6 @@ describe("CriteriaList", () => {
             target: document.body,
             props: {
                 listTitle: "Hard Exclusion",
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteria: loading([createReviewedCriterion({ name: "Criterion 1" })]),
                 emptyHint: "",
@@ -31,7 +30,6 @@ describe("CriteriaList", () => {
             target: document.body,
             props: {
                 listTitle: "Hard Exclusion",
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteria: loading([]),
                 emptyHint: "No criteria found",
@@ -49,7 +47,6 @@ describe("CriteriaList", () => {
             target: document.body,
             props: {
                 listTitle: "Hard Exclusion",
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteria: Promise.reject(),
                 emptyHint: "",
@@ -67,7 +64,6 @@ describe("CriteriaList", () => {
             target: document.body,
             props: {
                 listTitle: "Hard Exclusion",
-                inReviewMode: true,
                 reviewers: loading([]),
                 criteria: loading([]),
                 emptyHint: "",

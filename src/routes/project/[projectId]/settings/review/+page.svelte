@@ -1,6 +1,8 @@
 <script lang="ts">
+    import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+
     let { data } = $props();
-    const { loadingProject } = data;
+    const { projectId, loadingProject } = data;
 </script>
 
 <svelte:head>
@@ -12,3 +14,5 @@
         <title>Review | Settings</title>
     {/await}
 </svelte:head>
+
+<ProjectSettingsLayout {projectId} selectedTab="review">Review content</ProjectSettingsLayout>

@@ -122,6 +122,10 @@
     @apply text-sm font-medium tracking-normal text-neutral-500;
 }
 
+@utility text-description {
+    @apply text-sm font-normal tracking-normal text-gray-400;
+}
+
 @utility text-error {
     @apply text-base font-medium tracking-normal text-neutral-500 italic;
 }

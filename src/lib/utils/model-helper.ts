@@ -9,4 +9,4 @@ function asPaper(paper: Project_Paper | Paper): Paper {
     return isProjectPaper(paper) ? paper.paper! : paper;
 }
 
-export { asPaper };
+export { asPaper, isProjectPaper };

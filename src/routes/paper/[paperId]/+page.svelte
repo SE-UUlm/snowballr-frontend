@@ -23,5 +23,4 @@
     loadingProject={undefined}
     reviewers={undefined}
     {user}
-    userConfig={{ isReviewMode: false }}
 />

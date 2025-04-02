@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
-    import type { Tab } from "./tab-props";
+    import type { Tab } from "$lib/model/tabs";
 
     interface Props {
         tabs: Tab[];
@@ -11,7 +11,7 @@
 
 <!--
 @component
-{@link Tabs.List} but with underlinded abd transparent tabs.
+{@link Tabs.List} but with underlined abd transparent tabs.
 
 Usage:
 ```svelte

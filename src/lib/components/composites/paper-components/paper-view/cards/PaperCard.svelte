@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { Tab } from "$lib/components/composites/tabs/tab-props";
     import UnderlineTabsList from "$lib/components/composites/tabs/UnderlineTabsList.svelte";
     import * as Card from "$lib/components/primitives/card/index.js";
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
+    import type { Tab } from "$lib/model/tabs";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
