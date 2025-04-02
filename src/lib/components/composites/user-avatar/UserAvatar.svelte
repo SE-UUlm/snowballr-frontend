@@ -5,14 +5,16 @@
     import { ReviewDecision } from "$lib/model/api/review";
     import type { User } from "$lib/model/api/user";
     import { cn } from "$lib/utils/shadcn-helper";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 
     interface Props {
         user?: User;
         reviewDecision?: ReviewDecision;
         size?: "default" | "small";
+        showUsernameOnHover?: boolean;
     }
 
-    const { user, reviewDecision, size = "default" }: Props = $props();
+    const { user, reviewDecision, size = "default", showUsernameOnHover = true }: Props = $props();
 
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
     const userInitials = `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`;
@@ -42,7 +44,10 @@ no image was set, the initials of the user. For instance, the
 name of the user is 'John Doe', this avatar will display
 the initials 'JD'.
 
-Optionally, a reviewDecision can be added, which visualizes
+If the option `showUsernameOnHover` is set to true, then the full name is displayed as
+tooltip, when the user hovers over the avatar.
+
+Optionally, a `reviewDecision` can be added that adds a visualization for
 a decision of the associated user, which can be used for example
 in the PaperEntry component.
 
@@ -57,15 +62,33 @@ Usage:
         email: "john@doe.com",
         firstName: "John",
         lastName: "Doe",
-    }} reviewDecision={ReviewDecision.ACCEPTED} />
+        role: UserRole.DEFAULT,
+        status: UserStatus.ACTIVE,
+    }} reviewDecision={ReviewDecision.ACCEPTED} showUsernameOnHover={false} />
 ```
 -->
 <div class="relative" data-testid="user-avatar">
-    <Avatar.Root class={style.avatarSize}>
-        <Avatar.Fallback class={cn("group-hover/paper-list-entry:bg-slate-200", style.textSize)}>
-            {userInitials}
-        </Avatar.Fallback>
-    </Avatar.Root>
+    {#snippet avatar()}
+        <Avatar.Root class={style.avatarSize}>
+            <Avatar.Fallback
+                class={cn("group-hover/paper-list-entry:bg-slate-200", style.textSize)}
+            >
+                {userInitials}
+            </Avatar.Fallback>
+        </Avatar.Root>
+    {/snippet}
+    {#if showUsernameOnHover}
+        <Tooltip>
+            {#snippet trigger()}
+                {@render avatar()}
+            {/snippet}
+            {#snippet content()}
+                {user === undefined ? "Unknown" : `${user.firstName} ${user.lastName}`}
+            {/snippet}
+        </Tooltip>
+    {:else}
+        {@render avatar()}
+    {/if}
     {#if reviewDecision === ReviewDecision.ACCEPTED}
         <div class={cn(style.reviewIndicatorClass, "bg-accept-green")}>
             <Check color="#ffffff" size={style.iconSize} strokeWidth="3" />

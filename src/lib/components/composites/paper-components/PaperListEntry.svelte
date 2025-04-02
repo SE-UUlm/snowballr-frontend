@@ -79,6 +79,7 @@ Usage:
 <button
     class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={!reviewMode.isActivated}
+    data-testid="paper-list-entry"
     onclick={handleClick}
     type="button"
 >

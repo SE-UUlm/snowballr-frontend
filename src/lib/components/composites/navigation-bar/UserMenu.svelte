@@ -48,7 +48,7 @@
 
 <DropdownMenu.Root>
     <DropdownMenu.Trigger>
-        <UserAvatar {user} />
+        <UserAvatar showUsernameOnHover={false} {user} />
     </DropdownMenu.Trigger>
     <DropdownMenu.Content class="w-60" align="start" side="bottom" sideOffset={0}>
         <DropdownMenu.Group>
