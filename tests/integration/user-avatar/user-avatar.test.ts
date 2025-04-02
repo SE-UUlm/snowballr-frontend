@@ -63,7 +63,7 @@ describe("User avatar", () => {
         "When the username should be shown on hover, then full name of the provided user " +
             "is displayed as tooltip when the avatar is hovered",
         async () => {
-            const { component } = render(UserAvatar, {
+            const { unmount } = render(UserAvatar, {
                 props: {
                     user: {
                         id: "1",
@@ -84,10 +84,11 @@ describe("User avatar", () => {
             const tooltip = screen.getByRole("button", { name: "JD" });
             await userEvent.hover(tooltip);
             await waitFor(() => expect(tooltip).toHaveAttribute("data-state", "delayed-open"));
+
             const fullNameHint = screen.getByText("John Doe");
             expect(fullNameHint).toBeInTheDocument();
 
-            unmount(component);
+            unmount();
 
             render(UserAvatar, {
                 props: {
@@ -95,15 +96,19 @@ describe("User avatar", () => {
                 },
             });
 
-            const userAvatarNoName = screen.getByTestId("user-avatar");
-            expect(userAvatarNoName).toBeInTheDocument();
-            expect(userAvatarNoName).toHaveTextContent("");
+            const userAvatarUnknownName = screen.getByTestId("user-avatar");
+            expect(userAvatarUnknownName).toBeInTheDocument();
+            expect(userAvatarUnknownName).toHaveTextContent("");
 
-            const tooltip2 = screen.getByRole("button", { name: "" });
-            await userEvent.hover(tooltip2);
-            await waitFor(() => expect(tooltip2).toHaveAttribute("data-state", "delayed-open"));
-            expect(userAvatarNoName.childElementCount).toBe(2);
+            const tooltipUnknownName = screen.getByRole("button", { name: "" });
+            await userEvent.hover(tooltipUnknownName);
+            await waitFor(() =>
+                expect(tooltipUnknownName).toHaveAttribute("data-state", "delayed-open"),
+            );
+
             expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
+            const unknownNameHint = screen.getByText("Unknown");
+            expect(unknownNameHint).toBeInTheDocument();
         },
     );
 });

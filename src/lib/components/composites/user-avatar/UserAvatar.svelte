@@ -80,7 +80,7 @@ Usage:
                 </Avatar.Root>
             {/snippet}
             {#snippet content()}
-                {user?.firstName ?? ""} {user?.lastName ?? ""}
+                {user === undefined ? "Unknown" : `${user.firstName} ${user.lastName}`}
             {/snippet}
         </Tooltip>
     {:else}
