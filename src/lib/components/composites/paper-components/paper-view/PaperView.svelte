@@ -7,9 +7,6 @@
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
     import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
-    import AcceptButton from "./decision-buttons/AcceptButton.svelte";
-    import DeclineButton from "./decision-buttons/DeclineButton.svelte";
-    import MaybeButton from "./decision-buttons/MaybeButton.svelte";
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
@@ -17,6 +14,7 @@
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
     import { asPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
 
     export interface ProjectPaperViewProps {
@@ -152,11 +150,11 @@ Usage:
                         <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                         <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                         <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                            <DeclineButton {loadingPaperId} />
+                            <PaperDecisionButton {loadingPaperId} variant="decline" />
                             {#if project.settings?.reviewMaybeAllowed}
-                                <MaybeButton {loadingPaperId} />
+                                <PaperDecisionButton {loadingPaperId} variant="maybe" />
                             {/if}
-                            <AcceptButton {loadingPaperId} />
+                            <PaperDecisionButton {loadingPaperId} variant="accept" />
                         </div>
                     {/await}
                 {/if}

@@ -59,7 +59,7 @@ describe("PaperView", () => {
 
         await waitForComponentLoading();
 
-        const decisionButtons = screen.getAllByTestId("decision-button");
+        const decisionButtons = screen.getAllByTestId("decision-button", { exact: false });
         expect(decisionButtons).toHaveLength(3);
         expect(decisionButtons[0]).toHaveTextContent("Decline");
         expect(decisionButtons[1]).toHaveTextContent("Maybe");
@@ -89,7 +89,7 @@ describe("PaperView", () => {
 
         await waitForComponentLoading();
 
-        const decisionButtons = screen.getAllByTestId("decision-button");
+        const decisionButtons = screen.getAllByTestId("decision-button", { exact: false });
         expect(decisionButtons).toHaveLength(2);
         expect(document.body).not.toHaveTextContent("Maybe");
     });
