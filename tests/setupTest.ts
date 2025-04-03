@@ -216,3 +216,22 @@ vi.mock("$lib/grpc-api", () => {
     };
     return mockBackend;
 });
+
+// If window is defined, mock matchMedia
+// window is not defined in unit tests i.e. when running in node environment
+// window.matchMedia needs to be mocked for the Toaster component to work
+if (typeof window !== "undefined") {
+    Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation((query) => ({
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        })),
+    });
+}
