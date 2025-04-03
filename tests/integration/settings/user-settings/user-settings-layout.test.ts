@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
 import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
-import TestUserSettingsLayout from "./TestUserSettingslayout.svelte";
+import TestUserSettingsLayout from "./TestUserSettingsLayout.svelte";
 
 describe("UserSettingsLayout", () => {
     it("When all props are provided, then component is displayed correctly", () => {

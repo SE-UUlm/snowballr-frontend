@@ -1,7 +1,7 @@
 import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
-import TestProjectSettingslayout from "./TestProjectSettingslayout.svelte";
+import TestProjectSettingsLayout from "./TestProjectSettingsLayout.svelte";
 
 describe("ProjectSettingsLayout", () => {
     it("When all props are provided, then component is displayed correctly", () => {
@@ -46,7 +46,7 @@ describe("ProjectSettingsLayout", () => {
     });
 
     it("When children are passed, then children are displayed", () => {
-        render(TestProjectSettingslayout);
+        render(TestProjectSettingsLayout);
 
         expect(screen.getByText("This is a test!")).toBeInTheDocument();
     });
