@@ -44,6 +44,23 @@
     ] as const;
 </script>
 
+<!--
+@component
+`SettingsLayout` for the project settings.
+
+Tabs:
+- General
+- Members
+- SLR
+- Review
+
+Usage:
+```svelte
+    <ProjectSettingsLayout {projectId} selectedTab="general">
+        <span>This is the general settings page</span>
+    </ProjectSettingsLayout>
+```
+-->
 <SettingsLayout {selectedTab} {tabs}>
     {@render children?.()}
 </SettingsLayout>

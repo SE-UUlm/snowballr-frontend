@@ -95,9 +95,9 @@
                 {/if}
             {/each}
             {#if members.length === 0}
-                <div class="m-auto py-1">
+                <li class="m-auto py-1">
                     <span class="text-hint">No members found</span>
-                </div>
+                </li>
             {/if}
         {:catch error}
             {console.error(`Couldn't load project members: ${error}`)}
