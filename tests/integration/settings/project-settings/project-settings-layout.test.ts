@@ -6,6 +6,7 @@ import TestProjectSettingsLayout from "./TestProjectSettingsLayout.svelte";
 describe("ProjectSettingsLayout", () => {
     it("When all props are provided, then component is displayed correctly", () => {
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId: "1",
                 selectedTab: "general",
@@ -24,6 +25,7 @@ describe("ProjectSettingsLayout", () => {
 
     it("When tab is selected, then selected tab is highlighted", () => {
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId: "1",
                 selectedTab: "review",
@@ -55,6 +57,7 @@ describe("ProjectSettingsLayout", () => {
         const projectId = "1";
 
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId,
                 selectedTab: "general",
