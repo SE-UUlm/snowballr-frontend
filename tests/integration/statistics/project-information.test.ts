@@ -37,7 +37,7 @@ describe("ProjectInformation", () => {
         );
     });
 
-    test("When all the project was just created, then the project information component does not show information about the estimated remaining time.", async () => {
+    test("When the project was just created, then the project information component does not show information about the estimated remaining time.", async () => {
         render(ProjectInformation, {
             props: {
                 projectInformation: loading({
