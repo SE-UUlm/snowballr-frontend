@@ -1,4 +1,5 @@
 services:
+    # standalone frontend
     frontend:
         build:
             context: .
@@ -7,13 +8,46 @@ services:
         environment:
             NODE_ENV: production
         ports:
-            - ${PORT:-4173}:4173
-        profiles:
-            - run
-            - run-mock-local
+            - ${PORT:-4173}:3000
+        profiles: [""]
 
-    # use when mock-backend is publicly available
-    # mock-backend:
-    #     image: ghcr.io/se-uulm/snowballr-mock-backend:main
-    #     profiles:
-    #         - run-mock-local
+    # frontend together with local mock-backend
+    frontend-mock-local:
+        build:
+            context: .
+            args:
+                PUBLIC_API_BASE_URL: http://localhost:3001
+        environment:
+            NODE_ENV: production
+        ports:
+            - ${PORT:-4173}:3000
+        depends_on:
+            - mock-backend
+        profiles:
+            - mock-local
+
+    mock-backend:
+        image: ghcr.io/se-uulm/snowballr-mock-backend:main
+        environment:
+            ENABLE_DUMMY_ADMIN: "true"
+            EXAMPLE_DATA_FILE_PATH: "standardData.ts"
+            GRPC_PORT: 3000
+            GRPC_WEB_PORT: 3001
+        ports:
+            - "3000:3000"
+            - "3001:3001"
+        profiles:
+            - mock-local
+
+    # frontend with public mock-backend
+    frontend-mock-public:
+        build:
+            context: .
+            args:
+                PUBLIC_API_BASE_URL: http://snowballr.informatik.uni-ulm.de:3001
+        environment:
+            NODE_ENV: production
+        ports:
+            - ${PORT:-4173}:3000
+        profiles:
+            - mock-public
