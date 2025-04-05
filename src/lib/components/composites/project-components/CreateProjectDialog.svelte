@@ -8,7 +8,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
     import { onMount } from "svelte";
-    import { goto } from "$app/navigation";
+    import { goto, invalidate } from "$app/navigation";
     import { getName, getNames } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
@@ -37,6 +37,8 @@
         initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
     );
 
+    let loadingPossibleMembers = $state(true);
+
     onMount(async () => {
         try {
             const currentUser = await backendService.getCurrentUser(Nothing).response;
@@ -47,6 +49,7 @@
             isErrorOnUsersLoading = true;
             console.error(`Couldn't get users from server (${error})`);
         }
+        loadingPossibleMembers = false;
     });
 
     /**
@@ -193,6 +196,7 @@
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             )}
             data-testid="dialog-trigger-button"
+            disabled={loadingPossibleMembers}
         >
             <div class="flex flex-row items-center justify-center gap-2.5">
                 <CirclePlus strokeWidth="2.5" />
@@ -268,6 +272,10 @@
                     projectWasCreated = false;
                     projectId = undefined;
                     membersInput = [];
+
+                    // trigger reload of the homepage, so the created project is shown in the projects list
+                    // window.location.reload();
+                    invalidate("data:allProjectsForUser");
                 }}
             >
                 Back

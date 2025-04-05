@@ -43,12 +43,14 @@ Usage:
         <span class="text-emphasized">{information.reviewedPapersInStage}</span>
         /
         <span class="text-emphasized">{information.totalPapersInStage}</span>
-        {pluralize(information.totalPapersInStage, "paper", "papers")} so far. Based on your progress,
-        your estimated remaining time will be
-        <span class="text-emphasized">
-            {Math.round(information.estimatedRemainingDays * 10) / 10}
-        </span>
-        {pluralize(information.estimatedRemainingDays, "day", "days")}.
+        {pluralize(information.totalPapersInStage, "paper", "papers")} so far.
+        {#if information.estimatedRemainingDays > 0}
+            Based on your progress, your estimated remaining time will be
+            <span class="text-emphasized">
+                {Math.round(information.estimatedRemainingDays * 10) / 10}
+            </span>
+            {pluralize(information.estimatedRemainingDays, "day", "days")}.
+        {/if}
     {:catch}
         <ErrorIndicator errorMessage="Couldn't load project information." />
     {/await}

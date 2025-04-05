@@ -36,4 +36,33 @@ describe("ProjectInformation", () => {
             "Couldn't load project information.",
         );
     });
+
+    test("When the project was just created, then the project information component does not show information about the estimated remaining time.", async () => {
+        render(ProjectInformation, {
+            props: {
+                projectInformation: loading({
+                    projectName: "Demo",
+                    projectStart: new Date(),
+                    projectStage: 0n,
+                    daysInStage: 0,
+                    estimatedRemainingDays: 0 / 0,
+                    totalPapersInStage: 0,
+                    reviewedPapersInStage: 0,
+                }),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        // Project information are shown
+        expect(screen.getByTestId("project-information")).toHaveTextContent("in stage 0");
+        expect(screen.getByTestId("project-information")).toHaveTextContent("0 / 0");
+
+        expect(screen.getByTestId("project-information")).not.toHaveTextContent(
+            "your estimated remaining time will be",
+        );
+        expect(screen.getByTestId("project-information")).not.toHaveTextContent(
+            "Couldn't load project information.",
+        );
+    });
 });

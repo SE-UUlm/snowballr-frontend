@@ -41,7 +41,9 @@ async function requestUndecidedPapers(project: Project): Promise<PaperListEntryI
  * - the progress of the current stage
  * - open reviews from the project
  */
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ depends }) => {
+    depends("data:allProjectsForUser");
+
     const allUserProjects = backendService
         .getCurrentUser(Nothing)
         .response.then((user) => backendService.getAllProjectsForUser({ id: user.id }).response);

@@ -90,6 +90,9 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
               with:
+                  # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
+                  # See https://github.com/actions/checkout for more details.
+                  fetch-depth: 0
                   submodules: "recursive"
 
             - name: Setup
@@ -99,6 +102,10 @@ jobs:
 
             - name: Install Playwright
               run: npx playwright install --with-deps
+
+            - name: Run only tests for changed code (fail fast)
+              if: github.event_name == 'pull_request'
+              run: npm run test:e2e -- --only-changed=origin/${{ github.base_ref }}
 
             - name: Run Playwright
               run: npm run test:e2e

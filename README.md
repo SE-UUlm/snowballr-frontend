@@ -36,10 +36,10 @@ npm run compile:proto
 
 To run the app, you need to create a `.env` file in the root directory of the project. The file should contain the following environment variables (see [.env.example](./.env.example) for an example):
 
-| Variable              |      Required      | Default | Description                                                                            |
-| --------------------- | :----------------: | :-----: | -------------------------------------------------------------------------------------- |
-| `PUBLIC_API_BASE_URL` | :white_check_mark: |    -    | The URL of the backend API.                                                            |
-| `PUBLIC_IS_DEV_MODE`  |        :x:         |  false  | Whether the app is in development mode. This may enable additional development tooling |
+| Variable              |      Required      | Default | Description                                                                             |
+| --------------------- | :----------------: | :-----: | --------------------------------------------------------------------------------------- |
+| `PUBLIC_API_BASE_URL` | :white_check_mark: |    -    | The URL of the backend API.                                                             |
+| `PUBLIC_IS_DEV_MODE`  |        :x:         |  false  | Whether the app is in development mode. This may enable additional development tooling. |
 
 After completing these steps, you can start a development server with:
 
@@ -98,6 +98,13 @@ End-to-end tests are used to test the functionality of the app as a whole. They 
 ```bash
 npm run test:e2e
 ```
+
+Additionally, you can configure the E2E tests by setting the following process environment variables:
+
+| Variable | Default (if the variable is not set) | Description |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` | 3002 | The port that the mock backend will listen on for E2E testing of the chromium browser. |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX` | 3003 | The port that the mock backend will listen on for E2E testing of the firefox browser. |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT` | 3004 | The port that the mock backend will listen on for E2E testing of the webkit browser. |
 
 ### Lighthouse
 

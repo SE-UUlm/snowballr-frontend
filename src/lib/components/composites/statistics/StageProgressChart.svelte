@@ -5,17 +5,19 @@
     import * as d3 from "d3";
 
     interface Segment {
-        decision: PaperStatus;
+        decision: PaperStatus | "No decision";
         value: number;
     }
 
     const { stage, decisions }: StageProgressInterface = $props();
 
     const totalNumberOfDecisions = Object.values(decisions).reduce((acc, cur) => acc + cur, 0);
-    const segments: Segment[] = Object.entries(decisions).map(([key, numOfDecisions]) => ({
-        decision: key as PaperStatus,
-        value: numOfDecisions / totalNumberOfDecisions,
-    }));
+    let segments: Segment[] = $state(
+        Object.entries(decisions).map(([key, numOfDecisions]) => ({
+            decision: key as PaperStatus,
+            value: numOfDecisions / totalNumberOfDecisions,
+        })),
+    );
 
     const SIZE = 152;
     const radius = SIZE / 2;
@@ -32,10 +34,23 @@
         .value((d) => d.value)
         .sort(null);
 
-    const colorScale = d3
-        .scaleOrdinal<string>()
-        .domain(Object.keys(decisions))
-        .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus, "text")));
+    let colorScale = $state(
+        d3
+            .scaleOrdinal<string>()
+            .domain(Object.keys(decisions))
+            .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus, "text"))),
+    );
+
+    // check, whether the stage was just created and no decisions can be shown
+    if (totalNumberOfDecisions === 0) {
+        segments = [
+            {
+                decision: "No decision",
+                value: 1,
+            },
+        ];
+        colorScale = d3.scaleOrdinal<string>().domain("No decision").range(["text-gray-200"]);
+    }
 </script>
 
 <svg data-testid="stage-progress-chart" height={SIZE} width={SIZE}>
