@@ -101,11 +101,11 @@ npm run test:e2e
 
 Additionally, you can configure the E2E tests by setting the following process environment variables:
 
-| Variable                                     | Default (if not variable not) | Description                                                                            |
-| -------------------------------------------- | :---------------------------: | -------------------------------------------------------------------------------------- |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` |             3002              | The port that the mock backend will listen on for E2E testing of the chromium browser. |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX`  |             3003              | The port that the mock backend will listen on for E2E testing of the firefox browser.  |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT`   |             3004              | The port that the mock backend will listen on for E2E testing of the webkit browser.   |
+| Variable                                     | Default (if the variable not set) | Description                                                                            |
+| -------------------------------------------- | :-------------------------------: | -------------------------------------------------------------------------------------- |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` |               3002                | The port that the mock backend will listen on for E2E testing of the chromium browser. |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX`  |               3003                | The port that the mock backend will listen on for E2E testing of the firefox browser.  |
+| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT`   |               3004                | The port that the mock backend will listen on for E2E testing of the webkit browser.   |
 
 ### Lighthouse
 
