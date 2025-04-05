@@ -29,6 +29,8 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 # Copy the rest of the source files into the image.
 COPY . .
+# Build gRPC API
+RUN npm run compile:proto
 # Copy static env variables into an .env file, so that the app can be built.
 RUN printenv | sed -n '/^PUBLIC_API_BASE_URL=/p;' > .env
 # Run the build script.
@@ -37,26 +39,23 @@ RUN npm run build
 ################################################################################
 # Create a new stage to run the application with minimal runtime dependencies
 # where the necessary files are copied from the build stage.
-FROM build AS final
-# TODO: use base instead, as soon as adapter is used
+FROM base AS final
 
 # Use production node environment by default.
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Run the application as a non-root user.
-# USER node
-# TODO: uncomment, as soon as adapter is used (otherwise vite cannot be used)
+USER node
 
 # Copy package.json so that package manager commands can be used.
 COPY package.json .
 
-# Copy the production dependencies from the deps stage and also
-# the built application from the build stage into the image.
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/.svelte-kit/output ./.svelte-kit/output
+# Copy the built application from the build stage into the image.
+COPY --from=build /usr/src/app/build ./build
 
 # Expose the port that the application listens on.
-EXPOSE 4173
+EXPOSE 3000
+ENV PORT=3000
 
 # Run the application.
-CMD npm run preview -- --port 4173 --host
+CMD ["node", "build"]
