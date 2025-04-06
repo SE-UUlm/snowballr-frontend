@@ -9,7 +9,7 @@ git submodule update --init --recursive
 npm install
 ```
 
-Next, generate the API code[^tag-checkout]:
+Next, generate the API code:
 
 ```bash
 npm run compile:proto
@@ -43,9 +43,3 @@ You can preview the production build with `npm run preview`.
 
 If you don't have a backend server running, you can use the mock backend. Head over to the
 [snowballr-mock-backend](https://github.com/SE-UUlm/snowballr-mock-backend) repository and follow the instructions there.
-
-<!-- Links -->
-
-[^tag-checkout]:
-    Make sure, that the used API version was manually set to the desired stable version, otherwise set it
-    (see [here](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247) for further hints).
