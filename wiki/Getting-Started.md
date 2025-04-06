@@ -1,17 +1,3 @@
-# SnowballR
-
-**SnowballR** is a web-based tool supporting _Systematic Literature Reviews (SLR)_.
-
-## SnowballR's use cases
-
-![Open Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aopen%20is%3Aissue%20label%3A%22use%20case%22%20&label=open)
-![Closed Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)
-
-You can find all use cases
-[here](https://github.com/SE-UUlm/snowballr-frontend/issues?q=is%3Aissue%20label%3A%22use%20case%22%20).
-
-## Getting Started
-
 > **Note**: Currently it is only possible to build from source.
 
 To build the project from source, run the following commands:
@@ -31,10 +17,10 @@ npm run compile:proto
 
 You can find the generated API code in the `src/lib/model/api` directory.
 
-To run the app, you need to create a `.env` file in the root directory of the project.
-The file should contain the following environment variables
-(see [.env.example](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/.env.example)
-for an example or copy it using `cp .env.example .env`):
+To run the app, you need to create a `.env` file in the root directory of the project. The file should contain the
+following environment variables (see
+[.env.example](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/.env.example) for an example or copy it using
+`cp .env.example .env`):
 
 | Variable              |      Required      | Default | Description                                                                             |
 | --------------------- | :----------------: | :-----: | --------------------------------------------------------------------------------------- |
@@ -55,13 +41,11 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-If you don't have a backend server running, you can use the mock backend.
-Head over to the [snowballr-mock-backend](https://github.com/SE-UUlm/snowballr-mock-backend) repository and follow the
-instructions there.
+If you don't have a backend server running, you can use the mock backend. Head over to the
+[snowballr-mock-backend](https://github.com/SE-UUlm/snowballr-mock-backend) repository and follow the instructions there.
 
 <!-- Links -->
 
 [^tag-checkout]:
     Make sure, that the used API version was manually set to the desired stable version, otherwise set it
-    (see [here](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247)
-    for further hints).
+    (see [here](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247) for further hints).

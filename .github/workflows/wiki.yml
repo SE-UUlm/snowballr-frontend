@@ -1,0 +1,36 @@
+name: Lint and Publish Wiki
+
+on:
+    push:
+        paths:
+            - "**/*.md"
+
+jobs:
+    linting:
+        name: Linting Markdown
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ inputs.node_version }}
+
+            - name: Install dependencies
+              shell: bash
+              run: npm ci
+
+            - name: Lint Markdown files
+              run: npm run lint-md
+
+            - name: Check for Broken Links in README
+              uses: becheran/mlc@v0.21.0
+              with:
+                  args: README.md
+
+            - name: Check for Broken Links in README
+              uses: becheran/mlc@v0.21.0
+              with:
+                  args: --ignore-links "https://dl.acm.org/doi/*" wiki/
