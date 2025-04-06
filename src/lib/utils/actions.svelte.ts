@@ -1,7 +1,7 @@
 import type { Action } from "svelte/action";
 
 /**
- * Dispatches 'clickedOutsideOrEscape' event when the user clicks outside the element or pressed the 'ESC' key.
+ * Dispatches 'clickedOutsideOrEscape' event when the user clicks outside the element or presses the 'Escape' key.
  *
  * @param node - The node this action refers to
  */

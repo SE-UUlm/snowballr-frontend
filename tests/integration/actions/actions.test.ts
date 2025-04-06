@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import ClickOutsideOrEscapeActionComponent from "./ClickOutsideOrEscapeActionComponent.svelte";
 
 describe("Click outside or press escape action", () => {
-    it("When a component is created with the 'clickOutsideOrEscape' and the user clicks outside, then the 'ClickedOutsideOrEscape' is fired.", async () => {
+    it("When a component is created with the 'clickOutsideOrEscape' action and the user clicks outside, then the 'ClickedOutsideOrEscape' event is fired.", async () => {
         const onEvent = vi.fn();
         render(ClickOutsideOrEscapeActionComponent, { onEvent });
 
@@ -12,7 +12,7 @@ describe("Click outside or press escape action", () => {
         expect(onEvent).toHaveBeenCalled();
     });
 
-    it("When a component is created with the 'clickOutsideOrEscape' and the user pressed escape, then the 'ClickedOutsideOrEscape' is fired.", async () => {
+    it("When a component is created with the 'clickOutsideOrEscape' action and the user presses escape, then the 'ClickedOutsideOrEscape' event is fired.", async () => {
         const onEvent = vi.fn();
         render(ClickOutsideOrEscapeActionComponent, { onEvent });
 
@@ -21,8 +21,8 @@ describe("Click outside or press escape action", () => {
     });
 
     it(
-        "When a component is created with the 'clickOutsideOrEscape' and the user clicks inside the component or " +
-            "press any key except escape, then the 'ClickedOutsideOrEscape' is not fired.",
+        "When a component is created with the 'clickOutsideOrEscape' action and the user clicks inside the component or " +
+            "presses any key except escape, then the 'ClickedOutsideOrEscape' event is not fired.",
         async () => {
             const onEvent = vi.fn();
             render(ClickOutsideOrEscapeActionComponent, { onEvent });
