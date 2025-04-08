@@ -112,8 +112,10 @@ Usage:
         >
             {#if loading}
                 <LoaderCircle class="animate-spin" />
+                Inviting Users
+            {:else}
+                Invite Users
             {/if}
-            Invite Users
         </Button>
     {/snippet}
 </Dialog>

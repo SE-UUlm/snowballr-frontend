@@ -165,8 +165,10 @@ Usage:
             <Button disabled={isServerStillCreatingProject} form="project-creation" type="submit">
                 {#if isServerStillCreatingProject}
                     <LoaderCircle class="animate-spin" />
+                    Creating Project
+                {:else}
+                    Create Project
                 {/if}
-                Creating Project
             </Button>
         {/snippet}
     </Dialog>
