@@ -52,7 +52,7 @@ the values you need.
 ### Unit Tests
 
 Unit tests are used to test individual functions or components in isolation. They are located in the
-[tests/unit](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/unit/) directory. Run them with:
+[tests/unit](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/unit) directory. Run them with:
 
 ```bash
 npm run test:unit
@@ -61,7 +61,7 @@ npm run test:unit
 ### Integration Tests
 
 Integration tests are used to test the interaction between different components or functions. They are located in the
-[tests/integration](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/integration/) directory.
+[tests/integration](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/integration) directory.
 Run them with:
 
 ```bash
@@ -104,7 +104,7 @@ instead of classes or text content.
 ### End-to-End Tests
 
 End-to-end tests are used to test the functionality of the app as a whole. They are located in the
-[tests/e2e](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/) directory. Run them with:
+[tests/e2e](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e) directory. Run them with:
 
 ```bash
 npm run test:e2e
