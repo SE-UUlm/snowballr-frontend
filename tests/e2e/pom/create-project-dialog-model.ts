@@ -40,9 +40,6 @@ export class DevCreateProjectDialog {
         await this.projectNameInput.fill(projectName);
         await this.projectMemberInput.fill("john@doe.com");
         await this.projectMemberInput.press("Tab");
-        await this.projectMemberInput.pressSequentially("julia");
-        await this.projectMemberInput.press("ArrowDown");
-        await this.projectMemberInput.press("Tab");
 
         await this.createProjectButton.click();
     }

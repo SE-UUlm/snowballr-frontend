@@ -8,7 +8,7 @@ export class DevHomePage {
     constructor(page: Page) {
         this.page = page;
         this.createProjectDialog = page.getByRole("dialog", { name: "Create Project" });
-        this.openCreateProjectDialogButton = page.getByTestId("dialog-trigger-button");
+        this.openCreateProjectDialogButton = page.getByTestId("dialog-trigger");
     }
 
     /**

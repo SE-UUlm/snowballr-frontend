@@ -55,7 +55,7 @@ test.describe("Creating a new project", () => {
         await expect(dialog.projectMemberInput).toContainText("");
     });
 
-    test("When the project was successfully created, but the user dont want to open it, then the user stays on the homepage.", async ({
+    test("When the project was successfully created, but the user doesn't want to open it, then the user stays on the homepage.", async ({
         page,
     }) => {
         const homepage = new DevHomePage(page);
