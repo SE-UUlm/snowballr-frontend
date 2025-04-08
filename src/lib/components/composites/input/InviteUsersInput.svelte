@@ -1,9 +1,6 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import ErrorAlert from "../utils/ErrorAlert.svelte";
     import ChipsInput from "./ChipsInput.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";
     import { filterUsers } from "$lib/utils/filters";
     import { getName } from "$lib/utils/common-helper";
@@ -11,39 +8,20 @@
     import { Schema } from "$lib/schemas";
 
     interface Props {
-        user: User;
-        excludeUsers?: User[];
         membersInput: string[];
-        loading: boolean;
+        initialPossibleMembers: User[];
+        isErrorOnUsersLoading: boolean;
     }
 
     let {
-        user: thisUser,
-        excludeUsers = [],
         membersInput = $bindable(),
-        loading = $bindable(true),
+        initialPossibleMembers,
+        isErrorOnUsersLoading,
     }: Props = $props();
 
-    let isErrorOnUsersLoading = $state(false);
-    let initialPossibleMembers: User[] = $state([]);
     let possibleMembers: User[] = $derived(
         initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
     );
-
-    onMount(async () => {
-        const excludeIds = excludeUsers.map((user) => user.id);
-        excludeIds.push(thisUser.id);
-        try {
-            const users = await backendService
-                .getAllUsers(Nothing)
-                .response.then(({ users }) => users);
-            initialPossibleMembers = users.filter((user) => !excludeIds.includes(user.id));
-        } catch (error) {
-            isErrorOnUsersLoading = true;
-            console.error(`Couldn't load users (${error})`);
-        }
-        loading = false;
-    });
 
     /**
      * Filters all possible members by checking, whether their name or email contains the search string.
@@ -121,9 +99,9 @@ to invite non-existing users by their email address.
 Usage:
 ```svelte
     <InviteUsersInput
-        excludeUsers={members.map((member) => member.user!)}
-        {user}
         bind:membersInput
+        {initialPossibleMembers}
+        {isErrorOnUsersLoading}
     />
 ```
 -->

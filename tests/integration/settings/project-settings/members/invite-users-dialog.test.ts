@@ -8,6 +8,9 @@ import userEvent from "@testing-library/user-event";
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
         mockApiCall("inviteUserToProject", {});
+        mockApiCall("getAllUsers", {
+            users: [Users.johnDoe, Users.janeDoe, Users.henryMoore],
+        });
     });
 
     afterEach(() => {
@@ -40,7 +43,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByTestId("dialog-trigger");
         expect(trigger).toBeInTheDocument();
-        expect(trigger).not.toHaveAttribute("disabled");
+        await waitFor(() => expect(trigger).not.toHaveAttribute("disabled"));
         await waitFor(async () => user.click(trigger));
 
         expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -107,5 +110,47 @@ describe("InviteUsersDialog", () => {
         expect(
             screen.getByText("Something went wrong while inviting the users."),
         ).toBeInTheDocument();
+    });
+
+    test("When users loading fails, then error message is shown", async () => {
+        mockFailedApiCall("getAllUsers");
+
+        const user = userEvent.setup();
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: {
+                user: Users.johnDoe,
+                projectId: "1",
+                loadingMembers: Promise.resolve([]),
+            },
+        });
+
+        const trigger = await screen.findByTestId("dialog-trigger");
+        await waitFor(async () => user.click(trigger));
+
+        const errorMessage = await screen.findByText(
+            "Something went wrong while loading possible members.",
+        );
+        expect(errorMessage).toBeInTheDocument();
+    });
+
+    test("When members loading fails, then error message is shown", async () => {
+        const user = userEvent.setup();
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: {
+                user: Users.johnDoe,
+                projectId: "1",
+                loadingMembers: Promise.reject(new Error("Failed to load members")),
+            },
+        });
+
+        const trigger = await screen.findByTestId("dialog-trigger");
+        await waitFor(async () => user.click(trigger));
+
+        const errorMessage = await screen.findByText(
+            "Something went wrong while loading possible members.",
+        );
+        expect(errorMessage).toBeInTheDocument();
     });
 });

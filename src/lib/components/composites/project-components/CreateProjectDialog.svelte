@@ -11,6 +11,8 @@
     import type { User } from "$lib/model/api/user";
     import InviteUsersInput from "../input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
+    import { onMount } from "svelte";
+    import { loadUsers } from "../input/loading-users";
 
     interface Props {
         user: User;
@@ -26,10 +28,19 @@
     let projectId = $state<string | undefined>(undefined);
 
     let isErrorOnProjectCreation = $state(false);
+    let isErrorOnUsersLoading = $state(false);
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
     let loading = $state(true);
+    let initialPossibleMembers: User[] = $state([]);
+
+    onMount(async () => {
+        const result = await loadUsers(user);
+        initialPossibleMembers = result.initialPossibleMembers;
+        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+        loading = false;
+    });
 
     /**
      * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
@@ -140,7 +151,11 @@ Usage:
                     schema={Schema.projectName}
                     type="text"
                 />
-                <InviteUsersInput {user} bind:membersInput bind:loading />
+                <InviteUsersInput
+                    {initialPossibleMembers}
+                    {isErrorOnUsersLoading}
+                    bind:membersInput
+                />
             </form>
             {#if isErrorOnProjectCreation}
                 <ErrorAlert errorTitle="Something went wrong while creating the project." />

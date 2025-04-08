@@ -8,6 +8,8 @@
     import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
+    import { onMount } from "svelte";
+    import { loadUsers } from "$lib/components/composites/input/loading-users";
 
     interface Props {
         user: User;
@@ -22,6 +24,23 @@
     let error = $state<ApiError | undefined>(undefined);
     let open = $state(false);
     let membersInput: string[] = $state([]);
+    let loadingUsers = $state(true);
+    let isErrorOnUsersLoading = $state(false);
+    let initialPossibleMembers: User[] = $state([]);
+
+    onMount(async () => {
+        const result = await loadingMembers
+            .then((members) =>
+                loadUsers(
+                    user,
+                    members.map((member) => member.user!),
+                ),
+            )
+            .catch(() => ({ initialPossibleMembers: [], isErrorOnUsersLoading: true }));
+        initialPossibleMembers = result.initialPossibleMembers;
+        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+        loadingUsers = false;
+    });
 
     async function inviteUsers(event: Event) {
         event.preventDefault();
@@ -66,7 +85,7 @@ Usage:
 -->
 <Dialog
     title="Invite Users"
-    triggerProps={{ class: buttonVariants({ variant: "default" }) }}
+    triggerProps={{ class: buttonVariants({ variant: "default" }), disabled: loadingUsers }}
     bind:open
 >
     {#snippet trigger()}
@@ -77,15 +96,7 @@ Usage:
     {/snippet}
     {#snippet content()}
         <form id="invite-users" onsubmit={inviteUsers}>
-            {#await loadingMembers}
-                <InviteUsersInput membersInput={[]} {user} />
-            {:then members}
-                <InviteUsersInput
-                    excludeUsers={members.map((member) => member.user!)}
-                    {user}
-                    bind:membersInput
-                />
-            {/await}
+            <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
         </form>
         {#if error}
             <ErrorAlert errorTitle={error.errorTitle} />

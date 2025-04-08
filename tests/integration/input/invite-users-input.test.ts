@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { describe, expect, test } from "vitest";
 import { Users } from "$tests/example-data";
 import { render, screen } from "@testing-library/svelte";
 import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
@@ -7,22 +6,15 @@ import userEvent from "@testing-library/user-event";
 import { getName } from "$lib/utils/common-helper";
 
 describe("InviteUsersInput", () => {
-    beforeEach(() => {
-        mockApiCall("getAllUsers", {
-            users: [Users.johnDoe, Users.janeDoe, Users.henryMoore],
-        });
-    });
-
-    afterEach(() => {
-        vi.restoreAllMocks();
-    });
+    const users = [Users.janeDoe, Users.henryMoore];
 
     test("When all props are provided, then it should render correctly", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -34,13 +26,14 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [Users.janeDoe.email],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
-        const userEmail = screen.getByText(Users.janeDoe.email);
-        expect(userEmail).toBeInTheDocument();
+        const userName = screen.getByText(getName(Users.janeDoe));
+        expect(userName).toBeInTheDocument();
     });
 
     test("When name of current user is typed, then it is not displayed as suggestion", async () => {
@@ -49,8 +42,9 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: currentUser,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -60,32 +54,15 @@ describe("InviteUsersInput", () => {
         expect(suggestion).not.toBeInTheDocument();
     });
 
-    test("When name of excluded user is typed, then it is not displayed as suggestion", async () => {
-        const user = userEvent.setup();
-        const excludedUser = Users.janeDoe;
-        render(InviteUsersInput, {
-            target: document.body,
-            props: {
-                user: Users.johnDoe,
-                excludeUsers: [excludedUser],
-                membersInput: [],
-            },
-        });
-
-        const input = screen.getByRole("textbox");
-        await user.type(input, excludedUser.firstName);
-        const suggestion = screen.queryByText(excludedUser.firstName);
-        expect(suggestion).not.toBeInTheDocument();
-    });
-
     test("When name of user is typed, then it is displayed as suggestion", async () => {
         const user = userEvent.setup();
         const newUser = Users.janeDoe;
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -101,8 +78,9 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -125,8 +103,9 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -147,8 +126,9 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -167,8 +147,9 @@ describe("InviteUsersInput", () => {
         render(InviteUsersInput, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 membersInput: [],
+                initialPossibleMembers: users,
+                isErrorOnUsersLoading: false,
             },
         });
 
@@ -180,23 +161,6 @@ describe("InviteUsersInput", () => {
         expect(chips).toHaveLength(0);
 
         const errorMessage = screen.getByText("Please enter a valid name or email.");
-        expect(errorMessage).toBeInTheDocument();
-    });
-
-    test("When users loading fails, then error message is shown", async () => {
-        mockFailedApiCall("getAllUsers");
-
-        render(InviteUsersInput, {
-            target: document.body,
-            props: {
-                user: Users.johnDoe,
-                membersInput: [],
-            },
-        });
-
-        const errorMessage = await screen.findByText(
-            "Something went wrong while loading possible members.",
-        );
         expect(errorMessage).toBeInTheDocument();
     });
 });
