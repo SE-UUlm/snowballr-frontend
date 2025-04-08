@@ -7,8 +7,9 @@ services:
                 PUBLIC_API_BASE_URL: ${PUBLIC_API_BASE_URL}
         environment:
             NODE_ENV: production
+            PORT: ${PORT:-4173}
         ports:
-            - ${PORT:-4173}:3000
+            - ${PORT:-4173}:${PORT:-4173}
         profiles: [""]
 
     # frontend together with local mock-backend
@@ -19,8 +20,9 @@ services:
                 PUBLIC_API_BASE_URL: http://localhost:3001
         environment:
             NODE_ENV: production
+            PORT: ${PORT:-4173}
         ports:
-            - ${PORT:-4173}:3000
+            - ${PORT:-4173}:${PORT:-4173}
         depends_on:
             - mock-backend
         profiles:
@@ -47,7 +49,8 @@ services:
                 PUBLIC_API_BASE_URL: http://snowballr.informatik.uni-ulm.de:3001
         environment:
             NODE_ENV: production
+            PORT: ${PORT:-4173}
         ports:
-            - ${PORT:-4173}:3000
+            - ${PORT:-4173}:${PORT:-4173}
         profiles:
             - mock-public

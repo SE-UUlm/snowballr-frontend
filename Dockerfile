@@ -53,9 +53,5 @@ COPY package.json .
 # Copy the built application from the build stage into the image.
 COPY --from=build /usr/src/app/build ./build
 
-# Expose the port that the application listens on.
-EXPOSE 3000
-ENV PORT=3000
-
 # Run the application.
 CMD ["node", "build"]
