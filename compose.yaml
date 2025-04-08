@@ -32,7 +32,7 @@ services:
         image: ghcr.io/se-uulm/snowballr-mock-backend:main
         environment:
             ENABLE_DUMMY_ADMIN: "true"
-            EXAMPLE_DATA_FILE_PATH: "standardData.ts"
+            EXAMPLE_DATA_FILE: "standardData.ts"
             GRPC_PORT: 3000
             GRPC_WEB_PORT: 3001
         ports:
