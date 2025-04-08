@@ -13,9 +13,9 @@ _Snowballing_ is a complementary technique in which relevant literature is found
 systematic identification of relevant literature that may have been overlooked in the initial search, and thus improves
 the completeness of the literature search.
 
-| ![Snowballing Procedure](https://github.com/user-attachments/assets/d1b18213-45e5-4177-bc82-d5e29ebb8c19) |
-| :-------------------------------------------------------------------------------------------------------: |
-|                                      _Snowballing Procedure [\[1\]]_                                      |
+| ![Snowballing Procedure](./assets/snowballing.png) |
+| :------------------------------------------------: |
+|          _Snowballing Procedure [\[1\]]_           |
 
 #### Requirements
 
