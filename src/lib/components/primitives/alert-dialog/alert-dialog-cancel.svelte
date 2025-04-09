@@ -3,11 +3,13 @@
     import { buttonVariants } from "$lib/components/primitives/button/index.js";
     import { cn } from "$lib/utils/shadcn-helper.js";
 
+    export type AlertDialogCancelProps = AlertDialogPrimitive.CancelProps;
+
     let {
         ref = $bindable(null),
         class: className,
         ...restProps
-    }: AlertDialogPrimitive.CancelProps = $props();
+    }: AlertDialogCancelProps = $props();
 </script>
 
 <AlertDialogPrimitive.Cancel
