@@ -8,6 +8,7 @@ describe("ProjectMembersListEntry", () => {
         render(ProjectMemberListEntry, {
             target: document.body,
             props: {
+                projectId: "1",
                 member: Members.demoMember1,
                 isCurrentUser: false,
                 isInvitationPending: false,
@@ -23,6 +24,7 @@ describe("ProjectMembersListEntry", () => {
         render(ProjectMemberListEntry, {
             target: document.body,
             props: {
+                projectId: "1",
                 member: Members.demoMember1,
                 isCurrentUser: true,
                 isInvitationPending: false,
@@ -38,6 +40,7 @@ describe("ProjectMembersListEntry", () => {
         render(ProjectMemberListEntry, {
             target: document.body,
             props: {
+                projectId: "1",
                 member: Members.demoMember2,
                 isCurrentUser: false,
                 isInvitationPending: true,
@@ -52,6 +55,7 @@ describe("ProjectMembersListEntry", () => {
         render(ProjectMemberListEntry, {
             target: document.body,
             props: {
+                projectId: "1",
                 member: Members.demoMember1,
                 isCurrentUser: false,
                 isInvitationPending: false,

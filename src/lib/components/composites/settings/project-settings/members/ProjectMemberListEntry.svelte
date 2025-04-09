@@ -3,16 +3,26 @@
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
     import { getName } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
-    import Trash from "lucide-svelte/icons/trash";
+    import RemoveMemberDialog from "./RemoveMemberDialog.svelte";
 
     interface Props {
+        projectId: string;
         member: Project_Member;
         isCurrentUser: boolean;
         isInvitationPending: boolean;
         isAdminView: boolean;
+        onMemberRemoved?: (member: Project_Member) => void;
     }
 
-    let { member, isCurrentUser, isInvitationPending, isAdminView }: Props = $props();
+    let {
+        projectId,
+        member,
+        isCurrentUser,
+        isInvitationPending,
+        isAdminView,
+        onMemberRemoved = undefined,
+    }: Props = $props();
+
     const role = member.role === MemberRole.ADMIN ? "Admin" : "Member";
     const isRoleReadonly = isCurrentUser || !isAdminView;
 </script>
@@ -30,6 +40,7 @@ Usage:
     <ul>
         {#each members as member}
             <ProjectMemberListEntry
+                {projectId}
                 isAdminView={isCurrentUserAdmin}
                 isCurrentUser={member.user!.id === user.id}
                 isInvitationPending={false}
@@ -66,12 +77,7 @@ Usage:
             <span class="flex w-full">Role: {role}</span>
         </Button>
         {#if isAdminView}
-            <Button
-                class="size-10 border border-gray-300 bg-gray-100 hover:bg-gray-200"
-                disabled={isCurrentUser}
-            >
-                <Trash class="!size-6 text-red-500" />
-            </Button>
+            <RemoveMemberDialog {isCurrentUser} {member} {onMemberRemoved} {projectId} />
         {/if}
     </div>
 </li>

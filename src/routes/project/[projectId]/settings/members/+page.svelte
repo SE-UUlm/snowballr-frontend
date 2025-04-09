@@ -3,8 +3,9 @@
     import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
     import ProjectMemberListEntrySkeleton from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
+    import { MemberRole, Project_Member } from "$lib/model/api/project.js";
     import { resource } from "$lib/resource.svelte.js";
-    import { MemberRole } from "$lib/model/api/project.js";
+    import { getName, pluralize } from "$lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
@@ -27,19 +28,22 @@
         },
     );
 
-    async function reloadMembers() {
+    async function reloadMembers(errorMessage: string) {
         // First fetch the members again and only then replace them, so that no loading state is shown
         await loadMembers({ id: projectId })
             .then((members) => {
                 loadingMembersLocal = Promise.resolve(members);
             })
             .catch((error) => {
-                loadingMembersLocal = Promise.reject(error);
+                toast(errorMessage);
+                console.error(`Couldn't reload members: ${error}`);
             });
     }
 
     async function onUsersInvited(invitedUsers: string[]) {
-        await reloadMembers();
+        await reloadMembers(
+            `Couldn't invite ${pluralize(invitedUsers.length, "user", "users")} to the project`,
+        );
         let message = "";
         if (invitedUsers.length === 1) {
             message = `Invited ${invitedUsers[0]} to the project`;
@@ -47,6 +51,12 @@
             message = `Invited ${invitedUsers.length} users to the project`;
         }
         toast(message);
+    }
+
+    async function onMemberRemoved(member: Project_Member) {
+        const name = getName(member.user!);
+        await reloadMembers(`Couldn't remove ${name} from project.`);
+        toast(`Removed ${name} from the project`);
     }
 </script>
 
@@ -89,6 +99,8 @@
                     isCurrentUser={member.user!.id === user.id}
                     isInvitationPending={member.isInvitationPending}
                     {member}
+                    {onMemberRemoved}
+                    {projectId}
                 />
                 {#if i < members.length - 1}
                     <Separator />
