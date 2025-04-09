@@ -23,7 +23,10 @@ describe("ProjectInformation", () => {
         await waitForComponentLoading();
 
         // Project information are shown
-        expect(screen.getByTestId("project-information")).toHaveTextContent("started on 1/1/2020");
+        const dateString = new Date("2020-01-01").toLocaleDateString();
+        expect(screen.getByTestId("project-information")).toHaveTextContent(
+            `started on ${dateString}`,
+        );
         expect(screen.getByTestId("project-information")).toHaveTextContent("in stage 1");
         expect(screen.getByTestId("project-information")).toHaveTextContent("working 3 days");
         expect(screen.getByTestId("project-information")).toHaveTextContent("5 / 10");

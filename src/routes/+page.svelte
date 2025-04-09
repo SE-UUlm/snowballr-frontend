@@ -50,6 +50,6 @@
                 <ProjectListEntrySkeleton />
             {/snippet}
         </NamedList>
-        <CreateProjectDialog />
+        <CreateProjectDialog {user} />
     </section>
 </main>

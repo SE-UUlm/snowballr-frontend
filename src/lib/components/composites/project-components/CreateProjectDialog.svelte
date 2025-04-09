@@ -1,21 +1,24 @@
 <script lang="ts">
     import { CirclePlus, LoaderCircle } from "lucide-svelte";
     import { Button, buttonVariants } from "$lib/components/primitives/button";
-    import * as Dialog from "$lib/components/primitives/dialog";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
-    import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
-    import { onMount } from "svelte";
     import { goto, invalidate } from "$app/navigation";
-    import { getName, getNames } from "$lib/utils/common-helper";
-    import type { ValidationResult } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Nothing } from "$lib/model/api/base";
     import type { User } from "$lib/model/api/user";
-    import { filterUsers } from "$lib/utils/filters";
+    import InviteUsersInput from "../input/InviteUsersInput.svelte";
+    import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
+    import { onMount } from "svelte";
+    import { loadUsers } from "../input/loading-users";
+
+    interface Props {
+        user: User;
+    }
+
+    const { user }: Props = $props();
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -29,102 +32,15 @@
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
-
-    // TODO: check, whether this solution scales as the backend contains hundreds / thousands of users
-    // list of possible members that can be invited
+    let loading = $state(true);
     let initialPossibleMembers: User[] = $state([]);
-    let possibleMembers: User[] = $derived(
-        initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
-    );
-
-    let loadingPossibleMembers = $state(true);
 
     onMount(async () => {
-        try {
-            const currentUser = await backendService.getCurrentUser(Nothing).response;
-            const allUsers = await backendService.getAllUsers(Nothing).response;
-
-            initialPossibleMembers = allUsers.users.filter((user) => user.id !== currentUser.id);
-        } catch (error) {
-            isErrorOnUsersLoading = true;
-            console.error(`Couldn't get users from server (${error})`);
-        }
-        loadingPossibleMembers = false;
+        const result = await loadUsers(user);
+        initialPossibleMembers = result.initialPossibleMembers;
+        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+        loading = false;
     });
-
-    /**
-     * Filters all possible members by checking, whether their name or email contains the search string.
-     *
-     * Furthermore, the filtered list is sorted by the score from the FZF algorithm, i.e.
-     * the members with the best matching name or email are at the beginning of the list (and will
-     * appear at the top of the suggestions list).
-     *
-     * @param input - the content of the input field, i.e. the search string
-     * @returns list of "name \<email\>" (sorted) representations of users that can be invited
-     */
-    function filterPossibleMembers(input: string): string[] {
-        return filterUsers(possibleMembers, input).map(
-            (member) => `${getName(member)} <${member.email}>`,
-        );
-    }
-
-    /**
-     * Checks, whether a given input is a valid name of a registered user or an email.
-     */
-    function validateInput(input: string): ValidationResult {
-        if (!Schema.email.safeParse(input.trim()).success) {
-            const matchingMembers = possibleMembers.filter(
-                (member) => getName(member) === input.trim(),
-            );
-            if (matchingMembers.length === 0) {
-                return { success: false, error: "Please enter a valid name or email." };
-            }
-            if (matchingMembers.length > 1) {
-                return {
-                    success: false,
-                    error: "There are multiple users with this name. Please specify the user.",
-                };
-            }
-        }
-        return { success: true };
-    }
-
-    /**
-     * Maps a valid name to the email of the user.
-     *
-     * If multiple users with the given name exist, the name can not be mapped and a hint is displayed.
-     *
-     * @example The user \{ firstName: "John", lastName: "Doe, email: "john.doe\@example.com", ... \}
-     * is in the list of possible members. Then the input
-     * - "John Doe"
-     * - "john.doe\@example.com"
-     * - "John Doe \<john.doe\@example.com\>"
-     * all are mapped to "john.doe\@example.com"
-     *
-     * @param input - the name, email or combination of name \<email\> of a known user
-     * @returns the corresponding email of the user identified by the given name, email or name + email combination
-     */
-    function mapNameToEmail(input: string): string | undefined {
-        const possibleMatchedUser = possibleMembers.filter(
-            (user) =>
-                getName(user) === input ||
-                user.email === input ||
-                `${getName(user)} <${user.email}>` === input,
-        );
-
-        return possibleMatchedUser !== undefined ? possibleMatchedUser.at(0)?.email : undefined;
-    }
-
-    /**
-     * Get the name of a user identified by its email.
-     *
-     * @param input - the email of the user
-     * @returns the name of the user or undefined, if the no user with the given email was found
-     */
-    function mapEmailToName(input: string): string | undefined {
-        const name = getNames(initialPossibleMembers.filter((user) => input === user.email));
-        return name !== "" ? name : input;
-    }
 
     /**
      * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
@@ -175,7 +91,6 @@
                     .catch((error) => {
                         isErrorOnProjectCreation = true;
                         console.error(`Couldn't invite users to project (${error})`);
-                        /// TODO: add hint in the *Members* page in the settings
                     });
             })
             .catch((error) => {
@@ -186,74 +101,78 @@
     }
 </script>
 
-<Dialog.Root bind:open>
-    <div class="px-5">
-        <!-- need to overwrite svg size in button, as the shadcn default button sets a default size
-                for possible icons -->
-        <Dialog.Trigger
-            class={cn(
+<!--
+@component
+`Dialog` used to create a project by providing a project name and an optional list of initial members.
+
+- `user`: the current, signed in user
+
+Usage:
+```svelte
+    <CreateProjectDialog {user} />
+```
+-->
+<div class="px-5">
+    <Dialog
+        title="Create Project"
+        triggerProps={{
+            class: cn(
+                // Overwrite icon size in button, as the shadcn default button sets a default size for possible icons
                 buttonVariants({ variant: "default" }),
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
-            )}
-            data-testid="dialog-trigger-button"
-            disabled={loadingPossibleMembers}
-        >
+            ),
+            disabled: loading,
+        }}
+        bind:open
+    >
+        {#snippet trigger()}
             <div class="flex flex-row items-center justify-center gap-2.5">
                 <CirclePlus strokeWidth="2.5" />
                 Create Project
             </div>
-        </Dialog.Trigger>
-    </div>
-    <Dialog.Content data-testid="dialog-content">
-        <Dialog.Header>
-            <Dialog.Title>Create Project</Dialog.Title>
-            <Dialog.Description>Start a new SLR and invite other members.</Dialog.Description>
-        </Dialog.Header>
-        <form
-            id="project-creation"
-            class="flex h-full w-full flex-col gap-5 overflow-x-auto"
-            onsubmit={handleSubmit}
-        >
-            <Input
-                bind:this={projectNameInput}
-                class="w-full"
-                data-testid="project-name-input"
-                inputId="project-name-input"
-                label="Name"
-                placeholder="Demo"
-                required={true}
-                schema={Schema.projectName}
-                type="text"
-            />
-
-            <ChipsInput
-                displayItem={mapEmailToName}
-                label="Members"
-                resolveAlias={mapNameToEmail}
-                searchSuggestions={filterPossibleMembers}
-                validate={validateInput}
-                bind:items={membersInput}
-            />
-            {#if isErrorOnUsersLoading}
-                <ErrorAlert errorTitle="Something went wrong while loading possible members." />
+        {/snippet}
+        {#snippet description()}
+            Start a new SLR and invite other members.
+        {/snippet}
+        {#snippet content()}
+            <form
+                id="project-creation"
+                class="flex h-full w-full flex-col gap-5 overflow-x-auto"
+                onsubmit={handleSubmit}
+            >
+                <Input
+                    bind:this={projectNameInput}
+                    class="w-full"
+                    data-testid="project-name-input"
+                    inputId="project-name-input"
+                    label="Name"
+                    placeholder="Demo"
+                    required={true}
+                    schema={Schema.projectName}
+                    type="text"
+                />
+                <InviteUsersInput
+                    {initialPossibleMembers}
+                    {isErrorOnUsersLoading}
+                    bind:membersInput
+                />
+            </form>
+            {#if isErrorOnProjectCreation}
+                <ErrorAlert errorTitle="Something went wrong while creating the project." />
             {/if}
-        </form>
-        {#if isErrorOnProjectCreation}
-            <ErrorAlert errorTitle="Something went wrong while creating the project." />
-        {/if}
-        <Dialog.Footer>
-            <Button onclick={() => (open = false)} variant="outline">Cancel</Button>
-            {#if isServerStillCreatingProject}
-                <Button disabled form="project-creation" type="submit">
+        {/snippet}
+        {#snippet footer()}
+            <Button disabled={isServerStillCreatingProject} form="project-creation" type="submit">
+                {#if isServerStillCreatingProject}
                     <LoaderCircle class="animate-spin" />
                     Creating Project
-                </Button>
-            {:else}
-                <Button form="project-creation" type="submit">Create Project</Button>
-            {/if}
-        </Dialog.Footer>
-    </Dialog.Content>
-</Dialog.Root>
+                {:else}
+                    Create Project
+                {/if}
+            </Button>
+        {/snippet}
+    </Dialog>
+</div>
 
 <AlertDialog.Root open={projectWasCreated}>
     <AlertDialog.Content>
@@ -274,7 +193,6 @@
                     membersInput = [];
 
                     // trigger reload of the homepage, so the created project is shown in the projects list
-                    // window.location.reload();
                     invalidate("data:allProjectsForUser");
                 }}
             >

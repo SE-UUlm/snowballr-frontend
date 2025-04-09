@@ -1,11 +1,12 @@
 import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
-import TestProjectSettingslayout from "./TestProjectSettingslayout.svelte";
+import TestProjectSettingsLayout from "./TestProjectSettingsLayout.svelte";
 
 describe("ProjectSettingsLayout", () => {
     it("When all props are provided, then component is displayed correctly", () => {
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId: "1",
                 selectedTab: "general",
@@ -24,6 +25,7 @@ describe("ProjectSettingsLayout", () => {
 
     it("When tab is selected, then selected tab is highlighted", () => {
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId: "1",
                 selectedTab: "review",
@@ -46,7 +48,7 @@ describe("ProjectSettingsLayout", () => {
     });
 
     it("When children are passed, then children are displayed", () => {
-        render(TestProjectSettingslayout);
+        render(TestProjectSettingsLayout);
 
         expect(screen.getByText("This is a test!")).toBeInTheDocument();
     });
@@ -55,6 +57,7 @@ describe("ProjectSettingsLayout", () => {
         const projectId = "1";
 
         render(ProjectSettingsLayout, {
+            target: document.body,
             props: {
                 projectId,
                 selectedTab: "general",

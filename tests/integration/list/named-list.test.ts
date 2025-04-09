@@ -1,7 +1,8 @@
 import { expect, test, describe, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
 import NamedList from "$lib/components/composites/list/NamedList.svelte";
 import { createRawSnippet } from "svelte";
+import { waitForComponentLoading } from "../test-helper";
 
 const listItemSkeleton = createRawSnippet(() => {
     return { render: () => `<Skeleton class="h-5 w-20 rounded-full" data-testid="skeleton" />` };
@@ -28,8 +29,8 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 keySelector: deterministicKeySelector,
             },
@@ -38,13 +39,10 @@ describe("NamedListComponent", () => {
         // List title is shown
         expect(screen.getByText("Test List")).toBeInTheDocument();
 
-        await waitFor(
-            () => {
-                // 15 list items are displayed
-                expect(screen.queryAllByTestId("example-list-item").length).toBe(15);
-            },
-            { timeout: 250 },
-        );
+        await waitForComponentLoading();
+
+        // 15 list items are displayed
+        expect(screen.queryAllByTestId("example-list-item").length).toBe(15);
     });
 
     test("When the number of items should be shown, then the name of the list is extended by the number of list items.", async () => {
@@ -56,21 +54,18 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
                 keySelector: deterministicKeySelector,
             },
         });
 
-        await waitFor(
-            () => {
-                // List title is shown
-                expect(screen.getByText("Test List (5)")).toBeInTheDocument();
-            },
-            { timeout: 250 },
-        );
+        await waitForComponentLoading();
+
+        // List title is shown
+        expect(screen.getByText("Test List (5)")).toBeInTheDocument();
     });
 
     test("When the number of items should be shown and is given explicitly, then the name of the list is extended by the given number of list items.", async () => {
@@ -82,8 +77,8 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
                 numberOfItems: 10,
@@ -91,13 +86,10 @@ describe("NamedListComponent", () => {
             },
         });
 
-        await waitFor(
-            () => {
-                // List title is shown
-                expect(screen.getByText("Test List (10)")).toBeInTheDocument();
-            },
-            { timeout: 250 },
-        );
+        await waitForComponentLoading();
+
+        // List title is shown
+        expect(screen.getByText("Test List (10)")).toBeInTheDocument();
     });
 
     test("When the list is loading, then skeleton elements are shown", async () => {
@@ -109,8 +101,8 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 5,
                 keySelector: deterministicKeySelector,
             },
@@ -129,8 +121,8 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 keySelector: deterministicKeySelector,
             },
@@ -141,20 +133,17 @@ describe("NamedListComponent", () => {
 
         unmount();
 
-        await waitFor(
-            () => {
-                // 0 list items are displayed
-                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
-            },
-            { timeout: 250 },
-        );
+        await waitForComponentLoading();
+
+        // 0 list items are displayed
+        expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
 
         render(NamedList, {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 emptyHint: "Test hint for empty list",
                 keySelector: deterministicKeySelector,
@@ -164,14 +153,11 @@ describe("NamedListComponent", () => {
         // List title is shown
         expect(screen.getByText("Test List")).toBeInTheDocument();
 
-        await waitFor(
-            () => {
-                // 0 list items are displayed
-                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
-                expect(screen.getByText("Test hint for empty list")).toBeInTheDocument();
-            },
-            { timeout: 250 },
-        );
+        await waitForComponentLoading();
+
+        // 0 list items are displayed
+        expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
+        expect(screen.getByText("Test hint for empty list")).toBeInTheDocument();
     });
 
     test("When the list item couldn't be loaded, then the error message is shown", async () => {
@@ -185,21 +171,18 @@ describe("NamedListComponent", () => {
             props: {
                 listName: "Test List",
                 items: componentData,
-                listItemComponent: listItemComponent,
-                listItemSkeleton: listItemSkeleton,
+                listItemComponent,
+                listItemSkeleton,
                 numberOfSkeletons: 10,
                 keySelector: deterministicKeySelector,
             },
         });
 
-        await waitFor(
-            () => {
-                expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
-                expect(screen.queryAllByTestId("skeleton").length).toBe(0);
+        await waitForComponentLoading();
 
-                expect(screen.getByText("Error: Test Error"));
-            },
-            { timeout: 250 },
-        );
+        expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
+        expect(screen.queryAllByTestId("skeleton").length).toBe(0);
+
+        expect(screen.getByText("Error: Test Error"));
     });
 });
