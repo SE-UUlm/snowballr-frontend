@@ -57,7 +57,6 @@ jobs:
                       type=semver,pattern={{major}},enable=${{ github.ref_type == 'tag' }}
                       type=raw,value=latest-dev,enable=${{ github.ref_name == 'develop' }}
                       type=raw,value=latest,enable=${{ github.ref_name == 'main' }}
-                      type=ref,event=branch,enable=${{ github.ref_type == 'branch' }}
                   flavor: |
                       latest=false
 
@@ -79,6 +78,7 @@ jobs:
                   push-to-registry: true
 
     deploy-frontend:
+        name: Deploy Frontend
         if: github.ref_name == 'develop' && github.ref_type == 'branch'
         runs-on: ubuntu-latest
         needs: build-and-publish-docker-image

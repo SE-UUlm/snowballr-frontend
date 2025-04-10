@@ -13,11 +13,6 @@ WORKDIR /usr/src/app
 # Create a stage for installing production dependencies.
 FROM base AS build
 
-# Build arguments
-ARG PUBLIC_API_BASE_URL
-
-ENV PUBLIC_API_BASE_URL=$PUBLIC_API_BASE_URL
-
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage bind mounts to package.json and package-lock.json to avoid having to copy them
@@ -31,8 +26,9 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 COPY . .
 # Build gRPC API
 RUN npm run compile:proto
-# Copy static env variables into an .env file, so that the app can be built.
-RUN printenv | sed -n '/^PUBLIC_API_BASE_URL=/p;' > .env
+# We need to pass a sample base API URL so that the server can be built.
+# The actual variable will be passed at runtime.
+RUN echo 'PUBLIC_API_BASE_URL=http://localhost:8080' > .env
 # Run the build script.
 RUN npm run build
 
@@ -44,6 +40,9 @@ FROM base AS final
 # Use production node environment by default.
 ENV NODE_ENV=production
 
+# Copy env variables to file so that it can be read by svelte
+RUN printenv | sed -n '/^PUBLIC_API_BASE_URL=/p;' > .env
+
 # Run the application as a non-root user.
 USER node
 
@@ -54,4 +53,4 @@ COPY package.json .
 COPY --from=build /usr/src/app/build ./build
 
 # Run the application.
-CMD ["node", "build"]
+CMD ["node", "--env-file=.env", "build"]
