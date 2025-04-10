@@ -131,7 +131,7 @@ Usage:
     <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
     <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>
-<main class="flex h-full w-full flex-col gap-5 px-2 py-4">
+<main class="flex h-full w-full flex-col gap-5 px-5">
     <div class="flex h-full w-full flex-row gap-5">
         <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
