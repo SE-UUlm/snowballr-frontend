@@ -52,7 +52,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -88,7 +88,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(createPaper()),
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -161,7 +161,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(createPaper()),
                 allowEditModeToggle: false,
                 startInEditMode: false,
             },

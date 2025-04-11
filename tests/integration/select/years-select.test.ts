@@ -1,4 +1,5 @@
 import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
+import { errorLoading, loading } from "$tests/model-builder";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -17,7 +18,7 @@ describe("YearsSelect", () => {
         render(YearsSelect, {
             target: document.body,
             props: {
-                loadingYears: Promise.resolve<number[]>([-1, 2025]),
+                loadingYears: loading([-1, 2025]),
                 selectedYears: [],
             },
         });
@@ -31,7 +32,7 @@ describe("YearsSelect", () => {
         render(YearsSelect, {
             target: document.body,
             props: {
-                loadingYears: Promise.reject("Error"),
+                loadingYears: errorLoading("Error"),
                 selectedYears: [],
             },
         });

@@ -4,7 +4,7 @@ import PaperNavigationButton from "$lib/components/composites/paper-components/p
 import userEvent from "@testing-library/user-event";
 
 describe("PaperNavigationButton", () => {
-    test("When button has direction 'left', then aria-lable and tooltip is 'Previous Paper'", async () => {
+    test("When button has direction 'left', then aria-label and tooltip is 'Previous Paper'", async () => {
         render(PaperNavigationButton, {
             target: document.body,
             props: {
@@ -27,7 +27,7 @@ describe("PaperNavigationButton", () => {
         expect(tooltip).toBeInTheDocument();
     });
 
-    test("When button has direction 'right', then aria-lable and tooltip is 'Next Paper'", async () => {
+    test("When button has direction 'right', then aria-label and tooltip is 'Next Paper'", async () => {
         render(PaperNavigationButton, {
             target: document.body,
             props: {

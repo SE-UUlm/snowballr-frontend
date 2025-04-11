@@ -1,9 +1,9 @@
 import ReviewersSelect from "$lib/components/composites/select/ReviewersSelect.svelte";
-import { type User } from "$lib/model/api/user";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Users } from "../../example-data";
+import { errorLoading, loading } from "$tests/model-builder";
 
 describe("ReviewersSelect", () => {
     beforeEach(() => {
@@ -19,7 +19,7 @@ describe("ReviewersSelect", () => {
         render(ReviewersSelect, {
             target: document.body,
             props: {
-                loadingReviewers: Promise.resolve<User[]>([Users.johnDoe, Users.janeDoe]),
+                loadingReviewers: loading([Users.johnDoe, Users.janeDoe]),
                 selectedReviewers: [],
             },
         });
@@ -33,7 +33,7 @@ describe("ReviewersSelect", () => {
         render(ReviewersSelect, {
             target: document.body,
             props: {
-                loadingReviewers: Promise.reject("Error"),
+                loadingReviewers: errorLoading("Error"),
                 selectedReviewers: [],
             },
         });

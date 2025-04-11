@@ -1,4 +1,5 @@
 import PublishersSelect from "$lib/components/composites/select/PublishersSelect.svelte";
+import { errorLoading, loading } from "$tests/model-builder";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -17,7 +18,7 @@ describe("PublishersSelect", () => {
         render(PublishersSelect, {
             target: document.body,
             props: {
-                loadingPublishers: Promise.resolve<string[]>(["Publisher 1", "Publisher 2"]),
+                loadingPublishers: loading(["Publisher 1", "Publisher 2"]),
                 selectedPublishers: [],
             },
         });
@@ -31,7 +32,7 @@ describe("PublishersSelect", () => {
         render(PublishersSelect, {
             target: document.body,
             props: {
-                loadingPublishers: Promise.reject("Error"),
+                loadingPublishers: errorLoading("Error"),
                 selectedPublishers: [],
             },
         });

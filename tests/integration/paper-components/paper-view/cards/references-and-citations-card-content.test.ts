@@ -4,14 +4,15 @@ import { describe, expect, test } from "vitest";
 import { Papers } from "../../../../example-data";
 import { waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
+import { errorLoading, loading } from "$tests/model-builder";
 
 describe("ReferencesAndCitationsCardContent", () => {
     test("When props are provided, then component is shown", async () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                backwardReferencedPapers: Promise.resolve([Papers.demoPaper1]),
-                forwardReferencedPapers: Promise.resolve([Papers.demoPaper2]),
+                backwardReferencedPapers: loading([Papers.demoPaper1]),
+                forwardReferencedPapers: loading([Papers.demoPaper2]),
             },
         });
 
@@ -36,8 +37,8 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                backwardReferencedPapers: Promise.resolve([Papers.demoPaper1, Papers.demoPaper2]),
-                forwardReferencedPapers: Promise.resolve([]),
+                backwardReferencedPapers: loading([Papers.demoPaper1, Papers.demoPaper2]),
+                forwardReferencedPapers: loading([]),
             },
         });
 
@@ -58,8 +59,8 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                backwardReferencedPapers: Promise.resolve([]),
-                forwardReferencedPapers: Promise.resolve([Papers.demoPaper1, Papers.demoPaper2]),
+                backwardReferencedPapers: loading([]),
+                forwardReferencedPapers: loading([Papers.demoPaper1, Papers.demoPaper2]),
             },
         });
 
@@ -79,8 +80,8 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                backwardReferencedPapers: Promise.resolve([]),
-                forwardReferencedPapers: Promise.resolve([]),
+                backwardReferencedPapers: loading([]),
+                forwardReferencedPapers: loading([]),
             },
         });
 
@@ -96,8 +97,8 @@ describe("ReferencesAndCitationsCardContent", () => {
         render(ReferencesAndCitationsCardContent, {
             target: document.body,
             props: {
-                backwardReferencedPapers: Promise.reject("error"),
-                forwardReferencedPapers: Promise.reject("error"),
+                backwardReferencedPapers: errorLoading("error"),
+                forwardReferencedPapers: errorLoading("error"),
             },
         });
 

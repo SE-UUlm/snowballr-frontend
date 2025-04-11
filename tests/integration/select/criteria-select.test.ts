@@ -1,9 +1,9 @@
 import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
-import { Criterion } from "$lib/model/api/criterion";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Criteria } from "../../example-data";
+import { errorLoading, loading } from "$tests/model-builder";
 
 describe("CriteriaSelect", () => {
     beforeEach(() => {
@@ -19,10 +19,7 @@ describe("CriteriaSelect", () => {
         render(CriteriaSelect, {
             target: document.body,
             props: {
-                loadingCriteria: Promise.resolve<Criterion[]>([
-                    Criteria.demoCriterion1,
-                    Criteria.demoCriterion2,
-                ]),
+                loadingCriteria: loading([Criteria.demoCriterion1, Criteria.demoCriterion2]),
                 selectedCriteria: [],
             },
         });
@@ -36,7 +33,7 @@ describe("CriteriaSelect", () => {
         render(CriteriaSelect, {
             target: document.body,
             props: {
-                loadingCriteria: Promise.reject("Error"),
+                loadingCriteria: errorLoading("Error"),
                 selectedCriteria: [],
             },
         });

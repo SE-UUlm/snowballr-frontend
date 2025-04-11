@@ -1,7 +1,7 @@
 import { expect, test, describe } from "vitest";
 import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createUser } from "../../model-builder";
+import { createUser, loading } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
 
 describe("SimpleNavigationBar", () => {
@@ -14,7 +14,7 @@ describe("SimpleNavigationBar", () => {
                     lastName: "Doe",
                 }),
                 backRef: "/",
-                loadingTitle: Promise.resolve("Simple Navigation Bar"),
+                loadingTitle: loading("Simple Navigation Bar"),
             },
         });
 

@@ -4,6 +4,7 @@ import InviteUsersDialog from "$lib/components/composites/settings/project-setti
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
+import { errorLoading, loading } from "$tests/model-builder";
 
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
@@ -23,7 +24,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.resolve([]),
+                loadingMembers: loading([]),
             },
         });
 
@@ -37,7 +38,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.resolve([]),
+                loadingMembers: loading([]),
             },
         });
 
@@ -64,7 +65,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.resolve([]),
+                loadingMembers: loading([]),
                 onUsersInvited: (users: string[]) => {
                     invitedUsers = users;
                 },
@@ -93,7 +94,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.resolve([]),
+                loadingMembers: loading([]),
             },
         });
 
@@ -121,7 +122,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.resolve([]),
+                loadingMembers: loading([]),
             },
         });
 
@@ -141,7 +142,7 @@ describe("InviteUsersDialog", () => {
             props: {
                 user: Users.johnDoe,
                 projectId: "1",
-                loadingMembers: Promise.reject(new Error("Failed to load members")),
+                loadingMembers: errorLoading("Failed to load members"),
             },
         });
 

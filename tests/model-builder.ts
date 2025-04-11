@@ -17,6 +17,36 @@ import type { Review } from "$lib/model/api/review";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
 
+/**
+ * Simulates a loading state for a given value.
+ *
+ * @param value - The value to be resolved after the timeout.
+ * @param timeoutInMs - The timeout duration in milliseconds. Default is 0.
+ * @returns A promise that resolves to the given value after the specified timeout.
+ */
+export function loading<T>(value: T, timeoutInMs: number = 0): Promise<T> {
+    return new Promise<T>((resolve) => {
+        setTimeout(() => {
+            resolve(value);
+        }, timeoutInMs);
+    });
+}
+
+/**
+ * Simulates an error loading state for a given error.
+ *
+ * @param errorMessage - The error message to be rejected with.
+ * @param timeoutInMs - The timeout duration in milliseconds. Default is 0.
+ * @returns A promise that rejects with the given error after the specified timeout.
+ */
+export function errorLoading(errorMessage: string, timeoutInMs: number = 0): Promise<never> {
+    return new Promise<never>((_, reject) => {
+        setTimeout(() => {
+            reject(new Error(errorMessage));
+        }, timeoutInMs);
+    });
+}
+
 export function createUser(user: Partial<User> = {}): User {
     return {
         ...Users.johnDoe,
@@ -76,22 +106,14 @@ export function createCriterion(criterion: Partial<Criterion> = {}): Criterion {
     };
 }
 
-export function loading<T>(value: T, timeoutInMs: number = 0): Promise<T> {
-    return new Promise<T>((resolve) => {
-        setTimeout(() => {
-            resolve(value);
-        }, timeoutInMs);
-    });
-}
-
 export function createProjectPaperViewProps(
     props: Partial<ProjectPaperViewProps> = {},
 ): ProjectPaperViewProps {
     return {
         loadingPaper: loading(createProjectPaper()),
         loadingProject: loading(createProject()),
-        reviewers: Promise.resolve([]),
-        criteriaWithReviews: Promise.resolve([]),
+        reviewers: loading([]),
+        criteriaWithReviews: loading([]),
         ...props,
     };
 }
@@ -124,15 +146,15 @@ export function createPaperViewProps(
 ): PaperViewProps {
     return {
         user: createUser(),
-        backwardReferencedPapers: Promise.resolve([]),
-        forwardReferencedPapers: Promise.resolve([]),
+        backwardReferencedPapers: loading([]),
+        forwardReferencedPapers: loading([]),
         showButtonBar: false,
         backRef: "",
         ...(dependentProps ?? {
             loadingPaper: loading(createProjectPaper()),
             loadingProject: loading(createProject()),
-            reviewers: Promise.resolve([]),
-            criteriaWithReviews: Promise.resolve([]),
+            reviewers: loading([]),
+            criteriaWithReviews: loading([]),
             isProjectPaperView: true,
         }),
         ...props,

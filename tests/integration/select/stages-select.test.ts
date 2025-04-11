@@ -1,4 +1,5 @@
 import StagesSelect from "$lib/components/composites/select/StagesSelect.svelte";
+import { errorLoading, loading } from "$tests/model-builder";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -17,7 +18,7 @@ describe("StagesSelect", () => {
         render(StagesSelect, {
             target: document.body,
             props: {
-                loadingStageCount: Promise.resolve<bigint>(2n),
+                loadingStageCount: loading(2n),
                 selectedStages: [],
             },
         });
@@ -31,7 +32,7 @@ describe("StagesSelect", () => {
         render(StagesSelect, {
             target: document.body,
             props: {
-                loadingStageCount: Promise.reject("Error"),
+                loadingStageCount: errorLoading("Error"),
                 selectedStages: [],
             },
         });

@@ -1,7 +1,7 @@
 import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createReviewedCriterion, loading } from "../../model-builder";
+import { createReviewedCriterion, errorLoading, loading } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
 
 describe("CriteriaList", () => {
@@ -48,7 +48,7 @@ describe("CriteriaList", () => {
             props: {
                 listTitle: "Hard Exclusion",
                 reviewers: loading([]),
-                criteria: Promise.reject(),
+                criteria: errorLoading("Couldn't load criteria"),
                 emptyHint: "",
             },
         });

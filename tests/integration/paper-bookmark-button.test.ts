@@ -2,13 +2,14 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
 import userEvent from "@testing-library/user-event";
+import { loading } from "$tests/model-builder";
 
 describe("PaperBookmarkButton", () => {
     test("When paper is not bookmarked, then bookmark button has 'Add to reading list' tooltip", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                loadingPaperId: loading("1"),
                 isBookmarkedDefault: false,
             },
         });
@@ -22,7 +23,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                loadingPaperId: loading("1"),
                 isBookmarkedDefault: true,
             },
         });
@@ -37,7 +38,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                loadingPaperId: loading("1"),
                 isBookmarkedDefault: false,
             },
         });
@@ -59,7 +60,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                loadingPaperId: loading("1"),
                 isBookmarkedDefault: true,
             },
         });
