@@ -1,8 +1,7 @@
 <script lang="ts">
-    import Button from "$lib/components/primitives/button/button.svelte";
-    import { MemberRole, type Project_Member } from "$lib/model/api/project";
+    import { type Project_Member } from "$lib/model/api/project";
     import { getName } from "$lib/utils/common-helper";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import PromoteMemberDialog from "./PromoteMemberDialog.svelte";
     import RemoveMemberDialog from "./RemoveMemberDialog.svelte";
 
     interface Props {
@@ -12,6 +11,7 @@
         isInvitationPending: boolean;
         isAdminView: boolean;
         onMemberRemoved?: (member: Project_Member) => void;
+        onMemberPromoted?: (member: Project_Member) => void;
     }
 
     let {
@@ -21,10 +21,8 @@
         isInvitationPending,
         isAdminView,
         onMemberRemoved = undefined,
+        onMemberPromoted = undefined,
     }: Props = $props();
-
-    const role = member.role === MemberRole.ADMIN ? "Admin" : "Member";
-    const isRoleReadonly = $derived(isCurrentUser || !isAdminView);
 </script>
 
 <!--
@@ -64,18 +62,13 @@ Usage:
         {#if isInvitationPending}
             <span class="text-hint">Invitation Pending ...</span>
         {/if}
-        <Button
-            class={cn(
-                "w-[7.7rem]",
-                isRoleReadonly
-                    ? "hover:cursor-default hover:bg-transparent"
-                    : "border border-gray-300 bg-gray-100 hover:bg-gray-200",
-            )}
-            variant={isRoleReadonly ? "ghost" : "secondary"}
-        >
-            <!-- Take maximum space so that text is left aligned -->
-            <span class="flex w-full">Role: {role}</span>
-        </Button>
+        <PromoteMemberDialog
+            {isAdminView}
+            {isCurrentUser}
+            {member}
+            {onMemberPromoted}
+            {projectId}
+        />
         {#if isAdminView}
             <RemoveMemberDialog {isCurrentUser} {member} {onMemberRemoved} {projectId} />
         {/if}

@@ -75,6 +75,12 @@
         await reloadMembers(`Couldn't remove ${name} from project.`);
         toast(`Removed ${name} from the project`);
     }
+
+    async function onMemberPromoted(member: Project_Member) {
+        const name = getName(member.user!);
+        await reloadMembers(`Couldn't promote ${name} to an Admin`);
+        toast(`Promoted ${name} to an Admin`);
+    }
 </script>
 
 <svelte:head>
@@ -111,6 +117,7 @@
                     isCurrentUser={member.user!.id === user.id}
                     isInvitationPending={member.isInvitationPending}
                     {member}
+                    {onMemberPromoted}
                     {onMemberRemoved}
                     {projectId}
                 />
