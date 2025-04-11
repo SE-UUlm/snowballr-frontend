@@ -27,6 +27,7 @@
     let loadingUsers = $state(true);
     let isErrorOnUsersLoading = $state(false);
     let initialPossibleMembers: User[] = $state([]);
+    let actionButtonDisabled = $derived(loading || membersInput.length === 0);
 
     onMount(async () => {
         const result = await loadingMembers
@@ -106,15 +107,15 @@ Usage:
         <Button
             class="w-32"
             data-testid="invite-users-button"
-            disabled={loading}
+            disabled={actionButtonDisabled}
             form="invite-users"
             type="submit"
         >
             {#if loading}
                 <LoaderCircle class="animate-spin" />
-                Inviting Users
+                Sending Invitations
             {:else}
-                Invite Users
+                Send Invitations
             {/if}
         </Button>
     {/snippet}
