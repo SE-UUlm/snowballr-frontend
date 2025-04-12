@@ -2,7 +2,7 @@
     import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
 
     const { data, children } = $props();
-    const { user } = data;
+    const { user } = $derived(data);
 </script>
 
 <SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Settings")} {user} />

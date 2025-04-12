@@ -17,7 +17,10 @@
     const { user, reviewDecision, size = "default", showUsernameOnHover = true }: Props = $props();
 
     const getInitial = (text: string) => (text.length > 0 ? text[0].toUpperCase() : "");
-    const userInitials = `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`;
+    const userInitials = $derived(
+        `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`,
+    );
+
     const style =
         size === "default"
             ? {
