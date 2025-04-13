@@ -1,4 +1,6 @@
 import { test as base } from "@playwright/test";
+import { SnowballRClient } from "$lib/model/api/main.client";
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 
 export type TestOptions = {
     mockBackendUrl: string;
@@ -33,4 +35,15 @@ export const test = base.extend<{ forEachTest: void } & TestOptions>({
         },
         { auto: true },
     ],
+});
+
+export const setup = base.extend<{ mockBackendService: SnowballRClient } & TestOptions>({
+    mockBackendUrl: ["http://localhost:3001", { option: true }],
+    mockBackendService: async ({ mockBackendUrl }, use) => {
+        const transport = new GrpcWebFetchTransport({
+            baseUrl: mockBackendUrl,
+        });
+        const mockBackendService = new SnowballRClient(transport);
+        await use(mockBackendService);
+    },
 });
