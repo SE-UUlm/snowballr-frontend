@@ -124,10 +124,10 @@ end-to-end tests and getting feedback on them more quickly.
 
 #### Requirements
 
-The E2E tests require a mock-backend to be running for each supported browser (Chromium, Firefox, and WebKit).
-These mock-backends simulate the backend responses.
+The E2E tests require a mock backend to be running for each supported browser (Chromium, Firefox, and WebKit).
+These mock backends simulate the backend responses.
 
-To manually start all necessary mock-backends, you can use the provided script, which will start one instance per
+To manually start all necessary mock backends, you can use the provided script, which will start one instance per
 browser if you provide the three ports:
 
 ```bash
@@ -147,8 +147,8 @@ using the following environment variables:
 
 1. **Use the test fixture**:
    Instead of importing the `test` fixture directly from "@playwright/test" directly,
-   use the `test` variable exported from `fixtures/general-fixture.ts`.
-   This ensures that the API calls to the mock-backend are automatically redirected to the correct mock-backend
+   use the `test` variable exported from [`fixtures/general-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/fixtures/general-fixture.ts).
+   This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
    based on the browser the test is running in.
 
    In general, it makes sense to create an own fixture, if you want to use an object in multiple tests or
@@ -156,8 +156,8 @@ using the following environment variables:
 
 2. **Use Page Object Models (POMs)**:
    To make tests more maintainable and readable, use page object models (pom) to encapsulate UI logic.
-   For example, the `pom/create-project-dialog-model.ts` file wraps a page with custom selectors and
-   helper functions for the `CreateProjectDialog` component,
+   For example, the [`pom/create-project-dialog-model.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/pom/create-project-dialog-model.ts)
+   file wraps a page with custom selectors and helper functions for the `CreateProjectDialog` component,
    improving clarity and reusability across tests. In particular, these _pom_s can be wrapped in a fixture
    so that they can be accessed directly in each test without having to create a separate \_pom_ in each test.
 
