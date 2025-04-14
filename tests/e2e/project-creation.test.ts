@@ -11,7 +11,6 @@ test.describe("Creating a new project", () => {
     test.afterAll(async ({ mockBackendService }) => {
         mockBackendService.softDeleteProject({ id: "0" });
         mockBackendService.softDeleteProject({ id: "1" });
-        mockBackendService.softDeleteProject({ id: "2" });
     });
 
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({
