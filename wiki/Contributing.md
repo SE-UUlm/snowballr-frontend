@@ -38,14 +38,15 @@ to run the test and open the generated coverage report.
 To use test data in the tests, you can either use the
 [example data](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/example-data.ts) or the
 [model builder](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/model-builder.ts).
-In general, it makes sense to use the model builder to create test data, as it is more flexible and easier to use. Note
-that you should never expect that the example data never changes, so it is better to use the model builder and overwrite
-the values you need.
+In general, it makes sense to use the model builder to create test data, as it is more flexible and easier to use.
+
+> **Note**: Do not expect that the example data never changes, so it is better to use the model builder and overwrite
+> the values you need.
 
 ### Conventions
 
-- For single test cases, we use the when-then pattern, e.g. `test("When ..., Then ...", () => { ... })`. This makes it
-  easier to understand what the test is about.
+- For single test cases, we use the _when-then_ pattern, e.g. `test("When ..., then ...", () => { ... })`. This makes it
+  easier to understand what the test is about and what happens under what conditions.
 - We use the `describe` function to group tests that belong together, e.g. a function
   (`describe("foo()", () => { ... })`) or a component (`describe("MyComponent", () => { ... })`).
 
@@ -103,20 +104,64 @@ instead of classes or text content.
 
 ### End-to-End Tests
 
-End-to-end tests are used to test the functionality of the app as a whole. They are located in the
-[tests/e2e](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e) directory. Run them with:
+End-to-End (E2E) tests verify the full functionality of the application in a realistic browser environment.
+In this project, we use [Playwright](https://playwright.dev/) to implement and run E2E tests.
+The tests are located in the [tests/e2e](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e) directory
+and can be run with:
 
 ```bash
 npm run test:e2e
 ```
 
-Additionally, you can configure the E2E tests by setting the following process environment variables:
+To only execute the tests related to changes (compared to the `develop` branch), run:
+
+```bash
+npm run test:e2e:fast
+```
+
+As running the entire end-to-end test suite can take some time, this can be useful for testing new
+end-to-end tests and getting feedback on them more quickly.
+
+#### Requirements
+
+The E2E tests require a mock backend to be running for each supported browser (Chromium, Firefox, and WebKit).
+These mock backends simulate the backend responses.
+
+To manually start all necessary mock backends, you can use the provided script, which will start one instance per
+browser if you provide the three ports:
+
+```bash
+bash ./scripts/start_mock_backend.sh -c 3001 3002 3003
+```
+
+Each browser uses a different port for its mock backend. You can override the default ports
+using the following environment variables:
 
 | Variable                                     | Default (if the variable is not set) | Description                                                                            |
 | -------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- |
 | `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` | 3002                                 | The port that the mock backend will listen on for E2E testing of the chromium browser. |
 | `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX`  | 3003                                 | The port that the mock backend will listen on for E2E testing of the firefox browser.  |
 | `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT`   | 3004                                 | The port that the mock backend will listen on for E2E testing of the webkit browser.   |
+
+#### Best Practices
+
+1. **Use the test fixture**:
+   Instead of importing the `test` fixture directly from "@playwright/test" directly,
+   use the `test` variable exported from [`fixtures/general-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/fixtures/general-fixture.ts).
+   This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
+   based on the browser the test is running in.
+
+   In general, it makes sense to create an own fixture, if you want to use an object in multiple tests or
+   run a certain function before / after each test.
+
+2. **Use Page Object Models (POMs)**:
+   To make tests more maintainable and readable, use page object models (pom) to encapsulate UI logic.
+   For example, the [`pom/create-project-dialog-model.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/pom/create-project-dialog-model.ts)
+   file wraps a page with custom selectors and helper functions for the `CreateProjectDialog` component,
+   improving clarity and reusability across tests. In particular, these _pom_s can be wrapped in a fixture
+   so that they can be accessed directly in each test without having to create a separate \_pom_ in each test.
+
+For more advanced usage and documentation, refer to the official [Playwright documentation](https://playwright.dev/).
 
 ## Lighthouse
 

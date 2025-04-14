@@ -1,6 +1,6 @@
-import { test as setup } from "./fixtures/general-fixture";
+import { test as globalSetup } from "./fixtures/general-fixture";
 
-setup("Register user in the mock backend", async ({ page }) => {
+globalSetup("Register user in the mock backend", async ({ page }) => {
     await page.goto("/signup");
     await page.getByLabel("First Name").fill("Alice");
     await page.getByLabel("Last Name").fill("Smith");

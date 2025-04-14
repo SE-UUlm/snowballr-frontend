@@ -8,6 +8,11 @@ test.describe("Creating a new project", () => {
         await page.goto("/");
     });
 
+    test.afterAll(async ({ mockBackendService }) => {
+        mockBackendService.softDeleteProject({ id: "0" });
+        mockBackendService.softDeleteProject({ id: "1" });
+    });
+
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({
         page,
     }) => {

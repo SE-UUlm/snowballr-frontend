@@ -1,4 +1,6 @@
-import { test as base } from "@playwright/test";
+import { mergeTests, test as base } from "@playwright/test";
+import { SnowballRClient } from "$lib/model/api/main.client";
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 
 export type TestOptions = {
     mockBackendUrl: string;
@@ -19,7 +21,7 @@ export type TestOptions = {
  * and expect that only the test itself modifies the state. To avoid interference between tests, each browser is assigned
  * separate backend instance.
  */
-export const test = base.extend<{ forEachTest: void } & TestOptions>({
+export const defaultTest = base.extend<{ forEachTest: void } & TestOptions>({
     mockBackendUrl: ["http://localhost:3001", { option: true }],
     forEachTest: [
         async ({ page, mockBackendUrl }, use) => {
@@ -34,3 +36,25 @@ export const test = base.extend<{ forEachTest: void } & TestOptions>({
         { auto: true },
     ],
 });
+
+/**
+ * Extends the default test fixture with an additional gRPC client instance,
+ * unique for each browser.
+ *
+ * This gRPC client allows to directly send requests to the corresponding
+ * mock backend before / after (or during) the end-to-end test.
+ */
+export const mockBackendServiceTest = base.extend<
+    { mockBackendService: SnowballRClient } & TestOptions
+>({
+    mockBackendUrl: ["http://localhost:3001", { option: true }],
+    mockBackendService: async ({ mockBackendUrl }, use) => {
+        const transport = new GrpcWebFetchTransport({
+            baseUrl: mockBackendUrl,
+        });
+        const mockBackendService = new SnowballRClient(transport);
+        await use(mockBackendService);
+    },
+});
+
+export const test = mergeTests(defaultTest, mockBackendServiceTest);
