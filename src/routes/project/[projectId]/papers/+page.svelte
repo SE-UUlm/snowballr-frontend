@@ -152,8 +152,9 @@
         </div>
     </div>
     {#if loadingPaper && selectedPaper}
-        <div
+        <aside
             class="h-full w-[65%] min-w-75"
+            data-testid="paper-details-card"
             onClickedOutsideOrEscape={() => {
                 selectedPaper = undefined;
             }}
@@ -181,6 +182,6 @@
                     </a>
                 </div>
             </Card.Root>
-        </div>
+        </aside>
     {/if}
 </main>
