@@ -33,7 +33,7 @@ export const defaultTest = base.extend<{ forEachTest: void } & TestOptions>({
 
             await use();
         },
-        { auto: true },
+        { auto: true, box: true },
     ],
 });
 
@@ -48,13 +48,16 @@ export const mockBackendServiceTest = base.extend<
     { mockBackendService: SnowballRClient } & TestOptions
 >({
     mockBackendUrl: ["http://localhost:3001", { option: true }],
-    mockBackendService: async ({ mockBackendUrl }, use) => {
-        const transport = new GrpcWebFetchTransport({
-            baseUrl: mockBackendUrl,
-        });
-        const mockBackendService = new SnowballRClient(transport);
-        await use(mockBackendService);
-    },
+    mockBackendService: [
+        async ({ mockBackendUrl }, use) => {
+            const transport = new GrpcWebFetchTransport({
+                baseUrl: mockBackendUrl,
+            });
+            const mockBackendService = new SnowballRClient(transport);
+            await use(mockBackendService);
+        },
+        { box: true },
+    ],
 });
 
 export const test = mergeTests(defaultTest, mockBackendServiceTest);
