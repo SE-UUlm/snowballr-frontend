@@ -33,7 +33,7 @@
         "@protobuf-ts/grpcweb-transport": "^2.9.6",
         "@protobuf-ts/plugin": "^2.9.6",
         "@sveltejs/adapter-node": "^5.2.12",
-        "@sveltejs/kit": "^2.20.2",
+        "@sveltejs/kit": "^2.20.7",
         "@sveltejs/vite-plugin-svelte": "^5.0.3",
         "@tailwindcss/postcss": "^4.1.4",
         "@testing-library/jest-dom": "^6.6.3",
