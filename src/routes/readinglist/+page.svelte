@@ -23,7 +23,7 @@
 </svelte:head>
 <SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Reading List")} {user} />
 
-<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden">
+<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden px-5">
     <NamedList
         emptyHint="Your reading list is empty. Start adding papers from your SLRs to the reading list ..."
         items={filteredReadingList}
@@ -32,9 +32,7 @@
         numberOfSkeletons={7}
     >
         {#snippet preListContent()}
-            <div class="px-5">
-                <SearchBar onSearch={filterReadingList} timeoutInMs={0} />
-            </div>
+            <SearchBar onSearch={filterReadingList} timeoutInMs={0} />
         {/snippet}
         {#snippet listItemComponent(componentData)}
             <ReadingListEntry {...componentData} />
