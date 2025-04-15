@@ -41,15 +41,22 @@
     }
 
     async function onUsersInvited(invitedUsers: string[]) {
-        await reloadMembers(
-            `Couldn't invite ${pluralize(invitedUsers.length, "user", "users")} to the project`,
-        );
+        // Filter out users that are already members
+        const memberEmails = (await loadingMembers).map((member) => member.user?.email);
+        const filteredInvitedUsers = invitedUsers.filter((user) => !memberEmails.includes(user));
+
         let message = "";
-        if (invitedUsers.length === 1) {
-            message = `Invited ${invitedUsers[0]} to the project`;
+        if (filteredInvitedUsers.length === 0) {
+            message = `${pluralize(memberEmails.length, "User is", "Users are")} already invited`;
+        } else if (filteredInvitedUsers.length === 1) {
+            message = `Invited ${filteredInvitedUsers[0]} to the project`;
         } else {
-            message = `Invited ${invitedUsers.length} users to the project`;
+            message = `Invited ${filteredInvitedUsers.length} users to the project`;
         }
+
+        await reloadMembers(
+            `Couldn't invite ${pluralize(filteredInvitedUsers.length, "user", "users")} to the project`,
+        );
         toast(message);
     }
 

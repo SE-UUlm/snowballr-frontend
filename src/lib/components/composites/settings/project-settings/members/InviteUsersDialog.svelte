@@ -49,8 +49,13 @@
         error = undefined;
         loading = true;
         try {
+            const members = (await loadingMembers).map((member) => member.user?.email);
+            // filter out emails of existing members
+            const filteredMembersInput = membersInput.filter(
+                (userEmail) => !members.includes(userEmail),
+            );
             await Promise.all(
-                membersInput.map(
+                filteredMembersInput.map(
                     (userEmail) =>
                         backendService.inviteUserToProject({ projectId, userEmail }).response,
                 ),

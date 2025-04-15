@@ -24,7 +24,7 @@
     }: Props = $props();
 
     const role = member.role === MemberRole.ADMIN ? "Admin" : "Member";
-    const isRoleReadonly = isCurrentUser || !isAdminView;
+    const isRoleReadonly = $derived(isCurrentUser || !isAdminView);
 </script>
 
 <!--
