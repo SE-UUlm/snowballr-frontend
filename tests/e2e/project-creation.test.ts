@@ -11,6 +11,7 @@ test.describe("Creating a new project", () => {
     test.afterAll(async ({ mockBackendService }) => {
         mockBackendService.softDeleteProject({ id: "0" });
         mockBackendService.softDeleteProject({ id: "1" });
+        mockBackendService.softDeleteProject({ id: "2" });
     });
 
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({
@@ -49,10 +50,10 @@ test.describe("Creating a new project", () => {
         await dialog.checkForErrors();
 
         // dialog is closed
-        await expect(homepage.createProjectDialog).not.toBeVisible();
+        await expect(homepage.createProjectDialog).toBeHidden();
 
         // no new project was created
-        await expect(page.getByText("Demo project 1")).not.toBeVisible();
+        await expect(page.getByText("Demo project 1")).toBeHidden();
 
         // all inputs are reset
         await homepage.openCreateProjectDialog();
@@ -88,14 +89,14 @@ test.describe("Creating a new project", () => {
         await page.getByRole("button", { name: "Open" }).click();
 
         // the user is not on the homepage but the project dashboard
-        await expect(page.getByText("SnowballR")).not.toBeVisible();
+        await expect(page.getByText("SnowballR")).toBeHidden();
         await expect(page.locator("nav", { has: page.getByText("Demo project 3") })).toBeVisible();
-        await expect(page.getByRole("link", { name: "Demo project 3" })).not.toBeVisible();
+        await expect(page.getByRole("link", { name: "Demo project 3" })).toBeHidden();
 
         await expect(page.getByText("stage 0")).toBeVisible();
         await expect(page.getByText("reviewed 0 / 0")).toBeVisible();
         await expect(page.getByText("No open reviews")).toBeVisible();
-        await expect(page.getByText("estimated remaining time")).not.toBeVisible();
+        await expect(page.getByText("estimated remaining time")).toBeHidden();
     });
 
     /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members
