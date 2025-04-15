@@ -1,3 +1,6 @@
+To set up the development environment, follow the steps in
+[Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
+
 ## Project Layout
 
 ```plaintext
@@ -19,7 +22,8 @@
 
 ## Testing
 
-To test the functionality of our app we employ unit, integration and end-to-end tests. To run all tests at once you can use:
+To test the functionality of our app, we employ unit, integration, and end-to-end tests. To run all tests at once,
+you can use:
 
 ```bash
 npm run test
