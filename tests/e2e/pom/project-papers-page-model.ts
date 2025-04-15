@@ -10,10 +10,10 @@ export class DevProjectPapersPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.stage0 = page.locator("button", { hasText: "Stage 0" });
-        this.stage1 = page.locator("button", { hasText: "Stage 1" });
-        this.paper0FromStage0 = page.locator("button", { hasText: "Paper 0/0" });
-        this.paper0FromStage1 = page.locator("button", { hasText: "Paper 1/0" });
+        this.stage0 = page.getByRole("button", { name: "Stage 0" });
+        this.stage1 = page.getByRole("button", { name: "Stage 1" });
+        this.paper0FromStage0 = page.getByRole("button", { name: "Paper 0/0" });
+        this.paper0FromStage1 = page.getByRole("button", { name: "Paper 1/0" });
         this.paperDetailsCard = page.locator('aside[data-testid="paper-details-card"]');
     }
 

@@ -85,7 +85,7 @@ test.describe("Creating a new project", () => {
 
         // the user is not on the homepage but the project dashboard
         await expect(page.getByText("SnowballR")).toBeHidden();
-        await expect(page.locator("nav", { has: page.getByText("Demo project 3") })).toBeVisible();
+        await expect(page.getByRole("navigation").getByText("Demo project 3")).toBeVisible();
         await expect(page.getByRole("link", { name: "Demo project 3" })).toBeHidden();
 
         await expect(page.getByText("stage 0")).toBeVisible();
