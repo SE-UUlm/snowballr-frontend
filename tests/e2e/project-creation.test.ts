@@ -44,8 +44,8 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.projectNameInput.fill("Demo project 1");
         await createProjectDialog.projectMemberInput.fill("john@doe.com");
 
-        await createProjectDialog.closeCreateProjectDialog();
         await createProjectDialog.checkForErrors();
+        await createProjectDialog.closeCreateProjectDialog();
 
         // dialog is closed
         await expect(homePage.createProjectDialog).toBeHidden();
@@ -68,7 +68,7 @@ test.describe("Creating a new project", () => {
 
         await createProjectDialog.createProject("Demo project 2");
         await createProjectDialog.checkForErrors();
-        await page.getByRole("button", { name: "Back" }).click();
+        await createProjectDialog.closeCreatedProjectDialog("cancel");
 
         // the user stays on the project and the project is shown in the list of active projects
         await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
@@ -84,7 +84,7 @@ test.describe("Creating a new project", () => {
 
         await createProjectDialog.createProject("Demo project 3");
         await createProjectDialog.checkForErrors();
-        await page.getByRole("button", { name: "Open" }).click();
+        await createProjectDialog.closeCreatedProjectDialog("open");
 
         // the user is not on the homepage but the project dashboard
         await expect(page.getByText("SnowballR")).toBeHidden();
