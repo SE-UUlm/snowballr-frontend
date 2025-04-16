@@ -132,7 +132,7 @@ Usage:
     <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
-    <div class="flex h-full w-full flex-row gap-5">
+    <div class="flex h-full w-full flex-row gap-10">
         <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
             {backwardReferencedPapers}
