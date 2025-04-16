@@ -1,6 +1,6 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
-import { expect, vi, type Mock } from "vitest";
+import { expect, vi, type Mock, type MockInstance } from "vitest";
 import type { Navigation, Page } from "@sveltejs/kit";
 import { readable } from "svelte/store";
 import * as environment from "$app/environment";
@@ -244,14 +244,16 @@ type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType
  *
  * @param methodName - The name of the method to mock
  * @param value - The value to return
+ * @returns A mock instance of the API call
  */
 export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApiCallReturnType<T>>(
     methodName: T,
     value: R,
-) {
-    vi.spyOn(backendService, methodName).mockImplementation(() => {
+): MockInstance<(...args: unknown[]) => Promise<{ response: R }>> {
+    const mockInstance = vi.spyOn(backendService, methodName).mockImplementation(() => {
         return { response: Promise.resolve(value) } as ReturnType<(typeof backendService)[T]>;
     });
+    return mockInstance;
 }
 
 /**
