@@ -1,11 +1,11 @@
 import type { PageLoad } from "./$types";
-import type { ReadingListEntryInterface } from "$lib/model/component-interfaces";
 import { backendService } from "$lib/grpc-api";
+import type { Paper } from "$lib/model/api/paper";
 
 export const load: PageLoad = () => {
-    const loadingReadingList: Promise<ReadingListEntryInterface[]> = backendService
+    const loadingReadingList: Promise<Paper[]> = backendService
         .getReadingList({})
-        .response.then((readingList) => readingList.papers.map((paper) => ({ paper: paper })))
+        .response.then((readingList) => readingList.papers)
         .catch(() => {
             throw new Error("Couldn't load reading list.");
         });

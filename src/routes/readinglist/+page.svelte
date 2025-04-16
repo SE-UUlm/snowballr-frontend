@@ -4,16 +4,17 @@
     import NamedList from "$lib/components/composites/list/NamedList.svelte";
     import ReadingListEntrySkeleton from "$lib/components/composites/paper-components/ReadingListEntrySkeleton.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import { filterReadingListEntries } from "$lib/utils/filters";
+    import { filterPapers } from "$lib/utils/filters";
+    import type { Paper } from "$lib/model/api/paper";
 
     const { data } = $props();
     const { user, loadingReadingList } = data;
 
-    let filteredReadingList = $state(loadingReadingList);
+    let filteredReadingList = $state<Promise<Paper[]>>(loadingReadingList);
 
     function filterReadingList(searchText: string) {
         filteredReadingList = loadingReadingList.then((allEntries) =>
-            filterReadingListEntries(allEntries, searchText),
+            filterPapers(allEntries, searchText),
         );
     }
 </script>
@@ -27,15 +28,15 @@
     <NamedList
         emptyHint="Your reading list is empty. Start adding papers from your SLRs to the reading list ..."
         items={filteredReadingList}
-        keySelector={(readingListEntry) => readingListEntry.paper.id}
+        keySelector={(paper) => paper.id}
         listName=""
         numberOfSkeletons={7}
     >
         {#snippet preListContent()}
             <SearchBar onSearch={filterReadingList} timeoutInMs={0} />
         {/snippet}
-        {#snippet listItemComponent(componentData)}
-            <ReadingListEntry {...componentData} />
+        {#snippet listItemComponent(paper)}
+            <ReadingListEntry {paper} />
         {/snippet}
         {#snippet listItemSkeleton()}
             <ReadingListEntrySkeleton />

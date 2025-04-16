@@ -1,14 +1,15 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { handleSingleOrDoubleClick } from "$lib/utils/common-helper";
-    import type { ReadingListEntryInterface } from "$lib/model/component-interfaces";
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
     import DownloadButton from "$lib/components/composites/DownloadButton.svelte";
+    import type { Paper } from "$lib/model/api/paper";
 
-    type ReadingListEntryProps = ReadingListEntryInterface & {
+    interface ReadingListEntryProps {
+        paper: Paper;
         onClick?: () => void;
-    };
+    }
 
     const navigateToPaperView = () => {
         goto(`/paper/${id}`);
