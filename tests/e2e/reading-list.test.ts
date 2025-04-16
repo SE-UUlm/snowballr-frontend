@@ -8,7 +8,7 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
     let projectId: string = "";
     const paperIds: string[] = [];
 
-    const NUMBER_OF_PAPER_ON_READING_LIST = 11;
+    const NUMBER_OF_PAPERS = 11;
 
     test.beforeAll(async ({ mockBackendService }) => {
         const project: Project = await mockBackendService.createProject({
@@ -18,14 +18,14 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
 
         const createdPapers: Paper[] = await Promise.all(
             Array.from(
-                { length: NUMBER_OF_PAPER_ON_READING_LIST + 1 },
+                { length: NUMBER_OF_PAPERS + 1 },
                 (_, i) =>
                     mockBackendService.createPaper(
                         createPaper({ title: `Paper ${i} on reading list` }),
                     ).response,
             ),
         );
-        for (const paper of createdPapers.slice(0, NUMBER_OF_PAPER_ON_READING_LIST)) {
+        for (const paper of createdPapers.slice(0, NUMBER_OF_PAPERS)) {
             await mockBackendService.addPaperToReadingList({ id: paper.id });
             paperIds.push(paper.id);
         }
@@ -45,32 +45,30 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
     test("When the user opens the reading list, then all papers of the user's reading list are shown.", async ({
         page,
     }) => {
-        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPER_ON_READING_LIST);
+        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPERS);
 
         await expect(page.getByText(`Paper 0 on reading list`)).toBeVisible();
-        await expect(
-            page.getByText(`Paper ${NUMBER_OF_PAPER_ON_READING_LIST} on reading list`),
-        ).toBeHidden();
+        await expect(page.getByText(`Paper ${NUMBER_OF_PAPERS} on reading list`)).toBeHidden();
     });
 
     test("When the user searches in the reading list, then only papers matching the search input are shown.", async ({
         page,
         readingListPage,
     }) => {
-        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPER_ON_READING_LIST);
+        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPERS);
 
         // search for all paper with a "1" in the title, so "Paper 1 on reading list" and "Paper 10 on reading list"
-        await readingListPage.searchBar.fill("1");
+        await readingListPage.searchBarInput.fill("1");
         await expect(page.getByRole("listitem")).toHaveCount(2);
 
         // search for paper with "1234" in the title, so no paper should be found
-        await readingListPage.searchBar.fill("1234");
+        await readingListPage.searchBarInput.fill("1234");
         await expect(page.getByRole("listitem")).toHaveCount(0);
         await expect(page.getByText("Your reading list is empty.")).toBeVisible();
 
         // clear search
-        await readingListPage.searchBar.press("Escape");
-        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPER_ON_READING_LIST);
+        await readingListPage.searchBarInput.press("Escape");
+        await expect(page.getByRole("listitem")).toHaveCount(NUMBER_OF_PAPERS);
     });
 
     test("When the user clicks on an entry in the reading list, then the corresponding paper will be opened.", async ({
