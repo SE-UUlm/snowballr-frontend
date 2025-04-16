@@ -24,7 +24,7 @@
 
 <!--
 @component
-Button download a paper.
+Button to download a paper.
 
 Usage:
 ```svelte

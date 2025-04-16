@@ -53,7 +53,7 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
         ).toBeHidden();
     });
 
-    test("When the user search in the reading list, then only papers matching the search input are shown.", async ({
+    test("When the user searches in the reading list, then only papers matching the search input are shown.", async ({
         page,
         readingListPage,
     }) => {
