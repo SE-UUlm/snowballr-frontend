@@ -2,9 +2,28 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import TagsInput from "svelte-unstyled-tags";
+    import { toast } from "svelte-sonner";
 
     const maximumAmountOfTags = 25;
+    const maximalTagLength = 15;
     let tags: string[] = $state([]);
+
+    function validateTags() {
+        if (tags && tags.length > 0) {
+            const newTag = tags[tags.length - 1];
+            if (newTag.trim().length == 0) {
+                tags.pop();
+                return toast("Empty tags are not allowed!")
+            } else if (newTag.trim().length > maximalTagLength) {
+                tags.pop();
+                return toast(`Maximal tag length of ${maximalTagLength} characters exceeded!`)
+            } else if (tags.length > maximumAmountOfTags) {
+                tags.pop();
+                return toast(`Maximal amount of tags reached!`)
+            }
+            return tags;
+        }
+    }
 
 
 </script>
@@ -19,18 +38,13 @@
                 allTagsWrapperClasses="flex flex-row items-center gap-x-2 gap-y-2 flex-wrap"
                 componentWrapperClasses="flex flex-wrap"
                 inputClasses="focus:outline-none focus:ring-0 pl-2 py-1"
-                maximumTags={maximumAmountOfTags}
                 onlyUnique={true}
                 removeTagButtonClasses="hidden group-hover:inline-block ml-2 text-black-500 hover:text-black-500 cursor-pointer"
                 tagWrapperClasses="group flex items-start bg-gray-200 text-black px-2 py-1.5 rounded-xl"
-                tagsInputWrapperClasses="flex items-start border-2 border-gray-200 py-2 px-3 rounded-md mt-2 h-[74px] overflow-auto"
+                tagsInputWrapperClasses="flex items-start border-2 border-gray-200 py-2 px-3 rounded-md mt-2 h-[84px] overflow-auto"
                 bind:tags
+                on:input={() => validateTags()}
             />
-            {#if tags.length > maximumAmountOfTags-1}
-                <Label class="font-normal text-red-500">
-                    Maximal amount of tags reached.
-                </Label>
-            {/if}
         </div>
     </div>
 </SettingsSection>
