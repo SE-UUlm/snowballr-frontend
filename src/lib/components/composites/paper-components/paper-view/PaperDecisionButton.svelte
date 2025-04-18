@@ -1,12 +1,13 @@
 <script lang="ts">
     import { cn } from "$lib/utils/shadcn-helper";
     import Tooltip from "../../utils/Tooltip.svelte";
-    import { resource } from "$lib/resource.svelte.js";
     import {
         type PaperDecisionButtonVariant,
         paperDecisionButtonVariants,
     } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
+    import { backendService } from "$lib/grpc-api";
+    import { type Review_Create, ReviewDecision } from "$lib/model/api/review";
 
     interface ButtonContent {
         name: string;
@@ -20,11 +21,6 @@
     }
 
     const { loadingPaperId, variant }: PaperDecisionButtonProps = $props();
-
-    const paperId = resource<string, string | undefined>(loadingPaperId, {
-        initialValue: undefined,
-        resourceName: "paper ID",
-    });
 
     /**
      * Return the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -48,11 +44,38 @@
         }
     }
 
+    function getDecision(): ReviewDecision {
+        switch (variant) {
+            case "accept":
+                return ReviewDecision.ACCEPTED;
+            case "decline":
+                return ReviewDecision.DECLINED;
+            case "maybe":
+                return ReviewDecision.MAYBE;
+            default:
+                return ReviewDecision.UNSPECIFIED;
+        }
+    }
+
     /**
      * Submit a review to the server.
      */
-    function submitReview() {
-        console.log(`Submit review for paper with id ${paperId.value}`);
+    async function submitReview() {
+        try {
+            const paperId = await loadingPaperId;
+
+            const review: Review_Create = {
+                projectPaperId: paperId,
+                decision: getDecision(),
+                selectedCriteriaIds: [],
+            };
+
+            await backendService.createReview(review);
+
+            // TODO: navigate automatically to next paper
+        } catch (err) {
+            console.error(`Could not submit, as an invalid paper id was provided (${err})`);
+        }
     }
 </script>
 
