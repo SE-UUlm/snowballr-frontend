@@ -1,4 +1,4 @@
-import { type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export class DevReadingListPage {
     readonly page: Page;
@@ -21,5 +21,9 @@ export class DevReadingListPage {
     async openPaperListEntry() {
         await this.readingListEntry0.scrollIntoViewIfNeeded();
         await this.readingListEntry0.click();
+    }
+
+    async expectNumberOfEntries(numberOfEntries: number) {
+        await expect(this.readingListEntries).toHaveCount(numberOfEntries);
     }
 }

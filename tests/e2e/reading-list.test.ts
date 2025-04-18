@@ -46,7 +46,7 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
         page,
         readingListPage,
     }) => {
-        await expect(readingListPage.readingListEntries).toHaveCount(NUMBER_OF_PAPERS);
+        await readingListPage.expectNumberOfEntries(NUMBER_OF_PAPERS);
 
         await expect(page.getByText(`Paper 0 on reading list`)).toBeVisible();
         await expect(page.getByText(`Paper ${NUMBER_OF_PAPERS} on reading list`)).toBeHidden();
@@ -56,20 +56,20 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
         page,
         readingListPage,
     }) => {
-        await expect(readingListPage.readingListEntries).toHaveCount(NUMBER_OF_PAPERS);
+        await readingListPage.expectNumberOfEntries(NUMBER_OF_PAPERS);
 
         // search for all paper with a "1" in the title, so "Paper 1 on reading list" and "Paper 10 on reading list"
         await readingListPage.searchBarInput.fill("Paper 1");
-        await expect(readingListPage.readingListEntries).toHaveCount(2);
+        await readingListPage.expectNumberOfEntries(2);
 
         // search for paper with "1234" in the title, so no paper should be found
         await readingListPage.searchBarInput.fill("Paper 1234");
-        await expect(readingListPage.readingListEntries).toHaveCount(0);
+        await readingListPage.expectNumberOfEntries(0);
         await expect(page.getByText("Your reading list is empty.")).toBeVisible();
 
         // clear search
         await readingListPage.searchBarInput.press("Escape");
-        await expect(readingListPage.readingListEntries).toHaveCount(NUMBER_OF_PAPERS);
+        await readingListPage.expectNumberOfEntries(NUMBER_OF_PAPERS);
     });
 
     test("When the user clicks on an entry in the reading list, then the corresponding paper will be opened.", async ({
