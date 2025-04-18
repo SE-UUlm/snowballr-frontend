@@ -25,6 +25,9 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
                     ).response,
             ),
         );
+        // Add all created paper but the last one to the reading list to check
+        // that not all existing paper appear on the reading list but only
+        // these that were explicitly added.
         for (const paper of createdPapers.slice(0, NUMBER_OF_PAPERS)) {
             await mockBackendService.addPaperToReadingList({ id: paper.id });
             paperIds.push(paper.id);
@@ -91,18 +94,24 @@ test.describe("Add, view or remove papers to / from the reading list", () => {
     test.fixme(
         "When the user adds a paper to reading list in the paper view, " +
             "then it will be displayed on the reading list page.",
-        async () => {},
+        async () => {
+            // TODO: will be implemented with #99
+        },
     );
 
     test.fixme(
         "When the user removes a paper from the reading list in the paper view, " +
             "then it will not be displayed on the reading list page anymore.",
-        async () => {},
+        async () => {
+            // TODO: will be implemented with #100
+        },
     );
 
     test.fixme(
         "When the user removes a paper from the reading list on the reading list page, " +
             "then this paper will not be displayed anymore.",
-        async () => {},
+        async () => {
+            // TODO: will be implemented with #100
+        },
     );
 });
