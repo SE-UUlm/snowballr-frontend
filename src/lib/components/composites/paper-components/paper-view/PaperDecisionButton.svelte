@@ -8,6 +8,7 @@
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { type Review_Create, ReviewDecision } from "$lib/model/api/review";
+    import { LoaderCircle } from "lucide-svelte";
 
     interface ButtonContent {
         name: string;
@@ -21,6 +22,8 @@
     }
 
     const { loadingPaperId, variant }: PaperDecisionButtonProps = $props();
+
+    let isSubmittingReview = $state(false);
 
     /**
      * Return the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -61,6 +64,7 @@
      * Submit a review to the server.
      */
     async function submitReview() {
+        isSubmittingReview = true;
         try {
             const paperId = await loadingPaperId;
 
@@ -76,6 +80,7 @@
         } catch (err) {
             console.error(`Could not submit, as an invalid paper id was provided (${err})`);
         }
+        isSubmittingReview = false;
     }
 </script>
 
@@ -102,14 +107,20 @@ Usage:
         paperDecisionButtonVariants({ variant }),
     )}
     data-testid={`decision-button-${variant}`}
+    disabled={isSubmittingReview}
     onclick={submitReview}
     triggerSize="default"
     triggerVariant="default"
 >
     {#snippet trigger()}
-        <p>{getButtonContent().name}</p>
-        {#if shortcuts.isVisible}
-            <p>{getButtonContent().shortcut}</p>
+        {#if isSubmittingReview}
+            <LoaderCircle class="animate-spin" />
+            Submitting review
+        {:else}
+            <p>{getButtonContent().name}</p>
+            {#if shortcuts.isVisible}
+                <p>{getButtonContent().shortcut}</p>
+            {/if}
         {/if}
     {/snippet}
     {#snippet content()}
