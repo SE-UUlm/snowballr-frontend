@@ -169,16 +169,17 @@ For more advanced usage and documentation, refer to the official [Playwright doc
 
 ## Lighthouse
 
-We use Lighthouse to audit the performance, accessibility and best practices of our app. To install Lighthouse, run:
+We use Lighthouse to audit the performance, accessibility and best practices of our app.
+To run a Lighthouse audit on the app, you can use the following command:
 
 ```bash
-npm install -g lighthouse
+npm run lighthouse
 ```
 
-To run a Lighthouse audit on the app, you can use (note we use the url of the preview server here):
+To run all available routes, use:
 
 ```bash
-npm run lighthouse -- http://localhost:4173/path
+npm run lighthouse:all
 ```
 
 The report will be saved in the `./lighthouse-reports` directory.
