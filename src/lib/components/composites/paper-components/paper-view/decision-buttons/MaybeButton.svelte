@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import DecisionButton from "./DecisionButton.svelte";
 
     interface Props {
@@ -19,7 +20,9 @@
 >
     {#snippet buttonContent()}
         <p>Maybe</p>
-        <p class="text-maybe-yellow-shortcut">Ctrl+S</p>
+        {#if shortcuts.isVisible}
+            <p class="text-maybe-yellow-shortcut">Ctrl+S</p>
+        {/if}
     {/snippet}
     {#snippet tooltipContent()}
         <p>Mark Paper as undecided</p>

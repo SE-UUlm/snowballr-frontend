@@ -2,8 +2,6 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { env } from "$env/dynamic/public";
     import "../app.css";
-    import { onMount } from "svelte";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { Toaster } from "svelte-sonner";
     import { ModeWatcher } from "mode-watcher";
 
