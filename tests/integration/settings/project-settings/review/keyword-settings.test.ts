@@ -8,6 +8,7 @@ describe("KeywordSettings", () => {
     beforeEach(() => {
         render(KeywordSettings, {
             props: {
+                projectId: "0",
                 maximumAmountOfTags: maximumAmountOfTags,
                 maximalTagLength: 15,
             },

@@ -18,6 +18,6 @@
 
 <ProjectSettingsLayout {projectId} selectedTab="review">
     <div class="flex flex-col gap-9 overflow-auto p-2.5">
-        <KeywordSettings/>
+        <KeywordSettings maximalTagLength={15} maximumAmountOfTags={25} {projectId}/>
     </div>
 </ProjectSettingsLayout>

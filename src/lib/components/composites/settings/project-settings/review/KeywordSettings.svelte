@@ -2,15 +2,28 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import TagsInput from "svelte-unstyled-tags";
     import { toast } from "svelte-sonner";
+    import { onMount } from "svelte";
+
 
     interface Props {
+        projectId: string;
         maximumAmountOfTags: number;
         maximalTagLength: number;
     }
 
-    const { maximumAmountOfTags = 25, maximalTagLength = 15 }: Props = $props();
+    const { projectId, maximumAmountOfTags = 25, maximalTagLength = 15 }: Props = $props();
 
     let tags: string[] = $state([]);
+
+    /**
+     * Loads the already defined keyword tags for the selected project.
+     */
+    onMount(async () => {
+        const projectKeywords = localStorage.getItem(`project_${projectId}_keywords`);
+        if (projectKeywords) {
+            tags = JSON.parse(projectKeywords);
+        }
+    });
 
     /**
      * Validates the input for a tag. If the input is incorrect, the tag is not created.
@@ -34,6 +47,7 @@
                 tags.pop();
                 return toast(`Keyword name already exists!`);
             }
+            localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags))
             return tags;
         }
     }
