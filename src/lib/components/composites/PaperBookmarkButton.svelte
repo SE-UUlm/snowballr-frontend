@@ -52,7 +52,7 @@ According to bookmark state of the paper (isBookmarked), the button will change 
 
 Usage:
 ```svelte
-<PaperBookmarkButton paperId={42} isBookmarked={false} />
+<PaperBookmarkButton loadingPaperId={Promise.resolve("42")} isBookmarked={false} />
 ```
 -->
 <Tooltip

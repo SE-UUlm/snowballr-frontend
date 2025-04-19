@@ -1,0 +1,9 @@
+<script lang="ts">
+    import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
+</script>
+
+<div
+    class="border-container-border-grey highlight-on-hover flex w-full flex-row items-center gap-16 rounded-md border px-3 py-2"
+>
+    <PaperInfoSkeleton />
+</div>
