@@ -73,7 +73,7 @@ Usage:
                 allTagsWrapperClasses="flex flex-row items-center gap-x-2 gap-y-2 flex-wrap"
                 inputClasses="focus:outline-none focus:ring-0 pl-2 py-1"
                 labelText="Define keywords that are highlighted in the abstract of a paper in the review mode."
-                removeTagButtonClasses="hidden group-hover:inline-block ml-2 text-black-500 hover:text-black-500 cursor-pointer"
+                removeTagButtonClasses="max-w-0 overflow-hidden group-hover:max-w-[20px] group-hover:ml-2 transition-all duration-200 text-black-500 hover:text-black-500 cursor-pointer"
                 showLabel={true}
                 tagWrapperClasses="group flex items-start bg-gray-200 text-black px-2 py-1.5 rounded-xl"
                 tagsInputWrapperClasses="flex items-start border-2 border-gray-200 py-2 px-3 rounded-md mt-2 h-[84px] overflow-auto"

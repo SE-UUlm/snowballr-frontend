@@ -6,13 +6,13 @@ import userEvent from "@testing-library/user-event";
 describe("KeywordSettings", () => {
     const maximumAmountOfTags = 5;
     beforeEach(() => {
+        localStorage.clear();
         render(KeywordSettings, {
             props: {
                 projectId: "0",
                 maximumAmountOfTags: maximumAmountOfTags,
                 maximalTagLength: 15,
             },
-            target: document.body,
         });
     });
 
