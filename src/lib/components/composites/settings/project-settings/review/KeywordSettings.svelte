@@ -4,7 +4,6 @@
     import { toast } from "svelte-sonner";
     import { onMount } from "svelte";
 
-
     interface Props {
         projectId: string;
         maximumAmountOfTags: number;
@@ -43,16 +42,18 @@
             } else if (tags.length > maximumAmountOfTags) {
                 tags.pop();
                 return toast(`Maximal amount of keywords reached!`);
-            } else if (Array.from(tags).slice(0, tags.length - 1).includes(newTag)) {
+            } else if (
+                Array.from(tags)
+                    .slice(0, tags.length - 1)
+                    .includes(newTag)
+            ) {
                 tags.pop();
                 return toast(`Keyword name already exists!`);
             }
-            localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags))
+            localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags));
             return tags;
         }
     }
-
-
 </script>
 
 <!--
