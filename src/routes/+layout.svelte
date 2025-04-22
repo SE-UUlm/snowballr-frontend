@@ -5,6 +5,7 @@
     import { onMount } from "svelte";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { Toaster } from "svelte-sonner";
+    import { ModeWatcher } from "mode-watcher";
 
     let { children } = $props();
 
@@ -25,6 +26,7 @@
     });
 </script>
 
+<ModeWatcher defaultMode="light" />
 <div class="flex h-screen w-screen flex-col items-start gap-4 p-4">
     {@render children()}
     <Toaster />
