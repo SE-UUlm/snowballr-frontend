@@ -1,10 +1,10 @@
 import ReviewModeSettings from "$lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("ReviewModeSettings", () => {
-    it("When component is rendered, then a switch is shown allowing to toggle the review mode", () => {
+    test("When component is rendered, then a switch is shown allowing to toggle the review mode", () => {
         render(ReviewModeSettings);
 
         const reviewModeSection = screen.getByTestId("settings-section-review-mode");
@@ -16,7 +16,7 @@ describe("ReviewModeSettings", () => {
         expect(screen.getByRole("switch")).toBeInTheDocument();
     });
 
-    it("When switch is toggled, then the global review mode state changes", () => {
+    test("When switch is toggled, then the global review mode state changes", () => {
         render(ReviewModeSettings);
         expect(reviewMode.isActivated).toBe(true); // default to true
 

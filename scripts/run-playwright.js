@@ -21,10 +21,15 @@ const BASE_COMMAND = "node_modules/playwright/cli.js";
  */
 function runPlaywright(args = []) {
     const nodeArgs = isNode23 ? [NO_TYPE_STRIPPING_FLAG] : [];
-    spawnSync("node", [...nodeArgs, BASE_COMMAND, ...args], {
+    const result = spawnSync("node", [...nodeArgs, BASE_COMMAND, ...args], {
         shell: true,
         stdio: "inherit",
     });
+
+    // Propagate the exit code from the spawned process
+    if (result.status !== 0) {
+        process.exit(result.status);
+    }
 }
 
 /**

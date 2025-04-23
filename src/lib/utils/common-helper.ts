@@ -176,23 +176,23 @@ function comparePaperId(a: string, b: string): number {
  *  - single click =\> onSingleClick()
  *  - double click =\> onDoubleClick()
  */
-function handleSingleOrDoubleClick(
-    timeoutId: ReturnType<typeof setTimeout> | null,
-    onSingleClick: () => void,
-    onDoubleClick: () => void,
-): ReturnType<typeof setTimeout> | null {
-    if (timeoutId === null) {
-        timeoutId = setTimeout(() => {
-            timeoutId = null;
-            onSingleClick();
-        }, 350);
-    } else {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-        onDoubleClick();
-    }
+function handleSingleOrDoubleClick(onSingleClick: () => void, onDoubleClick: () => void) {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-    return timeoutId;
+    return () => {
+        if (timeoutId === null) {
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                onSingleClick();
+            }, 350);
+        } else {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+            onDoubleClick();
+        }
+
+        return timeoutId;
+    };
 }
 
 export {

@@ -20,7 +20,7 @@ export class DevCreateProjectDialog {
     }
 
     /**
-     * Closes the dialog for creating a new project, if it is open
+     * Closes the dialog for creating a new project, if it is open.
      */
     async closeCreateProjectDialog() {
         await expect(this.createProjectDialog).toBeVisible();
@@ -28,7 +28,7 @@ export class DevCreateProjectDialog {
     }
 
     /**
-     * Creates a new project with the two members "john\@doe.com" and "julia.clark\@example.com".
+     * Creates a new project with the two members "john\@doe.com" and "alice.smith\@example.com".
      *
      * @remarks
      * This function can only fill the input fields in the corresponding project creation dialog and submit the form.
@@ -40,6 +40,9 @@ export class DevCreateProjectDialog {
         await this.projectNameInput.fill(projectName);
         await this.projectMemberInput.fill("john@doe.com");
         await this.projectMemberInput.press("Tab");
+        await this.projectMemberInput.fill("Alice");
+        await this.projectMemberInput.press("ArrowDown");
+        await this.projectMemberInput.press("Enter");
 
         await this.createProjectButton.click();
     }

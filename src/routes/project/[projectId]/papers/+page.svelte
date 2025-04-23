@@ -17,6 +17,12 @@
     import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    import { ExternalLink } from "lucide-svelte";
+    import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
+    import { fly } from "svelte/transition";
+    import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
 
     let { data } = $props();
     const {
@@ -31,6 +37,8 @@
     } = data;
 
     let selectedPaper = $state<Project_Paper | undefined>(undefined);
+    // wrap the selected paper in a promise, as the `PaperDetailsCardContent` needs a loading paper
+    let loadingPaper = $derived(selectedPaper ? Promise.resolve(selectedPaper.paper!) : undefined);
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
@@ -74,7 +82,7 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} {user} />
-<main class="flex h-full w-full flex-row gap-10 px-4 py-2">
+<main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-4 py-2">
     <div class="flex h-full w-full flex-col gap-5">
         <div class="flex h-fit w-full flex-col gap-2.5">
             <div class="flex flex-row items-center gap-2.5">
@@ -143,13 +151,37 @@
             {/await}
         </div>
     </div>
-    {#if selectedPaper}
-        <Card.Root class="flex h-full w-[60%] flex-col gap-5 overflow-hidden shadow-lg">
-            <Card.Content>
-                <!-- TODO: replace with paper details card -->
-                <!-- This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/219 -->
-                <pre>{JSON.stringify(selectedPaper.paper!, undefined, 2)}</pre>
-            </Card.Content>
-        </Card.Root>
+    {#if loadingPaper && selectedPaper}
+        <aside
+            class="h-full w-[65%] min-w-75"
+            data-testid="paper-details-card"
+            onClickedOutsideOrEscape={() => {
+                selectedPaper = undefined;
+            }}
+            use:clickOutsideOrEscape
+            transition:fly={{ duration: 200, x: 150, opacity: 0 }}
+        >
+            <Card.Root
+                class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
+            >
+                <PaperDetailsCardContent {loadingPaper} />
+                <div class="absolute top-5 right-5 flex flex-row gap-2.5">
+                    <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
+                    <a
+                        class="flex items-center"
+                        href={`/project/${projectId}/paper/${selectedPaper.id}`}
+                    >
+                        <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
+                            {#snippet trigger()}
+                                <ExternalLink />
+                            {/snippet}
+                            {#snippet content()}
+                                <p>Open paper</p>
+                            {/snippet}
+                        </Tooltip>
+                    </a>
+                </div>
+            </Card.Root>
+        </aside>
     {/if}
 </main>

@@ -1,10 +1,10 @@
 import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import TestProjectSettingsLayout from "./TestProjectSettingsLayout.svelte";
 
 describe("ProjectSettingsLayout", () => {
-    it("When all props are provided, then component is displayed correctly", () => {
+    test("When all props are provided, then component is displayed correctly", () => {
         render(ProjectSettingsLayout, {
             target: document.body,
             props: {
@@ -23,7 +23,7 @@ describe("ProjectSettingsLayout", () => {
         expect(tabs[3]).toHaveTextContent("Review");
     });
 
-    it("When tab is selected, then selected tab is highlighted", () => {
+    test("When tab is selected, then selected tab is highlighted", () => {
         render(ProjectSettingsLayout, {
             target: document.body,
             props: {
@@ -47,13 +47,13 @@ describe("ProjectSettingsLayout", () => {
         expect(slrTab).not.toHaveClass("rounded-lg");
     });
 
-    it("When children are passed, then children are displayed", () => {
+    test("When children are passed, then children are displayed", () => {
         render(TestProjectSettingsLayout);
 
         expect(screen.getByText("This is a test!")).toBeInTheDocument();
     });
 
-    it("When layout is rendered, then tabs have links", () => {
+    test("When layout is rendered, then tabs have links", () => {
         const projectId = "1";
 
         render(ProjectSettingsLayout, {

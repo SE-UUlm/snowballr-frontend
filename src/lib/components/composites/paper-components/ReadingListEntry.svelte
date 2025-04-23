@@ -17,11 +17,6 @@
 
     const { paper, onClick = navigateToPaperView }: ReadingListEntryProps = $props();
     const { id, ...paperWithoutId } = paper;
-
-    let timeoutId: ReturnType<typeof setTimeout> | null = $state(null);
-    const handleClick = () => {
-        timeoutId = handleSingleOrDoubleClick(timeoutId, onClick, navigateToPaperView);
-    };
 </script>
 
 <!--
@@ -47,7 +42,7 @@ Usage:
     <button
         class="flex flex-auto"
         aria-label="Paper info for reading list entry"
-        onclick={handleClick}
+        onclick={handleSingleOrDoubleClick(onClick, navigateToPaperView)}
         type="button"
     >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
