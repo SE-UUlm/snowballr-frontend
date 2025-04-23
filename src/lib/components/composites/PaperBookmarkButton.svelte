@@ -4,14 +4,19 @@
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
     import Tooltip from "./utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
-    import { onMount } from "svelte";
+    import { backendService } from "$lib/grpc-api";
 
     interface Props {
         loadingPaperId: Promise<string>;
         isBookmarkedDefault?: boolean;
+        onPaperChangedBookmarkStatus?: () => void;
     }
 
-    const { loadingPaperId, isBookmarkedDefault = false }: Props = $props();
+    const {
+        loadingPaperId,
+        isBookmarkedDefault = false,
+        onPaperChangedBookmarkStatus = undefined,
+    }: Props = $props();
 
     let isBookmarked = $state(isBookmarkedDefault);
     let isHovered = $state(false);
@@ -19,40 +24,96 @@
     const paperId = $derived(
         resource<string, string | undefined>(loadingPaperId, {
             initialValue: undefined,
-            resourceName: "paper ID",
+            resourceName: "paper id",
         }),
     );
+
+    let isUpdatingBookmarkStatus = $state(false);
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);
 
     /**
-     * Adds the paper to the reading list, if it is not added yet, otherwise removes it.
+     * Fetches the actual bookmark status when the paper id becomes available.
+     * Uses a cleanup function to handle cases where the paper id changes before the fetch completes.
      */
-    function toggleBookmarkState() {
-        if (isBookmarked) {
-            removePaperFromReadingList();
+    $effect(() => {
+        const currentPaperId = paperId.value;
+        let cancelled = false;
+
+        if (currentPaperId) {
+            isUpdatingBookmarkStatus = true;
+
+            backendService
+                .isPaperOnReadingList({ id: currentPaperId })
+                .response.then((response) => {
+                    if (cancelled) return;
+
+                    isBookmarked = response.value;
+                })
+                .catch((error) => {
+                    if (cancelled) return;
+
+                    console.error(`Failed to fetch bookmark status for ${currentPaperId}:`, error);
+                })
+                .finally(() => {
+                    if (cancelled) return;
+
+                    // If cancelled, `isUpdatingBookmarkStatus` should already be false from cleanup
+                    isUpdatingBookmarkStatus = false;
+                });
+
+            // --- Cleanup Function ---
+            // Runs IF the dependency (currentPaperId) changes *before*
+            // the promise settles, OR when the component is unmounted.
+            return () => {
+                cancelled = true;
+                // Reset loading status immediately if the source id changes mid-flight
+                isUpdatingBookmarkStatus = false;
+            };
         } else {
-            addPaperToReadingList();
-        }
-    }
-
-    function addPaperToReadingList() {
-        // TODO: Will be implemented in #99
-        isBookmarked = true;
-        console.log(`Added paper with id ${paperId.value} to reading list`);
-    }
-    function removePaperFromReadingList() {
-        // TODO: Will be implemented in #100
-        isBookmarked = false;
-        console.log(`Removed paper with id ${paperId.value} from reading list`);
-    }
-
-    onMount(() => {
-        if (isBookmarkedDefault) {
-            addPaperToReadingList();
+            isUpdatingBookmarkStatus = false; // Ensure loading is false if id is invalid
         }
     });
+
+    /**
+     * Adds the paper to the reading list, if it is not already added yet, otherwise removes it.
+     */
+    function toggleBookmarkStatus() {
+        if (paperId.value === undefined) {
+            console.error("Paper id is undefined");
+            isUpdatingBookmarkStatus = false;
+            return;
+        }
+
+        if (isBookmarked) {
+            backendService
+                .removePaperFromReadingList({ id: paperId.value })
+                .response.then(() => {
+                    isBookmarked = false;
+                    onPaperChangedBookmarkStatus?.();
+                })
+                .catch((error) => {
+                    console.error("Error removing paper from reading list:", error);
+                })
+                .finally(() => {
+                    isUpdatingBookmarkStatus = false;
+                });
+        } else {
+            backendService
+                .addPaperToReadingList({ id: paperId.value })
+                .response.then(() => {
+                    isBookmarked = true;
+                    onPaperChangedBookmarkStatus?.();
+                })
+                .catch((error) => {
+                    console.error("Error adding paper to reading list:", error);
+                })
+                .finally(() => {
+                    isUpdatingBookmarkStatus = false;
+                });
+        }
+    }
 </script>
 
 <!--
@@ -60,20 +121,31 @@
 Button to add a paper to or remove a paper from the reading list.
 
 This component will handle the API calls itself.
-According to bookmark state of the paper (isBookmarked), the button will change its appearance.
-
-By setting the `isBookmarkedDefault` property, the default state for the button can be set, i.e.
-if set to true, the paper with the given id is added to the reading list per default.
+If `isBookmarkedDefault` is set, it will show the initial state of the bookmark button.
+After the initial state is set, the component will fetch the bookmark status of the paper from the backend.
 
 Usage:
 ```svelte
-<PaperBookmarkButton loadingPaperId={Promise.resolve("42")} isBookmarkedDefault={true} />
+    async function ChangedBookmarkStatusLogging() {
+        const readingList = await loadReadingList().then(() => {
+            console.log("Reading list updated");
+        }).catch((error) => {
+            console.error("Error loading reading list:", error);
+        });
+    }
+
+    <PaperBookmarkButton
+        loadingPaperId={Promise.resolve(paperId)}
+        isBookmarkedDefault={true}
+        onPaperChangedBookmarkStatus={ChangedBookmarkStatusLogging}
+    />
 ```
 -->
 <Tooltip
     class="text-primary bg-transparent [&_svg]:size-6"
     aria-label={tooltipText}
-    onclick={toggleBookmarkState}
+    disabled={isUpdatingBookmarkStatus}
+    onclick={toggleBookmarkStatus}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
 >

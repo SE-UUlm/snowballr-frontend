@@ -129,7 +129,6 @@ Usage:
         loadingPaperId={loadingPaperIdForNavigationBar}
         {user}
     />
-    <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
     <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
