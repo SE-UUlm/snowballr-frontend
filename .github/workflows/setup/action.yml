@@ -19,3 +19,7 @@ runs:
         - name: Generate gRPC web client code
           shell: bash
           run: npm run compile:proto
+
+        - name: Svelte-Kit sync
+          shell: bash
+          run: npx svelte-kit sync
