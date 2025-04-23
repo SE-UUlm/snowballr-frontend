@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/svelte";
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
 import TestUserSettingsLayout from "./TestUserSettingsLayout.svelte";
 
 describe("UserSettingsLayout", () => {
-    it("When all props are provided, then component is displayed correctly", () => {
+    test("When all props are provided, then component is displayed correctly", () => {
         render(UserSettingsLayout, {
             props: {
                 selectedTab: "account",
@@ -21,7 +21,7 @@ describe("UserSettingsLayout", () => {
         expect(tabs[3]).toHaveTextContent("Review");
     });
 
-    it("When tab is selected, then selected tab is highlighted", () => {
+    test("When tab is selected, then selected tab is highlighted", () => {
         render(UserSettingsLayout, {
             props: {
                 selectedTab: "review",
@@ -43,13 +43,13 @@ describe("UserSettingsLayout", () => {
         expect(shortcutsTab).not.toHaveClass("rounded-lg");
     });
 
-    it("When children are passed, then children are displayed", () => {
+    test("When children are passed, then children are displayed", () => {
         render(TestUserSettingsLayout);
 
         expect(screen.getByText("This is a test!")).toBeInTheDocument();
     });
 
-    it("When layout is rendered, then tabs have links", () => {
+    test("When layout is rendered, then tabs have links", () => {
         render(UserSettingsLayout, {
             props: {
                 selectedTab: "account",
