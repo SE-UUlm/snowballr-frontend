@@ -39,11 +39,6 @@
 
         return reviewingUser;
     }
-
-    let timeoutId: ReturnType<typeof setTimeout> | null = $state(null);
-    const handleClick = () => {
-        timeoutId = handleSingleOrDoubleClick(timeoutId, onClick, navigateToPaperView);
-    };
 </script>
 
 <!--
@@ -69,7 +64,7 @@ Usage:
     class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={!reviewMode.isActivated}
     data-testid="paper-list-entry"
-    onclick={handleClick}
+    onclick={handleSingleOrDoubleClick(onClick, navigateToPaperView)}
     type="button"
 >
     <div
