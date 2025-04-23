@@ -175,7 +175,7 @@ vi.mock("$lib/grpc-api", () => {
             getUserSettings: vi.fn(),
             updateUserSettings: vi.fn(),
             getReadingList: mock({ papers: Object.values(Papers) }),
-            isPaperOnReadingList: vi.fn(),
+            isPaperOnReadingList: mock({ value: false }),
             addPaperToReadingList: vi.fn(),
             removePaperFromReadingList: vi.fn(),
             getPendingInvitationsForUser: mock({ projects: [Object.values(Projects).at(0)!] }),
