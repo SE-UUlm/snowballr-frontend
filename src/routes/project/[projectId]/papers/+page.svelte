@@ -159,7 +159,7 @@
                 selectedPaper = undefined;
             }}
             use:clickOutsideOrEscape
-            transition:fly={{ duration: 100, x: 100, opacity: 0 }}
+            transition:fly={{ duration: 200, x: 150, opacity: 0 }}
         >
             <Card.Root
                 class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
