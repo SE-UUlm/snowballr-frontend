@@ -19,7 +19,7 @@ describe("ReadingListEntryComponent", () => {
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
 
         expect(
-            screen.getByRole("button", { name: "Remove from Reading List" }),
+            screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
     });
