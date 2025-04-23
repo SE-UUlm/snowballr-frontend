@@ -66,6 +66,9 @@
     const user = getContext<() => User>(UserContextKey)();
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
+    const loadingProjectPaper = $derived.by(() =>
+        loadingPaperWrapper.then(asProjectPaper).catch(() => undefined),
+    );
     const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
     // As the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
@@ -185,7 +188,7 @@ Usage:
     {#if showButtonBar}
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
-            <PaperNavigationButton direction="left" href="" />
+            <PaperNavigationButton direction="left" {loadingProjectPaper} />
             {#if reviewMode.isActivated && loadingProject}
                 {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
@@ -220,7 +223,7 @@ Usage:
                     </div>
                 {/await}
             {/if}
-            <PaperNavigationButton direction="right" href="" />
+            <PaperNavigationButton direction="right" {loadingProjectPaper} />
         </div>
     {/if}
 </main>
