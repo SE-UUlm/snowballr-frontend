@@ -182,4 +182,19 @@ To run all available routes, use:
 npm run lighthouse:all
 ```
 
-The report will be saved in the `./lighthouse-reports` directory.
+The report will be saved in the `./lighthouse-reports` directory. To automatically open the report in your browser,
+you can use the `--view` flag:
+
+```bash
+npm run lighthouse -- --view
+# or
+npm run lighthouse:all -- --view
+```
+
+To only run a sub-route, you can use the `--dir` flag:
+
+```bash
+npm run lighthouse -- --dir=/settings
+# or
+npm run lighthouse:all -- --dir=/settings
+```
