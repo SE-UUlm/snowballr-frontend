@@ -30,10 +30,11 @@ jobs:
             - name: Run frontend with dummy mock-backend
               run: |
                   echo "PORT=5173" > .env
+                  echo "RANDOMNESS_SEED=U25vd2JhbGxS" >> .env
                   docker compose --profile mock-local up -d --wait
 
             - name: Run Lighthouse
-              run: npm run lighthouse:all -- --params="projectId=1,paperId=1-1"
+              run: npm run lighthouse:all -- --params="projectId=11,paperId=11-0"
 
             - name: Archive coverage report
               uses: actions/upload-artifact@v4
