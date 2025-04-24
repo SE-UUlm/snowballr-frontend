@@ -18,4 +18,13 @@ export class DevHomePage {
         await expect(this.createProjectDialog).not.toBeVisible();
         await this.openCreateProjectDialogButton.click();
     }
+
+    /**
+     * Opens the account settings page.
+     */
+    async openAccountSettings() {
+        await expect(this.page.getByRole("heading", { name: "Settings" })).not.toBeVisible();
+        await this.page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await this.page.getByRole("link", { name: "Settings" }).click();
+    }
 }
