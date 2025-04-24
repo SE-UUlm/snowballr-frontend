@@ -1,13 +1,11 @@
 <script lang="ts">
     import { Toaster as Sonner, type ToasterProps as SonnerProps } from "svelte-sonner";
-    import { mode } from "mode-watcher";
 
     let restProps: SonnerProps = $props();
 </script>
 
 <Sonner
     class="toaster group"
-    theme={$mode}
     toastOptions={{
         classes: {
             toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
