@@ -15,7 +15,7 @@
     import type { Paper } from "$lib/model/api/paper";
     import type { Project, Project_Paper } from "$lib/model/api/project";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
-    import { asPaper } from "$lib/utils/model-helper";
+    import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     export interface ProjectPaperViewProps {
@@ -59,6 +59,11 @@
 
     const loadingPaper = loadingPaperWrapper.then(asPaper);
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
+    // as the navigation bar shows either the paper id or the local / relative id, if the paper
+    // is a project paper, the id for the navigation bar must be handles differently
+    const loadingPaperIdForNavigationBar = loadingPaperWrapper.then((paper) =>
+        isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id,
+    );
 
     // svelte-ignore non_reactive_update
     let researchContextCardProps:
@@ -116,7 +121,12 @@ Usage:
 ```
 -->
 <div class="flex h-fit w-full flex-row justify-between gap-4">
-    <PaperNavigationBar {backRef} {loadingPaper} {user} />
+    <PaperNavigationBar
+        {backRef}
+        {loadingPaper}
+        loadingPaperId={loadingPaperIdForNavigationBar}
+        {user}
+    />
     <!-- TODO: Set `isBookmarkedDefault` as soon as endpoint is available -->
     <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
 </div>

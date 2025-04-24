@@ -37,6 +37,7 @@
     <PaperNavigationBar
         backRef={`/project/${projectId}/dashboard`}
         loadingPaper={Promise.resolve(paper)}
+        loadingPaperId={Promise.resolve(paper.id)}
         {user}
     />
 {:catch error}

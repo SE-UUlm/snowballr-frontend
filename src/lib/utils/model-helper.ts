@@ -9,4 +9,8 @@ function asPaper(paper: Project_Paper | Paper): Paper {
     return isProjectPaper(paper) ? paper.paper! : paper;
 }
 
-export { asPaper, isProjectPaper };
+function asProjectPaper(paper: Project_Paper | Paper): Project_Paper | undefined {
+    return isProjectPaper(paper) ? paper : undefined;
+}
+
+export { asPaper, asProjectPaper, isProjectPaper };

@@ -18,8 +18,8 @@ import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } fr
 import type { ISnowballRClient } from "$lib/model/api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$lib/model/api/project";
-import { backendService } from "$lib/grpc-api";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
+import { backendService } from "$lib/grpc-api";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -220,6 +220,7 @@ vi.mock("$lib/grpc-api", () => {
             getBackwardReferencedPapers: mock({ papers: Object.values(Papers).slice(0, 3) }),
             getPaperPdf: vi.fn(),
             setPaperPdf: vi.fn(),
+            updateProjectMemberRole: vi.fn(),
         },
     };
     return mockBackend;
