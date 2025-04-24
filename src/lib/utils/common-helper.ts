@@ -30,7 +30,9 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
  * @returns true, if the paper is either unreviewed or has the status "Maybe", otherwise false
  */
 function isPaperUndecided(paper: Project_Paper): boolean {
-    return paper.decision === PaperDecision.UNDECIDED;
+    return (
+        paper.decision === PaperDecision.UNREVIEWED || paper.decision === PaperDecision.IN_REVIEW
+    );
 }
 
 /**
@@ -145,9 +147,11 @@ function getStatusText(paper: Project_Paper): PaperStatus {
             return "Accepted";
         case PaperDecision.DECLINED:
             return "Declined";
-        case PaperDecision.UNDECIDED:
+        case PaperDecision.IN_REVIEW:
+            return "Undecided";
+        case PaperDecision.UNREVIEWED:
         case PaperDecision.UNSPECIFIED:
-            return paper.reviews.length > 0 ? "Undecided" : "Not reviewed";
+            return "Not reviewed";
         default:
             exhaustiveCheck(paper.decision);
     }

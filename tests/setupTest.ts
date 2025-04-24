@@ -163,13 +163,13 @@ vi.mock("$lib/grpc-api", () => {
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
             getAllPapersToReview: mock({
-                projectPapers: Object.values(ProjectPapers).filter(
-                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                projectPapers: Object.values(ProjectPapers).filter((paper) =>
+                    [PaperDecision.UNREVIEWED, PaperDecision.IN_REVIEW].includes(paper.decision),
                 ),
             }),
             getPapersToReviewForProject: mock({
-                projectPapers: Object.values(ProjectPapers).filter(
-                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                projectPapers: Object.values(ProjectPapers).filter((paper) =>
+                    [PaperDecision.UNREVIEWED, PaperDecision.IN_REVIEW].includes(paper.decision),
                 ),
             }),
             getUserSettings: vi.fn(),

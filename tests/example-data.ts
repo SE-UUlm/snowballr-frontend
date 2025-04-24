@@ -184,14 +184,14 @@ export const ProjectPapers = {
         id: "0",
         paper: Papers.demoPaper1,
         stage: 0n,
-        decision: PaperDecision.UNDECIDED,
+        decision: PaperDecision.UNREVIEWED,
         reviews: [],
     },
     demoProjectPaper2: {
         id: "1",
         paper: Papers.demoPaper2,
         stage: 0n,
-        decision: PaperDecision.UNDECIDED,
+        decision: PaperDecision.IN_REVIEW,
         reviews: [Reviews.demoReview1, Reviews.demoReview3],
     },
     demoProjectPaper3: {
