@@ -4,7 +4,7 @@
     import { ProjectStatus } from "$lib/model/api/project";
     import type { ProjectListEntryInterface } from "$lib/model/component-interfaces";
 
-    const { project, membersList, statistics }: ProjectListEntryInterface = $props();
+    const { project, membersList, information }: ProjectListEntryInterface = $props();
 </script>
 
 <!--
@@ -21,7 +21,7 @@ Furthermore this component is clickable and navigates to the corresponding proje
 
 Usage:
 ```svelte
-    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} statistics={{projectProgress: 0.3}} />
+    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} information={{projectProgress: 0.3}} />
 ```
 -->
 <a
@@ -51,7 +51,7 @@ Usage:
             class="h-2.5 w-24 bg-slate-200 group-hover/project-list-entry:bg-slate-300 sm:w-28 md:w-48 lg:w-28 xl:w-40 2xl:w-52"
             aria-label="Stage Progress"
             data-testid="stage-progress-bar"
-            value={statistics.projectProgress * 100}
+            value={information.projectProgress * 100}
         />
     </div>
 </a>

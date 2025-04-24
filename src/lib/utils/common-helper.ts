@@ -136,13 +136,13 @@ function getStatusColor(status: PaperStatus, prefix: ColorPrefix = "text"): stri
 }
 
 /**
- * Maps the paper status to the corresponding text.
+ * Maps the paper decision to the corresponding text.
  *
- * @param paper - the paper whose review status should be determined
+ * @param paperDecision - the paper decision
  * @returns the review status ("Accepted", "Declined", "Undecided" or "Not reviewed")
  */
-function getStatusText(paper: Project_Paper): PaperStatus {
-    switch (paper.decision) {
+function getStatusText(paperDecision: PaperDecision): PaperStatus {
+    switch (paperDecision) {
         case PaperDecision.ACCEPTED:
             return "Accepted";
         case PaperDecision.DECLINED:
@@ -153,7 +153,7 @@ function getStatusText(paper: Project_Paper): PaperStatus {
         case PaperDecision.UNSPECIFIED:
             return "Not reviewed";
         default:
-            exhaustiveCheck(paper.decision);
+            exhaustiveCheck(paperDecision);
     }
 }
 

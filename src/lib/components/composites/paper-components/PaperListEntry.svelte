@@ -71,7 +71,7 @@ Usage:
         class={cn(
             "flex flex-auto rounded-md px-3 py-2",
             !reviewMode.isActivated && isProjectPaper(paper)
-                ? `border-l-4 ${getStatusColor(getStatusText(paper), "border")}`
+                ? `border-l-4 ${getStatusColor(getStatusText(paper.decision), "border")}`
                 : "",
         )}
     >

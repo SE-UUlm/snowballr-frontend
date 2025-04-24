@@ -1,38 +1,47 @@
 import { backendService } from "$lib/grpc-api";
 import type { PageLoad } from "./$types";
-import { type Project, type Project_Paper } from "$lib/model/api/project";
+import {
+    PaperDecision,
+    type Project,
+    type Project_Information_DecisionStatistics,
+} from "$lib/model/api/project";
 import type {
     PaperListEntryInterface,
     ProjectInformationInterface,
     StageProgressInterface,
 } from "$lib/model/component-interfaces";
-import { getStatusText, groupBy } from "$lib/utils/common-helper";
 
-async function groupProjectPapersInStageByDecision(
+async function requestProjectInformation(
     project: Project,
-): Promise<{ [key: string]: Project_Paper[] }> {
-    const papersOfStage = await backendService
-        .getAllProjectPapersForProject({ id: project.id })
-        .response.then((papers) =>
-            papers.projectPapers.filter(
-                (projectPaper) => projectPaper.stage === project.currentStage,
-            ),
-        );
+    decisionStatistics: Project_Information_DecisionStatistics,
+): Promise<ProjectInformationInterface> {
+    const projectInformation = await backendService.getProjectInformation({ projectId: project.id })
+        .response;
+    if (!projectInformation.creationDate) {
+        throw new Error("Couldn't load start date of project.", {
+            cause: "NoDate",
+        });
+    }
+    const startDate = new Date(Number(projectInformation.creationDate.seconds) * 1000);
+    if (!projectInformation.lastStageStarted) {
+        throw new Error("Couldn't load start date of latest stage.", {
+            cause: "NoDate",
+        });
+    }
+    const startDateForStage = new Date(Number(projectInformation.lastStageStarted.seconds) * 1000);
+    const daysInStage = Math.round(
+        Math.abs(new Date().getTime() - startDateForStage.getTime()) / 8.64e7,
+    );
 
-    return groupBy(papersOfStage, getStatusText);
-}
-
-async function requestProjectInformation(project: Project): Promise<ProjectInformationInterface> {
-    // TODO: add a real call to the backend (extend API + extend mock backend), waiting for #7 in snowballr-api
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 5);
-    const daysInStage = 2;
-
-    const papersByDecision = await groupProjectPapersInStageByDecision(project);
-    const numberOfReviewedPapers =
-        (papersByDecision["Accepted"] ?? []).length + (papersByDecision["Declined"] ?? []).length;
-    const numberOfPapers = Object.entries(papersByDecision).reduce(
-        (acc, currentValue) => acc + currentValue[1].length,
+    const numberOfReviewedPapers = decisionStatistics.statistics.reduce(
+        (acc, currentValue) =>
+            [PaperDecision.IN_REVIEW, PaperDecision.UNREVIEWED].includes(currentValue.decision)
+                ? acc + Number(currentValue.count)
+                : acc,
+        0,
+    );
+    const numberOfPapers = decisionStatistics.statistics.reduce(
+        (acc, currentValue) => acc + Number(currentValue.count),
         0,
     );
 
@@ -45,20 +54,6 @@ async function requestProjectInformation(project: Project): Promise<ProjectInfor
             (daysInStage * numberOfPapers) / numberOfReviewedPapers - daysInStage,
         totalPapersInStage: numberOfPapers,
         reviewedPapersInStage: numberOfReviewedPapers,
-    };
-}
-
-async function requestStageProgress(project: Project): Promise<StageProgressInterface> {
-    const papersByDecision = await groupProjectPapersInStageByDecision(project);
-    const decisions = {
-        "Not reviewed": (papersByDecision["Not reviewed"] ?? []).length,
-        Undecided: (papersByDecision["Undecided"] ?? []).length,
-        Accepted: (papersByDecision["Accepted"] ?? []).length,
-        Declined: (papersByDecision["Declined"] ?? []).length,
-    };
-    return {
-        stage: project.currentStage,
-        decisions: decisions,
     };
 }
 
@@ -86,17 +81,38 @@ export const load: PageLoad = async ({ params, parent }) => {
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     openReviews.catch(() => {});
 
-    const projectInformation: Promise<ProjectInformationInterface> = loadingProject
-        .then((project) => requestProjectInformation(project))
-        .catch(() => {
-            throw new Error("Couldn't load project information.");
+    const loadingDecisionStatistics = loadingProject.then(
+        (project) =>
+            backendService.getDecisionStatisticsForStage({
+                projectId: project.id,
+                stage: project.currentStage,
+            }).response,
+    );
+
+    const projectInformation: Promise<ProjectInformationInterface> = Promise.all([
+        loadingProject,
+        loadingDecisionStatistics,
+    ])
+        .then(([project, decisionStatistics]) =>
+            requestProjectInformation(project, decisionStatistics),
+        )
+        .catch((error) => {
+            throw new Error(
+                error.cause === "NoDate" ? error.message : "Couldn't load project information.",
+            );
         });
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     projectInformation.catch(() => {});
 
-    const stageProgress: Promise<StageProgressInterface> = loadingProject
-        .then((project) => requestStageProgress(project))
+    const stageProgress: Promise<StageProgressInterface> = Promise.all([
+        loadingProject,
+        loadingDecisionStatistics,
+    ])
+        .then(([project, decisionStatistics]) => ({
+            stage: project.currentStage,
+            decisions: decisionStatistics,
+        }))
         .catch(() => {
             throw new Error("Couldn't load stage progress.");
         });

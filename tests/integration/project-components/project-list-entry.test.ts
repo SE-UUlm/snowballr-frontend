@@ -15,7 +15,7 @@ describe("ProjectListEntryComponent", () => {
                         { user: Users.janeDoe, role: MemberRole.DEFAULT },
                     ],
                 },
-                statistics: { projectProgress: 0.2 },
+                information: { projectProgress: 0.2 },
             },
         });
 
@@ -36,7 +36,7 @@ describe("ProjectListEntryComponent", () => {
                 membersList: {
                     members: [],
                 },
-                statistics: { projectProgress: 20 },
+                information: { projectProgress: 20 },
             },
         });
 
@@ -53,7 +53,7 @@ describe("ProjectListEntryComponent", () => {
                 membersList: {
                     members: [],
                 },
-                statistics: { projectProgress: 20 },
+                information: { projectProgress: 20 },
             },
         });
 

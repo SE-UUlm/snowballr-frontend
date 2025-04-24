@@ -9,14 +9,14 @@ import type {
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
     const members = await backendService.getProjectMembers({ id: project.id }).response;
-    const statistics = await backendService.getProjectStatistics({
+    const projectInformation = await backendService.getProjectInformation({
         projectId: project.id,
     }).response;
 
     return {
         project: project,
         membersList: members,
-        statistics: statistics,
+        information: projectInformation,
     };
 }
 

@@ -51,7 +51,7 @@ Usage:
             </span>
             {pluralize(information.estimatedRemainingDays, "day", "days")}.
         {/if}
-    {:catch}
-        <ErrorIndicator errorMessage="Couldn't load project information." />
+    {:catch error}
+        <ErrorIndicator errorMessage={error.message} />
     {/await}
 </div>

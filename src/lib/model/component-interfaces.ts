@@ -2,10 +2,10 @@ import {
     type Project,
     type Project_Member_List,
     type Project_Paper,
-    type Project_Statistics,
+    type Project_Information,
+    type Project_Information_DecisionStatistics,
 } from "$lib/model/api/project";
 import type { Paper } from "$lib/model/api/paper";
-import type { PaperStatus } from "$lib/model/general";
 
 /**
  * Contains interfaces or types that specify the interface of components.
@@ -24,13 +24,13 @@ interface ProjectInformationInterface {
 
 interface StageProgressInterface {
     stage: bigint;
-    decisions: Record<PaperStatus, number>;
+    decisions: Project_Information_DecisionStatistics;
 }
 
 interface ProjectListEntryInterface {
     project: Project;
     membersList: Project_Member_List;
-    statistics: Project_Statistics;
+    information: Project_Information;
 }
 
 /**

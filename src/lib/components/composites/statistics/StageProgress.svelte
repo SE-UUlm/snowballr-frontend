@@ -2,8 +2,7 @@
     import type { StageProgressInterface } from "$lib/model/component-interfaces";
     import Circle from "lucide-svelte/icons/circle";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import { getStatusColor } from "$lib/utils/common-helper";
-    import { type PaperStatus } from "$lib/model/general";
+    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import StageProgressChart from "$lib/components/composites/statistics/StageProgressChart.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
 
@@ -42,19 +41,21 @@ Usage:
     {:then { stage, decisions }}
         <StageProgressChart {decisions} {stage} />
         <ul class="mx-10 space-y-3 max-sm:mx-2 md:max-lg:mx-4">
-            {#each Object.entries(decisions) as [decision, number] (decision)}
+            {#each Object.values(decisions.statistics) as { decision, count } (decision)}
                 <li class="flex flex-row items-center">
                     <Circle
-                        class={`mr-2 fill-current ${getStatusColor(decision as PaperStatus, "text")}`}
+                        class={`mr-2 fill-current ${getStatusColor(getStatusText(decision), "text")}`}
                         fill="currentColor"
                         size={14}
                     />
-                    <span class="text-default-sb min-w-38 md:max-lg:min-w-30">{decision}:</span>
-                    <span class="text-align">{number}</span>
+                    <span class="text-default-sb min-w-38 md:max-lg:min-w-30">
+                        {getStatusText(decision)}:
+                    </span>
+                    <span class="text-align">{count}</span>
                 </li>
             {/each}
         </ul>
-    {:catch}
-        <ErrorIndicator errorMessage="Couldn't load current stage progress." />
+    {:catch error}
+        <ErrorIndicator errorMessage={error.message} />
     {/await}
 </div>
