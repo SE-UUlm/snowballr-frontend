@@ -19,6 +19,7 @@ import type { ISnowballRClient } from "$lib/model/api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$lib/model/api/project";
 import { backendService } from "$lib/grpc-api";
+import { AuthenticationStatus } from "$lib/model/api/authentication";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -147,7 +148,9 @@ vi.mock("$lib/grpc-api", () => {
             register: vi.fn(),
             login: vi.fn(),
             logout: vi.fn(),
-            isAuthenticated: mock({ value: true }),
+            getAuthenticationStatus: mock({
+                authenticationStatus: AuthenticationStatus.AUTHENTICATED,
+            }),
             renewSession: vi.fn(),
             requestPasswordReset: vi.fn(),
             resetPassword: vi.fn(),
