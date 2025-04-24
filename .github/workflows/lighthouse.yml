@@ -18,34 +18,27 @@ jobs:
               with:
                   submodules: "recursive"
 
+            - name: Setup
+              uses: ./.github/workflows/setup/
+              with:
+                  node_version: ${{ env.node_version }}
+
             - name: Set up Docker Compose
               uses: docker/setup-compose-action@v1
 
             # We use the mock-local compose profile to run the frontend together with a dummy mock-backend
             - name: Run frontend with dummy mock-backend
               run: |
-                  echo "PORT=8080" > .env
+                  echo "PORT=5173" > .env
+                  echo "RANDOMNESS_SEED=U25vd2JhbGxS" >> .env
                   docker compose --profile mock-local up -d --wait
 
-            - name: Generate URLs
-              id: urls
-              uses: actions/github-script@v7
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  script: |
-                      const globber = await glob.create('**/src/routes/**/+page.svelte');
-                      const files = await globber.glob();
-                      const urls = files
-                          .map(x => x.match(/routes\/([\(a-zA-Z\/\[\]\)]*?)\/?\+page\.svelte/)[1])
-                          .map(x => x.replace('[paperId]', '1').replace('[projectId]', '1').replace(/\([a-z\-]+\)\//g, ''))
-                          .map(x => `http://localhost:8080/${x}`)
-                          .join('\n');
-                      console.log('generated URLs:', urls);
-                      core.setOutput('urls', urls);
+            - name: Run Lighthouse
+              run: npm run lighthouse:all -- --params="projectId=11,paperId=11-0"
 
-            - name: Audit URLs using Lighthouse
-              uses: treosh/lighthouse-ci-action@v12
+            - name: Archive coverage report
+              uses: actions/upload-artifact@v4
               with:
-                  urls: ${{ steps.urls.outputs.urls }}
-                  uploadArtifacts: true
-                  configPath: .github/lighthouserc.json
+                  name: lighthouse-report
+                  path: lighthouse-reports
+                  if-no-files-found: error
