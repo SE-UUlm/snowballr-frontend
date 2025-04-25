@@ -21,7 +21,7 @@ the pull request list. So it's up to you whether you want to create a draft pull
 
 When starting to work on an issue, ensure that the issue is assigned to you and part of our project `SnowballR`.
 Furthermore, make sure you set the status to `In progress` and the iteration to the current one (if that is not already
-done).
+done). **Prefer** to work on issues that are already assigned to you and part of the current iteration/sprint.
 
 When you are finished with the implementation, create a pull request (when not already done) and fill out the template.
 If other branches were merged into `develop` while you were working on the issue, make sure to rebase your branch onto
