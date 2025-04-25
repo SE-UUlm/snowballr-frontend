@@ -15,8 +15,9 @@
     import type { Paper } from "$lib/model/api/paper";
     import type { Project, Project_Paper } from "$lib/model/api/project";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
-    import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+    import { asPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import { getDisplayPaperId } from "$lib/utils/common-helper";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -62,7 +63,7 @@
     // as the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
     const loadingPaperIdForNavigationBar = loadingPaperWrapper.then((paper) =>
-        isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id,
+        getDisplayPaperId(paper),
     );
 
     // svelte-ignore non_reactive_update

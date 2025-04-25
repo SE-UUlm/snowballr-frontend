@@ -1,5 +1,7 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import type { PaperStatus } from "$lib/model/general";
+import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+import type { Paper } from "$lib/model/api/paper";
 
 /**
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
@@ -180,6 +182,18 @@ function comparePaperId(a: string, b: string): number {
 }
 
 /**
+ * Get the id of the paper that should be displayed, e.g. in the `PaperInfo` component.
+ *
+ * If the paper is a project paper, the local / relative id is used instead of the normal paper id.
+ *
+ * @param paper - The paper whose "display" id should be returned
+ * @returns the normal paper id or the local id, if it is a project paper
+ */
+function getDisplayPaperId(paper: Paper | Project_Paper): string {
+    return isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id;
+}
+
+/**
  * Handles a click event by checking
  * whether it was a single click (so no further click after 350ms) or a double click
  * and call the corresponding functions:
@@ -216,5 +230,6 @@ export {
     getStatusColor,
     getStatusText,
     comparePaperId,
+    getDisplayPaperId,
     handleSingleOrDoubleClick,
 };

@@ -4,10 +4,14 @@
     import { goto } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
-    import { getStatusColor, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
+    import {
+        getDisplayPaperId,
+        getStatusColor,
+        handleSingleOrDoubleClick,
+    } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
-    import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+    import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     type PaperListEntryProps = PaperListEntryInterface & {
@@ -26,9 +30,7 @@
 
     const { paper, projectId, onClick = navigateToPaperView }: PaperListEntryProps = $props();
 
-    const paperId = $derived(
-        isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id,
-    );
+    const paperId = $derived(getDisplayPaperId(paper));
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
