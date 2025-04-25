@@ -4,21 +4,20 @@ import KeywordSettings from "$lib/components/composites/settings/project-setting
 import userEvent from "@testing-library/user-event";
 
 describe("KeywordSettings", () => {
-    const maximumAmountOfTags = 5;
+    const maximumAmountOfTags = 51;
+    const maximumTagLength = 101;
     beforeEach(() => {
         localStorage.clear();
         render(KeywordSettings, {
             props: {
                 projectId: "0",
-                maximumAmountOfTags: maximumAmountOfTags,
-                maximalTagLength: 15,
             },
         });
     });
 
     test("It is rendered correctly", async () => {
         expect(screen.queryByText("Keywords")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Add a tag")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Add keyword")).toBeInTheDocument();
     });
 
     test("When the input is valid, a tag is created", async () => {
@@ -46,9 +45,10 @@ describe("KeywordSettings", () => {
         await userEvent.keyboard("{Enter}");
         expect(screen.queryByText(" ")).not.toBeInTheDocument();
 
-        await userEvent.type(tagsInputField, "Maximal tag length exceeded");
+        const toLongString = "a".repeat(maximumTagLength);
+        await userEvent.type(tagsInputField, toLongString);
         await userEvent.keyboard("{Enter}");
-        expect(screen.queryByText("Maximal tag length exceeded")).not.toBeInTheDocument();
+        expect(screen.queryByText(toLongString)).not.toBeInTheDocument();
     });
 
     test("When the tag remove button is clicked, the according tag gets removed correctly", async () => {
@@ -59,8 +59,8 @@ describe("KeywordSettings", () => {
         await userEvent.keyboard("{Enter}");
         const tagToRemove = screen.getByText("Tag to remove");
         expect(tagToRemove).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "\u2715" })).toBeInTheDocument();
-        await userEvent.click(screen.getByRole("button", { name: "\u2715" }));
+        expect(screen.getByRole("button", { name: "×" })).toBeInTheDocument();
+        await userEvent.click(screen.getByRole("button", { name: "×" }));
         expect(tagToRemove).not.toBeInTheDocument();
     });
 

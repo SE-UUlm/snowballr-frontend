@@ -2,8 +2,15 @@ import { test } from "./fixtures/project-review-settings-fixture";
 import { expect } from "@playwright/test";
 
 test.describe("Project - Review settings", () => {
+    let projectId: string = "";
+    test.beforeAll(async ({ mockBackendService }) => {
+        mockBackendService
+            .createProject({ name: "Project 1" })
+            .then((project) => (projectId = project.response.id));
+    });
+
     test.beforeEach(async ({ page }) => {
-        await page.goto("/");
+        await page.goto(`/project/${projectId}/settings/review`);
     });
 
     test("When the user creates a new tag and deletes this tag, the tag is correctly added and deleted", async ({

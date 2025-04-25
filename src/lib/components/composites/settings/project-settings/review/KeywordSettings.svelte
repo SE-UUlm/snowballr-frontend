@@ -1,16 +1,21 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import TagsInput from "svelte-unstyled-tags";
-    import { toast } from "svelte-sonner";
     import { onMount } from "svelte";
+    import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
+    import type { ValidationResult } from "$lib/model/general";
 
     interface Props {
         projectId: string;
-        maximumAmountOfTags: number;
-        maximalTagLength: number;
     }
 
-    const { projectId, maximumAmountOfTags = 25, maximalTagLength = 15 }: Props = $props();
+    const maximumNumberOfTags = 50;
+    const maximumTagLength = 100
+
+    export function getProjectKeywordsKey(projectId: string): string |null {
+        return localStorage.getItem(`project_${projectId}_keywords`);
+    }
+
+    const { projectId }: Props = $props();
 
     let tags: string[] = $state([]);
 
@@ -18,7 +23,7 @@
      * Loads the already defined keyword tags for the selected project.
      */
     onMount(async () => {
-        const projectKeywords = localStorage.getItem(`project_${projectId}_keywords`);
+        const projectKeywords = getProjectKeywordsKey(projectId)
         if (projectKeywords) {
             tags = JSON.parse(projectKeywords);
         }
@@ -29,31 +34,34 @@
      * If a new tag input is registered, it is checked whether it is not empty, it does not exceed
      * the maximal tag length, the maximal number of tags is not reached or the tag name already
      * exists. In this case the tag is correct and is added to the tag input field.
+     * @param newTag - validates the newly created tag
+     * @returns - the validation result of the new tag
      */
-    function validateTags() {
+    function validateTags(newTag: string): ValidationResult {
+        let validationResult: ValidationResult = { success: true };
         if (tags && tags.length > 0) {
-            const newTag = tags[tags.length - 1];
             if (newTag.trim().length == 0) {
-                tags.pop();
-                return toast("Empty keywords are not allowed!");
-            } else if (newTag.trim().length > maximalTagLength) {
-                tags.pop();
-                return toast(`Maximal keyword length of ${maximalTagLength} characters exceeded!`);
-            } else if (tags.length > maximumAmountOfTags) {
-                tags.pop();
-                return toast(`Maximal amount of keywords reached!`);
+                validationResult = { success: false, error: "Empty keywords are not allowed!" };
+            } else if (newTag.trim().length > maximumTagLength) {
+                validationResult = { success: false, error: `Maximum keyword length of ${maximumTagLength} characters exceeded!` };
+            } else if (tags.length > maximumNumberOfTags) {
+                validationResult = { success: false, error: `Maximum number of keywords reached!` };
             } else if (
                 Array.from(tags)
                     .slice(0, tags.length - 1)
                     .includes(newTag)
             ) {
-                tags.pop();
-                return toast(`Keyword name already exists!`);
+                validationResult = { success: false, error: `Keyword name already exists!` };
             }
-            localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags));
-            return tags;
         }
+        return validationResult;
     }
+
+    $effect(() => {
+        localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags));
+    });
+
+
 </script>
 
 <!--
@@ -65,22 +73,16 @@ length of a single tag are customizable.
 
 Usage:
 ```svelte
-    <SettingsSection {maximumAmountOfTags} {maximalTagLength} />
+    <KeywordSettings {maximumAmountOfTags} {maximalTagLength} />
+```
 -->
 <SettingsSection sectionTitle="Keywords">
-    <div class="items-top space-x-2">
-        <div class="grid max-w-2xl gap-1.5 pt-1 leading-none">
-            <TagsInput
-                allTagsWrapperClasses="flex flex-row items-center gap-x-2 gap-y-2 flex-wrap"
-                inputClasses="focus:outline-none focus:ring-0 pl-2 py-1"
-                labelText="Define keywords that are highlighted in the abstract of a paper in the review mode."
-                removeTagButtonClasses="max-w-0 overflow-hidden group-hover:max-w-[20px] group-hover:ml-2 transition-all duration-200 text-black-500 hover:text-black-500 cursor-pointer"
-                showLabel={true}
-                tagWrapperClasses="group flex items-start bg-gray-200 text-black px-2 py-1.5 rounded-xl"
-                tagsInputWrapperClasses="flex items-start border-2 border-gray-200 py-2 px-3 rounded-md mt-2 h-[84px] overflow-auto"
-                bind:tags
-                on:input={() => validateTags()}
+        <div class="max-w-2xl">
+            <ChipsInput
+                label="Define keywords that are highlighted in the abstract of a paper in the review mode."
+                placeholder="Add keyword"
+                validate={(newTag) => validateTags(newTag)}
+                bind:items={tags}
             />
         </div>
-    </div>
 </SettingsSection>
