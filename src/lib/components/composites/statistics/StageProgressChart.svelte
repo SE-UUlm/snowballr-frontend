@@ -21,9 +21,7 @@
             value: Number(count) / totalNumberOfDecisions,
         })),
     );
-    const possibleDecisions = Object.values(decisions.statistics).map(({ decision }) =>
-        getStatusText(decision),
-    );
+    const possibleDecisions = Object.values(decisions.statistics).map(({ decision }) => decision);
 
     const SIZE = 152;
     const radius = SIZE / 2;
@@ -43,7 +41,7 @@
     let colorScale = $state(
         d3
             .scaleOrdinal<string>()
-            .domain(possibleDecisions)
+            .domain(possibleDecisions.map((decision) => getStatusText(decision)))
             .range(possibleDecisions.map((decision) => getStatusColor(decision, "text"))),
     );
 

@@ -4,11 +4,7 @@
     import { goto } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
-    import {
-        getStatusColor,
-        getStatusText,
-        handleSingleOrDoubleClick,
-    } from "$lib/utils/common-helper";
+    import { getStatusColor, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
     import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
@@ -76,7 +72,7 @@ Usage:
         class={cn(
             "flex flex-auto rounded-md px-3 py-2",
             !reviewMode.isActivated && isProjectPaper(paper)
-                ? `border-l-4 ${getStatusColor(getStatusText(paper.decision), "border")}`
+                ? `border-l-4 ${getStatusColor(paper.decision, "border")}`
                 : "",
         )}
     >

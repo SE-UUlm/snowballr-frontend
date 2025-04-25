@@ -97,26 +97,32 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
 }
 
 type ColorPrefix = "border" | "text" | "bg" | "fill";
-const statusColors: Record<PaperStatus, Record<ColorPrefix, string>> = {
-    Accepted: {
+const statusColors: Record<PaperDecision, Record<ColorPrefix, string>> = {
+    [PaperDecision.ACCEPTED]: {
         border: "border-accept-green",
         text: "text-accept-green",
         fill: "fill-accept-green",
         bg: "bg-accept-green",
     },
-    Declined: {
+    [PaperDecision.DECLINED]: {
         border: "border-decline-red",
         text: "text-decline-red",
         fill: "fill-decline-red",
         bg: "bg-decline-red",
     },
-    Undecided: {
+    [PaperDecision.IN_REVIEW]: {
         border: "border-maybe-yellow",
         text: "text-maybe-yellow",
         fill: "fill-maybe-yellow",
         bg: "bg-maybe-yellow",
     },
-    "Not reviewed": {
+    [PaperDecision.UNREVIEWED]: {
+        border: "border-unreviewed-gray",
+        text: "text-unreviewed-gray",
+        fill: "fill-unreviewed-gray",
+        bg: "bg-unreviewed-gray",
+    },
+    [PaperDecision.UNSPECIFIED]: {
         border: "border-unreviewed-gray",
         text: "text-unreviewed-gray",
         fill: "fill-unreviewed-gray",
@@ -125,14 +131,14 @@ const statusColors: Record<PaperStatus, Record<ColorPrefix, string>> = {
 };
 
 /**
- * Maps the paper status to the corresponding color.
+ * Maps the paper decision to the corresponding color.
  *
- * @param status - the status of the paper
+ * @param decision - the final decision of the paper
  * @param prefix - the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
- * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
+ * @returns the color according to the decision and prefix or 'text-unreviewed-gray' if either the decision or prefix are not valid
  */
-function getStatusColor(status: PaperStatus, prefix: ColorPrefix = "text"): string {
-    return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
+function getStatusColor(decision: PaperDecision, prefix: ColorPrefix = "text"): string {
+    return statusColors[decision][prefix] ?? "text-unreviewed-gray";
 }
 
 /**
