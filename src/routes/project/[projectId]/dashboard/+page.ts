@@ -10,6 +10,21 @@ import type {
     ProjectInformationInterface,
     StageProgressInterface,
 } from "$lib/model/component-interfaces";
+import type { Timestamp } from "$lib/model/api/google/protobuf/timestamp";
+
+/**
+ * Parses a Timestamp object into a date object.
+ *
+ * @param timestamp - The timestamp given as object of seconds and nanoseconds relative to an epoch of UTC
+ * @param errorMessage - The message in the error thrown when the parsing is not possible
+ */
+function parseTimestamp(timestamp?: Timestamp, errorMessage: string = ""): Date {
+    if (!timestamp) {
+        throw new Error(errorMessage, { cause: "NoDate" });
+    }
+
+    return new Date(Number(timestamp.seconds) * 1000);
+}
 
 async function requestProjectInformation(
     project: Project,
@@ -22,15 +37,17 @@ async function requestProjectInformation(
             cause: "NoDate",
         });
     }
-    const startDate = new Date(Number(projectInformation.creationDate.seconds) * 1000);
-    if (!projectInformation.lastStageStarted) {
-        throw new Error("Couldn't load start date of latest stage.", {
-            cause: "NoDate",
-        });
-    }
-    const startDateForStage = new Date(Number(projectInformation.lastStageStarted.seconds) * 1000);
+    const startDate = parseTimestamp(
+        projectInformation.creationDate,
+        "Couldn't load start date of project.",
+    );
+    const startDateForStage = parseTimestamp(
+        projectInformation.lastStageStarted,
+        "Couldn't load start date of latest stage.",
+    );
+    const MILLIS_OF_ONE_DAY = 8.64e7;
     const daysInStage = Math.round(
-        Math.abs(new Date().getTime() - startDateForStage.getTime()) / 8.64e7,
+        Math.abs(Date.now() - startDateForStage.getTime()) / MILLIS_OF_ONE_DAY,
     );
 
     const numberOfReviewedPapers = decisionStatistics.statistics.reduce(
