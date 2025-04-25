@@ -17,7 +17,7 @@ To set up the development environment, follow the steps in
 Starting from an issue, we create a branch with the name of the issue (see [Commits & Branches](#commits--branches)).
 It's up to you, whether you create a draft pull request immediately or wait until you are finished with the
 implementation. While creating a draft pull request gives you direct feedback from the CI/CD pipeline, it also clutters
-the pull request list. So it's up to you, whether you want to create a draft pull request or not.
+the pull request list. So it's up to you whether you want to create a draft pull request or not.
 
 When starting to work on an issue, ensure that the issue is assigned to you and part of our project `SnowballR`.
 Furthermore, make sure you set the status to `In progress` and the iteration to the current one (if that is not already
@@ -41,7 +41,7 @@ The reviewing process works as follows:
    request into the `develop` branch. Make sure to use merge commits and not squash or rebase.
 4. If there were updates to the `develop` branch while the pull request was in review, you will need to rebase your
    branch onto the `develop` branch again and resolve any conflicts. Make sure this is discussed with the reviewer.
-5. After merging the pull request, the commit is automatically closed and the status is set to `Done`.
+5. After merging the pull request, the issue is automatically closed and the status is set to `Done`.
 
 ### Commits & Branches
 
@@ -53,7 +53,7 @@ A branch name should be `<prefix>/<issue-number>-<short-description>`, e.g. `fix
 signals the type of the issue. For that we use the type of
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) that best fits the issues. For instance, if the
 issue is a bug, we use `fix/`, if it is a feature, we use `feat/`, etc. **Prefer** using the GitHub functionality to
-create branches from an issues as it already provides `<issue-number>-<short-description>` and you only have to add the
+create branches from an issue as it already provides `<issue-number>-<short-description>` and you only have to add the
 `prefix/` part.
 
 ## Project Layout
