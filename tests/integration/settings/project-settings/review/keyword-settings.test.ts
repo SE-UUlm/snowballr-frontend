@@ -20,7 +20,7 @@ describe("KeywordSettings", () => {
         expect(screen.getByPlaceholderText("Add keyword")).toBeInTheDocument();
     });
 
-    test("When the input is valid, a tag is created", async () => {
+    test("When the input is valid, then a tag is created", async () => {
         const tagsInputField = screen.getByLabelText(
             "Define keywords that are highlighted in the abstract of a paper in the review mode.",
         );
@@ -29,7 +29,7 @@ describe("KeywordSettings", () => {
         expect(screen.getByText("New Tag 1")).toBeInTheDocument();
     });
 
-    test("When the tag name already exists, the name is to long or empty, then no tag is created", async () => {
+    test("When the tag name already exists, the name is too long or blank, then no tag is created", async () => {
         const tagsInputField = screen.getByLabelText(
             "Define keywords that are highlighted in the abstract of a paper in the review mode.",
         );
@@ -45,13 +45,13 @@ describe("KeywordSettings", () => {
         await userEvent.keyboard("{Enter}");
         expect(screen.queryByText(" ")).not.toBeInTheDocument();
 
-        const toLongString = "a".repeat(maximumTagLength);
-        await userEvent.type(tagsInputField, toLongString);
+        const tooLongString = "a".repeat(maximumTagLength);
+        await userEvent.type(tagsInputField, tooLongString);
         await userEvent.keyboard("{Enter}");
-        expect(screen.queryByText(toLongString)).not.toBeInTheDocument();
+        expect(screen.queryByText(tooLongString)).not.toBeInTheDocument();
     });
 
-    test("When the tag remove button is clicked, the according tag gets removed correctly", async () => {
+    test("When the tag remove button is clicked, then the according tag gets removed correctly", async () => {
         const tagsInputField = screen.getByLabelText(
             "Define keywords that are highlighted in the abstract of a paper in the review mode.",
         );
@@ -64,7 +64,7 @@ describe("KeywordSettings", () => {
         expect(tagToRemove).not.toBeInTheDocument();
     });
 
-    test("When the maximal amount of tags is reached, no other tag is created", async () => {
+    test("When the maximum amount of tags is reached, then no other tag is created", async () => {
         const tagsInputField = screen.getByLabelText(
             "Define keywords that are highlighted in the abstract of a paper in the review mode.",
         );

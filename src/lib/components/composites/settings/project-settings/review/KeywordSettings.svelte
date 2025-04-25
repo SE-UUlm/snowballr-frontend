@@ -74,13 +74,13 @@ length of a single tag are customizable.
 
 Usage:
 ```svelte
-    <KeywordSettings {maximumAmountOfTags} {maximalTagLength} />
+    <KeywordSettings {projectId} />
 ```
 -->
 <SettingsSection sectionTitle="Keywords">
     <div class="max-w-2xl">
         <ChipsInput
-            label="Define keywords that are highlighted in the abstract of a paper in the review mode."
+            label="Define keywords that are highlighted in the abstract of a paper when the review mode is activated."
             placeholder="Add keyword"
             validate={(newTag) => validateTags(newTag)}
             bind:items={tags}

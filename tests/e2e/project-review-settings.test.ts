@@ -13,7 +13,7 @@ test.describe("Project - Review settings", () => {
         await page.goto(`/project/${projectId}/settings/review`);
     });
 
-    test("When the user creates a new tag and deletes this tag, the tag is correctly added and deleted", async ({
+    test("When the user creates a new tag and deletes this tag, then the tag is correctly added and deleted", async ({
         page,
         projectReviewSettingsPage,
     }) => {
@@ -24,7 +24,7 @@ test.describe("Project - Review settings", () => {
         await expect(newTag).not.toBeVisible();
     });
 
-    test("When the navigates to another page and comes back to the review settings, the previously defined keyword tags are still available", async ({
+    test("When the user navigates to another page and comes back to the review settings, then the previously defined keyword tags are still available", async ({
         page,
         projectReviewSettingsPage,
     }) => {
