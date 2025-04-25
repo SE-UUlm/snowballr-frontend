@@ -17,7 +17,7 @@
 
 <!--
 @component
-Container for displaying basic paper information as
+Container for displaying basic paper information such as:
 - paper title
 - paper authors
 - the id

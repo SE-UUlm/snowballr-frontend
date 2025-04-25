@@ -60,7 +60,7 @@
     const loadingPaper = loadingPaperWrapper.then(asPaper);
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
     // as the navigation bar shows either the paper id or the local / relative id, if the paper
-    // is a project paper, the id for the navigation bar must be handles differently
+    // is a project paper, the id for the navigation bar must be handled differently
     const loadingPaperIdForNavigationBar = loadingPaperWrapper.then((paper) =>
         isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id,
     );
