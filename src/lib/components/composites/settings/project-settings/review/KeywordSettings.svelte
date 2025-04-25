@@ -8,8 +8,8 @@
         projectId: string;
     }
 
-    const maximumNumberOfTags = 50;
-    const maximumTagLength = 100;
+    const MAX_NUMBER_OF_TAGS = 50;
+    const MAX_TAG_LENGTH = 100;
 
     export function getProjectKeywordsKey(projectId: string): string | null {
         return localStorage.getItem(`project_${projectId}_keywords`);
@@ -37,27 +37,24 @@
      * @param newTag - validates the newly created tag
      * @returns - the validation result of the new tag
      */
-    function validateTags(newTag: string): ValidationResult {
-        let validationResult: ValidationResult = { success: true };
-        if (tags && tags.length > 0) {
-            if (newTag.trim().length == 0) {
-                validationResult = { success: false, error: "Empty keywords are not allowed!" };
-            } else if (newTag.trim().length > maximumTagLength) {
-                validationResult = {
-                    success: false,
-                    error: `Maximum keyword length of ${maximumTagLength} characters exceeded!`,
-                };
-            } else if (tags.length > maximumNumberOfTags) {
-                validationResult = { success: false, error: `Maximum number of keywords reached!` };
-            } else if (
-                Array.from(tags)
-                    .slice(0, tags.length - 1)
-                    .includes(newTag)
-            ) {
-                validationResult = { success: false, error: `Keyword name already exists!` };
-            }
+    function validateTag(newTag: string): ValidationResult {
+        if (tags.length >= MAX_NUMBER_OF_TAGS) {
+            return { success: false, error: `Maximum number of keywords reached!` };
         }
-        return validationResult;
+        const newTagLength = newTag.trim().length;
+        if (newTagLength === 0) {
+            return { success: false, error: "Blank keywords are not allowed!" };
+        }
+        if (newTagLength > MAX_TAG_LENGTH) {
+            return {
+                success: false,
+                error: `Maximum keyword length of ${MAX_TAG_LENGTH} characters exceeded!`,
+            };
+        }
+        if (tags.includes(newTag)) {
+            return { success: false, error: `Keyword name already exists!` };
+        }
+        return { success: true };
     }
 
     $effect(() => {
@@ -82,7 +79,7 @@ Usage:
         <ChipsInput
             label="Define keywords that are highlighted in the abstract of a paper when the review mode is activated."
             placeholder="Add keyword"
-            validate={(newTag) => validateTags(newTag)}
+            validate={(newTag) => validateTag(newTag)}
             bind:items={tags}
         />
     </div>

@@ -7,7 +7,7 @@ export class DevProjectReviewSettingsPage {
     constructor(page: Page) {
         this.page = page;
         this.tagInputField = page.getByLabel(
-            "Define keywords that are highlighted in the abstract of a paper in the review mode.",
+            "Define keywords that are highlighted in the abstract of a paper when the review mode is activated.",
         );
     }
 
@@ -19,7 +19,6 @@ export class DevProjectReviewSettingsPage {
     async addTag(tagName: string) {
         await this.tagInputField.click();
         await this.tagInputField.fill(tagName);
-        await this.tagInputField.focus();
         await this.page.keyboard.press("Enter");
     }
 
@@ -30,12 +29,7 @@ export class DevProjectReviewSettingsPage {
      */
     async deleteTag(tagName: string) {
         const tag = this.page.getByText(tagName);
-        await tag.hover();
-        const deleteTagButton = this.page.getByRole("button", { name: "×" });
+        const deleteTagButton = tag.getByRole("button", { name: "×" });
         await deleteTagButton.click();
-        // This is a not clean way of clicking the button, but it is a workarount, because the hover
-        // method does not work in firefox, so the button does not apear in the e2e test. Therefor
-        // the click has to be force on the not visible element until firefox changes this.
-        // await deleteTagButton.evaluate((btn: HTMLElement) => btn.click());
     }
 }
