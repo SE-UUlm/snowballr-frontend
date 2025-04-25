@@ -9,9 +9,9 @@
     }
 
     const maximumNumberOfTags = 50;
-    const maximumTagLength = 100
+    const maximumTagLength = 100;
 
-    export function getProjectKeywordsKey(projectId: string): string |null {
+    export function getProjectKeywordsKey(projectId: string): string | null {
         return localStorage.getItem(`project_${projectId}_keywords`);
     }
 
@@ -23,7 +23,7 @@
      * Loads the already defined keyword tags for the selected project.
      */
     onMount(async () => {
-        const projectKeywords = getProjectKeywordsKey(projectId)
+        const projectKeywords = getProjectKeywordsKey(projectId);
         if (projectKeywords) {
             tags = JSON.parse(projectKeywords);
         }
@@ -43,7 +43,10 @@
             if (newTag.trim().length == 0) {
                 validationResult = { success: false, error: "Empty keywords are not allowed!" };
             } else if (newTag.trim().length > maximumTagLength) {
-                validationResult = { success: false, error: `Maximum keyword length of ${maximumTagLength} characters exceeded!` };
+                validationResult = {
+                    success: false,
+                    error: `Maximum keyword length of ${maximumTagLength} characters exceeded!`,
+                };
             } else if (tags.length > maximumNumberOfTags) {
                 validationResult = { success: false, error: `Maximum number of keywords reached!` };
             } else if (
@@ -60,8 +63,6 @@
     $effect(() => {
         localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags));
     });
-
-
 </script>
 
 <!--
@@ -77,12 +78,12 @@ Usage:
 ```
 -->
 <SettingsSection sectionTitle="Keywords">
-        <div class="max-w-2xl">
-            <ChipsInput
-                label="Define keywords that are highlighted in the abstract of a paper in the review mode."
-                placeholder="Add keyword"
-                validate={(newTag) => validateTags(newTag)}
-                bind:items={tags}
-            />
-        </div>
+    <div class="max-w-2xl">
+        <ChipsInput
+            label="Define keywords that are highlighted in the abstract of a paper in the review mode."
+            placeholder="Add keyword"
+            validate={(newTag) => validateTags(newTag)}
+            bind:items={tags}
+        />
+    </div>
 </SettingsSection>
