@@ -23,7 +23,7 @@
     }
 
     const {
-        listName,
+        listName = "",
         items,
         listItemComponent,
         listItemSkeleton,
@@ -71,7 +71,9 @@ This can be e.g. a search bar.
 -->
 <div class="flex h-full w-full flex-col gap-y-5 overflow-hidden">
     {#await items}
-        <h2>{listName}</h2>
+        {#if listName}
+            <h2>{listName}</h2>
+        {/if}
         {@render preListContent?.()}
         <ul class="scroll-box space-y-4 pb-1">
             {#each { length: numberOfSkeletons }}
@@ -81,10 +83,14 @@ This can be e.g. a search bar.
             {/each}
         </ul>
     {:then loadedItems}
-        {#if showNumberOfListItems}
-            <h2>{listName} ({numberOfItems === undefined ? loadedItems.length : numberOfItems})</h2>
-        {:else}
-            <h2>{listName}</h2>
+        {#if listName}
+            {#if showNumberOfListItems}
+                <h2>
+                    {listName} ({numberOfItems === undefined ? loadedItems.length : numberOfItems})
+                </h2>
+            {:else}
+                <h2>{listName}</h2>
+            {/if}
         {/if}
         {@render preListContent?.()}
         {#if loadedItems.length === 0}
@@ -100,7 +106,9 @@ This can be e.g. a search bar.
         {/if}
     {:catch error}
         {console.error(`Couldn't load items: ${error}`)}
-        <h2>{listName}</h2>
+        {#if listName}
+            <h2>{listName}</h2>
+        {/if}
         <ErrorIndicator errorMessage={errorHint ? errorHint : error} />
     {/await}
 </div>
