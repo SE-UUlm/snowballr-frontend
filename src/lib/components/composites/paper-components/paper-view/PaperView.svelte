@@ -59,11 +59,12 @@
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
     const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
-    // as the navigation bar shows either the paper id or the local / relative id, if the paper
+    // As the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
     const loadingPaperIdForNavigationBar = $derived.by(() =>
         loadingPaperWrapper.then((paper) => getDisplayPaperId(paper)),
     );
+    const loadingProjectPaperId = loadingPaperWrapper.then((paper) => paper.id);
 
     // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
     // Note: this is ugly, but otherwise the types of these properties can't be inferred.
@@ -144,17 +145,15 @@ Usage:
             <PaperNavigationButton direction="left" href="" />
             {#if reviewMode.isActivated}
                 {#if loadingProject}
-                    {#await loadingProject}
-                        <!-- show nothing while loading -->
-                    {:then project}
+                    {#await Promise.all( [loadingProject, loadingProjectPaperId], ) then [project, projectPaperId]}
                         <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                         <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                         <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                            <PaperDecisionButton {loadingPaperId} variant="decline" />
+                            <PaperDecisionButton {projectPaperId} variant="decline" />
                             {#if project.settings?.reviewMaybeAllowed}
-                                <PaperDecisionButton {loadingPaperId} variant="maybe" />
+                                <PaperDecisionButton {projectPaperId} variant="maybe" />
                             {/if}
-                            <PaperDecisionButton {loadingPaperId} variant="accept" />
+                            <PaperDecisionButton {projectPaperId} variant="accept" />
                         </div>
                     {/await}
                 {/if}

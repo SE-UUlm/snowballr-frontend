@@ -7,7 +7,7 @@ describe("PaperDecisionButton", () => {
     test("When variant is 'accept', then button is visualized and acts as the accept button ", async () => {
         render(PaperDecisionButton, {
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                projectPaperId: "1",
                 variant: "accept",
             },
         });
@@ -25,7 +25,7 @@ describe("PaperDecisionButton", () => {
     test("When variant is 'decline', then button is visualized and acts as the decline button ", async () => {
         render(PaperDecisionButton, {
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                projectPaperId: "1",
                 variant: "decline",
             },
         });
@@ -43,7 +43,7 @@ describe("PaperDecisionButton", () => {
     test("When variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
         render(PaperDecisionButton, {
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                projectPaperId: "1",
                 variant: "maybe",
             },
         });

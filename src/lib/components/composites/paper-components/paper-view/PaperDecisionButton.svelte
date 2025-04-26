@@ -17,16 +17,16 @@
     }
 
     interface PaperDecisionButtonProps {
-        loadingPaperId: Promise<string>;
+        projectPaperId: string;
         variant: PaperDecisionButtonVariant;
     }
 
-    const { loadingPaperId, variant }: PaperDecisionButtonProps = $props();
+    const { projectPaperId, variant }: PaperDecisionButtonProps = $props();
 
     let isSubmittingReview = $state(false);
 
     /**
-     * Return the content of the button, i.e. the button name, the shortcut and the tooltip text
+     * Returns the content of the button, i.e. the button name, the shortcut and the tooltip text
      * based on the paper decision button variant.
      */
     function getButtonContent(): ButtonContent {
@@ -42,11 +42,13 @@
                     tooltipText: "Mark paper as undecided",
                 };
             default:
-                /// TODO: find better return content (ideas from reviewer?)
                 return { name: "", shortcut: "", tooltipText: "" };
         }
     }
 
+    /**
+     * Returns the review decision based on the paper decision button variant.
+     */
     function getDecision(): ReviewDecision {
         switch (variant) {
             case "accept":
@@ -61,22 +63,19 @@
     }
 
     /**
-     * Submit a review to the server.
+     * Submits a review to the server.
      */
     async function submitReview() {
         isSubmittingReview = true;
         try {
-            const paperId = await loadingPaperId;
-
             const review: Review_Create = {
-                projectPaperId: paperId,
+                projectPaperId: projectPaperId,
                 decision: getDecision(),
                 selectedCriteriaIds: [],
             };
 
             await backendService.createReview(review);
-
-            // TODO: navigate automatically to next paper
+            // TODO: navigate automatically to next paper that will be implemented in #47
         } catch (err) {
             console.error(`Could not submit, as an invalid paper id was provided (${err})`);
         }
@@ -96,7 +95,7 @@ the submitted decision.
 Usage:
 ```svelte
     <PaperDecisionButton
-        {loadingPaperId}
+        {projectPaperId}
         variant="accept"
     />
 ```
