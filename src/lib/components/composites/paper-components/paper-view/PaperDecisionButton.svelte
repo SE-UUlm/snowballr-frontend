@@ -19,11 +19,16 @@
     interface PaperDecisionButtonProps {
         projectPaperId: string;
         variant: PaperDecisionButtonVariant;
+        isSubmittingReview?: boolean;
     }
 
-    const { projectPaperId, variant }: PaperDecisionButtonProps = $props();
+    let {
+        projectPaperId,
+        variant,
+        isSubmittingReview = $bindable(false),
+    }: PaperDecisionButtonProps = $props();
 
-    let isSubmittingReview = $state(false);
+    let showLoadingSpinner = $state(false);
 
     /**
      * Returns the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -66,7 +71,7 @@
      * Submits a review to the server.
      */
     async function submitReview() {
-        isSubmittingReview = true;
+        isSubmittingReview = showLoadingSpinner = true;
         try {
             const review: Review_Create = {
                 projectPaperId: projectPaperId,
@@ -79,7 +84,7 @@
         } catch (err) {
             console.error(`Could not submit, as an invalid paper id was provided (${err})`);
         }
-        isSubmittingReview = false;
+        isSubmittingReview = showLoadingSpinner = false;
     }
 </script>
 
@@ -92,11 +97,15 @@ To customize which type of decision button it is, use the `variant` prop
 that not only styles the button correctly but also change the behavior regarding
 the submitted decision.
 
+When the button is pressed and a review is submitted, the variable `isSubmittingReview` is set to
+true to indicate that a review is submitted and no other decision buttons should be clickable.
+
 Usage:
 ```svelte
     <PaperDecisionButton
         {projectPaperId}
         variant="accept"
+        bind:isSubmittingReview
     />
 ```
 -->
@@ -112,7 +121,7 @@ Usage:
     triggerVariant="default"
 >
     {#snippet trigger()}
-        {#if isSubmittingReview}
+        {#if showLoadingSpinner}
             <LoaderCircle class="animate-spin" />
             Submitting review
         {:else}

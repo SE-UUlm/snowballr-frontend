@@ -87,6 +87,8 @@
             };
         }
     });
+
+    let isSubmittingReview = $state(false);
 </script>
 
 <!--
@@ -149,11 +151,23 @@ Usage:
                         <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                         <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                         <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                            <PaperDecisionButton {projectPaperId} variant="decline" />
+                            <PaperDecisionButton
+                                {projectPaperId}
+                                variant="decline"
+                                bind:isSubmittingReview
+                            />
                             {#if project.settings?.reviewMaybeAllowed}
-                                <PaperDecisionButton {projectPaperId} variant="maybe" />
+                                <PaperDecisionButton
+                                    {projectPaperId}
+                                    variant="maybe"
+                                    bind:isSubmittingReview
+                                />
                             {/if}
-                            <PaperDecisionButton {projectPaperId} variant="accept" />
+                            <PaperDecisionButton
+                                {projectPaperId}
+                                variant="accept"
+                                bind:isSubmittingReview
+                            />
                         </div>
                     {/await}
                 {/if}
