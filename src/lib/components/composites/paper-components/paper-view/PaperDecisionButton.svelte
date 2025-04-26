@@ -9,6 +9,7 @@
     import { backendService } from "$lib/grpc-api";
     import { type Review_Create, ReviewDecision } from "$lib/model/api/review";
     import { LoaderCircle } from "lucide-svelte";
+    import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
 
     interface ButtonContent {
         name: string;
@@ -68,7 +69,10 @@
     }
 
     /**
-     * Submits a review to the server.
+     * Submits a review to the server containing the review decision and the selected criteria.
+     *
+     * While the review is submitted, all decision buttons on this paper view page are disabled
+     * and a loading spinner is shown. After the review was submitted, a confirmation toast is shown.
      */
     async function submitReview() {
         isSubmittingReview = showLoadingSpinner = true;
@@ -76,7 +80,7 @@
             const review: Review_Create = {
                 projectPaperId: projectPaperId,
                 decision: getDecision(),
-                selectedCriteriaIds: [],
+                selectedCriteriaIds: selectedReviewCriteriaState.criteria,
             };
 
             await backendService.createReview(review);
@@ -86,6 +90,8 @@
         }
         isSubmittingReview = showLoadingSpinner = false;
     }
+
+    const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
 </script>
 
 <!-- max width is fixed, see PaperView component for reason -->

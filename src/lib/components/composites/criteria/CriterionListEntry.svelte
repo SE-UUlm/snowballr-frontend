@@ -6,6 +6,7 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
 
     interface Props {
         reviewers: User[];
@@ -13,6 +14,23 @@
     }
 
     let { reviewers, criterion }: Props = $props();
+
+    /**
+     * If this criterion was not checked before, then it will be added to the selected review
+     * criteria list, otherwise it will be deleted from this list.
+     */
+    function toggleReviewCriteriaInState() {
+        const criterionId = criterion.id;
+        if (!selectedReviewCriteriaState.criteria.includes(criterionId)) {
+            selectedReviewCriteriaState.criteria.push(criterionId);
+        } else {
+            selectedReviewCriteriaState.criteria = selectedReviewCriteriaState.criteria.filter(
+                (id) => id !== criterionId,
+            );
+        }
+    }
+
+    const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
 </script>
 
 <!--
@@ -34,8 +52,7 @@ Usage:
 -->
 <li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
     {#if reviewMode.isActivated}
-        <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
-        <Checkbox data-testid="criterion-checkbox" />
+        <Checkbox data-testid="criterion-checkbox" onCheckedChange={toggleReviewCriteriaInState} />
     {/if}
     <div class="flex flex-row gap-2 truncate">
         <span class="font-bold">{criterion.tag}</span>

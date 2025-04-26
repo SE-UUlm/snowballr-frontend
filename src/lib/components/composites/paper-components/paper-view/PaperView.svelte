@@ -16,6 +16,7 @@
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
+    import { setSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -89,6 +90,13 @@
     });
 
     let isSubmittingReview = $state(false);
+    const selectedReviewCriteria = $state({
+        criteria: [],
+    });
+
+    // Save reactive state for the selected review criteria from the `CriteriaList`
+    // in context, so this state is scoped to the `PaperView` component.
+    setSelectedReviewCriteriaContext(selectedReviewCriteria);
 </script>
 
 <!--
