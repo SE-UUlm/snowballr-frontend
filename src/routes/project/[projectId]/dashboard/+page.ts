@@ -32,11 +32,6 @@ async function requestProjectInformation(
 ): Promise<ProjectInformationInterface> {
     const projectInformation = await backendService.getProjectInformation({ projectId: project.id })
         .response;
-    if (!projectInformation.creationDate) {
-        throw new Error("Couldn't load start date of project.", {
-            cause: "NoDate",
-        });
-    }
     const startDate = parseTimestamp(
         projectInformation.creationDate,
         "Couldn't load start date of project.",
