@@ -36,13 +36,10 @@
 
         backendService
             .register(userData)
-            .then((user) => {
-                const { accessToken, refreshToken } = user.response;
+            .then(() => {
                 // TODO: Login with accessToken, store both tokens and redirect to the home page,
-                // will be completed in #134
-                console.log(
-                    `New user was registered with the following token: ${accessToken} (refreshToken: ${refreshToken})`,
-                );
+                // will be completed in !220
+                console.log("New user was registered.");
             })
             .catch((error) => {
                 if (error.code === StatusCodes.ALREADY_EXISTS) {

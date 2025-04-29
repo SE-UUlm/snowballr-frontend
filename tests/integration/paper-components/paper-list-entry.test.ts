@@ -37,9 +37,10 @@ describe("PaperListEntryComponent", () => {
             props: {
                 paper: {
                     id: "0",
+                    localId: "0",
                     paper: Papers.demoPaper1,
                     stage: 0n,
-                    decision: PaperDecision.UNDECIDED,
+                    decision: PaperDecision.UNREVIEWED,
                     reviews: [Reviews.demoReview1],
                 },
                 projectId: "0",
@@ -65,6 +66,7 @@ describe("PaperListEntryComponent", () => {
             props: {
                 paper: {
                     id: "0",
+                    localId: "0",
                     paper: Papers.demoPaper1,
                     stage: 0n,
                     decision: PaperDecision.DECLINED,

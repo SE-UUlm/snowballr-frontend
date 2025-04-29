@@ -14,11 +14,11 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 loadingPaper: loading(
                     createPaper({
-                        id: "123",
                         title: "Example Paper Title",
                         authors: [Authors.johnDoe, Authors.janeSmith],
                     }),
                 ),
+                loadingPaperId: loading("123"),
             },
         });
 
@@ -83,11 +83,11 @@ describe("PaperNavigationBar", () => {
                 backRef: "/",
                 loadingPaper: loading(
                     createPaper({
-                        id: "123",
                         title: "Example Paper Title",
                         authors: [],
                     }),
                 ),
+                loadingPaperId: loading("123"),
             },
         });
 

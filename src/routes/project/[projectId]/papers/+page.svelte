@@ -145,8 +145,7 @@
                         <StageEntry {projectId} {stage} bind:selectedPaper />
                     {/each}
                 </Accordion.Root>
-            {:catch error}
-                {console.error(`Couldn't load stages: ${error}`)}
+            {:catch}
                 <ErrorIndicator errorMessage="Couldn't load stages" />
             {/await}
         </div>
@@ -169,7 +168,7 @@
                     <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
                     <a
                         class="flex items-center"
-                        href={`/project/${projectId}/paper/${selectedPaper.id}`}
+                        href={`/project/${projectId}/paper/${selectedPaper.localId}`}
                     >
                         <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
                             {#snippet trigger()}

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { StageProgressInterface } from "$lib/model/component-interfaces";
-    import { getStatusColor } from "$lib/utils/common-helper";
+    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import type { PaperStatus } from "$lib/model/general";
     import * as d3 from "d3";
 
@@ -11,13 +11,17 @@
 
     const { stage, decisions }: StageProgressInterface = $props();
 
-    const totalNumberOfDecisions = Object.values(decisions).reduce((acc, cur) => acc + cur, 0);
+    const totalNumberOfDecisions = Object.values(decisions.statistics).reduce(
+        (acc, cur) => acc + Number(cur.count),
+        0,
+    );
     let segments: Segment[] = $state(
-        Object.entries(decisions).map(([key, numOfDecisions]) => ({
-            decision: key as PaperStatus,
-            value: numOfDecisions / totalNumberOfDecisions,
+        Object.values(decisions.statistics).map(({ decision, count }) => ({
+            decision: getStatusText(decision),
+            value: Number(count) / totalNumberOfDecisions,
         })),
     );
+    const possibleDecisions = Object.values(decisions.statistics).map(({ decision }) => decision);
 
     const SIZE = 152;
     const radius = SIZE / 2;
@@ -37,8 +41,8 @@
     let colorScale = $state(
         d3
             .scaleOrdinal<string>()
-            .domain(Object.keys(decisions))
-            .range(Object.keys(decisions).map((key) => getStatusColor(key as PaperStatus, "text"))),
+            .domain(possibleDecisions.map((decision) => getStatusText(decision)))
+            .range(possibleDecisions.map((decision) => getStatusColor(decision, "text"))),
     );
 
     // check, whether the stage was just created and no decisions can be shown

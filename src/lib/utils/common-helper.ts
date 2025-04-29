@@ -1,5 +1,7 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import type { PaperStatus } from "$lib/model/general";
+import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+import type { Paper } from "$lib/model/api/paper";
 
 /**
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
@@ -30,7 +32,9 @@ function getNames(persons: { firstName: string; lastName: string }[]): string {
  * @returns true, if the paper is either unreviewed or has the status "Maybe", otherwise false
  */
 function isPaperUndecided(paper: Project_Paper): boolean {
-    return paper.decision === PaperDecision.UNDECIDED;
+    return (
+        paper.decision === PaperDecision.UNREVIEWED || paper.decision === PaperDecision.IN_REVIEW
+    );
 }
 
 /**
@@ -95,26 +99,32 @@ function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string,
 }
 
 type ColorPrefix = "border" | "text" | "bg" | "fill";
-const statusColors: Record<PaperStatus, Record<ColorPrefix, string>> = {
-    Accepted: {
+const statusColors: Record<PaperDecision, Record<ColorPrefix, string>> = {
+    [PaperDecision.ACCEPTED]: {
         border: "border-accept-green",
         text: "text-accept-green",
         fill: "fill-accept-green",
         bg: "bg-accept-green",
     },
-    Declined: {
+    [PaperDecision.DECLINED]: {
         border: "border-decline-red",
         text: "text-decline-red",
         fill: "fill-decline-red",
         bg: "bg-decline-red",
     },
-    Undecided: {
+    [PaperDecision.IN_REVIEW]: {
         border: "border-maybe-yellow",
         text: "text-maybe-yellow",
         fill: "fill-maybe-yellow",
         bg: "bg-maybe-yellow",
     },
-    "Not reviewed": {
+    [PaperDecision.UNREVIEWED]: {
+        border: "border-unreviewed-gray",
+        text: "text-unreviewed-gray",
+        fill: "fill-unreviewed-gray",
+        bg: "bg-unreviewed-gray",
+    },
+    [PaperDecision.UNSPECIFIED]: {
         border: "border-unreviewed-gray",
         text: "text-unreviewed-gray",
         fill: "fill-unreviewed-gray",
@@ -123,33 +133,35 @@ const statusColors: Record<PaperStatus, Record<ColorPrefix, string>> = {
 };
 
 /**
- * Maps the paper status to the corresponding color.
+ * Maps the paper decision to the corresponding color.
  *
- * @param status - the status of the paper
+ * @param decision - the final decision of the paper
  * @param prefix - the prefix indicating wherefore the color should be used (possible values: "border", "fill", "text" or "bg")
- * @returns the color according to the status and prefix or 'text-unreviewed-gray' if either the status or prefix are not valid
+ * @returns the color according to the decision and prefix or 'text-unreviewed-gray' if either the decision or prefix are not valid
  */
-function getStatusColor(status: PaperStatus, prefix: ColorPrefix = "text"): string {
-    return statusColors[status]?.[prefix] ?? "text-unreviewed-gray";
+function getStatusColor(decision: PaperDecision, prefix: ColorPrefix = "text"): string {
+    return statusColors[decision][prefix] ?? "text-unreviewed-gray";
 }
 
 /**
- * Maps the paper status to the corresponding text.
+ * Maps the paper decision to the corresponding text.
  *
- * @param paper - the paper whose review status should be determined
+ * @param paperDecision - the paper decision
  * @returns the review status ("Accepted", "Declined", "Undecided" or "Not reviewed")
  */
-function getStatusText(paper: Project_Paper): PaperStatus {
-    switch (paper.decision) {
+function getStatusText(paperDecision: PaperDecision): PaperStatus {
+    switch (paperDecision) {
         case PaperDecision.ACCEPTED:
             return "Accepted";
         case PaperDecision.DECLINED:
             return "Declined";
-        case PaperDecision.UNDECIDED:
+        case PaperDecision.IN_REVIEW:
+            return "Undecided";
+        case PaperDecision.UNREVIEWED:
         case PaperDecision.UNSPECIFIED:
-            return paper.reviews.length > 0 ? "Undecided" : "Not reviewed";
+            return "Not reviewed";
         default:
-            exhaustiveCheck(paper.decision);
+            exhaustiveCheck(paperDecision);
     }
 }
 
@@ -167,6 +179,18 @@ function comparePaperId(a: string, b: string): number {
     const idB = parseInt(b.slice(1), 10);
     const compare = idA - idB;
     return isNaN(compare) ? 0 : compare;
+}
+
+/**
+ * Get the id of the paper that should be displayed, e.g. in the `PaperInfo` component.
+ *
+ * If the paper is a project paper, the local / relative id is used instead of the normal paper id.
+ *
+ * @param paper - The paper whose "display" id should be returned
+ * @returns the normal paper id or the local id, if it is a project paper
+ */
+function getDisplayPaperId(paper: Paper | Project_Paper): string {
+    return isProjectPaper(paper) ? asProjectPaper(paper)!.localId : asPaper(paper).id;
 }
 
 /**
@@ -206,5 +230,6 @@ export {
     getStatusColor,
     getStatusText,
     comparePaperId,
+    getDisplayPaperId,
     handleSingleOrDoubleClick,
 };

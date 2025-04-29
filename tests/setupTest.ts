@@ -18,6 +18,7 @@ import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } fr
 import type { ISnowballRClient } from "$lib/model/api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$lib/model/api/project";
+import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { backendService } from "$lib/grpc-api";
 
 // Add custom jest matchers
@@ -147,7 +148,9 @@ vi.mock("$lib/grpc-api", () => {
             register: vi.fn(),
             login: vi.fn(),
             logout: vi.fn(),
-            isAuthenticated: mock({ value: true }),
+            getAuthenticationStatus: mock({
+                authenticationStatus: AuthenticationStatus.AUTHENTICATED,
+            }),
             renewSession: vi.fn(),
             requestPasswordReset: vi.fn(),
             resetPassword: vi.fn(),
@@ -160,13 +163,13 @@ vi.mock("$lib/grpc-api", () => {
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
             getAllPapersToReview: mock({
-                projectPapers: Object.values(ProjectPapers).filter(
-                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                projectPapers: Object.values(ProjectPapers).filter((paper) =>
+                    [PaperDecision.UNREVIEWED, PaperDecision.IN_REVIEW].includes(paper.decision),
                 ),
             }),
             getPapersToReviewForProject: mock({
-                projectPapers: Object.values(ProjectPapers).filter(
-                    (paper) => paper.decision === PaperDecision.UNDECIDED,
+                projectPapers: Object.values(ProjectPapers).filter((paper) =>
+                    [PaperDecision.UNREVIEWED, PaperDecision.IN_REVIEW].includes(paper.decision),
                 ),
             }),
             getUserSettings: vi.fn(),
@@ -192,13 +195,15 @@ vi.mock("$lib/grpc-api", () => {
             exportProject: vi.fn(),
             softDeleteProject: vi.fn(),
             softUndeleteProject: vi.fn(),
-            getProjectStatistics: vi.fn(),
+            getProjectInformation: vi.fn(),
+            getDecisionStatisticsForStage: vi.fn(),
             getCriterionById: mock(({ id }) => createCriterion({ id })),
             getAllCriteriaForProject: mock({ criteria: Object.values(Criteria) }),
             createCriterion: vi.fn(),
             updateCriterion: vi.fn(),
             deleteCriterion: vi.fn(),
             getProjectPaperById: mock(({ id }) => createProjectPaper({ id })),
+            getProjectPaperByRelativeId: vi.fn(),
             getAllProjectPapersForProject: mock({ projectPapers: Object.values(ProjectPapers) }),
             addPaperToProject: vi.fn(),
             updateProjectPaper: vi.fn(),
@@ -215,6 +220,7 @@ vi.mock("$lib/grpc-api", () => {
             getBackwardReferencedPapers: mock({ papers: Object.values(Papers).slice(0, 3) }),
             getPaperPdf: vi.fn(),
             setPaperPdf: vi.fn(),
+            updateProjectMemberRole: vi.fn(),
         },
     };
     return mockBackend;

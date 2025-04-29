@@ -6,7 +6,10 @@ import type { CriterionWithReviews } from "$lib/model/general";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
-    const loadingProjectPaper = backendService.getProjectPaperById({ id: params.paperId }).response;
+    const loadingProjectPaper = backendService.getProjectPaperByRelativeId({
+        projectId: params.projectId,
+        relativeProjectPaperId: params.paperId,
+    }).response;
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
     loadingProjectPaper.catch(() => {});
@@ -27,7 +30,9 @@ export const load: PageLoad = ({ params }) => {
 
     const criteriaWithReviews: Promise<CriterionWithReviews[]> = Promise.all([
         backendService.getAllCriteriaForProject({ id: params.projectId }).response,
-        backendService.getAllReviewsForProjectPaper({ id: params.paperId }).response,
+        loadingProjectPaper.then(
+            (paper) => backendService.getAllReviewsForProjectPaper({ id: paper.id }).response,
+        ),
     ]).then(async ([{ criteria }, { reviews }]) => createCriteriaWithReviews(criteria, reviews));
 
     // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)

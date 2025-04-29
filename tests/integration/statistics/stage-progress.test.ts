@@ -1,9 +1,10 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import { waitForComponentLoading } from "../test-helper";
 import { loading } from "../../model-builder";
 import StageProgress from "$lib/components/composites/statistics/StageProgress.svelte";
 import type { StageProgressInterface } from "$lib/model/component-interfaces";
+import { PaperDecision } from "$lib/model/api/project";
 
 describe("StageProgress", () => {
     test("When all required props are provided, then the stage progress component is completely shown.", async () => {
@@ -11,7 +12,14 @@ describe("StageProgress", () => {
             props: {
                 stageProgress: loading<StageProgressInterface>({
                     stage: 0n,
-                    decisions: { "Not reviewed": 2, Accepted: 2, Undecided: 2, Declined: 2 },
+                    decisions: {
+                        statistics: [
+                            { decision: PaperDecision.UNREVIEWED, count: 2n },
+                            { decision: PaperDecision.ACCEPTED, count: 2n },
+                            { decision: PaperDecision.IN_REVIEW, count: 2n },
+                            { decision: PaperDecision.DECLINED, count: 2n },
+                        ],
+                    },
                 }),
             },
         });
@@ -37,7 +45,14 @@ describe("StageProgress", () => {
             props: {
                 stageProgress: loading<StageProgressInterface>({
                     stage: 0n,
-                    decisions: { "Not reviewed": 0, Accepted: 0, Undecided: 0, Declined: 0 },
+                    decisions: {
+                        statistics: [
+                            { decision: PaperDecision.UNREVIEWED, count: 0n },
+                            { decision: PaperDecision.ACCEPTED, count: 0n },
+                            { decision: PaperDecision.IN_REVIEW, count: 0n },
+                            { decision: PaperDecision.DECLINED, count: 0n },
+                        ],
+                    },
                 }),
             },
         });

@@ -51,7 +51,7 @@ describe("Check the (review) status of a paper", () => {
                 reviews: Reviews.demoReview1,
             },
             {
-                finalDecision: PaperDecision.UNDECIDED,
+                finalDecision: PaperDecision.IN_REVIEW,
                 reviews: Reviews.demoReview2,
             },
             {

@@ -8,19 +8,31 @@
     import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
-        loadingPaper: Promise<Paper | Omit<Paper, "id">>;
+        loadingPaper: Promise<Omit<Paper, "id">>;
+        loadingPaperId?: Promise<string>;
     };
 
-    const { loadingPaper, class: className }: Props = $props();
+    const { loadingPaper, loadingPaperId = undefined, class: className }: Props = $props();
 </script>
 
-{#await loadingPaper}
+<!--
+@component
+Container for displaying basic paper information such as:
+- paper title
+- paper authors
+- the id
+
+The id is either the global paper id or, if this component is used for displaying basic information
+for a project paper, the local / relative project paper id.
+
+-->
+{#await Promise.all([loadingPaper, loadingPaperId])}
     <PaperInfoSkeleton />
-{:then paper}
+{:then [paper, id]}
     <div class={cn("grid grid-flow-row gap-0", className)}>
         <div class="flex flex-row items-center gap-1 truncate">
-            {#if "id" in paper}
-                <div class="text-default-sb-nc w-fit text-neutral-500">#{paper.id}</div>
+            {#if id}
+                <div class="text-default-sb-nc w-fit text-neutral-500">#{id}</div>
             {/if}
             <h2 class="place-content-center truncate">{paper.title}</h2>
         </div>

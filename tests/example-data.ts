@@ -182,20 +182,23 @@ export const Reviews = {
 export const ProjectPapers = {
     demoProjectPaper1: {
         id: "0",
+        localId: "0",
         paper: Papers.demoPaper1,
         stage: 0n,
-        decision: PaperDecision.UNDECIDED,
+        decision: PaperDecision.UNREVIEWED,
         reviews: [],
     },
     demoProjectPaper2: {
         id: "1",
+        localId: "1",
         paper: Papers.demoPaper2,
         stage: 0n,
-        decision: PaperDecision.UNDECIDED,
+        decision: PaperDecision.IN_REVIEW,
         reviews: [Reviews.demoReview1, Reviews.demoReview3],
     },
     demoProjectPaper3: {
         id: "2",
+        localId: "2",
         paper: Papers.demoPaper3,
         stage: 0n,
         decision: PaperDecision.ACCEPTED,

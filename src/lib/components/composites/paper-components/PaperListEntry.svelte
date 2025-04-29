@@ -5,8 +5,8 @@
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
     import {
+        getDisplayPaperId,
         getStatusColor,
-        getStatusText,
         handleSingleOrDoubleClick,
     } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -19,15 +19,18 @@
     };
 
     const navigateToPaperView = () => {
-        const paperId = asPaper(paper).id;
-        const paperLink =
-            projectId !== undefined
-                ? `/project/${projectId}/paper/${paperId}`
-                : `/paper/${paperId}`;
-        goto(paperLink);
+        if (isProjectPaper(paper)) {
+            // navigate to project paper
+            goto(`/project/${projectId}/paper/${paperId}`);
+        } else {
+            // navigate to paper
+            goto(`/paper/${paperId}`);
+        }
     };
 
     const { paper, projectId, onClick = navigateToPaperView }: PaperListEntryProps = $props();
+
+    const paperId = $derived(getDisplayPaperId(paper));
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
@@ -71,11 +74,14 @@ Usage:
         class={cn(
             "flex flex-auto rounded-md px-3 py-2",
             !reviewMode.isActivated && isProjectPaper(paper)
-                ? `border-l-4 ${getStatusColor(getStatusText(paper), "border")}`
+                ? `border-l-4 ${getStatusColor(paper.decision, "border")}`
                 : "",
         )}
     >
-        <PaperInfo loadingPaper={Promise.resolve(asPaper(paper))} />
+        <PaperInfo
+            loadingPaper={Promise.resolve(asPaper(paper))}
+            loadingPaperId={Promise.resolve(paperId)}
+        />
     </div>
     {#if !reviewMode.isActivated && isProjectPaper(paper)}
         {#each paper.reviews as review (review.id)}
