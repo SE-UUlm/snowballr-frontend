@@ -17,6 +17,7 @@ export class DevProjectReviewSettingsPage {
      * @param tagName - the new tag name
      */
     async addTag(tagName: string) {
+        await this.tagInputField.waitFor({ state: "visible" });
         await this.tagInputField.click();
         await this.tagInputField.fill(tagName);
         await this.tagInputField.focus();

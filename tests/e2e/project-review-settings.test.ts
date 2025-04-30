@@ -4,9 +4,8 @@ import { expect } from "@playwright/test";
 test.describe("Project - Review settings", () => {
     let projectId: string = "";
     test.beforeAll(async ({ mockBackendService }) => {
-        mockBackendService
-            .createProject({ name: "Project 1" })
-            .then((project) => (projectId = project.response.id));
+        const project = await mockBackendService.createProject({ name: "Project 1" });
+        projectId = project.response.id;
     });
 
     test.beforeEach(async ({ page }) => {
@@ -34,7 +33,7 @@ test.describe("Project - Review settings", () => {
         await expect(page.getByText("New Tag 2")).toBeVisible();
 
         await page.getByText("General").click();
-        await page.getByTestId("settings-tab-review").click();
+        await page.getByRole("link", { name: "Review" }).click();
 
         await expect(page.getByText("New Tag 1")).toBeVisible();
         await expect(page.getByText("New Tag 2")).toBeVisible();
