@@ -5,13 +5,17 @@ export default defineConfig<TestOptions>({
     testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 3,
-    // Opt out of parallel tests on CI.
     failOnFlakyTests: !!process.env.CI,
+    // Opt out of parallel tests in CI.
     workers: process.env.CI ? 1 : undefined,
     reporter: [
         [process.env.GITHUB_ACTIONS ? "github" : "list"],
         ["html", { outputFolder: "e2e-report" }],
     ],
+    timeout: 10_000,
+    expect: {
+        timeout: 3_000,
+    },
     use: {
         baseURL: "http://localhost:4173",
         screenshot: "on",
@@ -72,7 +76,6 @@ export default defineConfig<TestOptions>({
             },
             dependencies: ["firefox setup"],
         },
-
         {
             name: "webkit",
             use: {
