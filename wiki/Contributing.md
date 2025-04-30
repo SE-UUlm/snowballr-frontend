@@ -120,3 +120,35 @@ npm run lighthouse -- --dir=/settings
 # or
 npm run lighthouse:all -- --dir=/settings
 ```
+
+The npm command builds and starts the app for the three different browsers. To skip building in subsequent runs, you can
+use the following command:
+
+```bash
+npm run test:e2e:skip-build
+```
+
+#### Requirements
+
+The E2E tests require a frontend and a mock backend to be running for each supported browser (Chromium, Firefox, and
+WebKit). The mock backends simulate the backend responses. To manually start the whole setup for each browser, you can
+use the provided script, which will start one frontend and one mock backend per browser:
+
+```bash
+node scripts/start-e2e-setup.js -c
+```
+
+| Variable                 | Default | Description                                              |
+| ------------------------ | :-----: | -------------------------------------------------------- |
+| `FRONTEND_PORT_CHROMIUM` |  4187   | The port of the frontend for the chromium testing setup. |
+| `FRONTEND_PORT_FIREFOX`  |  4188   | The port of the frontend for the firefox testing setup.  |
+| `FRONTEND_PORT_WEBKIT`   |  4189   | The port of the frontend for the webkit testing setup.   |
+
+#### Snapshots
+
+This runs all E2E tests and updates the snapshots. Similar to the `test:e2e:skip-build` command, you can also skip the
+build step by running:
+
+```bash
+npm run test:e2e:update:skip-build
+```

@@ -1,0 +1,36 @@
+services:
+    mock-backend-1:
+        image: ghcr.io/se-uulm/snowballr-mock-backend:main
+        environment:
+            NODE_ENV: production
+            GRPC_WEB_PORT: 3002
+        ports:
+            - 3002:3002
+
+    mock-backend-2:
+        image: ghcr.io/se-uulm/snowballr-mock-backend:main
+        environment:
+            NODE_ENV: production
+            GRPC_WEB_PORT: 3003
+        ports:
+            - 3003:3003
+
+    mock-backend-3:
+        image: ghcr.io/se-uulm/snowballr-mock-backend:main
+        environment:
+            NODE_ENV: production
+            GRPC_WEB_PORT: 3004
+        ports:
+            - 3004:3004
+
+    playwright:
+        build:
+            # Take root directory as working directory
+            context: ../../..
+            dockerfile: tests/e2e/docker/Dockerfile
+        volumes:
+            - ../../../e2e-report:/app/e2e-report
+        depends_on:
+            - mock-backend-1
+            - mock-backend-2
+            - mock-backend-3
