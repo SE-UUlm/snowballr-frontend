@@ -20,7 +20,6 @@ export class DevProjectReviewSettingsPage {
         await this.tagInputField.waitFor({ state: "visible" });
         await this.tagInputField.click();
         await this.tagInputField.fill(tagName);
-        await this.tagInputField.focus();
         await this.page.keyboard.press("Enter");
     }
 
