@@ -22,9 +22,9 @@ type CriterionWithReviews = Criterion & {
     reviews: Omit<Review, "selectedCriteriaIds">[];
 };
 
-interface CriteriaList {
+type CriteriaList = {
     criteria: string[];
-}
+};
 
 interface Stage {
     stageIndex: bigint;

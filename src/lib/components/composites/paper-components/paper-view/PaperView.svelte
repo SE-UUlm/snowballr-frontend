@@ -10,13 +10,14 @@
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
-    import type { Project, Project_Paper } from "$lib/model/api/project";
+    import { type Project, type Project_Paper } from "$lib/model/api/project";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
-    import { asPaper } from "$lib/utils/model-helper";
+    import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { setSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
+    import { type Review, ReviewDecision } from "$lib/model/api/review";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -89,14 +90,34 @@
         }
     });
 
-    let isSubmittingReview = $state(false);
     const selectedReviewCriteria = $state({
-        criteria: [],
+        criteria: [] as string[],
     });
-
     // Save reactive state for the selected review criteria from the `CriteriaList`
     // in context, so this state is scoped to the `PaperView` component.
     setSelectedReviewCriteriaContext(selectedReviewCriteria);
+
+    let isSubmittingReview = $state(false);
+    const loadingUserReview = getUserReviewIfAlreadySubmitted();
+    loadingUserReview.then(
+        (review) => (selectedReviewCriteria.criteria = review?.selectedCriteriaIds ?? []),
+    );
+
+    /**
+     * Gets the review of the user currently logged in for this paper,
+     * if such a review exist, i.e. the paper is a project paper and the
+     * user already reviewed this paper.
+     *
+     * @returns a promise containing the loading review if it exists, otherwise undefined
+     */
+    async function getUserReviewIfAlreadySubmitted(): Promise<Review | undefined> {
+        const paper = await loadingPaperWrapper;
+        if (!isProjectPaper(paper)) {
+            return undefined;
+        }
+        const projectPaper = asProjectPaper(paper)!;
+        return projectPaper.reviews.find((review) => review.userId === user.id);
+    }
 </script>
 
 <!--
@@ -153,32 +174,39 @@ Usage:
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
-            {#if reviewMode.isActivated}
-                {#if loadingProject}
-                    {#await Promise.all( [loadingProject, loadingProjectPaperId], ) then [project, projectPaperId]}
-                        <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
-                        <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                        <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
+            {#if reviewMode.isActivated && loadingProject}
+                {#await Promise.all( [loadingProject, loadingProjectPaperId, loadingUserReview], ) then [project, projectPaperId, userReview]}
+                    <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
+                    <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
+                    <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
+                        <PaperDecisionButton
+                            {projectPaperId}
+                            {userReview}
+                            variant={userReview?.decision === ReviewDecision.DECLINED
+                                ? "selected_decline"
+                                : "decline"}
+                            bind:isSubmittingReview
+                        />
+                        {#if project.settings?.reviewMaybeAllowed}
                             <PaperDecisionButton
                                 {projectPaperId}
-                                variant="decline"
+                                {userReview}
+                                variant={userReview?.decision === ReviewDecision.MAYBE
+                                    ? "selected_maybe"
+                                    : "maybe"}
                                 bind:isSubmittingReview
                             />
-                            {#if project.settings?.reviewMaybeAllowed}
-                                <PaperDecisionButton
-                                    {projectPaperId}
-                                    variant="maybe"
-                                    bind:isSubmittingReview
-                                />
-                            {/if}
-                            <PaperDecisionButton
-                                {projectPaperId}
-                                variant="accept"
-                                bind:isSubmittingReview
-                            />
-                        </div>
-                    {/await}
-                {/if}
+                        {/if}
+                        <PaperDecisionButton
+                            {projectPaperId}
+                            {userReview}
+                            variant={userReview?.decision === ReviewDecision.ACCEPTED
+                                ? "selected_accept"
+                                : "accept"}
+                            bind:isSubmittingReview
+                        />
+                    </div>
+                {/await}
             {/if}
             <PaperNavigationButton direction="right" href="" />
         </div>

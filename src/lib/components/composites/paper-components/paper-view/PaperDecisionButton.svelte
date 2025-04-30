@@ -7,7 +7,7 @@
     } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { type Review_Create, ReviewDecision } from "$lib/model/api/review";
+    import { type Review, type Review_Create, ReviewDecision } from "$lib/model/api/review";
     import { LoaderCircle } from "lucide-svelte";
     import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
 
@@ -21,14 +21,17 @@
         projectPaperId: string;
         variant: PaperDecisionButtonVariant;
         isSubmittingReview?: boolean;
+        userReview?: Review;
     }
 
     let {
         projectPaperId,
         variant,
         isSubmittingReview = $bindable(false),
+        userReview,
     }: PaperDecisionButtonProps = $props();
 
+    const wasAlreadyReviewed = userReview !== undefined;
     let showLoadingSpinner = $state(false);
 
     /**
@@ -38,10 +41,13 @@
     function getButtonContent(): ButtonContent {
         switch (variant) {
             case "accept":
+            case "selected_accept":
                 return { name: "Accept", shortcut: "Ctrl+A", tooltipText: "Accept paper" };
             case "decline":
+            case "selected_decline":
                 return { name: "Decline", shortcut: "Ctrl+D", tooltipText: "Decline paper" };
             case "maybe":
+            case "selected_maybe":
                 return {
                     name: "Maybe",
                     shortcut: "Ctrl+S",
@@ -106,10 +112,18 @@ the submitted decision.
 When the button is pressed and a review is submitted, the variable `isSubmittingReview` is set to
 true to indicate that a review is submitted and no other decision buttons should be clickable.
 
+The `userReview` property can be used to optionally pass the review given by the user currently
+logged in. If the user already submitted a review, then the decision button is styled according
+to the decision, i.e.
+- if the decision corresponds to the button variant, then button is disabled but looks like an
+enabled button and has a ring around it
+- otherwise, it is styled as a ordinary disabled button
+
 Usage:
 ```svelte
     <PaperDecisionButton
         {projectPaperId}
+        {userReview}
         variant="accept"
         bind:isSubmittingReview
     />
@@ -121,7 +135,7 @@ Usage:
         paperDecisionButtonVariants({ variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview}
+    disabled={isSubmittingReview || wasAlreadyReviewed}
     onclick={submitReview}
     triggerSize="default"
     triggerVariant="default"
