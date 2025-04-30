@@ -11,8 +11,8 @@
     const MAX_NUMBER_OF_TAGS = 50;
     const MAX_TAG_LENGTH = 100;
 
-    export function getProjectKeywordsKey(projectId: string): string | null {
-        return localStorage.getItem(`project_${projectId}_keywords`);
+    export function getProjectKeywordsKey(projectId: string) {
+        return `project_${projectId}_keywords`;
     }
 
     const { projectId }: Props = $props();
@@ -23,7 +23,7 @@
      * Loads the already defined keyword tags for the selected project.
      */
     onMount(async () => {
-        const projectKeywords = getProjectKeywordsKey(projectId);
+        const projectKeywords = localStorage.getItem(getProjectKeywordsKey(projectId));
         if (projectKeywords) {
             tags = JSON.parse(projectKeywords);
         }

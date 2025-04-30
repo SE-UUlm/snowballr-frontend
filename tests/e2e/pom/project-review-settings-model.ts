@@ -19,6 +19,7 @@ export class DevProjectReviewSettingsPage {
     async addTag(tagName: string) {
         await this.tagInputField.click();
         await this.tagInputField.fill(tagName);
+        await this.tagInputField.focus();
         await this.page.keyboard.press("Enter");
     }
 
