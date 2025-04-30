@@ -97,6 +97,7 @@ jobs:
                   # See https://github.com/actions/checkout for more details.
                   fetch-depth: 0
                   submodules: "recursive"
+                  lfs: true
 
             - name: Setup
               uses: ./.github/workflows/setup/

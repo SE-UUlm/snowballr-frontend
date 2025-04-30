@@ -1,5 +1,6 @@
 In this section, we explain how to contribute to the Snowballr frontend project. We cover the following topics:
 
+- [Git LFS Usage](#git-lfs-usage)
 - [Contribution Workflow \& Conventions](#contribution-workflow--conventions)
   - [Workflow](#workflow)
   - [Commits \& Branches](#commits--branches)
@@ -9,6 +10,15 @@ In this section, we explain how to contribute to the Snowballr frontend project.
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
+
+## Git LFS Usage
+
+We use [git-lfs](https://git-lfs.com/) to store large files in the repository. For now, this is only used for the
+snapshot screenshots of the E2E tests. To use git-lfs, you need to install it and run the following command:
+
+```bash
+git lfs pull
+```
 
 ## Contribution Workflow & Conventions
 

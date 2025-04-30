@@ -21,6 +21,7 @@ On this page, we will cover the following topics:
 - [End-to-End Tests](#end-to-end-tests)
   - [Requirements](#requirements)
   - [Best Practices](#best-practices)
+  - [Snapshots](#snapshots)
 
 ## Test Data
 
@@ -169,3 +170,43 @@ using the following environment variables:
    so that they can be accessed directly in each test without having to create a separate POM in each test.
 
 For more advanced usage and documentation, refer to the official [Playwright documentation](https://playwright.dev/).
+
+### Snapshots
+
+To detect visual regressions, we use snapshots. The snapshots are stored in the `tests/e2e/snapshots` directory.
+When running the E2E tests, the snapshots are compared to the current state of the application. If the snapshots
+are different, the test will fail. In case where a change is intended, you can update the snapshots by running the
+following command:
+
+```bash
+test:e2e:update-snapshots
+```
+
+There's a pre-defined `expectMatchingScreenshot` function that can be used to take a screenshot of the current state
+of the application and compare it to the snapshot. The function takes the current page, and a list of paths, which
+are used to create the path to the snapshot. Use the function like this:
+
+```ts
+await expectMatchingScreenshot(page, ["open-dialog"]);
+```
+
+This will take a screenshot of the current state of the application and compare it to the snapshot located at
+`tests/e2e/snapshots/<test-file>/open-dialog/img-<platform>-<arch>.png`. `platform` and `arch` are automatically
+determined by Playwright.
+
+Sometimes, parts of the screenshot contain dynamic content, such as the current date or time. In these cases, you can
+use a mask to ignore these parts of the screenshot (see
+[mask option](https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-1-option-mask)).
+Use the `mask` option like this:
+
+```ts
+await expectMatchingScreenshot(page, ["open-dialog"], {
+  mask: [
+    // Provide a comment to explain the reason for the mask
+    page.getByText("Some content"),
+  ],
+});
+```
+
+**Prefer** using the `expectMatchingScreenshot` function at each important step of the current workflow, instead of only
+the end. This gives us an overview of the current state of the application and provides a better coverage.

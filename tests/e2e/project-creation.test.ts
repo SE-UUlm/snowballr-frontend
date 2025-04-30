@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures/home-page-fixture";
+import { expectMatchingScreenshot } from "./helpers/snapshot";
 
 test.describe("Creating a new project", () => {
     test.beforeEach(async ({ page }) => {
@@ -12,14 +13,18 @@ test.describe("Creating a new project", () => {
     });
 
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({
+        page,
         homePage,
     }) => {
         await homePage.openCreateProjectDialog();
 
         await expect(homePage.createProjectDialog).toBeVisible();
+
+        await expectMatchingScreenshot(page, ["open-dialog"]);
     });
 
     test("When the dialog is opened, then the user can input the project name and possible members.", async ({
+        page,
         homePage,
         createProjectDialog,
     }) => {
@@ -29,6 +34,8 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.projectMemberInput.fill("john@doe.com");
 
         await createProjectDialog.checkForErrors();
+
+        await expectMatchingScreenshot(page, ["open-and-input-valid-data"]);
     });
 
     test("When the user inputs invalid data, then errors are displayed.", async ({
@@ -43,6 +50,8 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.projectMemberInput.press("Tab");
 
         await createProjectDialog.checkForErrors("expect-errors");
+
+        await expectMatchingScreenshot(page, ["open-and-input-invalid-data"]);
     });
 
     test("When the process is cancelled, then the dialog is closed, no project is created and all inputs are reset", async ({
@@ -84,6 +93,8 @@ test.describe("Creating a new project", () => {
         // the user stays on the project and the project is shown in the list of active projects
         await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
         await expect(page.getByRole("link", { name: "Demo project 2" })).toBeVisible();
+
+        await expectMatchingScreenshot(page, ["create-project-and-go-back"]);
     });
 
     test("When the project was successfully created and the user navigates to the project dashboard, then it shows an empty project.", async ({
@@ -106,6 +117,13 @@ test.describe("Creating a new project", () => {
         await expect(page.getByText("reviewed 0 / 0")).toBeVisible();
         await expect(page.getByText("No open reviews")).toBeVisible();
         await expect(page.getByText("estimated remaining time")).toBeHidden();
+
+        await expectMatchingScreenshot(page, ["create-project-and-open"], {
+            mask: [
+                // Mask project information as they contain the date
+                page.getByText("The project started on", { exact: false }),
+            ],
+        });
     });
 
     /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members

@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { test as globalSetup } from "./fixtures/general-fixture";
+import { expectMatchingScreenshot } from "./helpers/snapshot";
 
 globalSetup("Register user in the mock backend", async ({ page }) => {
     await page.goto("/signup");
@@ -10,4 +11,6 @@ globalSetup("Register user in the mock backend", async ({ page }) => {
     await page.getByRole("button", { name: "Create an account" }).click();
 
     await expect(page.getByRole("alert")).not.toBeVisible();
+
+    await expectMatchingScreenshot(page);
 });

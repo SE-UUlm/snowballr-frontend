@@ -19,7 +19,12 @@ export default defineConfig<TestOptions>({
     timeout: 10_000,
     expect: {
         timeout: 3_000,
+        toHaveScreenshot: {
+            maxDiffPixels: 0,
+        },
     },
+    // set snapshot path to 'tests/e2e/snapshots/...'
+    snapshotPathTemplate: "{testDir}/snapshots/{testFilePath}/{arg}-{projectName}-{platform}{ext}",
     use: {
         baseURL: "http://localhost:4173",
         screenshot: "on",
