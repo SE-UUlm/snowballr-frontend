@@ -1,5 +1,40 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices, PlaywrightTestConfig } from "@playwright/test";
 import type { TestOptions } from "./tests/e2e/fixtures/general-fixture";
+
+const CHROMIUM_BACKEND_PORT = process.env.MOCK_BACKEND_PORT_CHROMIUM ?? "3002";
+const CHROMIUM_FRONTEND_PORT = process.env.FRONTEND_PORT_CHROMIUM ?? "4187";
+
+const FIREFOX_BACKEND_PORT = process.env.MOCK_BACKEND_PORT_FIREFOX ?? "3003";
+const FIREFOX_FRONTEND_PORT = process.env.FRONTEND_PORT_FIREFOX ?? "4188";
+
+const WEBKIT_BACKEND_PORT = process.env.MOCK_BACKEND_PORT_WEBKIT ?? "3004";
+const WEBKIT_FRONTEND_PORT = process.env.FRONTEND_PORT_WEBKIT ?? "4189";
+
+// Playwright doesn't export `TestConfigWebServer` type, so we need to define it ourselves.
+type UnArray<T> = T extends (infer U)[] ? U : T;
+type NoUndefined<T> = Exclude<T, undefined>;
+type TestConfigWebServer = NoUndefined<UnArray<PlaywrightTestConfig["webServer"]>>;
+
+/**
+ * Creates a web server configuration for the Playwright test runner.
+ *
+ * @param frontendPort - The port for the frontend server.
+ * @param backendPort - The port for the backend server.
+ * @returns A configuration object for the web server.
+ */
+function createWebServerConfig(frontendPort: string, backendPort: string): TestConfigWebServer {
+    const proxyPort = (parseInt(backendPort) + 1000).toString();
+    return {
+        env: {
+            PORT: frontendPort,
+            GRPC_PORT: proxyPort,
+            GRPC_WEB_PORT: backendPort,
+        },
+        command: `echo 'Using server on port ${frontendPort}'`,
+        url: `http://localhost:${frontendPort}`,
+        reuseExistingServer: true,
+    };
+}
 
 export default defineConfig<TestOptions>({
     testDir: "tests/e2e",
@@ -15,43 +50,42 @@ export default defineConfig<TestOptions>({
     timeout: 10_000,
     expect: {
         timeout: 3_000,
+        toHaveScreenshot: {
+            maxDiffPixels: 0,
+        },
     },
+    // set snapshot path to 'tests/e2e/snapshots/...'
+    snapshotPathTemplate: "{testDir}/snapshots/{testFilePath}/{arg}-{projectName}-{platform}{ext}",
     use: {
-        baseURL: "http://localhost:4173",
         screenshot: "on",
         trace: "retain-on-failure",
     },
-    webServer: {
-        command: "npm run build && npm run preview",
-        port: 4173,
-        reuseExistingServer: !process.env.CI,
-    },
+    webServer: [
+        createWebServerConfig(CHROMIUM_FRONTEND_PORT, CHROMIUM_BACKEND_PORT),
+        createWebServerConfig(FIREFOX_FRONTEND_PORT, FIREFOX_BACKEND_PORT),
+        createWebServerConfig(WEBKIT_FRONTEND_PORT, WEBKIT_BACKEND_PORT),
+    ],
     projects: [
         // Setup projects
         {
             name: "chromium setup",
             testMatch: /.*\.setup\.ts/,
             use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
-                    "http://localhost:3002",
+                baseURL: `http://localhost:${CHROMIUM_FRONTEND_PORT}`,
             },
         },
         {
             name: "firefox setup",
             testMatch: /.*\.setup\.ts/,
             use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
-                    "http://localhost:3003",
+                baseURL: `http://localhost:${FIREFOX_FRONTEND_PORT}`,
             },
         },
         {
             name: "webkit setup",
             testMatch: /.*\.setup\.ts/,
             use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
+                baseURL: `http://localhost:${WEBKIT_FRONTEND_PORT}`,
             },
         },
 
@@ -60,9 +94,8 @@ export default defineConfig<TestOptions>({
             name: "chromium",
             use: {
                 ...devices["Desktop Chrome"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
-                    "http://localhost:3002",
+                mockBackendUrl: `http://localhost:${CHROMIUM_BACKEND_PORT}`,
+                baseURL: `http://localhost:${CHROMIUM_FRONTEND_PORT}`,
             },
             dependencies: ["chromium setup"],
         },
@@ -70,9 +103,8 @@ export default defineConfig<TestOptions>({
             name: "firefox",
             use: {
                 ...devices["Desktop Firefox"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
-                    "http://localhost:3003",
+                mockBackendUrl: `http://localhost:${FIREFOX_BACKEND_PORT}`,
+                baseURL: `http://localhost:${FIREFOX_FRONTEND_PORT}`,
             },
             dependencies: ["firefox setup"],
         },
@@ -80,8 +112,8 @@ export default defineConfig<TestOptions>({
             name: "webkit",
             use: {
                 ...devices["Desktop Safari"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
+                mockBackendUrl: `http://localhost:${WEBKIT_BACKEND_PORT}`,
+                baseURL: `http://localhost:${WEBKIT_FRONTEND_PORT}`,
             },
             dependencies: ["webkit setup"],
         },
