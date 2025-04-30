@@ -139,7 +139,7 @@ To manually start all necessary mock backends, you can use the provided script, 
 browser if you provide the three ports:
 
 ```bash
-bash ./scripts/start_mock_backend.sh -c 3001 3002 3003
+node scripts/start-mock-backend.js -c 3002 3003 3004
 ```
 
 Each browser uses a different port for its mock backend. You can override the default ports
