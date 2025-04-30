@@ -12,6 +12,10 @@ test.describe("Project - Review settings", () => {
         await page.goto(`/project/${projectId}/settings/review`);
     });
 
+    test.afterAll(async ({ mockBackendService }) => {
+        mockBackendService.softDeleteProject({ id: projectId });
+    });
+
     test("When the user creates a new tag and deletes this tag, then the tag is correctly added and deleted", async ({
         page,
         projectReviewSettingsPage,

@@ -58,7 +58,7 @@
     }
 
     $effect(() => {
-        localStorage.setItem(`project_${projectId}_keywords`, JSON.stringify(tags));
+        localStorage.setItem(getProjectKeywordsKey(projectId), JSON.stringify(tags));
     });
 </script>
 
