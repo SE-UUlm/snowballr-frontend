@@ -19,19 +19,10 @@
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
     let nextProjectPaper: Project_Paper;
 
-    let lastLoadedPaperId: string | null = null;
-
     $effect(() => {
         (async () => {
             const paper = await loadingProjectPaper;
             if (!paper) return;
-
-            if (paper.id === lastLoadedPaperId) return;
-
-            lastLoadedPaperId = paper.id;
-
-            console.log("Effekt wird ausgeführt für:", paper.id);
-            console.log(paper);
             if (reviewMode.isActivated) {
                 nextProjectPaper = await backendService.getNextPaperToReview({ id: paper.id })
                     .response;
@@ -62,7 +53,6 @@
             toast("No more papers to review for this project");
             return;
         }
-        console.log(nextProjectPaper.id.split("-")[0], nextProjectPaper.id.split("-")[1]);
         if (nextProjectPaper) {
             await goto(
                 `/project/${nextProjectPaper.id.split("-")[0]}/paper/${nextProjectPaper.localId}`,
@@ -76,15 +66,14 @@
 Button that navigates to the next or previous paper.
 
 This component is used in the PaperView component to navigate between papers.
-The loadingPaperId has to be the Promise of the currently loaded paper id. The loading project has to be
-the Promise of the project the currently loaded paper belongs to.
+The loadingProjectPaper has to be the Promise of the project paper or undefined if no
+such paper could be found.
 
 Usage:
 ```svelte
     <PaperNavigationButton
         direction="left"
-        {loadingPaperId}
-        {loadingProject}
+        {loadingProjectPaper}
     />
 ```
 -->

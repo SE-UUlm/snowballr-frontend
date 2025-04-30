@@ -7,6 +7,7 @@ import { backendService } from "$lib/grpc-api";
 import { Review, ReviewDecision } from "$lib/model/api/review";
 import { getReturnValue } from "$tests/setupTest";
 import { mockSelectedCriteriaContextWithInitialData } from "$tests/integration/test-helper";
+import { ProjectPapers } from "$tests/example-data";
 
 describe("PaperDecisionButton", () => {
     test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
@@ -17,6 +18,7 @@ describe("PaperDecisionButton", () => {
             props: {
                 projectPaperId: "1",
                 variant: "accept",
+                loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
 
@@ -46,6 +48,7 @@ describe("PaperDecisionButton", () => {
             props: {
                 projectPaperId: "1",
                 variant: "decline",
+                loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
 
@@ -75,6 +78,7 @@ describe("PaperDecisionButton", () => {
             props: {
                 projectPaperId: "1",
                 variant: "maybe",
+                loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
 
@@ -102,6 +106,7 @@ describe("PaperDecisionButton", () => {
                 projectPaperId: "1",
                 variant: "accept",
                 userReview: createReview(),
+                loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
 
