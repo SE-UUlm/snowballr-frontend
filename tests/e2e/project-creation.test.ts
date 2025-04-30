@@ -31,6 +31,20 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.checkForErrors();
     });
 
+    test("When the user inputs invalid data, then errors are displayed.", async ({
+        page,
+        homePage,
+        createProjectDialog,
+    }) => {
+        await homePage.openCreateProjectDialog();
+
+        await createProjectDialog.projectNameInput.fill("Demo project 0");
+        await createProjectDialog.projectMemberInput.fill("johndoe.com");
+        await createProjectDialog.projectMemberInput.press("Tab");
+
+        await createProjectDialog.checkForErrors("expect-errors");
+    });
+
     test("When the process is cancelled, then the dialog is closed, no project is created and all inputs are reset", async ({
         page,
         homePage,

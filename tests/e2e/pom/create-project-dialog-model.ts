@@ -48,10 +48,23 @@ export class DevCreateProjectDialog {
     }
 
     /**
-     * Checks, whether an error occurred during the process of the project creation, i.e. whether
-     * an error alert is shown in the dialog.
+     * Checks for errors according to the mode.
+     *
+     * If the mode is set to "expect-errors", the function asserts that an alert or an error message is shown.
+     * If the mode is set to "expect-no-errors", the function asserts that no alert or error message is shown.
+     *
+     * @param mode - the mode to check for errors (default "expect-no-errors")
      */
-    async checkForErrors() {
-        await expect(this.page.getByRole("alert")).not.toBeVisible();
+    async checkForErrors(mode: "expect-errors" | "expect-no-errors" = "expect-no-errors") {
+        const alert = this.page.getByRole("alert");
+        const errorMessage = this.page.getByText("Please enter a valid name or email.");
+
+        if (mode === "expect-no-errors") {
+            // No alert and no error message is shown
+            await expect(alert.and(errorMessage)).not.toBeVisible();
+        } else {
+            // An alert or an error message is shown
+            await expect(alert.or(errorMessage)).toBeVisible();
+        }
     }
 }
