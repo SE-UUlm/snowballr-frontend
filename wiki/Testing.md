@@ -144,11 +144,11 @@ bash ./scripts/start_mock_backend.sh -c 3001 3002 3003
 Each browser uses a different port for its mock backend. You can override the default ports
 using the following environment variables:
 
-| Variable                                     | Default (if the variable is not set) | Description                                                                            |
-| -------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` | 3002                                 | The port that the mock backend will listen on for E2E testing of the chromium browser. |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX`  | 3003                                 | The port that the mock backend will listen on for E2E testing of the firefox browser.  |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT`   | 3004                                 | The port that the mock backend will listen on for E2E testing of the webkit browser.   |
+| Variable                     | Default (if the variable is not set) | Description                                                  |
+| ---------------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| `MOCK_BACKEND_PORT_CHROMIUM` | 3002                                 | The port of the mock backend for the chromium testing setup. |
+| `MOCK_BACKEND_PORT_FIREFOX`  | 3003                                 | The port of the mock backend for the firefox testing setup.  |
+| `MOCK_BACKEND_PORT_WEBKIT`   | 3004                                 | The port of the mock backend for the webkit testing setup.   |
 
 ### Best Practices
 
