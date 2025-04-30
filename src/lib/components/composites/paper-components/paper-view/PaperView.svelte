@@ -99,9 +99,10 @@
 
     let isSubmittingReview = $state(false);
     const loadingUserReview = getUserReviewIfAlreadySubmitted();
-    loadingUserReview.then(
-        (review) => (selectedReviewCriteria.criteria = review?.selectedCriteriaIds ?? []),
-    );
+    loadingUserReview.then((review) => {
+        const selectedCriteria = review?.selectedCriteriaIds ?? [];
+        selectedReviewCriteria.criteria = selectedCriteria;
+    });
 
     /**
      * Gets the review of the user currently logged in for this paper,

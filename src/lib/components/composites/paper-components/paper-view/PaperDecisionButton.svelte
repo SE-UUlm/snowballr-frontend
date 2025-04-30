@@ -10,6 +10,8 @@
     import { type Review, type Review_Create, ReviewDecision } from "$lib/model/api/review";
     import { LoaderCircle } from "lucide-svelte";
     import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
+    import { toast } from "svelte-sonner";
+    import { shortcut, type ShortcutTrigger } from "@svelte-put/shortcut";
 
     interface ButtonContent {
         name: string;
@@ -42,15 +44,15 @@
         switch (variant) {
             case "accept":
             case "selected_accept":
-                return { name: "Accept", shortcut: "Ctrl+A", tooltipText: "Accept paper" };
+                return { name: "Accept", shortcut: "Ctrl+a", tooltipText: "Accept paper" };
             case "decline":
             case "selected_decline":
-                return { name: "Decline", shortcut: "Ctrl+D", tooltipText: "Decline paper" };
+                return { name: "Decline", shortcut: "Ctrl+d", tooltipText: "Decline paper" };
             case "maybe":
             case "selected_maybe":
                 return {
                     name: "Maybe",
-                    shortcut: "Ctrl+S",
+                    shortcut: "Ctrl+s",
                     tooltipText: "Mark paper as undecided",
                 };
             default:
@@ -75,6 +77,22 @@
     }
 
     /**
+     * Returns the shortcut trigger based on the paper decision button variant.
+     */
+    function getShortcutTrigger(): ShortcutTrigger {
+        switch (variant) {
+            case "accept":
+                return { key: "a", modifier: "ctrl", callback: () => submitReview() };
+            case "decline":
+                return { key: "d", modifier: "ctrl", callback: () => submitReview() };
+            case "maybe":
+                return { key: "s", modifier: "ctrl", callback: () => submitReview() };
+            default:
+                return { key: "" };
+        }
+    }
+
+    /**
      * Submits a review to the server containing the review decision and the selected criteria.
      *
      * While the review is submitted, all decision buttons on this paper view page are disabled
@@ -90,6 +108,8 @@
             };
 
             await backendService.createReview(review);
+
+            toast.success("Successfully submitted a review.");
             // TODO: navigate automatically to next paper that will be implemented in #47
         } catch (err) {
             console.error(`Could not submit, as an invalid paper id was provided (${err})`);
@@ -99,6 +119,9 @@
 
     const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
 </script>
+
+<!-- attach shortcuts for deciding on a paper -->
+<svelte:window use:shortcut={{ trigger: getShortcutTrigger() }} />
 
 <!-- max width is fixed, see PaperView component for reason -->
 <!--
