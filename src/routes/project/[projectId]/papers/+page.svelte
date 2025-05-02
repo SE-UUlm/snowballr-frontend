@@ -82,7 +82,7 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} {user} />
-<main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-4 py-2">
+<main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-5">
     <div class="flex h-full w-full flex-col gap-5">
         <div class="flex h-fit w-full flex-col gap-2.5">
             <div class="flex flex-row items-center gap-2.5">

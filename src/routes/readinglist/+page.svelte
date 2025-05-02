@@ -24,7 +24,7 @@
 </svelte:head>
 <SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Reading List")} {user} />
 
-<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden px-5">
+<main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
     <NamedList
         emptyHint="Your reading list is empty. Start adding papers from your SLRs to the reading list ..."
         items={filteredReadingList}

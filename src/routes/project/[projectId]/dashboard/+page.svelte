@@ -22,8 +22,8 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />
-<main class="mb-10 flex h-full w-full flex-row gap-x-5 overflow-hidden">
-    <section class="h-full w-full py-5">
+<main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
+    <section class="h-full w-full">
         <NamedList
             emptyHint="No open reviews."
             items={openReviews}
@@ -40,7 +40,7 @@
             {/snippet}
         </NamedList>
     </section>
-    <section class="flex h-full w-full flex-col gap-y-5 p-5">
+    <section class="flex h-full w-full flex-col gap-y-5">
         <div id="project-information-section" class="flex flex-col gap-y-3">
             <h2>Project Information</h2>
             <Separator />
