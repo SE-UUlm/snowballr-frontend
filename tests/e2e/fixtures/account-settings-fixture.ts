@@ -17,7 +17,7 @@ export const test = base.extend<AccountSettingsPage>({
         await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
 
         const homepage = new DevHomePage(page);
-        await homepage.openAccountSettings();
+        await homepage.openUserSettingInSidebar("Account");
         await use(new DevAccountSettingsPage(page));
     },
 });
