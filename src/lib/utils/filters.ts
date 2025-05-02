@@ -2,6 +2,7 @@ import { Fzf, type Selector } from "fzf";
 import type { Paper } from "../model/api/paper";
 import { getName, getNames } from "./common-helper";
 import type { User } from "../model/api/user";
+import type { Project_Paper } from "$lib/model/api/project";
 
 /**
  * Generic filter function using Fzf.
@@ -42,6 +43,27 @@ function filterPapers(allPapers: Paper[], searchText: string) {
 }
 
 /**
+ * Filters project papers based on search text and sorts them by best match.
+ *
+ * The search text is matched against the following fields:
+ * - Paper ID
+ * - Paper Title
+ * - Paper Authors
+ *
+ * @param allProjectPapers - List of all project papers
+ * @param searchText - Search text
+ * @returns List of project papers that match the search text
+ */
+function filterProjectPapers(allProjectPapers: Project_Paper[], searchText: string) {
+    return filter(
+        allProjectPapers,
+        (projectPaper) =>
+            `#${projectPaper.paper?.title ?? ""} ${getNames(projectPaper.paper?.authors ?? [])} ${projectPaper.localId ?? ""}`,
+        searchText,
+    );
+}
+
+/**
  * Filter users based on search text and sorts them by best match.
  *
  * The search text is matched against the following fields:
@@ -56,4 +78,4 @@ function filterUsers(allUsers: User[], searchText: string) {
     return filter(allUsers, (user) => `${getName(user)} ${user.email}`, searchText);
 }
 
-export { filterPapers, filterUsers };
+export { filterPapers, filterProjectPapers, filterUsers };

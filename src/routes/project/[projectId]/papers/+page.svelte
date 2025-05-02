@@ -43,6 +43,7 @@
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
     let showFilters = $state(true);
+    let searchText = $state("");
 
     interface PapersFilters {
         stages: string[];
@@ -103,13 +104,11 @@
                     Clear
                 </Button>
                 <SearchBar
-                    onSearch={(searchText) => {
-                        // TODO: build filters from search text
-                        // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
-                        // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
-                        console.log(searchText);
+                    onSearch={(text) => {
+                        searchText = text;
                     }}
                     placeholderText="Search paper"
+                    timeoutInMs={0}
                 />
             </div>
             {#if showFilters}
@@ -142,7 +141,7 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <StageEntry {projectId} {stage} bind:selectedPaper />
+                        <StageEntry {projectId} {searchText} {stage} bind:selectedPaper />
                     {/each}
                 </Accordion.Root>
             {:catch}

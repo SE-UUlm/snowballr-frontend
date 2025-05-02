@@ -5,15 +5,28 @@
     import type { Project_Paper } from "$lib/model/api/project";
     import type { Stage } from "$lib/model/general";
     import { pluralize } from "$lib/utils/common-helper";
+    import { filterProjectPapers } from "$lib/utils/filters";
     import CirclePlus from "lucide-svelte/icons/circle-plus";
 
     interface Props {
         projectId: string;
         stage: Stage;
         selectedPaper?: Project_Paper;
+        searchText?: string;
     }
 
-    let { projectId, stage, selectedPaper = $bindable(undefined) }: Props = $props();
+    let {
+        projectId,
+        stage,
+        selectedPaper = $bindable(undefined),
+        searchText = "",
+    }: Props = $props();
+
+    let filteredPapers = $derived(
+        searchText ? filterProjectPapers(stage.papers ?? [], searchText) : (stage.papers ?? []),
+    );
+
+    let totalPaperCount = $derived(stage.papers?.length ?? 0);
 </script>
 
 <Accordion.Item value={`stage-${stage.stageIndex}`}>
@@ -21,20 +34,36 @@
     <Accordion.Trigger data-testid="stage-entry-trigger">
         <div class="flex w-full flex-row justify-between">
             <span>Stage {stage.stageIndex}</span>
-            <span>({stage.papers.length} {pluralize(stage.papers.length, "paper", "papers")})</span>
+            {#if searchText}
+                <span>
+                    ({filteredPapers.length} / {totalPaperCount}
+                    {pluralize(totalPaperCount, "paper", "papers")})
+                </span>
+            {:else}
+                <span>({totalPaperCount} {pluralize(stage.papers.length, "paper", "papers")})</span>
+            {/if}
         </div>
     </Accordion.Trigger>
     <Accordion.Content>
         <div class="flex flex-col gap-4 pl-5">
-            {#each stage.papers as paper (paper.id)}
-                <PaperListEntry
-                    onClick={() => {
-                        selectedPaper = paper;
-                    }}
-                    {paper}
-                    {projectId}
-                />
-            {/each}
+            {#if filteredPapers.length > 0}
+                {#each filteredPapers as paper (paper.id)}
+                    <PaperListEntry
+                        onClick={() => {
+                            selectedPaper = paper;
+                        }}
+                        {paper}
+                        {projectId}
+                    />
+                {/each}
+            {:else if searchText && totalPaperCount > 0}
+                <span class="text-hint italic">
+                    No papers match your search criteria in this stage.
+                </span>
+            {:else if totalPaperCount === 0}
+                <span class="text-hint italic">No papers currently in this stage.</span>
+            {/if}
+
             <Button
                 onclick={() => {
                     // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
