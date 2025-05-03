@@ -133,12 +133,22 @@ function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R
     });
 }
 
+/**
+ * Get the returned value of a mock backend API call.
+ *
+ * @param fn - The mocked function
+ * @returns The returned value of this mocked backend function
+ */
+export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
+    return (await fn.mock.results[0].value.response) as T;
+}
+
 // Mock Backend API
 // Here we mock the backend API calls that are used in the application for the integration tests.
 // Note: This is only a base mock, you can/should override this mock in your tests according to your needs.
 // For example, you can mock the backend API to return an error, or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
-// See `invite-users-input.test.ts` for an example of how to override the mock.
+// See `invite-users-dialog.test.ts` for an example of how to override the mock.
 vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
@@ -210,7 +220,9 @@ vi.mock("$lib/grpc-api", () => {
             removePaperFromProject: vi.fn(),
             getReviewById: mock(({ id }) => createReview({ id })),
             getAllReviewsForProjectPaper: mock({ reviews: Object.values(Reviews) }),
-            createReview: vi.fn(),
+            createReview: mock(({ decision, selectedCriteriaIds }) =>
+                createReview({ decision, selectedCriteriaIds }),
+            ),
             updateReview: vi.fn(),
             deleteReview: vi.fn(),
             getPaperById: mock(({ id }) => createPaper({ id })),

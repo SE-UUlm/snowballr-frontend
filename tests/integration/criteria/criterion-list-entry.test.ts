@@ -2,12 +2,13 @@ import CriterionListEntry from "$lib/components/composites/criteria/CriterionLis
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createReviewedCriterion } from "../../model-builder";
-import { Reviews, Users } from "../../example-data";
+import { Criteria, Reviews, Users } from "../../example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
+import userEvent from "@testing-library/user-event";
 
 describe("CriterionListEntry", () => {
-    test("When props are provided, then component is shown", () => {
+    test("When props are provided, then the component is shown", () => {
         reviewMode.isActivated = true;
 
         render(CriterionListEntry, {
@@ -43,7 +44,7 @@ describe("CriterionListEntry", () => {
             },
         });
 
-        const checkbox = screen.getByTestId("criterion-checkbox");
+        const checkbox = screen.getByRole("checkbox");
         expect(checkbox).toBeInTheDocument();
 
         const userAvatar = screen.queryByTestId("user-avatar");
@@ -64,7 +65,7 @@ describe("CriterionListEntry", () => {
             },
         });
 
-        const checkbox = screen.queryByTestId("criterion-checkbox");
+        const checkbox = screen.queryByRole("checkbox");
         expect(checkbox).not.toBeInTheDocument();
 
         const userAvatar = screen.getByTestId("user-avatar");
@@ -74,5 +75,37 @@ describe("CriterionListEntry", () => {
 
         const reviewDecision = document.querySelector(".review-decision-icon-bg-small");
         expect(reviewDecision).toHaveClass("bg-decline-red");
+    });
+
+    test("When the user is in review mode and toggles the checkbox, then the selected criteria is added or deleted to / from a context", async () => {
+        reviewMode.isActivated = true;
+        const context = new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]);
+
+        render(CriterionListEntry, {
+            target: document.body,
+            context: context,
+            props: {
+                reviewers: [Users.johnDoe],
+                criterion: createReviewedCriterion({
+                    reviews: [Reviews.demoReview1],
+                }),
+            },
+        });
+
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(0);
+
+        const checkbox = screen.getByRole("checkbox");
+        expect(checkbox).toBeInTheDocument();
+
+        await userEvent.click(checkbox);
+        expect(checkbox).toBeChecked();
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria).toContain(
+            Criteria.demoCriterion1.id,
+        );
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(1);
+
+        await userEvent.click(checkbox);
+        expect(checkbox).not.toBeChecked();
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(0);
     });
 });

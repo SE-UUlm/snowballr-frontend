@@ -16,7 +16,7 @@
     let { reviewers, criterion }: Props = $props();
 
     const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
-    const isCriterionChecked = selectedReviewCriteriaState.criteria.includes(criterion.id);
+    const isCriterionInitiallyChecked = selectedReviewCriteriaState.criteria.includes(criterion.id);
 
     /**
      * If this criterion was not checked before, then it will be added to the selected review
@@ -24,7 +24,7 @@
      */
     function toggleReviewCriteriaInState() {
         const criterionId = criterion.id;
-        if (!isCriterionChecked) {
+        if (!selectedReviewCriteriaState.criteria.includes(criterion.id)) {
             selectedReviewCriteriaState.criteria.push(criterionId);
         } else {
             selectedReviewCriteriaState.criteria = selectedReviewCriteriaState.criteria.filter(
@@ -54,9 +54,9 @@ Usage:
 <li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
     {#if reviewMode.isActivated}
         <Checkbox
-            checked={isCriterionChecked}
+            checked={isCriterionInitiallyChecked}
             data-testid="criterion-checkbox"
-            disabled={isCriterionChecked}
+            disabled={isCriterionInitiallyChecked}
             onCheckedChange={toggleReviewCriteriaInState}
         />
     {/if}
