@@ -5,6 +5,7 @@ import { createReviewedCriterion, loading } from "../../../../model-builder";
 import { CriterionCategory } from "$lib/model/api/criterion";
 import { waitForComponentLoading } from "../../../test-helper";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
 
 describe("ReviewCriteriaList", () => {
     beforeEach(() => {
@@ -14,6 +15,7 @@ describe("ReviewCriteriaList", () => {
     test("When props are provided, then component is shown", () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([]),
@@ -31,6 +33,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is hard exclusion, then it is shown as hard exclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -66,6 +69,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is soft exclusion, then it is shown as soft exclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -101,6 +105,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is inclusion, then it is shown as inclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -136,6 +141,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is unspecified, then it isn't shown", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([

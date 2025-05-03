@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { createReviewedCriterion } from "../../model-builder";
 import { Reviews, Users } from "../../example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
 
 describe("CriterionListEntry", () => {
     test("When props are provided, then component is shown", () => {
@@ -11,6 +12,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: [],
                 criterion: createReviewedCriterion({
@@ -32,6 +34,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({
@@ -52,6 +55,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({

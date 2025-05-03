@@ -3,11 +3,13 @@ import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createReviewedCriterion, loading } from "../../model-builder";
 import { waitForComponentLoading } from "../test-helper";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
 
 describe("CriteriaList", () => {
     test("When props are provided, then the component is shown", async () => {
         render(CriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 listTitle: "Hard Exclusion",
                 reviewers: loading([]),
@@ -28,6 +30,7 @@ describe("CriteriaList", () => {
     test("When no criteria are provided, then an empty hint is shown", async () => {
         render(CriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 listTitle: "Hard Exclusion",
                 reviewers: loading([]),
@@ -45,6 +48,7 @@ describe("CriteriaList", () => {
     test("When criteria failed to load, then the error message is shown", async () => {
         render(CriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 listTitle: "Hard Exclusion",
                 reviewers: loading([]),
@@ -62,6 +66,7 @@ describe("CriteriaList", () => {
     test("When criteria are loading, then the skeletons are shown", () => {
         render(CriteriaList, {
             target: document.body,
+            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
             props: {
                 listTitle: "Hard Exclusion",
                 reviewers: loading([]),
