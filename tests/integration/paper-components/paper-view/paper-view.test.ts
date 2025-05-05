@@ -9,10 +9,12 @@ import {
     createProjectPaperViewProps,
     createProjectSettings,
     loading,
-} from "../../../model-builder";
+} from "$tests/model-builder";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import { waitForComponentLoading } from "$tests/integration/test-helper";
-import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
+import {
+    mockSelectedCriteriaContext,
+    waitForComponentLoading,
+} from "$tests/integration/test-helper";
 import { PaperDecision } from "$lib/model/api/project";
 import { Criteria, Reviews } from "$tests/example-data";
 
@@ -74,7 +76,7 @@ describe("PaperView", () => {
         reviewMode.isActivated = true;
 
         render(PaperView, {
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
+            context: mockSelectedCriteriaContext,
             props: createPaperViewProps(
                 {
                     showButtonBar: true,

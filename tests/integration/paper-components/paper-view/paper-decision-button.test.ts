@@ -3,17 +3,17 @@ import { describe, expect, test, vi } from "vitest";
 import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { createReview } from "$tests/model-builder";
-import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
 import { backendService } from "$lib/grpc-api";
 import { Review, ReviewDecision } from "$lib/model/api/review";
 import { getReturnValue } from "$tests/setupTest";
+import { mockSelectedCriteriaContextWithInitialData } from "$tests/integration/test-helper";
 
 describe("PaperDecisionButton", () => {
-    test("When variant is 'accept', then button is visualized and acts as the accept button ", async () => {
+    test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
         const mockCall = vi.spyOn(backendService, "createReview");
 
         render(PaperDecisionButton, {
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: ["1"] }]]),
+            context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
                 projectPaperId: "1",
                 variant: "accept",
@@ -38,11 +38,11 @@ describe("PaperDecisionButton", () => {
         );
     });
 
-    test("When variant is 'decline', then button is visualized and acts as the decline button ", async () => {
+    test("When the variant is 'decline', then button is visualized and acts as the decline button ", async () => {
         const mockCall = vi.spyOn(backendService, "createReview");
 
         render(PaperDecisionButton, {
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: ["1"] }]]),
+            context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
                 projectPaperId: "1",
                 variant: "decline",
@@ -67,11 +67,11 @@ describe("PaperDecisionButton", () => {
         );
     });
 
-    test("When variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
+    test("When the variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
         const mockCall = vi.spyOn(backendService, "createReview");
 
         render(PaperDecisionButton, {
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: ["1"] }]]),
+            context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
                 projectPaperId: "1",
                 variant: "maybe",
@@ -96,7 +96,7 @@ describe("PaperDecisionButton", () => {
         );
     });
 
-    test("When paper decision was already clicked, then the button is disabled", async () => {
+    test("When the paper decision button was already clicked, then the button is disabled", async () => {
         render(PaperDecisionButton, {
             props: {
                 projectPaperId: "1",

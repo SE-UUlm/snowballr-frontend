@@ -6,6 +6,7 @@ import { Criteria, Reviews, Users } from "../../example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
 import userEvent from "@testing-library/user-event";
+import { mockSelectedCriteriaContext } from "$tests/integration/test-helper";
 
 describe("CriterionListEntry", () => {
     test("When props are provided, then the component is shown", () => {
@@ -13,7 +14,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: [],
                 criterion: createReviewedCriterion({
@@ -35,7 +36,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({
@@ -56,7 +57,7 @@ describe("CriterionListEntry", () => {
 
         render(CriterionListEntry, {
             target: document.body,
-            context: new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]),
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: [Users.johnDoe],
                 criterion: createReviewedCriterion({
@@ -79,7 +80,7 @@ describe("CriterionListEntry", () => {
 
     test("When the user is in review mode and toggles the checkbox, then the selected criteria is added or deleted to / from a context", async () => {
         reviewMode.isActivated = true;
-        const context = new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }]]);
+        const context = mockSelectedCriteriaContext;
 
         render(CriterionListEntry, {
             target: document.body,
