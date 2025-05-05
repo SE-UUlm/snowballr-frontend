@@ -37,6 +37,17 @@ export class DevPaperViewPage {
     }
 
     /**
+     * Navigates to a certain project paper view and ensures the page is loaded.
+     *
+     * @param projectId - The id of the project
+     * @param paperId - The local project paper id
+     */
+    async openProjectPaperView(projectId: string, paperId: string) {
+        await this.page.goto(`/project/${projectId}/paper/${paperId}`);
+        await expect(this.acceptButton).toBeVisible();
+    }
+
+    /**
      * Navigates to the first referenced paper and ensures the page is loaded.
      */
     async navigateToReferencedPaper() {

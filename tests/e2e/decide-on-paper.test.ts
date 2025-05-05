@@ -77,8 +77,8 @@ test.describe("Decide on paper", () => {
     test.fixme(
         "When the user decides on a paper by clicking the corresponding decision button, " +
             "then a review is submitted and the next paper to review is opened",
-        async ({ page, paperViewPage }) => {
-            await page.goto(`project/${projectId}/paper/${localProjectPaperIds[0]}`);
+        async ({ paperViewPage }) => {
+            await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[0]);
 
             await paperViewPage.decideOnPaper(ReviewDecision.ACCEPTED);
             /// TODO: add check for automatic navigation
@@ -89,8 +89,7 @@ test.describe("Decide on paper", () => {
         "When the user presses one of the shortcuts for a decision, " +
             "then a review is submitted and the next paper to review is opened",
         async ({ page, paperViewPage }) => {
-            await page.goto(`project/${projectId}/paper/${localProjectPaperIds[1]}`);
-            await expect(paperViewPage.acceptButton).toBeVisible();
+            await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[1]);
 
             await page.keyboard.press("Control+a");
             /// TODO: add check for automatic navigation
@@ -101,7 +100,7 @@ test.describe("Decide on paper", () => {
         "When the user selects certain review criteria and clicks a decision button, " +
             "then a review is submitted and the decision is shown after a reload.",
         async ({ page, paperViewPage }) => {
-            await page.goto(`project/${projectId}/paper/${localProjectPaperIds[2]}`);
+            await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[2]);
 
             await paperViewPage.decideOnPaper(ReviewDecision.ACCEPTED);
             await expect(page.getByText("Successfully submitted a review.")).toBeVisible();
@@ -125,7 +124,7 @@ test.describe("Decide on paper", () => {
         "When the user opens a project paper in review mode that was already reviewed by " +
             "the user, then it is not possible to change any decision (including review criteria).",
         async ({ page, paperViewPage }) => {
-            await page.goto(`project/${projectId}/paper/${localProjectPaperIds[2]}`);
+            await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[2]);
 
             await page.reload();
 

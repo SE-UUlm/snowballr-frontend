@@ -66,7 +66,6 @@
     const loadingPaperIdForNavigationBar = $derived.by(() =>
         loadingPaperWrapper.then((paper) => getDisplayPaperId(paper)),
     );
-    const loadingProjectPaperId = loadingPaperWrapper.then((paper) => paper.id);
 
     // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
     // Note: this is ugly, but otherwise the types of these properties can't be inferred.
@@ -112,12 +111,17 @@
      * @returns a promise containing the loading review if it exists, otherwise undefined
      */
     async function getUserReviewIfAlreadySubmitted(): Promise<Review | undefined> {
-        const paper = await loadingPaperWrapper;
-        if (!isProjectPaper(paper)) {
+        try {
+            const paper = await loadingPaperWrapper;
+            if (!isProjectPaper(paper)) {
+                return undefined;
+            }
+            const projectPaper = asProjectPaper(paper)!;
+            return projectPaper.reviews.find((review) => review.userId === user.id);
+        } catch (err) {
+            console.error(`Could not load user review (${err})`);
             return undefined;
         }
-        const projectPaper = asProjectPaper(paper)!;
-        return projectPaper.reviews.find((review) => review.userId === user.id);
     }
 </script>
 
@@ -176,12 +180,12 @@ Usage:
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton direction="left" href="" />
             {#if reviewMode.isActivated && loadingProject}
-                {#await Promise.all( [loadingProject, loadingProjectPaperId, loadingUserReview], ) then [project, projectPaperId, userReview]}
+                {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                     <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                     <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                         <PaperDecisionButton
-                            {projectPaperId}
+                            projectPaperId={paper.id}
                             {userReview}
                             variant={userReview?.decision === ReviewDecision.DECLINED
                                 ? "selected_decline"
@@ -190,7 +194,7 @@ Usage:
                         />
                         {#if project.settings?.reviewMaybeAllowed}
                             <PaperDecisionButton
-                                {projectPaperId}
+                                projectPaperId={paper.id}
                                 {userReview}
                                 variant={userReview?.decision === ReviewDecision.MAYBE
                                     ? "selected_maybe"
@@ -199,7 +203,7 @@ Usage:
                             />
                         {/if}
                         <PaperDecisionButton
-                            {projectPaperId}
+                            projectPaperId={paper.id}
                             {userReview}
                             variant={userReview?.decision === ReviewDecision.ACCEPTED
                                 ? "selected_accept"
