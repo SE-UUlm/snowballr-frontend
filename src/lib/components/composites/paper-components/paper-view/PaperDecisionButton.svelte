@@ -140,7 +140,7 @@ logged in. If the user already submitted a review, then the decision button is s
 to the decision, i.e.
 - if the decision corresponds to the button variant, then button is disabled but looks like an
 enabled button and has a ring around it
-- otherwise, it is styled as a ordinary disabled button
+- otherwise, it is styled as an ordinary disabled button
 
 Usage:
 ```svelte

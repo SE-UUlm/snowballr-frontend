@@ -41,7 +41,8 @@ Single list element for a criterion.
 - `reviewers` should contain all users that are referenced in the reviews of `criterion`.
 
 When `reviewMode.isActivated` is true, a checkbox is shown in front of the list element.
-When checked, this means that the criterion applies to the current paper.
+When checked, this means that the criterion applies to the current paper and is stored
+in the context of this paper, so this criterion can be considered, when submitted a review.
 Otherwise, the list of reviewers, who already checked this checkbox are listed.
 
 Usage:
