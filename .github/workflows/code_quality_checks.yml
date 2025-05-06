@@ -103,8 +103,22 @@ jobs:
               with:
                   node_version: ${{ env.node_version }}
 
+            - name: Get installed Playwright version
+              run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
+
+            - name: Cache playwright binaries
+              uses: actions/cache@v3
+              id: playwright-cache
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+            - name: Install Playwright System Dependencies
+              run: npx playwright install-deps
+
             - name: Install Playwright
-              run: npx playwright install --with-deps
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              run: npx playwright install
 
             - name: Run only tests for changed code (fail fast)
               if: github.event_name == 'pull_request'
