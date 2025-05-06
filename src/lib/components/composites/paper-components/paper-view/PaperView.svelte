@@ -98,6 +98,28 @@
         }
     });
 
+    let loading = $state(true);
+    let paperQueue = $state([]);
+    // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
+    // Note: this is ugly, but otherwise the types of these properties can't be inferred.
+    $effect(() => {
+        (async () => {
+            const promises = [];
+            if (loadingPaperId) promises.push(loadingPaperId);
+            if (loadingPaperIdForNavigationBar) promises.push(loadingPaperIdForNavigationBar);
+            if (loadingPaperWrapper) promises.push(loadingPaperWrapper);
+            if (loadingPaper) promises.push(loadingPaper);
+            if (loadingProject) promises.push(loadingProject);
+            if (loadingProjectPaper) promises.push(loadingProjectPaper);
+            if (reviewers) promises.push(reviewers);
+            if (criteriaWithReviews) promises.push(criteriaWithReviews);
+            if (forwardReferencedPapers) promises.push(forwardReferencedPapers);
+            if (backwardReferencedPapers) promises.push(backwardReferencedPapers);
+            if (researchContextCardProps) promises.push(researchContextCardProps);
+            await Promise.all(promises).then(() => (loading = false));
+        })();
+    });
+
     const selectedReviewCriteria = $state({
         criteria: [] as string[],
     });
@@ -188,7 +210,12 @@ Usage:
     {#if showButtonBar}
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
-            <PaperNavigationButton direction="left" {loadingProjectPaper} />
+            <PaperNavigationButton
+                direction="left"
+                {loading}
+                {loadingProjectPaper}
+                bind:paperQueue
+            />
             {#if reviewMode.isActivated && loadingProject}
                 {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
@@ -223,7 +250,12 @@ Usage:
                     </div>
                 {/await}
             {/if}
-            <PaperNavigationButton direction="right" {loadingProjectPaper} />
+            <PaperNavigationButton
+                direction="right"
+                {loading}
+                {loadingProjectPaper}
+                bind:paperQueue
+            />
         </div>
     {/if}
 </main>

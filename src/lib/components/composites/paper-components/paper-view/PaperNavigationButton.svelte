@@ -11,27 +11,63 @@
     interface Props {
         direction: "left" | "right";
         loadingProjectPaper: Promise<Project_Paper | undefined>;
+        loading: boolean;
+        paperQueue: Project_Paper[];
     }
 
-    let { direction, loadingProjectPaper }: Props = $props();
-    let buttonLeftDisabled: boolean = $state(false);
-    let buttonRightDisabled: boolean = $state(false);
+    let { direction, loadingProjectPaper, loading, paperQueue = $bindable() }: Props = $props();
+    let buttonLeftDisabled: boolean = $state(true);
+    let buttonRightDisabled: boolean = $state(true);
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
-    let nextProjectPaper: Project_Paper;
+    let nextProjectPaper: Project_Paper | undefined;
+    let previousProjectPaper: Project_Paper | undefined;
 
     $effect(() => {
         (async () => {
             const paper = await loadingProjectPaper;
             if (!paper) return;
             if (reviewMode.isActivated) {
-                nextProjectPaper = await backendService.getNextPaperToReview({ id: paper.id })
-                    .response;
+                await backendService
+                    .getNextPaperToReview({ id: paper.id })
+                    .response.then((nextPaper) => {
+                        nextProjectPaper = nextPaper;
+                    })
+                    .catch((error) => {
+                        nextProjectPaper = undefined;
+                        if (error.message !== "No%20next%20paper%20available.") {
+                            toast("Error, while loading the next paper.");
+                        }
+                    });
+                previousProjectPaper = paperQueue[paperQueue.length - 1];
             } else {
-                nextProjectPaper = await backendService.getNextPaper({ id: paper.id }).response;
-                if (nextProjectPaper.id === paper.id) {
-                    buttonRightDisabled = true;
-                }
+                await backendService
+                    .getNextPaper({ id: paper.id })
+                    .response.then((nextPaper) => {
+                        nextProjectPaper = nextPaper;
+                    })
+                    .catch((error) => {
+                        nextProjectPaper = undefined;
+                        if (error.message !== "No%20next%20paper%20available.") {
+                            toast("Error, while loading the next paper.");
+                        }
+                    });
+                await backendService
+                    .getPreviousPaper({ id: paper.id })
+                    .response.then((previousPaper) => {
+                        previousProjectPaper = previousPaper;
+                    })
+                    .catch((error) => {
+                        previousProjectPaper = undefined;
+                        if (error.message !== "No%20previous%20paper%20available.") {
+                            toast("Error, while loading the next paper.");
+                        }
+                    });
             }
+            console.log(previousProjectPaper);
+            console.log(nextProjectPaper);
+            console.log(loading);
+            buttonRightDisabled = nextProjectPaper === undefined || loading;
+            buttonLeftDisabled = previousProjectPaper === undefined || loading;
         })();
     });
 
@@ -39,23 +75,18 @@
      * Handles the navigation of the button with the direction "right". Therefore, it is checked whether the
      * review mode is activated or not.
      */
-    const navigateRight = async function () {
-        if (!loadingProjectPaper) {
-            return;
-        }
-        const currentPaper = await loadingProjectPaper;
-        if (
-            nextProjectPaper &&
-            nextProjectPaper.localId == currentPaper!.localId &&
-            reviewMode.isActivated
-        ) {
-            await goto("/");
-            toast("No more papers to review for this project");
-            return;
-        }
-        if (nextProjectPaper) {
+    const navigate = async function () {
+        if (direction === "right" && nextProjectPaper) {
+            const paper = await loadingProjectPaper;
+            if (paper) paperQueue.push(paper);
             await goto(
                 `/project/${nextProjectPaper.id.split("-")[0]}/paper/${nextProjectPaper.localId}`,
+            );
+        }
+        if (direction === "left" && previousProjectPaper) {
+            paperQueue.pop();
+            await goto(
+                `/project/${previousProjectPaper.id.split("-")[0]}/paper/${previousProjectPaper.localId}`,
             );
         }
     };
@@ -81,14 +112,8 @@ Usage:
     class="text-primary max-w-xs min-w-32 grow bg-slate-200 shadow-lg hover:bg-slate-400"
     aria-label={tooltipText}
     data-testid="navigation-button"
-    disabled={direction === "right" ? buttonRightDisabled : buttonLeftDisabled}
-    onclick={() => {
-        if (direction === "left") {
-            goto("");
-        } else if (direction === "right") {
-            navigateRight();
-        }
-    }}
+    disabled={loading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled)}
+    onclick={() => navigate()}
     triggerSize="default"
     triggerVariant="link"
 >
