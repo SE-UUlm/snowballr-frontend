@@ -78,7 +78,7 @@ Usage:
     >
         <Input
             bind:this={firstNameInput}
-            class="h-full w-full"
+            class="w-full"
             errorMessagePrefix="First Name must contain"
             inputId="first-name-input"
             label="First Name"
@@ -90,7 +90,7 @@ Usage:
         />
         <Input
             bind:this={lastNameInput}
-            class="h-full w-full"
+            class="w-full"
             errorMessagePrefix="Last Name must contain"
             inputId="last-name-input"
             label="Last Name"
@@ -100,7 +100,7 @@ Usage:
             type="text"
             value={user.lastName}
         />
-        <Button class="text-md h-12.5 w-full md:mt-5.5 md:w-25" type="submit">Rename</Button>
+        <Button class="text-md w-full md:mt-5.5 md:w-25" type="submit">Rename</Button>
     </form>
     {#if updateUserError}
         <div class="max-w-100 md:max-w-200">
