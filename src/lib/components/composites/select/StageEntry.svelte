@@ -29,6 +29,17 @@
     let totalPaperCount = $derived(stage.papers?.length ?? 0);
 </script>
 
+<!--
+@component
+Accordion entry for a stage in the project paper list. It displays the stage number and the number of papers in the stage.
+It also displays the number of papers that match the search criteria if a search text is provided.
+It contains a button to add a paper to the stage and a list of papers in the stage.
+
+Usage:
+```svelte
+    <StageEntry {projectId} {stage} {searchText} bind:selectedPaper />
+```
+-->
 <Accordion.Item value={`stage-${stage.stageIndex}`}>
     <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
     <Accordion.Trigger data-testid="stage-entry-trigger">
