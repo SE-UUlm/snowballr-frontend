@@ -107,7 +107,7 @@
                     onSearch={(text) => {
                         searchText = text;
                     }}
-                    placeholderText="Search paper"
+                    placeholderText="Search paper or start with '#' to only search by id"
                     timeoutInMs={0}
                 />
             </div>
