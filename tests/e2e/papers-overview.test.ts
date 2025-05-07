@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures/projects-pages-fixture";
 import { Author, type Paper } from "$lib/model/api/paper";
-import { createPaper } from "$tests/model-builder";
+import { createAuthor, createPaper } from "$tests/model-builder";
 import type { Project_Paper } from "$lib/model/api/project";
 import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./pom/project-papers-page-model";
 
@@ -152,6 +152,42 @@ test.describe("View all papers of a project", () => {
     });
 
     // --- Search Tests ---
+
+    test("When the user searches for a specific paper id, then only matching papers are shown in open stages.", async ({
+        page,
+        projectPapersPage,
+        mockBackendService,
+    }) => {
+        // create a new paper with total paper id + 1
+        const title = "TotalPaperIdPlusOne";
+        const author = createAuthor({
+            firstName: "New",
+            lastName: "Author",
+            orcid: "",
+        });
+        const newPaper = await mockBackendService.createPaper(
+            createPaper({ title, authors: [author] }),
+        ).response;
+        const newProjectPaper = await mockBackendService.addPaperToProject({
+            projectId: projectId,
+            stage: 0n,
+            paperId: newPaper.id,
+        }).response;
+        const newProjectPaperId = newProjectPaper.id;
+
+        await page.reload();
+
+        await projectPapersPage.openStage(0);
+        await projectPapersPage.openStage(1);
+        await projectPapersPage.search(`#${newProjectPaper.localId}`);
+        await projectPapersPage.expectStageCounts(0, `(1 / ${NUM_PAPERS_PER_STAGE + 1} papers)`);
+        await projectPapersPage.expectStageCounts(1, `(0 / ${NUM_PAPERS_PER_STAGE} papers)`);
+        await expect(projectPapersPage.getPaperByTitle(title)).toBeVisible();
+        await expect(projectPapersPage.getNoSearchResultsText().first()).toBeVisible();
+
+        // remove the new paper from the project
+        await mockBackendService.removePaperFromProject({ id: newProjectPaperId });
+    });
 
     test("When the user searches for a specific paper title (unique sequence), then only matching papers are shown in open stages.", async ({
         projectPapersPage,
