@@ -43,11 +43,12 @@ describe("ProjectNameSettings", () => {
 
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-
+        await waitFor(() => expect(renameButton).toBeEnabled());
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, " ");
         await userEvent.click(renameButton);
-        expect(mockUpdateProject).toHaveBeenCalled();
+        expect(mockUpdateProject).not.toHaveBeenCalled();
+        await waitFor(() => expect(renameButton).toBeEnabled());
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "Demo Project");
         await userEvent.click(renameButton);
@@ -66,7 +67,7 @@ describe("ProjectNameSettings", () => {
 
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-
+        await waitFor(() => expect(renameButton).toBeEnabled());
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
         await userEvent.click(renameButton);
@@ -97,7 +98,7 @@ describe("ProjectNameSettings", () => {
         });
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-
+        await waitFor(() => expect(renameButton).toBeEnabled());
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
         await userEvent.click(renameButton);
