@@ -44,6 +44,7 @@
     export type PaperViewProps = IndependentPaperViewProps &
         (ProjectPaperViewProps | NonProjectPaperViewProps);
 
+    const data: PaperViewProps = $props();
     const {
         user,
         backwardReferencedPapers,
@@ -56,37 +57,37 @@
         loadingProject,
         reviewers,
         criteriaWithReviews,
-    }: PaperViewProps = $props();
+    } = $derived(data);
 
-    const loadingPaper = loadingPaperWrapper.then(asPaper);
-    const loadingPaperId = loadingPaper.then((paper) => paper.id);
+    const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
+    const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
     // as the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
-    const loadingPaperIdForNavigationBar = loadingPaperWrapper.then((paper) =>
-        getDisplayPaperId(paper),
+    const loadingPaperIdForNavigationBar = $derived.by(() =>
+        loadingPaperWrapper.then((paper) => getDisplayPaperId(paper)),
     );
 
-    // svelte-ignore non_reactive_update
-    let researchContextCardProps:
-        | ProjectResearchContextCardProps
-        | NonProjectResearchContextCardProps;
     // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
     // Note: this is ugly, but otherwise the types of these properties can't be inferred.
-    if (reviewers) {
-        // This now of type `ProjectResearchContextCardProps`
-        researchContextCardProps = {
-            reviewers,
-            criteriaWithReviews,
-            loadingProjectPaper: loadingPaperWrapper,
-        };
-    } else {
-        // This is now of type `NonProjectResearchContextCardProps`
-        researchContextCardProps = {
-            reviewers,
-            criteriaWithReviews,
-            loadingProjectPaper: loadingPaperWrapper,
-        };
-    }
+    let researchContextCardProps:
+        | ProjectResearchContextCardProps
+        | NonProjectResearchContextCardProps = $derived.by(() => {
+        if (reviewers) {
+            // This now of type `ProjectResearchContextCardProps`
+            return {
+                reviewers,
+                criteriaWithReviews,
+                loadingProjectPaper: loadingPaperWrapper,
+            };
+        } else {
+            // This is now of type `NonProjectResearchContextCardProps`
+            return {
+                reviewers,
+                criteriaWithReviews,
+                loadingProjectPaper: loadingPaperWrapper,
+            };
+        }
+    });
 </script>
 
 <!--
