@@ -12,16 +12,6 @@
     if (isDevMode) {
         console.warn("Running in development mode");
     }
-
-    onMount(() => {
-        const loadedState = localStorage.getItem("reviewMode");
-        if (loadedState) {
-            reviewMode.isActivated = JSON.parse(loadedState) as boolean;
-        } else {
-            // if no preference was stored yet, set review mode per default to active
-            reviewMode.isActivated = true;
-        }
-    });
 </script>
 
 <ModeWatcher defaultMode="light" />

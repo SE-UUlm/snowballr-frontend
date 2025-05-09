@@ -1,22 +1,7 @@
-import { browser } from "$app/environment";
+import { getLocalStorageItem, setLocalStorageItem } from "./local-storage-helper";
 
 const STORAGE_KEY = "showShortcuts";
-let initialValue = true;
-
-if (browser) {
-    const storedValue = localStorage.getItem(STORAGE_KEY);
-    if (storedValue !== null) {
-        try {
-            const parsedValue = JSON.parse(storedValue);
-            if (typeof parsedValue === "boolean") {
-                initialValue = parsedValue;
-            }
-        } catch (error) {
-            console.error(`Error parsing ${STORAGE_KEY} from local storage:`, error);
-            initialValue = true;
-        }
-    }
-}
+const initialValue = getLocalStorageItem<boolean>(STORAGE_KEY, true);
 
 /**
  * Stores, whether shortcuts are visible for the current user or not.
@@ -34,12 +19,6 @@ export const shortcuts = {
         const newValue = !!value;
         shortcutsVisibilityState = newValue;
 
-        if (browser) {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(newValue));
-            } catch (error) {
-                console.error(`Error saving ${STORAGE_KEY} to local storage:`, error);
-            }
-        }
+        setLocalStorageItem<boolean>(STORAGE_KEY, newValue);
     },
 };
