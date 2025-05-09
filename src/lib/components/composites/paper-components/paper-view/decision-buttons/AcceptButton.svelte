@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import DecisionButton from "./DecisionButton.svelte";
 
     interface Props {
@@ -19,7 +20,9 @@
 >
     {#snippet buttonContent()}
         <p>Accept</p>
-        <p class="text-accept-green-shortcut">Ctrl+A</p>
+        {#if shortcuts.isVisible}
+            <p class="text-accept-green-shortcut">Ctrl+A</p>
+        {/if}
     {/snippet}
     {#snippet tooltipContent()}
         <p>Accept Paper</p>

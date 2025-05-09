@@ -20,11 +20,27 @@ export class DevHomePage {
     }
 
     /**
+     * Opens the user settings page.
+     */
+    async openSettings() {
+        await this.page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await this.page.getByRole("link", { name: "Settings" }).click();
+        await expect(this.page.getByRole("heading", { name: "Settings" })).toBeVisible();
+    }
+
+    /**
      * Opens the account settings page.
      */
     async openAccountSettings() {
-        await expect(this.page.getByRole("heading", { name: "Settings" })).not.toBeVisible();
-        await this.page.getByRole("button", { name: /[A-Z]{2}/ }).click();
-        await this.page.getByRole("link", { name: "Settings" }).click();
+        await this.openSettings();
+        await this.page.getByRole("link", { name: "Account" }).click();
+    }
+
+    /**
+     * Opens the shortcuts settings page.
+     */
+    async openShortcutsSettings() {
+        await this.openSettings();
+        await this.page.getByRole("link", { name: "Shortcuts" }).click();
     }
 }
