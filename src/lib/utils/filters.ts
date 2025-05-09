@@ -1,7 +1,8 @@
-import { Fzf, type Selector } from "fzf";
+import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
 import type { Paper } from "../model/api/paper";
 import { getName, getNames } from "./common-helper";
 import type { User } from "../model/api/user";
+import type { Project_Paper } from "$lib/model/api/project";
 
 /**
  * Generic filter function using Fzf.
@@ -9,13 +10,20 @@ import type { User } from "../model/api/user";
  * @param items - List of items to filter
  * @param selector - Function to extract the string to match against
  * @param searchText - Search text
+ * @param extended - Whether to use extended matching
  * @returns List of items that match the search text
  */
-function filter<T>(items: T[], selector: (item: T) => string, searchText: string) {
+function filter<T>(
+    items: T[],
+    selector: (item: T) => string,
+    searchText: string,
+    extended: boolean = false,
+) {
     // Here we cast the items to string[] and selector to Selector<string> because we can't just use a selector
     // with a generic type. This is weird, but it's the only way to make it work.
     const fzf = new Fzf(items as string[], {
         selector: selector as Selector<string>,
+        match: extended ? extendedMatch : basicMatch,
         casing: "case-insensitive",
     });
     return fzf.find(searchText).map((result) => result.item) as T[];
@@ -42,6 +50,39 @@ function filterPapers(allPapers: Paper[], searchText: string) {
 }
 
 /**
+ * Filters project papers based on search text and sorts them by best match.
+ * If the search text starts with "#", it is treated as a paper ID.
+ * Otherwise, it is treated as a search text for the paper title and authors and the local ID.
+ *
+ * The search text is matched against the following fields:
+ * - Paper ID
+ * - Paper Title
+ * - Paper Authors
+ *
+ * @param allProjectPapers - List of all project papers
+ * @param searchText - Search text
+ * @returns List of project papers that match the search text
+ */
+function filterProjectPapers(allProjectPapers: Project_Paper[], searchText: string) {
+    if (searchText.startsWith("#")) {
+        const idToSearch = searchText.substring(1);
+        return filter(
+            allProjectPapers,
+            (projectPaper) => projectPaper.localId ?? "",
+            `^${idToSearch}`,
+            true,
+        );
+    } else {
+        return filter(
+            allProjectPapers,
+            (projectPaper) =>
+                `${projectPaper.localId ?? ""} ${projectPaper.paper?.title ?? ""} ${getNames(projectPaper.paper?.authors ?? [])}`,
+            searchText,
+        );
+    }
+}
+
+/**
  * Filter users based on search text and sorts them by best match.
  *
  * The search text is matched against the following fields:
@@ -56,4 +97,4 @@ function filterUsers(allUsers: User[], searchText: string) {
     return filter(allUsers, (user) => `${getName(user)} ${user.email}`, searchText);
 }
 
-export { filterPapers, filterUsers };
+export { filterPapers, filterProjectPapers, filterUsers };
