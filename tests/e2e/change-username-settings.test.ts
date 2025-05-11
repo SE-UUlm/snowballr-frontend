@@ -1,7 +1,23 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures/account-settings-fixture";
+import { Nothing } from "$lib/model/api/base";
+import { User } from "$lib/model/api/user";
 
 test.describe("Changing username", () => {
+    let originalUser: User;
+
+    /** Save the original user before the tests. */
+    test.beforeAll(async ({ mockBackendService }) => {
+        originalUser = await mockBackendService.getCurrentUser(Nothing).response;
+    });
+
+    /** Restore the original user after the tests. */
+    test.afterAll(async ({ mockBackendService }) => {
+        await mockBackendService.updateUser({
+            user: originalUser,
+        });
+    });
+
     test("When the user enters a valid first and last name, the new name should be updated.", async ({
         page,
         accountSettingsPage,

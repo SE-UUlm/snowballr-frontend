@@ -1,6 +1,7 @@
 import { test as base } from "./general-fixture";
 import { DevHomePage } from "$tests/e2e/pom/home-page-model";
 import { DevCreateProjectDialog } from "$tests/e2e/pom/create-project-dialog-model";
+import { expect } from "@playwright/test";
 
 type HomePageFixtures = {
     homePage: DevHomePage;
@@ -14,6 +15,9 @@ type HomePageFixtures = {
  */
 export const test = base.extend<HomePageFixtures>({
     homePage: async ({ page }, use) => {
+        await page.goto("/");
+        await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
+
         await use(new DevHomePage(page));
     },
 

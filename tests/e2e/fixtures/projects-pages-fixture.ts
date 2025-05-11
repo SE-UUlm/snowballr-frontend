@@ -1,5 +1,7 @@
 import { test as base } from "./general-fixture";
 import { DevProjectPapersPage } from "$tests/e2e/pom/project-papers-page-model";
+import { projectId } from "../papers-overview.test";
+import { expect } from "@playwright/test";
 
 type ProjectsPagesFixture = {
     projectPapersPage: DevProjectPapersPage;
@@ -11,6 +13,9 @@ type ProjectsPagesFixture = {
  */
 export const test = base.extend<ProjectsPagesFixture>({
     projectPapersPage: async ({ page }, use) => {
+        await page.goto(`project/${projectId}/papers`);
+        await expect(page.getByRole("tab", { name: "Papers" })).toBeVisible();
+
         await use(new DevProjectPapersPage(page));
     },
 });

@@ -2,13 +2,16 @@ import { expect } from "@playwright/test";
 import { test } from "./fixtures/home-page-fixture";
 
 test.describe("Creating a new project", () => {
-    test.beforeEach(async ({ page }) => {
-        await page.goto("/");
-    });
+    const projectIds = ["0", "1", "2", "3"];
 
+    /**
+     * Delete all projects created in this test after all tests are done.
+     */
     test.afterAll(async ({ mockBackendService }) => {
-        mockBackendService.softDeleteProject({ id: "0" });
-        mockBackendService.softDeleteProject({ id: "1" });
+        // delete all projects created in this test
+        projectIds.forEach((projectId) => {
+            mockBackendService.softDeleteProject({ id: projectId });
+        });
     });
 
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({

@@ -22,10 +22,10 @@ export class DevHomePage {
     /**
      * Opens the user settings page.
      */
-    async openSettings() {
-        await this.page.getByRole("button", { name: /[A-Z]{2}/ }).click();
-        await this.page.getByRole("link", { name: "Settings" }).click();
-        await expect(this.page.getByRole("heading", { name: "Settings" })).toBeVisible();
+    async openLinkInUserMenuDialog(linkName: LinkName) {
+        await this.page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
+        await this.page.getByRole("link", { name: linkName }).click();
+        await expect(this.page.getByRole("heading", { name: linkName })).toBeVisible();
     }
 
     /**

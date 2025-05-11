@@ -1,4 +1,6 @@
 import { DevProjectReviewSettingsPage } from "$tests/e2e/pom/project-review-settings-model";
+import { expect } from "@playwright/test";
+import { projectId, projectReviewSettingsProjectName } from "../project-review-settings.test";
 import { test as base } from "./general-fixture";
 
 type ProjectReviewSettingsPage = {
@@ -11,6 +13,11 @@ type ProjectReviewSettingsPage = {
  */
 export const test = base.extend<ProjectReviewSettingsPage>({
     projectReviewSettingsPage: async ({ page }, use) => {
+        await page.goto(`project/${projectId}/settings/review`);
+        await expect(
+            page.getByRole("heading", { name: projectReviewSettingsProjectName }),
+        ).toBeVisible();
+
         await use(new DevProjectReviewSettingsPage(page));
     },
 });

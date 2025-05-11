@@ -1,17 +1,22 @@
 import { test } from "./fixtures/project-review-settings-fixture";
 import { expect } from "@playwright/test";
 
+export let projectId: string = "";
+export const projectReviewSettingsProjectName = "Project 1";
+
 test.describe("Project - Review settings", () => {
-    let projectId: string = "";
+    /**
+     * Creates a new project before all tests in this test suite.
+     */
     test.beforeAll(async ({ mockBackendService }) => {
-        const project = await mockBackendService.createProject({ name: "Project 1" });
-        projectId = project.response.id;
+        await mockBackendService
+            .createProject({ name: projectReviewSettingsProjectName })
+            .then((project) => (projectId = project.response.id));
     });
 
-    test.beforeEach(async ({ page }) => {
-        await page.goto(`/project/${projectId}/settings/review`);
-    });
-
+    /**
+     * Deletes the project after all tests in this test suite.
+     */
     test.afterAll(async ({ mockBackendService }) => {
         mockBackendService.softDeleteProject({ id: projectId });
     });
