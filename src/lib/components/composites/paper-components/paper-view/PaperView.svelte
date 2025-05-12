@@ -16,7 +16,10 @@
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
-    import { setSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
+    import {
+        setAlreadyReviewedContext,
+        setSelectedReviewCriteriaContext,
+    } from "$lib/utils/custom-context";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
     import { toast } from "svelte-sonner";
 
@@ -97,11 +100,17 @@
     // in context, so this state is scoped to the `PaperView` component.
     setSelectedReviewCriteriaContext(selectedReviewCriteria);
 
+    const wasAlreadyReviewedState = $state({
+        wasReviewed: false,
+    });
+    setAlreadyReviewedContext(wasAlreadyReviewedState);
+
     let isSubmittingReview = $state(false);
     const loadingUserReview = getUserReviewIfAlreadySubmitted();
     loadingUserReview.then((review) => {
         const selectedCriteria = review?.selectedCriteriaIds ?? [];
         selectedReviewCriteria.criteria = selectedCriteria;
+        wasAlreadyReviewedState.wasReviewed = review !== undefined;
     });
 
     /**

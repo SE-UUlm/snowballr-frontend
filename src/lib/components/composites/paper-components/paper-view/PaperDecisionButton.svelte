@@ -82,11 +82,11 @@
     function getShortcutTrigger(): ShortcutTrigger {
         switch (variant) {
             case "accept":
-                return { key: "a", modifier: "ctrl", callback: () => submitReview() };
+                return { key: "a", modifier: "ctrl" };
             case "decline":
-                return { key: "d", modifier: "ctrl", callback: () => submitReview() };
+                return { key: "d", modifier: "ctrl" };
             case "maybe":
-                return { key: "s", modifier: "ctrl", callback: () => submitReview() };
+                return { key: "s", modifier: "ctrl" };
             default:
                 return { key: "" };
         }
@@ -124,7 +124,15 @@
 </script>
 
 <!-- attach shortcuts for deciding on a paper -->
-<svelte:window use:shortcut={{ trigger: getShortcutTrigger() }} />
+<svelte:window
+    use:shortcut={{
+        trigger: {
+            ...getShortcutTrigger(),
+            callback: () => submitReview(),
+            enabled: !wasAlreadyReviewed,
+        },
+    }}
+/>
 
 <!-- max width is fixed, see PaperView component for reason -->
 <!--

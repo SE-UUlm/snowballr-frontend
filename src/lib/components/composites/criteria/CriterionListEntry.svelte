@@ -6,7 +6,10 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
+    import {
+        getAlreadyReviewedContext,
+        getSelectedReviewCriteriaContext,
+    } from "$lib/utils/custom-context";
 
     interface Props {
         reviewers: User[];
@@ -16,6 +19,7 @@
     let { reviewers, criterion }: Props = $props();
 
     const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
+    const { wasReviewed } = getAlreadyReviewedContext();
     const isCriterionInitiallyChecked = selectedReviewCriteriaState.criteria.includes(criterion.id);
 
     /**
@@ -45,6 +49,9 @@ When checked, this means that the criterion applies to the current paper and is 
 in the context of this paper, so this criterion can be considered, when submitted a review.
 Otherwise, the list of reviewers, who already checked this checkbox are listed.
 
+When the criterion is used on a paper view of a project paper the current user already reviewed,
+then it cannot be checked anymore.
+
 Usage:
 ```svelte
     <ul>
@@ -57,7 +64,7 @@ Usage:
         <Checkbox
             checked={isCriterionInitiallyChecked}
             data-testid="criterion-checkbox"
-            disabled={isCriterionInitiallyChecked}
+            disabled={wasReviewed}
             onCheckedChange={toggleReviewCriteriaInState}
         />
     {/if}

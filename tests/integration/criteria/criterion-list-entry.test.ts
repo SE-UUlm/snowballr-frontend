@@ -93,7 +93,7 @@ describe("CriterionListEntry", () => {
             },
         });
 
-        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(0);
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria!.length).toBe(0);
 
         const checkbox = screen.getByRole("checkbox");
         expect(checkbox).toBeInTheDocument();
@@ -103,10 +103,10 @@ describe("CriterionListEntry", () => {
         expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria).toContain(
             Criteria.demoCriterion1.id,
         );
-        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(1);
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria!.length).toBe(1);
 
         await userEvent.click(checkbox);
         expect(checkbox).not.toBeChecked();
-        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria.length).toBe(0);
+        expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria!.length).toBe(0);
     });
 });

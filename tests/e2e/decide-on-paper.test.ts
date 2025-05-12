@@ -136,6 +136,9 @@ test.describe("Decide on paper", () => {
                 paperViewPage.exampleInclusionCriterion.getByRole("checkbox"),
             ).toBeDisabled();
             await expect(
+                paperViewPage.exampleHardExclusionCriterion.getByRole("checkbox"),
+            ).toBeDisabled();
+            await expect(
                 paperViewPage.exampleInclusionCriterion.getByRole("checkbox"),
             ).toBeChecked();
         },

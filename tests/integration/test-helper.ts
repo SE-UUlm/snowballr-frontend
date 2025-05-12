@@ -1,6 +1,9 @@
 import { waitFor, screen } from "@testing-library/svelte";
 import { expect } from "vitest";
-import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/utils/custom-context";
+import {
+    SELECTED_REVIEW_CRITERIA_KEY,
+    WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY,
+} from "$lib/utils/custom-context";
 
 /**
  * Awaits until all skeletons are removed from the screen.
@@ -17,6 +20,13 @@ export function waitForComponentLoading(): Promise<void> {
 
 export const mockSelectedCriteriaContext = new Map([
     [SELECTED_REVIEW_CRITERIA_KEY, { criteria: [] }],
+    [WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY, { wasReviewed: false }],
 ]);
-export const mockSelectedCriteriaContextWithInitialData = (data: string[]) =>
-    new Map([[SELECTED_REVIEW_CRITERIA_KEY, { criteria: data }]]);
+export const mockSelectedCriteriaContextWithInitialData = (
+    selectedCriteria?: string[],
+    wasAlreadyReviewed?: boolean,
+) =>
+    new Map([
+        [SELECTED_REVIEW_CRITERIA_KEY, { criteria: selectedCriteria ?? [] }],
+        [WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY, { wasReviewed: wasAlreadyReviewed ?? false }],
+    ]);

@@ -12,7 +12,7 @@ import {
 } from "$tests/model-builder";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import {
-    mockSelectedCriteriaContext,
+    mockSelectedCriteriaContextWithInitialData,
     waitForComponentLoading,
 } from "$tests/integration/test-helper";
 import { PaperDecision } from "$lib/model/api/project";
@@ -76,7 +76,7 @@ describe("PaperView", () => {
         reviewMode.isActivated = true;
 
         render(PaperView, {
-            context: mockSelectedCriteriaContext,
+            context: mockSelectedCriteriaContextWithInitialData([], true),
             props: createPaperViewProps(
                 {
                     showButtonBar: true,
