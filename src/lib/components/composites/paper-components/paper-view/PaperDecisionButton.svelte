@@ -112,7 +112,10 @@
             toast.success("Successfully submitted a review.");
             // TODO: navigate automatically to next paper that will be implemented in #47
         } catch (err) {
-            console.error(`Could not submit, as an invalid paper id was provided (${err})`);
+            toast.error("Could not submit the review!", {
+                description: "Please check your connection to the server.",
+            });
+            console.error("Could not submit the review:", err);
         }
         isSubmittingReview = showLoadingSpinner = false;
     }

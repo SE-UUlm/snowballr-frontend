@@ -18,6 +18,7 @@
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { setSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
+    import { toast } from "svelte-sonner";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -119,7 +120,8 @@
             const projectPaper = asProjectPaper(paper)!;
             return projectPaper.reviews.find((review) => review.userId === user.id);
         } catch (err) {
-            console.error(`Could not load user review (${err})`);
+            toast.error("Could not load the user review");
+            console.error("Could not load the user review:", err);
             return undefined;
         }
     }
