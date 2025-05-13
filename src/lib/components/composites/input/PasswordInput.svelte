@@ -7,9 +7,15 @@
     type Props = {
         class?: string;
         value?: string;
+        validate?: boolean;
     };
 
-    let { value = $bindable(), class: className = "", ...restProps }: Props = $props();
+    let {
+        value = $bindable(),
+        class: className = "",
+        validate: shouldValidate = true,
+        ...restProps
+    }: Props = $props();
     let isPasswordVisible = $state(false);
     let input: Input;
 
@@ -47,7 +53,7 @@ Usage:
     label="Password"
     onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
     required
-    schema={Schema.password}
+    schema={shouldValidate ? Schema.password : undefined}
     type={isPasswordVisible ? "text" : "password"}
     validationDisplayMode="constant"
     bind:value
