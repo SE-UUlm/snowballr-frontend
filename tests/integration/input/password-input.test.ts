@@ -48,6 +48,24 @@ describe("PasswordInput", () => {
         expect(component.getValue()).toBe(invalidPassword);
     });
 
+    test("When a link is provided, then it is displayed", () => {
+        render(PasswordInput, {
+            target: document.body,
+            props: {
+                link: {
+                    href: "/test",
+                    text: "test",
+                },
+            },
+        });
+
+        // Link exists
+        const link = document.getElementsByTagName("a")[0];
+        expect(link).toBeInTheDocument();
+        expect(link).toHaveTextContent("test");
+        expect(link).toHaveAttribute("href", "/test");
+    });
+
     test("When valid password is inserted, then validation criteria are met", async () => {
         const { component } = render(PasswordInput, {
             target: document.body,

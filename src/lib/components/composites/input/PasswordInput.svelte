@@ -8,6 +8,7 @@
         class?: string;
         value?: string;
         validate?: boolean;
+        link?: { href: string; text: string };
     };
 
     let {
