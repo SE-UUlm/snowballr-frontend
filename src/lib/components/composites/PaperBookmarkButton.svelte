@@ -5,17 +5,20 @@
     import Tooltip from "./utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
     import { backendService } from "$lib/grpc-api";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface Props {
         loadingPaperId: Promise<string>;
         isBookmarkedDefault?: boolean;
         onPaperChangedBookmarkStatus?: () => void;
+        class?: string;
     }
 
     const {
         loadingPaperId,
         isBookmarkedDefault = false,
         onPaperChangedBookmarkStatus = undefined,
+        class: className,
     }: Props = $props();
 
     // `isUpdatingBookmarkStatus` is initially set to `true` to represent the loading state
@@ -116,7 +119,7 @@ Usage:
 ```
 -->
 <Tooltip
-    class="text-primary bg-transparent [&_svg]:size-6"
+    class={cn("text-primary bg-transparent [&_svg]:size-6", className)}
     aria-label={tooltipText}
     disabled={isUpdatingBookmarkStatus}
     onclick={toggleBookmarkStatus}

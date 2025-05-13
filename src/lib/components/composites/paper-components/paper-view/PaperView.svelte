@@ -122,14 +122,14 @@ Usage:
     />
 ```
 -->
-<div class="flex h-fit w-full flex-row justify-between gap-4">
+<div class="flex h-fit w-full flex-row items-center justify-between gap-4">
     <PaperNavigationBar
         {backRef}
         {loadingPaper}
         loadingPaperId={loadingPaperIdForNavigationBar}
         {user}
     />
-    <PaperBookmarkButton isBookmarkedDefault={false} {loadingPaperId} />
+    <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {loadingPaperId} />
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
     <div class="flex h-full w-full flex-row gap-10">
