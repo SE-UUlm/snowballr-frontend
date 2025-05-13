@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import type { TestUser } from "../fixtures/general-fixture";
 
 export class DevCreateProjectDialog {
     readonly page: Page;
@@ -39,12 +40,13 @@ export class DevCreateProjectDialog {
      * It neither navigates to the newly created project nor close the dialog, but requires the dialog to be open.
      *
      * @param projectName - the name of the project
+     * @param user - the user to be added as a member
      */
-    async createProject(projectName: string) {
+    async createProject(projectName: string, user: TestUser) {
         await this.projectNameInput.fill(projectName);
         await this.projectMemberInput.fill("john@doe.com");
         await this.projectMemberInput.press("Tab");
-        await this.projectMemberInput.fill("Alice");
+        await this.projectMemberInput.fill(user.firstName);
         await this.projectMemberInput.press("ArrowDown");
         await this.projectMemberInput.press("Enter");
 

@@ -1,6 +1,9 @@
 import { mergeTests, test as base } from "@playwright/test";
 import { SnowballRClient } from "$lib/model/api/main.client";
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import type { User } from "$lib/model/api/user";
+
+export type TestUser = Pick<User, "firstName" | "lastName" | "email"> & { password: string };
 
 export type TestOptions = {
     mockBackendUrl: string;
@@ -60,4 +63,19 @@ export const mockBackendServiceTest = base.extend<
     ],
 });
 
-export const test = mergeTests(defaultTest, mockBackendServiceTest);
+const testUser = {
+    firstName: "Alice",
+    lastName: "Smith",
+    email: "alice.smith@example.com",
+    password: "12abAB!?",
+};
+
+/**
+ * Extends the default test fixture with a test user.
+ * This test user is used is registered before each test.
+ */
+export const userTest = base.extend<{ user: TestUser }>({
+    user: [testUser, { option: true }],
+});
+
+export const test = mergeTests(mockBackendServiceTest, defaultTest, userTest);

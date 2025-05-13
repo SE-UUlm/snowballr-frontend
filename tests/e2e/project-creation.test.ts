@@ -63,10 +63,11 @@ test.describe("Creating a new project", () => {
         page,
         homePage,
         createProjectDialog,
+        user,
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 2");
+        await createProjectDialog.createProject("Demo project 2", user);
         await createProjectDialog.checkForErrors();
         await createProjectDialog.closeCreatedProjectDialog("cancel");
 
@@ -79,10 +80,11 @@ test.describe("Creating a new project", () => {
         page,
         homePage,
         createProjectDialog,
+        user,
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 3");
+        await createProjectDialog.createProject("Demo project 3", user);
         await createProjectDialog.checkForErrors();
         await createProjectDialog.closeCreatedProjectDialog("open");
 
@@ -97,6 +99,5 @@ test.describe("Creating a new project", () => {
         await expect(page.getByText("estimated remaining time")).toBeHidden();
     });
 
-    /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members
-       were invited and the settings are the same as the default settings for new project from the user */
+    /* TODO: add E2E tests here for checking, that the settings are the same as the default settings for new project from the user */
 });
