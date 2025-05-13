@@ -18,101 +18,75 @@
         onPaperChangedBookmarkStatus = undefined,
     }: Props = $props();
 
-    let isBookmarked = $state(isBookmarkedDefault);
-    let isHovered = $state(false);
-    const tooltipText = $derived(isBookmarked ? "Remove from reading list" : "Add to reading list");
-    const paperId = $derived(
-        resource<string, string | undefined>(loadingPaperId, {
-            initialValue: undefined,
-            resourceName: "paper id",
-        }),
-    );
+    // `isUpdatingBookmarkStatus` is initially set to `true` to represent the loading state
+    let isUpdatingBookmarkStatus = $state(true);
 
-    let isUpdatingBookmarkStatus = $state(false);
+    const loadingBookmarkStatus = loadingPaperId.then((id) => checkInitialBookmarkStatus(id));
+    const paperId = resource<string, string | undefined>(loadingPaperId, {
+        initialValue: undefined,
+        resourceName: "paper id",
+    });
+
+    const isBookmarked = resource<boolean, boolean>(loadingBookmarkStatus, {
+        initialValue: isBookmarkedDefault,
+        resourceName: "bookmark status",
+    });
+    const tooltipText = $derived(
+        isBookmarked.value ? "Remove from reading list" : "Add to reading list",
+    );
+    let isHovered = $state(false);
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);
 
-    /**
-     * Fetches the actual bookmark status when the paper id becomes available.
-     * Uses a cleanup function to handle cases where the paper id changes before the fetch completes.
-     */
-    $effect(() => {
-        const currentPaperId = paperId.value;
-        let cancelled = false;
-
-        if (currentPaperId) {
-            isUpdatingBookmarkStatus = true;
-
-            backendService
-                .isPaperOnReadingList({ id: currentPaperId })
-                .response.then((response) => {
-                    if (cancelled) return;
-
-                    isBookmarked = response.value;
-                })
-                .catch((error) => {
-                    if (cancelled) return;
-
-                    console.error(`Failed to fetch bookmark status for ${currentPaperId}:`, error);
-                })
-                .finally(() => {
-                    if (cancelled) return;
-
-                    // If cancelled, `isUpdatingBookmarkStatus` should already be false from cleanup
-                    isUpdatingBookmarkStatus = false;
-                });
-
-            // --- Cleanup Function ---
-            // Runs IF the dependency (currentPaperId) changes *before*
-            // the promise settles, OR when the component is unmounted.
-            return () => {
-                cancelled = true;
-                // Reset loading status immediately if the source id changes mid-flight
+    async function checkInitialBookmarkStatus(id: string) {
+        return await backendService
+            .isPaperOnReadingList({ id })
+            .response.then((response) => response.value)
+            .catch((error) => {
+                console.error(`Failed to fetch bookmark status for ${id}:`, error);
+                return false;
+            })
+            .finally(() => {
                 isUpdatingBookmarkStatus = false;
-            };
-        } else {
-            isUpdatingBookmarkStatus = false; // Ensure loading is false if id is invalid
-        }
-    });
+            });
+    }
 
     /**
      * Adds the paper to the reading list, if it is not already added yet, otherwise removes it.
      */
     function toggleBookmarkStatus() {
+        isUpdatingBookmarkStatus = true;
+
         if (paperId.value === undefined) {
             console.error("Paper id is undefined");
             isUpdatingBookmarkStatus = false;
             return;
         }
 
-        if (isBookmarked) {
+        if (isBookmarked.value) {
             backendService
                 .removePaperFromReadingList({ id: paperId.value })
                 .response.then(() => {
-                    isBookmarked = false;
+                    isBookmarked.value = false;
                     onPaperChangedBookmarkStatus?.();
                 })
                 .catch((error) => {
                     console.error("Error removing paper from reading list:", error);
-                })
-                .finally(() => {
-                    isUpdatingBookmarkStatus = false;
                 });
         } else {
             backendService
                 .addPaperToReadingList({ id: paperId.value })
                 .response.then(() => {
-                    isBookmarked = true;
+                    isBookmarked.value = true;
                     onPaperChangedBookmarkStatus?.();
                 })
                 .catch((error) => {
                     console.error("Error adding paper to reading list:", error);
-                })
-                .finally(() => {
-                    isUpdatingBookmarkStatus = false;
                 });
         }
+
+        isUpdatingBookmarkStatus = false;
     }
 </script>
 
@@ -151,12 +125,12 @@ Usage:
 >
     {#snippet trigger()}
         {#if isHovered}
-            {#if isBookmarked}
+            {#if isBookmarked.value}
                 <BookmarkMinus />
             {:else}
                 <BookmarkPlus />
             {/if}
-        {:else if isBookmarked}
+        {:else if isBookmarked.value}
             <Bookmark fill="bg-primary" />
         {:else}
             <Bookmark />

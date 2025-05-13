@@ -112,7 +112,7 @@ describe("PaperBookmarkButton", () => {
         expect(testFunction).toHaveBeenCalledTimes(2);
     });
 
-    test("When the button is clicked and the API call fails, then the bookmark state is not toggled", async () => {
+    test("When the button is clicked and the addToPaperList API call fails, then the button is not toggled", async () => {
         mockApiCall("isPaperOnReadingList", { value: false }); // initially not bookmarked
         mockFailedApiCall("addPaperToReadingList");
 
@@ -133,7 +133,47 @@ describe("PaperBookmarkButton", () => {
         await user.click(button);
         expect(button).toHaveAttribute("aria-label", "Add to reading list");
 
-        // Check that the callback function was not called
         expect(testFunction).not.toHaveBeenCalled();
+    });
+
+    test("When the button is clicked and the removeFromPaperList API call fails, then the button is not toggled", async () => {
+        mockApiCall("isPaperOnReadingList", { value: true }); // initially bookmarked
+        mockFailedApiCall("removePaperFromReadingList");
+
+        const user = userEvent.setup();
+        const testFunction = vi.fn();
+        render(PaperBookmarkButton, {
+            target: document.body,
+            props: {
+                loadingPaperId: Promise.resolve("1"),
+                isBookmarkedDefault: true,
+                onPaperChangedBookmarkStatus: testFunction,
+            },
+        });
+
+        const button = screen.getByRole("button");
+        expect(button).toHaveAttribute("aria-label", "Remove from reading list");
+
+        await user.click(button);
+        expect(button).toHaveAttribute("aria-label", "Remove from reading list");
+
+        expect(testFunction).not.toHaveBeenCalled();
+    });
+
+    test("When the isPaperOnReadingList API call fails, then the button is not enabled", async () => {
+        mockFailedApiCall("isPaperOnReadingList");
+
+        const testFunction = vi.fn();
+        render(PaperBookmarkButton, {
+            target: document.body,
+            props: {
+                loadingPaperId: Promise.resolve("1"),
+                isBookmarkedDefault: false,
+                onPaperChangedBookmarkStatus: testFunction,
+            },
+        });
+
+        const button = screen.getByRole("button");
+        expect(button).toBeDisabled();
     });
 });
