@@ -1,6 +1,6 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
-import { expect, vi, type Mock, type MockInstance } from "vitest";
+import { expect, type Mock, type MockInstance, vi } from "vitest";
 import type { Navigation, Page } from "@sveltejs/kit";
 import { readable } from "svelte/store";
 import * as environment from "$app/environment";

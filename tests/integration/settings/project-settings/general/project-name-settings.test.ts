@@ -3,8 +3,8 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
 import { Projects } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
-import { ProjectStatus } from "$lib/model/api/project";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { createProject } from "$tests/model-builder";
 
 describe("ProjectNameSettings", () => {
     test("When all props are provided, then it renders correctly, with two labels, one input field and a button", async () => {
@@ -28,21 +28,10 @@ describe("ProjectNameSettings", () => {
     });
 
     test("When the input field is empty or the project name is the same, then the button should not change the name", async () => {
-        const mockCall = mockApiCall("getProjectById", {
-            id: "",
-            name: "",
-            status: ProjectStatus.UNSPECIFIED,
-            currentStage: 0n,
-            maxStage: 0n,
-        });
-        const mockUpdateProject = mockApiCall("updateProject", {
-            id: "0",
-            name: "New Project Name",
-            status: ProjectStatus.ACTIVE,
-            currentStage: 0n,
-            maxStage: 1n,
-            settings: undefined,
-        });
+        const mockUpdateProject = mockApiCall(
+            "updateProject",
+            createProject({ name: "New Project Name" }),
+        );
 
         render(ProjectNameSettings, {
             target: document.body,
@@ -62,19 +51,11 @@ describe("ProjectNameSettings", () => {
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "Demo Project");
         await userEvent.click(renameButton);
-        expect(mockUpdateProject).toHaveBeenCalled();
-        expect(mockCall).not.toHaveBeenCalled();
+        expect(mockUpdateProject).not.toHaveBeenCalled();
     });
 
     test("When the input field is filled with a differing name, then the button should change the name", async () => {
-        const mockCall = mockApiCall("updateProject", {
-            id: "0",
-            name: "New Project Name",
-            status: ProjectStatus.ACTIVE,
-            currentStage: 0n,
-            maxStage: 1n,
-            settings: undefined,
-        });
+        const mockCall = mockApiCall("updateProject", createProject({ name: "New Project Name" }));
 
         render(ProjectNameSettings, {
             props: {
