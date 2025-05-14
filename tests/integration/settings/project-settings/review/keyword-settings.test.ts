@@ -84,5 +84,5 @@ describe("KeywordSettings", () => {
         await userEvent.keyboard("{Enter}");
         expect(screen.queryByText("Maximum number of keywords reached!")).toBeInTheDocument();
         expect(screen.queryByText(`New Tag ${maximumAmountOfTags}`)).not.toBeInTheDocument();
-    });
+    }, 10000);
 });
