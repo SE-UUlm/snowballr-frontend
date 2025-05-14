@@ -16,7 +16,7 @@ test.describe("Inviting users to a project", () => {
         const actualUser = await getNameOfCurrentUser(page);
 
         await projectMembersSettingsPage.checkForUser(`${getName(actualUser)} - You`, "name");
-        await projectMembersSettingsPage.checkForUser(user.email, "email");
+        await projectMembersSettingsPage.checkForUser(user!.email, "email");
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 1,
             admins: 1,
@@ -46,7 +46,7 @@ test.describe("Inviting users to a project", () => {
 
         // Check that the user is still listed as a project admin
         await projectMembersSettingsPage.checkForUser(`${getName(actualUser)} - You`, "name");
-        await projectMembersSettingsPage.checkForUser(user.email, "email");
+        await projectMembersSettingsPage.checkForUser(user!.email, "email");
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 1,
             admins: 1,
@@ -63,14 +63,14 @@ test.describe("Inviting users to a project", () => {
 
         await projectMembersSettingsPage.openInviteUsersDialog();
 
-        await projectMembersSettingsPage.inviteUser(user.email);
+        await projectMembersSettingsPage.inviteUser(user!.email);
         await projectMembersSettingsPage.inviteUsersDialogButton.click();
         await expect(projectMembersSettingsPage.inviteUsersDialog).not.toBeVisible();
         await expect(page.getByText("User is already invited")).toBeVisible();
 
         // Check that the user is still listed as a project admin, and no invitation is sent
         await projectMembersSettingsPage.checkForUser(`${getName(actualUser)} - You`, "name");
-        await projectMembersSettingsPage.checkForUser(user.email, "email");
+        await projectMembersSettingsPage.checkForUser(user!.email, "email");
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 1,
             admins: 1,

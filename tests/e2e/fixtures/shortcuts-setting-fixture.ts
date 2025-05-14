@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { DevHomePage } from "../pom/home-page-model";
 import { DevShortcutsSettingsPage } from "../pom/shortcuts-settings-model";
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 
 type ShortcutsSettingsPage = {
     shortcutsSettingsPage: DevShortcutsSettingsPage;

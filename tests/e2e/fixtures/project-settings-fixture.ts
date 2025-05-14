@@ -1,5 +1,5 @@
 import { DevProjectSettingsPage } from "$tests/e2e/pom/project-settings-model";
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 import { expect } from "@playwright/test";
 import { projectId } from "../project-name-settings.test";
 

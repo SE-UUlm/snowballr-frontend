@@ -134,27 +134,14 @@ end-to-end tests and getting feedback on them more quickly.
 The E2E tests require a mock backend to be running for each supported browser (Chromium, Firefox, and WebKit).
 These mock backends simulate the backend responses.
 
-To manually start all necessary mock backends, you can use the provided script, which will start one instance per
-browser if you provide the three ports:
-
-```bash
-bash ./scripts/start_mock_backend.sh -c 3001 3002 3003
-```
-
-Each browser uses a different port for its mock backend. You can override the default ports
-using the following environment variables:
-
-| Variable                                     | Default (if the variable is not set) | Description                                                                            |
-| -------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM` | 3002                                 | The port that the mock backend will listen on for E2E testing of the chromium browser. |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX`  | 3003                                 | The port that the mock backend will listen on for E2E testing of the firefox browser.  |
-| `PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT`   | 3004                                 | The port that the mock backend will listen on for E2E testing of the webkit browser.   |
+The E2E tests will automatically create these mock backends using docker,
+requiring it to be installed and running.
 
 ### Best Practices
 
 1. **Use the test fixture**:
    Instead of importing the `test` fixture directly from "@playwright/test" directly,
-   use the `test` variable exported from [`fixtures/general-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/fixtures/general-fixture.ts).
+   use the `test` variable exported from [`fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/fixtures/shared-fixture.ts).
    This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
    based on the browser the test is running in.
 

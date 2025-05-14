@@ -6,14 +6,13 @@ test.describe("Navigate to referenced paper in paper view", () => {
     const paperIds: string[] = [];
 
     /** Create 2 papers in order to be able to switch from one paper to the other. */
-    test.beforeAll(async ({ mockBackendService }) => {
+    test.beforeAll(async ({ apiClient }) => {
         const papers = await Promise.all(
             Array.from(
                 { length: 2 },
                 (_, i) =>
-                    mockBackendService.createPaper(
-                        createPaper({ title: `Paper ${i} to be referenced` }),
-                    ).response,
+                    apiClient.createPaper(createPaper({ title: `Paper ${i} to be referenced` }))
+                        .response,
             ),
         );
         papers.forEach((paper) => paperIds.push(paper.id));

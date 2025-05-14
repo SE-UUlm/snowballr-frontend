@@ -12,8 +12,8 @@ test.describe("Decide on paper", () => {
     const projectPaperIds: string[] = [];
     const localProjectPaperIds: string[] = [];
 
-    test.beforeAll(async ({ mockBackendService }) => {
-        const project: Project = await mockBackendService.createProject({
+    test.beforeAll(async ({ apiClient }) => {
+        const project: Project = await apiClient.createProject({
             name: "Project paper decision",
         }).response;
         projectId = project.id;
@@ -27,22 +27,22 @@ test.describe("Decide on paper", () => {
                 snowballingType: SnowballingType.UNSPECIFIED,
             },
         };
-        await mockBackendService.updateProject({
+        await apiClient.updateProject({
             project: Project.create(projectSettings),
             mask: {
                 paths: generateFieldMask(projectSettings),
             },
         }).response;
 
-        await mockBackendService.createCriterion({
+        await apiClient.createCriterion({
             ...Criteria.demoCriterion1,
             projectId: project.id,
         });
-        await mockBackendService.createCriterion({
+        await apiClient.createCriterion({
             ...Criteria.demoCriterion2,
             projectId: project.id,
         });
-        await mockBackendService.createCriterion({
+        await apiClient.createCriterion({
             ...Criteria.demoCriterion3,
             projectId: project.id,
         });
@@ -51,13 +51,12 @@ test.describe("Decide on paper", () => {
             Array.from(
                 { length: 3 },
                 (_, i) =>
-                    mockBackendService.createPaper(
-                        createPaper({ title: `Paper ${i} to decide on` }),
-                    ).response,
+                    apiClient.createPaper(createPaper({ title: `Paper ${i} to decide on` }))
+                        .response,
             ),
         );
         for (const paper of papers) {
-            const projectPaper = await mockBackendService.addPaperToProject({
+            const projectPaper = await apiClient.addPaperToProject({
                 projectId: projectId,
                 paperId: paper.id,
                 stage: 0n,
@@ -67,11 +66,11 @@ test.describe("Decide on paper", () => {
         }
     });
 
-    test.afterAll(async ({ mockBackendService }) => {
+    test.afterAll(async ({ apiClient }) => {
         for (const paperId of projectPaperIds) {
-            await mockBackendService.removePaperFromProject({ id: paperId });
+            await apiClient.removePaperFromProject({ id: paperId });
         }
-        mockBackendService.softDeleteProject({ id: projectId });
+        apiClient.softDeleteProject({ id: projectId });
     });
 
     test.fixme(

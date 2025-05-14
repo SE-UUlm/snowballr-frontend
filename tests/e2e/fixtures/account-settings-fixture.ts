@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { DevAccountSettingsPage } from "../pom/account-settings-model";
 import { DevHomePage } from "../pom/home-page-model";
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 
 type AccountSettingsPage = {
     accountSettingsPage: DevAccountSettingsPage;

@@ -1,7 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
-import type { TestOptions } from "./tests/e2e/fixtures/general-fixture";
 
-export default defineConfig<TestOptions>({
+export default defineConfig({
     testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
     retries: 2,
@@ -27,63 +26,24 @@ export default defineConfig<TestOptions>({
         reuseExistingServer: !process.env.CI,
     },
     projects: [
-        // Setup projects
-        {
-            name: "chromium setup",
-            testMatch: /.*\.setup\.ts/,
-            use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
-                    "http://localhost:3002",
-            },
-        },
-        {
-            name: "firefox setup",
-            testMatch: /.*\.setup\.ts/,
-            use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
-                    "http://localhost:3003",
-            },
-        },
-        {
-            name: "webkit setup",
-            testMatch: /.*\.setup\.ts/,
-            use: {
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
-            },
-        },
-
         // Browser tests
         {
             name: "chromium",
             use: {
                 ...devices["Desktop Chrome"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_CHROMIUM ??
-                    "http://localhost:3002",
             },
-            dependencies: ["chromium setup"],
         },
         {
             name: "firefox",
             use: {
                 ...devices["Desktop Firefox"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_FIREFOX ??
-                    "http://localhost:3003",
             },
-            dependencies: ["firefox setup"],
         },
         {
             name: "webkit",
             use: {
                 ...devices["Desktop Safari"],
-                mockBackendUrl:
-                    process.env.PUBLIC_MOCK_BACKEND_GRPC_WEB_PORT_WEBKIT ?? "http://localhost:3004",
             },
-            dependencies: ["webkit setup"],
         },
     ],
 });

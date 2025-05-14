@@ -19,8 +19,8 @@ test.describe("Reading List Functionality", () => {
      * Create a project and papers for the reading list.
      * Do not add papers to the reading list, since they are provided by the reading list page fixture.
      */
-    test.beforeAll(async ({ mockBackendService }) => {
-        const project: Project = await mockBackendService.createProject({
+    test.beforeAll(async ({ apiClient }) => {
+        const project: Project = await apiClient.createProject({
             name: "Reading-List Project",
         }).response;
         projectId = project.id;
@@ -28,13 +28,13 @@ test.describe("Reading List Functionality", () => {
         const paperPromises: Promise<Paper>[] = [];
         for (let i = 0; i < NUM_PAPERS_DEFAULT; i++) {
             paperPromises.push(
-                mockBackendService.createPaper(
+                apiClient.createPaper(
                     createPaper({ title: `${PREDICTABLE_PAPER_TITLE_PREFIX} ${i}` }),
                 ).response,
             );
         }
         paperPromises.push(
-            mockBackendService.createPaper(createPaper({ title: EXTRA_PAPER_TITLE })).response,
+            apiClient.createPaper(createPaper({ title: EXTRA_PAPER_TITLE })).response,
         );
 
         const createdPapers = await Promise.all(paperPromises);
@@ -46,13 +46,13 @@ test.describe("Reading List Functionality", () => {
     /**
      * Clean up the project and papers after all tests.
      */
-    test.afterAll(async ({ mockBackendService }) => {
+    test.afterAll(async ({ apiClient }) => {
         for (const paperId of defaultPaperIds) {
-            await mockBackendService.removePaperFromReadingList({ id: paperId });
+            await apiClient.removePaperFromReadingList({ id: paperId });
         }
-        await mockBackendService.removePaperFromReadingList({ id: extraPaperId });
+        await apiClient.removePaperFromReadingList({ id: extraPaperId });
 
-        await mockBackendService.softDeleteProject({ id: projectId });
+        await apiClient.softDeleteProject({ id: projectId });
     });
 
     test("When the user opens the reading list, then all papers of the user's reading list are shown.", async ({
