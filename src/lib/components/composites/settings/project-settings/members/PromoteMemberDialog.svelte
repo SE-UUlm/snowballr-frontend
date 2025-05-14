@@ -40,7 +40,7 @@
             })
             .catch((promoteMemberError) => {
                 error = promoteMemberError;
-                console.error(`Failed to promote member: ${promoteMemberError}`);
+                console.error(`Couldn't promote member: ${promoteMemberError}`);
             });
         loading = false;
     }
@@ -61,7 +61,7 @@ Usage:
         variant: "destructiveSubtle",
         onclick: promoteMember,
     }}
-    errorText="Failed to promote member"
+    errorText="Couldn't promote member"
     title={`Promote ${memberName} to a Project Admin?`}
     triggerProps={{
         class: cn(
