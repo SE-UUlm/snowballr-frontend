@@ -9,13 +9,18 @@
     interface ReadingListEntryProps {
         paper: Paper;
         onClick?: () => void;
+        onPaperChangedBookmarkStatus?: () => void;
     }
 
     const navigateToPaperView = () => {
         goto(`/paper/${id}`);
     };
 
-    const { paper, onClick = navigateToPaperView }: ReadingListEntryProps = $props();
+    const {
+        paper,
+        onClick = navigateToPaperView,
+        onPaperChangedBookmarkStatus = undefined,
+    }: ReadingListEntryProps = $props();
     const { id, ...paperWithoutId } = paper;
 </script>
 
@@ -31,9 +36,14 @@ Furthermore this component is clickable and navigates to the corresponding paper
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
 
+In addition, it is possible to provide a callback function `onPaperChangedBookmarkStatus()`
+that is propagated to the `PaperBookmarkButton` and defines the behavior
+what happens when the bookmark status of the paper changes.
+This callback is executed when the bookmark status changes.
+
 Usage:
 ```svelte
-    <ReadingListEntry paper={paper} />
+    <ReadingListEntry paper={paper} {onPaperChangedBookmarkStatus} />
 ```
 -->
 <div
@@ -48,7 +58,11 @@ Usage:
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
     </button>
     <div class="flex flex-row items-center gap-4">
-        <PaperBookmarkButton isBookmarkedDefault={true} loadingPaperId={Promise.resolve(id)} />
+        <PaperBookmarkButton
+            isBookmarkedDefault={true}
+            loadingPaperId={Promise.resolve(id)}
+            {onPaperChangedBookmarkStatus}
+        />
         <DownloadButton loadingPaperId={Promise.resolve(id)} />
     </div>
 </div>

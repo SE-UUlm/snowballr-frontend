@@ -9,7 +9,7 @@ test.describe("Shortcuts visibility", () => {
     }) => {
         await shortcutsSettingsPage.setShortcutsVisibility(true);
 
-        await page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
         await expect(page.getByRole("link", { name: /Reading List.+/ })).toBeVisible();
         await expect(
             page.getByRole("link", { name: "Reading List", exact: true }),
@@ -22,7 +22,7 @@ test.describe("Shortcuts visibility", () => {
     }) => {
         await shortcutsSettingsPage.setShortcutsVisibility(false);
 
-        await page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
         await expect(page.getByRole("link", { name: /Reading List.+/ })).not.toBeVisible();
         await expect(page.getByRole("link", { name: "Reading List", exact: true })).toBeVisible();
     });
@@ -34,7 +34,7 @@ test.describe("Shortcuts visibility", () => {
         await shortcutsSettingsPage.setShortcutsVisibility(true);
         await reloadWait(page, page.getByRole("heading", { name: "Settings" }));
 
-        await page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
         await expect(page.getByRole("link", { name: /Reading List.+/ })).toBeVisible();
         await expect(
             page.getByRole("link", { name: "Reading List", exact: true }),
@@ -44,7 +44,7 @@ test.describe("Shortcuts visibility", () => {
         await shortcutsSettingsPage.setShortcutsVisibility(false);
         await reloadWait(page, page.getByRole("heading", { name: "Settings" }));
 
-        await page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+        await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
         await expect(page.getByRole("link", { name: /Reading List.+/ })).not.toBeVisible();
         await expect(page.getByRole("link", { name: "Reading List", exact: true })).toBeVisible();
     });

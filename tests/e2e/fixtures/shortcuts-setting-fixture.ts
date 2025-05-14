@@ -15,8 +15,9 @@ export const test = base.extend<ShortcutsSettingsPage>({
     shortcutsSettingsPage: async ({ page }, use) => {
         await page.goto("/");
         await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
+
         const homepage = new DevHomePage(page);
-        await homepage.openShortcutsSettings();
+        await homepage.openUserSettingInSidebar("Shortcuts");
         await use(new DevShortcutsSettingsPage(page));
     },
 });

@@ -5,12 +5,19 @@ import { createAuthor, createPaper } from "$tests/model-builder";
 import type { Project_Paper } from "$lib/model/api/project";
 import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./pom/project-papers-page-model";
 
+export let projectId: string = "";
+
 test.describe("View all papers of a project", () => {
-    let projectId: string = "";
     let projectPaperIds: string[] = [];
 
     const TOTAL_PAPERS = NUM_PAPERS_PER_STAGE * 2;
 
+    /**
+     * Create a project with 2 stages and `NUM_PAPERS_PER_STAGE` papers in each stage.
+     * The papers are created with unique titles and authors.
+     * The papers are added to the project in the order they are created.
+     * The project paper ids are stored in `projectPaperIds` for later use.
+     */
     test.beforeAll(async ({ mockBackendService }) => {
         mockBackendService
             .createProject({ name: "Project 1" })
@@ -46,14 +53,13 @@ test.describe("View all papers of a project", () => {
         projectPaperIds = (await Promise.all(projectPaperPromises)).map((pp) => pp.id);
     });
 
+    /**
+     * Remove the project papers and soft delete the project after all tests.
+     * TODO: Delete all papers from the mock backend (Currently not supported).
+     */
     test.afterAll(async ({ mockBackendService }) => {
         projectPaperIds.forEach((id) => mockBackendService.removePaperFromProject({ id: id }));
         mockBackendService.softDeleteProject({ id: projectId });
-    });
-
-    test.beforeEach(async ({ page }) => {
-        await page.goto(`/project/${projectId}/papers`);
-        await expect(page.getByRole("tab", { name: "Papers" })).toBeVisible();
     });
 
     test("When opening the project papers page, then the user sees all stages and the stage accordion items are closed.", async ({

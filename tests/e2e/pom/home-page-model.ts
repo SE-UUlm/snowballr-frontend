@@ -1,5 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
+type LinkName = "Reading List" | "Archived Projects" | "Invitations" | "Settings";
+type SettingName = "Account" | "Project Setup" | "Shortcuts" | "Review";
+
 export class DevHomePage {
     readonly page: Page;
     readonly createProjectDialog: Locator;
@@ -20,27 +23,23 @@ export class DevHomePage {
     }
 
     /**
-     * Opens the user settings page.
+     * Opens the user menu dialog and clicks on a specific link.
+     *
+     * @param linkName - The name of the link to be clicked in the user menu dialog.
      */
-    async openSettings() {
-        await this.page.getByRole("button", { name: /[A-Z]{2}/ }).click();
-        await this.page.getByRole("link", { name: "Settings" }).click();
-        await expect(this.page.getByRole("heading", { name: "Settings" })).toBeVisible();
+    async openLinkInUserMenuDialog(linkName: LinkName) {
+        await this.page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
+        await this.page.getByRole("link", { name: linkName }).click();
+        await expect(this.page.getByRole("heading", { name: linkName })).toBeVisible();
     }
 
     /**
-     * Opens the account settings page.
+     * Opens the user menu dialog, opens the settings and clicks on a specific user setting in the sidebar, e.g. "Account".
+     *
+     * @param settingName - The name of the setting to be opened in the user settings sidebar.
      */
-    async openAccountSettings() {
-        await this.openSettings();
-        await this.page.getByRole("link", { name: "Account" }).click();
-    }
-
-    /**
-     * Opens the shortcuts settings page.
-     */
-    async openShortcutsSettings() {
-        await this.openSettings();
-        await this.page.getByRole("link", { name: "Shortcuts" }).click();
+    async openUserSettingInSidebar(settingName: SettingName) {
+        await this.openLinkInUserMenuDialog("Settings");
+        await this.page.getByRole("link", { name: settingName }).click();
     }
 }

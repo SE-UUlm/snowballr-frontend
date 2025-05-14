@@ -4,55 +4,93 @@
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
     import Tooltip from "./utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
-    import { onMount } from "svelte";
+    import { backendService } from "$lib/grpc-api";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface Props {
         loadingPaperId: Promise<string>;
         isBookmarkedDefault?: boolean;
+        onPaperChangedBookmarkStatus?: () => void;
+        class?: string;
     }
 
-    const { loadingPaperId, isBookmarkedDefault = false }: Props = $props();
+    const {
+        loadingPaperId,
+        isBookmarkedDefault = false,
+        onPaperChangedBookmarkStatus = undefined,
+        class: className,
+    }: Props = $props();
 
-    let isBookmarked = $state(isBookmarkedDefault);
-    let isHovered = $state(false);
-    const tooltipText = $derived(isBookmarked ? "Remove from reading list" : "Add to reading list");
-    const paperId = $derived(
-        resource<string, string | undefined>(loadingPaperId, {
-            initialValue: undefined,
-            resourceName: "paper ID",
-        }),
+    // `isUpdatingBookmarkStatus` is initially set to `true` to represent the loading state
+    let isUpdatingBookmarkStatus = $state(true);
+
+    const loadingBookmarkStatus = loadingPaperId.then((id) => checkInitialBookmarkStatus(id));
+    const paperId = resource<string, string | undefined>(loadingPaperId, {
+        initialValue: undefined,
+        resourceName: "paper id",
+    });
+
+    const isBookmarked = resource<boolean, boolean>(loadingBookmarkStatus, {
+        initialValue: isBookmarkedDefault,
+        resourceName: "bookmark status",
+    });
+    const tooltipText = $derived(
+        isBookmarked.value ? "Remove from reading list" : "Add to reading list",
     );
+    let isHovered = $state(false);
 
     const onMouseEnter = () => (isHovered = true);
     const onMouseLeave = () => (isHovered = false);
 
+    async function checkInitialBookmarkStatus(id: string) {
+        return await backendService
+            .isPaperOnReadingList({ id })
+            .response.then((response) => response.value)
+            .catch((error) => {
+                console.error(`Failed to fetch bookmark status for ${id}:`, error);
+                return false;
+            })
+            .finally(() => {
+                isUpdatingBookmarkStatus = false;
+            });
+    }
+
     /**
-     * Adds the paper to the reading list, if it is not added yet, otherwise removes it.
+     * Adds the paper to the reading list, if it is not already added yet, otherwise removes it.
      */
-    function toggleBookmarkState() {
-        if (isBookmarked) {
-            removePaperFromReadingList();
+    function toggleBookmarkStatus() {
+        isUpdatingBookmarkStatus = true;
+
+        if (paperId.value === undefined) {
+            console.error("Paper id is undefined");
+            isUpdatingBookmarkStatus = false;
+            return;
+        }
+
+        if (isBookmarked.value) {
+            backendService
+                .removePaperFromReadingList({ id: paperId.value })
+                .response.then(() => {
+                    isBookmarked.value = false;
+                    onPaperChangedBookmarkStatus?.();
+                })
+                .catch((error) => {
+                    console.error("Error removing paper from reading list:", error);
+                });
         } else {
-            addPaperToReadingList();
+            backendService
+                .addPaperToReadingList({ id: paperId.value })
+                .response.then(() => {
+                    isBookmarked.value = true;
+                    onPaperChangedBookmarkStatus?.();
+                })
+                .catch((error) => {
+                    console.error("Error adding paper to reading list:", error);
+                });
         }
-    }
 
-    function addPaperToReadingList() {
-        // TODO: Will be implemented in #99
-        isBookmarked = true;
-        console.log(`Added paper with id ${paperId.value} to reading list`);
+        isUpdatingBookmarkStatus = false;
     }
-    function removePaperFromReadingList() {
-        // TODO: Will be implemented in #100
-        isBookmarked = false;
-        console.log(`Removed paper with id ${paperId.value} from reading list`);
-    }
-
-    onMount(() => {
-        if (isBookmarkedDefault) {
-            addPaperToReadingList();
-        }
-    });
 </script>
 
 <!--
@@ -60,31 +98,42 @@
 Button to add a paper to or remove a paper from the reading list.
 
 This component will handle the API calls itself.
-According to bookmark state of the paper (isBookmarked), the button will change its appearance.
-
-By setting the `isBookmarkedDefault` property, the default state for the button can be set, i.e.
-if set to true, the paper with the given id is added to the reading list per default.
+If `isBookmarkedDefault` is set, it will show the initial state of the bookmark button.
+After the initial state is set, the component will fetch the bookmark status of the paper from the backend.
 
 Usage:
 ```svelte
-<PaperBookmarkButton loadingPaperId={Promise.resolve("42")} isBookmarkedDefault={true} />
+    async function ChangedBookmarkStatusLogging() {
+        const readingList = await loadReadingList().then(() => {
+            console.log("Reading list updated");
+        }).catch((error) => {
+            console.error("Error loading reading list:", error);
+        });
+    }
+
+    <PaperBookmarkButton
+        loadingPaperId={Promise.resolve(paperId)}
+        isBookmarkedDefault={true}
+        onPaperChangedBookmarkStatus={ChangedBookmarkStatusLogging}
+    />
 ```
 -->
 <Tooltip
-    class="text-primary bg-transparent [&_svg]:size-6"
+    class={cn("text-primary bg-transparent [&_svg]:size-6", className)}
     aria-label={tooltipText}
-    onclick={toggleBookmarkState}
+    disabled={isUpdatingBookmarkStatus}
+    onclick={toggleBookmarkStatus}
     onmouseenter={onMouseEnter}
     onmouseleave={onMouseLeave}
 >
     {#snippet trigger()}
         {#if isHovered}
-            {#if isBookmarked}
+            {#if isBookmarked.value}
                 <BookmarkMinus />
             {:else}
                 <BookmarkPlus />
             {/if}
-        {:else if isBookmarked}
+        {:else if isBookmarked.value}
             <Bookmark fill="bg-primary" />
         {:else}
             <Bookmark />

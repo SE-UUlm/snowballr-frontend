@@ -10,7 +10,7 @@ export class DevPaperViewPage {
         this.allListEntries = page.getByRole("listitem");
         this.referenceListEntry0 = this.allListEntries
             .getByRole("button", {
-                name: "Paper 0 to be referenced",
+                name: "Paper 1 to be referenced",
             })
             .first();
     }
