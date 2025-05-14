@@ -66,17 +66,19 @@ export class DevProjectMemberSettingsPage {
     /**
      * Checks whether the user with the passed userId is listed in the project members.
      */
-    async checkForUser(userId: string, mode: "name" | "email") {
+    async checkForUser(userId: string, mode: "name" | "email", visible: boolean = true) {
         switch (mode) {
             case "name":
                 await expect(
                     this.page.getByRole("heading", { name: userId, level: 3 }),
-                ).toBeVisible();
+                ).toBeVisible({ visible });
                 break;
             case "email":
                 // Get the last element with the userId as text
                 // This is necessary when the user name is the same as the email address
-                await expect(this.page.getByText(userId, { exact: true }).last()).toBeVisible();
+                await expect(this.page.getByText(userId, { exact: true }).last()).toBeVisible({
+                    visible,
+                });
                 break;
         }
     }

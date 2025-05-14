@@ -63,6 +63,7 @@ Usage:
     triggerProps={{
         disabled: isDisabled,
         class: buttonVariants({ variant: "destructive-subtle", size: "icon" }),
+        "aria-label": `Remove member ${member.user!.email}`,
     }}
     bind:loading
     bind:error
