@@ -39,11 +39,9 @@
                 <Tabs.Root value={defaultTabValue}>
                     <Tabs.List>
                         {#each tabs as tab (tab.value)}
-                            <a href={tab.href}>
-                                <Tabs.Trigger value={tab.value}>
-                                    <span>{tab.label}</span>
-                                </Tabs.Trigger>
-                            </a>
+                            <Tabs.Trigger href={tab.href} value={tab.value}>
+                                <span>{tab.label}</span>
+                            </Tabs.Trigger>
                         {/each}
                     </Tabs.List>
                 </Tabs.Root>

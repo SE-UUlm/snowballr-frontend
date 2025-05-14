@@ -2,11 +2,17 @@
     import { Tabs as TabsPrimitive } from "bits-ui";
     import { cn } from "$lib/utils/shadcn-helper.js";
 
+    type TabsTriggerProps = TabsPrimitive.TriggerProps & {
+        href?: string;
+    };
+
     let {
+        children,
         ref = $bindable(null),
+        href = undefined,
         class: className,
         ...restProps
-    }: TabsPrimitive.TriggerProps = $props();
+    }: TabsTriggerProps = $props();
 </script>
 
 <TabsPrimitive.Trigger
@@ -16,4 +22,15 @@
     )}
     bind:ref
     {...restProps}
-/>
+>
+    {#snippet child({ props })}
+        <svelte:element
+            this={href ? "a" : "button"}
+            {href}
+            {...props}
+            class={cn(props["class"]!, "cursor-default")}
+        >
+            {@render children?.()}
+        </svelte:element>
+    {/snippet}
+</TabsPrimitive.Trigger>
