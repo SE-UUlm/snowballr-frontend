@@ -11,7 +11,7 @@
     import { LoaderCircle } from "lucide-svelte";
     import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
     import { toast } from "svelte-sonner";
-    import { shortcut, type ShortcutTrigger } from "@svelte-put/shortcut";
+    import { shortcut, type ShortcutTrigger, type ShortcutEventDetail } from "@svelte-put/shortcut";
 
     interface ButtonContent {
         name: string;
@@ -128,7 +128,12 @@
     use:shortcut={{
         trigger: {
             ...getShortcutTrigger(),
-            callback: () => submitReview(),
+            callback: (detail: ShortcutEventDetail) => {
+                const keyboardEvent = detail.originalEvent;
+                keyboardEvent.preventDefault();
+
+                submitReview();
+            },
             enabled: !wasAlreadyReviewed,
         },
     }}
