@@ -27,7 +27,7 @@ export async function reloadWait(page: Page, element: Locator) {
  * @returns the first and last name of the user
  */
 export async function getCurrentUser(page: Page): Promise<{ firstName: string; lastName: string }> {
-    await page.getByRole("button", { name: /[A-Z]{2}/ }).click();
+    await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
     const userNameLocator = page.getByRole("group", { name: /^[a-zA-Z]+ [a-zA-Z]+$/, exact: true });
     await expect(userNameLocator).toBeVisible();
     const userName = await userNameLocator.textContent().then((text) => text!.trim());

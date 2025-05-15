@@ -75,7 +75,7 @@ const testUser = {
  * This test user is used is registered before each test.
  */
 export const userTest = base.extend<{ user: TestUser }>({
-    user: [testUser, { option: true }],
+    user: [testUser, {}],
 });
 
 export const test = mergeTests(mockBackendServiceTest, defaultTest, userTest);

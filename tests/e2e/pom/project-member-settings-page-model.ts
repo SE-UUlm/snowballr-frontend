@@ -65,6 +65,15 @@ export class DevProjectMemberSettingsPage {
 
     /**
      * Checks whether the user with the passed userId is listed in the project members.
+     *
+     * When `mode` is set to "name", the userId is checked as a name.
+     * When `mode` is set to "email", the userId is checked as an email address.
+     * When `visible` is set to false, it is checked whether the user isn't listed.
+     *
+     * @param userId - the userId of the user to be checked
+     * @param mode - whether to check for the userId as name or email
+     * @param visible - whether the user should be visible or not
+     * @returns - true, if the user is listed, otherwise false (negated by `visible`)
      */
     async checkForUser(userId: string, mode: "name" | "email", visible: boolean = true) {
         switch (mode) {
