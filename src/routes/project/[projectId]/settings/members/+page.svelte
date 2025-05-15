@@ -47,11 +47,11 @@
 
         let message = "";
         if (filteredInvitedUsers.length === 0) {
-            message = `${pluralize(invitedUsers.length, "User is", "Users are")} already invited`;
+            message = `${pluralize(invitedUsers, "User is", "Users are")} already invited`;
         } else {
             // Show user name when it's only one, otherwise show number of invited users
             const messageContent = pluralize(
-                filteredInvitedUsers.length,
+                filteredInvitedUsers,
                 filteredInvitedUsers[0],
                 `${filteredInvitedUsers.length} users`,
             );
@@ -59,7 +59,7 @@
         }
 
         await reloadMembers(
-            `Couldn't invite ${pluralize(filteredInvitedUsers.length, "user", "users")} to the project`,
+            `Couldn't invite ${pluralize(filteredInvitedUsers, "user", "users")} to the project`,
         );
         toast(message);
     }

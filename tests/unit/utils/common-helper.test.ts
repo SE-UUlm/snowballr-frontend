@@ -93,6 +93,11 @@ describe("Pluralize a word based on the count", () => {
     test("When the count is 0, the plural form of the word is returned", () => {
         expect(pluralize(0, "item", "items")).toBe("items");
     });
+
+    test("When the count is an object with a length property, the plural form of the word is returned based on the length", () => {
+        expect(pluralize([1, 2, 3], "item", "items")).toBe("items");
+        expect(pluralize([1], "item", "items")).toBe("item");
+    });
 });
 
 describe("Group items of a list by a key (function)", () => {

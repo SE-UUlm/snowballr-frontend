@@ -137,7 +137,7 @@
             {:then stages}
                 <span class="text-hint">
                     {stages.length}
-                    {pluralize(stages.length, "Stage", "Stages")}
+                    {pluralize(stages, "Stage", "Stages")}
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
