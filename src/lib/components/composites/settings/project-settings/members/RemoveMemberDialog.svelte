@@ -53,7 +53,7 @@ Usage:
 ```
 -->
 <AlertDialog
-    actionButtonText={`Remove ${memberName} From This Project`}
+    actionButtonText="Remove Member From This Project"
     actionProps={{
         variant: "destructiveSubtle",
         onclick: removeMember,

@@ -22,7 +22,7 @@ export class DevRemoveMemberDialog {
         });
         this.openButton = page.locator(`button[aria-label="Remove member ${user.email}"]`);
         this.confirmButton = this.dialog.getByRole("button", {
-            name: `Remove ${displayName} From This Project`,
+            name: `Remove Member From This Project`,
         });
         this.cancelButton = this.dialog.getByRole("button", { name: "Cancel" });
     }
