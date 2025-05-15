@@ -21,9 +21,14 @@ import { alice } from "../users";
  * A `SnowballRClient` is also created and authenticated to allow for easy
  * test setup using direct api calls instead of going through the frontend.
  *
+ * To start a mock backend without instantly authenticating, set the `user`
+ * option of the fixture to `null`.
+ *
  * Provided Services/Options:
  * - user: The user which should be newly registered and authenticated as.
- *         This may be changed based on your requirements.
+ *         This may be changed based on your requirements. Set it to `undefined`
+ *         to disable creation of and authentication as a new user.
+ *         Defaults to `alice`.
  * - mockBackend: The newly started, dockerized mock backend. The port is
  *                choosen automatically. You most likely don't need to interact
  *                with this manually.
@@ -37,7 +42,7 @@ export const test = base.extend<
     object,
     {
         mockBackend: DockerMockBackend;
-        user: User;
+        user: User | null;
         apiClient: AuthSnowballRClient;
     }
 >({
@@ -54,14 +59,14 @@ export const test = base.extend<
     apiClient: [
         async ({ mockBackend, user }, use) => {
             const client = new AuthSnowballRClient(mockBackend);
-            await client.register(user);
+            if (user !== null) await client.register(user);
             await use(client);
         },
         { scope: "worker", auto: true },
     ],
-    page: async ({ page, mockBackend, apiClient }, use) => {
+    page: async ({ user, page, mockBackend, apiClient }, use) => {
         await mockBackend.setupRouting(page);
-        await apiClient.injectCredentials(page);
+        if (user !== null) await apiClient.injectCredentials(page);
         await use(page);
     },
 });
