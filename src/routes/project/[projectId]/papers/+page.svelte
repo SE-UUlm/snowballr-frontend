@@ -39,7 +39,7 @@
     // wrap the selected paper in a promise, as the `PaperDetailsCardContent` needs a loading paper
     let loadingPaper = $derived(selectedPaper ? Promise.resolve(selectedPaper.paper!) : undefined);
 
-    const loadingStageCount = loadingProject.then((project) => project.maxStage);
+    const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
 
     let showFilters = $state(false);
     let searchText = $state("");

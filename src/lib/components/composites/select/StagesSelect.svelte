@@ -10,7 +10,7 @@
     let { loadingStageCount, selectedStages = $bindable(undefined) }: Props = $props();
 
     const stageCount = resource<bigint, bigint>(loadingStageCount, {
-        initialValue: 0n,
+        initialValue: -1n,
         resourceName: "stages",
     });
 
