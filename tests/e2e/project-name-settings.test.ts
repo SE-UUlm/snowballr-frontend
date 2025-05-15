@@ -2,7 +2,7 @@ import { test } from "./fixtures/project-settings-fixture";
 import { expect } from "@playwright/test";
 
 export let projectId: string = "";
-export const projectReviewSettingsProjectName = "Project 1";
+const projectName = "Project 1";
 
 test.describe("Renaming a project", () => {
     /**
@@ -10,7 +10,7 @@ test.describe("Renaming a project", () => {
      */
     test.beforeAll(async ({ mockBackendService }) => {
         await mockBackendService
-            .createProject({ name: projectReviewSettingsProjectName })
+            .createProject({ name: projectName })
             .then((project) => (projectId = project.response.id));
     });
 
@@ -22,9 +22,9 @@ test.describe("Renaming a project", () => {
         page,
         projectSettingsPage,
     }) => {
-        await projectSettingsPage.changeProjectName("New Project");
+        await projectSettingsPage.changeProjectName("Project 1");
         await projectSettingsPage.checkForErrors();
-        const projectNameHeader = page.getByRole("heading", { name: "New Project" });
+        const projectNameHeader = page.getByRole("heading", { name: "Project 1" });
         await expect(projectNameHeader).toBeVisible();
         const toast = page.getByText("Please enter a new project name.");
         await expect(toast).toBeVisible();
@@ -38,7 +38,8 @@ test.describe("Renaming a project", () => {
         await projectSettingsPage.checkForErrors();
         const projectNameHeader = page.getByRole("heading", { name: "Project 1" });
         await expect(projectNameHeader).toBeVisible();
-        // Here is no toast necessary, because it is handled by the input field.
+        const toast = page.getByText("Please provide a non-empty project name");
+        await expect(toast).toBeVisible();
     });
 
     test("When the user enters a valid project name, then the name of the project should be updated to this name.", async ({
