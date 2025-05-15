@@ -37,9 +37,12 @@
                 );
                 initialPossibleMembers = result.initialPossibleMembers;
                 isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-                loadingUsers = false;
             })
-            .catch(() => ({ initialPossibleMembers: [], isErrorOnUsersLoading: true }));
+            .catch(() => {
+                initialPossibleMembers = [];
+                isErrorOnUsersLoading = true;
+            })
+            .finally(() => (loadingUsers = false));
     });
 
     async function inviteUsers(event: Event) {
