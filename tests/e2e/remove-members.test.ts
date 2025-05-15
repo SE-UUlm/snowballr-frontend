@@ -7,15 +7,19 @@ test.describe("Removing members from a project", () => {
     async function inviteUser(
         email: string,
         projectMembersSettingsPage: DevProjectMemberSettingsPage,
+        useSuggestion: boolean = false,
     ) {
         await projectMembersSettingsPage.openInviteUsersDialog();
-        await projectMembersSettingsPage.inviteUser(email);
+        await projectMembersSettingsPage.inviteUser(email, useSuggestion);
         await projectMembersSettingsPage.inviteUsersDialogButton.click();
         await expect(projectMembersSettingsPage.inviteUsersDialog).not.toBeVisible();
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 2,
             admins: 1,
+            members: 1,
             invitees: 1,
+            invitedAdmins: 0,
+            invitedMembers: 1,
         });
     }
 
@@ -49,7 +53,10 @@ test.describe("Removing members from a project", () => {
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 1,
             admins: 1,
+            members: 0,
             invitees: 0,
+            invitedAdmins: 0,
+            invitedMembers: 0,
         });
     });
 
@@ -69,7 +76,46 @@ test.describe("Removing members from a project", () => {
         await projectMembersSettingsPage.assertNumberOfProjectMembers({
             all: 2,
             admins: 1,
+            members: 1,
             invitees: 1,
+            invitedAdmins: 0,
+            invitedMembers: 1,
         });
+    });
+
+    test("When a registered user is removed from the project, then they can be invited again", async ({
+        page,
+        projectMembersSettingsPage,
+        mockBackendService,
+    }) => {
+        const user = {
+            firstName: "John",
+            lastName: "Doe",
+            email: "john.doe@example.com",
+            password: "password",
+        };
+        await mockBackendService.register(user);
+        await inviteUser(user.email, projectMembersSettingsPage, true);
+
+        const dialog = new DevRemoveMemberDialog(page, user);
+
+        await dialog.open();
+        await dialog.remove();
+        await expect(dialog.dialog).not.toBeVisible();
+        await expect(page.getByText(`Removed John Doe from the project`)).toBeVisible();
+        await projectMembersSettingsPage.checkForUser("John Doe", "name", false);
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 1,
+            admins: 1,
+            members: 0,
+            invitees: 0,
+            invitedAdmins: 0,
+            invitedMembers: 0,
+        });
+
+        // Invite the user again, this fails when no suggestion is shown
+        await inviteUser(user.email, projectMembersSettingsPage, true);
+        await expect(page.getByText(`Invited ${user.email} to the project`).last()).toBeVisible();
+        await projectMembersSettingsPage.checkForUser("John Doe", "name");
     });
 });

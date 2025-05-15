@@ -1,3 +1,4 @@
+import { getName } from "$lib/utils/common-helper";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class DevRemoveMemberDialog {
@@ -7,14 +8,21 @@ export class DevRemoveMemberDialog {
     readonly confirmButton: Locator;
     readonly cancelButton: Locator;
 
-    constructor(page: Page, user: { email: string }) {
+    constructor(page: Page, user: { firstName?: string; lastName?: string; email: string }) {
+        let displayName: string;
+        if (user.firstName && user.lastName) {
+            displayName = getName({ firstName: user.firstName, lastName: user.lastName });
+        } else {
+            displayName = user.email;
+        }
+
         this.page = page;
         this.dialog = page.getByRole("alertdialog", {
-            name: `Remove ${user.email} From This Project`,
+            name: `Remove ${displayName} From This Project`,
         });
         this.openButton = page.locator(`button[aria-label="Remove member ${user.email}"]`);
         this.confirmButton = this.dialog.getByRole("button", {
-            name: `Remove ${user.email} From This Project`,
+            name: `Remove ${displayName} From This Project`,
         });
         this.cancelButton = this.dialog.getByRole("button", { name: "Cancel" });
     }
