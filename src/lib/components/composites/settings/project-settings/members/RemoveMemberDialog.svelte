@@ -55,14 +55,14 @@ Usage:
 <AlertDialog
     actionButtonText={`Remove ${memberName} From This Project`}
     actionProps={{
-        variant: "destructive-subtle",
+        variant: "destructiveSubtle",
         onclick: removeMember,
     }}
     errorText="Couldn't remove member"
     title={`Remove ${memberName} From This Project`}
     triggerProps={{
         disabled: isDisabled,
-        class: buttonVariants({ variant: "destructive-subtle", size: "icon" }),
+        class: buttonVariants({ variant: "destructiveSubtle", size: "icon" }),
         "aria-label": `Remove member ${member.user!.email}`,
     }}
     bind:loading
