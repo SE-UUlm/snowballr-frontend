@@ -68,10 +68,10 @@ export default ts.config(
             ".svelte-kit/",
             "dist/",
             "coverage/",
+            "e2e-report/",
             "node_modules/",
             "src/lib/model/api/",
             "api/",
-            "e2e-report/",
         ],
     },
     {

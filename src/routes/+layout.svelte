@@ -15,10 +15,12 @@
 </script>
 
 <ModeWatcher defaultMode="light" />
+<Toaster />
+
 <div class="flex h-screen w-screen flex-col items-start gap-4 p-4">
     {@render children()}
-    <Toaster />
 </div>
+
 {#if isDevMode}
     <div
         class={cn(

@@ -6,6 +6,10 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import {
+        getAlreadyReviewedContext,
+        getSelectedReviewCriteriaContext,
+    } from "$lib/utils/custom-context";
 
     interface Props {
         reviewers: User[];
@@ -13,6 +17,25 @@
     }
 
     let { reviewers, criterion }: Props = $props();
+
+    const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
+    const { wasReviewed } = getAlreadyReviewedContext();
+    const isCriterionInitiallyChecked = selectedReviewCriteriaState.criteria.includes(criterion.id);
+
+    /**
+     * If this criterion was not checked before, then it will be added to the selected review
+     * criteria list, otherwise it will be deleted from this list.
+     */
+    function toggleReviewCriteriaInState() {
+        const criterionId = criterion.id;
+        if (!selectedReviewCriteriaState.criteria.includes(criterion.id)) {
+            selectedReviewCriteriaState.criteria.push(criterionId);
+        } else {
+            selectedReviewCriteriaState.criteria = selectedReviewCriteriaState.criteria.filter(
+                (id) => id !== criterionId,
+            );
+        }
+    }
 </script>
 
 <!--
@@ -22,8 +45,12 @@ Single list element for a criterion.
 - `reviewers` should contain all users that are referenced in the reviews of `criterion`.
 
 When `reviewMode.isActivated` is true, a checkbox is shown in front of the list element.
-When checked, this means that the criterion applies to the current paper.
+When checked, this means that the criterion applies to the current paper and is stored
+in the context of this paper, so this criterion can be considered, when submitted a review.
 Otherwise, the list of reviewers, who already checked this checkbox are listed.
+
+When the criterion is used on a paper view of a project paper the current user already reviewed,
+then it cannot be checked anymore.
 
 Usage:
 ```svelte
@@ -34,8 +61,12 @@ Usage:
 -->
 <li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
     {#if reviewMode.isActivated}
-        <!-- Will be extended in https://github.com/SE-UUlm/snowballr-frontend/issues/53 -->
-        <Checkbox data-testid="criterion-checkbox" />
+        <Checkbox
+            checked={isCriterionInitiallyChecked}
+            data-testid="criterion-checkbox"
+            disabled={wasReviewed}
+            onCheckedChange={toggleReviewCriteriaInState}
+        />
     {/if}
     <div class="flex flex-row gap-2 truncate">
         <span class="font-bold">{criterion.tag}</span>

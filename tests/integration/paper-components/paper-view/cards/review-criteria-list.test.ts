@@ -1,9 +1,9 @@
 import ReviewCriteriaList from "$lib/components/composites/paper-components/paper-view/cards/ReviewCriteriaList.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test } from "vitest";
-import { createReviewedCriterion, loading } from "../../../../model-builder";
+import { createReviewedCriterion, loading } from "$tests/model-builder";
 import { CriterionCategory } from "$lib/model/api/criterion";
-import { waitForComponentLoading } from "../../../test-helper";
+import { mockSelectedCriteriaContext, waitForComponentLoading } from "../../../test-helper";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
 describe("ReviewCriteriaList", () => {
@@ -14,6 +14,7 @@ describe("ReviewCriteriaList", () => {
     test("When props are provided, then component is shown", () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([]),
@@ -31,6 +32,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is hard exclusion, then it is shown as hard exclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -66,6 +68,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is soft exclusion, then it is shown as soft exclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -101,6 +104,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is inclusion, then it is shown as inclusion", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([
@@ -136,6 +140,7 @@ describe("ReviewCriteriaList", () => {
     test("When criterion is unspecified, then it isn't shown", async () => {
         render(ReviewCriteriaList, {
             target: document.body,
+            context: mockSelectedCriteriaContext,
             props: {
                 reviewers: loading([]),
                 criteriaWithReviews: loading([

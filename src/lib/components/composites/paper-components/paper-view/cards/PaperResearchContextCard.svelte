@@ -61,19 +61,19 @@ Usage:
     <PaperCardContent value="1">
         {#if reviewers !== undefined}
             <ReviewCriteriaList {criteriaWithReviews} {reviewers} />
-            <Separator />
             {#if reviewMode.isActivated}
                 <span>
                     Will be implemented in
                     <a
                         class="text-blue-400"
-                        href="https://github.com/SE-UUlm/snowballr-frontend/issues/53"
+                        href="https://github.com/SE-UUlm/snowballr-frontend/issues/55"
                     >
                         #53
                     </a>
                     .
                 </span>
             {:else}
+                <Separator />
                 <div class="md:px-8 lg:px-15">
                     <PaperDecisionBanner {loadingProjectPaper} {reviewers} />
                 </div>
