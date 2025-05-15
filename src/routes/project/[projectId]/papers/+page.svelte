@@ -18,7 +18,7 @@
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
-    import { ExternalLink } from "lucide-svelte";
+    import { ExternalLink, Funnel } from "lucide-svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
@@ -41,7 +41,7 @@
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage);
 
-    let showFilters = $state(true);
+    let showFilters = $state(false);
     let searchText = $state("");
 
     interface PapersFilters {
@@ -85,30 +85,27 @@
 <main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-5">
     <div class="flex h-full w-full flex-col gap-5">
         <div class="flex h-fit w-full flex-col gap-2.5">
-            <div class="flex flex-row items-center gap-2.5">
-                <Button onclick={() => (showFilters = !showFilters)}>
-                    Filters
-                    {#if showFilters}
-                        <ChevronUp class="size-4" />
-                    {:else}
-                        <ChevronDown class="size-4" />
-                    {/if}
-                </Button>
-                <Button
-                    onclick={() => {
-                        papersFilters = emptyFilters;
-                    }}
-                >
-                    <Trash />
-                    Clear
-                </Button>
+            <div class="flex gap-[2%]">
                 <SearchBar
-                    onSearch={(text) => {
-                        searchText = text;
-                    }}
+                    onSearch={(text) => (searchText = text)}
                     placeholderText="Search paper or start with '#' to only search by id"
                     timeoutInMs={0}
                 />
+                <div class="flex flex-row items-center gap-2.5">
+                    <Button onclick={() => (showFilters = !showFilters)}>
+                        <Funnel />
+                        Filter
+                        {#if showFilters}
+                            <ChevronUp class="size-4" />
+                        {:else}
+                            <ChevronDown class="size-4" />
+                        {/if}
+                    </Button>
+                    <Button onclick={() => (papersFilters = emptyFilters)}>
+                        <Trash />
+                        Reset
+                    </Button>
+                </div>
             </div>
             {#if showFilters}
                 <div class="flex flex-row flex-wrap items-center gap-2.5">
