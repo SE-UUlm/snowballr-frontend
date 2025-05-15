@@ -127,7 +127,7 @@
                 </div>
             {/if}
         </div>
-        <div class="h-full w-full">
+        <div class="h-full w-full overflow-y-auto">
             {#await loadingStages}
                 <span class="text-hint">Loading stages...</span>
             {:then stages}
