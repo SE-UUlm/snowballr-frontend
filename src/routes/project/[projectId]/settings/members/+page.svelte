@@ -42,16 +42,20 @@
 
     async function onUsersInvited(invitedUsers: string[]) {
         // Filter out users that are already members
-        const memberEmails = (await loadingMembers).map((member) => member.user?.email);
+        const memberEmails = (await loadingMembersLocal).map((member) => member.user?.email);
         const filteredInvitedUsers = invitedUsers.filter((user) => !memberEmails.includes(user));
 
         let message = "";
         if (filteredInvitedUsers.length === 0) {
-            message = `${pluralize(memberEmails.length, "User is", "Users are")} already invited`;
-        } else if (filteredInvitedUsers.length === 1) {
-            message = `Invited ${filteredInvitedUsers[0]} to the project`;
+            message = `${pluralize(invitedUsers.length, "User is", "Users are")} already invited`;
         } else {
-            message = `Invited ${filteredInvitedUsers.length} users to the project`;
+            // Show user name when it's only one, otherwise show number of invited users
+            const messageContent = pluralize(
+                filteredInvitedUsers.length,
+                filteredInvitedUsers[0],
+                `${filteredInvitedUsers.length} users`,
+            );
+            message = `Invited ${messageContent} to the project`;
         }
 
         await reloadMembers(

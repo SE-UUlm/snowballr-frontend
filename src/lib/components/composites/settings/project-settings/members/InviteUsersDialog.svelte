@@ -8,7 +8,6 @@
     import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
-    import { onMount } from "svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
 
     interface Props {
@@ -29,18 +28,18 @@
     let initialPossibleMembers: User[] = $state([]);
     let actionButtonDisabled = $derived(loading || membersInput.length === 0);
 
-    onMount(async () => {
-        const result = await loadingMembers
-            .then((members) =>
-                loadUsers(
+    $effect(() => {
+        loadingMembers
+            .then(async (members) => {
+                const result = await loadUsers(
                     user,
                     members.map((member) => member.user!),
-                ),
-            )
+                );
+                initialPossibleMembers = result.initialPossibleMembers;
+                isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+                loadingUsers = false;
+            })
             .catch(() => ({ initialPossibleMembers: [], isErrorOnUsersLoading: true }));
-        initialPossibleMembers = result.initialPossibleMembers;
-        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-        loadingUsers = false;
     });
 
     async function inviteUsers(event: Event) {
