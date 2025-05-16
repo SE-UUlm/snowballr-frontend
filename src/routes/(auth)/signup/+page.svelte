@@ -25,7 +25,7 @@
         const isEmailValid = emailInput.validate();
         const isPasswordValid = passwordInput.validate();
         if (!(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid)) {
-            let failedInput: String;
+            let failedInput: string;
             if (!isFirstNameValid) failedInput = "First Name";
             else if (!isLastNameValid) failedInput = "Last Name";
             else if (!isEmailValid) failedInput = "Email";

@@ -37,7 +37,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         return { user: undefinedUser };
     }
 
-    const authStatus =authStatusCall.response.authenticationStatus;
+    const authStatus = authStatusCall.response.authenticationStatus;
 
     if (authStatus === AuthenticationStatus.ACCESS_TOKEN_EXPIRED) {
         await backendService.renewSession(Nothing);

@@ -22,14 +22,14 @@
 <AlertDialog.Root open={data.user === undefined}>
     <AlertDialog.Content>
         <AlertDialog.Header class="text-red-400">
-          <AlertDialog.Title class="flex gap-2">
-              <ServerCrash />
-              An Error Occurred!
-          </AlertDialog.Title>
-          <AlertDialog.Description class="text-default">
-              The backend could not be reached or a severe and unrecoverable
-              error occured during communication.
-          </AlertDialog.Description>
+            <AlertDialog.Title class="flex gap-2">
+                <ServerCrash />
+                An Error Occurred!
+            </AlertDialog.Title>
+            <AlertDialog.Description class="text-default">
+                The backend could not be reached or a severe and unrecoverable error occured during
+                communication.
+            </AlertDialog.Description>
         </AlertDialog.Header>
     </AlertDialog.Content>
 </AlertDialog.Root>
