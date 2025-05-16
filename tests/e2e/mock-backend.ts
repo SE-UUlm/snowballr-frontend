@@ -1,12 +1,26 @@
 import { SnowballRClient } from "$lib/model/api/main.client";
 import type { Browser, Page } from "@playwright/test";
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
-import { execSync } from "node:child_process";
+import { exec, execSync } from "node:child_process";
 import { CookieJar, Cookie } from "tough-cookie";
 import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
 import { StatusCodes } from "$lib/model/error-codes";
 import { Nothing } from "$lib/model/api/base";
+
+async function isDockerInstalled(): Promise<boolean> {
+    return new Promise((resolve) => {
+        exec("docker version", (error) => {
+            if (error === null) resolve(true);
+            else resolve(false);
+        });
+    });
+}
+
+if (!(await isDockerInstalled())) {
+    console.error("Docker does not seem to be installed or running.");
+    process.exit(1);
+}
 
 export type User = {
     firstName: string;
