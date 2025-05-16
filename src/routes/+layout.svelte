@@ -4,8 +4,10 @@
     import "../app.css";
     import { Toaster } from "svelte-sonner";
     import { ModeWatcher } from "mode-watcher";
+    import * as AlertDialog from "$lib/components/primitives/alert-dialog/index.js";
+    import { ServerCrash } from "lucide-svelte";
 
-    let { children } = $props();
+    let { children, data } = $props();
 
     const isDevMode = env.PUBLIC_IS_DEV_MODE === "true";
 
@@ -16,6 +18,21 @@
 
 <ModeWatcher defaultMode="light" />
 <Toaster />
+
+<AlertDialog.Root open={data.user === undefined}>
+    <AlertDialog.Content>
+        <AlertDialog.Header class="text-red-400">
+          <AlertDialog.Title class="flex gap-2">
+              <ServerCrash />
+              An Error Occurred!
+          </AlertDialog.Title>
+          <AlertDialog.Description class="text-default">
+              The backend could not be reached or a severe and unrecoverable
+              error occured during communication.
+          </AlertDialog.Description>
+        </AlertDialog.Header>
+    </AlertDialog.Content>
+</AlertDialog.Root>
 
 <div class="flex h-screen w-screen flex-col items-start gap-4 p-4">
     {@render children()}
