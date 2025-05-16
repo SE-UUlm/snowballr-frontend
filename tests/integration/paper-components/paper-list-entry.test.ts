@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
@@ -12,7 +12,7 @@ describe("PaperListEntryComponent", () => {
         reviewMode.isActivated = true;
     });
 
-    test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
+    test("When all required props except an onClick handler are provided, then the paper list entry is completely shown (without review information)", async () => {
         render(PaperEntry, {
             props: {
                 paper: Papers.demoPaper1,
@@ -27,12 +27,13 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
 
         // border does not indicate review status
-        expect(screen.getByRole("button").children[0]).not.toHaveClass("border-l-4");
+        // It is a link, because no onClick handler was provided
+        expect(screen.getByRole("link").children[0]).not.toHaveClass("border-l-4");
         // and no user avatar exist indicate the individual review decision
-        expect(screen.getByRole("button").childElementCount).toBe(1);
+        expect(screen.getByRole("link").childElementCount).toBe(1);
     });
 
-    test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
+    test("When review information except an onClick handler are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
         render(PaperEntry, {
             props: {
                 paper: {
@@ -54,6 +55,58 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
 
         // border does not indicate review status
+        // It is a link, because no onClick handler was provided
+        expect(screen.getByRole("link").children[0]).not.toHaveClass("border-l-4");
+        // and no user avatar exist indicate the individual review decision
+        expect(screen.getByRole("link").childElementCount).toBe(1);
+    });
+
+    test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
+        render(PaperEntry, {
+            props: {
+                paper: Papers.demoPaper1,
+                projectId: undefined,
+                onClick: () => {},
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByText("#0")).toBeInTheDocument();
+        expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
+        expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
+
+        // border does not indicate review status
+        // It is a button, because an onClick handler was provided
+        expect(screen.getByRole("button").children[0]).not.toHaveClass("border-l-4");
+        // and no user avatar exist indicate the individual review decision
+        expect(screen.getByRole("button").childElementCount).toBe(1);
+    });
+
+    test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
+        render(PaperEntry, {
+            props: {
+                paper: {
+                    id: "0",
+                    localId: "0",
+                    paper: Papers.demoPaper1,
+                    stage: 0n,
+                    decision: PaperDecision.UNREVIEWED,
+                    reviews: [Reviews.demoReview1],
+                },
+                projectId: "0",
+                onClick: () => {},
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByText("#0")).toBeInTheDocument();
+        expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
+        expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
+
+        // border does not indicate review status
+        // It is a button, because an onClick handler was provided
         expect(screen.getByRole("button").children[0]).not.toHaveClass("border-l-4");
         // and no user avatar exist indicate the individual review decision
         expect(screen.getByRole("button").childElementCount).toBe(1);

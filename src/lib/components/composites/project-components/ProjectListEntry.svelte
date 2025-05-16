@@ -1,10 +1,17 @@
 <script lang="ts">
     import { Progress } from "$lib/components/primitives/progress";
-    import { getNames } from "$lib/utils/common-helper";
+    import { getNames, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import { ProjectStatus } from "$lib/model/api/project";
     import type { ProjectListEntryInterface } from "$lib/model/component-interfaces";
+    import { goto } from "$app/navigation";
 
-    const { project, membersList, information }: ProjectListEntryInterface = $props();
+    type ProjectListEntryProps = ProjectListEntryInterface & {
+        onClick?: () => void;
+    };
+
+    const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
+
+    const href = `/project/${project.id}/dashboard`;
 </script>
 
 <!--
@@ -17,18 +24,22 @@ This component shows the
   - current stage
   - current stage progress (as progress bar, whereas the parameter must be provided as percentage)
 
-Furthermore this component is clickable and navigates to the corresponding project homepage.
+Furthermore this component is clickable and navigates to the corresponding project homepage,
+if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
+on a single click. A double click always causes the navigation to the paper view.
 
 Usage:
 ```svelte
-    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} information={{projectProgress: 0.3}} />
+    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} information={{projectProgress: 0.3}} {onClick} />
 ```
 -->
-<a
+<svelte:element
+    this={!onClick ? "a" : "button"}
     class="border-container-border-grey highlight-on-hover flex h-fit w-full flex-col justify-between gap-2 rounded-md border px-5
     py-2 lg:flex-row lg:items-center lg:gap-10"
     class:opacity-25={project.status === ProjectStatus.ARCHIVED}
-    href={`/project/${project.id}/dashboard`}
+    onclick={handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
+    {...!onClick ? { href: href } : { type: "button" }}
 >
     <div class="flex h-fit min-w-0 flex-col">
         <h2 class="truncate">{project.name}</h2>
@@ -54,4 +65,4 @@ Usage:
             value={information.projectProgress * 100}
         />
     </div>
-</a>
+</svelte:element>

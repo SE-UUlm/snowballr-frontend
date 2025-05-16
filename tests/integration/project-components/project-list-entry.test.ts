@@ -1,11 +1,11 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { Projects, Users } from "../../example-data";
 import { MemberRole } from "$lib/model/api/project";
 
 describe("ProjectListEntryComponent", () => {
-    test("When all required props are provided, then the project list entry is completely shown.", () => {
+    test("When all required props except an onClick handler are provided, then the project list entry is completely shown.", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProject,
@@ -23,6 +23,33 @@ describe("ProjectListEntryComponent", () => {
         expect(screen.getByText("Demo Project")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Jane Doe")).toBeInTheDocument();
         expect(screen.getByText("Stage 0")).toBeInTheDocument();
+        expect(screen.getByText("Demo Project").closest("a")).toBeInTheDocument();
+
+        // Project (stage) progress is visualized using a progress bar
+        expect(screen.queryByText("20")).not.toBeInTheDocument();
+        expect(screen.queryByTestId("stage-progress-bar")).toHaveValue(20);
+    });
+
+    test("When all required props are provided, then the project list entry is completely shown.", () => {
+        render(ProjectListEntry, {
+            props: {
+                project: Projects.demoProject,
+                membersList: {
+                    members: [
+                        { user: Users.johnDoe, role: MemberRole.ADMIN },
+                        { user: Users.janeDoe, role: MemberRole.DEFAULT },
+                    ],
+                },
+                information: { projectProgress: 0.2 },
+                onClick: () => {},
+            },
+        });
+
+        // Project information are shown directly
+        expect(screen.getByText("Demo Project")).toBeInTheDocument();
+        expect(screen.getByText("John Doe, Jane Doe")).toBeInTheDocument();
+        expect(screen.getByText("Stage 0")).toBeInTheDocument();
+        expect(screen.getByText("Demo Project").closest("button")).toBeInTheDocument();
 
         // Project (stage) progress is visualized using a progress bar
         expect(screen.queryByText("20")).not.toBeInTheDocument();

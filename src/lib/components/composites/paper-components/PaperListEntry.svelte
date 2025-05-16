@@ -17,20 +17,11 @@
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;
     };
-
-    const navigateToPaperView = () => {
-        if (isProjectPaper(paper)) {
-            // navigate to project paper
-            goto(`/project/${projectId}/paper/${paperId}`);
-        } else {
-            // navigate to paper
-            goto(`/paper/${paperId}`);
-        }
-    };
-
-    const { paper, projectId, onClick = navigateToPaperView }: PaperListEntryProps = $props();
-
+    const { paper, projectId, onClick }: PaperListEntryProps = $props();
     const paperId = $derived(getDisplayPaperId(paper));
+    const href = $derived(
+        isProjectPaper(paper) ? `/project/${projectId}/paper/${paperId}` : `/paper/${paperId}`,
+    );
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
@@ -60,15 +51,16 @@ on a single click. A double click always causes the navigation to the paper view
 
 Usage:
 ```svelte
-    <PaperListEntry paper={paper} projectId={"1"} />
+    <PaperListEntry {paper} projectId={"1"} {onClick} />
 ```
 -->
-<button
+<svelte:element
+    this={!onClick ? "a" : "button"}
     class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={!reviewMode.isActivated}
     data-testid="paper-list-entry"
-    onclick={handleSingleOrDoubleClick(onClick, navigateToPaperView)}
-    type="button"
+    onclick={handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
+    {...!onClick ? { href: href } : { type: "button" }}
 >
     <div
         class={cn(
@@ -90,4 +82,4 @@ Usage:
             {/await}
         {/each}
     {/if}
-</button>
+</svelte:element>

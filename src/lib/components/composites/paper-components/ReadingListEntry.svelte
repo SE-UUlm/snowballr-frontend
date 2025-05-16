@@ -12,16 +12,14 @@
         onPaperChangedBookmarkStatus?: () => void;
     }
 
-    const navigateToPaperView = () => {
-        goto(`/paper/${id}`);
-    };
-
     const {
         paper,
-        onClick = navigateToPaperView,
+        onClick,
         onPaperChangedBookmarkStatus = undefined,
     }: ReadingListEntryProps = $props();
     const { id, ...paperWithoutId } = paper;
+
+    const href = `/paper/${id}`;
 </script>
 
 <!--
@@ -43,20 +41,21 @@ This callback is executed when the bookmark status changes.
 
 Usage:
 ```svelte
-    <ReadingListEntry paper={paper} {onPaperChangedBookmarkStatus} />
+    <ReadingListEntry {paper} {onClick} {onPaperChangedBookmarkStatus} />
 ```
 -->
 <div
     class="border-container-border-grey highlight-on-hover flex w-full flex-row items-center gap-16 rounded-md border px-3 py-2"
 >
-    <button
+    <svelte:element
+        this={!onClick ? "a" : "button"}
         class="flex flex-auto"
         aria-label="Paper info for reading list entry"
-        onclick={handleSingleOrDoubleClick(onClick, navigateToPaperView)}
-        type="button"
+        onclick={handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
+        {...!onClick ? { href: href } : { type: "button" }}
     >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
-    </button>
+    </svelte:element>
     <div class="flex flex-row items-center gap-4">
         <PaperBookmarkButton
             isBookmarkedDefault={true}

@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import ReadingListEntry from "$lib/components/composites/paper-components/ReadingListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
@@ -6,7 +6,7 @@ import { waitForComponentLoading } from "../test-helper";
 import { Papers } from "../../example-data";
 
 describe("ReadingListEntryComponent", () => {
-    test("When all required props are provided, then the reading list entry is completely shown", async () => {
+    test("When all required props except an onClick handler are provided, then the reading list entry is completely shown", async () => {
         render(ReadingListEntry, {
             props: {
                 paper: Papers.demoPaper1,
@@ -17,7 +17,30 @@ describe("ReadingListEntryComponent", () => {
 
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
+        expect(
+            screen.getByText("An Analysis of TypeScript Performance").closest("a"),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: "Remove from reading list" }),
+        ).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
+    });
 
+    test("When all required props are provided, then the reading list entry is completely shown", async () => {
+        render(ReadingListEntry, {
+            props: {
+                paper: Papers.demoPaper1,
+                onClick: () => {},
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
+        expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
+        expect(
+            screen.getByText("An Analysis of TypeScript Performance").closest("button"),
+        ).toBeInTheDocument();
         expect(
             screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
