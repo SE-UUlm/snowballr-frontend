@@ -75,5 +75,6 @@ Usage:
     {#snippet description()}
         Once removed, <span class="font-bold">{memberName}</span> will no longer have access to this
         project. You can always re-invite them later.
+        <!-- TODO: Clarify what happens with deleted users reviews -->
     {/snippet}
 </AlertDialog>

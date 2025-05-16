@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./fixtures/project-members-settings-fixtures";
 import { getName } from "$lib/utils/common-helper";
-import { getCurrentUser } from "./helper";
+import { getNameOfCurrentUser } from "./helper";
 
 test.describe("Inviting users to a project", () => {
     /**
@@ -13,7 +13,7 @@ test.describe("Inviting users to a project", () => {
         projectMembersSettingsPage,
         user,
     }) => {
-        const actualUser = await getCurrentUser(page);
+        const actualUser = await getNameOfCurrentUser(page);
 
         await projectMembersSettingsPage.checkForUser(`${getName(actualUser)} - You`, "name");
         await projectMembersSettingsPage.checkForUser(user.email, "email");
@@ -37,7 +37,7 @@ test.describe("Inviting users to a project", () => {
         projectMembersSettingsPage,
         user,
     }) => {
-        const actualUser = await getCurrentUser(page);
+        const actualUser = await getNameOfCurrentUser(page);
 
         await projectMembersSettingsPage.openInviteUsersDialog();
         await projectMembersSettingsPage.inviteUsersDialogCancelButton.click();
@@ -59,7 +59,7 @@ test.describe("Inviting users to a project", () => {
         projectMembersSettingsPage,
         user,
     }) => {
-        const actualUser = await getCurrentUser(page);
+        const actualUser = await getNameOfCurrentUser(page);
 
         await projectMembersSettingsPage.openInviteUsersDialog();
 
