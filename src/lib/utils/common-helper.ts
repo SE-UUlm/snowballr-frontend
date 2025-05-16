@@ -72,12 +72,16 @@ function exhaustiveCheck(x: never): never {
 /**
  * Returns either the plural or singular form of a word based on the count.
  *
- * @param count - the number of items
+ * @param count - the number of items or an object with a length property e.g. an array
+ *                (in this case the length property is used to determine the count)
  * @param singular - the singular form of the word
  * @param plural - the plural form of the word
  * @returns the singular form if count is 1, otherwise the plural form
  */
-function pluralize(count: number, singular: string, plural: string): string {
+function pluralize(count: number | { length: number }, singular: string, plural: string): string {
+    if (typeof count === "object" && "length" in count) {
+        count = count.length;
+    }
     return count === 1 ? singular : plural;
 }
 
@@ -219,6 +223,29 @@ function handleSingleOrDoubleClick(onSingleClick: () => void, onDoubleClick: () 
     };
 }
 
+/**
+ * Wraps long words in a span with the class "break-all" to allow line breaks.
+ *
+ * This is useful for long words that do not fit into the container and would otherwise overflow.
+ * The result can be rendered using `{@html result}`.
+ *
+ * @param text - The text to be wrapped
+ * @param longWordLength - The length of the word that should be wrapped (e.g. 20 characters)
+ * @returns The text with long words wrapped in a span with the class "break-all"
+ */
+function wrapLongWords(text: string, longWordLength: number) {
+    return text
+        .split(" ")
+        .map((word) => {
+            if (word.length >= longWordLength) {
+                return `<span class="break-all">${word}</span>`;
+            } else {
+                return word;
+            }
+        })
+        .join(" ");
+}
+
 export {
     getName,
     getNames,
@@ -232,4 +259,5 @@ export {
     comparePaperId,
     getDisplayPaperId,
     handleSingleOrDoubleClick,
+    wrapLongWords,
 };

@@ -5,7 +5,7 @@
 set -e
 
 # Image for the mock backend
-IMAGE="ghcr.io/se-uulm/snowballr-mock-backend:main"
+IMAGE="ghcr.io/se-uulm/snowballr-mock-backend@sha256:b55e15e99044ad35ea8ca30608859420ddc2100ef0053b9901f910c4f48c4544"
 # Name prefix for the mock backend container
 CONTAINER_PREFIX="snowballr-mock-backend"
 

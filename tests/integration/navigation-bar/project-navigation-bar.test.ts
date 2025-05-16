@@ -26,8 +26,8 @@ describe("ProjectNavigationBar", () => {
 
         await waitForComponentLoading();
 
-        const linkTags = screen.getAllByRole("link");
-        expect(linkTags).toHaveLength(5);
+        const linkTags = screen.getAllByRole("tab");
+        expect(linkTags).toHaveLength(4);
 
         const dashboardLinks = linkTags.filter(
             (link) => link.getAttribute("href") === "/project/123/dashboard",
@@ -52,6 +52,8 @@ describe("ProjectNavigationBar", () => {
         const statisticsLink = statisticsLinks[0];
         expect(statisticsLink).toBeInTheDocument();
         expect(statisticsLink).toHaveTextContent("Statistics");
+        expect(statisticsLink).toHaveAttribute("data-state", "active");
+        expect(statisticsLink).toHaveAttribute("aria-selected", "true");
 
         const settingsLinks = linkTags.filter(
             (link) => link.getAttribute("href") === "/project/123/settings/general",
@@ -60,17 +62,6 @@ describe("ProjectNavigationBar", () => {
         const settingsLink = settingsLinks[0];
         expect(settingsLink).toBeInTheDocument();
         expect(settingsLink).toHaveTextContent("Settings");
-
-        // Buttons have tab role
-        const tabs = screen.getAllByRole("tab");
-        expect(tabs).toHaveLength(4);
-
-        // Statistics tab is selected
-        const statisticsTabs = tabs.filter((tab) => tab.textContent === "Statistics");
-        expect(statisticsTabs).toHaveLength(1);
-        const statisticsTab = statisticsTabs[0];
-        expect(statisticsTab).toHaveAttribute("data-state", "active");
-        expect(statisticsTab).toHaveAttribute("aria-selected", "true");
 
         // Project title is shown
         const projectTitle = screen.getByText("Example Project Title");

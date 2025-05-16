@@ -6,6 +6,7 @@ import {
     groupBy,
     isPaperUndecided,
     pluralize,
+    wrapLongWords,
 } from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
@@ -93,6 +94,11 @@ describe("Pluralize a word based on the count", () => {
     test("When the count is 0, the plural form of the word is returned", () => {
         expect(pluralize(0, "item", "items")).toBe("items");
     });
+
+    test("When the count is an object with a length property, the plural form of the word is returned based on the length", () => {
+        expect(pluralize([1, 2, 3], "item", "items")).toBe("items");
+        expect(pluralize([1], "item", "items")).toBe("item");
+    });
 });
 
 describe("Group items of a list by a key (function)", () => {
@@ -152,5 +158,27 @@ describe("Compare paper ids", () => {
 
         const compare2 = comparePaperId("#a", "#b");
         expect(compare2).toBe(0);
+    });
+});
+
+describe("Wrap long words in a text", () => {
+    test("When the text is empty, then no words are wrapped", () => {
+        const text = "";
+        const result = wrapLongWords(text, 10);
+        expect(result).toBe("");
+    });
+
+    test("When the text contains no long words, then no words are wrapped", () => {
+        const text = "This is a test";
+        const result = wrapLongWords(text, 10);
+        expect(result).toBe("This is a test");
+    });
+
+    test("When the text contains long words, then they are wrapped in a span with the class 'break-all'", () => {
+        const text = "This is a verylongwordthatneedstobewrapped";
+        const result = wrapLongWords(text, 10);
+        expect(result).toBe(
+            'This is a <span class="break-all">verylongwordthatneedstobewrapped</span>',
+        );
     });
 });

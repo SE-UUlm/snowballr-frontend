@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import type { TestUser } from "../fixtures/general-fixture";
 
 export class DevCreateProjectDialog {
     readonly page: Page;
@@ -7,6 +8,7 @@ export class DevCreateProjectDialog {
     readonly cancelProjectCreationButton: Locator;
     readonly projectNameInput: Locator;
     readonly projectMemberInput: Locator;
+    readonly createdProjectDialog: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -17,6 +19,9 @@ export class DevCreateProjectDialog {
         this.cancelProjectCreationButton = page.getByRole("button", { name: "Cancel" });
         this.projectNameInput = page.getByLabel("Name");
         this.projectMemberInput = page.getByLabel("Members");
+        this.createdProjectDialog = page.getByRole("alertdialog", {
+            name: "Success! Your new project has been created successfully.",
+        });
     }
 
     /**
@@ -35,12 +40,13 @@ export class DevCreateProjectDialog {
      * It neither navigates to the newly created project nor close the dialog, but requires the dialog to be open.
      *
      * @param projectName - the name of the project
+     * @param user - the user to be added as a member
      */
-    async createProject(projectName: string) {
+    async createProject(projectName: string, user: TestUser) {
         await this.projectNameInput.fill(projectName);
         await this.projectMemberInput.fill("john@doe.com");
         await this.projectMemberInput.press("Tab");
-        await this.projectMemberInput.fill("Alice");
+        await this.projectMemberInput.fill(user.firstName);
         await this.projectMemberInput.press("ArrowDown");
         await this.projectMemberInput.press("Enter");
 
@@ -53,5 +59,19 @@ export class DevCreateProjectDialog {
      */
     async checkForErrors() {
         await expect(this.page.getByRole("alert")).not.toBeVisible();
+    }
+
+    /**
+     * Closes the alert dialog, which is opened when a project is created successfully.
+     *
+     * @param mode - whether the user wants to open the project or cancel the dialog
+     */
+    async closeCreatedProjectDialog(mode: "cancel" | "open") {
+        await expect(this.createdProjectDialog).toBeVisible();
+        if (mode === "open") {
+            await this.createdProjectDialog.getByRole("button", { name: "Open" }).click();
+        } else {
+            await this.createdProjectDialog.getByRole("button", { name: "Cancel" }).click();
+        }
     }
 }

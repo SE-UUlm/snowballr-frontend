@@ -1,7 +1,6 @@
 <script lang="ts">
     import { CirclePlus, LoaderCircle } from "lucide-svelte";
     import { Button, buttonVariants } from "$lib/components/primitives/button";
-    import * as AlertDialog from "$lib/components/primitives/alert-dialog";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -9,10 +8,11 @@
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { backendService } from "$lib/grpc-api";
     import type { User } from "$lib/model/api/user";
-    import InviteUsersInput from "../input/InviteUsersInput.svelte";
+    import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import { onMount } from "svelte";
-    import { loadUsers } from "../input/loading-users";
+    import { loadUsers } from "$lib/components/composites/input/loading-users";
+    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
 
     interface Props {
         user: User;
@@ -174,31 +174,26 @@ Usage:
     </Dialog>
 </div>
 
-<AlertDialog.Root open={projectWasCreated}>
-    <AlertDialog.Content>
-        <AlertDialog.Header>
-            <AlertDialog.Title>
-                Success! Your new project has been created successfully.
-            </AlertDialog.Title>
-            <AlertDialog.Description>
-                The members were invited and you can now start with the new SLR by adding sources,
-                refine the review process or inviting further members.
-            </AlertDialog.Description>
-        </AlertDialog.Header>
-        <AlertDialog.Footer>
-            <AlertDialog.Cancel
-                onclick={() => {
-                    projectWasCreated = false;
-                    projectId = undefined;
-                    membersInput = [];
+<AlertDialog
+    actionButtonText="Open"
+    actionProps={{
+        onclick: async () => navigateToProject(),
+    }}
+    cancelProps={{
+        onclick: () => {
+            projectWasCreated = false;
+            projectId = undefined;
+            membersInput = [];
 
-                    // trigger reload of the homepage, so the created project is shown in the projects list
-                    invalidate("data:allProjectsForUser");
-                }}
-            >
-                Back
-            </AlertDialog.Cancel>
-            <AlertDialog.Action onclick={async () => navigateToProject()}>Open</AlertDialog.Action>
-        </AlertDialog.Footer>
-    </AlertDialog.Content>
-</AlertDialog.Root>
+            // trigger reload of the homepage, so the created project is shown in the projects list
+            invalidate("data:allProjectsForUser");
+        },
+    }}
+    title="Success! Your new project has been created successfully."
+    bind:open={projectWasCreated}
+>
+    {#snippet description()}
+        The members were invited and you can now start with the new SLR by adding sources, refine
+        the review process or inviting further members.
+    {/snippet}
+</AlertDialog>

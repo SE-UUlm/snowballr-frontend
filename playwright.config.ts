@@ -4,18 +4,22 @@ import type { TestOptions } from "./tests/e2e/fixtures/general-fixture";
 export default defineConfig<TestOptions>({
     testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 3,
-    // Opt out of parallel tests on CI.
+    retries: 2,
     failOnFlakyTests: !!process.env.CI,
+    // Opt out of parallel tests on CI.
     workers: process.env.CI ? 1 : undefined,
     reporter: [
         [process.env.GITHUB_ACTIONS ? "github" : "list"],
         ["html", { outputFolder: "e2e-report" }],
     ],
+    expect: {
+        timeout: 2_500,
+    },
+    timeout: 15_000,
     use: {
         baseURL: "http://localhost:4173",
         screenshot: "on",
-        trace: "retain-on-failure",
+        trace: "on",
     },
     webServer: {
         command: "npm run build && npm run preview",
@@ -72,7 +76,6 @@ export default defineConfig<TestOptions>({
             },
             dependencies: ["firefox setup"],
         },
-
         {
             name: "webkit",
             use: {

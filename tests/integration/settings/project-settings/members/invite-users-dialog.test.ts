@@ -50,10 +50,13 @@ describe("InviteUsersDialog", () => {
         expect(trigger).toHaveAttribute("data-state", "open");
 
         const inviteUsersTexts = screen.getAllByText("Invite Users");
-        expect(inviteUsersTexts).toHaveLength(3);
+        expect(inviteUsersTexts).toHaveLength(2);
         expect(
             screen.getByText("Search for an existing user or invite a new user by email."),
         ).toBeInTheDocument();
+        const actionButton = screen.getByText("Send Invitations");
+        expect(actionButton).toBeInTheDocument();
+        expect(actionButton).toHaveAttribute("disabled");
     });
 
     test("When a user is invited successfully, then a success message is displayed", async () => {

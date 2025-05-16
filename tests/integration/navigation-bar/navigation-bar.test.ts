@@ -33,13 +33,12 @@ describe("NavigationBar", () => {
         const nav = screen.getByRole("navigation");
         expect(nav).toBeInTheDocument();
 
-        const linkTags = screen.getAllByRole("link");
-        expect(linkTags).toHaveLength(3);
-
-        const backButtons = linkTags.filter((link) => link.getAttribute("href") === "/");
-        expect(backButtons).toHaveLength(1);
-        const backButton = backButtons[0];
+        const backButton = screen.getByRole("link");
+        expect(backButton).toHaveAttribute("href", "/");
         expect(backButton).toBeInTheDocument();
+
+        const linkTags = screen.getAllByRole("tab");
+        expect(linkTags).toHaveLength(2);
 
         const firstLinks = linkTags.filter((link) => link.getAttribute("href") === "/first");
         expect(firstLinks).toHaveLength(1);
@@ -105,7 +104,7 @@ describe("NavigationBar", () => {
             },
         });
 
-        const linkTags = screen.getAllByRole("link");
+        const linkTags = screen.queryAllByRole("link");
         const backButtons = linkTags.filter((link) => link.getAttribute("href") === "/");
         expect(backButtons).toHaveLength(0);
     });

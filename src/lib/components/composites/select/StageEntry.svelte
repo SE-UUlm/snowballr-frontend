@@ -51,7 +51,7 @@ Usage:
                     {pluralize(totalPaperCount, "paper", "papers")})
                 </span>
             {:else}
-                <span>({totalPaperCount} {pluralize(stage.papers.length, "paper", "papers")})</span>
+                <span>({totalPaperCount} {pluralize(stage.papers, "paper", "papers")})</span>
             {/if}
         </div>
     </Accordion.Trigger>

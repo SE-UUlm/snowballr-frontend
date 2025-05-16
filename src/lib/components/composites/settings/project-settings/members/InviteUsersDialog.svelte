@@ -8,7 +8,6 @@
     import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
-    import { onMount } from "svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
 
     interface Props {
@@ -27,19 +26,23 @@
     let loadingUsers = $state(true);
     let isErrorOnUsersLoading = $state(false);
     let initialPossibleMembers: User[] = $state([]);
+    let actionButtonDisabled = $derived(loading || membersInput.length === 0);
 
-    onMount(async () => {
-        const result = await loadingMembers
-            .then((members) =>
-                loadUsers(
+    $effect(() => {
+        loadingMembers
+            .then(async (members) => {
+                const result = await loadUsers(
                     user,
                     members.map((member) => member.user!),
-                ),
-            )
-            .catch(() => ({ initialPossibleMembers: [], isErrorOnUsersLoading: true }));
-        initialPossibleMembers = result.initialPossibleMembers;
-        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-        loadingUsers = false;
+                );
+                initialPossibleMembers = result.initialPossibleMembers;
+                isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+            })
+            .catch(() => {
+                initialPossibleMembers = [];
+                isErrorOnUsersLoading = true;
+            })
+            .finally(() => (loadingUsers = false));
     });
 
     async function inviteUsers(event: Event) {
@@ -48,8 +51,13 @@
         error = undefined;
         loading = true;
         try {
+            const members = (await loadingMembers).map((member) => member.user?.email);
+            // filter out emails of existing members
+            const filteredMembersInput = membersInput.filter(
+                (userEmail) => !members.includes(userEmail),
+            );
             await Promise.all(
-                membersInput.map(
+                filteredMembersInput.map(
                     (userEmail) =>
                         backendService.inviteUserToProject({ projectId, userEmail }).response,
                 ),
@@ -106,15 +114,15 @@ Usage:
         <Button
             class="w-32"
             data-testid="invite-users-button"
-            disabled={loading}
+            disabled={actionButtonDisabled}
             form="invite-users"
             type="submit"
         >
             {#if loading}
                 <LoaderCircle class="animate-spin" />
-                Inviting Users
+                Sending Invitations
             {:else}
-                Invite Users
+                Send Invitations
             {/if}
         </Button>
     {/snippet}

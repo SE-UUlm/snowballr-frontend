@@ -44,8 +44,8 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.projectNameInput.fill("Demo project 1");
         await createProjectDialog.projectMemberInput.fill("john@doe.com");
 
-        await createProjectDialog.closeCreateProjectDialog();
         await createProjectDialog.checkForErrors();
+        await createProjectDialog.closeCreateProjectDialog();
 
         // dialog is closed
         await expect(homePage.createProjectDialog).toBeHidden();
@@ -63,12 +63,13 @@ test.describe("Creating a new project", () => {
         page,
         homePage,
         createProjectDialog,
+        user,
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 2");
+        await createProjectDialog.createProject("Demo project 2", user);
         await createProjectDialog.checkForErrors();
-        await page.getByRole("button", { name: "Back" }).click();
+        await createProjectDialog.closeCreatedProjectDialog("cancel");
 
         // the user stays on the project and the project is shown in the list of active projects
         await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
@@ -79,12 +80,13 @@ test.describe("Creating a new project", () => {
         page,
         homePage,
         createProjectDialog,
+        user,
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 3");
+        await createProjectDialog.createProject("Demo project 3", user);
         await createProjectDialog.checkForErrors();
-        await page.getByRole("button", { name: "Open" }).click();
+        await createProjectDialog.closeCreatedProjectDialog("open");
 
         // the user is not on the homepage but the project dashboard
         await expect(page.getByText("SnowballR")).toBeHidden();
@@ -97,6 +99,5 @@ test.describe("Creating a new project", () => {
         await expect(page.getByText("estimated remaining time")).toBeHidden();
     });
 
-    /* TODO: add E2E tests here for checking, that the user creating this project is project admin, the other members
-       were invited and the settings are the same as the default settings for new project from the user */
+    /* TODO: add E2E tests here for checking, that the settings are the same as the default settings for new project from the user */
 });
