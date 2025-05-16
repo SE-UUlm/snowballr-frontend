@@ -25,6 +25,17 @@
         const isEmailValid = emailInput.validate();
         const isPasswordValid = passwordInput.validate();
         if (!(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid)) {
+            let failedInput: String;
+            if (!isFirstNameValid) failedInput = "First Name";
+            else if (!isLastNameValid) failedInput = "Last Name";
+            else if (!isEmailValid) failedInput = "Email";
+            else if (!isPasswordValid) failedInput = "Password";
+            else throw "unreachable";
+
+            registrationError = {
+                errorTitle: "Input Validation Failed",
+                errorDetails: `The Input "${failedInput}" contains an error.`,
+            };
             return;
         }
 
