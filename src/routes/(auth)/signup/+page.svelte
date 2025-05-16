@@ -49,7 +49,6 @@
         await backendService
             .register(userData)
             .then(() => {
-                console.log("New user was registered.");
                 goto("/");
             })
             .catch((error) => {
