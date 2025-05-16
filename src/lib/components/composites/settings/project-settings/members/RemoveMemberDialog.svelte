@@ -1,6 +1,6 @@
 <script lang="ts">
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import { getName } from "$lib/utils/common-helper";
+    import { getName, wrapLongWords } from "$lib/utils/common-helper";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import Trash from "lucide-svelte/icons/trash";
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
@@ -73,8 +73,9 @@ Usage:
         <Trash class="size-6!" />
     {/snippet}
     {#snippet description()}
-        Once removed, <span class="font-bold">{memberName}</span> will no longer have access to this
-        project. You can always re-invite them later.
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        Once removed, <span class="font-bold">{@html wrapLongWords(memberName, 55)}</span> will no
+        longer have access to this project. You can always re-invite them later.
         <!-- TODO: Clarify what happens with deleted users reviews -->
     {/snippet}
 </AlertDialog>

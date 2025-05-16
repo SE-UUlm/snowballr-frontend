@@ -6,6 +6,7 @@
     import type { DialogTriggerProps } from "bits-ui";
     import type { AlertDialogCancelProps } from "$lib/components/primitives/alert-dialog/alert-dialog-cancel.svelte";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
+    import { wrapLongWords } from "$lib/utils/common-helper";
 
     interface Props {
         triggerProps?: DialogTriggerProps;
@@ -115,7 +116,8 @@ Usage:
     {/if}
     <AlertDialog.Content>
         <AlertDialog.Header>
-            <AlertDialog.Title><h1>{title}</h1></AlertDialog.Title>
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            <AlertDialog.Title><h1>{@html wrapLongWords(title, 30)}</h1></AlertDialog.Title>
             <AlertDialog.Description class="text-default-m" data-testid="alert-dialog-description">
                 {@render description?.()}
             </AlertDialog.Description>

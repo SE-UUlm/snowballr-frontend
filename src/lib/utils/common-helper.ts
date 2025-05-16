@@ -223,6 +223,29 @@ function handleSingleOrDoubleClick(onSingleClick: () => void, onDoubleClick: () 
     };
 }
 
+/**
+ * Wraps long words in a span with the class "break-all" to allow line breaks.
+ *
+ * This is useful for long words that do not fit into the container and would otherwise overflow.
+ * The result can be rendered using `{@html result}`.
+ *
+ * @param text - The text to be wrapped
+ * @param longWordLength - The length of the word that should be wrapped (e.g. 20 characters)
+ * @returns The text with long words wrapped in a span with the class "break-all"
+ */
+function wrapLongWords(text: string, longWordLength: number) {
+    return text
+        .split(" ")
+        .map((word) => {
+            if (word.length >= longWordLength) {
+                return `<span class="break-all">${word}</span>`;
+            } else {
+                return word;
+            }
+        })
+        .join(" ");
+}
+
 export {
     getName,
     getNames,
@@ -236,4 +259,5 @@ export {
     comparePaperId,
     getDisplayPaperId,
     handleSingleOrDoubleClick,
+    wrapLongWords,
 };
