@@ -120,7 +120,7 @@ const passwordSchema = z
 const projectNameSchema = z
     .string()
     .trim()
-    .min(1, { message: "Please provide a project name" })
+    .min(1, { message: "Please provide a non-empty project name" })
     .max(100, { message: "The project name is limited to 100 characters" });
 
 export const Schema = {
