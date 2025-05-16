@@ -14,16 +14,14 @@ export class DevPaperViewPage {
     constructor(page: Page) {
         this.page = page;
         this.allListEntries = page.getByRole("listitem");
-        this.referenceListEntry0 = this.allListEntries
-            .getByRole("button", {
-                name: "Paper 1 to be referenced",
-            })
-            .first();
         this.declineButton = page.getByRole("button", { name: "Decline", exact: false });
         this.maybeButton = page.getByRole("button", { name: "Maybe", exact: false });
         this.acceptButton = page.getByRole("button", { name: "Accept", exact: false });
         this.exampleInclusionCriterion = page.getByRole("listitem").filter({ hasText: /I/ });
         this.exampleHardExclusionCriterion = page.getByRole("listitem").filter({ hasText: /HE/ });
+        this.referenceListEntry0 = this.getFirstListEntry("link")
+            ? this.getFirstListEntry("link")
+            : this.getFirstListEntry("button");
     }
 
     /**
@@ -78,5 +76,20 @@ export class DevPaperViewPage {
             default:
                 console.error("Unknown decision", decision);
         }
+    }
+
+    /**
+     * Depending upon the list entries are links or buttons,
+     * this function returns the first list entry of the paper view.
+     *
+     * @param role - defines, if either "link" oder "button" entry is returned.
+     * @returns The first list entry of the paper view.
+     */
+    getFirstListEntry(role: "link" | "button"): Locator {
+        return this.allListEntries
+            .getByRole(role, {
+                name: "Paper 1 to be referenced",
+            })
+            .first();
     }
 }
