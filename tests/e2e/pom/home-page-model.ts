@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-type LinkName = "Reading List" | "Archived Projects" | "Invitations" | "Settings";
+type LinkName = "Reading List" | "Archived Projects" | "Invitations" | "Settings" | "Sign Out";
 type SettingName = "Account" | "Project Setup" | "Shortcuts" | "Review";
 
 export class DevHomePage {
@@ -27,10 +27,12 @@ export class DevHomePage {
      *
      * @param linkName - The name of the link to be clicked in the user menu dialog.
      */
-    async openLinkInUserMenuDialog(linkName: LinkName) {
+    async openLinkInUserMenuDialog(linkName: LinkName, checkDestination: boolean = true) {
         await this.page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
         await this.page.getByRole("link", { name: linkName }).click();
-        await expect(this.page.getByRole("heading", { name: linkName })).toBeVisible();
+        if (checkDestination) {
+            await expect(this.page.getByRole("heading", { name: linkName })).toBeVisible();
+        }
     }
 
     /**
