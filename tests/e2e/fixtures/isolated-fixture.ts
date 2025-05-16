@@ -49,7 +49,7 @@ export const test = base.extend<{
             await use(mockBackend);
             mockBackend.dispose();
         },
-        { scope: "test", auto: true },
+        { scope: "test", auto: true, timeout: 45_000 },
     ],
     apiClient: [
         async ({ mockBackend, user }, use) => {

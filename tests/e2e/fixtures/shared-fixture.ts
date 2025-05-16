@@ -54,7 +54,7 @@ export const test = base.extend<
             await use(mockBackend);
             mockBackend.dispose();
         },
-        { scope: "worker", auto: true },
+        { scope: "worker", auto: true, timeout: 45_000 },
     ],
     apiClient: [
         async ({ mockBackend, user }, use) => {
