@@ -1,4 +1,4 @@
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 import { DevPaperViewPage } from "$tests/e2e/pom/paper-view-model";
 
 type PaperViewFixture = {

@@ -1,7 +1,7 @@
 import { DevProjectReviewSettingsPage } from "$tests/e2e/pom/project-review-settings-model";
 import { expect } from "@playwright/test";
 import { projectId, projectReviewSettingsProjectName } from "../project-review-settings.test";
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 
 type ProjectReviewSettingsPage = {
     projectReviewSettingsPage: DevProjectReviewSettingsPage;

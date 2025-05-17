@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import type { TestUser } from "../fixtures/general-fixture";
+import type { User } from "../mock-backend";
 
 export class DevCreateProjectDialog {
     readonly page: Page;
@@ -42,7 +42,7 @@ export class DevCreateProjectDialog {
      * @param projectName - the name of the project
      * @param user - the user to be added as a member
      */
-    async createProject(projectName: string, user: TestUser) {
+    async createProject(projectName: string, user: User) {
         await this.projectNameInput.fill(projectName);
         await this.projectMemberInput.fill("john@doe.com");
         await this.projectMemberInput.press("Tab");

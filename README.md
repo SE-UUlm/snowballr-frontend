@@ -44,13 +44,14 @@ cp .env.example .env
 
 The environment variables are as follows:
 
-| Variable              |      Required      | Default | Description                                                                             |
-| --------------------- | :----------------: | :-----: | --------------------------------------------------------------------------------------- |
-| `PUBLIC_API_BASE_URL` | :white_check_mark: |    -    | The URL of the backend API.                                                             |
-| `PUBLIC_IS_DEV_MODE`  |        :x:         |  false  | Whether the app is in development mode. This may enable additional development tooling. |
-| `PORT`                |       :x:\*        |  4173   | The port where the frontend is served                                                   |
-| `GRPC_PORT`           |       :x:\*        |  3000   | The port of the mock backend where the native server is listening on                    |
-| `GRPC_WEB_PORT`       |       :x:\*        |  3001   | The port of the mock backend where the gRPC web proxy is listening on                   |
+| Variable                 |      Required      |    Default    | Description                                                                                                                       |
+| ------------------------ | :----------------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------------- |
+| `PUBLIC_API_BASE_URL`    | :white_check_mark: |       -       | The URL of the backend API.                                                                                                       |
+| `PUBLIC_IS_DEV_MODE`     |        :x:         |     false     | Whether the app is in development mode. This may enable additional development tooling.                                           |
+| `PUBLIC_CREDENTIAL_MODE` |        :x:         | "same-origin" | When the credentials for the backend should be attached to the request. Possible values are "same-origin", "include", and "omit". |
+| `PORT`                   |       :x:\*        |     4173      | The port where the frontend is served                                                                                             |
+| `GRPC_PORT`              |       :x:\*        |     3000      | The port of the mock backend where the native server is listening on                                                              |
+| `GRPC_WEB_PORT`          |       :x:\*        |     3001      | The port of the mock backend where the gRPC web proxy is listening on                                                             |
 
 \* only used when using the docker compose profiles.
 

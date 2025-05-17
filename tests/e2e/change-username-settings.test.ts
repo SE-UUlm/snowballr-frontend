@@ -7,13 +7,13 @@ test.describe("Changing username", () => {
     let originalUser: User;
 
     /** Save the original user before the tests. */
-    test.beforeAll(async ({ mockBackendService }) => {
-        originalUser = await mockBackendService.getCurrentUser(Nothing).response;
+    test.beforeAll(async ({ apiClient }) => {
+        originalUser = await apiClient.getCurrentUser(Nothing).response;
     });
 
     /** Restore the original user after the tests. */
-    test.afterAll(async ({ mockBackendService }) => {
-        await mockBackendService.updateUser({
+    test.afterAll(async ({ apiClient }) => {
+        await apiClient.updateUser({
             user: originalUser,
         });
     });

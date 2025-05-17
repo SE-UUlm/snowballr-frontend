@@ -1,5 +1,5 @@
 import { DevProjectMemberSettingsPage } from "../pom/project-member-settings-page-model";
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 import { Project } from "$lib/model/api/project";
 import { expect } from "@playwright/test";
 
@@ -8,10 +8,9 @@ type ProjectMembersSettingsPage = {
 };
 
 export const test = base.extend<ProjectMembersSettingsPage>({
-    projectMembersSettingsPage: async ({ page, mockBackendService }, use) => {
-        const project = await mockBackendService.createProject(
-            Project.create({ name: "Demo Project" }),
-        ).response;
+    projectMembersSettingsPage: async ({ page, apiClient }, use) => {
+        const project = await apiClient.createProject(Project.create({ name: "Demo Project" }))
+            .response;
         await page.goto(`/project/${project.id}/dashboard`);
         await page.getByRole("tab", { name: "Settings" }).click();
         await page.getByRole("link", { name: "Members" }).click();
@@ -20,6 +19,6 @@ export const test = base.extend<ProjectMembersSettingsPage>({
 
         await use(projectMembersSettingsPage);
 
-        await mockBackendService.softDeleteProject({ id: project.id });
+        await apiClient.softDeleteProject({ id: project.id });
     },
 });

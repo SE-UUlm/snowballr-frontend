@@ -8,8 +8,8 @@ test.describe("Project - Review settings", () => {
     /**
      * Creates a new project before all tests in this test suite.
      */
-    test.beforeAll(async ({ mockBackendService }) => {
-        await mockBackendService
+    test.beforeAll(async ({ apiClient }) => {
+        await apiClient
             .createProject({ name: projectReviewSettingsProjectName })
             .then((project) => (projectId = project.response.id));
     });
@@ -17,8 +17,8 @@ test.describe("Project - Review settings", () => {
     /**
      * Deletes the project after all tests in this test suite.
      */
-    test.afterAll(async ({ mockBackendService }) => {
-        mockBackendService.softDeleteProject({ id: projectId });
+    test.afterAll(async ({ apiClient }) => {
+        apiClient.softDeleteProject({ id: projectId });
     });
 
     test("When the user creates a new tag and deletes this tag, then the tag is correctly added and deleted", async ({

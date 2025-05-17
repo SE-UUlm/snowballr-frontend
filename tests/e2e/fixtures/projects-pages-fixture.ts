@@ -1,4 +1,4 @@
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 import { DevProjectPapersPage } from "$tests/e2e/pom/project-papers-page-model";
 import { projectId } from "../papers-overview.test";
 import { expect } from "@playwright/test";

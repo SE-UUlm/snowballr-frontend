@@ -29,9 +29,9 @@ test.describe("Removing members from a project", () => {
         user,
     }) => {
         // obligatory check for the current user, so that projectMembersSettingsPage is used
-        await projectMembersSettingsPage.checkForUser(user.email, "email");
+        await projectMembersSettingsPage.checkForUser(user!.email, "email");
 
-        const dialog = new DevRemoveMemberDialog(page, user);
+        const dialog = new DevRemoveMemberDialog(page, user!);
         await expect(dialog.openButton).toBeVisible();
         await expect(dialog.openButton).toBeDisabled();
     });
@@ -86,7 +86,7 @@ test.describe("Removing members from a project", () => {
     test("When a registered user is removed from the project, then they can be invited again", async ({
         page,
         projectMembersSettingsPage,
-        mockBackendService,
+        apiClient,
     }) => {
         const user = {
             firstName: "John",
@@ -94,7 +94,7 @@ test.describe("Removing members from a project", () => {
             email: "john.doe@example.com",
             password: "password",
         };
-        await mockBackendService.register(user);
+        await apiClient.register(user);
         await inviteUser(user.email, projectMembersSettingsPage, true);
 
         const dialog = new DevRemoveMemberDialog(page, user);

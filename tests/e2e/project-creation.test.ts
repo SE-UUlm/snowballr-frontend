@@ -7,10 +7,10 @@ test.describe("Creating a new project", () => {
     /**
      * Delete all projects created in this test after all tests are done.
      */
-    test.afterAll(async ({ mockBackendService }) => {
+    test.afterAll(async ({ apiClient }) => {
         // delete all projects created in this test
         projectIds.forEach((projectId) => {
-            mockBackendService.softDeleteProject({ id: projectId });
+            apiClient.softDeleteProject({ id: projectId });
         });
     });
 
@@ -67,7 +67,7 @@ test.describe("Creating a new project", () => {
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 2", user);
+        await createProjectDialog.createProject("Demo project 2", user!);
         await createProjectDialog.checkForErrors();
         await createProjectDialog.closeCreatedProjectDialog("cancel");
 
@@ -84,7 +84,7 @@ test.describe("Creating a new project", () => {
     }) => {
         await homePage.openCreateProjectDialog();
 
-        await createProjectDialog.createProject("Demo project 3", user);
+        await createProjectDialog.createProject("Demo project 3", user!);
         await createProjectDialog.checkForErrors();
         await createProjectDialog.closeCreatedProjectDialog("open");
 

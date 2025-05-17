@@ -18,8 +18,8 @@ test.describe("View all papers of a project", () => {
      * The papers are added to the project in the order they are created.
      * The project paper ids are stored in `projectPaperIds` for later use.
      */
-    test.beforeAll(async ({ mockBackendService }) => {
-        mockBackendService
+    test.beforeAll(async ({ apiClient }) => {
+        apiClient
             .createProject({ name: "Project 1" })
             .then((project) => (projectId = project.response.id));
 
@@ -38,13 +38,13 @@ test.describe("View all papers of a project", () => {
                 },
             ];
 
-            papers.push(mockBackendService.createPaper(createPaper({ title, authors })).response);
+            papers.push(apiClient.createPaper(createPaper({ title, authors })).response);
         }
         const createdPapers = await Promise.all(papers);
 
         const projectPaperPromises: Promise<Project_Paper>[] = createdPapers.map((paper, i) => {
             const stageIndex = Math.floor(i / NUM_PAPERS_PER_STAGE) === 0 ? 0n : 1n;
-            return mockBackendService.addPaperToProject({
+            return apiClient.addPaperToProject({
                 projectId: projectId,
                 stage: stageIndex,
                 paperId: paper.id,
@@ -57,9 +57,9 @@ test.describe("View all papers of a project", () => {
      * Remove the project papers and soft delete the project after all tests.
      * TODO: Delete all papers from the mock backend (Currently not supported).
      */
-    test.afterAll(async ({ mockBackendService }) => {
-        projectPaperIds.forEach((id) => mockBackendService.removePaperFromProject({ id: id }));
-        mockBackendService.softDeleteProject({ id: projectId });
+    test.afterAll(async ({ apiClient }) => {
+        projectPaperIds.forEach((id) => apiClient.removePaperFromProject({ id: id }));
+        apiClient.softDeleteProject({ id: projectId });
     });
 
     test("When opening the project papers page, then the user sees all stages and the stage accordion items are closed.", async ({
@@ -162,7 +162,7 @@ test.describe("View all papers of a project", () => {
     test("When the user searches for a specific paper id, then only matching papers are shown in open stages.", async ({
         page,
         projectPapersPage,
-        mockBackendService,
+        apiClient,
     }) => {
         // create a new paper with total paper id + 1
         const title = "TotalPaperIdPlusOne";
@@ -171,10 +171,9 @@ test.describe("View all papers of a project", () => {
             lastName: "Author",
             orcid: "",
         });
-        const newPaper = await mockBackendService.createPaper(
-            createPaper({ title, authors: [author] }),
-        ).response;
-        const newProjectPaper = await mockBackendService.addPaperToProject({
+        const newPaper = await apiClient.createPaper(createPaper({ title, authors: [author] }))
+            .response;
+        const newProjectPaper = await apiClient.addPaperToProject({
             projectId: projectId,
             stage: 0n,
             paperId: newPaper.id,
@@ -192,7 +191,7 @@ test.describe("View all papers of a project", () => {
         await expect(projectPapersPage.getNoSearchResultsText().first()).toBeVisible();
 
         // remove the new paper from the project
-        await mockBackendService.removePaperFromProject({ id: newProjectPaperId });
+        await apiClient.removePaperFromProject({ id: newProjectPaperId });
     });
 
     test("When the user searches for a specific paper title (unique sequence), then only matching papers are shown in open stages.", async ({

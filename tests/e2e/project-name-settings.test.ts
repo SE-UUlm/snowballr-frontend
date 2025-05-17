@@ -8,14 +8,14 @@ test.describe("Renaming a project", () => {
     /**
      * Creates a new project before all tests in this test suite.
      */
-    test.beforeAll(async ({ mockBackendService }) => {
-        await mockBackendService
+    test.beforeAll(async ({ apiClient }) => {
+        await apiClient
             .createProject({ name: projectName })
             .then((project) => (projectId = project.response.id));
     });
 
-    test.afterAll(async ({ mockBackendService }) => {
-        mockBackendService.softDeleteProject({ id: projectId });
+    test.afterAll(async ({ apiClient }) => {
+        apiClient.softDeleteProject({ id: projectId });
     });
 
     test("When the user enters an invalid project name, then the name of the project remains unchanged.", async ({

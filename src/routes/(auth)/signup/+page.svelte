@@ -8,6 +8,7 @@
     import type { ApiError } from "$lib/model/general";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { StatusCodes } from "$lib/model/error-codes";
+    import { goto } from "$app/navigation";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -24,6 +25,17 @@
         const isEmailValid = emailInput.validate();
         const isPasswordValid = passwordInput.validate();
         if (!(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid)) {
+            let failedInput: string;
+            if (!isFirstNameValid) failedInput = "First Name";
+            else if (!isLastNameValid) failedInput = "Last Name";
+            else if (!isEmailValid) failedInput = "Email";
+            else if (!isPasswordValid) failedInput = "Password";
+            else throw "unreachable";
+
+            registrationError = {
+                errorTitle: "Input Validation Failed",
+                errorDetails: `The Input "${failedInput}" contains an error.`,
+            };
             return;
         }
 
@@ -34,12 +46,10 @@
             password: passwordInput.getValue(),
         };
 
-        backendService
+        await backendService
             .register(userData)
             .then(() => {
-                // TODO: Login with accessToken, store both tokens and redirect to the home page,
-                // will be completed in !220
-                console.log("New user was registered.");
+                goto("/");
             })
             .catch((error) => {
                 if (error.code === StatusCodes.ALREADY_EXISTS) {

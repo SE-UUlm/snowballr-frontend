@@ -1,4 +1,4 @@
-import { test as base } from "./general-fixture";
+import { test as base } from "./shared-fixture";
 import { DevReadingListPage } from "$tests/e2e/pom/reading-list-page-model";
 import { DevHomePage } from "../pom/home-page-model";
 import { expect } from "@playwright/test";
@@ -21,18 +21,16 @@ type ReadingListPageAndHomepagePage = {
  */
 export const test = base.extend<{ readingListPageAndHomepagePage: ReadingListPageAndHomepagePage }>(
     {
-        readingListPageAndHomepagePage: async ({ page, mockBackendService }, use) => {
-            const currentList = await mockBackendService.getReadingList(Nothing).response;
+        readingListPageAndHomepagePage: async ({ page, apiClient }, use) => {
+            const currentList = await apiClient.getReadingList(Nothing).response;
             if (currentList?.papers) {
                 await Promise.all(
                     currentList.papers.map((paper) =>
-                        mockBackendService.removePaperFromReadingList({ id: paper.id }),
+                        apiClient.removePaperFromReadingList({ id: paper.id }),
                     ),
                 );
             }
-            await Promise.all(
-                defaultPaperIds.map((id) => mockBackendService.addPaperToReadingList({ id })),
-            );
+            await Promise.all(defaultPaperIds.map((id) => apiClient.addPaperToReadingList({ id })));
 
             await page.goto("/");
             await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
