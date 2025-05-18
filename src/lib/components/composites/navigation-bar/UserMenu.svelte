@@ -8,11 +8,10 @@
     import type { User } from "$lib/model/api/user";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
+    import { getContext } from "svelte";
+    import { UserContextKey } from "$lib/global-context/userContext";
 
-    interface Props {
-        user: User;
-    }
-    const { user }: Props = $props();
+    const user = getContext<() => User>(UserContextKey)();
 
     const menuItems: UserMenuTab[] = [
         {

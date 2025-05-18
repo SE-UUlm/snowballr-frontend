@@ -10,12 +10,10 @@
     import ErrorAlert from "../../utils/ErrorAlert.svelte";
     import SettingsSection from "../SettingsSection.svelte";
     import { generateFieldMask } from "protobuf-fieldmask";
+    import { getContext } from "svelte";
+    import { UserContextKey } from "$lib/global-context/userContext";
 
-    interface Props {
-        user: User;
-    }
-
-    const { user }: Props = $props();
+    const user = getContext<() => User>(UserContextKey)();
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -65,7 +63,7 @@ Component for changing the user's name.
 
 Usage:
 ```svelte
-    <ChangeNameSettings {user} />
+    <ChangeNameSettings />
 ```
 -->
 <SettingsSection sectionTitle="Change Name">

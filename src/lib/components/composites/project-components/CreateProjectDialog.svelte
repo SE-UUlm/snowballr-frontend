@@ -7,18 +7,15 @@
     import { goto, invalidate } from "$app/navigation";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { backendService } from "$lib/grpc-api";
-    import type { User } from "$lib/model/api/user";
+    import { User } from "$lib/model/api/user";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import { onMount } from "svelte";
+    import { getContext, onMount } from "svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
+    import { UserContextKey } from "$lib/global-context/userContext";
 
-    interface Props {
-        user: User;
-    }
-
-    const { user }: Props = $props();
+    const user = getContext<() => User>(UserContextKey)();
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -109,7 +106,7 @@
 
 Usage:
 ```svelte
-    <CreateProjectDialog {user} />
+    <CreateProjectDialog />
 ```
 -->
 <div class="px-5">

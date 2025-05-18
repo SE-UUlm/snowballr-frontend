@@ -22,6 +22,8 @@
     } from "$lib/utils/custom-context";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
     import { toast } from "svelte-sonner";
+    import { UserContextKey } from "$lib/global-context/userContext";
+    import { getContext } from "svelte";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -38,7 +40,6 @@
     }
 
     export type IndependentPaperViewProps = ReferencesAndCitationsCardContentProps & {
-        user: User;
         showButtonBar?: boolean;
         backRef: string;
         allowEditModeToggle?: boolean;
@@ -50,7 +51,6 @@
 
     const data: PaperViewProps = $props();
     const {
-        user,
         backwardReferencedPapers,
         forwardReferencedPapers,
         showButtonBar = false,
@@ -62,6 +62,8 @@
         reviewers,
         criteriaWithReviews,
     } = $derived(data);
+
+    const user = getContext<() => User>(UserContextKey)();
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
     const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
@@ -154,7 +156,6 @@ Edit Mode:
 Usage:
 ```svelte
     <PaperView
-        {user}
         {loadingPaper}
         {loadingProject}
         {backwardReferencedPapers}
@@ -169,12 +170,7 @@ Usage:
 ```
 -->
 <div class="flex h-fit w-full flex-row items-center justify-between gap-4">
-    <PaperNavigationBar
-        {backRef}
-        {loadingPaper}
-        loadingPaperId={loadingPaperIdForNavigationBar}
-        {user}
-    />
+    <PaperNavigationBar {backRef} {loadingPaper} loadingPaperId={loadingPaperIdForNavigationBar} />
     <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {loadingPaperId} />
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">

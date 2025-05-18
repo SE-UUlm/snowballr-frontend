@@ -26,7 +26,6 @@
 
     let { data } = $props();
     const {
-        user,
         projectId,
         loadingProject,
         loadingCriteria,
@@ -82,7 +81,7 @@
         <title>Failed loading project</title>
     {/await}
 </svelte:head>
-<ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} {user} />
+<ProjectNavigationBar defaultTabValue="papers" {loadingProject} {projectId} />
 <main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-5">
     <div class="flex h-full w-full flex-col gap-5">
         <div class="flex h-fit w-full flex-col gap-2.5">

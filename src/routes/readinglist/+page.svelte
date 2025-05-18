@@ -9,7 +9,7 @@
     import { loadReadingList } from "./helper.js";
 
     const { data } = $props();
-    const { user, loadingReadingList } = data;
+    const { loadingReadingList } = data;
 
     let currentFullReadingList = $state<Promise<Paper[]>>(loadingReadingList);
     let filteredReadingList = $state<Promise<Paper[]>>(loadingReadingList);
@@ -45,7 +45,7 @@
 <svelte:head>
     <title>Reading List</title>
 </svelte:head>
-<SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Reading List")} {user} />
+<SimpleNavigationBar backRef="/" loadingTitle={Promise.resolve("Reading List")} />
 
 <main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
     <NamedList

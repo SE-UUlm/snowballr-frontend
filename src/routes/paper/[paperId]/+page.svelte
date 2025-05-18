@@ -2,8 +2,7 @@
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
-    const { user, loadingPaper, backwardReferencedPapers, forwardReferencedPapers } =
-        $derived(data);
+    const { loadingPaper, backwardReferencedPapers, forwardReferencedPapers } = $derived(data);
 </script>
 
 <svelte:head>
@@ -23,5 +22,4 @@
     {loadingPaper}
     loadingProject={undefined}
     reviewers={undefined}
-    {user}
 />

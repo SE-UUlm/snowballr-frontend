@@ -3,7 +3,6 @@
 
     const { data } = $props();
     const {
-        user,
         projectId,
         loadingProject,
         loadingProjectPaper,
@@ -34,5 +33,4 @@
     {loadingProject}
     {reviewers}
     showButtonBar
-    {user}
 />

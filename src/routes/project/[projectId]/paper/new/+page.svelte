@@ -2,7 +2,7 @@
     import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 
     const { data } = $props();
-    const { user, projectId, loadingProject } = data;
+    const { projectId, loadingProject } = data;
     const paper = {
         id: projectId,
         externalId: "EXT12345",
@@ -38,7 +38,6 @@
         backRef={`/project/${projectId}/dashboard`}
         loadingPaper={Promise.resolve(paper)}
         loadingPaperId={Promise.resolve(paper.id)}
-        {user}
     />
 {:catch error}
     <p>{error.message}</p>
