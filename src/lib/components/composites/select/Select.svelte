@@ -14,6 +14,10 @@
     }
 
     let { options, categoryLabel = "categories", selectedValues = $bindable([]) }: Props = $props();
+
+    // Maximum number of characters allowed in the select component's label used for displaying
+    // the selected values.
+    const MAX_SELECTED_VALUES_LABEL_LENGTH = 30;
     let label = $derived(getSelectLabel(selectedValues));
 
     let doSelectAllOptions = $state(false);
@@ -28,16 +32,23 @@
      * @param selectedValues - The values the user selected
      */
     function getSelectLabel(selectedValues: string[] | undefined): string {
+        selectedValues = selectedValues?.filter((value) => value !== "all-options");
         if (
             !selectedValues ||
-            doSelectAllOptions ||
             selectedValues.length === 0 ||
             selectedValues.length === options.length
         ) {
             return `All ${categoryLabel} (${options.length})`;
         }
 
-        return `${categoryLabel}: ${selectedValues.join(", ")} (${selectedValues.length})`;
+        let selectedValueLabel = selectedValues
+            .map((value) => options.find((option) => option.value === value)?.label)
+            .join(", ");
+        if (selectedValueLabel.length > MAX_SELECTED_VALUES_LABEL_LENGTH) {
+            selectedValueLabel = `${selectedValueLabel.substring(0, MAX_SELECTED_VALUES_LABEL_LENGTH - 3)}...`;
+        }
+
+        return `${categoryLabel}: ${selectedValueLabel} (${selectedValues.length})`;
     }
 
     /**
