@@ -11,7 +11,7 @@
     import { getContext } from "svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
 
-    const user = getContext<() => User>(UserContextKey)();
+    const user = $derived(getContext<() => User>(UserContextKey)());
 
     const menuItems: UserMenuTab[] = [
         {
