@@ -1,21 +1,17 @@
 import { expect, test, describe } from "vitest";
 import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createUser } from "../../model-builder";
-import { waitForComponentLoading } from "../test-helper";
+import { mockUserContext, waitForComponentLoading } from "../test-helper";
 
 describe("SimpleNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
         render(SimpleNavigationBar, {
             target: document.body,
             props: {
-                user: createUser({
-                    firstName: "John",
-                    lastName: "Doe",
-                }),
                 backRef: "/",
                 loadingTitle: Promise.resolve("Simple Navigation Bar"),
             },
+            context: mockUserContext,
         });
 
         await waitForComponentLoading();

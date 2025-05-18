@@ -1,19 +1,15 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
 import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
-import { Users } from "$tests/example-data";
 import { backendService } from "$lib/grpc-api";
 import userEvent from "@testing-library/user-event";
 import type { User } from "$lib/model/api/user";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockUserContext } from "$tests/integration/test-helper";
 
 describe("ChangeNameSettings", () => {
     test("When the component is rendered, some text, two input fields and a button are shown in order to change the name", () => {
-        render(ChangeNameSettings, {
-            props: {
-                user: Users.johnDoe,
-            },
-        });
+        render(ChangeNameSettings, { context: mockUserContext });
 
         const changeNameSection = screen.getByTestId("settings-section-change-name");
         expect(changeNameSection).toBeInTheDocument();
@@ -30,11 +26,7 @@ describe("ChangeNameSettings", () => {
     test("When one of the input fields is empty, then the button should not change the name", async () => {
         const mockCall = vi.spyOn(backendService, "updateUser");
 
-        render(ChangeNameSettings, {
-            props: {
-                user: Users.johnDoe,
-            },
-        });
+        render(ChangeNameSettings, { context: mockUserContext });
 
         const firstNameInput = screen.getByLabelText("First Name");
         const lastNameInput = screen.getByLabelText("Last Name");
@@ -61,11 +53,7 @@ describe("ChangeNameSettings", () => {
             lastName: "Fox",
         } as User);
 
-        render(ChangeNameSettings, {
-            props: {
-                user: Users.johnDoe,
-            },
-        });
+        render(ChangeNameSettings, { context: mockUserContext });
 
         const firstNameInput = screen.getByLabelText("First Name");
         const lastNameInput = screen.getByLabelText("Last Name");
@@ -81,11 +69,8 @@ describe("ChangeNameSettings", () => {
 
     test("When a failed API call is made, then an error message should be shown", async () => {
         mockFailedApiCall("updateUser");
-        render(ChangeNameSettings, {
-            props: {
-                user: Users.johnDoe,
-            },
-        });
+
+        render(ChangeNameSettings, { context: mockUserContext });
 
         const firstNameInput = screen.getByLabelText("First Name");
         const lastNameInput = screen.getByLabelText("Last Name");

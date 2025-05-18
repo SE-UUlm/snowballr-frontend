@@ -123,7 +123,6 @@ export function createPaperViewProps(
     dependentProps?: ProjectPaperViewProps | NonProjectPaperViewProps,
 ): PaperViewProps {
     return {
-        user: createUser(),
         backwardReferencedPapers: Promise.resolve([]),
         forwardReferencedPapers: Promise.resolve([]),
         showButtonBar: false,
