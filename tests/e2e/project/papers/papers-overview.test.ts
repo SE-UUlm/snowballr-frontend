@@ -238,10 +238,7 @@ test.describe("View all papers of a project", () => {
         await expect(projectPapersPage.getNoSearchResultsText().first()).toBeVisible();
 
         // Stage 1 checks (all should match)
-        await projectPapersPage.expectStageCounts(
-            1,
-            `(${NUM_PAPERS_PER_STAGE} / ${NUM_PAPERS_PER_STAGE} papers)`,
-        );
+        await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
         for (let i = 0; i < NUM_PAPERS_PER_STAGE; i++) {
             const paperIndexInTotal = NUM_PAPERS_PER_STAGE + i;
             const paperTitle = `Paper 1/${i} (${getUniqueSequence(paperIndexInTotal)})`;

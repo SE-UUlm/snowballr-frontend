@@ -36,7 +36,7 @@ export class DevProjectPapersPage {
 
     /** Helper to get the text indicating no search results within an open stage */
     getNoSearchResultsText(): Locator {
-        return this.page.getByText("No papers match your search criteria in this stage.");
+        return this.page.getByText("No papers match your search or filter criteria in this stage.");
     }
 
     /** Helper to check stage counts in the trigger */

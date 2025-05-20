@@ -45,8 +45,10 @@ describe("Select", () => {
         await user.click(trigger);
 
         expect(trigger).toHaveAttribute("data-state", "open");
+        const optionAll = screen.getByText("Select all");
         const option1 = screen.getByText("Option 1");
         const option2 = screen.getByText("Option 2");
+        expect(optionAll).toBeInTheDocument();
         expect(option1).toBeInTheDocument();
         expect(option2).toBeInTheDocument();
     });
@@ -70,7 +72,7 @@ describe("Select", () => {
 
         await user.click(option1);
 
-        expect(trigger).toHaveTextContent("categories: 1 selected");
+        expect(trigger).toHaveTextContent("categories: Option 1 (1)");
         expect(option1).toHaveAttribute("aria-selected", "true");
         expect(option1).toHaveAttribute("data-highlighted");
         expect(option1).toHaveAttribute("data-selected");
