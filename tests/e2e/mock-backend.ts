@@ -7,6 +7,7 @@ import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
 import { StatusCodes } from "$lib/model/error-codes";
 import { Nothing } from "$lib/model/api/base";
+import { MOCK_BACKEND_IMAGE } from "./mock-backend-version";
 
 async function isDockerInstalled(): Promise<boolean> {
     return new Promise((resolve) => {
@@ -100,8 +101,6 @@ export class AuthSnowballRClient extends SnowballRClient {
     }
 }
 
-const MOCK_BACKEND_IMAGE = "ghcr.io/se-uulm/snowballr-mock-backend:main";
-
 /**
  * Manages a docker-backed mock backend.
  * Use `DockerMockBackend.create()` instead of trying to construct a new
@@ -152,7 +151,9 @@ export class DockerMockBackend {
      * to stop the container and free up resources.
      */
     static async create() {
-        const containerId = execSync(`docker run --rm -d -p 0:3001 ${MOCK_BACKEND_IMAGE}`)
+        const containerId = execSync(
+            `docker run --rm --pull=never -d -p 0:3001 ${MOCK_BACKEND_IMAGE}`,
+        )
             .toString()
             .trim();
         const port = parseInt(
