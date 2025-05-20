@@ -2,72 +2,108 @@
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import ArrowRight from "lucide-svelte/icons/arrow-right";
     import Tooltip from "../../utils/Tooltip.svelte";
-    import { goto } from "$app/navigation";
-    import type { Project_Paper } from "$lib/model/api/project";
+    import type { Project, Project_Paper } from "$lib/model/api/project";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
+    import { navigatePaper } from "$lib/utils/paper-navigation";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     interface Props {
         direction: "left" | "right";
+        loadingProject?: Promise<Project>;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
-        loading: boolean;
-        paperQueue: Project_Paper[];
+        loading?: boolean;
+        paperQueue?: Project_Paper[];
+        nextProjectPaper?: Project_Paper;
+        previousProjectPaper?: Project_Paper;
     }
 
-    let { direction, loadingProjectPaper, loading, paperQueue = $bindable() }: Props = $props();
+    let {
+        direction,
+        loadingProject,
+        loadingProjectPaper,
+        loading = $bindable(false),
+        paperQueue = $bindable([]),
+        nextProjectPaper = $bindable(undefined),
+        previousProjectPaper = $bindable(undefined),
+    }: Props = $props();
     let buttonLeftDisabled: boolean = $state(true);
     let buttonRightDisabled: boolean = $state(true);
+    let showLoadingSpinner = $state(false);
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
-    let nextProjectPaper: Project_Paper | undefined;
-    let previousProjectPaper: Project_Paper | undefined;
 
+    async function getNextProjectPaperToReview(paper: Project_Paper) {
+        await backendService
+            .getNextPaperToReview({ id: paper.id })
+            .response.then((nextPaper) => {
+                nextProjectPaper = nextPaper;
+            })
+            .catch((error) => {
+                nextProjectPaper = undefined;
+                if (error.message !== "No%20next%20paper%20available.") {
+                    toast("Error, while loading the next paper:" + error);
+                }
+            });
+    }
+
+    async function getNextProjectPaper(paper: Project_Paper) {
+        await backendService
+            .getNextPaper({ id: paper.id })
+            .response.then((nextPaper) => {
+                nextProjectPaper = nextPaper;
+            })
+            .catch((error) => {
+                nextProjectPaper = undefined;
+                if (error.message !== "No%20next%20paper%20available.") {
+                    toast("Error, while loading the next paper:" + error);
+                }
+            });
+    }
+
+    async function getPreviousProjectPaper(paper: Project_Paper) {
+        await backendService
+            .getPreviousPaper({ id: paper.id })
+            .response.then((previousPaper) => {
+                previousProjectPaper = previousPaper;
+            })
+            .catch((error) => {
+                previousProjectPaper = undefined;
+                if (error.message !== "No%20previous%20paper%20available.") {
+                    toast("Error, while loading the next paper:" + error);
+                }
+            });
+    }
+
+    /**
+     * Pre-fetches the next and the previous paper to find out if the according button is enabled or
+     * disabled and the according paper does not have to be loaded on clicking of the button, but
+     * before.
+     */
     $effect(() => {
+        // Loads the next or previous paper only if all necessary information is available.
+        if (loading) return;
         (async () => {
             const paper = await loadingProjectPaper;
             if (!paper) return;
-            if (reviewMode.isActivated) {
-                await backendService
-                    .getNextPaperToReview({ id: paper.id })
-                    .response.then((nextPaper) => {
-                        nextProjectPaper = nextPaper;
-                    })
-                    .catch((error) => {
-                        nextProjectPaper = undefined;
-                        if (error.message !== "No%20next%20paper%20available.") {
-                            toast("Error, while loading the next paper.");
-                        }
-                    });
-                previousProjectPaper = paperQueue[paperQueue.length - 1];
-            } else {
-                await backendService
-                    .getNextPaper({ id: paper.id })
-                    .response.then((nextPaper) => {
-                        nextProjectPaper = nextPaper;
-                    })
-                    .catch((error) => {
-                        nextProjectPaper = undefined;
-                        if (error.message !== "No%20next%20paper%20available.") {
-                            toast("Error, while loading the next paper.");
-                        }
-                    });
-                await backendService
-                    .getPreviousPaper({ id: paper.id })
-                    .response.then((previousPaper) => {
-                        previousProjectPaper = previousPaper;
-                    })
-                    .catch((error) => {
-                        previousProjectPaper = undefined;
-                        if (error.message !== "No%20previous%20paper%20available.") {
-                            toast("Error, while loading the next paper.");
-                        }
-                    });
+            nextProjectPaper = previousProjectPaper = undefined;
+            buttonRightDisabled = buttonLeftDisabled = true;
+            if (direction === "right") {
+                if (reviewMode.isActivated) {
+                    await getNextProjectPaperToReview(paper);
+                } else {
+                    await getNextProjectPaper(paper);
+                }
+                buttonRightDisabled = nextProjectPaper === undefined;
+            } else if (direction === "left") {
+                if (reviewMode.isActivated) {
+                    previousProjectPaper = paperQueue[paperQueue.length - 1];
+                } else {
+                    await getPreviousProjectPaper(paper);
+                }
+                buttonLeftDisabled = previousProjectPaper === undefined;
             }
-            console.log(previousProjectPaper);
-            console.log(nextProjectPaper);
-            console.log(loading);
-            buttonRightDisabled = nextProjectPaper === undefined || loading;
-            buttonLeftDisabled = previousProjectPaper === undefined || loading;
+            showLoadingSpinner = false;
         })();
     });
 
@@ -76,19 +112,15 @@
      * review mode is activated or not.
      */
     const navigate = async function () {
-        if (direction === "right" && nextProjectPaper) {
-            const paper = await loadingProjectPaper;
-            if (paper) paperQueue.push(paper);
-            await goto(
-                `/project/${nextProjectPaper.id.split("-")[0]}/paper/${nextProjectPaper.localId}`,
-            );
-        }
-        if (direction === "left" && previousProjectPaper) {
-            paperQueue.pop();
-            await goto(
-                `/project/${previousProjectPaper.id.split("-")[0]}/paper/${previousProjectPaper.localId}`,
-            );
-        }
+        loading = showLoadingSpinner = true;
+        await navigatePaper(
+            direction,
+            loadingProjectPaper,
+            paperQueue,
+            loadingProject,
+            nextProjectPaper,
+            previousProjectPaper,
+        );
     };
 </script>
 
@@ -118,7 +150,9 @@ Usage:
     triggerVariant="link"
 >
     {#snippet trigger()}
-        {#if direction === "left"}
+        {#if showLoadingSpinner}
+            <LoaderCircle class="animate-spin" />
+        {:else if direction === "left"}
             <ArrowLeft />
         {:else}
             <ArrowRight />

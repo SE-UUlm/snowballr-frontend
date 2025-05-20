@@ -100,8 +100,11 @@
 
     let loading = $state(true);
     let paperQueue = $state([]);
-    // Statically define props, so that the type can be inferred when passing it to `PaperResearchContextCard`.
-    // Note: this is ugly, but otherwise the types of these properties can't be inferred.
+    let nextProjectPaper: Project_Paper | undefined = $state(undefined);
+
+    /**
+     * Makes sure, that all necessary ressources are loaded.
+     */
     $effect(() => {
         (async () => {
             const promises = [];
@@ -133,11 +136,13 @@
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
     let isSubmittingReview = $state({ value: false });
-    const loadingUserReview = getUserReviewIfAlreadySubmitted();
-    loadingUserReview.then((review) => {
-        const selectedCriteria = review?.selectedCriteriaIds ?? [];
-        selectedReviewCriteria.criteria = selectedCriteria;
-        wasAlreadyReviewedState.wasReviewed = review !== undefined;
+    const loadingUserReview = $derived.by(() => getUserReviewIfAlreadySubmitted());
+    $effect(() => {
+        (async () => {
+            const review = await loadingUserReview;
+            selectedReviewCriteria.criteria = review?.selectedCriteriaIds ?? [];
+            wasAlreadyReviewedState.wasReviewed = review !== undefined;
+        })();
     });
 
     /**
@@ -181,6 +186,7 @@ Edit Mode:
 Usage:
 ```svelte
     <PaperView
+        {user}
         {loadingPaper}
         {loadingProject}
         {backwardReferencedPapers}
@@ -212,9 +218,11 @@ Usage:
             <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton
                 direction="left"
-                {loading}
+                {loadingProject}
                 {loadingProjectPaper}
+                bind:loading
                 bind:paperQueue
+                bind:nextProjectPaper
             />
             {#if reviewMode.isActivated && loadingProject}
                 {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
@@ -222,39 +230,56 @@ Usage:
                     <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                     <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                         <PaperDecisionButton
+                            {loadingProject}
+                            {loadingProjectPaper}
                             projectPaperId={paper.id}
                             {userReview}
                             variant={userReview?.decision === ReviewDecision.DECLINED
                                 ? "selected_decline"
                                 : "decline"}
+                            bind:loading
                             bind:isSubmittingReview
+                            bind:paperQueue
+                            bind:nextProjectPaper
                         />
                         {#if project.settings?.reviewMaybeAllowed}
                             <PaperDecisionButton
+                                {loadingProject}
+                                {loadingProjectPaper}
                                 projectPaperId={paper.id}
                                 {userReview}
                                 variant={userReview?.decision === ReviewDecision.MAYBE
                                     ? "selected_maybe"
                                     : "maybe"}
+                                bind:loading
                                 bind:isSubmittingReview
+                                bind:paperQueue
+                                bind:nextProjectPaper
                             />
                         {/if}
                         <PaperDecisionButton
+                            {loadingProject}
+                            {loadingProjectPaper}
                             projectPaperId={paper.id}
                             {userReview}
                             variant={userReview?.decision === ReviewDecision.ACCEPTED
                                 ? "selected_accept"
                                 : "accept"}
+                            bind:loading
                             bind:isSubmittingReview
+                            bind:paperQueue
+                            bind:nextProjectPaper
                         />
                     </div>
                 {/await}
             {/if}
             <PaperNavigationButton
                 direction="right"
-                {loading}
+                {loadingProject}
                 {loadingProjectPaper}
+                bind:loading
                 bind:paperQueue
+                bind:nextProjectPaper
             />
         </div>
     {/if}

@@ -10,8 +10,10 @@
     import { type Review, type Review_Create, ReviewDecision } from "$lib/model/api/review";
     import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
     import { toast } from "svelte-sonner";
-    import { shortcut, type ShortcutTrigger, type ShortcutEventDetail } from "@svelte-put/shortcut";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
+    import { navigatePaper } from "$lib/utils/paper-navigation";
+    import type { Project_Paper, Project } from "$lib/model/api/project";
 
     interface ButtonContent {
         name: string;
@@ -24,6 +26,11 @@
         variant: PaperDecisionButtonVariant;
         isSubmittingReview?: { value: boolean };
         userReview?: Review;
+        loadingProject?: Promise<Project>;
+        loading?: boolean;
+        loadingProjectPaper: Promise<Project_Paper | undefined>;
+        paperQueue?: Project_Paper[];
+        nextProjectPaper?: Project_Paper;
     }
 
     let {
@@ -31,6 +38,11 @@
         variant,
         isSubmittingReview = $bindable({ value: false }),
         userReview,
+        loadingProjectPaper,
+        loadingProject,
+        loading = $bindable(false),
+        paperQueue = $bindable([]),
+        nextProjectPaper = $bindable(undefined),
     }: PaperDecisionButtonProps = $props();
 
     const wasAlreadyReviewed = userReview !== undefined;
@@ -117,7 +129,15 @@
             await backendService.createReview(review);
 
             toast.success("Successfully submitted a review.");
-            // TODO: navigate automatically to next paper that will be implemented in #47
+            loading = true;
+            await navigatePaper(
+                "right",
+                loadingProjectPaper,
+                paperQueue,
+                loadingProject,
+                nextProjectPaper,
+                undefined,
+            );
         } catch (err) {
             toast.error("Could not submit the review!", {
                 description: "Please check your connection to the server.",
@@ -180,7 +200,7 @@ Usage:
         paperDecisionButtonVariants({ variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value}
+    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value || loading}
     loading={showLoadingSpinner.value}
     onclick={(args) => loadingWrapper(showLoadingSpinner, submitReview, args)}
     triggerSize="default"
