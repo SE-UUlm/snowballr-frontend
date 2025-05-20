@@ -23,6 +23,7 @@
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
     import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
+    import type { ProjectPaperFilter } from "$lib/model/general";
 
     let { data } = $props();
     const {
@@ -44,16 +45,7 @@
     let showFilters = $state(false);
     let searchText = $state("");
 
-    interface PapersFilters {
-        stages: string[];
-        reviewers: string[];
-        publishers: string[];
-        years: string[];
-        decisions: string[];
-        criteria: string[];
-    }
-
-    const emptyFilters: PapersFilters = {
+    const emptyFilters: ProjectPaperFilter = {
         stages: [],
         reviewers: [],
         publishers: [],
@@ -61,15 +53,7 @@
         decisions: [],
         criteria: [],
     };
-    let papersFilters = $state<PapersFilters>(emptyFilters);
-
-    $effect(() => {
-        const filters = Object.assign({}, $state.snapshot(papersFilters));
-        console.log(filters);
-        // TODO: Filter existing papers
-        // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
-        // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
-    });
+    let papersFilters = $state<ProjectPaperFilter>(emptyFilters);
 </script>
 
 <svelte:head>
@@ -137,7 +121,13 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <StageEntry {projectId} {searchText} {stage} bind:selectedPaper />
+                        <StageEntry
+                            filter={papersFilters}
+                            {projectId}
+                            {searchText}
+                            {stage}
+                            bind:selectedPaper
+                        />
                     {/each}
                 </Accordion.Root>
             {:catch}

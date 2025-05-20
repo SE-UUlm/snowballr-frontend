@@ -3,6 +3,7 @@ import type { Paper } from "../model/api/paper";
 import { getName, getNames } from "./common-helper";
 import type { User } from "../model/api/user";
 import type { Project_Paper } from "$lib/model/api/project";
+import type { ProjectPaperFilter } from "$lib/model/general";
 
 /**
  * Generic filter function using Fzf.
@@ -30,6 +31,59 @@ function filter<T>(
 }
 
 /**
+ * Checks if a given paper matches all active project paper filters.
+ *
+ * @remarks
+ * Only filter that have one or more selected values are applied, the remaining filters are ignored.
+ * A project paper must match all *active* filters.
+ * This means for the stage, publisher, year or decision that the paper's stage, ... must be
+ * in the list of selected values of the filters.
+ * Regarding the reviewers or selected criteria, at least one review or selected criterion must be
+ * in the list of selected values of the filters.
+ *
+ * @param paper - The paper to evaluate against the filters.
+ * @param filters - The filters to apply.
+ * @returns True if the paper matches all filters, false otherwise.
+ */
+function matchesFilters(paper: Project_Paper, filters: ProjectPaperFilter) {
+    const { stages, reviewers, publishers, years, decisions, criteria } = filters;
+
+    if (stages.length > 0 && !stages.includes(String(paper.stage))) {
+        return false;
+    }
+
+    if (
+        reviewers.length > 0 &&
+        !paper.reviews.some((review) => reviewers.includes(review.userId))
+    ) {
+        return false;
+    }
+
+    if (publishers.length > 0 && !publishers.includes(String(paper.paper?.publisher))) {
+        return false;
+    }
+
+    if (years.length > 0 && !years.includes(String(paper.paper?.year))) {
+        return false;
+    }
+
+    if (decisions.length > 0 && !decisions.includes(String(paper.decision))) {
+        return false;
+    }
+
+    if (
+        criteria.length > 0 &&
+        !paper.reviews.some((review) =>
+            review.selectedCriteriaIds.some((criterionId) => criteria.includes(criterionId)),
+        )
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Filters papers based on search text and sorts them by best match.
  *
  * The search text is matched against the following fields:
@@ -50,7 +104,7 @@ function filterPapers(allPapers: Paper[], searchText: string) {
 }
 
 /**
- * Filters project papers based on search text and sorts them by best match.
+ * Filters project papers based on filter and / or a search text and sorts them by best match.
  * If the search text starts with "#", it is treated as a paper ID.
  * Otherwise, it is treated as a search text for the paper title and authors and the local ID.
  *
@@ -59,11 +113,30 @@ function filterPapers(allPapers: Paper[], searchText: string) {
  * - Paper Title
  * - Paper Authors
  *
+ * In order to avoid being filtered out, a project paper must match at least one value in each
+ * filter category.
+ *
  * @param allProjectPapers - List of all project papers
+ * @param filters - The set of filter for a project paper
  * @param searchText - Search text
- * @returns List of project papers that match the search text
+ * @returns List of project papers that match the search text and filters
  */
-function filterProjectPapers(allProjectPapers: Project_Paper[], searchText: string) {
+function filterProjectPapers(
+    allProjectPapers: Project_Paper[],
+    filters?: ProjectPaperFilter,
+    searchText?: string,
+) {
+    // filter by project paper filter
+    if (filters) {
+        allProjectPapers = allProjectPapers.filter((paper) => matchesFilters(paper, filters));
+    }
+
+    // if no search text is given, only the filter are applied
+    if (!searchText) {
+        return allProjectPapers;
+    }
+
+    // filter by search text
     if (searchText.startsWith("#")) {
         const idToSearch = searchText.substring(1);
         return filter(
@@ -86,8 +159,8 @@ function filterProjectPapers(allProjectPapers: Project_Paper[], searchText: stri
  * Filter users based on search text and sorts them by best match.
  *
  * The search text is matched against the following fields:
- * - User Name
- * - User Email
+ * - user's name
+ * - user's email
  *
  * @param allUsers - List of all users
  * @param searchText - Search text

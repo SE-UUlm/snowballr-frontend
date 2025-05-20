@@ -3,7 +3,7 @@
     import * as Accordion from "$lib/components/primitives/accordion";
     import Button from "$lib/components/primitives/button/button.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
-    import type { Stage } from "$lib/model/general";
+    import type { ProjectPaperFilter, Stage } from "$lib/model/general";
     import { pluralize } from "$lib/utils/common-helper";
     import { filterProjectPapers } from "$lib/utils/filters";
     import CirclePlus from "lucide-svelte/icons/circle-plus";
@@ -12,6 +12,7 @@
         projectId: string;
         stage: Stage;
         selectedPaper?: Project_Paper;
+        filter?: ProjectPaperFilter;
         searchText?: string;
     }
 
@@ -19,33 +20,32 @@
         projectId,
         stage,
         selectedPaper = $bindable(undefined),
-        searchText = "",
+        filter = undefined,
+        searchText = undefined,
     }: Props = $props();
 
-    let filteredPapers = $derived(
-        searchText ? filterProjectPapers(stage.papers ?? [], searchText) : (stage.papers ?? []),
-    );
+    let filteredPapers = $derived(filterProjectPapers(stage.papers ?? [], filter, searchText));
 
     let totalPaperCount = $derived(stage.papers?.length ?? 0);
 </script>
 
 <!--
 @component
-Accordion entry for a stage in the project paper list. It displays the stage number and the number of papers in the stage.
-It also displays the number of papers that match the search criteria if a search text is provided.
+Accordion entry for a stage in the project paper list. It displays the stage number and
+the number of papers in the stage. It also displays the number of papers that match the search
+and filter criteria if either a search text or a set of filters or both are provided.
 It contains a button to add a paper to the stage and a list of papers in the stage.
 
 Usage:
 ```svelte
-    <StageEntry {projectId} {stage} {searchText} bind:selectedPaper />
+    <StageEntry filter={papersFilters} {projectId} {stage} {searchText} bind:selectedPaper />
 ```
 -->
 <Accordion.Item value={`stage-${stage.stageIndex}`}>
-    <!-- TODO: Add amount of filtered/all e.g. (3/7) -->
     <Accordion.Trigger data-testid="stage-entry-trigger">
         <div class="flex w-full flex-row justify-between">
             <span>Stage {stage.stageIndex}</span>
-            {#if searchText}
+            {#if filteredPapers.length < totalPaperCount}
                 <span>
                     ({filteredPapers.length} / {totalPaperCount}
                     {pluralize(totalPaperCount, "paper", "papers")})
@@ -69,7 +69,7 @@ Usage:
                 {/each}
             {:else if searchText && totalPaperCount > 0}
                 <span class="text-hint italic">
-                    No papers match your search criteria in this stage.
+                    No papers match your search or filter criteria in this stage.
                 </span>
             {:else if totalPaperCount === 0}
                 <span class="text-hint italic">No papers currently in this stage.</span>

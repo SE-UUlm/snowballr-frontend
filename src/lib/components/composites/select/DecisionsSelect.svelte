@@ -12,14 +12,14 @@
     function getOption(decision: PaperDecision): SelectOption {
         switch (decision) {
             case PaperDecision.ACCEPTED:
-                return { value: "accepted", label: "Accepted" };
+                return { value: String(PaperDecision.ACCEPTED), label: "Accepted" };
             case PaperDecision.DECLINED:
-                return { value: "declined", label: "Declined" };
+                return { value: String(PaperDecision.DECLINED), label: "Declined" };
             case PaperDecision.IN_REVIEW:
-                return { value: "undecided", label: "Undecided" };
+                return { value: String(PaperDecision.IN_REVIEW), label: "Undecided" };
             case PaperDecision.UNSPECIFIED:
             case PaperDecision.UNREVIEWED:
-                return { value: "unreviewed", label: "Unreviewed" };
+                return { value: String(PaperDecision.UNREVIEWED), label: "Unreviewed" };
             default:
                 exhaustiveCheck(decision);
         }
