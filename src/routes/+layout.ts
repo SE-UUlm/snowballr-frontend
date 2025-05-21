@@ -42,7 +42,8 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     if (authStatus === AuthenticationStatus.ACCESS_TOKEN_EXPIRED) {
         await backendService.renewSession(Nothing);
     } else if (authStatus !== AuthenticationStatus.AUTHENTICATED && !onUncheckedPath) {
-        throw goto("/signin");
+        await goto("/signin");
+        return { user: undefinedUser };
     }
 
     let user: User;
@@ -51,6 +52,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         return { user };
     } catch (err) {
         console.error(`Current user could not be loaded ${err}`);
-        throw goto("/signin");
+        await goto("/signin");
+        return { user: undefinedUser };
     }
 };

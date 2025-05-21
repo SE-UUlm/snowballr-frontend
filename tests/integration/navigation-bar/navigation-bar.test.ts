@@ -79,7 +79,7 @@ describe("NavigationBar", () => {
         assert.throws(() => screen.getByText("Reading List"));
         assert.throws(() => screen.getByText("Archived Projects"));
         assert.throws(() => screen.getByText("Invitations"));
-        assert.throws(() => screen.getByText("Sign out"));
+        assert.throws(() => screen.getByText("Sign Out"));
     });
 
     test("When no backRef is provided, then no back button is shown", () => {

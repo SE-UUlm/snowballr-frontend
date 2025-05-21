@@ -70,11 +70,13 @@
                 {/each}
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
-                <LogOut class="mr-2 size-4" />
-                <span>Sign out</span>
-                <DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
-            </DropdownMenu.Item>
+            <a href="/signout">
+                <DropdownMenu.Item>
+                    <LogOut class="mr-2 size-4" />
+                    <span>Sign Out</span>
+                    <DropdownMenu.Shortcut>⌘⇧Q</DropdownMenu.Shortcut>
+                </DropdownMenu.Item>
+            </a>
         </DropdownMenu.Group>
     </DropdownMenu.Content>
 </DropdownMenu.Root>
