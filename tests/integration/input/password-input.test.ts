@@ -4,6 +4,7 @@ import { assert, describe, expect, test } from "vitest";
 
 describe("PasswordInput", () => {
     const validPassword = "z's?c].e2x<@($\"<#;\\A]]3D@F)/^v^!";
+    const invalidPassword = "a";
 
     test("When props are provided, then label and input are shown", () => {
         render(PasswordInput, {
@@ -30,6 +31,41 @@ describe("PasswordInput", () => {
         expect(validationCriteria.length).toBeGreaterThan(0);
     });
 
+    test("When validation is disabled, then no validation occurs", () => {
+        const { component } = render(PasswordInput, {
+            target: document.body,
+            props: {
+                value: invalidPassword,
+                validate: false,
+            },
+        });
+
+        // Validation criteria is not shown
+        assert.throws(() => screen.getAllByTestId("validation-success"));
+        assert.throws(() => screen.getAllByTestId("validation-fail"));
+        assert.throws(() => screen.getAllByTestId("validation-criterion"));
+        expect(component.validate()).toBe(true);
+        expect(component.getValue()).toBe(invalidPassword);
+    });
+
+    test("When a link is provided, then it is displayed", () => {
+        render(PasswordInput, {
+            target: document.body,
+            props: {
+                link: {
+                    href: "/test",
+                    text: "test",
+                },
+            },
+        });
+
+        // Link exists
+        const link = document.getElementsByTagName("a")[0];
+        expect(link).toBeInTheDocument();
+        expect(link).toHaveTextContent("test");
+        expect(link).toHaveAttribute("href", "/test");
+    });
+
     test("When valid password is inserted, then validation criteria are met", async () => {
         const { component } = render(PasswordInput, {
             target: document.body,
@@ -54,7 +90,7 @@ describe("PasswordInput", () => {
         const { component } = render(PasswordInput, {
             target: document.body,
             props: {
-                value: "aB 1!",
+                value: invalidPassword,
             },
         });
 

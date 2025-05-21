@@ -9,6 +9,10 @@
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
+    import { AuthenticationStatus } from "$lib/model/api/authentication";
+    import { Nothing } from "$lib/model/api/base";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -16,6 +20,22 @@
     let passwordInput: PasswordInput;
 
     let registrationError: ApiError | undefined = $state(undefined);
+
+    let isLoading = $state(true);
+
+    onMount(async () => {
+        try {
+            const authStatus = (await backendService.getAuthenticationStatus(Nothing).response)
+                .authenticationStatus;
+            if (authStatus === AuthenticationStatus.AUTHENTICATED) {
+                await goto("/");
+            }
+        } catch {
+            console.error("There was an error acquiring the authentication status.");
+        }
+
+        isLoading = false;
+    });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -68,7 +88,13 @@
 <svelte:head>
     <title>Sign Up</title>
 </svelte:head>
-<Card.Root class="flex w-full max-w-xl flex-col border-slate-500 shadow-lg">
+
+<Card.Root
+    class={cn(
+        "flex w-full max-w-xl flex-col border-slate-500 shadow-lg",
+        isLoading ? "opacity-0" : "",
+    )}
+>
     <Card.Header class="flex w-full flex-col">
         <Card.Title class="text-3xl">Sign Up</Card.Title>
         <Card.Description>Enter your information to create an account</Card.Description>
