@@ -8,8 +8,7 @@
     import { Separator } from "$lib/components/primitives/separator";
 
     const { data } = $props();
-    const { user, projectId, loadingProject, openReviews, projectInformation, stageProgress } =
-        data;
+    const { projectId, loadingProject, openReviews, projectInformation, stageProgress } = data;
 </script>
 
 <svelte:head>
@@ -21,7 +20,7 @@
         <title>Project Dashboard</title>
     {/await}
 </svelte:head>
-<ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} {user} />
+<ProjectNavigationBar defaultTabValue="dashboard" {loadingProject} {projectId} />
 <main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
     <section class="h-full w-full">
         <NamedList

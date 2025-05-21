@@ -10,9 +10,15 @@
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { loadMembers, type MemberInfo } from "./helper";
+    import { getContext } from "svelte";
+    import type { User } from "$lib/model/api/user";
+    import { UserContextKey } from "$lib/global-context/userContext";
 
     let { data } = $props();
-    const { user, projectId, loadingProject, loadingMembers } = data;
+    const { projectId, loadingProject, loadingMembers } = data;
+
+    const user = getContext<() => User>(UserContextKey)();
+
     const numberOfSkeletons = 7;
 
     let loadingMembersLocal = $state<Promise<MemberInfo[]>>(loadingMembers);
@@ -85,12 +91,7 @@
     {#if isCurrentUserAdmin.value}
         <div class="flex flex-row items-center justify-between">
             <h1>Manage Access</h1>
-            <InviteUsersDialog
-                loadingMembers={loadingMembersLocal}
-                {onUsersInvited}
-                {projectId}
-                {user}
-            />
+            <InviteUsersDialog loadingMembers={loadingMembersLocal} {onUsersInvited} {projectId} />
         </div>
     {:else}
         <h1>Members</h1>

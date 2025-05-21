@@ -1,18 +1,16 @@
 <script lang="ts">
     import SimpleNavigationBar from "./SimpleNavigationBar.svelte";
-    import type { User } from "$lib/model/api/user";
     import type { Project } from "$lib/model/api/project";
     import type { LinkTab } from "$lib/model/tabs";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {
-        user: User;
         projectId: string;
         loadingProject: Promise<Project>;
         defaultTabValue: TabValue;
     }
 
-    const { user, projectId, loadingProject, defaultTabValue }: Props = $props();
+    const { projectId, loadingProject, defaultTabValue }: Props = $props();
     const tabs: LinkTab[] = [
         {
             value: "dashboard",
@@ -42,5 +40,4 @@
     {defaultTabValue}
     loadingTitle={loadingProject.then((project) => project.name)}
     {tabs}
-    {user}
 />

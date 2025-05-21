@@ -1,15 +1,17 @@
 import { assert, expect, test, describe } from "vitest";
 import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { createUser } from "../../model-builder";
-import { Users } from "../../example-data";
+import {
+    mockUserContext,
+    resetUserContext as resetMockUserContext,
+    setContextUser as setMockContextUser,
+} from "../test-helper";
 
 describe("NavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [
                     {
@@ -25,6 +27,7 @@ describe("NavigationBar", () => {
                 ],
                 defaultTabValue: "first",
             },
+            context: mockUserContext,
         });
 
         const header = screen.getByRole("banner");
@@ -86,7 +89,6 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: undefined,
                 tabs: [
                     {
@@ -102,6 +104,7 @@ describe("NavigationBar", () => {
                 ],
                 defaultTabValue: "first",
             },
+            context: mockUserContext,
         });
 
         const linkTags = screen.queryAllByRole("link");
@@ -113,11 +116,11 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [],
                 defaultTabValue: "first",
             },
+            context: mockUserContext,
         });
 
         assert.throws(() => screen.getAllByRole("tab"));
@@ -127,7 +130,6 @@ describe("NavigationBar", () => {
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 tabs: [
                     {
@@ -143,6 +145,7 @@ describe("NavigationBar", () => {
                 ],
                 defaultTabValue: "third",
             },
+            context: mockUserContext,
         });
 
         const tabs = screen.getAllByRole("tab");
@@ -153,13 +156,11 @@ describe("NavigationBar", () => {
     });
 
     test("When no name is provided, then no user initials are shown", () => {
+        setMockContextUser({ firstName: "", lastName: "" });
+
         render(NavigationBar, {
             target: document.body,
             props: {
-                user: createUser({
-                    firstName: "",
-                    lastName: "",
-                }),
                 backRef: "/",
                 tabs: [
                     {
@@ -175,8 +176,11 @@ describe("NavigationBar", () => {
                 ],
                 defaultTabValue: "first",
             },
+            context: mockUserContext,
         });
 
         assert.throws(() => screen.getByText("JD"));
+
+        resetMockUserContext();
     });
 });

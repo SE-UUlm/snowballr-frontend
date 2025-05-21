@@ -1,27 +1,19 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import type { User } from "$lib/model/api/user";
     import type { LinkTab } from "$lib/model/tabs";
 
     interface Props {
-        user: User;
         backRef?: string | undefined;
         loadingTitle: Promise<string>;
         tabs?: LinkTab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
     }
 
-    const {
-        user,
-        backRef = undefined,
-        loadingTitle,
-        tabs = [],
-        defaultTabValue = "",
-    }: Props = $props();
+    const { backRef = undefined, loadingTitle, tabs = [], defaultTabValue = "" }: Props = $props();
 </script>
 
-<NavigationBar {backRef} {defaultTabValue} {tabs} {user}>
+<NavigationBar {backRef} {defaultTabValue} {tabs}>
     {#await loadingTitle}
         <Skeleton class="h-7 w-56 rounded-full" />
     {:then title}

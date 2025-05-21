@@ -8,14 +8,14 @@
     import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 
     let { data } = $props();
-    const { user, openReviews } = data;
+    const { openReviews } = data;
     const { projectsMetadata } = $derived(data);
 </script>
 
 <svelte:head>
     <title>SnowballR</title>
 </svelte:head>
-<SimpleNavigationBar loadingTitle={Promise.resolve("SnowballR")} {user} />
+<SimpleNavigationBar loadingTitle={Promise.resolve("SnowballR")} />
 <main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
     <section class="h-full w-full">
         <NamedList
@@ -50,6 +50,6 @@
                 <ProjectListEntrySkeleton />
             {/snippet}
         </NamedList>
-        <CreateProjectDialog {user} />
+        <CreateProjectDialog />
     </section>
 </main>

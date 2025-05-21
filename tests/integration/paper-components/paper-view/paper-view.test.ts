@@ -13,30 +13,34 @@ import {
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import {
     mockSelectedCriteriaContextWithInitialData,
+    mockUserContext,
     waitForComponentLoading,
+    type SelectedCriteriaContextValue,
+    type WasReviewedContextValue,
 } from "$tests/integration/test-helper";
 import { PaperDecision } from "$lib/model/api/project";
 import { Criteria, Reviews } from "$tests/example-data";
+import type { User } from "$lib/model/api/user";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
-        render(
-            PaperView,
-            createPaperViewProps({
+        render(PaperView, {
+            props: createPaperViewProps({
                 showButtonBar: false,
             }),
-        );
+            context: mockUserContext,
+        });
 
         assert.throws(() => screen.getByTestId("button-bar"));
     });
 
     test("When `showButtonBar` is true, then navigation buttons are shown", () => {
-        render(
-            PaperView,
-            createPaperViewProps({
+        render(PaperView, {
+            props: createPaperViewProps({
                 showButtonBar: true,
             }),
-        );
+            context: mockUserContext,
+        });
 
         const navButtons = screen.getAllByTestId("navigation-button");
         expect(navButtons).toHaveLength(2);
@@ -45,9 +49,8 @@ describe("PaperView", () => {
     test("When the user is in review mode, then the decision buttons are shown", async () => {
         reviewMode.isActivated = true;
 
-        render(
-            PaperView,
-            createPaperViewProps(
+        render(PaperView, {
+            props: createPaperViewProps(
                 {
                     showButtonBar: true,
                 },
@@ -61,7 +64,8 @@ describe("PaperView", () => {
                     ),
                 }),
             ),
-        );
+            context: mockUserContext,
+        });
 
         await waitForComponentLoading();
 
@@ -75,8 +79,14 @@ describe("PaperView", () => {
     test("When the user already reviewed this paper but is in review mode, then the decision is shown", async () => {
         reviewMode.isActivated = true;
 
+        const userContext = mockUserContext;
+        const criteriaContext = mockSelectedCriteriaContextWithInitialData([], true);
+        const combinedContext = new Map<
+            symbol,
+            (() => User) | SelectedCriteriaContextValue | WasReviewedContextValue
+        >([...userContext, ...criteriaContext]);
+
         render(PaperView, {
-            context: mockSelectedCriteriaContextWithInitialData([], true),
             props: createPaperViewProps(
                 {
                     showButtonBar: true,
@@ -98,6 +108,7 @@ describe("PaperView", () => {
                     criteriaWithReviews: loading([{ ...Criteria.demoCriterion1, reviews: [] }]),
                 }),
             ),
+            context: combinedContext,
         });
 
         await waitForComponentLoading();
@@ -117,9 +128,8 @@ describe("PaperView", () => {
     test("When navigation and decision buttons are shown but `project.settings.reviewMaybeAllowed` is false, then only the accept and decline buttons are shown", async () => {
         reviewMode.isActivated = true;
 
-        render(
-            PaperView,
-            createPaperViewProps(
+        render(PaperView, {
+            props: createPaperViewProps(
                 {
                     showButtonBar: true,
                 },
@@ -133,7 +143,8 @@ describe("PaperView", () => {
                     ),
                 }),
             ),
-        );
+            context: mockUserContext,
+        });
 
         await waitForComponentLoading();
 
@@ -143,7 +154,10 @@ describe("PaperView", () => {
     });
 
     test("When non-project paper view is shown, then review information tab is not shown", () => {
-        render(PaperView, createPaperViewProps({}, createNonProjectPaperViewProps()));
+        render(PaperView, {
+            props: createPaperViewProps({}, createNonProjectPaperViewProps()),
+            context: mockUserContext,
+        });
 
         const reviewInfoTab = screen.queryByText("Review Information");
         expect(reviewInfoTab).toBeNull();

@@ -9,15 +9,18 @@
     import { backendService } from "$lib/grpc-api";
     import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
+    import { getContext } from "svelte";
+    import { UserContextKey } from "$lib/global-context/userContext";
 
     interface Props {
-        user: User;
         projectId: string;
         loadingMembers: Promise<Project_Member[]>;
         onUsersInvited?: (invitedUsers: string[]) => void;
     }
 
-    let { user, projectId, loadingMembers, onUsersInvited = undefined }: Props = $props();
+    let { projectId, loadingMembers, onUsersInvited = undefined }: Props = $props();
+
+    const user = getContext<() => User>(UserContextKey)();
 
     let loading = $state(false);
     let error = $state<ApiError | undefined>(undefined);
@@ -87,7 +90,6 @@ Usage:
         {loadingMembers}
         onUsersInvited={(users) => console.log(`Inviting users: ${users}`)}
         {projectId}
-        {user}
     />
 ```
 -->

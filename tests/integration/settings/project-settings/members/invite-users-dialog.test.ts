@@ -4,6 +4,7 @@ import InviteUsersDialog from "$lib/components/composites/settings/project-setti
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
+import { mockUserContext } from "$tests/integration/test-helper";
 
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
@@ -21,10 +22,10 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.resolve([]),
             },
+            context: mockUserContext,
         });
 
         expect(screen.getByText("Invite Users")).toBeInTheDocument();
@@ -35,10 +36,10 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.resolve([]),
             },
+            context: mockUserContext,
         });
 
         const trigger = await screen.findByTestId("dialog-trigger");
@@ -65,13 +66,13 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.resolve([]),
                 onUsersInvited: (users: string[]) => {
                     invitedUsers = users;
                 },
             },
+            context: mockUserContext,
         });
 
         const trigger = await screen.findByTestId("dialog-trigger");
@@ -94,10 +95,10 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.resolve([]),
             },
+            context: mockUserContext,
         });
 
         const trigger = await screen.findByTestId("dialog-trigger");
@@ -122,10 +123,10 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.resolve([]),
             },
+            context: mockUserContext,
         });
 
         const trigger = await screen.findByTestId("dialog-trigger");
@@ -142,10 +143,10 @@ describe("InviteUsersDialog", () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 projectId: "1",
                 loadingMembers: Promise.reject(new Error("Failed to load members")),
             },
+            context: mockUserContext,
         });
 
         const trigger = await screen.findByTestId("dialog-trigger");

@@ -6,11 +6,27 @@
     import { ModeWatcher } from "mode-watcher";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog/index.js";
     import { ServerCrash } from "lucide-svelte";
+    import type { LayoutData } from "./$types";
+    import { setContext, type Snippet } from "svelte";
+    import { UserContextKey } from "$lib/global-context/userContext";
+    import type { User } from "$lib/model/api/user";
 
-    let { children, data } = $props();
+    let { data, children } = $props<{
+        data: LayoutData;
+        children: Snippet;
+    }>();
+
+    let userState = $state<User>(data.user);
+
+    $effect(() => {
+        if (data && data.user) {
+            userState = data.user;
+        }
+    });
+
+    setContext(UserContextKey, () => userState);
 
     const isDevMode = env.PUBLIC_IS_DEV_MODE === "true";
-
     if (isDevMode) {
         console.warn("Running in development mode");
     }

@@ -2,15 +2,14 @@ import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { loading, createPaper } from "../../model-builder";
-import { waitForComponentLoading } from "../test-helper";
-import { Authors, Users } from "../../example-data";
+import { mockUserContext, waitForComponentLoading } from "../test-helper";
+import { Authors } from "../../example-data";
 
 describe("PaperNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 loadingPaper: loading(
                     createPaper({
@@ -20,6 +19,7 @@ describe("PaperNavigationBar", () => {
                 ),
                 loadingPaperId: loading("123"),
             },
+            context: mockUserContext,
         });
 
         await waitForComponentLoading();
@@ -59,7 +59,6 @@ describe("PaperNavigationBar", () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 loadingPaper: loading(
                     createPaper({
@@ -68,6 +67,7 @@ describe("PaperNavigationBar", () => {
                     }),
                 ),
             },
+            context: mockUserContext,
         });
 
         await waitForComponentLoading();
@@ -79,7 +79,6 @@ describe("PaperNavigationBar", () => {
         render(PaperNavigationBar, {
             target: document.body,
             props: {
-                user: Users.johnDoe,
                 backRef: "/",
                 loadingPaper: loading(
                     createPaper({
@@ -89,6 +88,7 @@ describe("PaperNavigationBar", () => {
                 ),
                 loadingPaperId: loading("123"),
             },
+            context: mockUserContext,
         });
 
         await waitForComponentLoading();
