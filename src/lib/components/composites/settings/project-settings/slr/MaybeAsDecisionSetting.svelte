@@ -3,6 +3,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import { Switch } from "$lib/components/primitives/switch";
+    import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project_Settings, type Project } from "$lib/model/api/project";
     import { generateFieldMask } from "protobuf-fieldmask";
@@ -18,7 +19,7 @@
 
     // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
     let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
-    let isChecked = $state(true);
+    let isChecked = $derived(maybeAsDecision.isActivated);
 
     let isConfirmDialogOpen = $state(false);
     let title = $state("");
@@ -46,6 +47,7 @@
                         },
                     })
                     .response.then(() => {
+                        maybeAsDecision.isActivated = isChecked;
                         toast("Successfully updated project settings.");
                     })
                     .catch((error) => {
@@ -108,7 +110,8 @@
             return await backendService
                 .getProjectById({ id })
                 .response.then((response) => {
-                    return response.settings?.reviewMaybeAllowed ?? true;
+                    maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? true;
+                    return maybeAsDecision.isActivated;
                 })
                 .catch((error) => {
                     console.error("Error fetching project settings:", error);
