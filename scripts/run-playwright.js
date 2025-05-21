@@ -1,5 +1,10 @@
 // Credits to https://github.com/GreenAsJade/online-go.com/commit/0d24569d4d6f6187838c686a6fc7f3ee05657471#diff-8cf79278a8f33c5b40ee4195627e110f7fc7946a7aaaea7286ebcdae6195f9d3
-import { spawnSync } from "node:child_process";
+import { execSync, spawnSync } from "node:child_process";
+import { MOCK_BACKEND_IMAGE } from "../tests/e2e/mock-backend-version.js";
+
+execSync(`docker pull ${MOCK_BACKEND_IMAGE}`, {
+    stdio: "inherit",
+});
 
 /*
 Since with Node 23 type stripping no longer has to be explicitly activated,

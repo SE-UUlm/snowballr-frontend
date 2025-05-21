@@ -12,7 +12,7 @@ export default defineConfig({
         ["html", { outputFolder: "e2e-report" }],
     ],
     expect: {
-        timeout: 2_500,
+        timeout: 7_500,
     },
     timeout: 15_000,
     use: {

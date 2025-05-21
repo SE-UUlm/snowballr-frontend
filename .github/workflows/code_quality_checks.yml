@@ -103,6 +103,14 @@ jobs:
               with:
                   node_version: ${{ env.node_version }}
 
+            # Seems to be some obscure interaction between IPv6 and Docker in GitHub Pipelines
+            # Possible fix taken from here:
+            # https://github.com/plan-player-analytics/Plan/issues/3535
+            - name: Avoid ERR_NETWORK_CHANGED
+              run: |
+                  sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+                  sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
             - name: Get installed Playwright version
               run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
 
