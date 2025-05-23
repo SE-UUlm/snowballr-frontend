@@ -10,6 +10,8 @@ export class DevPaperViewPage {
     readonly acceptButton: Locator;
     readonly exampleInclusionCriterion: Locator;
     readonly exampleHardExclusionCriterion: Locator;
+    readonly nextPaperButton: Locator;
+    readonly previousPaperButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -22,6 +24,8 @@ export class DevPaperViewPage {
         this.referenceListEntry0 = this.getFirstListEntry("link")
             ? this.getFirstListEntry("link")
             : this.getFirstListEntry("button");
+        this.nextPaperButton = page.locator("button[aria-label='Next Paper']");
+        this.previousPaperButton = page.locator("button[aria-label='Previous Paper']");
     }
 
     /**
@@ -42,7 +46,7 @@ export class DevPaperViewPage {
      */
     async openProjectPaperView(projectId: string, paperId: string) {
         await this.page.goto(`/project/${projectId}/paper/${paperId}`);
-        await expect(this.acceptButton).toBeVisible();
+        await expect(this.nextPaperButton).toBeVisible();
     }
 
     /**
@@ -91,5 +95,15 @@ export class DevPaperViewPage {
                 name: "Paper 1 to be referenced",
             })
             .first();
+    }
+
+    async goToNextPaper() {
+        await expect(this.nextPaperButton).toBeEnabled();
+        await this.nextPaperButton.click();
+    }
+
+    async goToPreviousPaper() {
+        await expect(this.previousPaperButton).toBeEnabled();
+        await this.previousPaperButton.click();
     }
 }

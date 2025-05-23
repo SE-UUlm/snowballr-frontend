@@ -1,5 +1,6 @@
 import { test as base } from "../../utils/fixtures/shared-fixture";
 import { DevPaperViewPage } from "$tests/e2e/project/paper/paper-view-model";
+import { expect } from "@playwright/test";
 
 type PaperViewFixture = {
     paperViewPage: DevPaperViewPage;
@@ -11,6 +12,8 @@ type PaperViewFixture = {
  */
 export const test = base.extend<PaperViewFixture>({
     paperViewPage: async ({ page }, use) => {
+        await page.goto("/");
+        await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
         await use(new DevPaperViewPage(page));
     },
 });
