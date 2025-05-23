@@ -1,6 +1,6 @@
 import { Schema, ZodIssueSubCode } from "$lib/schemas";
 import { assert, describe, expect, test } from "vitest";
-import { z } from "zod";
+import { z, ZodIssueCode } from "zod";
 
 /**
  * Wrapper for `describe` that provides a `testValid` and `testInvalid` function.
@@ -112,8 +112,12 @@ function customCode(subCode: ZodIssueSubCode): string {
 }
 
 schemaTest("First Name Schema", Schema.firstName, (testValid, testInvalid) => {
-    test.each(["", " ", "  "])("When first name is blank, then validation fails", (input) => {
-        testInvalid(input, { codes: [z.ZodIssueCode.too_small] });
+    test("When first name is empty, then validation fails", () => {
+        testInvalid("", { codes: [z.ZodIssueCode.too_small] });
+    });
+
+    test.each([" ", "  "])("When first name is blank, then validation fails", (input) => {
+        testInvalid(input, { codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)] });
     });
 
     test("When first name is more than 100 characters long, then validation fails", () => {
@@ -135,16 +139,22 @@ schemaTest("First Name Schema", Schema.firstName, (testValid, testInvalid) => {
     );
 
     test.each([" John", "John ", " John "])(
-        "When first name '%s' has leading or trailing spaces, then spaces are trimmed in result",
+        "When first name '%s' has leading or trailing spaces, then validation fails",
         (input) => {
-            testValid(input, "John");
+            testInvalid(input, {
+                codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)],
+            });
         },
     );
 });
 
 schemaTest("Last Name Schema", Schema.lastName, (testValid, testInvalid) => {
-    test.each(["", " ", "  "])("When last name is blank, then validation fails", (input) => {
-        testInvalid(input, { codes: [z.ZodIssueCode.too_small] });
+    test("When last name is empty, then validation fails", () => {
+        testInvalid("", { codes: [z.ZodIssueCode.too_small] });
+    });
+
+    test.each([" ", "  "])("When last name is blank, then validation fails", (input) => {
+        testInvalid(input, { codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)] });
     });
 
     test("When last name is more than 100 characters long, then validation fails", () => {
@@ -152,7 +162,7 @@ schemaTest("Last Name Schema", Schema.lastName, (testValid, testInvalid) => {
     });
 
     test.each(Array.from({ length: 100 }, (_, i) => i + 1))(
-        "When last name is more than %f character(s) long, then validation passes",
+        "When last name is %f character(s) long, then validation passes",
         (length) => {
             testValid("a".repeat(length));
         },
@@ -166,9 +176,11 @@ schemaTest("Last Name Schema", Schema.lastName, (testValid, testInvalid) => {
     );
 
     test.each([" Doe", "Doe ", " Doe "])(
-        "When last name '%s' has leading or trailing spaces, then spaces are trimmed in result",
+        "When last name '%s' has leading or trailing spaces, then validation fails",
         (input) => {
-            testValid(input, "Doe");
+            testInvalid(input, {
+                codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)],
+            });
         },
     );
 });
@@ -275,8 +287,12 @@ schemaTest("Password Schema", Schema.password, (testValid, testInvalid) => {
 });
 
 schemaTest("Project name Schema", Schema.projectName, (testValid, testInvalid) => {
-    test.each(["", " ", "  "])("When project name is blank, then validation fails", (input) => {
-        testInvalid(input, { codes: [z.ZodIssueCode.too_small] });
+    test("When project name is empty, then validation fails", () => {
+        testInvalid("", { codes: [ZodIssueCode.too_small] });
+    });
+
+    test.each([" ", "  "])("When project name is blank, then validation fails", (input) => {
+        testInvalid(input, { codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)] });
     });
 
     test("When the project name is more than 100 characters long, then validation fails", () => {
@@ -294,6 +310,15 @@ schemaTest("Project name Schema", Schema.projectName, (testValid, testInvalid) =
         "When valid project name '%s' is tested, then validation passes",
         (input) => {
             testValid(input);
+        },
+    );
+
+    test.each([" TestProject", "TestProject ", " TestProject Name "])(
+        "When project name '%s' has leading or trailing spaces, then validation fails",
+        (input) => {
+            testInvalid(input, {
+                codes: [customCode(ZodIssueSubCode.no_leading_trailing_whitespace)],
+            });
         },
     );
 });
