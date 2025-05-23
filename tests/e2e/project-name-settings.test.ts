@@ -30,7 +30,7 @@ test.describe("Renaming a project", () => {
         await expect(toast).toBeVisible();
     });
 
-    test("When the user enters an empty project name, then the name of the project remains unchanged.", async ({
+    test("When the user enters an blank project name, then the name of the project remains unchanged.", async ({
         page,
         projectSettingsPage,
     }) => {
@@ -38,7 +38,7 @@ test.describe("Renaming a project", () => {
         await projectSettingsPage.checkForErrors();
         const projectNameHeader = page.getByRole("heading", { name: "Project 1" });
         await expect(projectNameHeader).toBeVisible();
-        const toast = page.getByText("Please provide a non-empty project name");
+        const toast = page.getByText("The project name cannot start or end with whitespace");
         await expect(toast).toBeVisible();
     });
 
