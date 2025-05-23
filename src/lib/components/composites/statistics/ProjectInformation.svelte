@@ -1,8 +1,21 @@
 <script lang="ts">
-    import type { ProjectInformationInterface } from "$lib/model/component-interfaces";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import { pluralize } from "$lib/utils/common-helper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+
+    /**
+     * Contains interfaces or types that specify the interface of components.
+     * These are not defined locally so that these types can be used at the point where the data for the components is loaded or created too.
+     */
+    export interface ProjectInformationInterface {
+        projectName: string;
+        projectStart: Date;
+        projectStage: bigint;
+        daysInStage: number;
+        estimatedRemainingDays: number;
+        totalPapersInStage: number;
+        reviewedPapersInStage: number;
+    }
 
     interface ProjectInformationProps {
         projectInformation: Promise<ProjectInformationInterface>;

@@ -1,9 +1,19 @@
 <script lang="ts">
     import { Progress } from "$lib/components/primitives/progress";
     import { getNames, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
-    import { ProjectStatus } from "$lib/model/api/project";
-    import type { ProjectListEntryInterface } from "$lib/model/component-interfaces";
+    import {
+        Project,
+        Project_Information,
+        Project_Member_List,
+        ProjectStatus,
+    } from "$lib/model/api/project";
     import { goto } from "$app/navigation";
+
+    export interface ProjectListEntryInterface {
+        project: Project;
+        membersList: Project_Member_List;
+        information: Project_Information;
+    }
 
     type ProjectListEntryProps = ProjectListEntryInterface & {
         onClick?: () => void;

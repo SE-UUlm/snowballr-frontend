@@ -1,10 +1,15 @@
 <script lang="ts">
-    import type { StageProgressInterface } from "$lib/model/component-interfaces";
     import Circle from "lucide-svelte/icons/circle";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import StageProgressChart from "$lib/components/composites/statistics/StageProgressChart.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
+    import type { Project_Information_DecisionStatistics } from "$lib/model/api/project";
+
+    export interface StageProgressInterface {
+        stage: bigint;
+        decisions: Project_Information_DecisionStatistics;
+    }
 
     interface StageProgressChartProps {
         stageProgress: Promise<StageProgressInterface>;

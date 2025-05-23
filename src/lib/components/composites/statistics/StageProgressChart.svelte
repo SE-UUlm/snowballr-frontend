@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { StageProgressInterface } from "$lib/model/component-interfaces";
     import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import type { PaperStatus } from "$lib/model/general";
     import * as d3 from "d3";
+    import type { StageProgressInterface } from "./StageProgress.svelte";
 
     interface Segment {
         decision: PaperStatus | "No decision";
