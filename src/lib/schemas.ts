@@ -34,8 +34,8 @@ function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, mess
  */
 const firstNameSchema = z
     .string()
-    .min(1, { message: "at least 1 non-whitespace character" })
-    .max(100, { message: "at most 100 non-whitespace characters" })
+    .min(1, { message: "must contain at least 1 non-whitespace character" })
+    .max(100, { message: "must contain at most 100 non-whitespace characters" })
     .refine((value) => value === value.trim(), {
         params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
         message: "cannot start or end with whitespace",
@@ -46,8 +46,8 @@ const firstNameSchema = z
  */
 const lastNameSchema = z
     .string()
-    .min(1, { message: "at least 1 non-whitespace character" })
-    .max(100, { message: "at most 100 non-whitespace characters" })
+    .min(1, { message: "must contain at least 1 non-whitespace character" })
+    .max(100, { message: "must contain at most 100 non-whitespace characters" })
     .refine((value) => value === value.trim(), {
         params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
         message: "cannot start or end with whitespace",
