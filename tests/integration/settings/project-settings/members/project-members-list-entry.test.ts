@@ -1,17 +1,22 @@
 import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
+import { MemberRole } from "$lib/model/api/project";
 import { Members } from "$tests/example-data";
 import { render, screen } from "@testing-library/svelte";
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, assert } from "vitest";
 
 describe("ProjectMembersListEntry", () => {
+    const adminMember = { ...Members.demoMember1, isInvitationPending: false };
+    assert(adminMember.role === MemberRole.ADMIN, "Admin member must be an admin");
+    const defaultMember = { ...Members.demoMember2, isInvitationPending: false };
+    assert(defaultMember.role !== MemberRole.ADMIN, "Default member cannot be an admin");
+
     test("When all props are provided, then it renders correctly", () => {
         render(ProjectMemberListEntry, {
             target: document.body,
             props: {
                 projectId: "1",
-                member: Members.demoMember1,
+                member: adminMember,
                 isCurrentUser: false,
-                isInvitationPending: false,
                 isAdminView: true,
             },
         });
@@ -25,9 +30,8 @@ describe("ProjectMembersListEntry", () => {
             target: document.body,
             props: {
                 projectId: "1",
-                member: Members.demoMember1,
+                member: adminMember,
                 isCurrentUser: true,
-                isInvitationPending: false,
                 isAdminView: true,
             },
         });
@@ -41,9 +45,8 @@ describe("ProjectMembersListEntry", () => {
             target: document.body,
             props: {
                 projectId: "1",
-                member: Members.demoMember2,
+                member: { ...defaultMember, isInvitationPending: true },
                 isCurrentUser: false,
-                isInvitationPending: true,
                 isAdminView: true,
             },
         });
@@ -56,9 +59,8 @@ describe("ProjectMembersListEntry", () => {
             target: document.body,
             props: {
                 projectId: "1",
-                member: Members.demoMember1,
+                member: adminMember,
                 isCurrentUser: false,
-                isInvitationPending: false,
                 isAdminView: true,
             },
         });

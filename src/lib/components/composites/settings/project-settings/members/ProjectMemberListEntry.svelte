@@ -1,14 +1,14 @@
 <script lang="ts">
     import { type Project_Member } from "$lib/model/api/project";
     import { getName } from "$lib/utils/common-helper";
+    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/members/helper";
     import PromoteMemberDialog from "./PromoteMemberDialog.svelte";
     import RemoveMemberDialog from "./RemoveMemberDialog.svelte";
 
     interface Props {
         projectId: string;
-        member: Project_Member;
+        member: MemberInfo;
         isCurrentUser: boolean;
-        isInvitationPending: boolean;
         isAdminView: boolean;
         onMemberRemoved?: (member: Project_Member) => void;
         onMemberPromoted?: (member: Project_Member) => void;
@@ -18,7 +18,6 @@
         projectId,
         member,
         isCurrentUser,
-        isInvitationPending,
         isAdminView,
         onMemberRemoved = undefined,
         onMemberPromoted = undefined,
@@ -38,11 +37,12 @@ Usage:
     <ul>
         {#each members as member}
             <ProjectMemberListEntry
-                {projectId}
-                isAdminView={isCurrentUserAdmin}
-                isCurrentUser={member.user!.id === user.id}
-                isInvitationPending={false}
+                {isAdminView}
+                isCurrentUser={member.user!.id === currentUser.id}
                 {member}
+                {onMemberPromoted}
+                {onMemberRemoved}
+                {projectId}
             />
         {/each}
     </ul>
@@ -59,7 +59,7 @@ Usage:
         <span class="text-hint text-primary">{member.user!.email}</span>
     </div>
     <div class="flex flex-row items-center gap-2.5">
-        {#if isInvitationPending}
+        {#if member.isInvitationPending}
             <span class="text-hint">Invitation Pending ...</span>
         {/if}
         <PromoteMemberDialog

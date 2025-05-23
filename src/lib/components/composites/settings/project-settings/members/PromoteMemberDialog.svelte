@@ -5,10 +5,11 @@
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
     import { getName, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
+    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/members/helper";
 
     interface Props {
         projectId: string;
-        member: Project_Member;
+        member: MemberInfo;
         isCurrentUser: boolean;
         isAdminView: boolean;
         onMemberPromoted?: (member: Project_Member) => void;
@@ -18,8 +19,18 @@
 
     const memberName = getName(member.user!);
     let role = $derived(member.role === MemberRole.ADMIN ? "Admin" : "Member");
+    /**
+     * Member cannot be promoted if the following conditions are met:
+     * - member is current signed-in user
+     * - member is already an admin
+     * - current sign-in user is not a project admin (non-admin view)
+     * - member is invitee
+     */
     let isRoleReadonly = $derived(
-        isCurrentUser || member.role === MemberRole.ADMIN || !isAdminView,
+        isCurrentUser ||
+            member.role === MemberRole.ADMIN ||
+            !isAdminView ||
+            member.isInvitationPending,
     );
     let loading = $state(false);
     let error = $state<unknown>(undefined);

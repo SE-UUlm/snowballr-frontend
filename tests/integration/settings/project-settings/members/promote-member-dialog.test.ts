@@ -8,9 +8,9 @@ import userEvent from "@testing-library/user-event";
 import { getName } from "$lib/utils/common-helper";
 
 describe("PromoteMemberDialog", () => {
-    const adminMember = Members.demoMember1;
+    const adminMember = { ...Members.demoMember1, isInvitationPending: false };
     assert(adminMember.role === MemberRole.ADMIN, "Admin member must be an admin");
-    const defaultMember = Members.demoMember2;
+    const defaultMember = { ...Members.demoMember2, isInvitationPending: false };
     assert(defaultMember.role !== MemberRole.ADMIN, "Default member cannot be an admin");
 
     beforeEach(() => {
@@ -85,7 +85,23 @@ describe("PromoteMemberDialog", () => {
         expect(trigger).toBeDisabled();
     });
 
-    test("When the current view is the admin view, the member is not an admin and not the current user, then the dialog trigger is enabled", () => {
+    test("When the member is an invitee, then the dialog trigger is disabled", () => {
+        render(PromoteMemberDialog, {
+            target: document.body,
+            props: {
+                projectId: "1",
+                member: { ...defaultMember, isInvitationPending: true },
+                isCurrentUser: false,
+                isAdminView: false,
+            },
+        });
+
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        expect(trigger).toBeInTheDocument();
+        expect(trigger).toBeDisabled();
+    });
+
+    test("When the current view is the admin view, the member is not an admin or invitee and not the current user, then the dialog trigger is enabled", () => {
         render(PromoteMemberDialog, {
             target: document.body,
             props: {

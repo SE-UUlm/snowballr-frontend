@@ -116,7 +116,6 @@
                 <ProjectMemberListEntry
                     isAdminView={isCurrentUserAdmin.value}
                     isCurrentUser={member.user!.id === user.id}
-                    isInvitationPending={member.isInvitationPending}
                     {member}
                     {onMemberPromoted}
                     {onMemberRemoved}
