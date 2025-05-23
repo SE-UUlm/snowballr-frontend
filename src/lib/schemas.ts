@@ -32,7 +32,7 @@ function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, mess
 /**
  * Schema for the first name of a user.
  */
-const firsNameSchema = z
+const firstNameSchema = z
     .string()
     .min(1, { message: "at least 1 non-whitespace character" })
     .max(100, { message: "at most 100 non-whitespace characters" })
@@ -136,7 +136,7 @@ export const Schema = {
     /**
      * Schemas, used for input validation.
      */
-    firstName: firsNameSchema,
+    firstName: firstNameSchema,
     lastName: lastNameSchema,
     email: emailSchema,
     password: passwordSchema,
