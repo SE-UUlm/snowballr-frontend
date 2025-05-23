@@ -8,7 +8,7 @@
         listName: string;
         items: Promise<T[]>;
         listItemComponent: Snippet<[T]>;
-        listItemSkeleton: Snippet;
+        listItemSkeleton: Snippet<[number]>;
         numberOfSkeletons: number;
         showNumberOfListItems?: boolean;
         numberOfItems?: number;
@@ -50,7 +50,7 @@ Usage:
         {#snippet listItemComponent(componentData)}
             <YourComponent {...componentData} />
         {/snippet}
-        {#snippet listItemSkeleton()}
+        {#snippet listItemSkeleton(index)}
             <YourSkeletonComponent />
         {/snippet}
     </NamedList>
@@ -76,9 +76,9 @@ This can be e.g. a search bar.
         {/if}
         {@render preListContent?.()}
         <ul class="scroll-box space-y-4 pb-1">
-            {#each { length: numberOfSkeletons }}
+            {#each { length: numberOfSkeletons }, i}
                 <li>
-                    {@render listItemSkeleton()}
+                    {@render listItemSkeleton(i)}
                 </li>
             {/each}
         </ul>

@@ -10,7 +10,7 @@
     let { numberOfReviews = 0 }: Props = $props();
 </script>
 
-<li class="flex flex-row items-center gap-4">
+<div class="flex flex-row items-center gap-4">
     {#if reviewMode.isActivated}
         <div class="size-4.5"></div>
     {/if}
@@ -24,4 +24,4 @@
             <UserAvatarSkeleton size="small" />
         {/each}
     {/if}
-</li>
+</div>

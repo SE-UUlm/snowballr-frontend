@@ -55,11 +55,13 @@ then it cannot be checked anymore.
 Usage:
 ```svelte
     <ul>
-        <CriterionListEntry {reviewers} {criterion} />
+        <li>
+            <CriterionListEntry {reviewers} {criterion} />
+        </li>
     </ul>
 ```
 -->
-<li class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
+<div class="flex flex-row items-center gap-4" data-testid="criterion-list-entry">
     {#if reviewMode.isActivated}
         <Checkbox
             checked={isCriterionInitiallyChecked}
@@ -97,4 +99,4 @@ Usage:
             {/each}
         </div>
     {/if}
-</li>
+</div>
