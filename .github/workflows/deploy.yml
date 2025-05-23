@@ -76,30 +76,3 @@ jobs:
                   subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
                   subject-digest: ${{ steps.push.outputs.digest }}
                   push-to-registry: true
-
-    deploy-frontend:
-        name: Deploy Frontend
-        if: github.ref_name == 'develop' && github.ref_type == 'branch'
-        runs-on: ubuntu-latest
-        needs: build-and-publish-docker-image
-        steps:
-            - name: Set up SSH
-              run: |
-                  mkdir -p ~/.ssh
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-                  chmod 600 ~/.ssh/id_rsa
-            - name: Convert image name to lowercase
-              run: |
-                  echo "IMAGE_NAME_LOWER=${IMAGE_NAME,,}" >> $GITHUB_ENV
-            - name: Pull and (re)start docker image
-              run: |
-                  ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << EOF
-                    echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-                    docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest-dev
-
-                    docker stop ${{env.CONTAINER_NAME}} &> /dev/null
-                    docker rm ${{env.CONTAINER_NAME}} &> /dev/null
-
-                    docker run -d --env-file frontend/.env --name ${{env.CONTAINER_NAME}} -p 80:3000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest-dev
-                  EOF
