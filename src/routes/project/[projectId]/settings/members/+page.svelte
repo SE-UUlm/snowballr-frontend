@@ -41,7 +41,7 @@
                 loadingMembersLocal = Promise.resolve(members);
             })
             .catch((error) => {
-                toast(errorMessage);
+                toast.error(errorMessage);
                 console.error(`Couldn't reload members: ${error}`);
             });
     }
@@ -51,9 +51,10 @@
         const memberEmails = (await loadingMembersLocal).map((member) => member.user?.email);
         const filteredInvitedUsers = invitedUsers.filter((user) => !memberEmails.includes(user));
 
-        let message = "";
+        let toastFunc;
         if (filteredInvitedUsers.length === 0) {
-            message = `${pluralize(invitedUsers, "User is", "Users are")} already invited`;
+            toastFunc = () =>
+                toast.info(`${pluralize(invitedUsers, "User is", "Users are")} already invited`);
         } else {
             // Show user name when it's only one, otherwise show number of invited users
             const messageContent = pluralize(
@@ -61,25 +62,25 @@
                 filteredInvitedUsers[0],
                 `${filteredInvitedUsers.length} users`,
             );
-            message = `Invited ${messageContent} to the project`;
+            toastFunc = () => toast.success(`Invited ${messageContent} to the project`);
         }
 
         await reloadMembers(
             `Couldn't invite ${pluralize(filteredInvitedUsers, "user", "users")} to the project`,
         );
-        toast(message);
+        toastFunc();
     }
 
     async function onMemberRemoved(member: Project_Member) {
         const name = getName(member.user!);
         await reloadMembers(`Couldn't remove ${name} from project.`);
-        toast(`Removed ${name} from the project`);
+        toast.success(`Removed ${name} from the project`);
     }
 
     async function onMemberPromoted(member: Project_Member) {
         const name = getName(member.user!);
         await reloadMembers(`Couldn't promote ${name} to an Admin`);
-        toast(`Promoted ${name} to an Admin`);
+        toast.success(`Promoted ${name} to an Admin`);
     }
 </script>
 

@@ -65,7 +65,7 @@
             };
             const fieldMask = generateFieldMask(projectData);
             if (projectName === newProjectName) {
-                toast("Please enter a new project name.");
+                toast.info("Please enter a new project name.");
             } else {
                 try {
                     await backendService.updateProject({
@@ -75,7 +75,7 @@
                         },
                     }).response;
                     projectName = newProjectName;
-                    toast("Successfully updated project name.");
+                    toast.success("Successfully updated project name.");
                     await invalidate("data:getProjectById");
                 } catch (error) {
                     updateProjectError = {

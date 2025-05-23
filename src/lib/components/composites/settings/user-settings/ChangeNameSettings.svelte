@@ -45,7 +45,7 @@
             })
             .response.then(() => {
                 invalidate("data:getCurrentUser");
-                toast("Successfully updated your name.");
+                toast.success("Successfully updated your name.");
 
                 // Make sure the input fields are not focused after submitting
                 (document.activeElement as HTMLElement)?.blur();
