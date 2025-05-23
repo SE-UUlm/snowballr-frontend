@@ -52,10 +52,10 @@ const lastNameSchema = z
  */
 const emailSchema = z.string().email({ message: "a valid format" });
 
-const upperCaseLetters = "A-Z";
-const lowerCaseLetters = "a-z";
+const upperCaseLetters = "A-ZÄÖÜ";
+const lowerCaseLetters = "a-zäöü";
 const numbers = "0-9";
-const specialCharacters = "#$%&@^`~.,:;\"'\\/|_-<>*+!?={[()]}";
+const specialCharacters = "#$%&@^`~.,:;\"'\\/|_-<>*+!?={[()]}ß";
 // Keep specialCharacters to display, but escape characters for regex
 const specialCharactersRegex = specialCharacters
     .replace("/", "\\/")

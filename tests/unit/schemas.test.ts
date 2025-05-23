@@ -268,6 +268,7 @@ schemaTest("Password Schema", Schema.password, (testValid, testInvalid) => {
         "[[Vu\\uz:&;D}z[3w+_/$S,K5'xE<*.gD",
         "dt)_$pE6s{);/4e=!\\%gvd*F`@&C,>U'",
         "g=KL\">/L]=*_@xd]]',7Z^:(QY{*$7AQ",
+        "PasswordWithUmlautsÄÖÜäöüß_00!Foo",
     ])("When valid password '%s' is tested, then validation passes", (input) => {
         testValid(input);
     });
