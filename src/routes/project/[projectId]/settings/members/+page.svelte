@@ -13,6 +13,7 @@
     import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { UserContextKey } from "$lib/global-context/userContext";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = data;
@@ -33,8 +34,10 @@
             resourceName: "isCurrentUserAdmin",
         },
     );
+    let reloadingMembers = $state(false);
 
     async function reloadMembers(errorMessage: string) {
+        reloadingMembers = true;
         // First fetch the members again and only then replace them, so that no loading state is shown
         await loadMembers({ id: projectId })
             .then((members) => {
@@ -44,6 +47,7 @@
                 toast.error(errorMessage);
                 console.error(`Couldn't reload members: ${error}`);
             });
+        reloadingMembers = false;
     }
 
     async function onUsersInvited(invitedUsers: string[]) {
@@ -98,6 +102,12 @@
     {#if isCurrentUserAdmin.value}
         <div class="flex flex-row items-center justify-between">
             <h1>Manage Access</h1>
+            {#if reloadingMembers}
+                <div class="flex flex-row gap-3 text-lg text-gray-400">
+                    <LoaderCircle class="animate-spin" />
+                    <span>Reloading Members</span>
+                </div>
+            {/if}
             <InviteUsersDialog loadingMembers={loadingMembersLocal} {onUsersInvited} {projectId} />
         </div>
     {:else}
