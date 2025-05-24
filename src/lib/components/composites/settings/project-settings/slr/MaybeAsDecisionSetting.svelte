@@ -1,11 +1,13 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { Label } from "$lib/components/primitives/label";
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project_Settings, type Project } from "$lib/model/api/project";
+    import type { ApiError } from "$lib/model/general";
     import { generateFieldMask } from "protobuf-fieldmask";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
@@ -28,6 +30,8 @@
     let pendingActionConfirmCallback: (() => void) | null = $state(null);
 
     const disabled = $derived(slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus);
+
+    let updateSLRSettingsError: ApiError | undefined = $state(undefined);
 
     async function toggleIsMaybeAsDecisionSettingStatus() {
         isUpdatingMaybeAsDecisionSettingStatus = true;
@@ -56,7 +60,9 @@
                     .catch((error) => {
                         isChecked = !isChecked; // Revert the switch state on error
                         console.error("Error updating project settings:", error);
-                        toast.error("Failed to update project settings.");
+                        updateSLRSettingsError = {
+                            errorTitle: "Failed to update project settings",
+                        };
                     })
                     .finally(() => {
                         isUpdatingMaybeAsDecisionSettingStatus = false;
@@ -71,6 +77,7 @@
 
     function handleSwitchClick(event: MouseEvent) {
         event.preventDefault();
+        updateSLRSettingsError = undefined;
 
         if (isUpdatingMaybeAsDecisionSettingStatus) {
             return;
@@ -80,12 +87,10 @@
 
         if (targetCheckedState) {
             title = "Enable 'Maybe' as Decision?";
-            dialogDescription =
-                "Are you sure you want to enable 'Maybe' as decision? This can have consequences on the review process.";
+            dialogDescription = "Are you sure you want to enable 'Maybe' as decision?";
         } else {
             title = "Disable 'Maybe' as Decision?";
-            dialogDescription =
-                "Are you sure you want to disable 'Maybe' as decision? This can have consequences on the review process.";
+            dialogDescription = "Are you sure you want to disable 'Maybe' as decision?";
         }
 
         pendingActionConfirmCallback = () => {
@@ -118,7 +123,9 @@
                 })
                 .catch((error) => {
                     console.error("Error fetching project settings:", error);
-                    toast.error("Failed to fetch project settings.");
+                    updateSLRSettingsError = {
+                        errorTitle: "Failed to update project settings",
+                    };
                     return true; // Default to true if there's an error
                 });
         }
@@ -162,6 +169,9 @@ Usage:
             </p>
         </div>
     </div>
+    {#if updateSLRSettingsError}
+        <Alert title={updateSLRSettingsError.errorTitle} variant="error" />
+    {/if}
 
     <AlertDialog
         bind:open={isConfirmDialogOpen}
