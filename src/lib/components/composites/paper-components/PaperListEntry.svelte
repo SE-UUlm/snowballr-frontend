@@ -10,9 +10,26 @@
         handleSingleOrDoubleClick,
     } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
-    import type { PaperListEntryInterface } from "$lib/model/component-interfaces";
     import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import type { Paper } from "$lib/model/api/paper";
+    import type { Project_Paper } from "$lib/model/api/project";
+
+    /**
+     * Interface for the paper list entries.
+     *
+     * It either takes a Paper or a Project_Paper object.
+     * According to this the projectId is either undefined or a string.
+     */
+    export type PaperListEntryInterface =
+        | {
+              projectId: undefined;
+              paper: Paper;
+          }
+        | {
+              projectId: string;
+              paper: Project_Paper;
+          };
 
     type PaperListEntryProps = PaperListEntryInterface & {
         onClick?: () => void;

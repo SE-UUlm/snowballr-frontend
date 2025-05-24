@@ -1,8 +1,17 @@
 <script lang="ts">
-    import type { ProjectInformationInterface } from "$lib/model/component-interfaces";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import { pluralize } from "$lib/utils/common-helper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+
+    export interface ProjectInformationInterface {
+        projectName: string;
+        projectStart: Date;
+        projectStage: bigint;
+        daysInStage: number;
+        estimatedRemainingDays: number;
+        totalPapersInStage: number;
+        reviewedPapersInStage: number;
+    }
 
     interface ProjectInformationProps {
         projectInformation: Promise<ProjectInformationInterface>;
