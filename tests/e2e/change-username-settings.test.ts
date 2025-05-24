@@ -37,7 +37,7 @@ test.describe("Changing username", () => {
 
         accountSettingsPage.changeUsername(" ", "Beta");
         await expect(
-            page.getByText("First Name must contain at least 1 non-whitespace character"),
+            page.getByText("First Name cannot start or end with whitespace"),
         ).toBeVisible();
 
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
@@ -50,9 +50,7 @@ test.describe("Changing username", () => {
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
 
         accountSettingsPage.changeUsername("Alpha", " ");
-        await expect(
-            page.getByText("Last Name must contain at least 1 non-whitespace character"),
-        ).toBeVisible();
+        await expect(page.getByText("Last Name cannot start or end with whitespace")).toBeVisible();
 
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
     });

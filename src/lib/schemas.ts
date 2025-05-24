@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export const ZodIssueSubCode = {
-    non_blank: "non_blank",
     invalid_characters: "invalid_characters",
     not_enough_upper_case_letters: "not_enough_upper_case_letters",
     not_enough_lower_case_letters: "not_enough_lower_case_letters",
     not_enough_numbers: "not_enough_numbers",
     not_enough_special_characters: "not_enough_special_characters",
+    no_leading_trailing_whitespace: "no_leading_trailing_whitespace",
 } as const;
 export type ZodIssueSubCode = keyof typeof ZodIssueSubCode;
 
@@ -32,20 +32,26 @@ function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, mess
 /**
  * Schema for the first name of a user.
  */
-const firsNameSchema = z
+const firstNameSchema = z
     .string()
-    .trim()
-    .min(1, { message: "at least 1 non-whitespace character" })
-    .max(100, { message: "at most 100 non-whitespace characters" });
+    .min(1, { message: "must contain at least 1 non-whitespace character" })
+    .max(100, { message: "must contain at most 100 non-whitespace characters" })
+    .refine((value) => value === value.trim(), {
+        params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
+        message: "cannot start or end with whitespace",
+    });
 
 /**
  * Schema for the last name of a user.
  */
 const lastNameSchema = z
     .string()
-    .trim()
-    .min(1, { message: "at least 1 non-whitespace character" })
-    .max(100, { message: "at most 100 non-whitespace characters" });
+    .min(1, { message: "must contain at least 1 non-whitespace character" })
+    .max(100, { message: "must contain at most 100 non-whitespace characters" })
+    .refine((value) => value === value.trim(), {
+        params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
+        message: "cannot start or end with whitespace",
+    });
 
 /**
  * Schema for the email of a user.
@@ -119,15 +125,18 @@ const passwordSchema = z
  */
 const projectNameSchema = z
     .string()
-    .trim()
-    .min(1, { message: "Please provide a non-empty project name" })
-    .max(100, { message: "The project name is limited to 100 characters" });
+    .min(1, { message: "Please provide a non-blank project name" })
+    .max(100, { message: "The project name is limited to 100 characters" })
+    .refine((value) => value === value.trim(), {
+        params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
+        message: "The project name cannot start or end with whitespace",
+    });
 
 export const Schema = {
     /**
      * Schemas, used for input validation.
      */
-    firstName: firsNameSchema,
+    firstName: firstNameSchema,
     lastName: lastNameSchema,
     email: emailSchema,
     password: passwordSchema,

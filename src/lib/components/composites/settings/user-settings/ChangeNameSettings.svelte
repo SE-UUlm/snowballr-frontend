@@ -77,7 +77,7 @@ Usage:
         <Input
             bind:this={firstNameInput}
             class="w-full"
-            errorMessagePrefix="First Name must contain"
+            errorMessagePrefix="First Name"
             inputId="first-name-input"
             label="First Name"
             placeholder="First Name"
@@ -89,7 +89,7 @@ Usage:
         <Input
             bind:this={lastNameInput}
             class="w-full"
-            errorMessagePrefix="Last Name must contain"
+            errorMessagePrefix="Last Name"
             inputId="last-name-input"
             label="Last Name"
             placeholder="Last Name"

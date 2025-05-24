@@ -105,7 +105,7 @@
                 <Input
                     bind:this={firstNameInput}
                     class="w-full"
-                    errorMessagePrefix="First name must contain"
+                    errorMessagePrefix="First name"
                     inputId="first-name-input"
                     label="First Name"
                     placeholder="John"
@@ -116,7 +116,7 @@
                 <Input
                     bind:this={lastNameInput}
                     class="w-full"
-                    errorMessagePrefix="Last name must contain"
+                    errorMessagePrefix="Last name"
                     inputId="last-name-input"
                     label="Last Name"
                     placeholder="Doe"
