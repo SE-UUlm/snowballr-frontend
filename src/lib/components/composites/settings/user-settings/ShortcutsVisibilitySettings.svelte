@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Button } from "$lib/components/primitives/button";
-    import { Checkbox } from "$lib/components/primitives/checkbox";
     import { Label } from "$lib/components/primitives/label";
+    import Switch from "$lib/components/primitives/switch/switch.svelte";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import SettingsSection from "../SettingsSection.svelte";
 </script>
@@ -17,11 +17,11 @@ Usage:
 -->
 <SettingsSection sectionTitle="Shortcuts Visibility">
     <div class="flex space-x-2">
-        <Checkbox id="shortcuts-visibility-checkbox" bind:checked={shortcuts.isVisible} />
+        <Switch id="shortcuts-visibility-switch" bind:checked={shortcuts.isVisible} />
         <div class="grid w-full max-w-100 gap-1.5 pt-0.25 md:max-w-200">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="shortcuts-visibility-checkbox"
+                for="shortcuts-visibility-switch"
             >
                 Display Shortcuts
             </Label>

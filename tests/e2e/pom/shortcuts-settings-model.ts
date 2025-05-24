@@ -2,11 +2,11 @@ import { type Locator, type Page } from "@playwright/test";
 
 export class DevShortcutsSettingsPage {
     readonly page: Page;
-    readonly shortcutsVisibilityCheckbox: Locator;
+    readonly shortcutsVisibilitySwitch: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.shortcutsVisibilityCheckbox = page.getByLabel("Display Shortcuts");
+        this.shortcutsVisibilitySwitch = page.getByLabel("Display Shortcuts");
     }
 
     /**
@@ -15,9 +15,9 @@ export class DevShortcutsSettingsPage {
      * @param isVisible - whether the shortcuts should be visible or not
      */
     async setShortcutsVisibility(isVisible: boolean) {
-        const isChecked = await this.shortcutsVisibilityCheckbox.isChecked();
+        const isChecked = await this.shortcutsVisibilitySwitch.isChecked();
         if (isChecked !== isVisible) {
-            await this.shortcutsVisibilityCheckbox.click();
+            await this.shortcutsVisibilitySwitch.click();
         }
     }
 }

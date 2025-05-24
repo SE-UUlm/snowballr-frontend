@@ -15,17 +15,17 @@ describe("ShortcutsVisibilitySettings", () => {
         expect(screen.queryByText("Shortcuts Visibility")).toBeInTheDocument();
         expect(screen.queryByText("Display Shortcuts")).toBeInTheDocument();
 
-        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+        expect(screen.getByRole("switch")).toBeInTheDocument();
     });
 
     test("When the checkbox is toggled, then the global shortcuts visibility state changes", () => {
         render(ShortcutsVisibilitySettings);
         expect(shortcuts.isVisible).toBe(true); // default to true
 
-        screen.getByRole("checkbox").click();
+        screen.getByRole("switch").click();
         expect(shortcuts.isVisible).toBe(false);
 
-        screen.getByRole("checkbox").click();
+        screen.getByRole("switch").click();
         expect(shortcuts.isVisible).toBe(true);
     });
 });

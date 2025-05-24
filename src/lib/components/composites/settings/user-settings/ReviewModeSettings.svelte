@@ -16,11 +16,11 @@ Usage:
 -->
 <SettingsSection sectionTitle="Review mode">
     <div class="items-top flex flex-row space-x-2">
-        <Switch id="review-mode-checkbox" bind:checked={reviewMode.isActivated} />
+        <Switch id="review-mode-switch" bind:checked={reviewMode.isActivated} />
         <div class="grid gap-1.5 pt-1 leading-none">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="review-mode-checkbox"
+                for="review-mode-switch"
             >
                 Activate the "Review" mode
             </Label>
