@@ -13,9 +13,10 @@
     interface Props {
         projectId: string;
         loadingProject: Promise<Project>;
+        slrSettingsLocked?: boolean;
     }
 
-    const { projectId, loadingProject }: Props = $props();
+    const { projectId, loadingProject, slrSettingsLocked = false }: Props = $props();
 
     // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
     let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
@@ -25,6 +26,8 @@
     let title = $state("");
     let dialogDescription = $state("");
     let pendingActionConfirmCallback: (() => void) | null = $state(null);
+
+    const disabled = $derived(slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus);
 
     async function toggleIsMaybeAsDecisionSettingStatus() {
         isUpdatingMaybeAsDecisionSettingStatus = true;
@@ -48,7 +51,7 @@
                     })
                     .response.then(() => {
                         maybeAsDecision.isActivated = isChecked;
-                        toast("Successfully updated project settings.");
+                        toast.success("Successfully updated project settings.");
                     })
                     .catch((error) => {
                         isChecked = !isChecked; // Revert the switch state on error
@@ -144,7 +147,7 @@ Usage:
             id="maybe-decision-switch"
             checked={isChecked}
             onclick={handleSwitchClick}
-            disabled={isUpdatingMaybeAsDecisionSettingStatus}
+            {disabled}
         />
         <div class="grid gap-1.5 pt-1 leading-none">
             <Label

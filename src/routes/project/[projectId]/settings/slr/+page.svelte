@@ -1,11 +1,14 @@
 <script lang="ts">
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
-    import { MemberRole } from "$lib/model/api/project.js";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import { MemberRole, ProjectStatus } from "$lib/model/api/project.js";
     import { resource } from "$lib/resource.svelte.js";
+    import { onMount } from "svelte";
 
     let { data } = $props();
     const { user, projectId, loadingProject, loadingMemebers } = data;
+    let slrSettingsLocked = $state(false);
 
     const isCurrentUserAdmin = resource<boolean, boolean>(
         loadingMemebers.then(
@@ -18,6 +21,22 @@
             resourceName: "isCurrentUserAdmin",
         },
     );
+
+    onMount(() => {
+        async function checkIfSLRSettingsAreLocked() {
+            return await loadingProject
+                .then((project) => {
+                    return project.status !== ProjectStatus.ACTIVE;
+                })
+                .catch(() => {
+                    return false; // If loading fails, assume settings are not locked
+                });
+        }
+
+        checkIfSLRSettingsAreLocked().then((locked) => {
+            slrSettingsLocked = locked;
+        });
+    });
 </script>
 
 <svelte:head>
@@ -31,7 +50,14 @@
 </svelte:head>
 
 <ProjectSettingsLayout {projectId} selectedTab="slr">
+    {#if slrSettingsLocked}
+        <Alert
+            variant="warning"
+            title="SLR Settings are Locked"
+            details="To ensure consistency, SLR settings can’t be changed after a review has been submitted."
+        />
+    {/if}
     {#if isCurrentUserAdmin.value}
-        <MaybeAsDecisionSetting {projectId} {loadingProject} />
+        <MaybeAsDecisionSetting {projectId} {loadingProject} {slrSettingsLocked} />
     {/if}
 </ProjectSettingsLayout>
