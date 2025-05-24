@@ -2,6 +2,7 @@ import { UserRole, UserStatus } from "$lib/model/api/user";
 import { MemberRole, PaperDecision, ProjectStatus } from "$lib/model/api/project";
 import { ReviewDecision } from "$lib/model/api/review";
 import { CriterionCategory } from "$lib/model/api/criterion";
+import { createProjectSettings } from "./model-builder";
 
 export const Users = {
     johnDoe: {
@@ -95,13 +96,21 @@ export const Authors = {
 };
 
 export const Projects = {
-    demoProject: {
+    demoProjectActive: {
         id: "0",
         name: "Demo Project",
         status: ProjectStatus.ACTIVE,
         currentStage: 0n,
         maxStage: 1n,
-        settings: undefined,
+        settings: createProjectSettings(),
+    },
+    demoProjectActiveLocked: {
+        id: "2",
+        name: "Demo Project (locked)",
+        status: ProjectStatus.ACTIVE_LOCKED,
+        currentStage: 0n,
+        maxStage: 1n,
+        settings: createProjectSettings(),
     },
     demoProjectArchived: {
         id: "1",
@@ -109,7 +118,7 @@ export const Projects = {
         status: ProjectStatus.ARCHIVED,
         currentStage: 3n,
         maxStage: 3n,
-        settings: undefined,
+        settings: createProjectSettings(),
     },
 };
 

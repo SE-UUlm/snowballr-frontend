@@ -11,8 +11,8 @@ describe("ProjectNameSettings", () => {
         render(ProjectNameSettings, {
             target: document.body,
             props: {
-                projectId: Projects.demoProject.id,
-                loadingProject: Promise.resolve(Projects.demoProject),
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
         });
 
@@ -22,7 +22,7 @@ describe("ProjectNameSettings", () => {
         const projectRenameInput = screen.getByLabelText("Project Name");
         expect(projectRenameInput).toBeInTheDocument();
         await waitFor(() => {
-            expect(projectRenameInput).toHaveValue(Projects.demoProject.name);
+            expect(projectRenameInput).toHaveValue(Projects.demoProjectActive.name);
         });
 
         const renameButton = screen.getByRole("button", { name: "Rename" });
@@ -37,8 +37,8 @@ describe("ProjectNameSettings", () => {
         render(ProjectNameSettings, {
             target: document.body,
             props: {
-                projectId: Projects.demoProject.id,
-                loadingProject: Promise.resolve(Projects.demoProject),
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
         });
 
@@ -61,7 +61,7 @@ describe("ProjectNameSettings", () => {
             expect(projectRenameInput).toBeEnabled();
         });
         await userEvent.clear(projectRenameInput);
-        await userEvent.type(projectRenameInput, Projects.demoProject.name);
+        await userEvent.type(projectRenameInput, Projects.demoProjectActive.name);
         await userEvent.click(renameButton);
 
         expect(mockUpdateProject).not.toHaveBeenCalled();
@@ -81,8 +81,8 @@ describe("ProjectNameSettings", () => {
         const mockCall = mockApiCall("updateProject", createProject({ name: "New Project Name" }));
         render(ProjectNameSettings, {
             props: {
-                projectId: Projects.demoProject.id,
-                loadingProject: Promise.resolve(Projects.demoProject),
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
         });
 
@@ -102,7 +102,7 @@ describe("ProjectNameSettings", () => {
         const failedPromise = Promise.reject(new Error("Error while loading project"));
         render(ProjectNameSettings, {
             props: {
-                projectId: Projects.demoProject.id,
+                projectId: Projects.demoProjectActive.id,
                 loadingProject: failedPromise,
             },
         });
@@ -123,8 +123,8 @@ describe("ProjectNameSettings", () => {
         mockFailedApiCall("updateProject");
         render(ProjectNameSettings, {
             props: {
-                projectId: Projects.demoProject.id,
-                loadingProject: Promise.resolve(Projects.demoProject),
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
         });
 
@@ -153,8 +153,8 @@ describe("ProjectNameSettings", () => {
     test("When the project is loading, then the input placeholder is 'Loading'", async () => {
         render(ProjectNameSettings, {
             props: {
-                projectId: Projects.demoProject.id,
-                loadingProject: loading(Projects.demoProject, 5000),
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: loading(Projects.demoProjectActive, 5000),
             },
         });
 

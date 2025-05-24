@@ -33,7 +33,7 @@ export function createAuthor(author: Partial<Author> = {}): Author {
 
 export function createProject(project: Partial<Project> = {}): Project {
     return {
-        ...Projects.demoProject,
+        ...Projects.demoProjectActive,
         ...project,
     };
 }
@@ -110,7 +110,7 @@ export function createNonProjectPaperViewProps(
 
 export function createProjectSettings(props: Partial<Project_Settings> = {}): Project_Settings {
     return {
-        reviewMaybeAllowed: true,
+        reviewMaybeAllowed: false,
         similarityThreshold: 0.5,
         fetcherApis: [],
         snowballingType: SnowballingType.BOTH,
