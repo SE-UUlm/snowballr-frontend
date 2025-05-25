@@ -3,7 +3,7 @@
     import type { CriterionWithReviews } from "$lib/model/general";
     import type { User } from "$lib/model/api/user";
     import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
-    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
+    import NamedList from "../list/NamedList.svelte";
 
     interface Props {
         listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";
@@ -20,6 +20,10 @@
         numberOfSkeletons = 2,
         emptyHint,
     }: Props = $props();
+
+    const items = Promise.all([loadingReviewers, loadingCriteria]).then(([reviewers, criteria]) =>
+        criteria.map((criterion) => ({ criterion, reviewers })),
+    );
 </script>
 
 <!--
@@ -33,23 +37,20 @@ Usage:
     <CriteriaList listTitle="Hard Exclusion" {reviewers} {criteria} />
 ```
 -->
-<section class="flex flex-col gap-5">
-    <h2>{listTitle}</h2>
-    <ul class="flex flex-col gap-4 pl-2">
-        {#await Promise.all([loadingReviewers, loadingCriteria])}
-            {#each { length: numberOfSkeletons }, i}
-                <CriterionListEntrySkeleton numberOfReviews={i % 2} />
-            {/each}
-        {:then [reviewers, criteria]}
-            {#each criteria as criterion (criterion.id)}
-                <CriterionListEntry {criterion} {reviewers} />
-            {/each}
-            {#if criteria.length === 0}
-                <span class="text-hint italic">{emptyHint}</span>
-            {/if}
-        {:catch error}
-            {console.error(`Couldn't load criteria: ${error}`)}
-            <ErrorIndicator errorMessage="Couldn't load criteria" />
-        {/await}
-    </ul>
+<section class="flex flex-col gap-5 overflow-hidden">
+    <NamedList
+        {emptyHint}
+        errorHint="Couldn't load criteria"
+        {items}
+        keySelector={(item) => item.criterion.id}
+        listName={listTitle}
+        {numberOfSkeletons}
+    >
+        {#snippet listItemComponent(item)}
+            <CriterionListEntry criterion={item.criterion} reviewers={item.reviewers} />
+        {/snippet}
+        {#snippet listItemSkeleton(i)}
+            <CriterionListEntrySkeleton numberOfReviews={i % 2} />
+        {/snippet}
+    </NamedList>
 </section>

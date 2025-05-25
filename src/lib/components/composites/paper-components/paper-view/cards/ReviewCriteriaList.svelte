@@ -22,7 +22,7 @@
     );
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-[1_1_0] flex-col gap-5 overflow-hidden">
     <CriteriaList
         criteria={hardExclusions}
         emptyHint="No hard exclusion criteria."
