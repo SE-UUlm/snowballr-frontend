@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Tooltip from "./utils/Tooltip.svelte";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
     import { Download } from "lucide-svelte";
 

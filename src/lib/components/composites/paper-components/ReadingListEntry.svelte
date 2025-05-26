@@ -2,8 +2,8 @@
     import { goto } from "$app/navigation";
     import { handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
-    import DownloadButton from "$lib/components/composites/DownloadButton.svelte";
+    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
+    import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
     import type { Paper } from "$lib/model/api/paper";
 
     interface ReadingListEntryProps {

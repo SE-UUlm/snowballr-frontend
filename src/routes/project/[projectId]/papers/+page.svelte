@@ -19,7 +19,7 @@
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import { ExternalLink } from "lucide-svelte";
-    import PaperBookmarkButton from "$lib/components/composites/PaperBookmarkButton.svelte";
+    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
     import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
