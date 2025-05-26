@@ -68,7 +68,7 @@
         "prettier-plugin-tailwindcss": "^0.6.11",
         "protobuf-fieldmask": "^2.0.0",
         "svelte": "^5.25.3",
-        "svelte-check": "^4.1.7",
+        "svelte-check": "^4.2.1",
         "svelte-sonner": "^0.3.28",
         "sveltekit-lighthouse-runner": "^1.0.0",
         "tailwind-merge": "^3.3.0",
