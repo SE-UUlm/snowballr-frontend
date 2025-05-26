@@ -24,6 +24,15 @@
     import { fly } from "svelte/transition";
     import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
     import type { ProjectPaperFilter } from "$lib/model/general";
+    import {
+        getFilterFromURL,
+        getSearchTextFromURL,
+        updateFiltersInURL,
+        updateSearchTextInURL,
+    } from "$lib/utils/search-parameters";
+    import { SvelteURLSearchParams } from "svelte/reactivity";
+    import { goto } from "$app/navigation";
+    import { page } from "$app/state";
 
     let { data } = $props();
     const {
@@ -42,8 +51,10 @@
 
     const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
 
+    let searchText = $state(getSearchTextFromURL());
+    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
+
     let showFilters = $state(false);
-    let searchText = $state("");
 
     const emptyFilters: ProjectPaperFilter = {
         stages: [],
@@ -53,7 +64,33 @@
         decisions: [],
         criteria: [],
     };
-    let papersFilters = $state<ProjectPaperFilter>(emptyFilters);
+
+    let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
+
+    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+    $effect(() => {
+        if (searchParameters.toString() !== window.location.search.slice(1)) {
+            if (debounceTimeout) clearTimeout(debounceTimeout);
+
+            debounceTimeout = setTimeout(() => {
+                goto(`?${searchParameters.toString()}`, { replaceState: true, keepFocus: true });
+            }, 250);
+        }
+    });
+
+    $effect(() => {
+        searchParameters = updateFiltersInURL(
+            {
+                stages: papersFilters.stages,
+                reviewers: papersFilters.reviewers,
+                publishers: papersFilters.publishers,
+                years: papersFilters.years,
+                decisions: papersFilters.decisions,
+                criteria: papersFilters.criteria,
+            },
+            searchParameters,
+        );
+    });
 </script>
 
 <svelte:head>
@@ -71,7 +108,10 @@
         <div class="flex h-fit w-full flex-col gap-2.5">
             <div class="flex gap-[2%]">
                 <SearchBar
-                    onSearch={(text) => (searchText = text)}
+                    onSearch={(text) => {
+                        searchText = text;
+                        searchParameters = updateSearchTextInURL(searchText, searchParameters);
+                    }}
                     placeholderText="Search paper or start with '#' to only search by id"
                     timeoutInMs={0}
                 />
