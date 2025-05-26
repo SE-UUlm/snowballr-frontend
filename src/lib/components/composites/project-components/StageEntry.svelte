@@ -67,7 +67,7 @@ Usage:
                         {projectId}
                     />
                 {/each}
-            {:else if searchText && totalPaperCount > 0}
+            {:else if totalPaperCount > 0}
                 <span class="text-hint italic">
                     No papers match your search or filter criteria in this stage.
                 </span>
