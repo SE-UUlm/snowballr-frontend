@@ -351,4 +351,32 @@ test.describe("View all papers of a project", () => {
         await projectPapersPage.expectStageCounts(0, `(${NUM_PAPERS_PER_STAGE} papers)`);
         await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
     });
+
+    test("When the user reloads the page, the search text is restored from the URL.", async ({
+        projectPapersPage,
+        page,
+    }) => {
+        await projectPapersPage.search("Hello world");
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return params.has("searchText") && params.get("searchText") === "Hello world";
+        });
+
+        await projectPapersPage.applyFilter(0);
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return (
+                params.has("searchText") &&
+                params.get("searchText") === "Hello world" &&
+                params.has("stages") &&
+                params.get("stages") === "0"
+            );
+        });
+
+        await page.reload();
+        await projectPapersPage.showFiltersButton.click();
+
+        await expect(projectPapersPage.searchBarInput).toHaveValue("Hello world");
+        await expect(projectPapersPage.stageFilter).toHaveText("Stages: Stage 0 (1)");
+    });
 });
