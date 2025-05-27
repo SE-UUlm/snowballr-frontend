@@ -59,7 +59,7 @@
         "globals": "^16.0.0",
         "jsdom": "^26.1.0",
         "license-checker": "^25.0.1",
-        "lucide-svelte": "^0.503.0",
+        "lucide-svelte": "^0.511.0",
         "markdownlint-cli": "^0.45.0",
         "mode-watcher": "^1.0.6",
         "postcss": "^8.5.3",
