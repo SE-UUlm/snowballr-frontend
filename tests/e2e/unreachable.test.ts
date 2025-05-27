@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { test as mockBackendtest } from "./fixtures/shared-fixture";
+import { test as mockBackendtest } from "./utils/fixtures/shared-fixture";
 
 test.describe("Backend Unreachable", () => {
     test("When the backend is unreachable, then an alert dialog is displayed", async ({ page }) => {
