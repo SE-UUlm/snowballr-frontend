@@ -22,7 +22,7 @@
 
     // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
     let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
-    let isChecked = $derived(maybeAsDecision.isActivated);
+    let checked = $derived(maybeAsDecision.isActivated);
 
     let isConfirmDialogOpen = $state(false);
     let title = $state("");
@@ -33,13 +33,13 @@
 
     let updateSLRSettingsError: ApiError | undefined = $state(undefined);
 
-    async function toggleIsMaybeAsDecisionSettingStatus() {
+    async function toggleIsMaybeAsDecisionSettingStatus(targetCheckedState: boolean) {
         isUpdatingMaybeAsDecisionSettingStatus = true;
 
         await loadingProject
             .then((project) => {
                 const projectSettings = project.settings ?? Project_Settings.create();
-                projectSettings.reviewMaybeAllowed = isChecked;
+                projectSettings.reviewMaybeAllowed = targetCheckedState;
                 project.settings = projectSettings;
 
                 const maskPaths = generateFieldMask(project).filter(
@@ -54,23 +54,21 @@
                         },
                     })
                     .response.then(() => {
-                        maybeAsDecision.isActivated = isChecked;
+                        maybeAsDecision.isActivated = targetCheckedState;
                         toast.success("Successfully updated project settings.");
                     })
                     .catch((error) => {
-                        isChecked = !isChecked; // Revert the switch state on error
                         console.error("Error updating project settings:", error);
                         updateSLRSettingsError = {
                             errorTitle: "Failed to update project settings",
                         };
-                    })
-                    .finally(() => {
-                        isUpdatingMaybeAsDecisionSettingStatus = false;
                     });
             })
             .catch((error) => {
                 console.error("Error fetching project settings:", error);
                 toast.error("Failed to fetch project settings.");
+            })
+            .finally(() => {
                 isUpdatingMaybeAsDecisionSettingStatus = false;
             });
     }
@@ -83,7 +81,7 @@
             return;
         }
 
-        const targetCheckedState = !isChecked;
+        const targetCheckedState = !checked;
 
         if (targetCheckedState) {
             title = "Enable 'Maybe' as Decision?";
@@ -94,8 +92,7 @@
         }
 
         pendingActionConfirmCallback = () => {
-            isChecked = targetCheckedState;
-            toggleIsMaybeAsDecisionSettingStatus();
+            toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
             isConfirmDialogOpen = false;
         };
 
@@ -118,22 +115,20 @@
             return await backendService
                 .getProjectById({ id })
                 .response.then((response) => {
-                    maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? true;
-                    return maybeAsDecision.isActivated;
+                    maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
                 })
                 .catch((error) => {
                     console.error("Error fetching project settings:", error);
                     updateSLRSettingsError = {
                         errorTitle: "Failed to update project settings",
                     };
-                    return true; // Default to true if there's an error
+                    maybeAsDecision.isActivated = false;
+                })
+                .finally(() => {
+                    isUpdatingMaybeAsDecisionSettingStatus = false;
                 });
         }
-
-        checkInitialMaybeAsDecisionSettingStatus(projectId).then((status) => {
-            isChecked = status;
-            isUpdatingMaybeAsDecisionSettingStatus = false;
-        });
+        checkInitialMaybeAsDecisionSettingStatus(projectId);
     });
 </script>
 
@@ -150,12 +145,7 @@ Usage:
 -->
 <SettingsSection sectionTitle="Maybe as Decision">
     <div class="items-top flex flex-row space-x-2">
-        <Switch
-            id="maybe-decision-switch"
-            checked={isChecked}
-            onclick={handleSwitchClick}
-            {disabled}
-        />
+        <Switch id="maybe-decision-switch" {checked} onclick={handleSwitchClick} {disabled} />
         <div class="grid gap-1.5 pt-1 leading-none">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
