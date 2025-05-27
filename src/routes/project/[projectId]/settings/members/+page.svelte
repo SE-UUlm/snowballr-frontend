@@ -13,6 +13,7 @@
     import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { UserContextKey } from "$lib/global-context/userContext";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = data;
@@ -33,17 +34,20 @@
             resourceName: "isCurrentUserAdmin",
         },
     );
+    let reloadingMembers = $state(false);
 
     async function reloadMembers(errorMessage: string) {
+        reloadingMembers = true;
         // First fetch the members again and only then replace them, so that no loading state is shown
         await loadMembers({ id: projectId })
             .then((members) => {
                 loadingMembersLocal = Promise.resolve(members);
             })
             .catch((error) => {
-                toast(errorMessage);
+                toast.error(errorMessage);
                 console.error(`Couldn't reload members: ${error}`);
             });
+        reloadingMembers = false;
     }
 
     async function onUsersInvited(invitedUsers: string[]) {
@@ -51,9 +55,10 @@
         const memberEmails = (await loadingMembersLocal).map((member) => member.user?.email);
         const filteredInvitedUsers = invitedUsers.filter((user) => !memberEmails.includes(user));
 
-        let message = "";
+        let toastFunc;
         if (filteredInvitedUsers.length === 0) {
-            message = `${pluralize(invitedUsers, "User is", "Users are")} already invited`;
+            toastFunc = () =>
+                toast.info(`${pluralize(invitedUsers, "User is", "Users are")} already invited`);
         } else {
             // Show user name when it's only one, otherwise show number of invited users
             const messageContent = pluralize(
@@ -61,19 +66,25 @@
                 filteredInvitedUsers[0],
                 `${filteredInvitedUsers.length} users`,
             );
-            message = `Invited ${messageContent} to the project`;
+            toastFunc = () => toast.success(`Invited ${messageContent} to the project`);
         }
 
         await reloadMembers(
             `Couldn't invite ${pluralize(filteredInvitedUsers, "user", "users")} to the project`,
         );
-        toast(message);
+        toastFunc();
     }
 
     async function onMemberRemoved(member: Project_Member) {
         const name = getName(member.user!);
         await reloadMembers(`Couldn't remove ${name} from project.`);
-        toast(`Removed ${name} from the project`);
+        toast.success(`Removed ${name} from the project`);
+    }
+
+    async function onMemberPromoted(member: Project_Member) {
+        const name = getName(member.user!);
+        await reloadMembers(`Couldn't promote ${name} to an Admin`);
+        toast.success(`Promoted ${name} to an Admin`);
     }
 </script>
 
@@ -91,7 +102,18 @@
     {#if isCurrentUserAdmin.value}
         <div class="flex flex-row items-center justify-between">
             <h1>Manage Access</h1>
-            <InviteUsersDialog loadingMembers={loadingMembersLocal} {onUsersInvited} {projectId} />
+            {#if reloadingMembers}
+                <div class="flex flex-row gap-3 text-lg text-gray-400">
+                    <LoaderCircle class="animate-spin" />
+                    <span>Reloading Members</span>
+                </div>
+            {/if}
+            <InviteUsersDialog
+                disabled={reloadingMembers}
+                loadingMembers={loadingMembersLocal}
+                {onUsersInvited}
+                {projectId}
+            />
         </div>
     {:else}
         <h1>Members</h1>
@@ -107,10 +129,11 @@
         {:then members}
             {#each members as member, i (member.user!.id)}
                 <ProjectMemberListEntry
+                    disabled={reloadingMembers}
                     isAdminView={isCurrentUserAdmin.value}
                     isCurrentUser={member.user!.id === user.id}
-                    isInvitationPending={member.isInvitationPending}
                     {member}
+                    {onMemberPromoted}
                     {onMemberRemoved}
                     {projectId}
                 />

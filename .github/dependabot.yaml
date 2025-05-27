@@ -8,7 +8,7 @@ updates:
     - package-ecosystem: "npm"
       directory: "/"
       schedule:
-          interval: "weekly"
+          interval: "monthly"
       groups:
           vitest:
               patterns:
@@ -20,4 +20,4 @@ updates:
     - package-ecosystem: "github-actions"
       directory: "/"
       schedule:
-          interval: "weekly"
+          interval: "monthly"

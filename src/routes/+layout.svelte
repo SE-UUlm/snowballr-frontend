@@ -33,7 +33,7 @@
 </script>
 
 <ModeWatcher defaultMode="light" />
-<Toaster />
+<Toaster richColors />
 
 <AlertDialog.Root open={data.user === undefined}>
     <AlertDialog.Content>

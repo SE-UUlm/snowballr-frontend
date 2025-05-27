@@ -1,30 +1,29 @@
 <script lang="ts">
-    import Button from "$lib/components/primitives/button/button.svelte";
-    import { MemberRole, type Project_Member } from "$lib/model/api/project";
+    import { type Project_Member } from "$lib/model/api/project";
     import { getName } from "$lib/utils/common-helper";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/members/helper";
+    import PromoteMemberDialog from "./PromoteMemberDialog.svelte";
     import RemoveMemberDialog from "./RemoveMemberDialog.svelte";
 
     interface Props {
         projectId: string;
-        member: Project_Member;
+        member: MemberInfo;
         isCurrentUser: boolean;
-        isInvitationPending: boolean;
         isAdminView: boolean;
         onMemberRemoved?: (member: Project_Member) => void;
+        onMemberPromoted?: (member: Project_Member) => void;
+        disabled?: boolean;
     }
 
     let {
         projectId,
         member,
         isCurrentUser,
-        isInvitationPending,
         isAdminView,
         onMemberRemoved = undefined,
+        onMemberPromoted = undefined,
+        disabled = false,
     }: Props = $props();
-
-    const role = member.role === MemberRole.ADMIN ? "Admin" : "Member";
-    const isRoleReadonly = $derived(isCurrentUser || !isAdminView);
 </script>
 
 <!--
@@ -40,11 +39,12 @@ Usage:
     <ul>
         {#each members as member}
             <ProjectMemberListEntry
-                {projectId}
-                isAdminView={isCurrentUserAdmin}
-                isCurrentUser={member.user!.id === user.id}
-                isInvitationPending={false}
+                {isAdminView}
+                isCurrentUser={member.user!.id === currentUser.id}
                 {member}
+                {onMemberPromoted}
+                {onMemberRemoved}
+                {projectId}
             />
         {/each}
     </ul>
@@ -61,23 +61,19 @@ Usage:
         <span class="text-hint text-primary">{member.user!.email}</span>
     </div>
     <div class="flex flex-row items-center gap-2.5">
-        {#if isInvitationPending}
+        {#if member.isInvitationPending}
             <span class="text-hint">Invitation Pending ...</span>
         {/if}
-        <Button
-            class={cn(
-                "w-[7.7rem]",
-                isRoleReadonly
-                    ? "hover:cursor-default hover:bg-transparent"
-                    : "border border-gray-300 bg-gray-100 hover:bg-gray-200",
-            )}
-            variant={isRoleReadonly ? "ghost" : "secondary"}
-        >
-            <!-- Take maximum space so that text is left aligned -->
-            <span class="flex w-full">Role: {role}</span>
-        </Button>
+        <PromoteMemberDialog
+            {disabled}
+            {isAdminView}
+            {isCurrentUser}
+            {member}
+            {onMemberPromoted}
+            {projectId}
+        />
         {#if isAdminView}
-            <RemoveMemberDialog {isCurrentUser} {member} {onMemberRemoved} {projectId} />
+            <RemoveMemberDialog {disabled} {isCurrentUser} {member} {onMemberRemoved} {projectId} />
         {/if}
     </div>
 </li>
