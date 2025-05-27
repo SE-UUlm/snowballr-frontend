@@ -1,7 +1,6 @@
 <script lang="ts">
     import Input from "$lib/components/composites/input/Input.svelte";
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
-    import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
@@ -13,6 +12,8 @@
     import { Nothing } from "$lib/model/api/base";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -21,7 +22,8 @@
 
     let registrationError: ApiError | undefined = $state(undefined);
 
-    let isLoading = $state(true);
+    let isLoadingAuthStatus = $state(true);
+    const loading = $state({ value: false });
 
     onMount(async () => {
         try {
@@ -34,11 +36,12 @@
             console.error("There was an error acquiring the authentication status.");
         }
 
-        isLoading = false;
+        isLoadingAuthStatus = false;
     });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
+        registrationError = undefined;
 
         const isFirstNameValid = firstNameInput.validate();
         const isLastNameValid = lastNameInput.validate();
@@ -68,9 +71,7 @@
 
         await backendService
             .register(userData)
-            .then(() => {
-                goto("/");
-            })
+            .then(async () => await goto("/"))
             .catch((error) => {
                 if (error.code === StatusCodes.ALREADY_EXISTS) {
                     registrationError = {
@@ -92,7 +93,7 @@
 <Card.Root
     class={cn(
         "flex w-full max-w-xl flex-col border-slate-500 shadow-lg",
-        isLoading ? "opacity-0" : "",
+        isLoadingAuthStatus ? "opacity-0" : "",
     )}
 >
     <Card.Header class="flex w-full flex-col">
@@ -100,11 +101,15 @@
         <Card.Description>Enter your information to create an account</Card.Description>
     </Card.Header>
     <Card.Content class="flex w-full flex-col">
-        <form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+        <form
+            class="flex flex-col gap-5"
+            onsubmit={(args) => loadingWrapper(loading, handleSubmit, args)}
+        >
             <div class="flex w-full flex-row gap-5">
                 <Input
                     bind:this={firstNameInput}
                     class="w-full"
+                    disabled={isLoadingAuthStatus || loading.value}
                     errorMessagePrefix="First name"
                     inputId="first-name-input"
                     label="First Name"
@@ -116,6 +121,7 @@
                 <Input
                     bind:this={lastNameInput}
                     class="w-full"
+                    disabled={isLoadingAuthStatus || loading.value}
                     errorMessagePrefix="Last name"
                     inputId="last-name-input"
                     label="Last Name"
@@ -128,6 +134,7 @@
             <Input
                 bind:this={emailInput}
                 class="w-full"
+                disabled={isLoadingAuthStatus || loading.value}
                 errorMessagePrefix="Email must have"
                 inputId="email-input"
                 label="Email"
@@ -136,8 +143,18 @@
                 schema={Schema.email}
                 type="email"
             />
-            <PasswordInput bind:this={passwordInput} class="w-full" />
-            <Button class="w-full" type="submit">Create an account</Button>
+            <PasswordInput
+                bind:this={passwordInput}
+                class="w-full"
+                disabled={isLoadingAuthStatus || loading.value}
+            />
+            <LoadingButton
+                class="w-full"
+                label="Create an account"
+                loading={loading.value}
+                loadingLabel="Creating an account"
+                type="submit"
+            />
             {#if registrationError}
                 <Alert
                     details={registrationError.errorDetails}

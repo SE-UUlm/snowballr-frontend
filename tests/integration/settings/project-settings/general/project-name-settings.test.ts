@@ -44,8 +44,8 @@ describe("ProjectNameSettings", () => {
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
         await waitFor(() => {
-            expect(renameButton).toBeEnabled()
-            expect(projectRenameInput).toBeEnabled()
+            expect(renameButton).toBeEnabled();
+            expect(projectRenameInput).toBeEnabled();
         });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, " ");
@@ -56,8 +56,8 @@ describe("ProjectNameSettings", () => {
         ).toBeInTheDocument();
 
         await waitFor(() => {
-            expect(renameButton).toBeEnabled()
-            expect(projectRenameInput).toBeEnabled()
+            expect(renameButton).toBeEnabled();
+            expect(projectRenameInput).toBeEnabled();
         });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, Projects.demoProject.name);
@@ -83,8 +83,8 @@ describe("ProjectNameSettings", () => {
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
         await waitFor(() => {
-            expect(renameButton).toBeEnabled()
-            expect(projectRenameInput).toBeEnabled()
+            expect(renameButton).toBeEnabled();
+            expect(projectRenameInput).toBeEnabled();
         });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
@@ -119,8 +119,8 @@ describe("ProjectNameSettings", () => {
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
         await waitFor(() => {
-            expect(renameButton).toBeEnabled()
-            expect(projectRenameInput).toBeEnabled()
+            expect(renameButton).toBeEnabled();
+            expect(projectRenameInput).toBeEnabled();
         });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");

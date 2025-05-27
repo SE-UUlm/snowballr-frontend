@@ -12,7 +12,7 @@
     import { z } from "zod";
     import InputValidationCriterion from "./InputValidationCriterion.svelte";
 
-    type Props = WithElementRef<HTMLInputAttributes> & {
+    export type InputProps = WithElementRef<HTMLInputAttributes> & {
         inputId: string;
         label: string;
         placeholder?: string;
@@ -45,7 +45,7 @@
         value = $bindable(),
         class: className,
         ...restProps
-    }: Props = $props();
+    }: InputProps = $props();
 
     interface ValidationCriterion {
         code: string;
