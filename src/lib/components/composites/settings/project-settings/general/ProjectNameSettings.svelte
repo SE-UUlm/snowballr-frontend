@@ -1,7 +1,6 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import Input from "$lib/components/composites/input/Input.svelte";
-    import { Button } from "$lib/components/primitives/button";
     import { backendService } from "$lib/grpc-api";
     import { onMount } from "svelte";
     import { Project } from "$lib/model/api/project";
@@ -9,9 +8,10 @@
     import { generateFieldMask } from "protobuf-fieldmask";
     import type { ApiError } from "$lib/model/general";
     import { invalidate } from "$app/navigation";
-    import { LoaderCircle } from "lucide-svelte";
     import { toast } from "svelte-sonner";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import Alert, { type AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     interface Props {
         projectId: string;
@@ -24,26 +24,28 @@
 
     let projectNameInput: Input;
 
-    let updateProjectError: ApiError | undefined = $state(undefined);
+    let updateProjectError: (ApiError & { variant: AlertVariant }) | undefined = $state(undefined);
 
-    let loading = $state(true);
-    let showLoadingSpinner = $state(false);
+    let loadingProjectName = $state(false);
+    const loading = $state({ value: false });
 
     /**
      * Loading the project name on mount.
      */
     onMount(async () => {
-        loadingProject
+        loadingProjectName = true;
+        await loadingProject
             .then((project) => {
                 projectName = project.name;
-                loading = false;
             })
             .catch((error) => {
                 updateProjectError = {
                     errorTitle: "Something went wrong while loading the project name.",
+                    variant: "error",
                 };
                 console.error(`Couldn't load the project name: ${error}`);
             });
+        loadingProjectName = false;
     });
 
     /**
@@ -53,39 +55,47 @@
      * provided name.
      */
     async function handleSubmit(event: Event) {
-        updateProjectError = undefined;
-        loading = showLoadingSpinner = true;
         event.preventDefault();
-        const newProjectName: string = projectNameInput.getValue().trim();
-        const projectNameValid = projectNameInput.validate();
-        if (projectNameValid) {
-            const projectData: Partial<Project> = {
-                id: projectId,
-                name: newProjectName,
+        updateProjectError = undefined;
+
+        if (!projectNameInput.validate()) return;
+
+        const projectData: Partial<Project> = {
+            id: projectId,
+            name: projectNameInput.getValue(),
+        };
+
+        if (projectName === projectData.name) {
+            updateProjectError = {
+                errorTitle:
+                    "To successfully change the project's name, you must provide a new one that is different from the current one.",
+                variant: "warning",
             };
-            const fieldMask = generateFieldMask(projectData);
-            if (projectName === newProjectName) {
-                toast.info("Please enter a new project name.");
-            } else {
-                try {
-                    await backendService.updateProject({
-                        project: Project.create(projectData),
-                        mask: {
-                            paths: fieldMask,
-                        },
-                    }).response;
-                    projectName = newProjectName;
-                    toast.success("Successfully updated project name.");
-                    await invalidate("data:getProjectById");
-                } catch (error) {
-                    updateProjectError = {
-                        errorTitle: "Something went wrong while updating the project name.",
-                    };
-                    console.error(`Couldn't update project: ${error}`);
-                }
-            }
+            return;
         }
-        loading = showLoadingSpinner = false;
+
+        await backendService
+            .updateProject({
+                project: Project.create(projectData),
+                mask: {
+                    paths: generateFieldMask(projectData),
+                },
+            })
+            .response.then(async () => {
+                await invalidate("data:getProjectById");
+                toast.success("Successfully updated project name.");
+                projectName = projectData.name!;
+
+                // Make sure that the input field is not focused after submitting
+                (document.activeElement as HTMLElement)?.blur();
+            })
+            .catch((error) => {
+                updateProjectError = {
+                    errorTitle: "Something went wrong while updating the project name.",
+                    variant: "error",
+                };
+                console.error(`Couldn't update project: ${error}`);
+            });
     }
 </script>
 
@@ -101,38 +111,33 @@ Usage:
 <SettingsSection sectionTitle="General">
     <form
         id="project-update"
-        class="flex w-full max-w-xl flex-col items-center gap-2.5 md:h-fit md:max-w-xl md:flex-row md:items-start"
-        onsubmit={handleSubmit}
+        class="flex w-full max-w-100 flex-col items-center gap-2.5 md:h-fit md:max-w-150 md:flex-row md:items-start"
+        onsubmit={(args) => loadingWrapper(loading, handleSubmit, args)}
     >
         <Input
             bind:this={projectNameInput}
             class="h-full w-full"
-            disabled={loading}
+            disabled={loadingProjectName || loading.value}
             inputId="project-name-input"
             label="Project Name"
-            placeholder={loading ? "Loading" : "New Project Name"}
+            placeholder={loadingProjectName ? "Loading" : "New Project Name"}
             required
             schema={Schema.projectName}
             type="text"
             value={projectName}
         />
-        <Button
-            class="text-md w-full md:mt-5.5 md:w-42"
-            disabled={loading}
+        <LoadingButton
+            class="text-md w-full md:mt-5.5 md:w-44 lg:w-42 xl:w-40"
             form="project-update"
+            label="Rename"
+            loading={loading.value}
+            loadingLabel="Renaming"
             type="submit"
-        >
-            {#if showLoadingSpinner}
-                <LoaderCircle class="animate-spin" />
-                Renaming
-            {:else}
-                Rename
-            {/if}
-        </Button>
+        />
     </form>
     {#if updateProjectError}
-        <div class="max-w-xl">
-            <Alert title={updateProjectError.errorTitle} variant="error" />
+        <div class="max-w-100 md:max-w-150">
+            <Alert title={updateProjectError.errorTitle} variant={updateProjectError.variant} />
         </div>
     {/if}
 </SettingsSection>

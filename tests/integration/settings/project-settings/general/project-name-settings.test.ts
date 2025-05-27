@@ -4,7 +4,7 @@ import ProjectNameSettings from "$lib/components/composites/settings/project-set
 import { Projects } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { createProject } from "$tests/model-builder";
+import { createProject, loading } from "$tests/model-builder";
 
 describe("ProjectNameSettings", () => {
     test("When all props are provided, then it renders correctly, with two labels, one input field and a button", async () => {
@@ -43,16 +43,31 @@ describe("ProjectNameSettings", () => {
 
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-        await waitFor(() => expect(renameButton).toBeEnabled());
+        await waitFor(() => {
+            expect(renameButton).toBeEnabled()
+            expect(projectRenameInput).toBeEnabled()
+        });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, " ");
         await userEvent.click(renameButton);
         expect(mockUpdateProject).not.toHaveBeenCalled();
-        await waitFor(() => expect(renameButton).toBeEnabled());
+        expect(
+            screen.getByText("The project name cannot start or end with whitespace"),
+        ).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(renameButton).toBeEnabled()
+            expect(projectRenameInput).toBeEnabled()
+        });
         await userEvent.clear(projectRenameInput);
-        await userEvent.type(projectRenameInput, "Demo Project");
+        await userEvent.type(projectRenameInput, Projects.demoProject.name);
         await userEvent.click(renameButton);
         expect(mockUpdateProject).not.toHaveBeenCalled();
+        expect(
+            screen.getByText(
+                "To successfully change the project's name, you must provide a new one that is different from the current one.",
+            ),
+        ).toBeInTheDocument();
     });
 
     test("When the input field is filled with a differing name, then the button should change the name", async () => {
@@ -67,7 +82,10 @@ describe("ProjectNameSettings", () => {
 
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-        await waitFor(() => expect(renameButton).toBeEnabled());
+        await waitFor(() => {
+            expect(renameButton).toBeEnabled()
+            expect(projectRenameInput).toBeEnabled()
+        });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
         await userEvent.click(renameButton);
@@ -82,6 +100,7 @@ describe("ProjectNameSettings", () => {
                 loadingProject: failedPromise,
             },
         });
+
         const errorHeading = await screen.findByRole("heading", {
             name: "Something went wrong while loading the project name.",
         });
@@ -96,9 +115,13 @@ describe("ProjectNameSettings", () => {
                 loadingProject: Promise.resolve(Projects.demoProject),
             },
         });
+
         const projectRenameInput = screen.getByLabelText("Project Name");
         const renameButton = screen.getByRole("button", { name: "Rename" });
-        await waitFor(() => expect(renameButton).toBeEnabled());
+        await waitFor(() => {
+            expect(renameButton).toBeEnabled()
+            expect(projectRenameInput).toBeEnabled()
+        });
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
         await userEvent.click(renameButton);
@@ -107,5 +130,17 @@ describe("ProjectNameSettings", () => {
                 name: "Something went wrong while updating the project name.",
             }),
         ).toBeInTheDocument();
+    });
+
+    test("When the project is loading, then the input placeholder is 'Loading'", async () => {
+        render(ProjectNameSettings, {
+            props: {
+                projectId: Projects.demoProject.id,
+                loadingProject: loading(Projects.demoProject, 5000),
+            },
+        });
+
+        const projectRenameInput = screen.getByLabelText("Project Name");
+        expect(projectRenameInput as HTMLInputElement).toHaveAttribute("placeholder", "Loading");
     });
 });
