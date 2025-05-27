@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import type { User } from "$lib/model/api/user";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "$tests/integration/test-helper";
+import { Users } from "$tests/example-data";
 
 describe("ChangeNameSettings", () => {
     test("When the component is rendered, some text, two input fields and a button are shown in order to change the name", () => {
@@ -67,6 +68,22 @@ describe("ChangeNameSettings", () => {
         expect(mockCall).toHaveBeenCalled();
     });
 
+    test("When the button is clicked with the same name, then the api is not called", async () => {
+        const mockCall = mockApiCall("updateUser", Users.johnDoe);
+
+        render(ChangeNameSettings, { context: mockUserContext });
+
+        const renameButton = screen.getByRole("button", { name: "Rename" });
+
+        await userEvent.click(renameButton);
+        expect(mockCall).not.toHaveBeenCalled();
+        expect(
+            screen.getByRole("alert", {
+                name: "To successfully change your name, you must provide a new one that is different from your current one.",
+            }),
+        ).toBeInTheDocument();
+    });
+
     test("When a failed API call is made, then an error message should be shown", async () => {
         mockFailedApiCall("updateUser");
 
@@ -82,7 +99,7 @@ describe("ChangeNameSettings", () => {
         await userEvent.type(lastNameInput, "Fox");
         await userEvent.click(renameButton);
         expect(
-            screen.getByRole("heading", { name: "Something went wrong while updating user." }),
+            screen.getByRole("alert", { name: "Something went wrong while updating user." }),
         ).toBeInTheDocument();
     });
 });
