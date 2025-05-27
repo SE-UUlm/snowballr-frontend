@@ -112,6 +112,47 @@ describe("NamedListComponent", () => {
         expect(screen.queryAllByTestId("skeleton").length).toBe(5);
     });
 
+    test("When the list items should be grouped, then a group header is displayed before each group (header defaults to 'Unknown').", async () => {
+        type ComponentInterface = { name: string; group: string };
+
+        const componentData: Promise<ComponentInterface[]> = Promise.resolve([
+            { name: "Item A1", group: "groupA" },
+            { name: "Item A2", group: "groupA" },
+            { name: "Item B1", group: "groupB" },
+            { name: "Item C1", group: "groupC" },
+        ]);
+
+        const groupLabels = Promise.resolve({
+            groupA: "Group A",
+            groupB: "Group B",
+        });
+
+        render(NamedList, {
+            props: {
+                listName: "Grouped List",
+                items: componentData,
+                listItemComponent,
+                listItemSkeleton,
+                numberOfSkeletons: 5,
+                keySelector: deterministicKeySelector,
+                groupSelector: (item) => (item as ComponentInterface).group,
+                groupLabels,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const groupAHeader = screen.getByText("Group A");
+        const groupBHeader = screen.getByText("Group B");
+        const groupCHeader = screen.getByText("Unknown");
+
+        // Ensure group headers are rendered
+        expect(groupAHeader).toBeInTheDocument();
+        expect(groupBHeader).toBeInTheDocument();
+        // 'Item C1' has a group that is not known in the group labels, so the group header is "Unknown"
+        expect(groupCHeader).toBeInTheDocument();
+    });
+
     test("When the list was loaded successfully, but no items exist, then a hint is shown (if provided)", async () => {
         const componentData: Promise<string[]> = Promise.resolve(
             Array.from({ length: 0 }, (_, i) => `Hello world ${i}`),
