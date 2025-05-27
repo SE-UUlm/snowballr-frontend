@@ -59,7 +59,7 @@ Usage:
             </Dialog.Description>
         </Dialog.Header>
         {@render content?.()}
-        <Dialog.Footer>
+        <Dialog.Footer class="gap-2">
             <Dialog.Close class={buttonVariants({ variant: "outline" })}>Cancel</Dialog.Close>
             {@render footer?.()}
         </Dialog.Footer>
