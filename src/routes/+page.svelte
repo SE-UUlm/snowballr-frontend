@@ -20,6 +20,12 @@
     <section class="h-full w-full">
         <NamedList
             emptyHint="No open reviews."
+            groupLabels={projectsMetadata
+                .then((projects) =>
+                    Object.fromEntries(projects.map(({ project }) => [project.id, project.name])),
+                )
+                .catch(() => ({}))}
+            groupSelector={(review) => review.projectId!}
             items={openReviews}
             keySelector={(review) => review.paper.id}
             listName="Open Reviews"
