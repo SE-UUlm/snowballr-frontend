@@ -12,6 +12,7 @@
         isAdminView: boolean;
         onMemberRemoved?: (member: Project_Member) => void;
         onMemberPromoted?: (member: Project_Member) => void;
+        disabled?: boolean;
     }
 
     let {
@@ -21,6 +22,7 @@
         isAdminView,
         onMemberRemoved = undefined,
         onMemberPromoted = undefined,
+        disabled = false,
     }: Props = $props();
 </script>
 
@@ -63,6 +65,7 @@ Usage:
             <span class="text-hint">Invitation Pending ...</span>
         {/if}
         <PromoteMemberDialog
+            {disabled}
             {isAdminView}
             {isCurrentUser}
             {member}
@@ -70,7 +73,7 @@ Usage:
             {projectId}
         />
         {#if isAdminView}
-            <RemoveMemberDialog {isCurrentUser} {member} {onMemberRemoved} {projectId} />
+            <RemoveMemberDialog {disabled} {isCurrentUser} {member} {onMemberRemoved} {projectId} />
         {/if}
     </div>
 </li>

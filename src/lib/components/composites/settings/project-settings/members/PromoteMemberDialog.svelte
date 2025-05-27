@@ -13,9 +13,17 @@
         isCurrentUser: boolean;
         isAdminView: boolean;
         onMemberPromoted?: (member: Project_Member) => void;
+        disabled?: boolean;
     }
 
-    let { projectId, member, isCurrentUser, isAdminView, onMemberPromoted }: Props = $props();
+    let {
+        projectId,
+        member,
+        isCurrentUser,
+        isAdminView,
+        onMemberPromoted,
+        disabled = false,
+    }: Props = $props();
 
     const memberName = getName(member.user!);
     let role = $derived(member.role === MemberRole.ADMIN ? "Admin" : "Member");
@@ -76,11 +84,13 @@ Usage:
     title={`Promote ${memberName} to a Project Admin?`}
     triggerProps={{
         class: cn(
-            "w-[7.7rem] disabled:opacity-100! select-auto",
+            "w-[7.7rem] select-auto",
             buttonVariants({ variant: isRoleReadonly ? "ghost" : "destructiveSubtle" }),
-            isRoleReadonly ? "hover:bg-transparent hover:cursor-default" : "text-primary",
+            isRoleReadonly
+                ? "hover:bg-transparent hover:cursor-default disabled:opacity-100!"
+                : "text-primary",
         ),
-        disabled: isRoleReadonly,
+        disabled: isRoleReadonly || disabled,
         "aria-label": `Promote member ${member.user!.email}`,
     }}
     bind:loading

@@ -11,14 +11,21 @@
         member: Project_Member;
         isCurrentUser: boolean;
         onMemberRemoved?: (member: Project_Member) => void;
+        disabled?: boolean;
     }
 
-    let { projectId, member, isCurrentUser, onMemberRemoved = undefined }: Props = $props();
+    let {
+        projectId,
+        member,
+        isCurrentUser,
+        onMemberRemoved = undefined,
+        disabled: disabledProp = false,
+    }: Props = $props();
 
     const memberName = getName(member.user!);
     // Make isDisabled reactive
     // When we update the members list in the members settings page, this wouldn't get updated otherwise
-    let isDisabled = $derived(isCurrentUser || member.role === MemberRole.ADMIN);
+    let disabled = $derived(isCurrentUser || member.role === MemberRole.ADMIN || disabledProp);
     let loading = $state(false);
     let error = $state<unknown>(undefined);
     let open = $state(false);
@@ -61,7 +68,7 @@ Usage:
     errorText="Couldn't remove member"
     title={`Remove ${memberName} From This Project`}
     triggerProps={{
-        disabled: isDisabled,
+        disabled,
         class: buttonVariants({ variant: "destructiveSubtle", size: "icon" }),
         "aria-label": `Remove member ${member.user!.email}`,
     }}

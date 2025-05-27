@@ -108,7 +108,12 @@
                     <span>Reloading Members</span>
                 </div>
             {/if}
-            <InviteUsersDialog loadingMembers={loadingMembersLocal} {onUsersInvited} {projectId} />
+            <InviteUsersDialog
+                disabled={reloadingMembers}
+                loadingMembers={loadingMembersLocal}
+                {onUsersInvited}
+                {projectId}
+            />
         </div>
     {:else}
         <h1>Members</h1>
@@ -124,6 +129,7 @@
         {:then members}
             {#each members as member, i (member.user!.id)}
                 <ProjectMemberListEntry
+                    disabled={reloadingMembers}
                     isAdminView={isCurrentUserAdmin.value}
                     isCurrentUser={member.user!.id === user.id}
                     {member}

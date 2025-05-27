@@ -16,9 +16,15 @@
         projectId: string;
         loadingMembers: Promise<Project_Member[]>;
         onUsersInvited?: (invitedUsers: string[]) => void;
+        disabled?: boolean;
     }
 
-    let { projectId, loadingMembers, onUsersInvited = undefined }: Props = $props();
+    let {
+        projectId,
+        loadingMembers,
+        onUsersInvited = undefined,
+        disabled = false,
+    }: Props = $props();
 
     const user = getContext<() => User>(UserContextKey)();
 
@@ -95,7 +101,10 @@ Usage:
 -->
 <Dialog
     title="Invite Users"
-    triggerProps={{ class: buttonVariants({ variant: "default" }), disabled: loadingUsers }}
+    triggerProps={{
+        class: buttonVariants({ variant: "default" }),
+        disabled: loadingUsers || disabled,
+    }}
     bind:open
 >
     {#snippet trigger()}
