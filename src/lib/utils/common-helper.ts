@@ -246,6 +246,23 @@ function wrapLongWords(text: string, longWordLength: number) {
         .join(" ");
 }
 
+/**
+ * A wrapper function for async functions that sets a loading state before and after the function call.
+ *
+ * This is useful to indicate to the user that a process is ongoing, e.g. when fetching data.
+ * Use this together with the `LoadingButton` component to show a loading spinner.
+ */
+async function loadingWrapper<IT, OT>(
+    loading: { value: boolean },
+    fn: (args: IT) => OT,
+    args: IT,
+): Promise<OT> {
+    loading.value = true;
+    const result = await fn(args);
+    loading.value = false;
+    return result;
+}
+
 export {
     getName,
     getNames,
@@ -260,4 +277,5 @@ export {
     getDisplayPaperId,
     handleSingleOrDoubleClick,
     wrapLongWords,
+    loadingWrapper,
 };
