@@ -62,6 +62,19 @@
         }
         doSelectAllOptions = !doSelectAllOptions;
     }
+
+    // Automatically drop any selected items that not exist in options, if the options are already
+    // loaded.
+    $effect(() => {
+        const invalid = selectedValues.filter((v) => !options.some((option) => option.value === v));
+        if (invalid.length > 0 && options.length > 0) {
+            // re-filter away the invalid ones and reassign
+            selectedValues = selectedValues.filter((v) =>
+                options.some((option) => option.value === v),
+            );
+            // after this, `invalid.length` will be zero on the next run ⇒ no loop
+        }
+    });
 </script>
 
 <!--
