@@ -101,9 +101,13 @@
     let loading = $state(true);
     let paperQueue = $state([]);
     let nextProjectPaper: Project_Paper | undefined = $state(undefined);
+    const loadingUserReview: Promise<Review | undefined> = $state(
+        getUserReviewIfAlreadySubmitted(),
+    );
+    let userReview: Review | undefined = $state(undefined);
 
     /**
-     * Makes sure, that all necessary ressources are loaded.
+     * Makes sure that all necessary resources are loaded.
      */
     $effect(() => {
         (async () => {
@@ -119,7 +123,19 @@
             if (forwardReferencedPapers) promises.push(forwardReferencedPapers);
             if (backwardReferencedPapers) promises.push(backwardReferencedPapers);
             if (researchContextCardProps) promises.push(researchContextCardProps);
-            await Promise.all(promises).then(() => (loading = false));
+            if (loadingUserReview) {
+                loadingUserReview.then((review) => {
+                    userReview = review;
+                });
+                promises.push(loadingUserReview);
+            }
+            await Promise.all(promises)
+                .then(() => {
+                    loading = false;
+                })
+                .catch(() => {
+                    toast.error("Something went wrong while loading the paper!");
+                });
         })();
     });
 
@@ -136,12 +152,11 @@
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
     let isSubmittingReview = $state({ value: false });
-    const loadingUserReview = $derived.by(() => getUserReviewIfAlreadySubmitted());
     $effect(() => {
         (async () => {
-            const review = await loadingUserReview;
-            selectedReviewCriteria.criteria = review?.selectedCriteriaIds ?? [];
-            wasAlreadyReviewedState.wasReviewed = review !== undefined;
+            userReview = await getUserReviewIfAlreadySubmitted();
+            selectedReviewCriteria.criteria = userReview?.selectedCriteriaIds ?? [];
+            wasAlreadyReviewedState.wasReviewed = userReview !== undefined;
         })();
     });
 
@@ -215,7 +230,6 @@ Usage:
     </div>
     {#if showButtonBar}
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
-            <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
             <PaperNavigationButton
                 direction="left"
                 {loadingProject}
@@ -225,7 +239,7 @@ Usage:
                 bind:nextProjectPaper
             />
             {#if reviewMode.isActivated && loadingProject}
-                {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
+                {#await Promise.all([loadingProject, loadingPaperWrapper]) then [project, paper]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                     <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                     <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
@@ -233,10 +247,10 @@ Usage:
                             {loadingProject}
                             {loadingProjectPaper}
                             projectPaperId={paper.id}
-                            {userReview}
                             variant={userReview?.decision === ReviewDecision.DECLINED
                                 ? "selected_decline"
                                 : "decline"}
+                            bind:userReview
                             bind:loading
                             bind:isSubmittingReview
                             bind:paperQueue
@@ -247,10 +261,10 @@ Usage:
                                 {loadingProject}
                                 {loadingProjectPaper}
                                 projectPaperId={paper.id}
-                                {userReview}
                                 variant={userReview?.decision === ReviewDecision.MAYBE
                                     ? "selected_maybe"
                                     : "maybe"}
+                                bind:userReview
                                 bind:loading
                                 bind:isSubmittingReview
                                 bind:paperQueue
@@ -261,10 +275,10 @@ Usage:
                             {loadingProject}
                             {loadingProjectPaper}
                             projectPaperId={paper.id}
-                            {userReview}
                             variant={userReview?.decision === ReviewDecision.ACCEPTED
                                 ? "selected_accept"
                                 : "accept"}
+                            bind:userReview
                             bind:loading
                             bind:isSubmittingReview
                             bind:paperQueue

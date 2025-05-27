@@ -7,7 +7,7 @@
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
     import { navigatePaper } from "$lib/utils/paper-navigation";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     interface Props {
         direction: "left" | "right";
@@ -30,8 +30,12 @@
     }: Props = $props();
     let buttonLeftDisabled: boolean = $state(true);
     let buttonRightDisabled: boolean = $state(true);
-    let showLoadingSpinner = $state(false);
+    const showLoadingSpinner = $state({ value: false });
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
+
+    $effect(() => {
+        loading = showLoadingSpinner.value;
+    });
 
     async function getNextProjectPaperToReview(paper: Project_Paper) {
         await backendService
@@ -42,7 +46,9 @@
             .catch((error) => {
                 nextProjectPaper = undefined;
                 if (error.message !== "No%20next%20paper%20available.") {
-                    toast("Error, while loading the next paper:" + error);
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
+                    return;
                 }
             });
     }
@@ -56,7 +62,8 @@
             .catch((error) => {
                 nextProjectPaper = undefined;
                 if (error.message !== "No%20next%20paper%20available.") {
-                    toast("Error, while loading the next paper:" + error);
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
                 }
             });
     }
@@ -70,7 +77,8 @@
             .catch((error) => {
                 previousProjectPaper = undefined;
                 if (error.message !== "No%20previous%20paper%20available.") {
-                    toast("Error, while loading the next paper:" + error);
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
                 }
             });
     }
@@ -78,14 +86,14 @@
     /**
      * Pre-fetches the next and the previous paper to find out if the according button is enabled or
      * disabled and the according paper does not have to be loaded on clicking of the button, but
-     * before.
+     * before. Loads the next or previous paper only if all necessary information is available.
      */
     $effect(() => {
-        // Loads the next or previous paper only if all necessary information is available.
         if (loading) return;
         (async () => {
             const paper = await loadingProjectPaper;
             if (!paper) return;
+
             nextProjectPaper = previousProjectPaper = undefined;
             buttonRightDisabled = buttonLeftDisabled = true;
             if (direction === "right") {
@@ -103,16 +111,13 @@
                 }
                 buttonLeftDisabled = previousProjectPaper === undefined;
             }
-            showLoadingSpinner = false;
         })();
     });
 
     /**
-     * Handles the navigation of the button with the direction "right". Therefore, it is checked whether the
-     * review mode is activated or not.
+     * Handles the navigation of the navigation button depending on the direction.
      */
-    const navigate = async function () {
-        loading = showLoadingSpinner = true;
+    async function navigate() {
         await navigatePaper(
             direction,
             loadingProjectPaper,
@@ -121,7 +126,7 @@
             nextProjectPaper,
             previousProjectPaper,
         );
-    };
+    }
 </script>
 
 <!--
@@ -134,10 +139,14 @@ such paper could be found.
 
 Usage:
 ```svelte
-    <PaperNavigationButton
-        direction="left"
-        {loadingProjectPaper}
-    />
+<PaperNavigationButton
+                direction="right"
+                {loadingProject}
+                {loadingProjectPaper}
+                bind:loading
+                bind:paperQueue
+                bind:nextProjectPaper
+            />
 ```
 -->
 <Tooltip
@@ -145,17 +154,18 @@ Usage:
     aria-label={tooltipText}
     data-testid="navigation-button"
     disabled={loading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled)}
-    onclick={() => navigate()}
+    loading={showLoadingSpinner.value}
+    onclick={(args) => loadingWrapper(showLoadingSpinner, navigate, args)}
     triggerSize="default"
     triggerVariant="link"
 >
     {#snippet trigger()}
-        {#if showLoadingSpinner}
-            <LoaderCircle class="animate-spin" />
-        {:else if direction === "left"}
-            <ArrowLeft />
-        {:else}
-            <ArrowRight />
+        {#if !showLoadingSpinner.value}
+            {#if direction === "left"}
+                <ArrowLeft />
+            {:else}
+                <ArrowRight />
+            {/if}
         {/if}
     {/snippet}
     {#snippet content()}

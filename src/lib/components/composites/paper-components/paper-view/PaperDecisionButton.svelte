@@ -13,7 +13,7 @@
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
     import { navigatePaper } from "$lib/utils/paper-navigation";
-    import type { Project_Paper, Project } from "$lib/model/api/project";
+    import type { Project, Project_Paper } from "$lib/model/api/project";
 
     interface ButtonContent {
         name: string;
@@ -37,7 +37,7 @@
         projectPaperId,
         variant,
         isSubmittingReview = $bindable({ value: false }),
-        userReview,
+        userReview = $bindable(undefined),
         loadingProjectPaper,
         loadingProject,
         loading = $bindable(false),
@@ -45,7 +45,7 @@
         nextProjectPaper = $bindable(undefined),
     }: PaperDecisionButtonProps = $props();
 
-    const wasAlreadyReviewed = userReview !== undefined;
+    const wasAlreadyReviewed = $derived(userReview !== undefined);
     const showLoadingSpinner = $state({ value: false });
 
     $effect(() => {
@@ -54,6 +54,7 @@
         // the API call is made. However we need a different sate for displaying the loading state of the single
         // decision button. Otherwise, all would have a spinner and label with "Submitting Review".
         isSubmittingReview.value = showLoadingSpinner.value;
+        loading = showLoadingSpinner.value;
     });
 
     /**
@@ -125,11 +126,12 @@
                 decision: getDecision(),
                 selectedCriteriaIds: selectedReviewCriteriaState.criteria,
             };
-
-            await backendService.createReview(review);
-
+            variant = "selected_" + variant;
+            backendService.createReview(review).response.then((review) => (userReview = review));
             toast.success("Successfully submitted a review.");
-            loading = true;
+            if (!nextProjectPaper) {
+                toast.info("No more papers to review.");
+            }
             await navigatePaper(
                 "right",
                 loadingProjectPaper,
@@ -187,17 +189,24 @@ enabled button and has a ring around it
 Usage:
 ```svelte
     <PaperDecisionButton
-        {projectPaperId}
-        {userReview}
-        variant="accept"
+        {loadingProject}
+        {loadingProjectPaper}
+        projectPaperId={paper.id}
+        variant={userReview?.decision === ReviewDecision.DECLINED
+            ? "selected_decline"
+            : "decline"}
+        bind:userReview
+        bind:loading
         bind:isSubmittingReview
+        bind:paperQueue
+        bind:nextProjectPaper
     />
 ```
 -->
 <Tooltip
     class={cn(
         "text-primary max-w-[20rem] flex-grow-1000 shadow-lg",
-        paperDecisionButtonVariants({ variant }),
+        paperDecisionButtonVariants({ variant: variant }),
     )}
     data-testid={`decision-button-${variant}`}
     disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value || loading}
