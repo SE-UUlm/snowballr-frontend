@@ -1,0 +1,59 @@
+name: End-to-End Tests
+
+on:
+    push:
+        branches:
+            - main
+            - develop
+    pull_request:
+    workflow_dispatch:
+
+env:
+    node_version: ${{ vars.NODE_VERSION }}
+    PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
+
+jobs:
+    e2e-test:
+        name: End-to-End Testing with Playwright
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1, 2, 3]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
+                  # See https://github.com/actions/checkout for more details.
+                  fetch-depth: 0
+                  submodules: "recursive"
+
+            - name: E2E-Setup
+              uses: ./.github/workflows/e2e-setup/
+              with:
+                  node_version: ${{ env.node_version }}
+
+            - uses: dorny/paths-filter@v3
+              id: changes
+              with:
+                  filters: |
+                      e2e-tests:
+                        - 'tests/e2e/**'
+
+            - name: Run only tests for changed code (fail fast)
+              # Skip fast failing test run when not triggered by a pull request and no changes were made to the e2e test directory
+              if: ${{ github.event_name == 'pull_request' && steps.changes.outputs.e2e-tests == 'true' }}
+              run: npm run test:e2e -- --shard ${{ matrix.shard }}/${{ strategy.job-total }} --only-changed=origin/${{ github.base_ref }}
+
+            - name: Run Playwright
+              run: npm run test:e2e -- --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+
+            - name: Archive Playwright report
+              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              with:
+                  name: playwright-report-${{ matrix.shard }}
+                  path: e2e-report/
+                  retention-days: 30
