@@ -94,6 +94,10 @@ vi.mock("$app/stores", (): typeof stores => {
     };
 });
 
+// Mock SvelteKit runtime modules $env/static/public and $env/dynamic/public
+vi.mock("$env/static/public", () => ({ env: {} }));
+vi.mock("$env/dynamic/public", () => ({ env: {} }));
+
 // This type takes the SnowballRClient interface and returns a new "interface" type where each api function returns a MockUnaryCall,
 // i.e. a mocked API call, instead of a normal UnaryCall.
 type MockReturnType<T> = {

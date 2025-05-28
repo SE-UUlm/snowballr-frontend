@@ -2,12 +2,24 @@
     import { Progress } from "$lib/components/primitives/progress";
     import { getNames, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import {
+        MemberRole,
         Project,
         Project_Information,
         Project_Member_List,
         ProjectStatus,
     } from "$lib/model/api/project";
     import { goto } from "$app/navigation";
+    import { env } from "$env/dynamic/public";
+    import { UserContextKey } from "$lib/global-context/userContext";
+    import { getContext } from "svelte";
+    import type { User } from "$lib/model/api/user";
+    import { Badge } from "$lib/components/primitives/badge/index.js";
+
+    const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
+    let user: User | undefined;
+    if (isDevMode) {
+        user = getContext<() => User>(UserContextKey)();
+    }
 
     export interface ProjectListEntryInterface {
         project: Project;
@@ -52,7 +64,15 @@ Usage:
     {...!onClick ? { href: href } : { type: "button" }}
 >
     <div class="flex h-fit min-w-0 flex-col">
-        <h2 class="truncate">{project.name}</h2>
+        <h2 class="truncate">
+            {project.name}
+            <!-- Show admin badge in dev mode when current user is admin of project -->
+            {#if isDevMode && membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
+                <Badge class="ml-2" title="You are an admin of this project" variant="outline">
+                    admin
+                </Badge>
+            {/if}
+        </h2>
 
         {#if membersList.members.length > 0}
             <span class="text-hint truncate">
