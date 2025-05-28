@@ -7,20 +7,16 @@
         open?: boolean;
     }
 
-    let {
-        loading = $bindable(false),
-        error = $bindable(undefined),
-        open = $bindable(false),
-    }: Props = $props();
+    let { loading = false, error = undefined, open = false }: Props = $props();
 </script>
 
 <AlertDialog
     actionProps={{ class: "bg-blue-500" }}
+    {error}
+    {loading}
     title="This is the alert dialog title"
     triggerProps={{ class: "bg-red-500" }}
-    bind:error
     bind:open
-    bind:loading
 >
     {#snippet trigger()}
         This is the alert dialog trigger

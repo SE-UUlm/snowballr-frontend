@@ -15,8 +15,9 @@
         description?: Snippet;
         cancelProps?: AlertDialogCancelProps;
         cancelButtonText?: string;
-        actionProps?: AlertDialogActionProps;
+        actionProps?: Omit<AlertDialogActionProps, "disabled">;
         actionButtonText?: string;
+        actionButtonLoadingText?: string;
         errorText?: string;
         loading?: boolean;
         error?: unknown;
@@ -32,9 +33,10 @@
         cancelButtonText = "Cancel",
         actionProps = {},
         actionButtonText = "Confirm",
+        actionButtonLoadingText = actionButtonText,
         errorText = "An error occurred",
-        loading = $bindable(false),
-        error = $bindable(undefined),
+        loading = false,
+        error = undefined,
         open = $bindable(false),
     }: Props = $props();
 </script>
@@ -43,11 +45,11 @@
 @component
 Highly customizable AlertDialog Element.
 
-Bindings:
+States:
 - `loading`: Whether the action button is in a loading state.
 - `error`: The error object e.g. from a `catch` block, when defined, an error alert is shown.
 
-With those bindings you can easily handle the loading state and error state of the dialog.
+With those properties you can easily handle the loading state and error state of the dialog.
 Example:
 ```svelte
     <script lang="ts">
@@ -80,8 +82,8 @@ Example:
         actionProps={{
             onclick: dialogOnClick,
         }}
-        bind:loading
-        bind:error
+        {loading}
+        {error}
         bind:open
     >
         ...
@@ -136,8 +138,10 @@ Usage:
             >
                 {#if loading}
                     <LoaderCircle class="animate-spin" />
+                    {actionButtonLoadingText}
+                {:else}
+                    {actionButtonText}
                 {/if}
-                {actionButtonText}
             </AlertDialog.Action>
         </AlertDialog.Footer>
     </AlertDialog.Content>

@@ -43,7 +43,7 @@
                 An Error Occurred!
             </AlertDialog.Title>
             <AlertDialog.Description class="text-default">
-                The backend could not be reached or a severe and unrecoverable error occured during
+                The backend could not be reached or a severe and unrecoverable error occurred during
                 communication.
             </AlertDialog.Description>
         </AlertDialog.Header>
