@@ -107,7 +107,7 @@
     });
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
-    let isSubmittingReview = $state(false);
+    let isSubmittingReview = $state({ value: false });
     const loadingUserReview = getUserReviewIfAlreadySubmitted();
     loadingUserReview.then((review) => {
         const selectedCriteria = review?.selectedCriteriaIds ?? [];

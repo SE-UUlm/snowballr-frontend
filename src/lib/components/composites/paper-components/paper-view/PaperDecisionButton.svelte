@@ -8,10 +8,10 @@
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { type Review, type Review_Create, ReviewDecision } from "$lib/model/api/review";
-    import { LoaderCircle } from "lucide-svelte";
     import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
     import { toast } from "svelte-sonner";
     import { shortcut, type ShortcutTrigger, type ShortcutEventDetail } from "@svelte-put/shortcut";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     interface ButtonContent {
         name: string;
@@ -22,19 +22,27 @@
     interface PaperDecisionButtonProps {
         projectPaperId: string;
         variant: PaperDecisionButtonVariant;
-        isSubmittingReview?: boolean;
+        isSubmittingReview?: { value: boolean };
         userReview?: Review;
     }
 
     let {
         projectPaperId,
         variant,
-        isSubmittingReview = $bindable(false),
+        isSubmittingReview = $bindable({ value: false }),
         userReview,
     }: PaperDecisionButtonProps = $props();
 
     const wasAlreadyReviewed = userReview !== undefined;
-    let showLoadingSpinner = $state(false);
+    const showLoadingSpinner = $state({ value: false });
+
+    $effect(() => {
+        // Update `isSubmittingReview` every time `showLoadingSpinner` is updated
+        // `isSubmittingReview` is used as a state in the `PaperView` component to disable all decision buttons while
+        // the API call is made. However we need a different sate for displaying the loading state of the single
+        // decision button. Otherwise, all would have a spinner and label with "Submitting Review".
+        isSubmittingReview.value = showLoadingSpinner.value;
+    });
 
     /**
      * Returns the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -99,7 +107,6 @@
      * and a loading spinner is shown. After the review was submitted, a confirmation toast is shown.
      */
     async function submitReview() {
-        isSubmittingReview = showLoadingSpinner = true;
         try {
             const review: Review_Create = {
                 projectPaperId: projectPaperId,
@@ -117,7 +124,6 @@
             });
             console.error("Could not submit the review:", err);
         }
-        isSubmittingReview = showLoadingSpinner = false;
     }
 
     const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
@@ -132,9 +138,9 @@
                 const keyboardEvent = detail.originalEvent;
                 keyboardEvent.preventDefault();
 
-                submitReview();
+                loadingWrapper(showLoadingSpinner, submitReview, {});
             },
-            enabled: !wasAlreadyReviewed,
+            enabled: !wasAlreadyReviewed && !showLoadingSpinner.value,
         },
     }}
 />
@@ -174,21 +180,20 @@ Usage:
         paperDecisionButtonVariants({ variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview || wasAlreadyReviewed}
-    onclick={submitReview}
+    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value}
+    loading={showLoadingSpinner.value}
+    onclick={(args) => loadingWrapper(showLoadingSpinner, submitReview, args)}
     triggerSize="default"
     triggerVariant="default"
 >
     {#snippet trigger()}
-        {#if showLoadingSpinner}
-            <LoaderCircle class="animate-spin" />
-            Submitting review
-        {:else}
-            <p>{getButtonContent().name}</p>
-            {#if shortcuts.isVisible}
-                <p>{getButtonContent().shortcut}</p>
-            {/if}
+        <p>{getButtonContent().name}</p>
+        {#if shortcuts.isVisible}
+            <p>{getButtonContent().shortcut}</p>
         {/if}
+    {/snippet}
+    {#snippet loadingTrigger()}
+        Submitting review
     {/snippet}
     {#snippet content()}
         {getButtonContent().tooltipText}
