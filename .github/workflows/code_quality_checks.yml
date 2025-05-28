@@ -85,64 +85,6 @@ jobs:
                   retention-days: 1
                   if-no-files-found: error
 
-    e2e-test:
-        name: End-to-End Testing with Playwright
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
-                  # See https://github.com/actions/checkout for more details.
-                  fetch-depth: 0
-                  submodules: "recursive"
-
-            - name: Setup
-              uses: ./.github/workflows/setup/
-              with:
-                  node_version: ${{ env.node_version }}
-
-            # Seems to be some obscure interaction between IPv6 and Docker in GitHub Pipelines
-            # Possible fix taken from here:
-            # https://github.com/plan-player-analytics/Plan/issues/3535
-            - name: Avoid ERR_NETWORK_CHANGED
-              run: |
-                  sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
-                  sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
-
-            - name: Get installed Playwright version
-              run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
-
-            - name: Cache playwright binaries
-              uses: actions/cache@v4
-              id: playwright-cache
-              with:
-                  path: ~/.cache/ms-playwright
-                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-            - name: Install Playwright System Dependencies
-              run: npx playwright install-deps
-
-            - name: Install Playwright
-              if: steps.playwright-cache.outputs.cache-hit != 'true'
-              run: npx playwright install
-
-            - name: Run only tests for changed code (fail fast)
-              if: github.event_name == 'pull_request'
-              run: npm run test:e2e -- --only-changed=origin/${{ github.base_ref }}
-
-            - name: Run Playwright
-              run: npm run test:e2e
-
-            - name: Archive Playwright report
-              uses: actions/upload-artifact@v4
-              if: ${{ !cancelled() }}
-              with:
-                  name: playwright-report
-                  path: e2e-report/
-                  retention-days: 30
-
     coverage-report:
         name: Code Coverage Report
         runs-on: ubuntu-latest

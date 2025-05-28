@@ -1,0 +1,42 @@
+name: End-to-End Tests Setup
+description: Setup End-to-End Testing
+inputs:
+    node_version:
+        description: "Node.js version"
+        required: true
+runs:
+    using: composite
+    steps:
+        - name: Setup
+          uses: ./.github/workflows/setup/
+          with:
+              node_version: ${{ env.node_version }}
+
+        # Seems to be some obscure interaction between IPv6 and Docker in GitHub Pipelines
+        # Possible fix taken from here:
+        # https://github.com/plan-player-analytics/Plan/issues/3535
+        - name: Avoid ERR_NETWORK_CHANGED
+          shell: bash
+          run: |
+              sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+              sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
+        - name: Get installed Playwright version
+          shell: bash
+          run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)")" >> $GITHUB_ENV
+
+        - name: Cache playwright binaries
+          uses: actions/cache@v4
+          id: playwright-cache
+          with:
+              path: ~/.cache/ms-playwright
+              key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+        - name: Install Playwright System Dependencies
+          shell: bash
+          run: npx playwright install-deps
+
+        - name: Install Playwright
+          shell: bash
+          if: steps.playwright-cache.outputs.cache-hit != 'true'
+          run: npx playwright install
