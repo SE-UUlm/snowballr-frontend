@@ -1,6 +1,6 @@
 <script lang="ts">
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import { getName, wrapLongWords } from "$lib/utils/common-helper";
+    import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import Trash from "lucide-svelte/icons/trash";
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
@@ -26,13 +26,13 @@
     // Make isDisabled reactive
     // When we update the members list in the members settings page, this wouldn't get updated otherwise
     let disabled = $derived(isCurrentUser || member.role === MemberRole.ADMIN || disabledProp);
-    let loading = $state(false);
+    const loading = $state({ value: false });
     let error = $state<unknown>(undefined);
     let open = $state(false);
 
     async function removeMember() {
         error = undefined;
-        loading = true;
+
         await backendService
             .removeProjectMember({
                 projectId,
@@ -46,7 +46,6 @@
                 error = removeMemberError;
                 console.error(`Couldn't remove member: ${removeMemberError}`);
             });
-        loading = false;
     }
 </script>
 
@@ -60,20 +59,22 @@ Usage:
 ```
 -->
 <AlertDialog
+    actionButtonLoadingText="Removing Member From This Project"
     actionButtonText="Remove Member From This Project"
     actionProps={{
+        class: "w-76",
         variant: "destructiveSubtle",
-        onclick: removeMember,
+        onclick: (args) => loadingWrapper(loading, removeMember, args),
     }}
+    {error}
     errorText="Couldn't remove member"
+    loading={loading.value}
     title={`Remove ${memberName} From This Project`}
     triggerProps={{
         disabled,
         class: buttonVariants({ variant: "destructiveSubtle", size: "icon" }),
         "aria-label": `Remove member ${member.user!.email}`,
     }}
-    bind:loading
-    bind:error
     bind:open
 >
     {#snippet trigger()}
