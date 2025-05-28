@@ -3,6 +3,7 @@
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
     import { groupBy } from "$lib/utils/common-helper";
     import { Separator } from "$lib/components/primitives/separator";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     type T = $$Generic; /* eslint-disable-line no-undef */
 
@@ -139,13 +140,15 @@ is not found in the map, the group will be labeled as "Unknown".
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
             <ul class="scroll-box space-y-4 pb-1">
-                {#if groupSelector !== undefined}
-                    {#each Object.entries(groupBy(loadedItems, groupSelector)) as [key, values] (key)}
-                        <div class="space-y-1">
+                {#if groupSelector}
+                    {#each Object.entries(groupBy(loadedItems, groupSelector)) as [key, values], index (index)}
+                        <!-- show group header before each group and add a gap to the previous group
+                             except for first group header that has no previous group -->
+                        <div class={cn("space-y-1", index >= 1 ? "mt-6" : "")}>
                             {#await groupLabels}
-                                <h3 class="italic">Loading</h3>
+                                <h2 class="italic">Loading</h2>
                             {:then loadedGroupLabels}
-                                <h3>{loadedGroupLabels?.[key] ?? "Unknown"}</h3>
+                                <h2>{loadedGroupLabels?.[key] ?? "Unknown"}</h2>
                             {/await}
                             <Separator />
                         </div>
