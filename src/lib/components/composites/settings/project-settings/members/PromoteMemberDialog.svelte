@@ -77,7 +77,7 @@ Usage:
 <AlertDialog
     actionButtonText="Promote Member to a Project Admin"
     actionProps={{
-        variant: "destructiveSubtle",
+        variant: "errorSubtle",
         onclick: promoteMember,
     }}
     errorText="Couldn't promote member"
@@ -85,7 +85,7 @@ Usage:
     triggerProps={{
         class: cn(
             "w-[7.7rem] select-auto",
-            buttonVariants({ variant: isRoleReadonly ? "ghost" : "destructiveSubtle" }),
+            buttonVariants({ variant: isRoleReadonly ? "ghost" : "errorSubtle" }),
             isRoleReadonly
                 ? "hover:bg-transparent hover:cursor-default disabled:opacity-100!"
                 : "text-primary",

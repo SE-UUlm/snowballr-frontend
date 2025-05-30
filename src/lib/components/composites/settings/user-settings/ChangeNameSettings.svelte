@@ -7,11 +7,11 @@
     import { Schema } from "$lib/schemas";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
-    import ErrorAlert from "../../utils/ErrorAlert.svelte";
     import SettingsSection from "../SettingsSection.svelte";
     import { generateFieldMask } from "protobuf-fieldmask";
     import { getContext } from "svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
+    import Alert from "../../utils/Alert.svelte";
 
     const user = getContext<() => User>(UserContextKey)();
 
@@ -102,9 +102,10 @@ Usage:
     </form>
     {#if updateUserError}
         <div class="max-w-100 md:max-w-200">
-            <ErrorAlert
-                errorDetails={updateUserError.errorDetails}
-                errorTitle={updateUserError.errorTitle}
+            <Alert
+                details={updateUserError.errorDetails}
+                title={updateUserError.errorTitle}
+                variant="error"
             />
         </div>
     {/if}

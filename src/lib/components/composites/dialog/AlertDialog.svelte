@@ -5,8 +5,8 @@
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import type { DialogTriggerProps } from "bits-ui";
     import type { AlertDialogCancelProps } from "$lib/components/primitives/alert-dialog/alert-dialog-cancel.svelte";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { wrapLongWords } from "$lib/utils/common-helper";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
 
     interface Props {
         triggerProps?: DialogTriggerProps;
@@ -93,10 +93,10 @@ Usage:
     <AlertDialog
         title="This is the title of the dialog"
         actionProps={{
-            variant: "destructive",
+            variant: "error",
             onclick: () => console.log("Action button clicked"),
         }}
-        actionButtonText="Execute Destructive Action"
+        actionButtonText="Execute Error Action"
         errorText="Couldn't execute action"
     >
         {#snippet trigger()}
@@ -123,7 +123,7 @@ Usage:
             </AlertDialog.Description>
         </AlertDialog.Header>
         {#if error}
-            <ErrorAlert errorTitle={errorText} />
+            <Alert title={errorText} variant="error" />
         {/if}
         <AlertDialog.Footer>
             <AlertDialog.Cancel {...cancelProps} data-testid="alert-dialog-cancel">

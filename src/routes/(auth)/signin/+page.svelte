@@ -6,13 +6,13 @@
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { Nothing } from "$lib/model/api/base.js";
     import { AuthenticationStatus } from "$lib/model/api/authentication.js";
     import { cn } from "$lib/utils/shadcn-helper";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
@@ -102,9 +102,10 @@
             />
             <Button class="w-full" type="submit">Sign In</Button>
             {#if signinError}
-                <ErrorAlert
-                    errorDetails={signinError.errorDetails}
-                    errorTitle={signinError.errorTitle}
+                <Alert
+                    details={signinError.errorDetails}
+                    title={signinError.errorTitle}
+                    variant="error"
                 />
             {/if}
         </form>

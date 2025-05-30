@@ -5,7 +5,6 @@
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
     import { goto, invalidate } from "$app/navigation";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { backendService } from "$lib/grpc-api";
     import { User } from "$lib/model/api/user";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
@@ -14,6 +13,7 @@
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
+    import Alert from "../utils/Alert.svelte";
 
     const user = getContext<() => User>(UserContextKey)();
 
@@ -155,7 +155,7 @@ Usage:
                 />
             </form>
             {#if isErrorOnProjectCreation}
-                <ErrorAlert errorTitle="Something went wrong while creating the project." />
+                <Alert title="Something went wrong while creating the project." variant="error" />
             {/if}
         {/snippet}
         {#snippet footer()}

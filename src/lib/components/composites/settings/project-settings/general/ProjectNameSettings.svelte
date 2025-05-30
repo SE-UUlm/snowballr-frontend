@@ -8,10 +8,10 @@
     import { Schema } from "$lib/schemas";
     import { generateFieldMask } from "protobuf-fieldmask";
     import type { ApiError } from "$lib/model/general";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { invalidate } from "$app/navigation";
     import { LoaderCircle } from "lucide-svelte";
     import { toast } from "svelte-sonner";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
 
     interface Props {
         projectId: string;
@@ -132,7 +132,7 @@ Usage:
     </form>
     {#if updateProjectError}
         <div class="max-w-xl">
-            <ErrorAlert errorTitle={updateProjectError.errorTitle} />
+            <Alert title={updateProjectError.errorTitle} variant="error" />
         </div>
     {/if}
 </SettingsSection>
