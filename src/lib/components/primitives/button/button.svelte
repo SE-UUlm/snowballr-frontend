@@ -8,7 +8,7 @@
         variants: {
             variant: {
                 default: "bg-primary text-primary-foreground hover:bg-primary/90",
-                destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                destructive: "bg-error text-error-foreground hover:bg-error/90",
                 destructiveSubtle:
                     "bg-gray-100 text-red-600 border border-gray-300 hover:bg-gray-200",
                 outline:

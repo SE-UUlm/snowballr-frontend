@@ -1,3 +1,7 @@
+<script>
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
+</script>
+
 <svelte:head>
     <title>Theme</title>
 </svelte:head>
@@ -30,3 +34,29 @@
         </div>
     </div>
 </div>
+
+<Alert
+    details="This is a standard alert used to convey general information or updates that don't fall into a specific category."
+    title="Default Alert"
+    variant="default"
+/>
+<Alert
+    details="The operation was completed successfully. You can now proceed with the next steps or return to the dashboard."
+    title="Success Alert"
+    variant="success"
+/>
+<Alert
+    details="Here's some useful information that might help you understand the context or make a better decision."
+    title="Info Alert"
+    variant="info"
+/>
+<Alert
+    details="Be cautious—there might be potential issues or actions that could lead to unintended consequences."
+    title="Warning Alert"
+    variant="warning"
+/>
+<Alert
+    details="An error occurred while processing your request. Please check the details and try again or contact support."
+    title="Error Alert"
+    variant="error"
+/>

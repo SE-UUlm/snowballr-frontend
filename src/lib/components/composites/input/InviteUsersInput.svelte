@@ -1,11 +1,11 @@
 <script lang="ts">
-    import ErrorAlert from "../utils/ErrorAlert.svelte";
     import ChipsInput from "./ChipsInput.svelte";
     import type { User } from "$lib/model/api/user";
     import { filterUsers } from "$lib/utils/filters";
     import { getName } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import { Schema } from "$lib/schemas";
+    import Alert from "../utils/Alert.svelte";
 
     interface Props {
         membersInput: string[];
@@ -115,6 +115,6 @@ Usage:
         bind:items={membersInput}
     />
     {#if isErrorOnUsersLoading}
-        <ErrorAlert errorTitle="Something went wrong while loading possible members." />
+        <Alert title="Something went wrong while loading possible members." variant="error" />
     {/if}
 </div>

@@ -6,13 +6,13 @@
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { AuthenticationStatus } from "$lib/model/api/authentication";
     import { Nothing } from "$lib/model/api/base";
     import { cn } from "$lib/utils/shadcn-helper";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -139,9 +139,10 @@
             <PasswordInput bind:this={passwordInput} class="w-full" />
             <Button class="w-full" type="submit">Create an account</Button>
             {#if registrationError}
-                <ErrorAlert
-                    errorDetails={registrationError.errorDetails}
-                    errorTitle={registrationError.errorTitle}
+                <Alert
+                    details={registrationError.errorDetails}
+                    title={registrationError.errorTitle}
+                    variant="error"
                 />
             {/if}
         </form>

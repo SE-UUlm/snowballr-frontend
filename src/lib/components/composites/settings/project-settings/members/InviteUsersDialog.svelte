@@ -7,10 +7,10 @@
     import type { Project_Member } from "$lib/model/api/project";
     import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
-    import ErrorAlert from "$lib/components/composites/utils/ErrorAlert.svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import { getContext } from "svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
 
     interface Props {
         projectId: string;
@@ -118,7 +118,7 @@ Usage:
             <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
         </form>
         {#if error}
-            <ErrorAlert errorTitle={error.errorTitle} />
+            <Alert title={error.errorTitle} variant="error" />
         {/if}
     {/snippet}
     {#snippet footer()}
