@@ -93,10 +93,10 @@ Usage:
     <AlertDialog
         title="This is the title of the dialog"
         actionProps={{
-            variant: "error",
+            variant: "destructive",
             onclick: () => console.log("Action button clicked"),
         }}
-        actionButtonText="Execute Error Action"
+        actionButtonText="Execute Destructive Action"
         errorText="Couldn't execute action"
     >
         {#snippet trigger()}
