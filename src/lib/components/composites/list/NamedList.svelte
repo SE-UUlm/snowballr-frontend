@@ -1,10 +1,13 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
+    import { groupBy } from "$lib/utils/common-helper";
+    import { Separator } from "$lib/components/primitives/separator";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     type T = $$Generic; /* eslint-disable-line no-undef */
 
-    interface NamedListProps {
+    interface BaseProps<T> {
         listName: string;
         items: Promise<T[]>;
         listItemComponent: Snippet<[T]>;
@@ -22,6 +25,18 @@
         keySelector: (item: T) => string | number;
     }
 
+    interface UngroupedListProps<T> extends BaseProps<T> {
+        groupSelector?: never;
+        groupLabels?: never;
+    }
+
+    interface GroupedListProps<T> extends BaseProps<T> {
+        groupSelector: (item: T) => string;
+        groupLabels: Promise<Record<string, string>>;
+    }
+
+    type NamedListProps<T> = UngroupedListProps<T> | GroupedListProps<T>;
+
     const {
         listName = "",
         items,
@@ -34,8 +49,19 @@
         errorHint,
         preListContent = undefined,
         keySelector,
-    }: NamedListProps = $props();
+        groupSelector,
+        groupLabels,
+    }: NamedListProps<T> = $props();
 </script>
+
+<!-- render a group of list items -->
+{#snippet itemsGroup(items: T[])}
+    {#each items as item (keySelector(item))}
+        <li>
+            {@render listItemComponent?.(item)}
+        </li>
+    {/each}
+{/snippet}
 
 <!--
 @component
@@ -46,28 +72,45 @@ Therefore use this component as following:
 
 Usage:
 ```svelte
-    <NamedList listName={yourListName} items={yourListItems} showNumberOfListItems={true} numberOfItems={10} numberOfSkeletons={10}>
+    <NamedList
+        emptyHint="No project papers."
+        groupLabels={projects
+                .then((projects) => Object.fromEntries(projects.map(({ project }) => [project.id, project.name])))
+                .catch(() => ({}))}
+        groupSelector={(paper) => paper.projectId!}
+        items={openReviews}
+        keySelector={(paper) => paper.paper.id}
+        listName="Project papers"
+        numberOfSkeletons={10}
+        showNumberOfListItems={true}
+    >
         {#snippet listItemComponent(componentData)}
             <YourComponent {...componentData} />
         {/snippet}
-        {#snippet listItemSkeleton(index)}
+        {#snippet listItemSkeleton()}
             <YourSkeletonComponent />
         {/snippet}
     </NamedList>
 ```
-items is a promise, containing a list of objects of type T, so of the same type
-as the props of `YourComponent`.
-If the option showNumberOfListItems is set to true (default: false),
-the number of list items (either given by 'numberOfItems' or automatically determined)
-is added to the list name / header, like 'yourListName (10)'.
+`items` is a Promise that resolves to a list of objects of type `T`,
+which matches the props expected by `YourComponent`.
 
-While the list is loading, it displays \<numberOfSkeleton\> skeleton list items.
-If the loading was successful it either shows the components, filled with the component data
-or an optional hint (provided with 'emptyHint') that the list is empty.
-Otherwise the error message is shown.
+If the `showNumberOfListItems` option is enabled (default: `false`),
+the list name is suffixed with the item count — either explicitly provided via `numberOfItems`,
+or inferred automatically, e.g. "yourListName (10)".
 
-You can render additional content between the title and the list by providing `preListContent`.
-This can be e.g. a search bar.
+While the list is loading, `numberOfSkeleton` skeleton items are displayed as placeholders.
+
+After loading:
+- If items are present, each is rendered using `YourComponent`.
+- If the list is empty, an optional `emptyHint` is shown instead.
+- If an error occurred, the error message is shown, or a custom hint if provided.
+
+Optional `preListContent` can be rendered between the list title and the list itself, e.g. a search bar.
+
+Items can be grouped by passing a `groupSelector` function, which assigns each item to a group.
+Group names are provided via the `groupLabels` map. If a group key returned by `groupSelector`
+is not found in the map, the group will be labeled as "Unknown".
 -->
 <div class="flex h-full w-full flex-col gap-y-5 overflow-hidden">
     {#await items}
@@ -97,11 +140,23 @@ This can be e.g. a search bar.
             <span class="text-hint italic">{emptyHint}</span>
         {:else}
             <ul class="scroll-box space-y-4 pb-1">
-                {#each loadedItems as item (keySelector(item))}
-                    <li>
-                        {@render listItemComponent?.(item)}
-                    </li>
-                {/each}
+                {#if groupSelector}
+                    {#each Object.entries(groupBy(loadedItems, groupSelector)) as [key, values], index (index)}
+                        <!-- show group header before each group and add a gap to the previous group
+                             except for first group header that has no previous group -->
+                        <div class={cn("space-y-1", index >= 1 ? "mt-6" : "")}>
+                            {#await groupLabels}
+                                <h2 class="italic">Loading</h2>
+                            {:then loadedGroupLabels}
+                                <h2>{loadedGroupLabels?.[key] ?? "Unknown"}</h2>
+                            {/await}
+                            <Separator />
+                        </div>
+                        {@render itemsGroup(values)}
+                    {/each}
+                {:else}
+                    {@render itemsGroup(loadedItems)}
+                {/if}
             </ul>
         {/if}
     {:catch error}
