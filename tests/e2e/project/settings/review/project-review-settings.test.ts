@@ -1,3 +1,4 @@
+import { reloadWait } from "$tests/e2e/utils/helper/helper";
 import { test } from "./project-review-settings-fixture";
 import { expect } from "@playwright/test";
 
@@ -41,8 +42,10 @@ test.describe("Project - Review settings", () => {
         await projectReviewSettingsPage.addTag("New Tag 2");
         await expect(page.getByText("New Tag 2")).toBeVisible();
 
-        await page.getByText("General").click();
-        await page.getByRole("link", { name: "Review" }).click();
+        await reloadWait(
+            page,
+            page.getByRole("heading", { name: projectReviewSettingsProjectName }),
+        );
 
         await expect(page.getByText("New Tag 1")).toBeVisible();
         await expect(page.getByText("New Tag 2")).toBeVisible();
