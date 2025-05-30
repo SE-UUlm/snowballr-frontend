@@ -5,11 +5,13 @@ type SettingName = "Account" | "Project Setup" | "Shortcuts" | "Review";
 
 export class DevHomePage {
     readonly page: Page;
+    readonly heading: Locator;
     readonly createProjectDialog: Locator;
     readonly openCreateProjectDialogButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
+        this.heading = page.getByRole("heading", { name: "SnowballR", exact: true })
         this.createProjectDialog = page.getByRole("dialog", { name: "Create Project" });
         this.openCreateProjectDialogButton = page.getByTestId("dialog-trigger");
     }
