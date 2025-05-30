@@ -20,7 +20,7 @@ test.describe("Changing SLR settings", () => {
         await apiClient
             .addPaperToProject({ projectId: slrProjectId, stage: 0n, paperId: paper.id })
             .response.then((projectPaper) => {
-                projectPaperId = projectPaper.id;
+                projectPaperId = projectPaper.localId;
             });
     });
 

@@ -30,6 +30,7 @@ export class DevProjectSLRSettingsPage {
      * @param state - The desired state of the "Maybe as Decision" switch.
      */
     async toggleMaybeAsDecisionSwitch(state: boolean) {
+        await expect(this.maybeAsDecisionSwitch).toBeEnabled();
         if ((await this.maybeAsDecisionSwitch.isChecked()) !== state) {
             await this.maybeAsDecisionSwitch.click();
             await this.confirmButton.click();

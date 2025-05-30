@@ -110,25 +110,22 @@
         pendingActionConfirmCallback = null;
     }
 
-    onMount(() => {
-        async function checkInitialMaybeAsDecisionSettingStatus(id: string) {
-            return await backendService
-                .getProjectById({ id })
-                .response.then((response) => {
-                    maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
-                })
-                .catch((error) => {
-                    console.error("Error fetching project settings:", error);
-                    updateSLRSettingsError = {
-                        errorTitle: "Failed to update project settings",
-                    };
-                    maybeAsDecision.isActivated = false;
-                })
-                .finally(() => {
-                    isUpdatingMaybeAsDecisionSettingStatus = false;
-                });
-        }
-        checkInitialMaybeAsDecisionSettingStatus(projectId);
+    onMount(async () => {
+        await backendService
+            .getProjectById({ id: projectId })
+            .response.then((response) => {
+                maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
+            })
+            .catch((error) => {
+                console.error("Error fetching project settings:", error);
+                updateSLRSettingsError = {
+                    errorTitle: "Failed to update project settings",
+                };
+                maybeAsDecision.isActivated = false;
+            })
+            .finally(() => {
+                isUpdatingMaybeAsDecisionSettingStatus = false;
+            });
     });
 </script>
 
