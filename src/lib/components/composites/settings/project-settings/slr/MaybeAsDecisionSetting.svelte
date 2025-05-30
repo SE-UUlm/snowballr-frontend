@@ -145,7 +145,7 @@ Usage:
 -->
 <SettingsSection sectionTitle="Maybe as Decision">
     <div class="items-top flex flex-row space-x-2">
-        <Switch id="maybe-decision-switch" {checked} onclick={handleSwitchClick} {disabled} />
+        <Switch id="maybe-decision-switch" {checked} {disabled} onclick={handleSwitchClick} />
         <div class="grid gap-1.5 pt-1 leading-none">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -164,16 +164,16 @@ Usage:
     {/if}
 
     <AlertDialog
-        bind:open={isConfirmDialogOpen}
-        {title}
-        cancelButtonText="Cancel"
         actionButtonText="Confirm"
         actionProps={{
             onclick: handleActionClick,
         }}
+        cancelButtonText="Cancel"
         cancelProps={{
             onclick: handleCancelClick,
         }}
+        {title}
+        bind:open={isConfirmDialogOpen}
     >
         {#snippet description()}
             {dialogDescription}

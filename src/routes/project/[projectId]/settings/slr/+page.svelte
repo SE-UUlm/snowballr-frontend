@@ -52,12 +52,12 @@
 <ProjectSettingsLayout {projectId} selectedTab="slr">
     {#if slrSettingsLocked}
         <Alert
-            variant="warning"
-            title="SLR Settings are Locked"
             details="To ensure consistency, SLR settings can’t be changed after a review has been submitted."
+            title="SLR Settings are Locked"
+            variant="warning"
         />
     {/if}
     {#if isCurrentUserAdmin.value}
-        <MaybeAsDecisionSetting {projectId} {loadingProject} {slrSettingsLocked} />
+        <MaybeAsDecisionSetting {loadingProject} {projectId} {slrSettingsLocked} />
     {/if}
 </ProjectSettingsLayout>
