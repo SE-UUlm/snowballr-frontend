@@ -1,66 +1,28 @@
 import { expect } from "@playwright/test";
-import { test } from "./projects-papers-fixture";
-import { Author, type Paper } from "$lib/model/api/paper";
+import { test } from "./project-papers-page-fixtures";
 import { createAuthor, createPaper } from "$tests/model-builder";
-import type { Project_Paper } from "$lib/model/api/project";
 import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./project-papers-page-model";
 
-export let projectId: string = "";
+test.describe("Papers Overview Tests", () => {
+    test("When navigating to the papers overview page, then the page is displayed", async ({
+        page,
+        projectPapersPage,
+        homePage,
+        projectNavigationBar,
+    }) => {
+        // Directly navigate to the papers overview
+        await page.goto("/");
+        await homePage.openProject(projectPapersPage.projectName);
+        await projectNavigationBar.papersTab.click();
+        await expect(projectPapersPage.showFiltersButton).toBeVisible();
 
-test.describe("View all papers of a project", () => {
-    let projectPaperIds: string[] = [];
+        // Navigate to the papers overview via the project paper view
+        await page.goto("/");
 
-    const TOTAL_PAPERS = NUM_PAPERS_PER_STAGE * 2;
-
-    /**
-     * Create a project with 2 stages and `NUM_PAPERS_PER_STAGE` papers in each stage.
-     * The papers are created with unique titles and authors.
-     * The papers are added to the project in the order they are created.
-     * The project paper ids are stored in `projectPaperIds` for later use.
-     */
-    test.beforeAll(async ({ apiClient }) => {
-        apiClient
-            .createProject({ name: "Project 1" })
-            .then((project) => (projectId = project.response.id));
-
-        const papers: Promise<Paper>[] = [];
-        for (let i = 0; i < TOTAL_PAPERS; i++) {
-            const stageIndex = Math.floor(i / NUM_PAPERS_PER_STAGE);
-            const paperIndex = i % NUM_PAPERS_PER_STAGE;
-            const uniqueSequence = getUniqueSequence(i);
-            const title = `Paper ${stageIndex}/${paperIndex} (${uniqueSequence})`;
-            const year = 1990 + i;
-
-            const authors: Author[] = [
-                {
-                    firstName: stageIndex === 0 ? `Alpha${paperIndex}` : `Beta${paperIndex}`,
-                    lastName: "Author",
-                    orcid: "",
-                },
-            ];
-
-            papers.push(apiClient.createPaper(createPaper({ title, authors, year })).response);
-        }
-        const createdPapers = await Promise.all(papers);
-
-        const projectPaperPromises: Promise<Project_Paper>[] = createdPapers.map((paper, i) => {
-            const stageIndex = Math.floor(i / NUM_PAPERS_PER_STAGE) === 0 ? 0n : 1n;
-            return apiClient.addPaperToProject({
-                projectId: projectId,
-                stage: stageIndex,
-                paperId: paper.id,
-            }).response;
-        });
-        projectPaperIds = (await Promise.all(projectPaperPromises)).map((pp) => pp.id);
-    });
-
-    /**
-     * Remove the project papers and soft delete the project after all tests.
-     * TODO: Delete all papers from the mock backend (Currently not supported).
-     */
-    test.afterAll(async ({ apiClient }) => {
-        projectPaperIds.forEach((id) => apiClient.removePaperFromProject({ id: id }));
-        apiClient.softDeleteProject({ id: projectId });
+        await homePage.openProjectPaper(projectPapersPage.projectPaperNames[0]);
+        await projectNavigationBar.goBackButton.click();
+        await projectNavigationBar.papersTab.click();
+        await expect(projectPapersPage.showFiltersButton).toBeVisible();
     });
 
     test("When opening the project papers page, then the user sees all stages and the stage accordion items are closed.", async ({
@@ -175,7 +137,7 @@ test.describe("View all papers of a project", () => {
         const newPaper = await apiClient.createPaper(createPaper({ title, authors: [author] }))
             .response;
         const newProjectPaper = await apiClient.addPaperToProject({
-            projectId: projectId,
+            projectId: projectPapersPage.projectId,
             stage: 0n,
             paperId: newPaper.id,
         }).response;
@@ -377,7 +339,20 @@ test.describe("View all papers of a project", () => {
 
         await expect(projectPapersPage.searchBarInput).toHaveValue("Hello world");
 
-        await expect(projectPapersPage.stageFilter).toBeVisible(); // as there are filters in the URL, the filter bar is initially shown
-        await expect(projectPapersPage.stageFilter).toHaveText("Stages: Stage 0 (1)");
+        await expect(projectPapersPage.stageFilterButton).toBeVisible(); // as there are filters in the URL, the filter bar is initially shown
+        await expect(projectPapersPage.stageFilterButton).toHaveText("Stages: Stage 0 (1)");
+    });
+
+    test("When the user clicks the filters button,then all available filters are displayed. If the user clicks the button again, the filters disappear. ", async ({
+        projectPapersPage,
+    }) => {
+        for (const filter of projectPapersPage.allFilterButtons) {
+            await expect(filter).not.toBeVisible();
+        }
+
+        await projectPapersPage.showFiltersButton.click();
+        for (const filter of projectPapersPage.allFilterButtons) {
+            await expect(filter).toBeVisible();
+        }
     });
 });

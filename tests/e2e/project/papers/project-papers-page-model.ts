@@ -3,15 +3,25 @@ import { expect, type Locator, type Page } from "@playwright/test";
 export const NUM_PAPERS_PER_STAGE = 5;
 export const getUniqueSequence = (index: number) => String.fromCharCode(65 + index).repeat(5);
 
-export class DevProjectPapersPage {
+export class ProjectPapersPageModel {
     readonly page: Page;
     readonly paperDetailsCard: Locator;
     readonly searchBarInput: Locator;
-    readonly clearFiltersButton: Locator;
     readonly showFiltersButton: Locator;
+    readonly clearFiltersButton: Locator;
+    readonly stageFilterButton: Locator;
+    readonly reviewerFilterButton: Locator;
+    readonly publisherFilterButton: Locator;
+    readonly yearFilterButton: Locator;
+    readonly decisionFilterButton: Locator;
+    readonly criteriaFilterButton: Locator;
+    readonly allFilterButtons: Locator[];
 
-    readonly stageFilter: Locator;
-    readonly yearFilter: Locator;
+    readonly projectName: string;
+    readonly projectPaperNames: string[];
+
+    projectId: string;
+    projectPaperIds: string[];
 
     constructor(page: Page) {
         this.page = page;
@@ -20,9 +30,26 @@ export class DevProjectPapersPage {
         this.searchBarInput = page.getByPlaceholder("Search paper");
         this.clearFiltersButton = page.getByRole("button", { name: "Reset" });
         this.showFiltersButton = page.getByRole("button", { name: "Filter", exact: false });
+        this.stageFilterButton = page.getByRole("button", { name: "Stages", exact: false });
+        this.reviewerFilterButton = page.getByRole("button", { name: "All Reviewers" });
+        this.publisherFilterButton = page.getByRole("button", { name: "All Publishers" });
+        this.yearFilterButton = page.getByRole("button", { name: "Years", exact: false });
+        this.decisionFilterButton = page.getByRole("button", { name: "All Decisions" });
+        this.criteriaFilterButton = page.getByRole("button", { name: "All Criteria" });
+        this.allFilterButtons = [
+            this.stageFilterButton,
+            this.reviewerFilterButton,
+            this.publisherFilterButton,
+            this.yearFilterButton,
+            this.decisionFilterButton,
+            this.criteriaFilterButton,
+        ];
 
-        this.stageFilter = page.getByRole("button", { name: "Stages", exact: false });
-        this.yearFilter = page.getByRole("button", { name: "Years", exact: false });
+        this.projectName = "Project 1";
+        this.projectPaperNames = [];
+
+        this.projectId = "";
+        this.projectPaperIds = [];
     }
 
     /** Helper to get stage trigger locator */
@@ -40,6 +67,11 @@ export class DevProjectPapersPage {
     /** Helper to get paper locator by full title */
     getPaperByTitle(title: string): Locator {
         return this.page.getByRole("button", { name: title });
+    }
+
+    /** Helper to get stage button locator by its name */
+    getStageButton(stageIndex: number): Locator {
+        return this.page.getByRole("button", { name: `Stage ${stageIndex}` });
     }
 
     /** Helper to get the text indicating no search results within an open stage */
@@ -113,21 +145,21 @@ export class DevProjectPapersPage {
      * @param year - The year the nested paper of the project paper was published
      */
     async applyFilter(stage?: number, year?: number) {
-        if (!(await this.stageFilter.isVisible())) {
+        if (!(await this.stageFilterButton.isVisible())) {
             await this.showFiltersButton.click();
-            await expect(this.stageFilter).toBeVisible();
+            await expect(this.stageFilterButton).toBeVisible();
         }
 
         if (stage !== undefined) {
-            await this.stageFilter.click();
+            await this.stageFilterButton.click();
             await this.page.getByRole("option", { name: `Stage ${stage}` }).click();
-            await this.stageFilter.click();
+            await this.stageFilterButton.click();
         }
 
         if (year !== undefined) {
-            await this.yearFilter.click();
+            await this.yearFilterButton.click();
             await this.page.getByRole("option", { name: `${year}` }).click();
-            await this.yearFilter.click();
+            await this.yearFilterButton.click();
         }
     }
 }
