@@ -26,12 +26,12 @@ jobs:
               run: npm run lint-md
 
             - name: Check for Broken Links in README
-              uses: becheran/mlc@v0.21.0
+              uses: becheran/mlc@v0.22.0
               with:
                   args: README.md
 
             - name: Check for Broken Links in README
-              uses: becheran/mlc@v0.21.0
+              uses: becheran/mlc@v0.22.0
               with:
                   args: --ignore-links "https://dl.acm.org/doi/*" wiki/
 
