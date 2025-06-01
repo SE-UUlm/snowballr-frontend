@@ -6,10 +6,8 @@ import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 
-describe.sequential("Project SLR Settings", () => {
-    const projectData = createProject({
-        settings: createProjectSettings(),
-    });
+describe("Maybe As Decision Project Setting", () => {
+    const projectData = createProject();
 
     beforeEach(() => {
         projectData.settings = createProjectSettings();
