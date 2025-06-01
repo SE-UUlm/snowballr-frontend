@@ -44,9 +44,8 @@
 
         await loadingProject
             .then((project) => {
-                const projectSettings = project.settings ?? Project_Settings.create();
-                projectSettings.reviewMaybeAllowed = targetCheckedState;
-                project.settings = projectSettings;
+                project.settings ??= Project_Settings.create();
+                project.settings.reviewMaybeAllowed = targetCheckedState;
 
                 const maskPaths = generateFieldMask(project).filter(
                     (path) => path === "settings.reviewMaybeAllowed",

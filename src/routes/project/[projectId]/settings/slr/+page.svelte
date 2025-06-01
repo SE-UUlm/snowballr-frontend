@@ -7,11 +7,11 @@
     import { onMount } from "svelte";
 
     let { data } = $props();
-    const { user, projectId, loadingProject, loadingMemebers } = data;
+    const { user, projectId, loadingProject, loadingMembers } = data;
     let slrSettingsLocked = $state(false);
 
     const isCurrentUserAdmin = resource<boolean, boolean>(
-        loadingMemebers.then(
+        loadingMembers.then(
             (members) =>
                 members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,
         ),
