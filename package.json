@@ -50,7 +50,7 @@
         "clsx": "^2.1.1",
         "cross-fetch": "^4.1.0",
         "d3": "^7.9.0",
-        "eslint": "^9.26.0",
+        "eslint": "^9.28.0",
         "eslint-config-prettier": "^10.1.2",
         "eslint-plugin-svelte": "^3.9.0",
         "eslint-plugin-tsdoc": "^0.4.0",
