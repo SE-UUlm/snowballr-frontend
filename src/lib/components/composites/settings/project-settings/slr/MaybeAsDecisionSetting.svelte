@@ -33,6 +33,12 @@
 
     let updateSLRSettingsError: ApiError | undefined = $state(undefined);
 
+    /**
+     * Toggles the 'reviewMaybeAllowed' setting in the project settings.
+     * This function updates the project settings to enable or disable the 'Maybe' as decision option.
+     *
+     * @param targetCheckedState - The desired state to set for the 'Maybe' as decision setting.
+     */
     async function toggleIsMaybeAsDecisionSettingStatus(targetCheckedState: boolean) {
         isUpdatingMaybeAsDecisionSettingStatus = true;
 
@@ -135,9 +141,11 @@ This component renders a section within the SLR project settings. It allows admi
 When enabled, reviewers can gain the ability to select 'Maybe' as a decision on a paper, in addition to the standard options. If disabled, the 'Maybe' option will be removed from the decision options.
 Before the setting is changed, a confirmation dialog is presented to the admin, requiring them to confirm their choice to either enable or disable the 'Maybe as Decision' functionality.
 
+The `slrSettingsLocked` prop can be used to disable the switch if the SLR settings are locked, preventing any changes to this setting.
+
 Usage:
 ```svelte
-  <MaybeAsDecisionSetting {projectId} {loadingProject} />
+  <MaybeAsDecisionSetting {projectId} {loadingProject} {slrSettingsLocked} />
 ```
 -->
 <SettingsSection sectionTitle="Maybe as Decision">
