@@ -15,18 +15,19 @@ test.describe("Changing username", () => {
     test.afterAll(async ({ apiClient }) => {
         await apiClient.updateUser({
             user: originalUser,
-        });
+        }).response;
     });
 
     test("When the user enters a valid first and last name, the new name should be updated.", async ({
         page,
         accountSettingsPage,
     }) => {
-        accountSettingsPage.changeUsername("Zeta", "Zeta");
+        await accountSettingsPage.changeUsername("Zeta", "Zeta");
 
         await expect(page.getByRole("textbox", { name: "First Name" })).toHaveValue("Zeta");
         await expect(page.getByRole("textbox", { name: "Last Name" })).toHaveValue("Zeta");
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
+        await expect(page.getByText("Successfully updated your name.")).toBeVisible();
     });
 
     test("When the user enters an invalid first name, the new name should not be updated.", async ({
@@ -35,7 +36,7 @@ test.describe("Changing username", () => {
     }) => {
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
 
-        accountSettingsPage.changeUsername(" ", "Beta");
+        await accountSettingsPage.changeUsername(" ", "Beta");
         await expect(
             page.getByText("First Name cannot start or end with whitespace"),
         ).toBeVisible();
@@ -49,8 +50,24 @@ test.describe("Changing username", () => {
     }) => {
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
 
-        accountSettingsPage.changeUsername("Alpha", " ");
+        await accountSettingsPage.changeUsername("Alpha", " ");
         await expect(page.getByText("Last Name cannot start or end with whitespace")).toBeVisible();
+
+        await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
+    });
+
+    test("When the user doesn't change the name but clicks the rename button, then the new name should not be updated.", async ({
+        page,
+        accountSettingsPage,
+    }) => {
+        await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
+
+        await accountSettingsPage.renameButton.click();
+        await expect(
+            page.getByRole("alert", {
+                name: "To successfully change your name, you must provide a new one that is different from your current one.",
+            }),
+        ).toBeVisible();
 
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
     });

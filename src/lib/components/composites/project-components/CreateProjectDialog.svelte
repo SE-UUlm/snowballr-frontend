@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { CirclePlus, LoaderCircle } from "lucide-svelte";
-    import { Button, buttonVariants } from "$lib/components/primitives/button";
+    import { CirclePlus } from "lucide-svelte";
+    import { buttonVariants } from "$lib/components/primitives/button";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -14,13 +14,15 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
     import Alert from "../utils/Alert.svelte";
+    import LoadingButton from "../button/LoadingButton.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     const user = getContext<() => User>(UserContextKey)();
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
 
-    let isServerStillCreatingProject = $state(false);
+    const isCreatingProject = $state({ value: false });
     let projectWasCreated = $state(false);
     let projectId = $state<string | undefined>(undefined);
 
@@ -29,14 +31,14 @@
 
     let projectNameInput: Input;
     let membersInput: string[] = $state([]);
-    let loading = $state(true);
+    let isLoadingUsers = $state(true);
     let initialPossibleMembers: User[] = $state([]);
 
     onMount(async () => {
         const result = await loadUsers(user);
         initialPossibleMembers = result.initialPossibleMembers;
         isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-        loading = false;
+        isLoadingUsers = false;
     });
 
     /**
@@ -63,46 +65,41 @@
             return;
         }
 
-        isServerStillCreatingProject = true;
-
-        backendService
+        await backendService
             .createProject({
                 name: projectNameInput.getValue(),
             })
             .response.then(async (project) => {
                 projectId = project.id;
-
-                return Promise.all(
-                    membersInput.map(
-                        (memberEmail) =>
-                            backendService.inviteUserToProject({
-                                projectId: projectId!,
-                                userEmail: memberEmail,
-                            }).response,
-                    ),
-                )
-                    .then(() => {
-                        projectWasCreated = true;
-                        open = false;
-                    })
-                    .catch((error) => {
-                        isErrorOnProjectCreation = true;
-                        console.error(`Couldn't invite users to project (${error})`);
-                    });
             })
             .catch((error) => {
                 isErrorOnProjectCreation = true;
                 console.error(`Couldn't create project (${error})`);
             });
-        isServerStillCreatingProject = false;
+
+        await Promise.all(
+            membersInput.map(
+                (memberEmail) =>
+                    backendService.inviteUserToProject({
+                        projectId: projectId!,
+                        userEmail: memberEmail,
+                    }).response,
+            ),
+        )
+            .then(() => {
+                projectWasCreated = true;
+                open = false;
+            })
+            .catch((error) => {
+                isErrorOnProjectCreation = true;
+                console.error(`Couldn't invite users to project (${error})`);
+            });
     }
 </script>
 
 <!--
 @component
 `Dialog` used to create a project by providing a project name and an optional list of initial members.
-
-- `user`: the current, signed in user
 
 Usage:
 ```svelte
@@ -118,7 +115,7 @@ Usage:
                 buttonVariants({ variant: "default" }),
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             ),
-            disabled: loading,
+            disabled: isLoadingUsers,
         }}
         bind:open
     >
@@ -135,7 +132,7 @@ Usage:
             <form
                 id="project-creation"
                 class="flex h-full w-full flex-col gap-5 overflow-x-auto"
-                onsubmit={handleSubmit}
+                onsubmit={(args) => loadingWrapper(isCreatingProject, handleSubmit, args)}
             >
                 <Input
                     bind:this={projectNameInput}
@@ -159,14 +156,14 @@ Usage:
             {/if}
         {/snippet}
         {#snippet footer()}
-            <Button disabled={isServerStillCreatingProject} form="project-creation" type="submit">
-                {#if isServerStillCreatingProject}
-                    <LoaderCircle class="animate-spin" />
-                    Creating Project
-                {:else}
-                    Create Project
-                {/if}
-            </Button>
+            <LoadingButton
+                class="w-full sm:w-42"
+                form="project-creation"
+                label="Create Project"
+                loading={isCreatingProject.value}
+                loadingLabel="Creating Project"
+                type="submit"
+            />
         {/snippet}
     </Dialog>
 </div>

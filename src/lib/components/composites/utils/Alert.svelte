@@ -2,16 +2,17 @@
     import * as Alert from "$lib/components/primitives/alert";
     import { CircleAlertIcon, CircleCheckIcon, InfoIcon, TriangleAlertIcon } from "lucide-svelte";
 
+    export type AlertVariant = "default" | "success" | "info" | "warning" | "error";
     type Props = {
         title: string;
         details?: string;
-        variant?: "default" | "success" | "info" | "warning" | "error";
+        variant?: AlertVariant;
     };
 
     const { title, details, variant = "default" }: Props = $props();
 </script>
 
-<Alert.Root {variant}>
+<Alert.Root aria-label={title} {variant}>
     {#if variant === "success"}
         <CircleCheckIcon class="size-4" role="img" />
     {:else if variant === "info"}

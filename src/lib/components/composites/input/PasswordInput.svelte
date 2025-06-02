@@ -2,11 +2,9 @@
     import Eye from "lucide-svelte/icons/eye";
     import EyeClosed from "lucide-svelte/icons/eye-closed";
     import { Schema } from "$lib/schemas";
-    import Input from "./Input.svelte";
+    import Input, { type InputProps } from "./Input.svelte";
 
-    type Props = {
-        class?: string;
-        value?: string;
+    type Props = Omit<InputProps, "inputId" | "label" | "required" | "type"> & {
         validate?: boolean;
         link?: { href: string; text: string };
     };

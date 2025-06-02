@@ -1,7 +1,6 @@
 <script lang="ts">
     import Input from "$lib/components/composites/input/Input.svelte";
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
-    import { Button } from "$lib/components/primitives/button/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
@@ -13,13 +12,16 @@
     import { AuthenticationStatus } from "$lib/model/api/authentication.js";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
     let signinError: ApiError | undefined = $state(undefined);
 
-    let isLoading = $state(true);
+    let isLoadingAuthStatus = $state(true);
+    const loading = $state({ value: false });
 
     onMount(async () => {
         try {
@@ -32,24 +34,21 @@
             console.error("There was an error acquiring the authentication status.");
         }
 
-        isLoading = false;
+        isLoadingAuthStatus = false;
     });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
         signinError = undefined;
 
-        const isEmailValid = emailInput.validate();
-        if (!isEmailValid) {
-            return;
-        }
+        if (!emailInput.validate()) return;
 
         const userData = {
             email: emailInput.getValue(),
             password: passwordInput.getValue(),
         };
 
-        backendService
+        await backendService
             .login(userData)
             .then(async () => await goto("/"))
             .catch((error) => {
@@ -74,18 +73,22 @@
 <Card.Root
     class={cn(
         "flex w-full max-w-xl flex-col border-slate-500 shadow-lg",
-        isLoading ? "opacity-0" : "",
+        isLoadingAuthStatus ? "opacity-0" : "",
     )}
 >
     <Card.Header class="flex w-full flex-col">
         <Card.Title class="text-3xl">Sign In</Card.Title>
-        <Card.Description>Enter your information to sign in to your account</Card.Description>
+        <Card.Description>Enter your credentials to sign in to your account</Card.Description>
     </Card.Header>
     <Card.Content class="flex w-full flex-col">
-        <form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+        <form
+            class="flex flex-col gap-5"
+            onsubmit={(args) => loadingWrapper(loading, handleSubmit, args)}
+        >
             <Input
                 bind:this={emailInput}
                 class="w-full"
+                disabled={isLoadingAuthStatus || loading.value}
                 errorMessagePrefix="Email must have"
                 inputId="email-input"
                 label="Email"
@@ -97,10 +100,17 @@
             <PasswordInput
                 bind:this={passwordInput}
                 class="w-full"
+                disabled={isLoadingAuthStatus || loading.value}
                 link={{ href: "/resetpassword", text: "Forgot Password?" }}
                 validate={false}
             />
-            <Button class="w-full" type="submit">Sign In</Button>
+            <LoadingButton
+                class="w-full"
+                label="Sign In"
+                loading={loading.value}
+                loadingLabel="Signing In"
+                type="submit"
+            />
             {#if signinError}
                 <Alert
                     details={signinError.errorDetails}

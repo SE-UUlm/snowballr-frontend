@@ -8,21 +8,26 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     type Props = WithElementRef<TooltipTriggerProps> & {
         trigger: Snippet;
+        loadingTrigger?: Snippet;
         content: Snippet;
         triggerVariant?: ButtonVariant;
         triggerSize?: ButtonSize;
         openOnClick?: boolean;
+        loading?: boolean;
     };
 
     const {
         trigger,
+        loadingTrigger = trigger,
         content,
         triggerVariant = "none",
         triggerSize = "fit",
         openOnClick = false,
+        loading = false,
         class: className,
         ...restProps
     }: Props = $props();
@@ -69,7 +74,12 @@ Usage:
             onclick={handleClick}
             {...restProps}
         >
-            {@render trigger()}
+            {#if loading}
+                <LoaderCircle class="animate-spin" />
+                {@render loadingTrigger()}
+            {:else}
+                {@render trigger()}
+            {/if}
         </Tooltip.Trigger>
         <Tooltip.Content>
             {@render content()}

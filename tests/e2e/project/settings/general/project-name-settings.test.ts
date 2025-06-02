@@ -11,35 +11,37 @@ test.describe("Renaming a project", () => {
     test.beforeAll(async ({ apiClient }) => {
         await apiClient
             .createProject({ name: projectName })
-            .then((project) => (projectId = project.response.id));
+            .response.then((project) => (projectId = project.id));
     });
 
     test.afterAll(async ({ apiClient }) => {
-        apiClient.softDeleteProject({ id: projectId });
+        await apiClient.softDeleteProject({ id: projectId }).response;
     });
 
-    test("When the user enters an invalid project name, then the name of the project remains unchanged.", async ({
+    test("When the user enters the same project name, then a warning alert is shown", async ({
         page,
         projectSettingsPage,
     }) => {
         await projectSettingsPage.changeProjectName("Project 1");
-        await projectSettingsPage.checkForErrors();
-        const projectNameHeader = page.getByRole("heading", { name: "Project 1" });
-        await expect(projectNameHeader).toBeVisible();
-        const toast = page.getByText("Please enter a new project name.");
-        await expect(toast).toBeVisible();
+
+        await expect(page.getByRole("heading", { name: "Project 1" })).toBeVisible();
+        await expect(
+            page.getByRole("alert", {
+                name: "To successfully change the project's name, you must provide a new one that is different from the current one.",
+            }),
+        ).toBeVisible();
     });
 
-    test("When the user enters an blank project name, then the name of the project remains unchanged.", async ({
+    test("When the user enters a blank project name, then the project name remains unchanged and an error is shown", async ({
         page,
         projectSettingsPage,
     }) => {
         await projectSettingsPage.changeProjectName(" ");
-        await projectSettingsPage.checkForErrors();
-        const projectNameHeader = page.getByRole("heading", { name: "Project 1" });
-        await expect(projectNameHeader).toBeVisible();
-        const toast = page.getByText("The project name cannot start or end with whitespace");
-        await expect(toast).toBeVisible();
+
+        await expect(page.getByRole("heading", { name: "Project 1" })).toBeVisible();
+        await expect(
+            page.getByText("The project name cannot start or end with whitespace"),
+        ).toBeVisible();
     });
 
     test("When the user enters a valid project name, then the name of the project should be updated to this name.", async ({
@@ -47,12 +49,10 @@ test.describe("Renaming a project", () => {
         projectSettingsPage,
     }) => {
         await projectSettingsPage.changeProjectName("New Project");
+
         await projectSettingsPage.checkForErrors();
-        const oldHeader = page.getByRole("heading", { name: "Project 1" });
-        await expect(oldHeader).not.toBeVisible();
-        const projectNameHeader = page.getByRole("heading", { name: "New Project" });
-        await expect(projectNameHeader).toBeVisible();
-        const toast = page.getByText("Successfully updated project name.");
-        await expect(toast).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Project 1" })).not.toBeVisible();
+        await expect(page.getByRole("heading", { name: "New Project" })).toBeVisible();
+        await expect(page.getByText("Successfully updated project name.")).toBeVisible();
     });
 });

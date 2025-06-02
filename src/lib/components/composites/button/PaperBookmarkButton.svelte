@@ -2,7 +2,7 @@
     import Bookmark from "lucide-svelte/icons/bookmark";
     import BookmarkPlus from "lucide-svelte/icons/bookmark-plus";
     import BookmarkMinus from "lucide-svelte/icons/bookmark-minus";
-    import Tooltip from "./utils/Tooltip.svelte";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
     import { backendService } from "$lib/grpc-api";
     import { cn } from "$lib/utils/shadcn-helper";

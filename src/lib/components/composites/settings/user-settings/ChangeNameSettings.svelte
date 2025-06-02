@@ -1,6 +1,5 @@
 <script lang="ts">
     import { invalidate } from "$app/navigation";
-    import Button from "$lib/components/primitives/button/button.svelte";
     import { backendService } from "$lib/grpc-api";
     import { User } from "$lib/model/api/user";
     import type { ApiError } from "$lib/model/general";
@@ -11,17 +10,21 @@
     import { generateFieldMask } from "protobuf-fieldmask";
     import { getContext } from "svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
-    import Alert from "../../utils/Alert.svelte";
+    import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
-    const user = getContext<() => User>(UserContextKey)();
+    const user = $derived(getContext<() => User>(UserContextKey)());
 
     let firstNameInput: Input;
     let lastNameInput: Input;
 
-    let updateUserError: ApiError | undefined = $state(undefined);
+    let updateUserError: (ApiError & { variant: AlertVariant }) | undefined = $state(undefined);
+    const loading = $state({ value: false });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
+        updateUserError = undefined;
 
         const isFirstNameValid = firstNameInput.validate();
         const isLastNameValid = lastNameInput.validate();
@@ -33,26 +36,35 @@
             lastName: lastNameInput.getValue(),
         };
 
-        const updatedUser = User.create(userData);
-        const maskPaths = generateFieldMask(userData).filter((path) => path !== "id");
+        if (userData.firstName === user.firstName && userData.lastName === user.lastName) {
+            updateUserError = {
+                errorTitle:
+                    "To successfully change your name, you must provide a new one that is different from your current one.",
+                variant: "warning",
+            };
+            return;
+        }
 
-        backendService
+        await backendService
             .updateUser({
-                user: updatedUser,
+                user: User.create(userData),
                 mask: {
-                    paths: maskPaths,
+                    paths: generateFieldMask(userData),
                 },
             })
-            .response.then(() => {
-                invalidate("data:getCurrentUser");
+            .response.then(async () => {
+                await invalidate("data:getCurrentUser");
                 toast.success("Successfully updated your name.");
 
-                // Make sure the input fields are not focused after submitting
+                // Make sure that the input fields are not focused after submitting
                 (document.activeElement as HTMLElement)?.blur();
             })
             .catch((error) => {
-                updateUserError = { errorTitle: "Something went wrong while updating user." };
-                console.error(error);
+                updateUserError = {
+                    errorTitle: "Something went wrong while updating user.",
+                    variant: "error",
+                };
+                console.error(`Couldn't update user name: ${error}`);
             });
     }
 </script>
@@ -72,11 +84,12 @@ Usage:
     </p>
     <form
         class="flex w-full max-w-100 flex-col items-center gap-2.5 md:h-fit md:max-w-200 md:flex-row md:items-start"
-        onsubmit={handleSubmit}
+        onsubmit={(args) => loadingWrapper(loading, handleSubmit, args)}
     >
         <Input
             bind:this={firstNameInput}
             class="w-full"
+            disabled={loading.value}
             errorMessagePrefix="First Name"
             inputId="first-name-input"
             label="First Name"
@@ -89,6 +102,7 @@ Usage:
         <Input
             bind:this={lastNameInput}
             class="w-full"
+            disabled={loading.value}
             errorMessagePrefix="Last Name"
             inputId="last-name-input"
             label="Last Name"
@@ -98,14 +112,20 @@ Usage:
             type="text"
             value={user.lastName}
         />
-        <Button class="text-md w-full md:mt-5.5 md:w-25" type="submit">Rename</Button>
+        <LoadingButton
+            class="text-md w-full md:mt-5.5 md:w-80 lg:w-72 xl:w-68"
+            label="Rename"
+            loading={loading.value}
+            loadingLabel="Renaming"
+            type="submit"
+        />
     </form>
     {#if updateUserError}
         <div class="max-w-100 md:max-w-200">
             <Alert
                 details={updateUserError.errorDetails}
                 title={updateUserError.errorTitle}
-                variant="error"
+                variant={updateUserError.variant}
             />
         </div>
     {/if}

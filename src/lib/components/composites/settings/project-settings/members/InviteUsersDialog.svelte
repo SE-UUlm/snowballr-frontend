@@ -1,7 +1,6 @@
 <script lang="ts">
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Project_Member } from "$lib/model/api/project";
@@ -11,6 +10,8 @@
     import { getContext } from "svelte";
     import { UserContextKey } from "$lib/global-context/userContext";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     interface Props {
         projectId: string;
@@ -28,14 +29,14 @@
 
     const user = getContext<() => User>(UserContextKey)();
 
-    let loading = $state(false);
+    const loading = $state({ value: false });
     let error = $state<ApiError | undefined>(undefined);
     let open = $state(false);
     let membersInput: string[] = $state([]);
     let loadingUsers = $state(true);
     let isErrorOnUsersLoading = $state(false);
     let initialPossibleMembers: User[] = $state([]);
-    let actionButtonDisabled = $derived(loading || membersInput.length === 0);
+    let actionButtonDisabled = $derived(loading.value || membersInput.length === 0);
 
     $effect(() => {
         loadingMembers
@@ -58,7 +59,6 @@
         event.preventDefault();
 
         error = undefined;
-        loading = true;
         try {
             const members = (await loadingMembers).map((member) => member.user?.email);
             // filter out emails of existing members
@@ -78,7 +78,6 @@
             error = { errorTitle: "Something went wrong while inviting the users." };
             console.error(`Couldn't invite users: ${inviteUsersError}`);
         }
-        loading = false;
     }
 </script>
 
@@ -114,7 +113,7 @@ Usage:
         Search for an existing user or invite a new user by email.
     {/snippet}
     {#snippet content()}
-        <form id="invite-users" onsubmit={inviteUsers}>
+        <form id="invite-users" onsubmit={(args) => loadingWrapper(loading, inviteUsers, args)}>
             <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
         </form>
         {#if error}
@@ -122,19 +121,15 @@ Usage:
         {/if}
     {/snippet}
     {#snippet footer()}
-        <Button
-            class="w-32"
+        <LoadingButton
+            class="w-full sm:w-46"
             data-testid="invite-users-button"
             disabled={actionButtonDisabled}
             form="invite-users"
+            label="Send Invitations"
+            loading={loading.value}
+            loadingLabel="Sending Invitations"
             type="submit"
-        >
-            {#if loading}
-                <LoaderCircle class="animate-spin" />
-                Sending Invitations
-            {:else}
-                Send Invitations
-            {/if}
-        </Button>
+        />
     {/snippet}
 </Dialog>

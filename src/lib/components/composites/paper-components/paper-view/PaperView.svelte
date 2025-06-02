@@ -6,7 +6,7 @@
         type ProjectResearchContextCardProps,
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
-    import PaperBookmarkButton from "../../PaperBookmarkButton.svelte";
+    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
@@ -107,7 +107,7 @@
     });
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
-    let isSubmittingReview = $state(false);
+    let isSubmittingReview = $state({ value: false });
     const loadingUserReview = getUserReviewIfAlreadySubmitted();
     loadingUserReview.then((review) => {
         const selectedCriteria = review?.selectedCriteriaIds ?? [];

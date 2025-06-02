@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
-import DownloadButton from "$lib/components/composites/DownloadButton.svelte";
+import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
 import userEvent from "@testing-library/user-event";
 
 describe("DownloadButton", () => {

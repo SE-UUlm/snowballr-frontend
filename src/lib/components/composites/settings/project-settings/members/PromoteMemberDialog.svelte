@@ -3,7 +3,7 @@
     import { buttonVariants } from "$lib/components/primitives/button";
     import { backendService } from "$lib/grpc-api";
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
-    import { getName, wrapLongWords } from "$lib/utils/common-helper";
+    import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/members/helper";
 
@@ -40,13 +40,13 @@
             !isAdminView ||
             member.isInvitationPending,
     );
-    let loading = $state(false);
+    const loading = $state({ value: false });
     let error = $state<unknown>(undefined);
     let open = $state(false);
 
     async function promoteMember() {
         error = undefined;
-        loading = true;
+
         await backendService
             .updateProjectMemberRole({
                 projectId,
@@ -61,7 +61,6 @@
                 error = promoteMemberError;
                 console.error(`Couldn't promote member: ${promoteMemberError}`);
             });
-        loading = false;
     }
 </script>
 
@@ -75,12 +74,16 @@ Usage:
 ```
 -->
 <AlertDialog
+    actionButtonLoadingText="Promoting Member to a Project Admin"
     actionButtonText="Promote Member to a Project Admin"
     actionProps={{
+        class: "w-78",
         variant: "destructiveSubtle",
-        onclick: promoteMember,
+        onclick: (args) => loadingWrapper(loading, promoteMember, args),
     }}
+    {error}
     errorText="Couldn't promote member"
+    loading={loading.value}
     title={`Promote ${memberName} to a Project Admin?`}
     triggerProps={{
         class: cn(
@@ -93,8 +96,6 @@ Usage:
         disabled: isRoleReadonly || disabled,
         "aria-label": `Promote member ${member.user!.email}`,
     }}
-    bind:loading
-    bind:error
     bind:open
 >
     {#snippet trigger()}
