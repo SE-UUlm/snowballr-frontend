@@ -38,7 +38,8 @@
 
         if (userData.firstName === user.firstName && userData.lastName === user.lastName) {
             updateUserError = {
-                errorTitle:
+                errorTitle: "No Changes Detected",
+                errorDetails:
                     "To successfully change your name, you must provide a new one that is different from your current one.",
                 variant: "warning",
             };
@@ -61,7 +62,9 @@
             })
             .catch((error) => {
                 updateUserError = {
-                    errorTitle: "Something went wrong while updating user.",
+                    errorTitle: "Failed to Update User",
+                    errorDetails:
+                        "Something went wrong while updating the user. Please make sure your internet connection is stable, then try again.",
                     variant: "error",
                 };
                 console.error(`Couldn't update user name: ${error}`);

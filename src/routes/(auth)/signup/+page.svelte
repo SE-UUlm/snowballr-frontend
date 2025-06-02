@@ -56,8 +56,8 @@
             else throw "unreachable";
 
             registrationError = {
-                errorTitle: "Input Validation Failed",
-                errorDetails: `The Input "${failedInput}" contains an error.`,
+                errorTitle: "Invalid Input",
+                errorDetails: `The input "${failedInput}" is not valid. Please check and try again.`,
             };
             return;
         }
@@ -75,8 +75,9 @@
             .catch((error) => {
                 if (error.code === StatusCodes.ALREADY_EXISTS) {
                     registrationError = {
-                        errorTitle: "An account with this email address already exists.",
-                        errorDetails: "Try logging in or resetting your password",
+                        errorTitle: "Email Already Registered",
+                        errorDetails:
+                            "An account with this email address already exists. Try logging in or resetting your password.",
                     };
                 } else {
                     registrationError = { errorTitle: "Something went wrong while registration." };

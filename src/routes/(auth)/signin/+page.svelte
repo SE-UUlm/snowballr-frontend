@@ -54,9 +54,9 @@
             .catch((error) => {
                 if (error.code === StatusCodes.UNAUTHENTICATED) {
                     signinError = {
-                        errorTitle: "The provided credentials are not correct.",
+                        errorTitle: "Invalid Credentials",
                         errorDetails:
-                            "Check if the email and password are correct or try resetting your password.",
+                            "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
                     };
                 } else {
                     signinError = { errorTitle: "Something unknown went wrong." };

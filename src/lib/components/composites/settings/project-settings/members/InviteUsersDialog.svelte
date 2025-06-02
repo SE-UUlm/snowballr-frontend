@@ -75,7 +75,11 @@
             membersInput = [];
             open = false;
         } catch (inviteUsersError) {
-            error = { errorTitle: "Something went wrong while inviting the users." };
+            error = {
+                errorTitle: "Invitation Failed",
+                errorDetails:
+                    "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
+            };
             console.error(`Couldn't invite users: ${inviteUsersError}`);
         }
     }
@@ -117,7 +121,7 @@ Usage:
             <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
         </form>
         {#if error}
-            <Alert title={error.errorTitle} variant="error" />
+            <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
         {/if}
     {/snippet}
     {#snippet footer()}

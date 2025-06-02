@@ -40,7 +40,9 @@
             })
             .catch((error) => {
                 updateProjectError = {
-                    errorTitle: "Something went wrong while loading the project name.",
+                    errorTitle: "Failed to Load Project",
+                    errorDetails:
+                        "Something went wrong while loading the project name. Please make sure your internet connection is stable, then try again.",
                     variant: "error",
                 };
                 console.error(`Couldn't load the project name: ${error}`);
@@ -67,7 +69,8 @@
 
         if (projectName === projectData.name) {
             updateProjectError = {
-                errorTitle:
+                errorTitle: "No Changes Detected",
+                errorDetails:
                     "To successfully change the project's name, you must provide a new one that is different from the current one.",
                 variant: "warning",
             };
@@ -91,7 +94,9 @@
             })
             .catch((error) => {
                 updateProjectError = {
-                    errorTitle: "Something went wrong while updating the project name.",
+                    errorTitle: "Failed to Update Project",
+                    errorDetails:
+                        "Something went wrong while updating the project name. Please make sure your internet connection is stable, then try again.",
                     variant: "error",
                 };
                 console.error(`Couldn't update project: ${error}`);
@@ -137,7 +142,11 @@ Usage:
     </form>
     {#if updateProjectError}
         <div class="max-w-100 md:max-w-150">
-            <Alert title={updateProjectError.errorTitle} variant={updateProjectError.variant} />
+            <Alert
+                details={updateProjectError.errorDetails}
+                title={updateProjectError.errorTitle}
+                variant={updateProjectError.variant}
+            />
         </div>
     {/if}
 </SettingsSection>
