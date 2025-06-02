@@ -65,8 +65,13 @@ test.describe("Changing username", () => {
         await accountSettingsPage.renameButton.click();
         await expect(
             page.getByRole("alert", {
-                name: "To successfully change your name, you must provide a new one that is different from your current one.",
+                name: "No Changes Detected",
             }),
+        ).toBeVisible();
+        await expect(
+            page.getByText(
+                "To successfully change your name, you must provide a new one that is different from your current one.",
+            ),
         ).toBeVisible();
 
         await expect(page.getByRole("button", { name: "ZZ", exact: true })).toBeVisible();
