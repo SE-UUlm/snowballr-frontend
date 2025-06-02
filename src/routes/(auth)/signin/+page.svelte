@@ -30,8 +30,8 @@
             if (authStatus === AuthenticationStatus.AUTHENTICATED) {
                 await goto("/");
             }
-        } catch {
-            console.error("There was an error acquiring the authentication status.");
+        } catch (error) {
+            console.error("There was an error acquiring the authentication status:", error);
         }
 
         isLoadingAuthStatus = false;
