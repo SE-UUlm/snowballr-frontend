@@ -31,24 +31,27 @@ function filter<T>(
 }
 
 /**
- * Checks if a given paper matches all active project paper filters.
+ * Checks if a given project paper matches all active project paper filters.
  *
  * @remarks
- * Only filter that have one or more selected values are applied, the remaining filters are ignored.
+ * Only filters that have one or more selected values are applied (called *active*), the remaining filters are ignored.
  * A project paper must match all *active* filters.
- * This means for the stage, publisher, year or decision that the paper's stage, ... must be
- * in the list of selected values of the filters.
- * Regarding the reviewers or selected criteria, at least one review or selected criterion must be
- * in the list of selected values of the filters.
+ * This means for the stage, publisher, year or decision of the project paper
+ * that the paper's stage, etc. must be in the list of the filters.
+ * Regarding the reviewers or selected criteria, at least one review or selected criterion of the project paper
+ * must be in the list of the filters.
  *
  * @param paper - The paper to evaluate against the filters.
- * @param filters - The filters to apply.
+ * @param filters - The filters to check against.
  * @returns True if the paper matches all filters, false otherwise.
  */
-function matchesFilters(paper: Project_Paper, filters: ProjectPaperFilter) {
+function matchesPaperFilters(paper: Project_Paper, filters: ProjectPaperFilter) {
     const { stages, reviewers, publishers, years, decisions, criteria } = filters;
 
-    if (stages.length > 0 && !stages.includes(String(paper.stage))) {
+    const matchesFilter = (filter: string[], value: string | bigint | number | undefined) =>
+        filter.length === 0 || (value !== undefined && filter.includes(String(value)));
+
+    if (!matchesFilter(stages, paper.stage)) {
         return false;
     }
 
@@ -59,15 +62,15 @@ function matchesFilters(paper: Project_Paper, filters: ProjectPaperFilter) {
         return false;
     }
 
-    if (publishers.length > 0 && !publishers.includes(String(paper.paper?.publisher))) {
+    if (!matchesFilter(publishers, paper.paper?.publisher)) {
         return false;
     }
 
-    if (years.length > 0 && !years.includes(String(paper.paper?.year))) {
+    if (!matchesFilter(years, paper.paper?.year)) {
         return false;
     }
 
-    if (decisions.length > 0 && !decisions.includes(String(paper.decision))) {
+    if (!matchesFilter(decisions, paper.decision)) {
         return false;
     }
 
@@ -128,7 +131,7 @@ function filterProjectPapers(
 ) {
     // filter by project paper filter
     if (filters) {
-        allProjectPapers = allProjectPapers.filter((paper) => matchesFilters(paper, filters));
+        allProjectPapers = allProjectPapers.filter((paper) => matchesPaperFilters(paper, filters));
     }
 
     // if no search text is given, only the filters are applied
