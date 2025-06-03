@@ -311,7 +311,7 @@ test.describe("View all papers of a project", () => {
         await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
     });
 
-    test("When the user selects filter that no paper matches, then the 'no results' message is shown.", async ({
+    test("When the user selects a filter that no paper matches, then the 'no results' message is shown.", async ({
         projectPapersPage,
     }) => {
         await projectPapersPage.openStage(0);
@@ -328,7 +328,7 @@ test.describe("View all papers of a project", () => {
         await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
     });
 
-    test("When the user clears the filter using the reset button, then all papers are shown again.", async ({
+    test("When the user clears the filters using the reset button, then all papers are shown again.", async ({
         projectPapersPage,
     }) => {
         const matchingPaper = `Paper 0/0 (${getUniqueSequence(0)})`;
@@ -352,7 +352,7 @@ test.describe("View all papers of a project", () => {
         await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
     });
 
-    test("When the user reloads the page, the search text is restored from the URL.", async ({
+    test("When the user reloads the page, then the search text is restored from the URL.", async ({
         projectPapersPage,
         page,
     }) => {

@@ -16,7 +16,7 @@ describe("Custom filter", () => {
     );
 
     test(
-        "When papers are filtered, only papers where the id, title or authors match " +
+        "When papers are filtered, then only papers where the id, title or authors match " +
             "the search string - considering the FZF matching - are returned.",
         async () => {
             const papers = [Papers.demoPaper1, Papers.demoPaper2, Papers.demoPaper3];
@@ -40,7 +40,7 @@ describe("Custom filter", () => {
     );
 
     test(
-        "When project papers are filtered by search text, only papers where the id, title or " +
+        "When project papers are filtered by search text, then only papers where the id, title or " +
             "authors match the search string - considering the FZF matching - are returned.",
         () => {
             const projectPapers = [
@@ -61,7 +61,7 @@ describe("Custom filter", () => {
     );
 
     test(
-        "When project papers are filtered by specific filter arrays, only papers conforming all" +
+        "When project papers are filtered by specific filter arrays, then only papers conforming all" +
             "non-empty filter arrays are returned.",
         () => {
             const projectPapers = [
@@ -96,7 +96,7 @@ describe("Custom filter", () => {
     );
 
     test(
-        "When users are filtered, only users matching the search string - " +
+        "When users are filtered, then only users matching the search string - " +
             "considering the FZF matching - are returned.",
         async () => {
             const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
@@ -137,7 +137,7 @@ describe("Custom filter", () => {
         },
     );
 
-    test("When a project paper match all filters, then it is not filtered out", () => {
+    test("When a project paper matches all filters, then it is not filtered out", () => {
         const filters = {
             stages: ["0"],
             reviewers: ["1"],

@@ -104,7 +104,7 @@ function filterPapers(allPapers: Paper[], searchText: string) {
 }
 
 /**
- * Filters project papers based on filter and / or a search text and sorts them by best match.
+ * Filters project papers based on filters and / or a search text and sorts them by best match.
  * If the search text starts with "#", it is treated as a paper ID.
  * Otherwise, it is treated as a search text for the paper title and authors and the local ID.
  *
@@ -131,7 +131,7 @@ function filterProjectPapers(
         allProjectPapers = allProjectPapers.filter((paper) => matchesFilters(paper, filters));
     }
 
-    // if no search text is given, only the filter are applied
+    // if no search text is given, only the filters are applied
     if (!searchText) {
         return allProjectPapers;
     }
