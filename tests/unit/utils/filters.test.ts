@@ -4,7 +4,7 @@ import { filterPapers, filterProjectPapers, filterUsers } from "$lib/utils/filte
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import { createPaper, createProjectPaper, createReview } from "$tests/model-builder";
 
-describe("Custom filter", () => {
+describe("Filter papers", () => {
     test(
         "When papers should be filtered, but no search is provided, " +
             "then the same list of papers is returned ",
@@ -24,7 +24,9 @@ describe("Custom filter", () => {
             expect(filterPapers(papers, "2 J")).toStrictEqual([Papers.demoPaper3]);
         },
     );
+});
 
+describe("Filter project papers", () => {
     test(
         "When project papers should be filtered, but neither a filter nor a search text is provided," +
             "then the same list of project papers is returned",
@@ -85,26 +87,6 @@ describe("Custom filter", () => {
         },
     );
 
-    test(
-        "When users should be filtered, but no search is provided, " +
-            "then the same list of users is returned ",
-        async () => {
-            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
-
-            expect(filterUsers(users, "")).toStrictEqual(users);
-        },
-    );
-
-    test(
-        "When users are filtered, then only users matching the search string - " +
-            "considering the FZF matching - are returned.",
-        async () => {
-            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
-
-            expect(filterUsers(users, "Doe")).toStrictEqual([Users.johnDoe, Users.janeDoe]);
-        },
-    );
-
     test.each([
         { stage: 1n },
         { reviews: [createReview({ userId: "0", selectedCriteriaIds: ["2"] })] },
@@ -158,4 +140,26 @@ describe("Custom filter", () => {
             matchingProjectPaper,
         ]);
     });
+});
+
+describe("Filter users", () => {
+    test(
+        "When users should be filtered, but no search is provided, " +
+            "then the same list of users is returned ",
+        async () => {
+            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
+
+            expect(filterUsers(users, "")).toStrictEqual(users);
+        },
+    );
+
+    test(
+        "When users are filtered, then only users matching the search string - " +
+            "considering the FZF matching - are returned.",
+        async () => {
+            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
+
+            expect(filterUsers(users, "Doe")).toStrictEqual([Users.johnDoe, Users.janeDoe]);
+        },
+    );
 });
