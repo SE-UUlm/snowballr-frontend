@@ -73,4 +73,8 @@ test.describe("Changing SLR settings", () => {
         await reloadWait(page, page.getByRole("heading", { name: slrProjectName }));
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).not.toBeChecked();
     });
+
+    // TODO: Implement tests, as soon as the backend supports the update of states of the project to `ACTIVE_LOCKED`
+    test.skip("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
+    test.skip("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
 });
