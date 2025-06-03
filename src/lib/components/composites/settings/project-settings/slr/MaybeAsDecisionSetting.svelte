@@ -65,13 +65,19 @@
                     .catch((error) => {
                         console.error("Error updating project settings:", error);
                         updateSLRSettingsError = {
-                            errorTitle: "Failed to update project settings",
+                            errorTitle: "Project Settings Update Failed",
+                            errorDetails:
+                                "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
                         };
                     });
             })
             .catch((error) => {
                 console.error("Error fetching project settings:", error);
-                toast.error("Failed to fetch project settings.");
+                updateSLRSettingsError = {
+                    errorTitle: "Project Settings Load Failed",
+                    errorDetails:
+                        "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
+                };
             })
             .finally(() => {
                 isUpdatingMaybeAsDecisionSettingStatus = false;
@@ -124,8 +130,11 @@
             .catch((error) => {
                 console.error("Error fetching project settings:", error);
                 updateSLRSettingsError = {
-                    errorTitle: "Failed to update project settings",
+                    errorTitle: "Project Settings Load Failed",
+                    errorDetails:
+                        "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
                 };
+
                 maybeAsDecision.isActivated = false;
             })
             .finally(() => {
@@ -164,7 +173,11 @@ Usage:
         </div>
     </div>
     {#if updateSLRSettingsError}
-        <Alert title={updateSLRSettingsError.errorTitle} variant="error" />
+        <Alert
+            details={updateSLRSettingsError.errorDetails}
+            title={updateSLRSettingsError.errorTitle}
+            variant="error"
+        />
     {/if}
 
     <AlertDialog
