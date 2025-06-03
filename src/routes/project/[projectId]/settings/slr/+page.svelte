@@ -8,7 +8,7 @@
 
     let { data } = $props();
     const { user, projectId, loadingProject, loadingMembers } = data;
-    let slrSettingsLocked = $state(false);
+    let slrSettingsLocked = $state(true);
 
     const isCurrentUserAdmin = resource<boolean, boolean>(
         loadingMembers.then(
@@ -29,7 +29,7 @@
                     return project.status !== ProjectStatus.ACTIVE;
                 })
                 .catch(() => {
-                    return false; // If loading fails, assume settings are not locked
+                    return true; // If loading fails, assume settings are not locked
                 });
         }
 
