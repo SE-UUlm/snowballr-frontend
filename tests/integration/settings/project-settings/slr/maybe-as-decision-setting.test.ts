@@ -193,14 +193,40 @@ describe("Maybe As Decision Project Setting", () => {
         });
         screen.getByRole("button", { name: "Confirm" }).click();
 
-        await waitFor(() => {
-            expect(screen.getByText("Failed to update project settings")).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByRole("alert", { name: "Project Settings Update Failed" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
+            ),
+        ).toBeInTheDocument();
 
         expect(maybeSwitch).not.toBeChecked();
         expect(maybeSwitch).toBeEnabled();
         expect(maybeAsDecision.isActivated).toBe(false);
 
         expect(mockGetCall).toHaveBeenCalledOnce();
+    });
+
+    test("When the project fails to resolve, then an error message is displayed", async () => {
+        mockFailedApiCall("getProjectById");
+        render(MaybeAsDecisionSetting, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                loadingProject: loading(projectData),
+                slrSettingsLocked: false,
+            },
+        });
+
+        expect(
+            await screen.findByRole("alert", { name: "Project Settings Load Failed" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
+            ),
+        ).toBeInTheDocument();
     });
 });
