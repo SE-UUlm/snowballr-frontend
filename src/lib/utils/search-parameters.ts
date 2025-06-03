@@ -21,7 +21,7 @@ export function getSearchTextFromURL() {
  * @param searchParams - The current URL search parameters
  * @returns The updated search parameters with the added, deleted or updated 'searchText' value.
  */
-export function updateSearchTextInURL(
+export function updateSearchTextParam(
     searchText: string,
     searchParams: SvelteURLSearchParams,
 ): SvelteURLSearchParams {
@@ -66,7 +66,7 @@ export function getFilterFromURL(): ProjectPaperFilter {
  * @param searchParams - The current URL search parameters
  * @returns The updated search parameters with the added, deleted or updated filter values.
  */
-export function updateFiltersInURL(
+export function updateFiltersParam(
     filters: ProjectPaperFilter,
     searchParams: SvelteURLSearchParams,
 ): SvelteURLSearchParams {

@@ -2,8 +2,8 @@ import { describe, expect, test } from "vitest";
 import {
     getFilterFromURL,
     getSearchTextFromURL,
-    updateFiltersInURL,
-    updateSearchTextInURL,
+    updateFiltersParam,
+    updateSearchTextParam,
 } from "$lib/utils/search-parameters";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
@@ -29,7 +29,7 @@ describe("Helper search text URL query parameter", () => {
             "then the query parameter will be deleted.",
         async () => {
             const searchParameters = new SvelteURLSearchParams("searchText=hello+world");
-            expect(updateSearchTextInURL("", searchParameters)).toStrictEqual(
+            expect(updateSearchTextParam("", searchParameters)).toStrictEqual(
                 new SvelteURLSearchParams(""),
             );
         },
@@ -40,7 +40,7 @@ describe("Helper search text URL query parameter", () => {
             "then the query parameter will be updated.",
         async () => {
             const searchParameters = new SvelteURLSearchParams("searchText=hello+world");
-            expect(updateSearchTextInURL("hello hello", searchParameters)).toStrictEqual(
+            expect(updateSearchTextParam("hello hello", searchParameters)).toStrictEqual(
                 new SvelteURLSearchParams("searchText=hello+hello"),
             );
         },
@@ -91,7 +91,7 @@ describe("Helper filters URL query parameters", () => {
                 decisions: [],
                 criteria: [],
             };
-            expect(updateFiltersInURL(filters, searchParameters)).toStrictEqual(
+            expect(updateFiltersParam(filters, searchParameters)).toStrictEqual(
                 new SvelteURLSearchParams(""),
             );
         },
@@ -110,7 +110,7 @@ describe("Helper filters URL query parameters", () => {
                 decisions: ["1", "2"],
                 criteria: [],
             };
-            expect(updateFiltersInURL(filters, searchParameters)).toStrictEqual(
+            expect(updateFiltersParam(filters, searchParameters)).toStrictEqual(
                 new SvelteURLSearchParams("decisions=1,2"),
             );
         },

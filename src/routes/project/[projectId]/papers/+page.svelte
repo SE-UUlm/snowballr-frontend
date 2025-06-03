@@ -27,8 +27,8 @@
     import {
         getFilterFromURL,
         getSearchTextFromURL,
-        updateFiltersInURL,
-        updateSearchTextInURL,
+        updateFiltersParam,
+        updateSearchTextParam,
     } from "$lib/utils/search-parameters";
     import { SvelteURLSearchParams } from "svelte/reactivity";
     import { goto } from "$app/navigation";
@@ -79,7 +79,7 @@
     });
 
     $effect(() => {
-        searchParameters = updateFiltersInURL(
+        searchParameters = updateFiltersParam(
             {
                 stages: papersFilters.stages,
                 reviewers: papersFilters.reviewers,
@@ -110,7 +110,7 @@
                 <SearchBar
                     onSearch={(text) => {
                         searchText = text;
-                        searchParameters = updateSearchTextInURL(searchText, searchParameters);
+                        searchParameters = updateSearchTextParam(searchText, searchParameters);
                     }}
                     placeholderText="Search paper or start with '#' to only search by id"
                     timeoutInMs={0}
