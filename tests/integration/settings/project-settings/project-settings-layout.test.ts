@@ -10,6 +10,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId: "1",
                 selectedTab: "general",
+                isCurrentUserAdmin: true,
             },
         });
 
@@ -29,6 +30,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId: "1",
                 selectedTab: "review",
+                isCurrentUserAdmin: true,
             },
         });
 
@@ -61,6 +63,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId,
                 selectedTab: "general",
+                isCurrentUserAdmin: true,
             },
         });
 

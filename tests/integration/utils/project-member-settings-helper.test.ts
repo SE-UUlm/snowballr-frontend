@@ -1,7 +1,7 @@
 import { Members, Users } from "$tests/example-data";
 import { mockApiCall } from "$tests/setupTest";
 import { describe, expect, test } from "vitest";
-import { loadMembers } from "../../../src/routes/project/[projectId]/settings/members/helper";
+import { loadMembers } from "../../../src/routes/project/[projectId]/settings/helper";
 import { MemberRole } from "$lib/model/api/project";
 
 describe("LoadMembers", () => {

@@ -9,30 +9,28 @@
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import { loadMembers, type MemberInfo } from "./helper";
-    import { getContext } from "svelte";
-    import type { User } from "$lib/model/api/user";
-    import { UserContextKey } from "$lib/global-context/userContext";
+    import { loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     let { data } = $props();
-    const { projectId, loadingProject, loadingMembers } = data;
-
-    const user = getContext<() => User>(UserContextKey)();
+    const { user, projectId, loadingProject, loadingMembers } = $derived(data);
 
     const numberOfSkeletons = 7;
 
-    let loadingMembersLocal = $state<Promise<MemberInfo[]>>(loadingMembers);
-    const isCurrentUserAdmin = resource<boolean, boolean>(
-        loadingMembers.then(
-            (members) =>
-                members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,
+    let loadingMembersLocal = $derived<Promise<MemberInfo[]>>(loadingMembers);
+    const isCurrentUserAdmin = $derived(
+        resource<boolean, boolean>(
+            loadingMembers.then(
+                (members) =>
+                    members.find((member) => member.user!.id === user.id)?.role ===
+                    MemberRole.ADMIN,
+            ),
+            {
+                initialValue: false,
+                onErrorValue: false,
+                resourceName: "isCurrentUserAdmin",
+            },
         ),
-        {
-            initialValue: false,
-            onErrorValue: false,
-            resourceName: "isCurrentUserAdmin",
-        },
     );
     let reloadingMembers = $state(false);
 
@@ -98,7 +96,11 @@
     {/await}
 </svelte:head>
 
-<ProjectSettingsLayout {projectId} selectedTab="members">
+<ProjectSettingsLayout
+    isCurrentUserAdmin={isCurrentUserAdmin.value}
+    {projectId}
+    selectedTab="members"
+>
     {#if isCurrentUserAdmin.value}
         <div class="flex flex-row items-center justify-between">
             <h1>Manage Access</h1>

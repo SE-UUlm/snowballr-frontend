@@ -5,7 +5,7 @@
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
     import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
-    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/members/helper";
+    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/helper";
 
     interface Props {
         projectId: string;

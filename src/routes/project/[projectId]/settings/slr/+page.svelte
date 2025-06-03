@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
@@ -7,20 +8,31 @@
     import { onMount } from "svelte";
 
     let { data } = $props();
-    const { user, projectId, loadingProject, loadingMembers } = data;
+    const { user, projectId, loadingProject, loadingMembers } = $derived(data);
     let slrSettingsLocked = $state(true);
 
-    const isCurrentUserAdmin = resource<boolean, boolean>(
-        loadingMembers.then(
-            (members) =>
-                members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,
+    const isCurrentUserAdmin = $derived(
+        resource<boolean, boolean | undefined>(
+            loadingMembers.then(
+                (members) =>
+                    members.find((member) => member.user!.id === user.id)?.role ===
+                    MemberRole.ADMIN,
+            ),
+            {
+                initialValue: undefined,
+                onErrorValue: false,
+                resourceName: "isCurrentUserAdmin",
+            },
         ),
-        {
-            initialValue: false,
-            onErrorValue: false,
-            resourceName: "isCurrentUserAdmin",
-        },
     );
+
+    $effect(() => {
+        // Redirect to general settings if the user is not an admin
+        if (isCurrentUserAdmin.value !== undefined && !isCurrentUserAdmin.value) {
+            console.log(isCurrentUserAdmin.value);
+            goto(`/project/${projectId}/settings/general`, { replaceState: true });
+        }
+    });
 
     onMount(() => {
         async function checkIfSLRSettingsAreLocked() {
@@ -49,15 +61,15 @@
     {/await}
 </svelte:head>
 
-<ProjectSettingsLayout {projectId} selectedTab="slr">
-    {#if slrSettingsLocked}
-        <Alert
-            details="To ensure consistency, SLR settings can’t be changed after a review has been submitted."
-            title="SLR Settings are Locked"
-            variant="warning"
-        />
-    {/if}
-    {#if isCurrentUserAdmin.value}
+{#if isCurrentUserAdmin.value}
+    <ProjectSettingsLayout isCurrentUserAdmin={true} {projectId} selectedTab="slr">
+        {#if slrSettingsLocked}
+            <Alert
+                details="To ensure consistency, SLR settings can’t be changed after a review has been submitted."
+                title="SLR Settings are Locked"
+                variant="warning"
+            />
+        {/if}
         <MaybeAsDecisionSetting {loadingProject} {projectId} {slrSettingsLocked} />
-    {/if}
-</ProjectSettingsLayout>
+    </ProjectSettingsLayout>
+{/if}
