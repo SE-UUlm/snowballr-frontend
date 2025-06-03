@@ -39,7 +39,7 @@
         "@svelte-put/shortcut": "^4.1.0",
         "@tailwindcss/postcss": "^4.1.7",
         "@testing-library/jest-dom": "^6.6.3",
-        "@testing-library/svelte": "^5.2.6",
+        "@testing-library/svelte": "^5.2.8",
         "@testing-library/user-event": "^14.6.0",
         "@types/d3": "^7.4.3",
         "@types/eslint": "^9.6.0",
