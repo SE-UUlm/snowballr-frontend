@@ -115,6 +115,10 @@ Usage:
         bind:items={membersInput}
     />
     {#if isErrorOnUsersLoading}
-        <Alert title="Something went wrong while loading possible members." variant="error" />
+        <Alert
+            details="Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again."
+            title="Failed to Load Members"
+            variant="error"
+        />
     {/if}
 </div>

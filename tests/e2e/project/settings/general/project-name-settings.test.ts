@@ -27,8 +27,13 @@ test.describe("Renaming a project", () => {
         await expect(page.getByRole("heading", { name: "Project 1" })).toBeVisible();
         await expect(
             page.getByRole("alert", {
-                name: "To successfully change the project's name, you must provide a new one that is different from the current one.",
+                name: "No Changes Detected",
             }),
+        ).toBeVisible();
+        await expect(
+            page.getByText(
+                "To successfully change the project's name, you must provide a new one that is different from the current one.",
+            ),
         ).toBeVisible();
     });
 

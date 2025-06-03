@@ -18,11 +18,13 @@ describe("ProjectNameSettings", () => {
 
         expect(screen.queryByText("General")).toBeInTheDocument();
         expect(screen.queryByText("Project Name")).toBeInTheDocument();
+
         const projectRenameInput = screen.getByLabelText("Project Name");
         expect(projectRenameInput).toBeInTheDocument();
         await waitFor(() => {
             expect(projectRenameInput).toHaveValue(Projects.demoProject.name);
         });
+
         const renameButton = screen.getByRole("button", { name: "Rename" });
         expect(renameButton).toBeInTheDocument();
     });
@@ -32,7 +34,6 @@ describe("ProjectNameSettings", () => {
             "updateProject",
             createProject({ name: "New Project Name" }),
         );
-
         render(ProjectNameSettings, {
             target: document.body,
             props: {
@@ -62,7 +63,13 @@ describe("ProjectNameSettings", () => {
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, Projects.demoProject.name);
         await userEvent.click(renameButton);
+
         expect(mockUpdateProject).not.toHaveBeenCalled();
+        expect(
+            await screen.findByRole("alert", {
+                name: "No Changes Detected",
+            }),
+        ).toBeInTheDocument();
         expect(
             screen.getByText(
                 "To successfully change the project's name, you must provide a new one that is different from the current one.",
@@ -72,7 +79,6 @@ describe("ProjectNameSettings", () => {
 
     test("When the input field is filled with a differing name, then the button should change the name", async () => {
         const mockCall = mockApiCall("updateProject", createProject({ name: "New Project Name" }));
-
         render(ProjectNameSettings, {
             props: {
                 projectId: Projects.demoProject.id,
@@ -92,7 +98,7 @@ describe("ProjectNameSettings", () => {
         expect(mockCall).toHaveBeenCalled();
     });
 
-    test("When a failed API call to get the project is made, then an error message should be shown", async () => {
+    test("When the loading project fails to resolve, then an error message should be shown", async () => {
         const failedPromise = Promise.reject(new Error("Error while loading project"));
         render(ProjectNameSettings, {
             props: {
@@ -101,10 +107,16 @@ describe("ProjectNameSettings", () => {
             },
         });
 
-        const errorHeading = await screen.findByRole("heading", {
-            name: "Something went wrong while loading the project name.",
-        });
-        expect(errorHeading).toBeInTheDocument();
+        expect(
+            await screen.findByRole("alert", {
+                name: "Failed to Load Project",
+            }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong while loading the project name. Please make sure your internet connection is stable, then try again.",
+            ),
+        ).toBeInTheDocument();
     });
 
     test("When a failed API call to update the project is made, then an error message should be shown", async () => {
@@ -125,10 +137,16 @@ describe("ProjectNameSettings", () => {
         await userEvent.clear(projectRenameInput);
         await userEvent.type(projectRenameInput, "New Project Name");
         await userEvent.click(renameButton);
+
         expect(
-            screen.getByRole("heading", {
-                name: "Something went wrong while updating the project name.",
+            await screen.findByRole("alert", {
+                name: "Failed to Update Project",
             }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong while updating the project name. Please make sure your internet connection is stable, then try again.",
+            ),
         ).toBeInTheDocument();
     });
 

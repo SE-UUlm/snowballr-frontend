@@ -78,9 +78,14 @@ describe("ChangeNameSettings", () => {
         await userEvent.click(renameButton);
         expect(mockCall).not.toHaveBeenCalled();
         expect(
-            screen.getByRole("alert", {
-                name: "To successfully change your name, you must provide a new one that is different from your current one.",
+            await screen.findByRole("alert", {
+                name: "No Changes Detected",
             }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "To successfully change your name, you must provide a new one that is different from your current one.",
+            ),
         ).toBeInTheDocument();
     });
 
@@ -98,8 +103,14 @@ describe("ChangeNameSettings", () => {
         await userEvent.clear(lastNameInput);
         await userEvent.type(lastNameInput, "Fox");
         await userEvent.click(renameButton);
+
         expect(
-            screen.getByRole("alert", { name: "Something went wrong while updating user." }),
+            await screen.findByRole("alert", { name: "Failed to Update User" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong while updating the user. Please make sure your internet connection is stable, then try again.",
+            ),
         ).toBeInTheDocument();
     });
 });

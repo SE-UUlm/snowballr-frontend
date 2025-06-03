@@ -30,8 +30,8 @@
             if (authStatus === AuthenticationStatus.AUTHENTICATED) {
                 await goto("/");
             }
-        } catch {
-            console.error("There was an error acquiring the authentication status.");
+        } catch (error) {
+            console.error("There was an error acquiring the authentication status:", error);
         }
 
         isLoadingAuthStatus = false;
@@ -54,9 +54,9 @@
             .catch((error) => {
                 if (error.code === StatusCodes.UNAUTHENTICATED) {
                     signinError = {
-                        errorTitle: "The provided credentials are not correct.",
+                        errorTitle: "Invalid Credentials",
                         errorDetails:
-                            "Check if the email and password are correct or try resetting your password.",
+                            "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
                     };
                 } else {
                     signinError = { errorTitle: "Something unknown went wrong." };

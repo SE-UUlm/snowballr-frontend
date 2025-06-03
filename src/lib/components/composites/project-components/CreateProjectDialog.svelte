@@ -152,7 +152,11 @@ Usage:
                 />
             </form>
             {#if isErrorOnProjectCreation}
-                <Alert title="Something went wrong while creating the project." variant="error" />
+                <Alert
+                    details="Something went wrong while creating the project. Please make sure your internet connection is stable, then try again."
+                    title="Failed to Create Project"
+                    variant="error"
+                />
             {/if}
         {/snippet}
         {#snippet footer()}

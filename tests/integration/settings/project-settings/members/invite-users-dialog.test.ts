@@ -111,8 +111,11 @@ describe("InviteUsersDialog", () => {
         const inviteButton = screen.getByTestId("invite-users-button");
         await user.click(inviteButton);
 
+        expect(await screen.findByRole("alert", { name: "Invitation Failed" })).toBeInTheDocument();
         expect(
-            screen.getByText("Something went wrong while inviting the users."),
+            screen.getByText(
+                "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
+            ),
         ).toBeInTheDocument();
     });
 
@@ -132,10 +135,14 @@ describe("InviteUsersDialog", () => {
         const trigger = await screen.findByTestId("dialog-trigger");
         await waitFor(async () => user.click(trigger));
 
-        const errorMessage = await screen.findByText(
-            "Something went wrong while loading possible members.",
-        );
-        expect(errorMessage).toBeInTheDocument();
+        expect(
+            await screen.findByRole("alert", { name: "Failed to Load Members" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again.",
+            ),
+        ).toBeInTheDocument();
     });
 
     test("When members loading fails, then error message is shown", async () => {
@@ -152,9 +159,13 @@ describe("InviteUsersDialog", () => {
         const trigger = await screen.findByTestId("dialog-trigger");
         await waitFor(async () => user.click(trigger));
 
-        const errorMessage = await screen.findByText(
-            "Something went wrong while loading possible members.",
-        );
-        expect(errorMessage).toBeInTheDocument();
+        expect(
+            await screen.findByRole("alert", { name: "Failed to Load Members" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again.",
+            ),
+        ).toBeInTheDocument();
     });
 });
