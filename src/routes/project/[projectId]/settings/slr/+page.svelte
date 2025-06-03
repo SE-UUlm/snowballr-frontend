@@ -3,28 +3,15 @@
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
-    import { MemberRole, ProjectStatus } from "$lib/model/api/project.js";
-    import { resource } from "$lib/resource.svelte.js";
+    import { ProjectStatus } from "$lib/model/api/project.js";
     import { onMount } from "svelte";
+    import { isCurrentUserProjectAdmin } from "../helper.js";
 
     let { data } = $props();
     const { user, projectId, loadingProject, loadingMembers } = $derived(data);
     let slrSettingsLocked = $state(true);
 
-    const isCurrentUserAdmin = $derived(
-        resource<boolean, boolean | undefined>(
-            loadingMembers.then(
-                (members) =>
-                    members.find((member) => member.user!.id === user.id)?.role ===
-                    MemberRole.ADMIN,
-            ),
-            {
-                initialValue: undefined,
-                onErrorValue: false,
-                resourceName: "isCurrentUserAdmin",
-            },
-        ),
-    );
+    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
 
     $effect(() => {
         // Redirect to general settings if the user is not an admin
