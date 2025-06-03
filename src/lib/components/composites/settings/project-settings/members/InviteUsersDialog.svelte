@@ -117,7 +117,11 @@ Usage:
         Search for an existing user or invite a new user by email.
     {/snippet}
     {#snippet content()}
-        <form id="invite-users" onsubmit={(args) => loadingWrapper(loading, inviteUsers, args)}>
+        <form
+            id="invite-users"
+            class="overflow-x-auto"
+            onsubmit={(args) => loadingWrapper(loading, inviteUsers, args)}
+        >
             <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
         </form>
         {#if error}
