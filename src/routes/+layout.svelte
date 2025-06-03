@@ -3,7 +3,6 @@
     import { env } from "$env/dynamic/public";
     import "../app.css";
     import { Toaster } from "svelte-sonner";
-    import { ModeWatcher } from "mode-watcher";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog/index.js";
     import { ServerCrash } from "lucide-svelte";
     import type { LayoutData } from "./$types";
@@ -32,7 +31,7 @@
     }
 </script>
 
-<ModeWatcher defaultMode="light" />
+<!-- <ModeWatcher defaultMode="light" -->
 <Toaster richColors />
 
 <AlertDialog.Root open={data.user === undefined}>
