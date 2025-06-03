@@ -352,7 +352,7 @@ test.describe("View all papers of a project", () => {
         await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
     });
 
-    test("When the user reloads the page, then the search text is restored from the URL.", async ({
+    test("When the user reloads the page, then the search text and applied filters are restored from the URL.", async ({
         projectPapersPage,
         page,
     }) => {
@@ -374,9 +374,10 @@ test.describe("View all papers of a project", () => {
         });
 
         await page.reload();
-        await projectPapersPage.showFiltersButton.click();
 
         await expect(projectPapersPage.searchBarInput).toHaveValue("Hello world");
+
+        await expect(projectPapersPage.stageFilter).toBeVisible(); // as there are filters in the URL, the filter bar is initially shown
         await expect(projectPapersPage.stageFilter).toHaveText("Stages: Stage 0 (1)");
     });
 });

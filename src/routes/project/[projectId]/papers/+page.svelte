@@ -33,6 +33,7 @@
     import { SvelteURLSearchParams } from "svelte/reactivity";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
+    import { onMount } from "svelte";
 
     let { data } = $props();
     const {
@@ -91,6 +92,10 @@
             searchParameters,
         );
     });
+
+    onMount(() => {
+        showFilters = JSON.stringify(papersFilters) !== JSON.stringify(emptyFilters);
+    })
 </script>
 
 <svelte:head>
