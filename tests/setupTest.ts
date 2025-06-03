@@ -237,6 +237,9 @@ vi.mock("$lib/grpc-api", () => {
             getPaperPdf: vi.fn(),
             setPaperPdf: vi.fn(),
             updateProjectMemberRole: vi.fn(),
+            getNextPaper: mock(({ id }) => createProjectPaper({ id })),
+            getNextPaperToReview: mock(({ id }) => createProjectPaper({ id })),
+            getPreviousPaper: mock(({ id }) => createProjectPaper({ id })),
         },
     };
     return mockBackend;

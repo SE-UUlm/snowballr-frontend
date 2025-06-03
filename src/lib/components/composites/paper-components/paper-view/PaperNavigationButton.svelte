@@ -2,16 +2,131 @@
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import ArrowRight from "lucide-svelte/icons/arrow-right";
     import Tooltip from "../../utils/Tooltip.svelte";
-    import { goto } from "$app/navigation";
+    import type { Project, Project_Paper } from "$lib/model/api/project";
+    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import { backendService } from "$lib/grpc-api";
+    import { toast } from "svelte-sonner";
+    import { navigatePaper } from "$lib/utils/paper-navigation";
+    import { loadingWrapper } from "$lib/utils/common-helper";
 
     interface Props {
         direction: "left" | "right";
-        href: string;
-        onClick?: () => void;
+        loadingProject?: Promise<Project>;
+        loadingProjectPaper: Promise<Project_Paper | undefined>;
+        loading?: boolean;
+        paperQueue?: Project_Paper[];
+        nextProjectPaper?: Project_Paper;
+        previousProjectPaper?: Project_Paper;
     }
 
-    const { direction, href, onClick }: Props = $props();
+    let {
+        direction,
+        loadingProject,
+        loadingProjectPaper,
+        loading = $bindable(false),
+        paperQueue = $bindable([]),
+        nextProjectPaper = $bindable(undefined),
+        previousProjectPaper = $bindable(undefined),
+    }: Props = $props();
+    let buttonLeftDisabled: boolean = $state(true);
+    let buttonRightDisabled: boolean = $state(true);
+    const showLoadingSpinner = $state({ value: false });
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
+
+    $effect(() => {
+        loading = showLoadingSpinner.value;
+    });
+
+    async function getNextProjectPaperToReview(paper: Project_Paper) {
+        await backendService
+            .getNextPaperToReview({ id: paper.id })
+            .response.then((nextPaper) => {
+                nextProjectPaper = nextPaper;
+            })
+            .catch((error) => {
+                nextProjectPaper = undefined;
+                if (error.message !== "No%20next%20paper%20available.") {
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
+                    return;
+                }
+            });
+    }
+
+    async function getNextProjectPaper(paper: Project_Paper) {
+        await backendService
+            .getNextPaper({ id: paper.id })
+            .response.then((nextPaper) => {
+                nextProjectPaper = nextPaper;
+            })
+            .catch((error) => {
+                nextProjectPaper = undefined;
+                if (error.message !== "No%20next%20paper%20available.") {
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
+                }
+            });
+    }
+
+    async function getPreviousProjectPaper(paper: Project_Paper) {
+        await backendService
+            .getPreviousPaper({ id: paper.id })
+            .response.then((previousPaper) => {
+                previousProjectPaper = previousPaper;
+            })
+            .catch((error) => {
+                previousProjectPaper = undefined;
+                if (error.message !== "No%20previous%20paper%20available.") {
+                    toast.error("Error while loading the next paper");
+                    console.error("Error while loading the next paper:" + error);
+                }
+            });
+    }
+
+    /**
+     * Pre-fetches the next and the previous paper to find out if the according button is enabled or
+     * disabled and the according paper does not have to be loaded on clicking of the button, but
+     * before. Loads the next or previous paper only if all necessary information is available.
+     */
+    $effect(() => {
+        if (loading) return;
+        (async () => {
+            const paper = await loadingProjectPaper;
+            if (!paper) return;
+
+            nextProjectPaper = previousProjectPaper = undefined;
+            buttonRightDisabled = buttonLeftDisabled = true;
+            if (direction === "right") {
+                if (reviewMode.isActivated) {
+                    await getNextProjectPaperToReview(paper);
+                } else {
+                    await getNextProjectPaper(paper);
+                }
+                buttonRightDisabled = nextProjectPaper === undefined;
+            } else if (direction === "left") {
+                if (reviewMode.isActivated) {
+                    previousProjectPaper = paperQueue[paperQueue.length - 1];
+                } else {
+                    await getPreviousProjectPaper(paper);
+                }
+                buttonLeftDisabled = previousProjectPaper === undefined;
+            }
+        })();
+    });
+
+    /**
+     * Handles the navigation of the navigation button depending on the direction.
+     */
+    async function navigate() {
+        await navigatePaper(
+            direction,
+            loadingProjectPaper,
+            paperQueue,
+            loadingProject,
+            nextProjectPaper,
+            previousProjectPaper,
+        );
+    }
 </script>
 
 <!--
@@ -19,33 +134,38 @@
 Button that navigates to the next or previous paper.
 
 This component is used in the PaperView component to navigate between papers.
-When the button is clicked, the `onClick` function is called and the user is navigated to the `href` location.
+The loadingProjectPaper has to be the Promise of the project paper or undefined if no
+such paper could be found.
 
 Usage:
 ```svelte
-    <PaperNavigationButton
-        direction="left"
-        href="/papers/1"
-        onClick={() => console.log("button was clicked")}
-    />
+<PaperNavigationButton
+                direction="right"
+                {loadingProject}
+                {loadingProjectPaper}
+                bind:loading
+                bind:paperQueue
+                bind:nextProjectPaper
+            />
 ```
 -->
 <Tooltip
     class="text-primary max-w-xs min-w-32 grow bg-slate-200 shadow-lg hover:bg-slate-400"
     aria-label={tooltipText}
     data-testid="navigation-button"
-    onclick={() => {
-        if (onClick) onClick();
-        goto(href);
-    }}
+    disabled={loading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled)}
+    loading={showLoadingSpinner.value}
+    onclick={(args) => loadingWrapper(showLoadingSpinner, navigate, args)}
     triggerSize="default"
     triggerVariant="link"
 >
     {#snippet trigger()}
-        {#if direction === "left"}
-            <ArrowLeft />
-        {:else}
-            <ArrowRight />
+        {#if !showLoadingSpinner.value}
+            {#if direction === "left"}
+                <ArrowLeft />
+            {:else}
+                <ArrowRight />
+            {/if}
         {/if}
     {/snippet}
     {#snippet content()}

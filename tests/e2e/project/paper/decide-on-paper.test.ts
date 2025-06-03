@@ -73,38 +73,47 @@ test.describe("Decide on paper", () => {
         apiClient.softDeleteProject({ id: projectId });
     });
 
-    test.fixme(
+    test(
         "When the user decides on a paper by clicking the corresponding decision button, " +
             "then a review is submitted and the next paper to review is opened",
-        async ({ paperViewPage }) => {
+        async ({ page, paperViewPage }) => {
             await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[0]);
 
             await paperViewPage.decideOnPaper(ReviewDecision.ACCEPTED);
-            /// TODO: add check for automatic navigation
+            await expect(
+                page.getByRole("heading", {
+                    name: `Paper ${localProjectPaperIds[1]} to decide on`,
+                }),
+            ).toBeVisible();
         },
     );
 
-    test.fixme(
+    test(
         "When the user presses one of the shortcuts for a decision, " +
             "then a review is submitted and the next paper to review is opened",
         async ({ page, paperViewPage }) => {
             await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[1]);
-
+            await expect(paperViewPage.acceptButton).toBeEnabled();
+            await expect(paperViewPage.nextPaperButton).toBeEnabled();
             await page.keyboard.press("Control+a");
-            /// TODO: add check for automatic navigation
+            await expect(
+                page.getByRole("heading", {
+                    name: `Paper ${localProjectPaperIds[2]} to decide on`,
+                }),
+            ).toBeVisible();
         },
     );
 
     test(
         "When the user selects certain review criteria and clicks a decision button, " +
-            "then a review is submitted and the decision is shown after a reload.",
+            "then a review is submitted and the decision is shown (because there is no" +
+            "other paper to review).",
         async ({ page, paperViewPage }) => {
             await paperViewPage.openProjectPaperView(projectId, localProjectPaperIds[2]);
 
             await paperViewPage.decideOnPaper(ReviewDecision.ACCEPTED);
             await expect(page.getByText("Successfully submitted a review.")).toBeVisible();
-
-            await page.reload();
+            await expect(page.getByText("No more papers to review.")).toBeVisible();
 
             await expect(paperViewPage.acceptButton).toContainClass("ring-1");
             await expect(paperViewPage.declineButton).not.toContainClass("ring-1");

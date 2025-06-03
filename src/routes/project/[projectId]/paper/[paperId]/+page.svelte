@@ -10,7 +10,7 @@
         forwardReferencedPapers,
         reviewers,
         criteriaWithReviews,
-    } = data;
+    } = $derived(data);
 </script>
 
 <svelte:head>

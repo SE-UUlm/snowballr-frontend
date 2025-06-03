@@ -66,6 +66,9 @@
     const user = getContext<() => User>(UserContextKey)();
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
+    const loadingProjectPaper = $derived.by(() =>
+        loadingPaperWrapper.then(asProjectPaper).catch(() => undefined),
+    );
     const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
     // As the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
@@ -95,6 +98,47 @@
         }
     });
 
+    let loading = $state(true);
+    let paperQueue = $state([]);
+    let nextProjectPaper: Project_Paper | undefined = $state(undefined);
+    const loadingUserReview: Promise<Review | undefined> = $state(
+        getUserReviewIfAlreadySubmitted(),
+    );
+    let userReview: Review | undefined = $state(undefined);
+
+    /**
+     * Makes sure that all necessary resources are loaded.
+     */
+    $effect(() => {
+        (async () => {
+            const promises = [];
+            if (loadingPaperId) promises.push(loadingPaperId);
+            if (loadingPaperIdForNavigationBar) promises.push(loadingPaperIdForNavigationBar);
+            if (loadingPaperWrapper) promises.push(loadingPaperWrapper);
+            if (loadingPaper) promises.push(loadingPaper);
+            if (loadingProject) promises.push(loadingProject);
+            if (loadingProjectPaper) promises.push(loadingProjectPaper);
+            if (reviewers) promises.push(reviewers);
+            if (criteriaWithReviews) promises.push(criteriaWithReviews);
+            if (forwardReferencedPapers) promises.push(forwardReferencedPapers);
+            if (backwardReferencedPapers) promises.push(backwardReferencedPapers);
+            if (researchContextCardProps) promises.push(researchContextCardProps);
+            if (loadingUserReview) {
+                loadingUserReview.then((review) => {
+                    userReview = review;
+                });
+                promises.push(loadingUserReview);
+            }
+            await Promise.all(promises)
+                .then(() => {
+                    loading = false;
+                })
+                .catch(() => {
+                    toast.error("Something went wrong while loading the paper!");
+                });
+        })();
+    });
+
     const selectedReviewCriteria = $state({
         criteria: [] as string[],
     });
@@ -108,11 +152,12 @@
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
     let isSubmittingReview = $state({ value: false });
-    const loadingUserReview = getUserReviewIfAlreadySubmitted();
-    loadingUserReview.then((review) => {
-        const selectedCriteria = review?.selectedCriteriaIds ?? [];
-        selectedReviewCriteria.criteria = selectedCriteria;
-        wasAlreadyReviewedState.wasReviewed = review !== undefined;
+    $effect(() => {
+        (async () => {
+            userReview = await getUserReviewIfAlreadySubmitted();
+            selectedReviewCriteria.criteria = userReview?.selectedCriteriaIds ?? [];
+            wasAlreadyReviewedState.wasReviewed = userReview !== undefined;
+        })();
     });
 
     /**
@@ -156,6 +201,7 @@ Edit Mode:
 Usage:
 ```svelte
     <PaperView
+        {user}
         {loadingPaper}
         {loadingProject}
         {backwardReferencedPapers}
@@ -184,43 +230,71 @@ Usage:
     </div>
     {#if showButtonBar}
         <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
-            <!-- TODO: Implementation of navigation buttons will be done in #46 and #47 -->
-            <PaperNavigationButton direction="left" href="" />
+            <PaperNavigationButton
+                direction="left"
+                {loadingProject}
+                {loadingProjectPaper}
+                bind:loading
+                bind:paperQueue
+                bind:nextProjectPaper
+            />
             {#if reviewMode.isActivated && loadingProject}
-                {#await Promise.all( [loadingProject, loadingPaperWrapper, loadingUserReview], ) then [project, paper, userReview]}
+                {#await Promise.all([loadingProject, loadingPaperWrapper]) then [project, paper]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                     <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                     <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                         <PaperDecisionButton
+                            {loadingProject}
+                            {loadingProjectPaper}
                             projectPaperId={paper.id}
-                            {userReview}
                             variant={userReview?.decision === ReviewDecision.DECLINED
                                 ? "selected_decline"
                                 : "decline"}
+                            bind:userReview
+                            bind:loading
                             bind:isSubmittingReview
+                            bind:paperQueue
+                            bind:nextProjectPaper
                         />
                         {#if project.settings?.reviewMaybeAllowed}
                             <PaperDecisionButton
+                                {loadingProject}
+                                {loadingProjectPaper}
                                 projectPaperId={paper.id}
-                                {userReview}
                                 variant={userReview?.decision === ReviewDecision.MAYBE
                                     ? "selected_maybe"
                                     : "maybe"}
+                                bind:userReview
+                                bind:loading
                                 bind:isSubmittingReview
+                                bind:paperQueue
+                                bind:nextProjectPaper
                             />
                         {/if}
                         <PaperDecisionButton
+                            {loadingProject}
+                            {loadingProjectPaper}
                             projectPaperId={paper.id}
-                            {userReview}
                             variant={userReview?.decision === ReviewDecision.ACCEPTED
                                 ? "selected_accept"
                                 : "accept"}
+                            bind:userReview
+                            bind:loading
                             bind:isSubmittingReview
+                            bind:paperQueue
+                            bind:nextProjectPaper
                         />
                     </div>
                 {/await}
             {/if}
-            <PaperNavigationButton direction="right" href="" />
+            <PaperNavigationButton
+                direction="right"
+                {loadingProject}
+                {loadingProjectPaper}
+                bind:loading
+                bind:paperQueue
+                bind:nextProjectPaper
+            />
         </div>
     {/if}
 </main>
