@@ -1,21 +1,34 @@
-import { test } from "./project-general-settings-fixture";
+import { test } from "./project-general-settings-page-fixture";
 import { expect } from "@playwright/test";
 
-export let projectId: string = "";
-const projectName = "Project 1";
+test.describe("Project Name Settings Test", () => {
+    test("When navigating to the general project settings, then the page is displayed", async ({
+        page,
+        projectSettingsPage,
+        homePage,
+        projectMemberSettingsPage,
+        projectNavigationBar,
+        projectSettingsSideBar,
+    }) => {
+        // Directly navigate to the general project settings
+        await page.goto("/");
 
-test.describe("Renaming a project", () => {
-    /**
-     * Creates a new project before all tests in this test suite.
-     */
-    test.beforeAll(async ({ apiClient }) => {
-        await apiClient
-            .createProject({ name: projectName })
-            .response.then((project) => (projectId = project.id));
-    });
+        await homePage.openProject(projectSettingsPage.projectName);
+        await projectNavigationBar.settingsTab.click();
+        await expect(projectSettingsPage.renameButton).toBeVisible();
+        await expect(projectSettingsPage.heading).toBeVisible();
 
-    test.afterAll(async ({ apiClient }) => {
-        await apiClient.softDeleteProject({ id: projectId }).response;
+        // Navigate to the general project settings page via the project member settings page
+        await page.goto("/");
+
+        await homePage.openProject(projectSettingsPage.projectName);
+        await projectNavigationBar.settingsTab.click();
+        await projectSettingsSideBar.members.click();
+        await expect(projectMemberSettingsPage.openInviteUsersDialogButton).toBeVisible();
+
+        await projectSettingsSideBar.general.click();
+        await expect(projectSettingsPage.renameButton).toBeVisible();
+        await expect(projectSettingsPage.heading).toBeVisible();
     });
 
     test("When the user enters the same project name, then a warning alert is shown", async ({
@@ -24,7 +37,7 @@ test.describe("Renaming a project", () => {
     }) => {
         await projectSettingsPage.changeProjectName("Project 1");
 
-        await expect(page.getByRole("heading", { name: "Project 1" })).toBeVisible();
+        await expect(projectSettingsPage.heading).toBeVisible();
         await expect(
             page.getByRole("alert", {
                 name: "No Changes Detected",
@@ -43,7 +56,7 @@ test.describe("Renaming a project", () => {
     }) => {
         await projectSettingsPage.changeProjectName(" ");
 
-        await expect(page.getByRole("heading", { name: "Project 1" })).toBeVisible();
+        await expect(projectSettingsPage.heading).toBeVisible();
         await expect(
             page.getByText("The project name cannot start or end with whitespace"),
         ).toBeVisible();
@@ -55,7 +68,7 @@ test.describe("Renaming a project", () => {
     }) => {
         await projectSettingsPage.changeProjectName("New Project");
 
-        await projectSettingsPage.checkForErrors();
+        await expect(projectSettingsPage.errorAlert).not.toBeVisible();
         await expect(page.getByRole("heading", { name: "Project 1" })).not.toBeVisible();
         await expect(page.getByRole("heading", { name: "New Project" })).toBeVisible();
         await expect(page.getByText("Successfully updated project name.")).toBeVisible();
