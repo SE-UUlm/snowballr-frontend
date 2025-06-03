@@ -77,4 +77,5 @@ test.describe("Changing SLR settings", () => {
     // TODO: Implement tests, as soon as the backend supports the update of states of the project to `ACTIVE_LOCKED`
     test.skip("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
     test.skip("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
+    test.skip("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
 });
