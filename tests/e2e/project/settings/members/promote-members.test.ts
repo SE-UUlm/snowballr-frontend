@@ -1,8 +1,7 @@
 import { expect } from "@playwright/test";
-import { test } from "./project-members-settings-fixtures";
-import { DevPromoteMemberDialog } from "./promote-member-dialog-model";
+import { test } from "./project-members-settings-page-fixtures";
 
-test.describe("Promoting members to project admins", () => {
+test.describe("Promote Members Tests", () => {
     // async function inviteUser(
     //     email: string,
     //     projectMembersSettingsPage: DevProjectMemberSettingsPage,
@@ -23,17 +22,21 @@ test.describe("Promoting members to project admins", () => {
     // }
 
     test("When the current user is listed, then they can't promote themselves to a project admin.", async ({
-        page,
         projectMembersSettingsPage,
         user,
     }) => {
         // obligatory check for the current user, so that projectMembersSettingsPage is used
         await projectMembersSettingsPage.checkForUser(user!.email, "email");
 
-        const dialog = new DevPromoteMemberDialog(page, user!);
-        await expect(dialog.openButton).toBeVisible();
-        await expect(dialog.openButton).toBeDisabled();
-        await expect(dialog.openButton).toHaveText("Role: Admin");
+        await expect(
+            projectMembersSettingsPage.getOpenPromoteMemberDialogButton(user!),
+        ).toBeVisible();
+        await expect(
+            projectMembersSettingsPage.getOpenPromoteMemberDialogButton(user!),
+        ).toBeDisabled();
+        await expect(projectMembersSettingsPage.getOpenPromoteMemberDialogButton(user!)).toHaveText(
+            "Role: Admin",
+        );
     });
 
     // TODO: Currently, we cannot promote invited users. Only when they are in the project.

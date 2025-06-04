@@ -1,10 +1,9 @@
 import { getName } from "$lib/utils/common-helper";
 import { expect, type Locator, type Page } from "@playwright/test";
 
-export class DevRemoveMemberDialog {
+export class PromoteMemberDialogModel {
     readonly page: Page;
     readonly dialog: Locator;
-    readonly openButton: Locator;
     readonly confirmButton: Locator;
     readonly cancelButton: Locator;
 
@@ -18,35 +17,25 @@ export class DevRemoveMemberDialog {
 
         this.page = page;
         this.dialog = page.getByRole("alertdialog", {
-            name: `Remove ${displayName} From This Project`,
+            name: `Promote ${displayName} to a Project Admin`,
         });
-        this.openButton = page.locator(`button[aria-label="Remove member ${user.email}"]`);
         this.confirmButton = this.dialog.getByRole("button", {
-            name: `Remove Member From This Project`,
+            name: `Promote Member to a Project Admin`,
         });
         this.cancelButton = this.dialog.getByRole("button", { name: "Cancel" });
     }
 
     /**
-     * Opens the dialog for removing a user from the project.
+     * Promotes the user to an admin.
      */
-    async open() {
-        await expect(this.dialog).not.toBeVisible();
-        await this.openButton.click();
-        await expect(this.dialog).toBeVisible();
-    }
-
-    /**
-     * Removes the user from the project.
-     */
-    async remove() {
+    async promote() {
         await expect(this.dialog).toBeVisible();
         await this.confirmButton.click();
         await expect(this.dialog).not.toBeVisible();
     }
 
     /**
-     * Cancels the removal of the user from the project.
+     * Cancels the promotion of the user to an admin.
      */
     async cancel() {
         await expect(this.dialog).toBeVisible();
