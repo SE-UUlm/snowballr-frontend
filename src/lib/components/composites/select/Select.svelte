@@ -75,6 +75,16 @@
             // after this, `invalid.length` will be zero on the next run ⇒ no loop
         }
     });
+
+    // Change "Select all"/"Unselect all" label automatically when the user manually
+    // selects / unselects all options
+    $effect(() => {
+        if (selectedValues.length === 0) {
+            doSelectAllOptions = false;
+        } else if (selectedValues.length === options.length) {
+            doSelectAllOptions = true;
+        }
+    });
 </script>
 
 <!--
@@ -95,14 +105,12 @@ Usage:
 -->
 <Select.Root type="multiple" bind:value={selectedValues}>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
-    {#if options.length === 0}
-        <Select.Content>
+    <Select.Content>
+        {#if options.length === 0}
             <Select.Item disabled value="no-options">
                 {`No ${categoryLabel.toLowerCase()} available`}
             </Select.Item>
-        </Select.Content>
-    {:else}
-        <Select.Content>
+        {:else}
             <Select.Item onclick={() => toggleAllOptions()} value="all-options">
                 {doSelectAllOptions ? "Unselect all" : "Select all"}
             </Select.Item>
@@ -110,6 +118,6 @@ Usage:
             {#each options as option (option.value)}
                 <Select.Item value={option.value}>{option.label}</Select.Item>
             {/each}
-        </Select.Content>
-    {/if}
+        {/if}
+    </Select.Content>
 </Select.Root>
