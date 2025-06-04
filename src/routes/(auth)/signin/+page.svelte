@@ -59,7 +59,10 @@
                             "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
                     };
                 } else {
-                    signinError = { errorTitle: "Something unknown went wrong." };
+                    signinError = {
+                        errorTitle: "Something unknown went wrong.",
+                        errorDetails: "Please check your internet connection and the connection to the server."
+                    };
                 }
                 console.error(error);
             });

@@ -80,7 +80,10 @@
                             "An account with this email address already exists. Try logging in or resetting your password.",
                     };
                 } else {
-                    registrationError = { errorTitle: "Something went wrong while registration." };
+                    registrationError = {
+                        errorTitle: "Something went wrong while registration.",
+                        errorDetails: "Please check your internet connection and the connection to the server."
+                    };
                 }
                 console.error(error);
             });

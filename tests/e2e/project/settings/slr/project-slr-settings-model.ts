@@ -1,27 +1,31 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { ConfirmMaybeDecisionDialog } from "$tests/e2e/project/settings/slr/confirm-maybe-decision-dialog";
 
-export class DevProjectSLRSettingsPage {
+export class ProjectSLRSettingsPageModel {
     readonly page: Page;
+    readonly confirmMaybeDecisionDialog: ConfirmMaybeDecisionDialog;
+
+    readonly header: Locator;
     readonly maybeAsDecisionSwitch: Locator;
-    readonly confirmButton: Locator;
+
+    readonly projectName: string;
+
+    projectId: string;
+    projectPaperId: string;
 
     constructor(page: Page) {
         this.page = page;
+        this.projectName = "Project 1";
+
+        this.confirmMaybeDecisionDialog = new ConfirmMaybeDecisionDialog(page);
+
+        this.header = page.getByRole("heading", { name: this.projectName });
         this.maybeAsDecisionSwitch = page.getByRole("switch", {
             name: "Allow 'Maybe' as decision on a Paper",
         });
-        this.confirmButton = page.getByRole("button", { name: "Confirm" });
-    }
 
-    /**
-     * Opens the SLR settings page for a specific project.
-     *
-     * @param projectId - The ID of the project to open SLR settings for.
-     * @param projectName - The name of the project to verify in the settings page.
-     */
-    async openSLRProjectSettings(projectId: string, projectName: string) {
-        await this.page.goto(`project/${projectId}/settings/slr`);
-        await expect(this.page.getByRole("heading", { name: projectName })).toBeVisible();
+        this.projectId = "";
+        this.projectPaperId = "";
     }
 
     /**
@@ -33,7 +37,7 @@ export class DevProjectSLRSettingsPage {
         await expect(this.maybeAsDecisionSwitch).toBeEnabled();
         if ((await this.maybeAsDecisionSwitch.isChecked()) !== state) {
             await this.maybeAsDecisionSwitch.click();
-            await this.confirmButton.click();
+            await this.confirmMaybeDecisionDialog.confirmDecision(state);
         }
         if (state) {
             await expect(this.maybeAsDecisionSwitch).toBeChecked();
