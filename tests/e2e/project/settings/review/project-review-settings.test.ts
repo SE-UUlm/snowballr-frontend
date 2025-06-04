@@ -1,53 +1,20 @@
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
 import { test } from "./project-review-settings-fixture";
 import { expect } from "@playwright/test";
 
-export let projectId: string = "";
-export const projectReviewSettingsProjectName = "Project 1";
-
-test.describe("Project - Review settings", () => {
-    /**
-     * Creates a new project before all tests in this test suite.
-     */
-    test.beforeAll(async ({ apiClient }) => {
-        await apiClient
-            .createProject({ name: projectReviewSettingsProjectName })
-            .then((project) => (projectId = project.response.id));
-    });
-
-    /**
-     * Deletes the project after all tests in this test suite.
-     */
-    test.afterAll(async ({ apiClient }) => {
-        apiClient.softDeleteProject({ id: projectId });
-    });
-
-    test("When the user creates a new tag and deletes this tag, then the tag is correctly added and deleted", async ({
+test.describe("Project Review Settings", () => {
+    test("Tests the navigation to the project review settings", async ({
         page,
         projectReviewSettingsPage,
+        homePage,
+        navigationBar,
+        projectSettingsSideBar,
     }) => {
-        await projectReviewSettingsPage.addTag("New Tag");
-        const newTag = page.getByText("New Tag");
-        await expect(newTag).toBeVisible();
-        await projectReviewSettingsPage.deleteTag("New Tag");
-        await expect(newTag).not.toBeVisible();
-    });
+        // Directly navigate to the project review settings
+        await page.goto("/");
 
-    test("When the user navigates to another page and comes back to the review settings, then the previously defined keyword tags are still available", async ({
-        page,
-        projectReviewSettingsPage,
-    }) => {
-        await projectReviewSettingsPage.addTag("New Tag 1");
-        await expect(page.getByText("New Tag 1")).toBeVisible();
-        await projectReviewSettingsPage.addTag("New Tag 2");
-        await expect(page.getByText("New Tag 2")).toBeVisible();
-
-        await reloadWait(
-            page,
-            page.getByRole("heading", { name: projectReviewSettingsProjectName }),
-        );
-
-        await expect(page.getByText("New Tag 1")).toBeVisible();
-        await expect(page.getByText("New Tag 2")).toBeVisible();
+        await homePage.openProject(projectReviewSettingsPage.projectName);
+        await navigationBar.settingsTab.click();
+        await projectSettingsSideBar.review.click();
+        await expect(projectReviewSettingsPage.tagInputField).toBeVisible();
     });
 });

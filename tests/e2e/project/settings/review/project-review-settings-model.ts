@@ -1,14 +1,24 @@
 import { type Locator, type Page } from "@playwright/test";
 
-export class DevProjectReviewSettingsPage {
+export class ProjectReviewSettingsPageModel {
     readonly page: Page;
+    readonly heading: Locator;
     readonly tagInputField: Locator;
+
+    readonly projectName: string;
+
+    projectId: string;
 
     constructor(page: Page) {
         this.page = page;
+        this.projectName = "Project 1";
+
+        this.heading = page.getByRole("heading", { name: this.projectName });
         this.tagInputField = page.getByLabel(
             "Define keywords that are highlighted in the abstract of a paper when the review mode is activated.",
         );
+
+        this.projectId = "";
     }
 
     /**
@@ -23,13 +33,23 @@ export class DevProjectReviewSettingsPage {
     }
 
     /**
+     * Returns a tag element based on the provided tag name.
+     *
+     * @param tagName - The name of the tag to search for.
+     */
+    async getTag(tagName: string) {
+        return this.page.getByText(tagName);
+    }
+
+    /**
      * Deletes the tag with the given name.
      *
      * @param tagName - tag name
      */
     async deleteTag(tagName: string) {
-        const tag = this.page.getByText(tagName);
-        const deleteTagButton = tag.getByRole("button", { name: "×" });
-        await deleteTagButton.click();
+        const tageDeleteButton = this.getTag(tagName).then((tag) =>
+            tag.getByRole("button", { name: "×" }),
+        );
+        await tageDeleteButton.then((button) => button.click());
     }
 }
