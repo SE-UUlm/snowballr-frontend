@@ -83,7 +83,7 @@ Custom select component that allows users to select multiple options from a list
 
 - when no options are available, a disabled item is displayed with the message "No [categoryLabel] available".
 - when all options are selected, the trigger displays "All [categoryLabel] ([options.length])".
-- when some options are selected, the trigger displays "[categoryLabel]: [selectedValues.length] selected".
+- when some options are selected, the trigger displays "[categoryLabel]: [selectedValue1], [selectedValue2], ...([selectedValues.length]) selected".
 
 Usage:
 ```svelte
@@ -93,7 +93,6 @@ Usage:
     />
 ```
 -->
-
 <Select.Root type="multiple" bind:value={selectedValues}>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
     {#if options.length === 0}
