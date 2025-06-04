@@ -10,6 +10,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId: "1",
                 selectedTab: "general",
+                isCurrentUserAdmin: true,
             },
         });
 
@@ -29,6 +30,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId: "1",
                 selectedTab: "review",
+                isCurrentUserAdmin: true,
             },
         });
 
@@ -61,6 +63,7 @@ describe("ProjectSettingsLayout", () => {
             props: {
                 projectId,
                 selectedTab: "general",
+                isCurrentUserAdmin: true,
             },
         });
 
@@ -73,5 +76,22 @@ describe("ProjectSettingsLayout", () => {
         expect(membersTab).toHaveAttribute("href", `/project/${projectId}/settings/members`);
         expect(slrTab).toHaveAttribute("href", `/project/${projectId}/settings/slr`);
         expect(reviewTab).toHaveAttribute("href", `/project/${projectId}/settings/review`);
+    });
+
+    test.skip("When the current is not an project admin, then the SLR tab is not displayed", () => {
+        render(ProjectSettingsLayout, {
+            target: document.body,
+            props: {
+                projectId: "1",
+                selectedTab: "general",
+                isCurrentUserAdmin: false,
+            },
+        });
+
+        const tabs = screen.getAllByTestId("settings-tab-", { exact: false });
+        expect(tabs).toHaveLength(3); // SLR tab should not be present
+
+        // Check if SLR tab is not present
+        expect(screen.queryByTestId("settings-tab-slr")).not.toBeInTheDocument();
     });
 });

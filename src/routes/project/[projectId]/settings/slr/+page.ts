@@ -1,4 +1,4 @@
-import type { PageLoad } from "./$types";
+import type { PageLoad } from "../../$types";
 import { loadMembers } from "../helper";
 
 export const load: PageLoad = ({ params }) => {
@@ -8,6 +8,6 @@ export const load: PageLoad = ({ params }) => {
     loadingMembers.catch(() => {});
 
     return {
-        loadingMembers,
+        loadingMembers: loadingMembers,
     };
 };

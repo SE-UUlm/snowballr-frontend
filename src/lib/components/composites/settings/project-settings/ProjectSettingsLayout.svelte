@@ -7,41 +7,59 @@
     import type { IconLinkTab } from "$lib/model/tabs";
     import SettingsLayout from "../SettingsLayout.svelte";
 
-    type TabValue = (typeof tabs)[number]["value"];
+    type ProjectTabValue = "general" | "members" | "slr" | "review";
+
     interface Props {
         projectId: string;
-        selectedTab: TabValue;
+        selectedTab: ProjectTabValue;
         children?: Snippet | undefined;
+        isCurrentUserAdmin: boolean;
     }
 
-    let { projectId, selectedTab, children = undefined }: Props = $props();
+    let { projectId, selectedTab, children = undefined, isCurrentUserAdmin }: Props = $props();
 
-    const tabs: IconLinkTab[] = [
+    const ALL_TABS = [
         {
             value: "general",
             label: "General",
             href: `/project/${projectId}/settings/general`,
             icon: Settings,
+            adminOnly: false,
         },
         {
             value: "members",
             label: "Members",
             href: `/project/${projectId}/settings/members`,
             icon: Users,
+            adminOnly: false,
         },
         {
             value: "slr",
             label: "SLR",
             href: `/project/${projectId}/settings/slr`,
             icon: Snowflake,
+            adminOnly: true,
         },
         {
             value: "review",
             label: "Review",
             href: `/project/${projectId}/settings/review`,
             icon: ClipboardCheck,
+            adminOnly: false,
         },
-    ] as const;
+    ];
+
+    let tabs = $derived<IconLinkTab[]>(
+        ALL_TABS.filter((tab) => !(tab.adminOnly && !isCurrentUserAdmin)).map(
+            (tab) =>
+                ({
+                    value: tab.value,
+                    label: tab.label,
+                    href: tab.href,
+                    icon: tab.icon,
+                }) as IconLinkTab,
+        ),
+    );
 </script>
 
 <!--
@@ -56,7 +74,7 @@ Tabs:
 
 Usage:
 ```svelte
-    <ProjectSettingsLayout {projectId} selectedTab="general">
+    <ProjectSettingsLayout {projectId} selectedTab="general isCurrentUserAdmin={true}>">
         <span>This is the general settings page</span>
     </ProjectSettingsLayout>
 ```

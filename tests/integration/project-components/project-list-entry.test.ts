@@ -8,7 +8,7 @@ describe("ProjectListEntryComponent", () => {
     test("When all required props except an onClick handler are provided, then the project list entry is completely shown.", () => {
         render(ProjectListEntry, {
             props: {
-                project: Projects.demoProject,
+                project: Projects.demoProjectActive,
                 membersList: {
                     members: [
                         { user: Users.johnDoe, role: MemberRole.ADMIN },
@@ -33,7 +33,7 @@ describe("ProjectListEntryComponent", () => {
     test("When all required props are provided, then the project list entry is completely shown.", () => {
         render(ProjectListEntry, {
             props: {
-                project: Projects.demoProject,
+                project: Projects.demoProjectActive,
                 membersList: {
                     members: [
                         { user: Users.johnDoe, role: MemberRole.ADMIN },
@@ -59,7 +59,7 @@ describe("ProjectListEntryComponent", () => {
     test("When no members are provided, then the list entry shows a hint.", () => {
         render(ProjectListEntry, {
             props: {
-                project: Projects.demoProject,
+                project: Projects.demoProjectActive,
                 membersList: {
                     members: [],
                 },

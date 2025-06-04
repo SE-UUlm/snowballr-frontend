@@ -43,5 +43,6 @@ export class DevHomePage {
     async openUserSettingInSidebar(settingName: SettingName) {
         await this.openLinkInUserMenuDialog("Settings");
         await this.page.getByRole("link", { name: settingName }).click();
+        await this.page.waitForURL(`**/settings/${settingName.toLowerCase()}`);
     }
 }
