@@ -57,6 +57,7 @@ export const load: PageLoad = ({ params }) => {
 
 /**
  * Organizes the papers by their stage. The stages are determined by the stageIndex of the papers.
+ * If no papers are provided, a stage with an index of 0 is returned to allow the user to add initial papers.
  *
  * @param papers - The papers of a project from different stages.
  * @returns A list of stages with the papers of the respective stage.
@@ -73,5 +74,11 @@ function organizePapersByStage(papers: Project_Paper[]): Stage[] {
         stage.papers.push(paper);
     }
     stages.forEach((stage) => stage.papers.sort((a, b) => comparePaperId(b.id, a.id)));
-    return stages.sort((a, b) => Number(a.stageIndex - b.stageIndex));
+    stages.sort((a, b) => Number(a.stageIndex - b.stageIndex));
+
+    if (stages.length === 0) {
+        stages.push({ stageIndex: 0n, papers: [] });
+    }
+
+    return stages;
 }
