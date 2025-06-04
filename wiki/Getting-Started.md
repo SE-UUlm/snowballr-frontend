@@ -80,7 +80,7 @@ You can preview the production build with `npm run preview`.
 
 <a name="footnote-1">[1]</a> Make sure, that the used API version was manually set to the desired stable version,
 otherwise set it (see
-[here](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247)
+[Stackoverflow post](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247)
 for further hints).
 
 <!-- markdownlint-enable MD033 -->

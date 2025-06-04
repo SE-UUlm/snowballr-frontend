@@ -141,7 +141,7 @@ requiring it to be installed and running.
 
 1. **Use the test fixture**:
    Instead of importing the `test` fixture directly from "@playwright/test" directly,
-   use the `test` variable exported from [`fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/fixtures/shared-fixture.ts).
+   use the `test` variable exported from [`utils/fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/shared-fixture.ts).
    This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
    based on the browser the test is running in.
 
@@ -150,7 +150,7 @@ requiring it to be installed and running.
 
 2. **Use Page Object Models (POMs)**:
    To make tests more maintainable and readable, use page object models (POMs) to encapsulate UI logic.
-   For example, the [`pom/create-project-dialog-model.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/pom/create-project-dialog-model.ts)
+   For example, the [`homepage/create-project-dialog-model.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/homepage/create-project-dialog-model.ts)
    file wraps a page with custom selectors and helper functions for the `CreateProjectDialog` component,
    improving clarity and reusability across tests. In particular, these POMs can be wrapped in a fixture
    so that they can be accessed directly in each test without having to create a separate POM in each test.
