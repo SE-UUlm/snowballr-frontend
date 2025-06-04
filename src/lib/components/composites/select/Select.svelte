@@ -15,12 +15,13 @@
 
     let { options, categoryLabel = "categories", selectedValues = $bindable([]) }: Props = $props();
 
+    const ALL_OPTIONS = "all-options";
+    let doSelectAllOptions = $state(false);
+
     // Maximum number of characters allowed in the select component's label used for displaying
     // the selected values.
     const MAX_SELECTED_VALUES_LABEL_LENGTH = 30;
     let label = $derived(getSelectLabel(selectedValues));
-
-    let doSelectAllOptions = $state(false);
 
     /**
      * Determine the label of the select button.
@@ -32,7 +33,6 @@
      * @param selectedValues - The values the user selected
      */
     function getSelectLabel(selectedValues: string[] | undefined): string {
-        selectedValues = selectedValues?.filter((value) => value !== "all-options");
         if (
             !selectedValues ||
             selectedValues.length === 0 ||
@@ -52,15 +52,24 @@
     }
 
     /**
-     * Select or unselect all options at once.
+     * If the 'Select all / Unselect all' option was selected, then it add / remove all options to / from
+     * the selected options.
+     *
+     * @remarks
+     * If the ALL_OPTIONS option is included in the list of values, then the 'Select all / Unselect all'
+     * option was selected.
+     *
+     * @param values - The list of all selected values
      */
-    function toggleAllOptions() {
-        if (doSelectAllOptions) {
-            selectedValues = [];
-        } else {
-            selectedValues = [...options.map((option) => option.value), "all-options"];
+    function selectOrUnselectAllOptions(values: string[]) {
+        if (values.includes(ALL_OPTIONS)) {
+            if (!doSelectAllOptions) {
+                selectedValues = options.map((o) => o.value);
+            } else {
+                selectedValues = [];
+            }
+            doSelectAllOptions = !doSelectAllOptions;
         }
-        doSelectAllOptions = !doSelectAllOptions;
     }
 
     // Automatically drop any selected items that not exist in options, if the options are already
@@ -69,14 +78,12 @@
         const invalid = selectedValues.filter((v) => !options.some((option) => option.value === v));
         if (invalid.length > 0 && options.length > 0) {
             // re-filter away the invalid ones and reassign
-            selectedValues = selectedValues.filter((v) =>
-                options.some((option) => option.value === v),
-            );
+            selectedValues = selectedValues.filter((v) => !invalid.includes(v));
             // after this, `invalid.length` will be zero on the next run ⇒ no loop
         }
     });
 
-    // Change "Select all"/"Unselect all" label automatically when the user manually
+    // Change "Select all / Unselect all" label automatically when the user manually
     // selects / unselects all options
     $effect(() => {
         if (selectedValues.length === 0) {
@@ -97,13 +104,10 @@ Custom select component that allows users to select multiple options from a list
 
 Usage:
 ```svelte
-    <Select
-        {options}
-        categoryLabel="Years"
-    />
+    <Select categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
 ```
 -->
-<Select.Root type="multiple" bind:value={selectedValues}>
+<Select.Root onValueChange={selectOrUnselectAllOptions} type="multiple" bind:value={selectedValues}>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
     <Select.Content>
         {#if options.length === 0}
@@ -111,7 +115,7 @@ Usage:
                 {`No ${categoryLabel.toLowerCase()} available`}
             </Select.Item>
         {:else}
-            <Select.Item onclick={() => toggleAllOptions()} value="all-options">
+            <Select.Item value={ALL_OPTIONS}>
                 {doSelectAllOptions ? "Unselect all" : "Select all"}
             </Select.Item>
             <Separator />

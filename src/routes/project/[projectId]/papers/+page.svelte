@@ -95,7 +95,7 @@
 
     onMount(() => {
         showFilters = JSON.stringify(papersFilters) !== JSON.stringify(emptyFilters);
-    })
+    });
 </script>
 
 <svelte:head>
