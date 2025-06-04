@@ -203,7 +203,7 @@ describe("Maybe As Decision Project Setting", () => {
         ).toBeInTheDocument();
 
         expect(maybeSwitch).not.toBeChecked();
-        expect(maybeSwitch).toBeEnabled();
+        await waitFor(() => expect(maybeSwitch).toBeEnabled());
         expect(maybeAsDecision.isActivated).toBe(false);
 
         expect(mockGetCall).toHaveBeenCalledOnce();

@@ -35,7 +35,7 @@
         actionButtonText = "Confirm",
         actionButtonLoadingText = actionButtonText,
         errorText = "An error occurred",
-        loading = false,
+        loading = $bindable(false),
         error = undefined,
         open = $bindable(false),
     }: Props = $props();

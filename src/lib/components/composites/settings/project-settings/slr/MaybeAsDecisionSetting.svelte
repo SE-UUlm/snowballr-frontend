@@ -43,7 +43,7 @@
         isUpdatingMaybeAsDecisionSettingStatus = true;
 
         await loadingProject
-            .then((project) => {
+            .then(async (project) => {
                 project.settings ??= Project_Settings.create();
                 project.settings.reviewMaybeAllowed = targetCheckedState;
 
@@ -51,7 +51,7 @@
                     (path) => path === "settings.reviewMaybeAllowed",
                 );
 
-                backendService
+                await backendService
                     .updateProject({
                         project,
                         mask: {
@@ -102,8 +102,8 @@
             dialogDescription = "Are you sure you want to disable 'Maybe' as decision?";
         }
 
-        pendingActionConfirmCallback = () => {
-            toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
+        pendingActionConfirmCallback = async () => {
+            await toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
             isConfirmDialogOpen = false;
         };
 
@@ -191,6 +191,7 @@ Usage:
         }}
         {title}
         bind:open={isConfirmDialogOpen}
+        bind:loading={isUpdatingMaybeAsDecisionSettingStatus}
     >
         {#snippet description()}
             {dialogDescription}
