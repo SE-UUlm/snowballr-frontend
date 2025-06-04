@@ -2,8 +2,14 @@ name: Lint and Publish Wiki
 
 on:
     push:
-        paths:
-            - "**/*.md"
+        branches:
+            - main
+            - develop
+    pull_request:
+    workflow_dispatch:
+
+env:
+    node_version: ${{ vars.NODE_VERSION }}
 
 jobs:
     linting:
@@ -16,7 +22,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: ${{ inputs.node_version }}
+                  node-version: ${{ env.node_version }}
 
             - name: Install dependencies
               shell: bash
@@ -33,7 +39,7 @@ jobs:
             - name: Check for Broken Links in README
               uses: becheran/mlc@v0.22.0
               with:
-                  args: --ignore-links "https://dl.acm.org/doi/*" wiki/
+                  args: --ignore-links "https://dl.acm.org/doi/*,https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247" wiki/
 
     publish-wiki:
         name: Publish Wiki
