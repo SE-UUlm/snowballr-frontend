@@ -99,5 +99,29 @@ test.describe("Creating a new project", () => {
         await expect(page.getByText("estimated remaining time")).toBeHidden();
     });
 
+    test("When the project was successfully created, then the project has a stage 0 with no papers.", async ({
+        page,
+        homePage,
+        createProjectDialog,
+        user,
+    }) => {
+        await homePage.openCreateProjectDialog();
+
+        await createProjectDialog.createProject("Demo project 4", user!);
+        await createProjectDialog.checkForErrors();
+        await createProjectDialog.closeCreatedProjectDialog("open");
+
+        // the user is on the project dashboard
+        await expect(page.getByText("SnowballR")).toBeHidden();
+
+        // navigate to papers tab
+        await page.getByRole("tab", { name: "Papers" }).click();
+        await page.waitForURL("**/project/*/papers");
+
+        // the project has a stage 0 with no papers
+        await expect(page.getByText("Stage 0")).toBeVisible();
+        await expect(page.getByText("(0 papers)")).toBeVisible();
+    });
+
     /* TODO: add E2E tests here for checking, that the settings are the same as the default settings for new project from the user */
 });
