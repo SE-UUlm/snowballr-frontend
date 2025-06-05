@@ -93,7 +93,9 @@ test.describe("Reading List Functionality", () => {
         // Search for something not present
         await readingListPage.searchBarInput.fill("NonExistentSearchTerm");
         await readingListPage.expectNumberOfEntries(0);
-        await expect(page.getByText("Your reading list is empty.")).toBeVisible();
+        await expect(
+            page.getByText("No papers on the reading list match your search."),
+        ).toBeVisible();
 
         // Clear search
         await readingListPage.searchBarInput.press("Escape");
