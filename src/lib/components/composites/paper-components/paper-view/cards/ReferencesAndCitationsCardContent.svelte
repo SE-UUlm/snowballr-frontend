@@ -18,17 +18,25 @@
 
     let backwardReferencedPapers = $state<Promise<Paper[]>>(allBackwardReferencedPapers);
     let forwardReferencedPapers = $state<Promise<Paper[]>>(allForwardReferencedPapers);
+    let noSearchResultsForBackwardReferencedPapers = $state(false);
+    let noSearchResultsForForwardReferencedPapers = $state(false);
 
     function filterBackwardReferencedPapers(searchText: string) {
-        backwardReferencedPapers = allBackwardReferencedPapers.then((allPapers) =>
-            filterPapers(allPapers, searchText),
-        );
+        backwardReferencedPapers = allBackwardReferencedPapers.then((allPapers) => {
+            const filteredPapers = filterPapers(allPapers, searchText);
+            noSearchResultsForBackwardReferencedPapers =
+                filteredPapers.length === 0 && allPapers.length > 0;
+            return filteredPapers;
+        });
     }
 
     function filterForwardReferencedPapers(searchText: string) {
-        forwardReferencedPapers = allForwardReferencedPapers.then((allPapers) =>
-            filterPapers(allPapers, searchText),
-        );
+        forwardReferencedPapers = allForwardReferencedPapers.then((allPapers) => {
+            const filteredPapers = filterPapers(allPapers, searchText);
+            noSearchResultsForForwardReferencedPapers =
+                filteredPapers.length === 0 && allPapers.length > 0;
+            return filteredPapers;
+        });
     }
 </script>
 
@@ -44,7 +52,9 @@ Usage:
 <section class="flex h-full flex-col gap-5">
     <div class="flex h-full flex-[1_1_0] overflow-hidden">
         <NamedList
-            emptyHint="No references found."
+            emptyHint={noSearchResultsForBackwardReferencedPapers
+                ? "No references match your search."
+                : "No references found."}
             errorHint="Couldn't load references."
             items={backwardReferencedPapers}
             keySelector={(paper) => paper.id}
@@ -65,7 +75,9 @@ Usage:
     </div>
     <div class="flex h-full flex-[1_1_0] overflow-hidden">
         <NamedList
-            emptyHint="No citations found."
+            emptyHint={noSearchResultsForForwardReferencedPapers
+                ? "No citations match your search."
+                : "No citations found."}
             errorHint="Couldn't load citations."
             items={forwardReferencedPapers}
             keySelector={(paper) => paper.id}
