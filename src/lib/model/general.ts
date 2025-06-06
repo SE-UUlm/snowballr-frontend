@@ -31,4 +31,21 @@ interface Stage {
     papers: Project_Paper[];
 }
 
-export type { ValidationResult, ApiError, CriterionWithReviews, CriteriaList, Stage, PaperStatus };
+interface ProjectPaperFilter {
+    stages: string[];
+    reviewers: string[];
+    publishers: string[];
+    years: string[];
+    decisions: string[];
+    criteria: string[];
+}
+
+export type {
+    ValidationResult,
+    ApiError,
+    CriterionWithReviews,
+    CriteriaList,
+    Stage,
+    PaperStatus,
+    ProjectPaperFilter,
+};

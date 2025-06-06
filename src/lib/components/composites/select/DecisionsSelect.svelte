@@ -1,7 +1,7 @@
 <script lang="ts">
     import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
     import { PaperDecision } from "$lib/model/api/project";
-    import { exhaustiveCheck } from "$lib/utils/common-helper";
+    import { getStatusText } from "$lib/utils/common-helper";
 
     interface Props {
         selectedDecisions?: string[];
@@ -10,19 +10,7 @@
     let { selectedDecisions = $bindable(undefined) }: Props = $props();
 
     function getOption(decision: PaperDecision): SelectOption {
-        switch (decision) {
-            case PaperDecision.ACCEPTED:
-                return { value: "accepted", label: "Accepted" };
-            case PaperDecision.DECLINED:
-                return { value: "declined", label: "Declined" };
-            case PaperDecision.IN_REVIEW:
-                return { value: "undecided", label: "Undecided" };
-            case PaperDecision.UNSPECIFIED:
-            case PaperDecision.UNREVIEWED:
-                return { value: "unreviewed", label: "Unreviewed" };
-            default:
-                exhaustiveCheck(decision);
-        }
+        return { value: String(decision), label: getStatusText(decision) };
     }
 
     // Default options are all from PaperDecision except 'UNSPECIFIED'

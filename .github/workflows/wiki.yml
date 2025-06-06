@@ -38,14 +38,14 @@ jobs:
                   fi
                   echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
+            - name: Lint Markdown files
+              run: npm run lint-md
+
             # To verify whether the wiki links are up-to-date, we replace them with links to the current branch
             # In case, we change the path of a file we link to in the wiki, this would result in a broken link on this branch
             # If we wouldn't check this, the broken link would only be noticed on the develop branch
             - name: Replace GitHub URLs to develop with current branch
               run: node scripts/wiki-replace-github-urls.js ${{ steps.get_branch_name.outputs.branch_name }}
-
-            - name: Lint Markdown files
-              run: npm run lint-md
 
             - name: Check for Broken Links in README
               uses: becheran/mlc@v0.22.0

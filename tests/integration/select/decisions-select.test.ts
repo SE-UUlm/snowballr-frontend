@@ -33,7 +33,7 @@ describe("DecisionsSelect", () => {
         expect(option2).toBeInTheDocument();
         const option3 = screen.getByText("Undecided");
         expect(option3).toBeInTheDocument();
-        const option4 = screen.getByText("Unreviewed");
+        const option4 = screen.getByText("Not reviewed");
         expect(option4).toBeInTheDocument();
     });
 });

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Input } from "$lib/components/primitives/input/index";
     import { Search } from "lucide-svelte";
+    import { getSearchTextFromURL } from "$lib/utils/search-parameters";
 
     interface Props {
         placeholderText?: string;
@@ -10,7 +11,7 @@
 
     const { placeholderText = "Search", onSearch, timeoutInMs = 500 }: Props = $props();
 
-    let searchInput: string = $state("");
+    let searchInput: string = $state(getSearchTextFromURL());
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 

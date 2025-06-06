@@ -14,15 +14,26 @@
     import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
-    import StageEntry from "$lib/components/composites/select/StageEntry.svelte";
+    import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
-    import { ExternalLink } from "lucide-svelte";
+    import { ExternalLink, Funnel } from "lucide-svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
     import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
+    import type { ProjectPaperFilter } from "$lib/model/general";
+    import {
+        getFilterFromURL,
+        getSearchTextFromURL,
+        updateFiltersParam,
+        updateSearchTextParam,
+    } from "$lib/utils/search-parameters";
+    import { SvelteURLSearchParams } from "svelte/reactivity";
+    import { goto } from "$app/navigation";
+    import { page } from "$app/state";
+    import { onMount } from "svelte";
 
     let { data } = $props();
     const {
@@ -39,21 +50,14 @@
     // wrap the selected paper in a promise, as the `PaperDetailsCardContent` needs a loading paper
     let loadingPaper = $derived(selectedPaper ? Promise.resolve(selectedPaper.paper!) : undefined);
 
-    const loadingStageCount = loadingProject.then((project) => project.maxStage);
+    const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
 
-    let showFilters = $state(true);
-    let searchText = $state("");
+    let searchText = $state(getSearchTextFromURL());
+    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
 
-    interface PapersFilters {
-        stages: string[];
-        reviewers: string[];
-        publishers: string[];
-        years: string[];
-        decisions: string[];
-        criteria: string[];
-    }
+    let showFilters = $state(false);
 
-    const emptyFilters: PapersFilters = {
+    const emptyFilters: ProjectPaperFilter = {
         stages: [],
         reviewers: [],
         publishers: [],
@@ -61,14 +65,36 @@
         decisions: [],
         criteria: [],
     };
-    let papersFilters = $state<PapersFilters>(emptyFilters);
+
+    let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
+
+    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+    $effect(() => {
+        if (searchParameters.toString() !== window.location.search.slice(1)) {
+            if (debounceTimeout) clearTimeout(debounceTimeout);
+
+            debounceTimeout = setTimeout(() => {
+                goto(`?${searchParameters.toString()}`, { replaceState: true, keepFocus: true });
+            }, 250);
+        }
+    });
 
     $effect(() => {
-        const filters = Object.assign({}, $state.snapshot(papersFilters));
-        console.log(filters);
-        // TODO: Filter existing papers
-        // This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/37
-        // and https://github.com/SE-UUlm/snowballr-frontend/issues/38
+        searchParameters = updateFiltersParam(
+            {
+                stages: papersFilters.stages,
+                reviewers: papersFilters.reviewers,
+                publishers: papersFilters.publishers,
+                years: papersFilters.years,
+                decisions: papersFilters.decisions,
+                criteria: papersFilters.criteria,
+            },
+            searchParameters,
+        );
+    });
+
+    onMount(() => {
+        showFilters = JSON.stringify(papersFilters) !== JSON.stringify(emptyFilters);
     });
 </script>
 
@@ -85,30 +111,30 @@
 <main class="flex h-full w-full flex-row gap-10 overflow-x-hidden px-5">
     <div class="flex h-full w-full flex-col gap-5">
         <div class="flex h-fit w-full flex-col gap-2.5">
-            <div class="flex flex-row items-center gap-2.5">
-                <Button onclick={() => (showFilters = !showFilters)}>
-                    Filters
-                    {#if showFilters}
-                        <ChevronUp class="size-4" />
-                    {:else}
-                        <ChevronDown class="size-4" />
-                    {/if}
-                </Button>
-                <Button
-                    onclick={() => {
-                        papersFilters = emptyFilters;
-                    }}
-                >
-                    <Trash />
-                    Clear
-                </Button>
+            <div class="flex gap-[2%]">
                 <SearchBar
                     onSearch={(text) => {
                         searchText = text;
+                        searchParameters = updateSearchTextParam(searchText, searchParameters);
                     }}
                     placeholderText="Search paper or start with '#' to only search by id"
                     timeoutInMs={0}
                 />
+                <div class="flex flex-row items-center gap-2.5">
+                    <Button onclick={() => (showFilters = !showFilters)}>
+                        <Funnel />
+                        Filter
+                        {#if showFilters}
+                            <ChevronUp class="size-4" />
+                        {:else}
+                            <ChevronDown class="size-4" />
+                        {/if}
+                    </Button>
+                    <Button onclick={() => (papersFilters = emptyFilters)}>
+                        <Trash />
+                        Reset
+                    </Button>
+                </div>
             </div>
             {#if showFilters}
                 <div class="flex flex-row flex-wrap items-center gap-2.5">
@@ -130,7 +156,7 @@
                 </div>
             {/if}
         </div>
-        <div class="h-full w-full">
+        <div class="h-full w-full overflow-y-auto">
             {#await loadingStages}
                 <span class="text-hint">Loading stages...</span>
             {:then stages}
@@ -140,7 +166,13 @@
                 </span>
                 <Accordion.Root type="multiple">
                     {#each stages as stage (stage.stageIndex)}
-                        <StageEntry {projectId} {searchText} {stage} bind:selectedPaper />
+                        <StageEntry
+                            filter={papersFilters}
+                            {projectId}
+                            {searchText}
+                            {stage}
+                            bind:selectedPaper
+                        />
                     {/each}
                 </Accordion.Root>
             {:catch}

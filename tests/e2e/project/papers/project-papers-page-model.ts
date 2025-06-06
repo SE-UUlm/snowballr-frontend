@@ -8,18 +8,26 @@ export class DevProjectPapersPage {
     readonly paperDetailsCard: Locator;
     readonly searchBarInput: Locator;
     readonly clearFiltersButton: Locator;
+    readonly showFiltersButton: Locator;
+
+    readonly stageFilter: Locator;
+    readonly yearFilter: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
         this.paperDetailsCard = page.locator('aside[data-testid="paper-details-card"]');
         this.searchBarInput = page.getByPlaceholder("Search paper");
-        this.clearFiltersButton = page.getByRole("button", { name: "Clear" });
+        this.clearFiltersButton = page.getByRole("button", { name: "Reset" });
+        this.showFiltersButton = page.getByRole("button", { name: "Filter", exact: false });
+
+        this.stageFilter = page.getByRole("button", { name: "Stages", exact: false });
+        this.yearFilter = page.getByRole("button", { name: "Years", exact: false });
     }
 
     /** Helper to get stage trigger locator */
     getStageTrigger(stageIndex: number): Locator {
-        return this.page.getByRole("button", { name: `Stage ${stageIndex}` });
+        return this.page.getByRole("button", { name: new RegExp(`^Stage ${stageIndex}`) });
     }
 
     /** Helper to get paper locator by its stage and index within that stage */
@@ -36,7 +44,7 @@ export class DevProjectPapersPage {
 
     /** Helper to get the text indicating no search results within an open stage */
     getNoSearchResultsText(): Locator {
-        return this.page.getByText("No papers match your search criteria in this stage.");
+        return this.page.getByText("No papers match your search or filter criteria in this stage.");
     }
 
     /** Helper to check stage counts in the trigger */
@@ -53,7 +61,7 @@ export class DevProjectPapersPage {
             await trigger.click();
         }
         // Wait for animation or content to be fully visible
-        await expect(paperInStageLocator.or(this.getNoSearchResultsText())).toBeVisible();
+        await expect(paperInStageLocator.or(this.getNoSearchResultsText()).first()).toBeVisible();
     }
 
     /** Closes the specified stage if not already closed */
@@ -91,5 +99,35 @@ export class DevProjectPapersPage {
     async clearSearchViaEscape() {
         await this.searchBarInput.focus();
         await this.page.keyboard.press("Escape");
+    }
+
+    /**
+     * Applies given filters by selecting the corresponding values in the
+     * `Select` components for stages, years and decisions.
+     *
+     * @remarks
+     * This method does not check, whether the given stage, year or decision can be selected!
+     * In case they do not exist, an error is thrown.
+     *
+     * @param stage - The stage the paper should be in
+     * @param year - The year the nested paper of the project paper was published
+     */
+    async applyFilter(stage?: number, year?: number) {
+        if (!(await this.stageFilter.isVisible())) {
+            await this.showFiltersButton.click();
+            await expect(this.stageFilter).toBeVisible();
+        }
+
+        if (stage !== undefined) {
+            await this.stageFilter.click();
+            await this.page.getByRole("option", { name: `Stage ${stage}` }).click();
+            await this.stageFilter.click();
+        }
+
+        if (year !== undefined) {
+            await this.yearFilter.click();
+            await this.page.getByRole("option", { name: `${year}` }).click();
+            await this.yearFilter.click();
+        }
     }
 }

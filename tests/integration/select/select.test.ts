@@ -2,6 +2,8 @@ import Select from "$lib/components/composites/select/Select.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { get, type Writable, writable } from "svelte/store";
+import TestSelect from "./TestSelect.svelte";
 
 describe("Select", () => {
     beforeEach(() => {
@@ -45,8 +47,10 @@ describe("Select", () => {
         await user.click(trigger);
 
         expect(trigger).toHaveAttribute("data-state", "open");
+        const optionAll = screen.getByText("Select all");
         const option1 = screen.getByText("Option 1");
         const option2 = screen.getByText("Option 2");
+        expect(optionAll).toBeInTheDocument();
         expect(option1).toBeInTheDocument();
         expect(option2).toBeInTheDocument();
     });
@@ -57,7 +61,10 @@ describe("Select", () => {
             target: document.body,
             props: {
                 options: [
-                    { value: "option-1", label: "Option 1" },
+                    {
+                        value: "option-1",
+                        label: "Option 1 (with a very very long text and is longer than 30 characters)",
+                    },
                     { value: "option-2", label: "Option 2" },
                 ],
             },
@@ -66,11 +73,11 @@ describe("Select", () => {
         const trigger = screen.getByText("All categories (2)");
         await user.click(trigger);
 
-        const option1 = screen.getByText("Option 1");
+        const option1 = screen.getByText("Option 1", { exact: false });
 
         await user.click(option1);
 
-        expect(trigger).toHaveTextContent("categories: 1 selected");
+        expect(trigger).toHaveTextContent("categories: Option 1 (with a very very ... (1)");
         expect(option1).toHaveAttribute("aria-selected", "true");
         expect(option1).toHaveAttribute("data-highlighted");
         expect(option1).toHaveAttribute("data-selected");
@@ -104,6 +111,43 @@ describe("Select", () => {
 
         expect(trigger).toHaveTextContent("All categories (2)");
     });
+
+    test(
+        "When all options are selected at once, " +
+            "then all options can be unselected at once too",
+        async () => {
+            const user = userEvent.setup();
+            const selectedValues: Writable<string[]> = writable([]);
+
+            render(TestSelect, {
+                options: [
+                    { value: "option-1", label: "Option 1" },
+                    { value: "option-2", label: "Option 2" },
+                ],
+                selectedValues: selectedValues,
+            });
+
+            const trigger = screen.getByText("All categories (2)");
+            await user.click(trigger);
+
+            let optionAll = screen.getByText("Select all");
+            await user.click(optionAll);
+
+            optionAll = screen.getByText("Unselect all");
+            expect(get(selectedValues)).toContain("option-1");
+            expect(get(selectedValues)).toContain("option-2");
+            expect(optionAll).toBeInTheDocument();
+            expect(trigger).toHaveTextContent("All categories (2)");
+
+            await user.click(optionAll);
+
+            optionAll = screen.getByText("Select all");
+            expect(optionAll).toBeInTheDocument();
+            expect(get(selectedValues)).not.toContain("option-1");
+            expect(get(selectedValues)).not.toContain("option-2");
+            expect(trigger).toHaveTextContent("All categories (2)");
+        },
+    );
 
     test("When no options are provided, then hint is shown", async () => {
         const user = userEvent.setup();

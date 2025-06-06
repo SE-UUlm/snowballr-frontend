@@ -29,6 +29,7 @@ test.describe("View all papers of a project", () => {
             const paperIndex = i % NUM_PAPERS_PER_STAGE;
             const uniqueSequence = getUniqueSequence(i);
             const title = `Paper ${stageIndex}/${paperIndex} (${uniqueSequence})`;
+            const year = 1990 + i;
 
             const authors: Author[] = [
                 {
@@ -38,7 +39,7 @@ test.describe("View all papers of a project", () => {
                 },
             ];
 
-            papers.push(apiClient.createPaper(createPaper({ title, authors })).response);
+            papers.push(apiClient.createPaper(createPaper({ title, authors, year })).response);
         }
         const createdPapers = await Promise.all(papers);
 
@@ -238,10 +239,7 @@ test.describe("View all papers of a project", () => {
         await expect(projectPapersPage.getNoSearchResultsText().first()).toBeVisible();
 
         // Stage 1 checks (all should match)
-        await projectPapersPage.expectStageCounts(
-            1,
-            `(${NUM_PAPERS_PER_STAGE} / ${NUM_PAPERS_PER_STAGE} papers)`,
-        );
+        await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
         for (let i = 0; i < NUM_PAPERS_PER_STAGE; i++) {
             const paperIndexInTotal = NUM_PAPERS_PER_STAGE + i;
             const paperTitle = `Paper 1/${i} (${getUniqueSequence(paperIndexInTotal)})`;
@@ -292,5 +290,94 @@ test.describe("View all papers of a project", () => {
             const paperTitle = `Paper 0/${i} (${getUniqueSequence(i)})`;
             await expect(projectPapersPage.getPaperByTitle(paperTitle)).toBeVisible();
         }
+    });
+
+    // --- Filter Tests ---
+
+    test("When the user selects a filter, then only papers matching this filter are shown in open stages.", async ({
+        projectPapersPage,
+    }) => {
+        const matchingPaper = `Paper 0/0 (${getUniqueSequence(0)})`;
+
+        await projectPapersPage.openStage(0);
+        await projectPapersPage.openStage(1);
+
+        await projectPapersPage.applyFilter(0, 1990);
+
+        await projectPapersPage.expectStageCounts(0, `(1 / ${NUM_PAPERS_PER_STAGE} papers)`);
+        await projectPapersPage.expectStageCounts(1, `(0 / ${NUM_PAPERS_PER_STAGE} papers)`);
+
+        await expect(projectPapersPage.getPaperByTitle(matchingPaper)).toBeVisible();
+        await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
+    });
+
+    test("When the user selects a filter that no paper matches, then the 'no results' message is shown.", async ({
+        projectPapersPage,
+    }) => {
+        await projectPapersPage.openStage(0);
+        await projectPapersPage.openStage(1);
+
+        await projectPapersPage.applyFilter(1, 1990);
+
+        // Check counts
+        await projectPapersPage.expectStageCounts(0, `(0 / ${NUM_PAPERS_PER_STAGE} papers)`);
+        await projectPapersPage.expectStageCounts(1, `(0 / ${NUM_PAPERS_PER_STAGE} papers)`);
+
+        // Check messages
+        await expect(projectPapersPage.getNoSearchResultsText().first()).toBeVisible();
+        await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
+    });
+
+    test("When the user clears the filters using the reset button, then all papers are shown again.", async ({
+        projectPapersPage,
+    }) => {
+        const matchingPaper = `Paper 0/0 (${getUniqueSequence(0)})`;
+        const nonMatchingPaper = `Paper 1/0 (${getUniqueSequence(0)})`;
+
+        await projectPapersPage.applyFilter(0, 1990);
+
+        await projectPapersPage.openStage(0);
+        await projectPapersPage.openStage(1);
+
+        // Verify filtered state
+        await projectPapersPage.expectStageCounts(0, `(1 / ${NUM_PAPERS_PER_STAGE} papers)`);
+        await projectPapersPage.expectStageCounts(1, `(0 / ${NUM_PAPERS_PER_STAGE} papers)`);
+        await expect(projectPapersPage.getPaperByTitle(matchingPaper)).toBeVisible();
+        await expect(projectPapersPage.getPaperByTitle(nonMatchingPaper)).toBeHidden();
+
+        await projectPapersPage.clearFiltersButton.click();
+
+        // Verify reset state
+        await projectPapersPage.expectStageCounts(0, `(${NUM_PAPERS_PER_STAGE} papers)`);
+        await projectPapersPage.expectStageCounts(1, `(${NUM_PAPERS_PER_STAGE} papers)`);
+    });
+
+    test("When the user reloads the page, then the search text and applied filters are restored from the URL.", async ({
+        projectPapersPage,
+        page,
+    }) => {
+        await projectPapersPage.search("Hello world");
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return params.has("searchText") && params.get("searchText") === "Hello world";
+        });
+
+        await projectPapersPage.applyFilter(0);
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return (
+                params.has("searchText") &&
+                params.get("searchText") === "Hello world" &&
+                params.has("stages") &&
+                params.get("stages") === "0"
+            );
+        });
+
+        await page.reload();
+
+        await expect(projectPapersPage.searchBarInput).toHaveValue("Hello world");
+
+        await expect(projectPapersPage.stageFilter).toBeVisible(); // as there are filters in the URL, the filter bar is initially shown
+        await expect(projectPapersPage.stageFilter).toHaveText("Stages: Stage 0 (1)");
     });
 });

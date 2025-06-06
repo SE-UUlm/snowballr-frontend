@@ -94,6 +94,18 @@ vi.mock("$app/stores", (): typeof stores => {
     };
 });
 
+// inspired from https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
+vi.mock("$app/state", async () => {
+    // This is to avoid mocking of other logic implemented in $app/state,
+    // it can be omitted if you don't care about it.
+    const original = await vi.importActual("$app/state");
+
+    return {
+        ...original,
+        page: { url: new URL("http://localhost") },
+    };
+});
+
 // Mock SvelteKit runtime modules $env/static/public and $env/dynamic/public
 vi.mock("$env/static/public", () => ({ env: {} }));
 vi.mock("$env/dynamic/public", () => ({ env: {} }));

@@ -17,7 +17,7 @@ describe("StagesSelect", () => {
         render(StagesSelect, {
             target: document.body,
             props: {
-                loadingStageCount: Promise.resolve<bigint>(2n),
+                loadingStageCount: Promise.resolve(2n),
                 selectedStages: [],
             },
         });
@@ -26,7 +26,7 @@ describe("StagesSelect", () => {
         expect(trigger).toBeInTheDocument();
     });
 
-    test("When the loadingStageCount promise is rejected, then stage 0 is still shown", async () => {
+    test("When the loadingStageCount promise is rejected, then hint is shown", async () => {
         const user = userEvent.setup();
         render(StagesSelect, {
             target: document.body,
@@ -36,15 +36,12 @@ describe("StagesSelect", () => {
             },
         });
 
-        const trigger = await screen.findByText("All Stages (1)");
+        const trigger = await screen.findByText("All Stages (0)");
         expect(trigger).toBeInTheDocument();
 
         await user.click(trigger);
 
-        const option = screen.getByText("Stage 0");
-        expect(option).toBeInTheDocument();
-
         const noStagesOption = screen.queryByText("No stages available");
-        expect(noStagesOption).not.toBeInTheDocument();
+        expect(noStagesOption).toBeInTheDocument();
     });
 });

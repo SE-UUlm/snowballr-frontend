@@ -73,7 +73,9 @@ function organizePapersByStage(papers: Project_Paper[]): Stage[] {
 
         stage.papers.push(paper);
     }
-    stages.forEach((stage) => stage.papers.sort((a, b) => comparePaperId(b.id, a.id)));
+    stages.forEach((stage) =>
+        stage.papers.sort((a, b) => comparePaperId(`#${a.localId}`, `#${b.localId}`)),
+    );
     stages.sort((a, b) => Number(a.stageIndex - b.stageIndex));
 
     if (stages.length === 0) {
