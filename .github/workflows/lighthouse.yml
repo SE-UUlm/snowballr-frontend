@@ -11,7 +11,7 @@ env:
 jobs:
     lighthouse:
         name: Lighthouse Auditing
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         steps:
             - name: Checkout code
               uses: actions/checkout@v4

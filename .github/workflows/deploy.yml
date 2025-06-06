@@ -13,7 +13,7 @@ env:
 jobs:
     build-and-publish-docker-image:
         name: Build and Publish Docker Image
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         permissions:
             contents: read
             packages: write

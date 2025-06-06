@@ -15,7 +15,7 @@ env:
 jobs:
     linting:
         name: Linting
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
 
     unit-test:
         name: Unit Testing with Vitest
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
 
     integration-test:
         name: Integration Testing with Vitest
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -87,7 +87,7 @@ jobs:
 
     coverage-report:
         name: Code Coverage Report
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         needs: [unit-test, integration-test]
         permissions:
             pull-requests: write
@@ -172,7 +172,7 @@ jobs:
 
     check:
         name: Svelte Check
-        runs-on: ubuntu-latest
+        runs-on: linux-sp
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
