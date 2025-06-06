@@ -54,7 +54,7 @@ Usage:
         <NamedList
             emptyHint={noSearchResultsForBackwardReferencedPapers
                 ? "No references match your search."
-                : "No references found."}
+                : "No references exist or have been added."}
             errorHint="Couldn't load references."
             items={backwardReferencedPapers}
             keySelector={(paper) => paper.id}
@@ -77,7 +77,7 @@ Usage:
         <NamedList
             emptyHint={noSearchResultsForForwardReferencedPapers
                 ? "No citations match your search."
-                : "No citations found."}
+                : "No citations exist or have been added."}
             errorHint="Couldn't load citations."
             items={forwardReferencedPapers}
             keySelector={(paper) => paper.id}
