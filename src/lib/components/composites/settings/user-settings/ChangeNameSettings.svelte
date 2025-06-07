@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { invalidate } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
     import { User } from "$lib/model/api/user";
     import type { ApiError } from "$lib/model/general";
@@ -13,6 +12,7 @@
     import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { triggerUserSessionRefresh } from "$lib/user-state/userSessionStore";
 
     const user = $derived(getContext<() => User>(UserContextKey)());
 
@@ -54,7 +54,7 @@
                 },
             })
             .response.then(async () => {
-                await invalidate("data:getCurrentUser");
+                triggerUserSessionRefresh();
                 toast.success("Successfully updated your name.");
 
                 // Make sure that the input fields are not focused after submitting
