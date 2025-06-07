@@ -7,7 +7,7 @@
     import { ServerCrash } from "lucide-svelte";
     import type { LayoutData } from "./$types";
     import { setContext, type Snippet } from "svelte";
-    import { UserContextKey } from "$lib/global-context/userContext";
+    import { UserContextKey } from "$lib/user-state/userContext";
     import type { User } from "$lib/model/api/user";
 
     let { data, children } = $props<{

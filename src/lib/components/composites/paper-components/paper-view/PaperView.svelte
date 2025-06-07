@@ -22,7 +22,7 @@
     } from "$lib/utils/custom-context";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
     import { toast } from "svelte-sonner";
-    import { UserContextKey } from "$lib/global-context/userContext";
+    import { UserContextKey } from "$lib/user-state/userContext";
     import { getContext } from "svelte";
 
     export interface ProjectPaperViewProps {
