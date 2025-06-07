@@ -12,7 +12,7 @@
     import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
-    import { triggerUserSessionRefresh } from "$lib/current-user/userSessionStore";
+    import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
 
     const user = $derived(getContext<() => User>(UserContextKey)());
 
@@ -54,7 +54,7 @@
                 },
             })
             .response.then(async () => {
-                triggerUserSessionRefresh();
+                triggerCurrentUserRefresh();
                 toast.success("Successfully updated your name.");
 
                 // Make sure that the input fields are not focused after submitting

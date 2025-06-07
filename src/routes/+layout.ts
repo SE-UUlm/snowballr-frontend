@@ -5,16 +5,12 @@ import { Nothing } from "$lib/model/api/base";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { StatusCodes } from "$lib/model/error-codes";
 import { goto } from "$app/navigation";
-import {
-    getCachedUser,
-    setCachedUser,
-    USER_SESSION_DEPENDENCY_KEY,
-} from "$lib/current-user/userSessionStore";
+import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
 
 export const ssr = false;
 
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
-    depends(USER_SESSION_DEPENDENCY_KEY);
+    depends(USER_DEPENDENCY_KEY);
     setFetch(fetch);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

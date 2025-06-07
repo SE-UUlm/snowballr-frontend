@@ -1,7 +1,7 @@
 import { invalidate } from "$app/navigation";
 import type { User } from "$lib/model/api/user";
 
-export const USER_SESSION_DEPENDENCY_KEY = "data:getCurrentUser";
+export const USER_DEPENDENCY_KEY = "data:getCurrentUser";
 
 /** Cache for the user object.
  * | Value | Description |
@@ -34,9 +34,9 @@ export function setCachedUser(user: User | null): void {
 }
 
 /**
- * Invalidate the client-side user cache and trigger a re-fetch of the user session in the root layout.
+ * Invalidates the client-side user cache and trigger a re-fetch of the user in the root layout.
  */
-export function triggerUserSessionRefresh(): void {
+export function triggerCurrentUserRefresh(): void {
     cachedUser = undefined;
-    invalidate(USER_SESSION_DEPENDENCY_KEY);
+    invalidate(USER_DEPENDENCY_KEY);
 }
