@@ -1,20 +1,23 @@
-import { ProjectReviewSettingsPageModel } from "$tests/e2e/project/settings/review/project-review-settings-model";
+import { ProjectReviewSettingsPageModel } from "$tests/e2e/project/settings/review/project-review-settings-page-model";
 import { expect } from "@playwright/test";
 import { test as base } from "../../../utils/fixtures/shared-fixture";
 import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
 import { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
+import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
 
 type ProjectReviewSettingsPageFixtures = {
     projectReviewSettingsPage: ProjectReviewSettingsPageModel;
     homePage: HomePageModel;
-    navigationBar: NavigationBarModel;
+    projectNavigationBar: ProjectNavigationBarModel;
     projectSettingsSideBar: ProjectSettingsSidebarModel;
 };
 
 /**
  * Extends the default **custom** fixture by providing the page object models for the
  * - project review settings page
+ * - home page
+ * - project navigation bar
+ * - project settings sidebar
  */
 export const test = base.extend<ProjectReviewSettingsPageFixtures>({
     projectReviewSettingsPage: async ({ page, apiClient }, use) => {
@@ -26,7 +29,7 @@ export const test = base.extend<ProjectReviewSettingsPageFixtures>({
                 .response.then((project) => (projectReviewSettingsPage.projectId = project.id));
 
             await page.goto(`/project/${projectReviewSettingsPage.projectId}/settings/review`);
-            await expect(projectReviewSettingsPage.header).toBeVisible();
+            await expect(projectReviewSettingsPage.heading).toBeVisible();
 
             await use(projectReviewSettingsPage);
         } finally {
@@ -38,8 +41,8 @@ export const test = base.extend<ProjectReviewSettingsPageFixtures>({
         await use(new HomePageModel(page));
     },
 
-    navigationBar: async ({ page }, use) => {
-        await use(new NavigationBarModel(page));
+    projectNavigationBar: async ({ page }, use) => {
+        await use(new ProjectNavigationBarModel(page));
     },
 
     projectSettingsSideBar: async ({ page }, use) => {

@@ -47,9 +47,9 @@ export class ProjectReviewSettingsPageModel {
      * @param tagName - tag name
      */
     async deleteTag(tagName: string) {
-        const tageDeleteButton = this.getTag(tagName).then((tag) =>
+        const tagDeleteButton = this.getTag(tagName).then((tag) =>
             tag.getByRole("button", { name: "×" }),
         );
-        await tageDeleteButton.then((button) => button.click());
+        await tagDeleteButton.then((button) => button.click());
     }
 }
