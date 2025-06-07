@@ -1,9 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
+import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
 
-type LinkName = "Reading List" | "Archived Projects" | "Invitations" | "Settings" | "Sign Out";
-type SettingName = "Account" | "Project Setup" | "Shortcuts" | "Review";
-
-export class DevHomePage {
+export class HomePageModel {
     readonly page: Page;
     readonly heading: Locator;
     readonly createProjectDialog: Locator;
@@ -11,9 +10,41 @@ export class DevHomePage {
 
     constructor(page: Page) {
         this.page = page;
-        this.heading = page.getByRole("heading", { name: "SnowballR", exact: true })
+        this.heading = page.getByRole("heading", { name: "SnowballR", exact: true });
         this.createProjectDialog = page.getByRole("dialog", { name: "Create Project" });
         this.openCreateProjectDialogButton = page.getByTestId("dialog-trigger");
+    }
+
+    /**
+     * Returns the list link element of the homepage with the given name
+     *
+     * @param name - the name of the list element
+     */
+    getListElementLink(name: string) {
+        return this.page.getByRole("link", { name: name });
+    }
+
+    /**
+     * Opens and navigates to the project paper view of the project paper with the given name
+     *
+     * @param paperName - the name of the project paper to navigate to
+     */
+    async openProjectPaper(paperName: string) {
+        await expect(this.getListElementLink(paperName)).toBeVisible();
+        await this.getListElementLink(paperName).click();
+        await expect(new ProjectPaperViewPageModel(this.page).getHeading(paperName)).toBeVisible();
+    }
+
+    /**
+     * Opens and navigates to the project dashboard of the project the given name
+     *
+     * @param projectName - the name of the project to navigate to
+     */
+    async openProject(projectName: string) {
+        await this.getListElementLink(projectName).click();
+        await expect(
+            new ProjectDashboardPageModel(this.page).getHeading(projectName),
+        ).toBeVisible();
     }
 
     /**
@@ -22,29 +53,5 @@ export class DevHomePage {
     async openCreateProjectDialog() {
         await expect(this.createProjectDialog).not.toBeVisible();
         await this.openCreateProjectDialogButton.click();
-    }
-
-    /**
-     * Opens the user menu dialog and clicks on a specific link.
-     *
-     * @param linkName - The name of the link to be clicked in the user menu dialog.
-     */
-    async openLinkInUserMenuDialog(linkName: LinkName, checkDestination: boolean = true) {
-        await this.page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
-        await this.page.getByRole("link", { name: linkName }).click();
-        if (checkDestination) {
-            await expect(this.page.getByRole("heading", { name: linkName })).toBeVisible();
-        }
-    }
-
-    /**
-     * Opens the user menu dialog, opens the settings and clicks on a specific user setting in the sidebar, e.g. "Account".
-     *
-     * @param settingName - The name of the setting to be opened in the user settings sidebar.
-     */
-    async openUserSettingInSidebar(settingName: SettingName) {
-        await this.openLinkInUserMenuDialog("Settings");
-        await this.page.getByRole("link", { name: settingName }).click();
-        await this.page.waitForURL(`**/settings/${settingName.toLowerCase()}`);
     }
 }

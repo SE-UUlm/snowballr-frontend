@@ -1,19 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./home-page-fixture";
 
-test.describe("Creating a new project", () => {
-    const projectIds = ["0", "1", "2", "3"];
-
-    /**
-     * Delete all projects created in this test after all tests are done.
-     */
-    test.afterAll(async ({ apiClient }) => {
-        // delete all projects created in this test
-        projectIds.forEach((projectId) => {
-            apiClient.softDeleteProject({ id: projectId });
-        });
-    });
-
+test.describe("Project Creation Tests", () => {
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({
         homePage,
     }) => {
@@ -35,7 +23,6 @@ test.describe("Creating a new project", () => {
     });
 
     test("When the process is cancelled, then the dialog is closed, no project is created and all inputs are reset", async ({
-        page,
         homePage,
         createProjectDialog,
     }) => {
@@ -51,7 +38,7 @@ test.describe("Creating a new project", () => {
         await expect(homePage.createProjectDialog).toBeHidden();
 
         // no new project was created
-        await expect(page.getByText("Demo project 1")).toBeHidden();
+        await expect(homePage.getListElementLink("Demo project 1")).toBeHidden();
 
         // all inputs are reset
         await homePage.openCreateProjectDialog();
@@ -60,7 +47,6 @@ test.describe("Creating a new project", () => {
     });
 
     test("When the project was successfully created, but the user doesn't want to open it, then the user stays on the homepage.", async ({
-        page,
         homePage,
         createProjectDialog,
         user,
@@ -72,13 +58,14 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.closeCreatedProjectDialog("cancel");
 
         // the user stays on the project and the project is shown in the list of active projects
-        await expect(page.getByRole("heading", { name: "SnowballR" })).toBeVisible();
-        await expect(page.getByRole("link", { name: "Demo project 2" })).toBeVisible();
+        await expect(homePage.heading).toBeVisible();
+        await expect(homePage.getListElementLink("Demo project 2")).toBeVisible();
     });
 
     test("When the project was successfully created and the user navigates to the project dashboard, then it shows an empty project.", async ({
         page,
         homePage,
+        projectDashboardPage,
         createProjectDialog,
         user,
     }) => {
@@ -89,9 +76,9 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.closeCreatedProjectDialog("open");
 
         // the user is not on the homepage but the project dashboard
-        await expect(page.getByText("SnowballR")).toBeHidden();
-        await expect(page.getByRole("navigation").getByText("Demo project 3")).toBeVisible();
-        await expect(page.getByRole("link", { name: "Demo project 3" })).toBeHidden();
+        await expect(homePage.heading).toBeHidden();
+        await expect(projectDashboardPage.getHeading("Demo Project 3")).toBeVisible();
+        await expect(homePage.getListElementLink("Demo project 3")).toBeHidden();
 
         await expect(page.getByText("stage 0")).toBeVisible();
         await expect(page.getByText("reviewed 0 / 0")).toBeVisible();
@@ -103,6 +90,8 @@ test.describe("Creating a new project", () => {
         page,
         homePage,
         createProjectDialog,
+        projectPapersPage,
+        projectNavigationBar,
         user,
     }) => {
         await homePage.openCreateProjectDialog();
@@ -112,16 +101,19 @@ test.describe("Creating a new project", () => {
         await createProjectDialog.closeCreatedProjectDialog("open");
 
         // the user is on the project dashboard
-        await expect(page.getByText("SnowballR")).toBeHidden();
+        await expect(homePage.heading).toBeHidden();
 
         // navigate to papers tab
-        await page.getByRole("tab", { name: "Papers" }).click();
-        await page.waitForURL("**/project/*/papers");
+        await projectNavigationBar.papersTab.click();
+        await expect(projectPapersPage.showFiltersButton).toBeVisible();
 
         // the project has a stage 0 with no papers
-        await expect(page.getByText("Stage 0")).toBeVisible();
+        await expect(projectPapersPage.getStageButton(0)).toBeVisible();
         await expect(page.getByText("(0 papers)")).toBeVisible();
     });
 
-    /* TODO: add E2E tests here for checking, that the settings are the same as the default settings for new project from the user */
+    test.fixme(
+        "When the user creates a project, then the project is created with the default settings",
+        async () => {},
+    );
 });
