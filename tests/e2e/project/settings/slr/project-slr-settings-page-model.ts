@@ -1,11 +1,11 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { ConfirmMaybeDecisionDialog } from "$tests/e2e/project/settings/slr/confirm-maybe-decision-dialog";
+import { ConfirmMaybeDecisionDialogModel } from "$tests/e2e/project/settings/slr/confirm-maybe-decision-dialog-model";
 
 export class ProjectSLRSettingsPageModel {
     readonly page: Page;
-    readonly confirmMaybeDecisionDialog: ConfirmMaybeDecisionDialog;
+    readonly confirmMaybeDecisionDialog: ConfirmMaybeDecisionDialogModel;
 
-    readonly header: Locator;
+    readonly heading: Locator;
     readonly maybeAsDecisionSwitch: Locator;
 
     readonly projectName: string;
@@ -17,9 +17,9 @@ export class ProjectSLRSettingsPageModel {
         this.page = page;
         this.projectName = "Project 1";
 
-        this.confirmMaybeDecisionDialog = new ConfirmMaybeDecisionDialog(page);
+        this.confirmMaybeDecisionDialog = new ConfirmMaybeDecisionDialogModel(page);
 
-        this.header = page.getByRole("heading", { name: this.projectName });
+        this.heading = page.getByRole("heading", { name: this.projectName });
         this.maybeAsDecisionSwitch = page.getByRole("switch", {
             name: "Allow 'Maybe' as decision on a Paper",
         });

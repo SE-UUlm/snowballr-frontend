@@ -1,21 +1,29 @@
 import { test as base } from "../../../utils/fixtures/shared-fixture";
 import { expect } from "@playwright/test";
 import { createPaper } from "$tests/model-builder";
-import { ProjectSLRSettingsPageModel } from "$tests/e2e/project/settings/slr/project-slr-settings-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-model";
+import { ProjectSLRSettingsPageModel } from "$tests/e2e/project/settings/slr/project-slr-settings-page-model";
+import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
 import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
 import { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
+import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
 
-type ProjectSlrSettingsFixtures = {
+type ProjectSlrSettingsPageFixtures = {
     projectSLRSettingsPage: ProjectSLRSettingsPageModel;
     homePage: HomePageModel;
     projectPaperViewPage: ProjectPaperViewPageModel;
-    navigationBar: NavigationBarModel;
+    projectNavigationBar: ProjectNavigationBarModel;
     projectSettingsSideBar: ProjectSettingsSidebarModel;
 };
 
-export const test = base.extend<ProjectSlrSettingsFixtures>({
+/**
+ * Extends the default **custom** fixture by providing the page object models for the
+ * - project slr settings page
+ * - home page
+ * - project paper view page
+ * - project navigation bar
+ * - project settings sidebar
+ */
+export const test = base.extend<ProjectSlrSettingsPageFixtures>({
     projectSLRSettingsPage: async ({ page, apiClient }, use) => {
         const projectSLRSettingsPage = new ProjectSLRSettingsPageModel(page);
 
@@ -39,7 +47,7 @@ export const test = base.extend<ProjectSlrSettingsFixtures>({
                 });
 
             await page.goto(`project/${projectSLRSettingsPage.projectId}/settings/slr`);
-            await expect(projectSLRSettingsPage.header).toBeVisible();
+            await expect(projectSLRSettingsPage.heading).toBeVisible();
 
             await use(projectSLRSettingsPage);
         } finally {
@@ -56,8 +64,8 @@ export const test = base.extend<ProjectSlrSettingsFixtures>({
         await use(new ProjectPaperViewPageModel(page));
     },
 
-    navigationBar: async ({ page }, use) => {
-        await use(new NavigationBarModel(page));
+    projectNavigationBar: async ({ page }, use) => {
+        await use(new ProjectNavigationBarModel(page));
     },
 
     projectSettingsSideBar: async ({ page }, use) => {

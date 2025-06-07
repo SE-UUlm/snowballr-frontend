@@ -1,7 +1,11 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { ReviewDecision } from "$lib/model/api/review";
+import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
+import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";
+import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
+import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
 
-export class DevPaperViewPage {
+export class ProjectPaperViewPageModel {
     readonly page: Page;
     readonly allListEntries: Locator;
     readonly referenceListEntry0: Locator;
@@ -12,6 +16,15 @@ export class DevPaperViewPage {
     readonly exampleHardExclusionCriterion: Locator;
     readonly nextPaperButton: Locator;
     readonly previousPaperButton: Locator;
+
+    readonly submittedReviewToast: Locator;
+    readonly noMorePapersToReviewToast: Locator;
+
+    readonly projectName: string;
+
+    projectId: string;
+    localProjectPaperIds: string[];
+    projectPaperNames: string[];
 
     constructor(page: Page) {
         this.page = page;
@@ -26,16 +39,24 @@ export class DevPaperViewPage {
             : this.getFirstListEntry("button");
         this.nextPaperButton = page.locator("button[aria-label='Next Paper']");
         this.previousPaperButton = page.locator("button[aria-label='Previous Paper']");
+
+        this.submittedReviewToast = page.getByText("Successfully submitted a review.");
+        this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
+
+        this.projectName = "Project 1";
+
+        this.projectId = "";
+        this.localProjectPaperIds = [];
+        this.projectPaperNames = [];
     }
 
     /**
-     * Navigates to a certain paper view and ensures the page is loaded.
+     * Returns a heading element based on a specified paper title.
      *
-     * @param paperId - The local project paper id
+     * @param paperTitle - The title of the paper to locate within the navigation role.
      */
-    async openPaperView(paperId: string) {
-        await this.page.goto(`/paper/${paperId}`);
-        await expect(this.referenceListEntry0).toBeVisible();
+    getHeading(paperTitle: string) {
+        return this.page.getByRole("navigation").getByText(paperTitle, { exact: true });
     }
 
     /**
@@ -97,13 +118,49 @@ export class DevPaperViewPage {
             .first();
     }
 
+    /**
+     * Navigates to the next paper in the sequence by clicking the "Next Paper" button.
+     * Ensures the button is enabled before triggering the click action.
+     */
     async goToNextPaper() {
         await expect(this.nextPaperButton).toBeEnabled();
         await this.nextPaperButton.click();
     }
 
+    /**
+     * Navigates to the previous paper by clicking on the "previous paper" button.
+     * It ensures the button is enabled before performing the click action.
+     */
     async goToPreviousPaper() {
         await expect(this.previousPaperButton).toBeEnabled();
         await this.previousPaperButton.click();
+    }
+
+    /**
+     * Returns the button to add/remove a paper to/from the reading list
+     *
+     * @param add - whether the button is the "add to" or "remove from" button
+     */
+    getReadingListButton(add: boolean) {
+        return this.page.getByRole("button", {
+            name: `${add ? "Add to" : "Remove from"} reading list`,
+        });
+    }
+
+    /**
+     * Changes the review mode and reopens the given project paper.
+     *
+     * @param reviewMode - the value of the review mode
+     * @param paperName - the project paper id to open
+     */
+    async changeReviewMode(reviewMode: boolean, paperName: string) {
+        const projectNavigationBar = new ProjectNavigationBarModel(this.page);
+        await projectNavigationBar.getUserAvatarButton().click();
+        await projectNavigationBar.getSettingsLink().click();
+        await new SettingsSidebarModel(this.page).review.click();
+        await new ReviewSettingsPageModel(this.page).setReviewMode(reviewMode);
+
+        await projectNavigationBar.goBackButton.click();
+        await new HomePageModel(this.page).openProjectPaper(paperName);
     }
 }

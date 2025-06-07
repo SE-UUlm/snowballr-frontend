@@ -61,7 +61,8 @@
                 } else {
                     signinError = {
                         errorTitle: "Something unknown went wrong.",
-                        errorDetails: "Please check your internet connection and the connection to the server."
+                        errorDetails:
+                            "Please check your internet connection and the connection to the server.",
                     };
                 }
                 console.error(error);

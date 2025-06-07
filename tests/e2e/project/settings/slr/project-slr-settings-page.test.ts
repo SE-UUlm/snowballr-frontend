@@ -1,20 +1,20 @@
 import { expect } from "@playwright/test";
 import { reloadWait } from "$tests/e2e/utils/helper/helper";
-import { test } from "./project-slr-settings-fixture";
+import { test } from "./project-slr-settings-page-fixture";
 
-test.describe("Changing SLR settings", () => {
-    test("Tests the navigation to the project slr settings", async ({
+test.describe("Changing SLR Settings Tests", () => {
+    test("When navigating to the project slr settings, then the page is displayed", async ({
         page,
         projectSLRSettingsPage,
         homePage,
-        navigationBar,
+        projectNavigationBar,
         projectSettingsSideBar,
     }) => {
         // Directly navigate to the project slr settings
         await page.goto("/");
 
         await homePage.openProject(projectSLRSettingsPage.projectName);
-        await navigationBar.settingsTab.click();
+        await projectNavigationBar.settingsTab.click();
         await projectSettingsSideBar.slr.click();
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).toBeVisible();
     });
@@ -52,11 +52,11 @@ test.describe("Changing SLR settings", () => {
         projectSLRSettingsPage,
     }) => {
         await projectSLRSettingsPage.toggleMaybeAsDecisionSwitch(true);
-        await reloadWait(page, projectSLRSettingsPage.header);
+        await reloadWait(page, projectSLRSettingsPage.heading);
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).toBeChecked();
 
         await projectSLRSettingsPage.toggleMaybeAsDecisionSwitch(false);
-        await reloadWait(page, projectSLRSettingsPage.header);
+        await reloadWait(page, projectSLRSettingsPage.heading);
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).not.toBeChecked();
     });
 

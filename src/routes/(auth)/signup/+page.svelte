@@ -82,7 +82,8 @@
                 } else {
                     registrationError = {
                         errorTitle: "Something went wrong while registration.",
-                        errorDetails: "Please check your internet connection and the connection to the server."
+                        errorDetails:
+                            "Please check your internet connection and the connection to the server.",
                     };
                 }
                 console.error(error);
