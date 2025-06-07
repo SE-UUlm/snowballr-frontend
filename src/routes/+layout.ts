@@ -13,17 +13,13 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     depends(USER_DEPENDENCY_KEY);
     setFetch(fetch);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const undefinedUser: User = undefined as any;
+    const emptyUser: User = null as unknown as User;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nullUser: User = null as any;
-
-    // If the user is on a path that does not require authentication, we return nullUser
+    // If the user is on a path that does not require authentication, we return an empty user
     const uncheckedPaths = ["/signin", "/signup", "/resetpassword"];
     const onUncheckedPath = uncheckedPaths.includes(url.pathname);
     if (onUncheckedPath) {
-        return { user: nullUser };
+        return { user: emptyUser };
     }
 
     // If the user is already cached, we return the cached user
@@ -40,12 +36,12 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
 
     if (authStatusCall === undefined) {
         setCachedUser(null);
-        return { user: undefinedUser };
+        return { user: emptyUser };
     }
 
     if (authStatusCall.status.code !== StatusCodes.OK) {
         setCachedUser(null);
-        return { user: undefinedUser };
+        return { user: emptyUser };
     }
 
     const authStatus = authStatusCall.response.authenticationStatus;
@@ -57,19 +53,19 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
                 console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
                 setCachedUser(null);
                 await goto("/signin");
-                return { user: nullUser };
+                return { user: emptyUser };
             }
             // Renewal successful, proceed to fetch current user
         } catch (error) {
             console.error(`Session renewal failed: ${error}`);
             setCachedUser(null);
             await goto("/signin");
-            return { user: nullUser };
+            return { user: emptyUser };
         }
     } else if (authStatus !== AuthenticationStatus.AUTHENTICATED && !onUncheckedPath) {
         setCachedUser(null);
         await goto("/signin");
-        return { user: nullUser };
+        return { user: emptyUser };
     }
 
     try {
@@ -80,6 +76,6 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         console.error(`Current user could not be loaded ${error}`);
         setCachedUser(null);
         await goto("/signin");
-        return { user: nullUser };
+        return { user: emptyUser };
     }
 };
