@@ -9,7 +9,7 @@ import {
     getCachedUser,
     setCachedUser,
     USER_SESSION_DEPENDENCY_KEY,
-} from "$lib/user-state/userSessionStore";
+} from "$lib/current-user/userSessionStore";
 
 export const ssr = false;
 

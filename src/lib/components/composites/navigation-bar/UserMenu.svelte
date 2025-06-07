@@ -9,7 +9,7 @@
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/user-state/userContext";
+    import { UserContextKey } from "$lib/current-user/userContext";
 
     const user = $derived(getContext<() => User>(UserContextKey)());
 

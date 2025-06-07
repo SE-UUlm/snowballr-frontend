@@ -8,7 +8,7 @@
     import { backendService } from "$lib/grpc-api";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/user-state/userContext";
+    import { UserContextKey } from "$lib/current-user/userContext";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";

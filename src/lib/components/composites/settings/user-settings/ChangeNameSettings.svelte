@@ -8,11 +8,11 @@
     import SettingsSection from "../SettingsSection.svelte";
     import { generateFieldMask } from "protobuf-fieldmask";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/user-state/userContext";
+    import { UserContextKey } from "$lib/current-user/userContext";
     import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
-    import { triggerUserSessionRefresh } from "$lib/user-state/userSessionStore";
+    import { triggerUserSessionRefresh } from "$lib/current-user/userSessionStore";
 
     const user = $derived(getContext<() => User>(UserContextKey)());
 
