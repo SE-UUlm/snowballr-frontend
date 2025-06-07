@@ -9,7 +9,7 @@
     import { User } from "$lib/model/api/user";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import { getContext, onMount } from "svelte";
+    import { getContext } from "svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { UserContextKey } from "$lib/user-state/userContext";
@@ -17,7 +17,7 @@
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
 
-    const user = getContext<() => User>(UserContextKey)();
+    const userContext = getContext<() => User>(UserContextKey);
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -34,11 +34,29 @@
     let isLoadingUsers = $state(true);
     let initialPossibleMembers: User[] = $state([]);
 
-    onMount(async () => {
-        const result = await loadUsers(user);
-        initialPossibleMembers = result.initialPossibleMembers;
-        isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-        isLoadingUsers = false;
+    $effect(() => {
+        const currentUser = userContext();
+        if (!currentUser) {
+            isLoadingUsers = false;
+            initialPossibleMembers = [];
+            isErrorOnUsersLoading = false;
+            return;
+        }
+
+        isLoadingUsers = true;
+        loadUsers(currentUser)
+            .then((result) => {
+                initialPossibleMembers = result.initialPossibleMembers;
+                isErrorOnUsersLoading = result.isErrorOnUsersLoading;
+            })
+            .catch((error) => {
+                console.error(`Error loading users: ${error}`);
+                isErrorOnUsersLoading = true;
+                initialPossibleMembers = [];
+            })
+            .finally(() => {
+                isLoadingUsers = false;
+            });
     });
 
     /**
