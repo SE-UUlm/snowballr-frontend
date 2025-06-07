@@ -14,13 +14,16 @@
     let currentFullReadingList = $state<Promise<Paper[]>>(loadingReadingList);
     let filteredReadingList = $state<Promise<Paper[]>>(loadingReadingList);
     let currentSearchText = $state<string>("");
+    let noSearchResults = $state(false);
 
     function filterReadingList(searchText: string) {
         currentSearchText = searchText;
 
-        filteredReadingList = currentFullReadingList.then((allEntries) =>
-            filterPapers(allEntries, searchText),
-        );
+        filteredReadingList = currentFullReadingList.then((allEntries) => {
+            const filteredPapers = filterPapers(allEntries, searchText);
+            noSearchResults = filteredPapers.length === 0 && allEntries.length > 0;
+            return filteredPapers;
+        });
     }
 
     /**
@@ -49,7 +52,9 @@
 
 <main class="mb-10 flex h-full w-full flex-row gap-x-10 overflow-hidden px-5">
     <NamedList
-        emptyHint="Your reading list is empty. Start adding papers from your SLRs to the reading list ..."
+        emptyHint={noSearchResults
+            ? "No papers on the reading list match your search."
+            : "Your reading list is empty. Start adding papers from your SLRs to the reading list ..."}
         items={filteredReadingList}
         keySelector={(paper) => paper.id}
         listName=""

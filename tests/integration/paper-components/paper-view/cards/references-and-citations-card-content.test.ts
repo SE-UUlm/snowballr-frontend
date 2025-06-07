@@ -86,9 +86,9 @@ describe("ReferencesAndCitationsCardContent", () => {
 
         await waitForComponentLoading();
 
-        const referencesHint = screen.getByText("No references found.");
+        const referencesHint = screen.getByText("No references exist or have been added.");
         expect(referencesHint).toBeInTheDocument();
-        const citationsHint = screen.getByText("No citations found.");
+        const citationsHint = screen.getByText("No citations exist or have been added.");
         expect(citationsHint).toBeInTheDocument();
     });
 

@@ -69,7 +69,7 @@ Usage:
                 {/each}
             {:else if totalPaperCount > 0}
                 <span class="text-hint italic">
-                    No papers match your search or filter criteria in this stage.
+                    No papers in this stage match your search or filter.
                 </span>
             {:else if totalPaperCount === 0}
                 <span class="text-hint italic">No papers currently in this stage.</span>
