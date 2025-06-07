@@ -10,9 +10,14 @@
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import { getContext } from "svelte";
+    import type { User } from "$lib/model/api/user";
+    import { UserContextKey } from "$lib/current-user/userContext";
 
     let { data } = $props();
-    const { user, projectId, loadingProject, loadingMembers } = $derived(data);
+    const { projectId, loadingProject, loadingMembers } = $derived(data);
+
+    const user = $derived(getContext<() => User>(UserContextKey)());
 
     const numberOfSkeletons = 7;
 
