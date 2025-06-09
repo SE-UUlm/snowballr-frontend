@@ -9,11 +9,11 @@ import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-
 
 export const ssr = false;
 
+const emptyUser: User = null as unknown as User;
+
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     depends(USER_DEPENDENCY_KEY);
     setFetch(fetch);
-
-    const emptyUser: User = null as unknown as User;
 
     // If the user is on a path that does not require authentication, we return an empty user
     const uncheckedPaths = ["/signin", "/signup", "/resetpassword"];
@@ -51,21 +51,15 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
             const renewResponse = await backendService.renewSession(Nothing);
             if (renewResponse.status.code !== StatusCodes.OK) {
                 console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
-                setCachedUser(null);
-                await goto("/signin");
-                return { user: emptyUser };
+                return await redirectToSignIn();
             }
             // Renewal successful, proceed to fetch current user
         } catch (error) {
             console.error(`Session renewal failed: ${error}`);
-            setCachedUser(null);
-            await goto("/signin");
-            return { user: emptyUser };
+            return await redirectToSignIn();
         }
     } else if (authStatus !== AuthenticationStatus.AUTHENTICATED && !onUncheckedPath) {
-        setCachedUser(null);
-        await goto("/signin");
-        return { user: emptyUser };
+        return await redirectToSignIn();
     }
 
     try {
@@ -74,8 +68,19 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         return { user };
     } catch (error) {
         console.error(`Current user could not be loaded ${error}`);
-        setCachedUser(null);
-        await goto("/signin");
-        return { user: emptyUser };
+        return await redirectToSignIn();
     }
 };
+
+/**
+ * Redirects to the sign-in page and clears the user cache.
+ * This function is used when the user is not authenticated or when an error occurs
+ * that implies the user is not authenticated.
+ *
+ * @returns An empty user object.
+ */
+async function redirectToSignIn() {
+    setCachedUser(null);
+    await goto("/signin");
+    return { user: emptyUser };
+}
