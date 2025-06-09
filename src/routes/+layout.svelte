@@ -3,8 +3,6 @@
     import { env } from "$env/dynamic/public";
     import "../app.css";
     import { Toaster } from "svelte-sonner";
-    import * as AlertDialog from "$lib/components/primitives/alert-dialog/index.js";
-    import { ServerCrash } from "lucide-svelte";
     import type { LayoutData } from "./$types";
     import { setContext, type Snippet } from "svelte";
     import { UserContextKey } from "$lib/current-user/userContext";
@@ -33,21 +31,6 @@
 
 <!-- <ModeWatcher defaultMode="light" -->
 <Toaster richColors />
-
-<AlertDialog.Root open={data.user === undefined}>
-    <AlertDialog.Content>
-        <AlertDialog.Header class="text-red-400">
-            <AlertDialog.Title class="flex gap-2">
-                <ServerCrash />
-                An Error Occurred!
-            </AlertDialog.Title>
-            <AlertDialog.Description class="text-default">
-                The backend could not be reached or a severe and unrecoverable error occurred during
-                communication.
-            </AlertDialog.Description>
-        </AlertDialog.Header>
-    </AlertDialog.Content>
-</AlertDialog.Root>
 
 <div class="flex h-screen w-screen flex-col items-start gap-4 p-4">
     {@render children()}
