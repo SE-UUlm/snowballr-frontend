@@ -4,6 +4,10 @@ In this section, we explain how to contribute to the Snowballr frontend project.
   - [Workflow](#workflow)
   - [Commits \& Branches](#commits--branches)
 - [Project Layout](#project-layout)
+- [User Context](#user-context)
+  - [How the User is Fetched and Made Available](#how-the-user-is-fetched-and-made-available)
+  - [How to Use the User Context in Components](#how-to-use-the-user-context-in-components)
+  - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
 
@@ -74,6 +78,116 @@ create branches from an issue as it already provides `<issue-number>-<short-desc
     ├── integration/
     └── unit/
 ```
+
+## User Context
+
+The application provides a global user context that makes the currently authenticated user's data available throughout
+the component tree.
+
+### How the User is Fetched and Made Available
+
+```mermaid
+graph TD
+    A[Root layout.ts]
+    B{User cached?}
+    C[Use cached user]
+    D[Check auth/session]
+    E{Session valid?}
+    F[Use fetched user]
+    G[Redirect to sign-in]
+    H[Inject user into context]
+    I[Components use context]
+
+    A --> B
+    B -->|Yes| C --> H
+    B -->|No| D --> E
+    E -->|Yes| F --> H
+    E -->|No| G
+    H --> I
+```
+
+The initial user loading logic lives in the root layout.ts file. It checks whether a user is already cached using the
+userCache. If no cached user is found, it attempts to determine the current authentication status and fetch the user
+accordingly. If the user is unauthenticated or the session is invalid, it tries to renew the session or redirects to
+the sign-in page if necessary.
+
+The resulting user object—whether fetched, cached, or an explicit "empty" user—is returned from layout.ts and injected
+into the user context by the root layout.svelte file. This ensures the user state is consistent and accessible
+throughout the app.
+
+Components can safely assume that the user object is always valid and never `null` or `undefined`. In cases where the
+user is not authenticated, the app will redirect to the sign-in page before components are rendered. This eliminates
+the need for `null` checks in downstream components that rely on user data.
+
+### How to Use the User Context in Components
+
+To access the current user's data within any Svelte component that is a child of the main layout:
+
+1. Import necessary utilities:
+   You'll need `getContext` from Svelte, the `UserContextKey`, and potentially the `User` type.
+2. Retrieve and use the user data:
+   Use `getContext` with `UserContextKey` to get the getter function, and then call it. Wrap this in `$derived` to
+   create a reactive variable that automatically updates when the user context changes.
+
+   ```svelte
+   <script lang="ts">
+     import { getContext } from "svelte";
+     import { UserContextKey } from "$lib/current-user/userContext";
+     import type { User } from "$lib/model/api/user";
+
+     const user = $derived(getContext<() => User>(UserContextKey)());
+
+     function greet() {
+       console.log(`Hello, ${user.firstName}!`);
+     }
+   </script>
+
+   <p>Welcome, {user.firstName} {user.lastName}!</p>
+   ```
+
+### Refreshing User Data
+
+If an action within a component modifies user data on the backend (e.g. updating profile information), you'll need to
+trigger a refresh of the user context to ensure all parts of the application have the latest data.
+
+1. Import the refresh function:
+
+   ```svelte
+   import {triggerCurrentUserRefresh} from "$lib/current-user/userCache";
+   ```
+
+2. Call the function after an update:
+
+   ```svelte
+   <script lang="ts">
+   import { backendService } from "$lib/grpc-api";
+   import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
+   import { toast } from "svelte-sonner";
+   import { StatusCodes } from "$lib/model/error-codes";
+   
+    const user = $derived(getContext<() => User>(UserContextKey)());
+   
+    async function handleNameUpdate(newName: string) {
+    try {
+    const response = await backendService.updateUser({
+    user: { id: user.id, firstName: newName /_ other fields _/ },
+    mask: { paths: ["first_name"] } // Example field mask
+    }).response;
+   
+              // Assuming your backendService call doesn't throw on non-OK gRPC status
+              // and returns a structure with a status code. Adjust as per your actual API.
+              // Or, if it throws, catch the error.
+   
+              triggerCurrentUserRefresh();
+              toast.success("User details updated successfully!");
+          } catch (error) {
+              console.error("Failed to update user:", error);
+              toast.error("Failed to update user details.");
+          }
+   
+    }
+   </script>
+   ```
 
 ## Testing
 

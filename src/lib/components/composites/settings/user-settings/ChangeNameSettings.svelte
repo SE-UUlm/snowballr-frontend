@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { invalidate } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
     import { User } from "$lib/model/api/user";
     import type { ApiError } from "$lib/model/general";
@@ -9,10 +8,11 @@
     import SettingsSection from "../SettingsSection.svelte";
     import { generateFieldMask } from "protobuf-fieldmask";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/global-context/userContext";
+    import { UserContextKey } from "$lib/current-user/userContext";
     import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
 
     const user = $derived(getContext<() => User>(UserContextKey)());
 
@@ -54,7 +54,7 @@
                 },
             })
             .response.then(async () => {
-                await invalidate("data:getCurrentUser");
+                triggerCurrentUserRefresh();
                 toast.success("Successfully updated your name.");
 
                 // Make sure that the input fields are not focused after submitting

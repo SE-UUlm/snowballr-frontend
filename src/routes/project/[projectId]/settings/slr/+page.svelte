@@ -4,11 +4,14 @@
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { ProjectStatus } from "$lib/model/api/project.js";
-    import { onMount } from "svelte";
+    import { getContext, onMount } from "svelte";
     import { isCurrentUserProjectAdmin } from "../helper.js";
+    import type { User } from "$lib/model/api/user.js";
+    import { UserContextKey } from "$lib/current-user/userContext.js";
 
     let { data } = $props();
-    const { user, projectId, loadingProject, loadingMembers } = $derived(data);
+    const { projectId, loadingProject, loadingMembers } = $derived(data);
+    const user = $derived(getContext<() => User>(UserContextKey)());
     let slrSettingsLocked = $state(true);
 
     const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));

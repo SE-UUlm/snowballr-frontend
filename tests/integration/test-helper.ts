@@ -5,7 +5,7 @@ import {
     WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY,
 } from "$lib/utils/custom-context";
 import type { User } from "$lib/model/api/user";
-import { UserContextKey } from "$lib/global-context/userContext";
+import { UserContextKey } from "$lib/current-user/userContext";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
 

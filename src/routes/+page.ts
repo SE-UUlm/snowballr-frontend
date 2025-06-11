@@ -3,6 +3,7 @@ import { backendService } from "$lib/grpc-api";
 import { type Project } from "$lib/model/api/project";
 import type { ProjectListEntryInterface } from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+import type { User } from "$lib/model/api/user";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
     const members = await backendService.getProjectMembers({ id: project.id }).response;
@@ -42,7 +43,17 @@ export const load: PageLoad = async ({ depends, parent }) => {
     depends("data:allProjectsForUser");
 
     const parentData = await parent();
-    const user = parentData.user;
+    const user = parentData.user as User | null;
+
+    // If the user is not logged in, we return empty arrays for projects and open reviews
+    // This is to ensure that the page can still render without errors
+    if (!user) {
+        return {
+            projectsMetadata: Promise.resolve([]),
+            openReviews: Promise.resolve([]),
+        };
+    }
+
     const userId = user.id;
 
     const allUserProjects = backendService.getAllProjectsForUser({ id: userId }).response;

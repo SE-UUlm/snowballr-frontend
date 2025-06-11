@@ -5,23 +5,28 @@ import { Nothing } from "$lib/model/api/base";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { StatusCodes } from "$lib/model/error-codes";
 import { goto } from "$app/navigation";
+import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
 
 export const ssr = false;
 
+const emptyUser: User = null as unknown as User;
+
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
-    depends("data:getCurrentUser");
+    depends(USER_DEPENDENCY_KEY);
     setFetch(fetch);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const undefinedUser: User = undefined as any;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nullUser: User = null as any;
-
+    // If the user is on a path that does not require authentication, we return an empty user
     const uncheckedPaths = ["/signin", "/signup", "/resetpassword"];
     const onUncheckedPath = uncheckedPaths.includes(url.pathname);
     if (onUncheckedPath) {
-        return { user: nullUser };
+        return { user: emptyUser };
+    }
+
+    // If the user is already cached, we return the cached user
+    // If the user is not cached (undefined or null), we will fetch the user
+    const cachedUser = getCachedUser();
+    if (cachedUser) {
+        return { user: cachedUser };
     }
 
     const authStatusCall = await backendService.getAuthenticationStatus(Nothing).then(
@@ -30,29 +35,52 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     );
 
     if (authStatusCall === undefined) {
-        return { user: undefinedUser };
+        setCachedUser(null);
+        return { user: emptyUser };
     }
 
     if (authStatusCall.status.code !== StatusCodes.OK) {
-        return { user: undefinedUser };
+        setCachedUser(null);
+        return { user: emptyUser };
     }
 
     const authStatus = authStatusCall.response.authenticationStatus;
 
     if (authStatus === AuthenticationStatus.ACCESS_TOKEN_EXPIRED) {
-        await backendService.renewSession(Nothing);
+        try {
+            const renewResponse = await backendService.renewSession(Nothing);
+            if (renewResponse.status.code !== StatusCodes.OK) {
+                console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
+                return await redirectToSignIn();
+            }
+            // Renewal successful, proceed to fetch current user
+        } catch (error) {
+            console.error(`Session renewal failed: ${error}`);
+            return await redirectToSignIn();
+        }
     } else if (authStatus !== AuthenticationStatus.AUTHENTICATED && !onUncheckedPath) {
-        await goto("/signin");
-        return { user: undefinedUser };
+        return await redirectToSignIn();
     }
 
-    let user: User;
     try {
-        user = await backendService.getCurrentUser(Nothing).response;
+        const user: User = await backendService.getCurrentUser(Nothing).response;
+        setCachedUser(user);
         return { user };
-    } catch (err) {
-        console.error(`Current user could not be loaded ${err}`);
-        await goto("/signin");
-        return { user: undefinedUser };
+    } catch (error) {
+        console.error(`Current user could not be loaded ${error}`);
+        return await redirectToSignIn();
     }
 };
+
+/**
+ * Redirects to the sign-in page and clears the user cache.
+ * This function is used when the user is not authenticated or when an error occurs
+ * that implies the user is not authenticated.
+ *
+ * @returns An empty user object.
+ */
+async function redirectToSignIn() {
+    setCachedUser(null);
+    await goto("/signin");
+    return { user: emptyUser };
+}
