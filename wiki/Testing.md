@@ -140,13 +140,23 @@ requiring it to be installed and running.
 ### Best Practices
 
 1. **Use the test fixture**:
-   Instead of importing the `test` fixture directly from "@playwright/test" directly,
-   use the `test` variable exported from [`utils/fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/shared-fixture.ts).
-   This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
-   based on the browser the test is running in.
+   Instead of importing the `test` fixture directly from "@playwright/test",
+   use the `test` variable exported from one of the following:
 
-   In general, it makes sense to create an own fixture, if you want to use an object in multiple tests or
-   run a certain function before / after each test.
+   - [`utils/fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/shared-fixture.ts)
+     (a new mock backend is started for each worker)
+   - [`utils/fixtures/isolated-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/isolated-fixture.ts)
+     (a new mock backend is started for each test)
+
+   This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
+   instance based on the browser the test is running in.
+
+   In general, it makes sense to create an own fixture for each test class to set up the tests and to use an object in
+   multiple tests or run a certain function before / after each test. Instead of using `beforeAll` or `afterAll` in the
+   test classes implement the setup code in the fixture, to create
+   a strict separation between the setup and the tests.
+
+   The name of a fixture must follow the convention `custom-name-page-fixture.ts`.
 
 2. **Use Page Object Models (POMs)**:
    To make tests more maintainable and readable, use page object models (POMs) to encapsulate UI logic.
@@ -154,5 +164,27 @@ requiring it to be installed and running.
    file wraps a page with custom selectors and helper functions for the `CreateProjectDialog` component,
    improving clarity and reusability across tests. In particular, these POMs can be wrapped in a fixture
    so that they can be accessed directly in each test without having to create a separate POM in each test.
+
+   Make sure that every page, dialog, navigation- or sidebar has its own model. The attributes and functions
+   to access any element must be declared in the according model to ensure reusability. Only use functions that
+   click multiple elements if they are really needed. In general, the intention is to simulate the user behavior
+   as good as possible by simulating each click in the tests.
+
+   The name of the model is defined by the following guidelines:
+
+   - `custom-name-page-model.ts` (if the model represents a full page)
+   - `custom-name-navigation-bar-model.ts` (if the model represents a navigation bar)
+   - `custom-name-sidebar-model.ts` (if the model represents a sidebar)
+   - `custom-name-dialog-model.ts` (if the model represents a dialog)
+
+3. **Test classes**:
+   The classes are only used to test. They shall not include any (setup) functions or call any POM
+   elements themselves. It is recommended to simulate every single user click to test an use case
+   in the according tests. Do not use functions that include several clicks (due to clarity and
+   readability).
+
+   The name of a test must follow the convention `custom-name-page.test.ts`. If there are different use cases
+   that are tested, they are still located in the test file for the according page. In this file each use case is
+   tested in its own `describe` block.
 
 For more advanced usage and documentation, refer to the official [Playwright documentation](https://playwright.dev/).
