@@ -60,9 +60,9 @@
                     };
                 } else {
                     signinError = {
-                        errorTitle: "Something unknown went wrong.",
+                        errorTitle: "Sign-In Failed",
                         errorDetails:
-                            "Please check your internet connection and the connection to the server.",
+                            "Something went wrong during sign-in. Please make sure your internet connection is stable, then try again.",
                     };
                 }
                 console.error(error);

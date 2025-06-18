@@ -81,9 +81,9 @@
                     };
                 } else {
                     registrationError = {
-                        errorTitle: "Something went wrong while registration.",
+                        errorTitle: "Registration Failed",
                         errorDetails:
-                            "Please check your internet connection and the connection to the server.",
+                            "Something went wrong during registration. Please make sure your internet connection is stable, then try again.",
                     };
                 }
                 console.error(error);
