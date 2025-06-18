@@ -6,7 +6,7 @@ import {
     PREDICTABLE_PAPER_TITLE_PREFIX,
 } from "./reading-list-page-model";
 
-test.describe("Reading List Tests", () => {
+test.describe("Reading List Navigation", () => {
     test("When navigating to the reading list, then the page is displayed", async ({
         page,
         readingListPage,
@@ -19,7 +19,9 @@ test.describe("Reading List Tests", () => {
         await navigationBar.getReadingListLink().click();
         await expect(readingListPage.heading).toBeVisible();
     });
+});
 
+test.describe("Reading List Tests", () => {
     test("When the user opens the reading list, then all papers of the user's reading list are shown.", async ({
         readingListPage,
     }) => {

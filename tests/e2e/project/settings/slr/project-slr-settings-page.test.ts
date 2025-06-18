@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import { reloadWait } from "$tests/e2e/utils/helper/helper";
 import { test } from "./project-slr-settings-page-fixture";
 
-test.describe("Changing SLR Settings Tests", () => {
+test.describe("SLR Settings Navigation", () => {
     test("When navigating to the project slr settings, then the page is displayed", async ({
         page,
         projectSLRSettingsPage,
@@ -18,7 +18,9 @@ test.describe("Changing SLR Settings Tests", () => {
         await projectSettingsSideBar.slr.click();
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).toBeVisible();
     });
+});
 
+test.describe("SLR Settings Tests", () => {
     test("When the 'Maybe as Decision' option is turned on, then the option 'Maybe' should be visible", async ({
         projectSLRSettingsPage,
         projectPaperViewPage,
@@ -60,8 +62,16 @@ test.describe("Changing SLR Settings Tests", () => {
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).not.toBeChecked();
     });
 
-    // TODO: Implement tests, as soon as the backend supports the update of states of the project to `ACTIVE_LOCKED`
-    test.skip("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
-    test.skip("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
-    test.skip("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
+    test.fixme(
+        "When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed",
+        async () => {},
+    );
+    test.fixme(
+        "When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed",
+        async () => {},
+    );
+    test.fixme(
+        "When the current user is not a project admin, then the user gets redirected to the general settings tab",
+        async () => {},
+    );
 });

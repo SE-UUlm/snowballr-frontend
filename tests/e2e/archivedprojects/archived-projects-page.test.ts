@@ -1,7 +1,7 @@
 import { test } from "./archived-projects-page-fixture";
 import { expect } from "@playwright/test";
 
-test.describe("Archived Projects Tests", () => {
+test.describe("Archived Projects Navigation", () => {
     test("When navigating to the archived projects, then the page is displayed", async ({
         page,
         archivedProjectsPage,

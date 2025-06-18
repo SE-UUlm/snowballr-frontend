@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "./project-dashboard-page-fixture";
 
-test.describe("Project Dashboard Tests", () => {
+test.describe("Project Dashboard Navigation", () => {
     test("When navigating to the project dashboard, then the page is displayed.", async ({
         page,
         projectDashboardPage,

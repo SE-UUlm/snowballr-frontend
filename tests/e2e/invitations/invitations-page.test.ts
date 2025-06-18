@@ -1,7 +1,7 @@
 import { test } from "./invitations-page-fixture";
 import { expect } from "@playwright/test";
 
-test.describe("Invitation Tests", () => {
+test.describe("Invitation Navigation", () => {
     test("When navigating to the invitations, then the page is displayed", async ({
         page,
         invitationsPage,

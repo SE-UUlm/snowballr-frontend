@@ -1,7 +1,7 @@
 import { test } from "./project-general-settings-page-fixture";
 import { expect } from "@playwright/test";
 
-test.describe("Project Name Settings Test", () => {
+test.describe("Project Name Settings Navigation", () => {
     test("When navigating to the general project settings, then the page is displayed", async ({
         page,
         projectSettingsPage,
@@ -30,7 +30,9 @@ test.describe("Project Name Settings Test", () => {
         await expect(projectSettingsPage.renameButton).toBeVisible();
         await expect(projectSettingsPage.heading).toBeVisible();
     });
+});
 
+test.describe("Project Name Settings Test", () => {
     test("When the user enters the same project name, then a warning alert is shown", async ({
         page,
         projectSettingsPage,

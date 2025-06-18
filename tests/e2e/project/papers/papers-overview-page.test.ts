@@ -3,7 +3,7 @@ import { test } from "./project-papers-page-fixtures";
 import { createAuthor, createPaper } from "$tests/model-builder";
 import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./project-papers-page-model";
 
-test.describe("Papers Overview Tests", () => {
+test.describe("Papers Overview Navigation", () => {
     test("When navigating to the papers overview page, then the page is displayed", async ({
         page,
         projectPapersPage,
@@ -24,7 +24,9 @@ test.describe("Papers Overview Tests", () => {
         await projectNavigationBar.papersTab.click();
         await expect(projectPapersPage.showFiltersButton).toBeVisible();
     });
+});
 
+test.describe("Papers Overview Tests", () => {
     test("When opening the project papers page, then the user sees all stages and the stage accordion items are closed.", async ({
         page,
         projectPapersPage,
