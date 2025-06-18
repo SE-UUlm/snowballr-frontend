@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { User } from "../utils/helper/mock-backend";
 
-export class DevCreateProjectDialog {
+export class CreateProjectDialogModel {
     readonly page: Page;
     readonly createProjectDialog: Locator;
     readonly createProjectButton: Locator;
@@ -9,6 +9,9 @@ export class DevCreateProjectDialog {
     readonly projectNameInput: Locator;
     readonly projectMemberInput: Locator;
     readonly createdProjectDialog: Locator;
+    readonly openCreatedProjectDialogButton: Locator;
+    readonly cancelCreatedProjectDialogButton: Locator;
+    readonly errorAlert: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -22,10 +25,17 @@ export class DevCreateProjectDialog {
         this.createdProjectDialog = page.getByRole("alertdialog", {
             name: "Success! Your new project has been created successfully.",
         });
+        this.openCreatedProjectDialogButton = this.createdProjectDialog.getByRole("button", {
+            name: "Open",
+        });
+        this.cancelCreatedProjectDialogButton = this.createdProjectDialog.getByRole("button", {
+            name: "Cancel",
+        });
+        this.errorAlert = page.getByRole("alert");
     }
 
     /**
-     * Closes the dialog for creating a new project, if it is open.
+     * Closes the dialog for creating a new project if it is open.
      */
     async closeCreateProjectDialog() {
         await expect(this.createProjectDialog).toBeVisible();
@@ -37,7 +47,7 @@ export class DevCreateProjectDialog {
      *
      * @remarks
      * This function can only fill the input fields in the corresponding project creation dialog and submit the form.
-     * It neither navigates to the newly created project nor close the dialog, but requires the dialog to be open.
+     * It neither navigates to the newly created project nor closes the dialog but requires the dialog to be open.
      *
      * @param projectName - the name of the project
      * @param user - the user to be added as a member
@@ -54,11 +64,11 @@ export class DevCreateProjectDialog {
     }
 
     /**
-     * Checks, whether an error occurred during the process of the project creation, i.e. whether
+     * Checks whether an error occurred during the process of the project creation i.e., whether
      * an error alert is shown in the dialog.
      */
     async checkForErrors() {
-        await expect(this.page.getByRole("alert")).not.toBeVisible();
+        await expect(this.errorAlert).not.toBeVisible();
     }
 
     /**
@@ -69,9 +79,9 @@ export class DevCreateProjectDialog {
     async closeCreatedProjectDialog(mode: "cancel" | "open") {
         await expect(this.createdProjectDialog).toBeVisible();
         if (mode === "open") {
-            await this.createdProjectDialog.getByRole("button", { name: "Open" }).click();
+            await this.openCreatedProjectDialogButton.click();
         } else {
-            await this.createdProjectDialog.getByRole("button", { name: "Cancel" }).click();
+            await this.cancelCreatedProjectDialogButton.click();
         }
     }
 }
