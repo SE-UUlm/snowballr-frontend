@@ -34,6 +34,10 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { onMount } from "svelte";
+    import type { SortOptionLabel } from "$lib/model/sortCriteria";
+    import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
+    import { sortProjectPaper } from "$lib/utils/sorters";
+    import { ALLOWED_SORT_OPTIONS } from "$lib/model/sortCriteria.js";
 
     let { data } = $props();
     const {
@@ -64,6 +68,8 @@
     };
     let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
     let showFilters = $state(false);
+
+    let selectedSortOption: SortOptionLabel = $state("Id: Low to High");
 
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
@@ -129,6 +135,7 @@
                             <ChevronDown class="size-4" />
                         {/if}
                     </Button>
+                    <SortOptionsSelect bind:selectedSortOption />
                 </div>
             </div>
             {#if showFilters}
@@ -164,12 +171,18 @@
                     {pluralize(stages, "Stage", "Stages")}
                 </span>
                 <Accordion.Root type="multiple">
-                    {#each stages as stage (stage.stageIndex)}
+                    {#each stages as { stageIndex, papers } (stageIndex)}
                         <StageEntry
                             filter={papersFilters}
                             {projectId}
                             {searchText}
-                            {stage}
+                            stage={{
+                                stageIndex,
+                                papers: sortProjectPaper(
+                                    papers,
+                                    ALLOWED_SORT_OPTIONS[selectedSortOption],
+                                ),
+                            }}
                             bind:selectedPaper
                         />
                     {/each}
