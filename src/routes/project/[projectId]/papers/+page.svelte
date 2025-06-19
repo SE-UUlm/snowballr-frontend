@@ -53,9 +53,6 @@
     const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
 
     let searchText = $state(getSearchTextFromURL());
-    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
-
-    let showFilters = $state(false);
 
     const emptyFilters: ProjectPaperFilter = {
         stages: [],
@@ -65,6 +62,8 @@
         decisions: [],
         criteria: [],
     };
+    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
+    let showFilters = $state(false);
 
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
