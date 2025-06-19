@@ -130,10 +130,6 @@
                             <ChevronDown class="size-4" />
                         {/if}
                     </Button>
-                    <Button onclick={() => (papersFilters = emptyFilters)}>
-                        <Trash />
-                        Reset
-                    </Button>
                 </div>
             </div>
             {#if showFilters}
@@ -153,6 +149,10 @@
                         {loadingCriteria}
                         bind:selectedCriteria={papersFilters.criteria}
                     />
+                    <Button onclick={() => (papersFilters = emptyFilters)}>
+                        <Trash />
+                        Reset
+                    </Button>
                 </div>
             {/if}
         </div>
