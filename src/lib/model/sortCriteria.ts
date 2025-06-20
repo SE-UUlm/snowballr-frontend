@@ -2,10 +2,10 @@
  * The criteria by which the user can sort their paper.
  */
 export enum SortCriteria {
-    PAPER_TITLE = "Paper Title",
+    PAPER_TITLE = "Title",
     YEAR = "Year",
     DECISION = "Decision",
-    PAPER_ID = "Paper Id",
+    PAPER_ID = "Id",
 }
 
 export enum SortDirection {
