@@ -27,6 +27,7 @@
     import {
         getFilterFromURL,
         getSearchTextFromURL,
+        getSortOptionFromURL,
         updateFiltersParam,
         updateSearchTextParam,
     } from "$lib/utils/search-parameters";
@@ -38,6 +39,7 @@
     import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
     import { sortProjectPaper } from "$lib/utils/sorters";
     import { ALLOWED_SORT_OPTIONS } from "$lib/model/sortCriteria.js";
+    import { updateSortParams } from "$lib/utils/search-parameters.js";
 
     let { data } = $props();
     const {
@@ -69,7 +71,7 @@
     let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
     let showFilters = $state(false);
 
-    let selectedSortOption: SortOptionLabel = $state("Id: Low to High");
+    let selectedSortOption = $state<SortOptionLabel>(getSortOptionFromURL());
 
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
@@ -84,6 +86,7 @@
         }
     });
 
+    // update query parameters when the user selects / unselects a filter
     $effect(() => {
         searchParameters = updateFiltersParam(
             {
@@ -95,6 +98,14 @@
                 criteria: papersFilters.criteria,
             },
             searchParameters,
+        );
+    });
+
+    // update the query parameters when the user changes the sort option
+    $effect(() => {
+        searchParameters = updateSortParams(
+            searchParameters,
+            ALLOWED_SORT_OPTIONS[selectedSortOption],
         );
     });
 

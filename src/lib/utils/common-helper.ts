@@ -263,6 +263,28 @@ async function loadingWrapper<IT, OT>(
     return result;
 }
 
+/**
+ * Converts a string to a corresponding value of a string-valued enum.
+ *
+ * This function checks whether the provided string is a valid value in the given enum.
+ * If it is, the string is returned as the correct enum type, otherwise, `undefined` is returned.
+ *
+ * @template T - A string-valued enum type (Record<string, string>)
+ * @param enumObj - The enum object to match against (e.g. SortCriteria)
+ * @param value - The string value to convert
+ * @returns The corresponding enum value if valid, otherwise `undefined`
+ *
+ * @example
+ * stringToEnumValue(SortDirection, "asc") // returns SortDirection.ASC
+ * stringToEnumValue(SortDirection, "invalid") // returns undefined
+ */
+function stringToEnumValue<T extends Record<string, string>>(
+    enumObj: T,
+    value: string,
+): T[keyof T] | undefined {
+    return (Object.values(enumObj) as string[]).includes(value) ? (value as T[keyof T]) : undefined;
+}
+
 export {
     getName,
     getNames,
@@ -278,4 +300,5 @@ export {
     handleSingleOrDoubleClick,
     wrapLongWords,
     loadingWrapper,
+    stringToEnumValue,
 };
