@@ -228,7 +228,7 @@ test.describe("Papers Overview Tests", () => {
         await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
     });
 
-    test("When the user clears the search using Escape, then all papers are shown again.", async ({
+    test("When the user clears the search using 'Esc', then all papers are shown again.", async ({
         projectPapersPage,
     }) => {
         const searchPaperIndex = 3; // Paper 0/3
@@ -345,7 +345,7 @@ test.describe("Papers Overview Tests", () => {
         await expect(projectPapersPage.stageFilterButton).toHaveText("Stages: Stage 0 (1)");
     });
 
-    test("When the user clicks the filters button,then all available filters are displayed. If the user clicks the button again, the filters disappear. ", async ({
+    test("When the user clicks the filters button, then all available filters are displayed. When the user clicks the button again, then the filters disappear. ", async ({
         projectPapersPage,
     }) => {
         for (const filter of projectPapersPage.allFilterButtons) {
@@ -357,4 +357,33 @@ test.describe("Papers Overview Tests", () => {
             await expect(filter).toBeVisible();
         }
     });
+
+    // --- Sort Tests ---
+
+    test("When the user sorts the papers, then they are rearranged depending on the selected sort option.", async ({
+        projectPapersPage,
+    }) => {
+        await projectPapersPage.openStage(0);
+
+        await projectPapersPage.selectSortOption("Id: Low to High");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/0 (${getUniqueSequence(0)})`,
+        );
+
+        await projectPapersPage.selectSortOption("Title: Z to A");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/${NUM_PAPERS_PER_STAGE - 1} (${getUniqueSequence(NUM_PAPERS_PER_STAGE - 1)})`,
+        );
+
+        await projectPapersPage.selectSortOption("Year: Oldest to Newest");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/0 (${getUniqueSequence(0)})`,
+        );
+    });
+
+    test.fixme(
+        "When the user reloads the page, then the sort options is restored from the URL.",
+        async ({ projectPapersPage, page }) => {
+        }
+    );
 });

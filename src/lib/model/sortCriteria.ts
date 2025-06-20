@@ -9,8 +9,8 @@ export enum SortCriteria {
 }
 
 export enum SortDirection {
-    ASC,
-    DESC,
+    ASC = "asc",
+    DESC = "desc",
 }
 
 export interface SortOption {
