@@ -381,9 +381,28 @@ test.describe("Papers Overview Tests", () => {
         );
     });
 
-    test.fixme(
-        "When the user reloads the page, then the sort options is restored from the URL.",
-        async ({ projectPapersPage, page }) => {
-        }
-    );
+    test("When the user reloads the page, then the sort options is restored from the URL.", async ({
+        projectPapersPage,
+        page,
+    }) => {
+        await projectPapersPage.selectSortOption("Title: Z to A");
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return (
+                params.has("sort") &&
+                params.get("sort") === "Title" &&
+                params.has("order") &&
+                params.get("order") === "desc"
+            );
+        });
+
+        await page.reload();
+
+        await expect(projectPapersPage.sortOptionSelect).toHaveText("Sort by: Title");
+        await projectPapersPage.sortOptionSelect.click();
+        await expect(page.getByRole("option", { name: "Title: Z to A" })).toHaveAttribute(
+            "aria-selected",
+            "true",
+        );
+    });
 });
