@@ -123,7 +123,7 @@ describe("Helper sort URL query parameter", () => {
         expect(getSortOptionFromURL()).toBe("Title: Z to A");
     });
 
-    test("When the query parameter for the sort option is not present, then undefined will be returned.", async () => {
+    test("When the query parameter for the sort option is not present, then the default sort option 'Id: Low to High' is returned.", async () => {
         page.url = new URL("http://localhost/test");
 
         expect(getSortOptionFromURL()).toBe("Id: Low to High");
