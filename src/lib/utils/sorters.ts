@@ -1,5 +1,6 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-criteria";
+import { comparePaperId } from "$lib/utils/common-helper";
 
 /**
  * Compares two paper decisions based on a custom priority order:
@@ -52,7 +53,7 @@ function sortProjectPaper(papers: Project_Paper[], sortOption: SortOption): Proj
                 break;
 
             case SortCriteria.PAPER_ID:
-                compareResult = a.localId.localeCompare(b.localId);
+                compareResult = comparePaperId(`#${a.localId}`, `#${b.localId}`);
                 break;
         }
 
