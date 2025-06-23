@@ -11,8 +11,8 @@
         ArrowDown10,
         ArrowDownZA,
         ArrowUp,
-        ArrowUp10,
-        ArrowUpAZ,
+        ArrowDown01,
+        ArrowDownAZ,
     } from "lucide-svelte";
 
     interface Props {
@@ -38,11 +38,11 @@ Usage:
         {`Sort by: ${ALLOWED_SORT_OPTIONS[selectedSortOption].criterion}`}
         {#if ALLOWED_SORT_OPTIONS[selectedSortOption].direction === SortDirection.ASC}
             {#if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.PAPER_TITLE}
-                <ArrowUpAZ class="size-4" />
+                <ArrowDownAZ class="size-4" />
             {:else if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.DECISION}
                 <ArrowUp class="size-4" />
             {:else}
-                <ArrowUp10 class="size-4" />
+                <ArrowDown01 class="size-4" />
             {/if}
         {:else if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.PAPER_TITLE}
             <ArrowDownZA class="size-4" />
