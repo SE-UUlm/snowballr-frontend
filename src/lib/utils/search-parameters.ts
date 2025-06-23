@@ -7,7 +7,7 @@ import {
     SortDirection,
     type SortOption,
     type SortOptionLabel,
-} from "$lib/model/sortCriteria";
+} from "$lib/model/sort-criteria";
 import { stringToEnumValue } from "$lib/utils/common-helper";
 
 /**

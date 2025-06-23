@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import type { SortOptionLabel } from "$lib/model/sortCriteria";
+import type { SortOptionLabel } from "$lib/model/sort-criteria";
 
 export const NUM_PAPERS_PER_STAGE = 5;
 export const getUniqueSequence = (index: number) => String.fromCharCode(65 + index).repeat(5);

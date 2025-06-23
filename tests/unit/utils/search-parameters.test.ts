@@ -9,7 +9,7 @@ import {
 } from "$lib/utils/search-parameters";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
-import { SortCriteria, SortDirection } from "$lib/model/sortCriteria";
+import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
 
 describe("Helper search text URL query parameter", () => {
     test("When the query parameter for the search text is present, then it will be successfully read and returned.", async () => {

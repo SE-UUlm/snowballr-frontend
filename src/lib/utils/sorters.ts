@@ -1,5 +1,5 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
-import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sortCriteria";
+import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-criteria";
 
 /**
  * Compares two paper decisions based on a custom priority order:

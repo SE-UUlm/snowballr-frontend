@@ -35,10 +35,10 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { onMount } from "svelte";
-    import type { SortOptionLabel } from "$lib/model/sortCriteria";
+    import type { SortOptionLabel } from "$lib/model/sort-criteria";
     import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
     import { sortProjectPaper } from "$lib/utils/sorters";
-    import { ALLOWED_SORT_OPTIONS } from "$lib/model/sortCriteria.js";
+    import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
     import { updateSortParams } from "$lib/utils/search-parameters.js";
 
     let { data } = $props();
