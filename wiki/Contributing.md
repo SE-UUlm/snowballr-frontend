@@ -10,6 +10,7 @@ In this section, we explain how to contribute to the Snowballr frontend project.
   - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
+- [Teamscale Integration](#teamscale-integration)
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
@@ -224,3 +225,13 @@ npm run lighthouse -- --dir=/settings
 # or
 npm run lighthouse:all -- --dir=/settings
 ```
+
+## Teamscale Integration
+
+We use Teamscale for analyzing, monitoring and improving the quality of our project.
+To set up the integration with your IDE follow the instructions online:
+
+- [IntelliJ IDEA](https://docs.teamscale.com/howto/integrating-with-your-ide/intellij/)
+- [VS Code](https://docs.teamscale.com/howto/integrating-with-your-ide/visual-studio-code/)
+
+Note that the configuration file was already added, and you only have to connect the plugin to the server.
