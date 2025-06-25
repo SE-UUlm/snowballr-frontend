@@ -10,8 +10,5 @@ export async function loadReadingList(): Promise<Paper[]> {
             throw new Error("Couldn't load reading list.");
         });
 
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    loadingReadingList.catch(() => {});
-
     return loadingReadingList;
 }

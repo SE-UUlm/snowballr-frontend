@@ -58,9 +58,6 @@ export const load: PageLoad = async ({ depends, parent }) => {
 
     const allUserProjects = backendService.getAllProjectsForUser({ id: userId }).response;
 
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    allUserProjects.catch(() => {});
-
     const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {
             try {
@@ -74,9 +71,6 @@ export const load: PageLoad = async ({ depends, parent }) => {
         .catch(() => {
             throw new Error("Couldn't load projects.");
         });
-
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    projectsMetadata.catch(() => {});
 
     const openReviews: Promise<PaperListEntryInterface[]> = allUserProjects
         .then(async (projectsResponse) => {
@@ -92,9 +86,6 @@ export const load: PageLoad = async ({ depends, parent }) => {
         .catch(() => {
             throw new Error("Couldn't load open reviews.");
         });
-
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    openReviews.catch(() => {});
 
     return { projectsMetadata, openReviews };
 };
