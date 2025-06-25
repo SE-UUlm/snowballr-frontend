@@ -6,14 +6,9 @@
         SortDirection,
         type SortOptionLabel,
     } from "$lib/model/sort-criteria";
-    import {
-        ArrowDown,
-        ArrowDown10,
-        ArrowDownZA,
-        ArrowUp,
-        ArrowDown01,
-        ArrowDownAZ,
-    } from "lucide-svelte";
+    import { ArrowDown10, ArrowDownZA, ArrowDown01, ArrowDownAZ } from "lucide-svelte";
+    import ArrowDownYN from "$lib/svg/ArrowDownYN.svelte";
+    import ArrowDownNY from "$lib/svg/ArrowDownNY.svelte";
 
     interface Props {
         selectedSortOption: SortOptionLabel;
@@ -40,14 +35,14 @@ Usage:
             {#if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.PAPER_TITLE}
                 <ArrowDownAZ class="size-4" />
             {:else if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.DECISION}
-                <ArrowUp class="size-4" />
+                <ArrowDownYN />
             {:else}
                 <ArrowDown01 class="size-4" />
             {/if}
         {:else if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.PAPER_TITLE}
             <ArrowDownZA class="size-4" />
         {:else if ALLOWED_SORT_OPTIONS[selectedSortOption].criterion === SortCriteria.DECISION}
-            <ArrowDown class="size-4" />
+            <ArrowDownNY />
         {:else}
             <ArrowDown10 class="size-4" />
         {/if}
