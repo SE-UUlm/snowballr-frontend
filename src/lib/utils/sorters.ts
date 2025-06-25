@@ -3,8 +3,10 @@ import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-cr
 import { comparePaperId } from "$lib/utils/common-helper";
 
 /**
- * Compares two paper decisions based on a custom priority order:
- * ACCEPTED \> IN_REVIEW \> DECLINED \> UNREVIEWED
+ * Compares two paper decisions based on a custom order:
+ * ACCEPTED \< IN_REVIEW \< DECLINED \< UNREVIEWED.
+ *
+ * A \< B means that A comes before B in ascending order.
  *
  * @param a - The first decision
  * @param b - The second decision
