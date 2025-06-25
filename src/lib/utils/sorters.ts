@@ -55,7 +55,7 @@ function sortProjectPaper(papers: Project_Paper[], sortOption: SortOption): Proj
                 break;
 
             case SortCriteria.PAPER_ID:
-                compareResult = comparePaperId(`#${a.localId}`, `#${b.localId}`);
+                compareResult = comparePaperId(a.localId, b.localId);
                 break;
         }
 

@@ -170,19 +170,30 @@ function getStatusText(paperDecision: PaperDecision): PaperStatus {
 }
 
 /**
- * Compares two paper ids.
+ * Compares two paper IDs.
  *
- * Both ids are expected to be in the format '#<number>'. The comparison is done by comparing the numbers.
+ * The IDs are expected to be numeric strings (e.g. "42").
  *
- * @param a - Id of the first paper
- * @param b - Id of the second paper
- * @returns a negative number if a is less than b, a positive number if a is greater than b, and 0 if a is equal to b
+ * However, if
+ * - only one ID is numeric, the numeric one is considered smaller (i.e. comes first).
+ * - neither ID is numeric, they are compared lexicographically (string comparison).
+ *
+ * @param a - ID of first paper
+ * @param b - ID of second paper
+ * @returns A negative number if `a < b`, a positive number if `a > b`, or 0 if they are equal
  */
 function comparePaperId(a: string, b: string): number {
-    const idA = parseInt(a.slice(1), 10);
-    const idB = parseInt(b.slice(1), 10);
-    const compare = idA - idB;
-    return isNaN(compare) ? 0 : compare;
+    const idA = parseInt(a, 10);
+    const idB = parseInt(b, 10);
+
+    const isANaN = isNaN(idA);
+    const isBNaN = isNaN(idB);
+
+    if (isANaN && isBNaN) return a.localeCompare(b);
+    else if (isANaN && !isBNaN) return 1;
+    else if (!isANaN && isBNaN) return -1;
+
+    return idA - idB;
 }
 
 /**

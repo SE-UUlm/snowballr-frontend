@@ -138,26 +138,31 @@ describe("Group items of a list by a key (function)", () => {
 
 describe("Compare paper ids", () => {
     test("When the paper ids are the same, then they are equal", () => {
-        const compare = comparePaperId("#123", "#123");
+        const compare = comparePaperId("123", "123");
         expect(compare).toBe(0);
     });
 
     test("When the first paper id is smaller than the second, then the comparison is negative", () => {
-        const compare = comparePaperId("#9", "#10");
+        const compare = comparePaperId("9", "10");
         expect(compare).toBeLessThan(0);
     });
 
     test("When the first paper id is greater than the second, then the comparison is positive", () => {
-        const compare = comparePaperId("#42", "#8");
+        const compare = comparePaperId("42", "8");
         expect(compare).toBeGreaterThan(0);
     });
 
-    test("When both paper ids are malformed, then the comparison is 0", () => {
-        const compare1 = comparePaperId("#", "#");
-        expect(compare1).toBe(0);
+    test("When only one paper ids is numeric, then this id comes before the other one", () => {
+        const compare1 = comparePaperId("1", "a");
+        expect(compare1).toBeLessThan(0);
 
-        const compare2 = comparePaperId("#a", "#b");
-        expect(compare2).toBe(0);
+        const compare2 = comparePaperId("a", "1");
+        expect(compare2).toBeGreaterThan(0);
+    });
+
+    test("When both paper ids are not numeric, then the ids are compared lexicographically.", () => {
+        const compare = comparePaperId("a", "b");
+        expect(compare).toBeLessThan(0);
     });
 });
 
