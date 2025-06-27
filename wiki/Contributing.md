@@ -10,6 +10,7 @@ In this section, we explain how to contribute to the Snowballr frontend project.
   - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
+- [Teamscale Integration](#teamscale-integration)
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
@@ -160,32 +161,31 @@ trigger a refresh of the user context to ensure all parts of the application hav
 
    ```svelte
    <script lang="ts">
-   import { backendService } from "$lib/grpc-api";
-   import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
-   import { toast } from "svelte-sonner";
-   import { StatusCodes } from "$lib/model/error-codes";
-   
-    const user = $derived(getContext<() => User>(UserContextKey)());
-   
-    async function handleNameUpdate(newName: string) {
-    try {
-    const response = await backendService.updateUser({
-    user: { id: user.id, firstName: newName /_ other fields _/ },
-    mask: { paths: ["first_name"] } // Example field mask
-    }).response;
-   
-              // Assuming your backendService call doesn't throw on non-OK gRPC status
-              // and returns a structure with a status code. Adjust as per your actual API.
-              // Or, if it throws, catch the error.
-   
-              triggerCurrentUserRefresh();
-              toast.success("User details updated successfully!");
-          } catch (error) {
-              console.error("Failed to update user:", error);
-              toast.error("Failed to update user details.");
-          }
-   
-    }
+     import { backendService } from "$lib/grpc-api";
+     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
+     import { toast } from "svelte-sonner";
+     import { StatusCodes } from "$lib/model/error-codes";
+
+     const user = $derived(getContext<() => User>(UserContextKey)());
+
+     async function handleNameUpdate(newName: string) {
+       try {
+         const response = await backendService.updateUser({
+           user: { id: user.id, firstName: newName /* other fields */ },
+           mask: { paths: ["first_name"] }, // Example field mask
+         }).response;
+
+         // Assuming your backendService call doesn't throw on non-OK gRPC status
+         // and returns a structure with a status code. Adjust as per your actual API.
+         // Or, if it throws, catch the error.
+
+         triggerCurrentUserRefresh();
+         toast.success("User details updated successfully!");
+       } catch (error) {
+         console.error("Failed to update user:", error);
+         toast.error("Failed to update user details.");
+       }
+     }
    </script>
    ```
 
@@ -224,3 +224,13 @@ npm run lighthouse -- --dir=/settings
 # or
 npm run lighthouse:all -- --dir=/settings
 ```
+
+## Teamscale Integration
+
+We use Teamscale for analyzing, monitoring and improving the quality of our project.
+To set up the integration with your IDE follow the instructions online:
+
+- [IntelliJ IDEA](https://docs.teamscale.com/howto/integrating-with-your-ide/intellij/)
+- [VS Code](https://docs.teamscale.com/howto/integrating-with-your-ide/visual-studio-code/)
+
+Note that the configuration file was already added, and you only have to connect the plugin to the server.
