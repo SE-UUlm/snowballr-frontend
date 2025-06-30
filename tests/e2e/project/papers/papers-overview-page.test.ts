@@ -98,9 +98,7 @@ test.describe("Papers Overview Tests", () => {
         await projectPapersPage.openPaperPreview(stageIndex, paperIndexInStage);
         await page.getByRole("button", { name: "Open paper" }).click();
 
-        // paper view was opened
-        await expect(page.getByRole("heading", { name: paperTitle })).toBeVisible();
-        await expect(paperLocator).toBeHidden();
+        await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
     });
 
     test("When the user double clicks a paper, then the paper view of this paper is opened.", async ({
@@ -117,9 +115,7 @@ test.describe("Papers Overview Tests", () => {
 
         await projectPapersPage.openPaperView(stageIndex, paperIndexInStage);
 
-        // paper view was opened
-        await expect(page.getByRole("heading", { name: paperTitle })).toBeVisible();
-        await expect(paperLocator).toBeHidden();
+        await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
     });
 
     // --- Search Tests ---

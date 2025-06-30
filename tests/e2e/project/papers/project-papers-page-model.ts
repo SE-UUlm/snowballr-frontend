@@ -130,6 +130,16 @@ export class ProjectPapersPageModel {
         await paperLocator.dblclick();
     }
 
+    /** Asserts that the paper view of a certain paper was opened */
+    async assertPaperViewWasOpened(paperLocator: Locator, paperTitle: string) {
+        await expect(
+            this.page
+                .getByRole("navigation")
+                .filter({ has: this.page.getByRole("heading", { name: paperTitle }) }),
+        ).toBeVisible();
+        await expect(paperLocator).toBeHidden();
+    }
+
     /** Performs a search */
     async search(text: string) {
         await this.searchBarInput.fill(text);
