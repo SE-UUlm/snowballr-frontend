@@ -1,6 +1,6 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-criteria";
-import { comparePaperId } from "$lib/utils/common-helper";
+import { comparePaperId, exhaustiveCheck } from "$lib/utils/common-helper";
 
 /**
  * Compares two paper decisions based on a custom order:
@@ -57,6 +57,9 @@ function sortProjectPaper(papers: Project_Paper[], sortOption: SortOption): Proj
             case SortCriteria.PAPER_ID:
                 compareResult = comparePaperId(a.localId, b.localId);
                 break;
+
+            default:
+                compareResult = exhaustiveCheck(criterion);
         }
 
         // Reverse result if descending

@@ -53,7 +53,7 @@ export const load: PageLoad = ({ params }) => {
 function organizePapersByStage(papers: Project_Paper[]): Stage[] {
     const stages: Stage[] = [];
     for (const paper of papers) {
-        let stage = stages.find((stage) => stage.stageIndex === paper.stage);
+        let stage = stages.find((s) => s.stageIndex === paper.stage);
         if (!stage) {
             stage = { stageIndex: paper.stage, papers: [] };
             stages.push(stage);
