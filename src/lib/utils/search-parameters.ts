@@ -1,6 +1,14 @@
 import { page } from "$app/state";
 import type { ProjectPaperFilter } from "$lib/model/general";
 import type { SvelteURLSearchParams } from "svelte/reactivity";
+import {
+    ALLOWED_SORT_OPTIONS,
+    SortCriteria,
+    SortDirection,
+    type SortOption,
+    type SortOptionLabel,
+} from "$lib/model/sort-criteria";
+import { stringToEnumValue } from "$lib/utils/common-helper";
 
 /**
  * Returns the 'searchText' query parameter from the current URL.
@@ -77,6 +85,53 @@ export function updateFiltersParam(
         } else {
             searchParams.delete(key);
         }
+    }
+    return searchParams;
+}
+
+/**
+ * Returns the label of the sort option corresponding to the 'sort' and 'order'
+ * query parameter from the current URL.
+ * If this query parameter is not set, 'Id: Low to High' is returned as default.
+ */
+export function getSortOptionFromURL(): SortOptionLabel {
+    const sortCriterion = page.url.searchParams.get("sort");
+    const sortDirection = page.url.searchParams.get("order");
+
+    if (!sortCriterion || !sortDirection) {
+        return "Id: Low to High";
+    }
+
+    const label = (Object.keys(ALLOWED_SORT_OPTIONS) as Array<SortOptionLabel>).find(
+        (key) =>
+            ALLOWED_SORT_OPTIONS[key].criterion ===
+                stringToEnumValue(SortCriteria, sortCriterion) &&
+            ALLOWED_SORT_OPTIONS[key].direction === stringToEnumValue(SortDirection, sortDirection),
+    );
+
+    return label ?? "Id: Low to High";
+}
+
+/**
+ * Updates the 'sort' and 'order' query parameter in the given URL search parameters.
+ * If either the sort criterion or the sort direction is undefined, the query parameter is deleted.
+ *
+ * @remarks
+ * This function does not modify the browser's URL directly.
+ * @param searchParams - The current URL search parameters
+ * @param sortOption - The sort option, e.g. 'Title' and 'asc', to set in the URL
+ * @returns The updated search parameters with the added, deleted or updated 'sort' and 'order' values.
+ */
+export function updateSortParams(
+    searchParams: SvelteURLSearchParams,
+    sortOption?: SortOption,
+): SvelteURLSearchParams {
+    if (sortOption) {
+        searchParams.set("sort", sortOption.criterion);
+        searchParams.set("order", sortOption.direction);
+    } else {
+        searchParams.delete("sort");
+        searchParams.delete("order");
     }
     return searchParams;
 }

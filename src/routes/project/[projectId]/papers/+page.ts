@@ -53,7 +53,7 @@ export const load: PageLoad = ({ params }) => {
 function organizePapersByStage(papers: Project_Paper[]): Stage[] {
     const stages: Stage[] = [];
     for (const paper of papers) {
-        let stage = stages.find((stage) => stage.stageIndex === paper.stage);
+        let stage = stages.find((s) => s.stageIndex === paper.stage);
         if (!stage) {
             stage = { stageIndex: paper.stage, papers: [] };
             stages.push(stage);
@@ -61,9 +61,7 @@ function organizePapersByStage(papers: Project_Paper[]): Stage[] {
 
         stage.papers.push(paper);
     }
-    stages.forEach((stage) =>
-        stage.papers.sort((a, b) => comparePaperId(`#${a.localId}`, `#${b.localId}`)),
-    );
+    stages.forEach((stage) => stage.papers.sort((a, b) => comparePaperId(a.localId, b.localId)));
     stages.sort((a, b) => Number(a.stageIndex - b.stageIndex));
 
     if (stages.length === 0) {

@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import type { SortOptionLabel } from "$lib/model/sort-criteria";
 
 export const NUM_PAPERS_PER_STAGE = 5;
 export const getUniqueSequence = (index: number) => String.fromCharCode(65 + index).repeat(5);
@@ -16,6 +17,7 @@ export class ProjectPapersPageModel {
     readonly decisionFilterButton: Locator;
     readonly criteriaFilterButton: Locator;
     readonly allFilterButtons: Locator[];
+    readonly sortOptionSelect: Locator;
 
     readonly projectName: string;
     readonly projectPaperNames: string[];
@@ -44,6 +46,7 @@ export class ProjectPapersPageModel {
             this.decisionFilterButton,
             this.criteriaFilterButton,
         ];
+        this.sortOptionSelect = page.getByRole("button", { name: "Sort by: ", exact: false });
 
         this.projectName = "Project 1";
         this.projectPaperNames = [];
@@ -55,6 +58,11 @@ export class ProjectPapersPageModel {
     /** Helper to get stage trigger locator */
     getStageTrigger(stageIndex: number): Locator {
         return this.page.getByRole("button", { name: new RegExp(`^Stage ${stageIndex}`) });
+    }
+
+    /** Helper tp get the first paper in the first stage */
+    getFirstPaperInFirstStage(): Locator {
+        return this.page.getByRole("button", { name: "Paper" }).nth(1);
     }
 
     /** Helper to get paper locator by its stage and index within that stage */
@@ -122,6 +130,16 @@ export class ProjectPapersPageModel {
         await paperLocator.dblclick();
     }
 
+    /** Asserts that the paper view of a certain paper was opened */
+    async assertPaperViewWasOpened(paperLocator: Locator, paperTitle: string) {
+        await expect(
+            this.page
+                .getByRole("navigation")
+                .filter({ has: this.page.getByRole("heading", { name: paperTitle }) }),
+        ).toBeVisible();
+        await expect(paperLocator).toBeHidden();
+    }
+
     /** Performs a search */
     async search(text: string) {
         await this.searchBarInput.fill(text);
@@ -161,5 +179,15 @@ export class ProjectPapersPageModel {
             await this.page.getByRole("option", { name: `${year}` }).click();
             await this.yearFilterButton.click();
         }
+    }
+
+    /**
+     * Selects a certain sort option.
+     *
+     * @param sortOption - The option to select
+     */
+    async selectSortOption(sortOption: SortOptionLabel) {
+        await this.sortOptionSelect.click();
+        await this.page.getByRole("option", { name: sortOption }).click();
     }
 }

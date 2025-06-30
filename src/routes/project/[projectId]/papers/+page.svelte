@@ -27,6 +27,7 @@
     import {
         getFilterFromURL,
         getSearchTextFromURL,
+        getSortOptionFromURL,
         updateFiltersParam,
         updateSearchTextParam,
     } from "$lib/utils/search-parameters";
@@ -34,6 +35,11 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { onMount } from "svelte";
+    import type { SortOptionLabel } from "$lib/model/sort-criteria";
+    import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
+    import { sortProjectPaper } from "$lib/utils/sorters";
+    import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
+    import { updateSortParams } from "$lib/utils/search-parameters.js";
 
     let { data } = $props();
     const {
@@ -53,9 +59,6 @@
     const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
 
     let searchText = $state(getSearchTextFromURL());
-    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
-
-    let showFilters = $state(false);
 
     const emptyFilters: ProjectPaperFilter = {
         stages: [],
@@ -65,6 +68,10 @@
         decisions: [],
         criteria: [],
     };
+    let papersFilters = $state<ProjectPaperFilter>(getFilterFromURL());
+    let showFilters = $state(false);
+
+    let selectedSortOption = $state<SortOptionLabel>(getSortOptionFromURL());
 
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
@@ -79,6 +86,7 @@
         }
     });
 
+    // update query parameters when the user selects / unselects a filter
     $effect(() => {
         searchParameters = updateFiltersParam(
             {
@@ -90,6 +98,14 @@
                 criteria: papersFilters.criteria,
             },
             searchParameters,
+        );
+    });
+
+    // update the query parameters when the user changes the sort option
+    $effect(() => {
+        searchParameters = updateSortParams(
+            searchParameters,
+            ALLOWED_SORT_OPTIONS[selectedSortOption],
         );
     });
 
@@ -130,10 +146,7 @@
                             <ChevronDown class="size-4" />
                         {/if}
                     </Button>
-                    <Button onclick={() => (papersFilters = emptyFilters)}>
-                        <Trash />
-                        Reset
-                    </Button>
+                    <SortOptionsSelect bind:selectedSortOption />
                 </div>
             </div>
             {#if showFilters}
@@ -153,6 +166,10 @@
                         {loadingCriteria}
                         bind:selectedCriteria={papersFilters.criteria}
                     />
+                    <Button onclick={() => (papersFilters = emptyFilters)}>
+                        <Trash />
+                        Reset
+                    </Button>
                 </div>
             {/if}
         </div>
@@ -165,12 +182,18 @@
                     {pluralize(stages, "Stage", "Stages")}
                 </span>
                 <Accordion.Root type="multiple">
-                    {#each stages as stage (stage.stageIndex)}
+                    {#each stages as { stageIndex, papers } (stageIndex)}
                         <StageEntry
                             filter={papersFilters}
                             {projectId}
                             {searchText}
-                            {stage}
+                            stage={{
+                                stageIndex,
+                                papers: sortProjectPaper(
+                                    papers,
+                                    ALLOWED_SORT_OPTIONS[selectedSortOption],
+                                ),
+                            }}
                             bind:selectedPaper
                         />
                     {/each}

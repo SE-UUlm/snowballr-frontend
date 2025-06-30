@@ -98,9 +98,7 @@ test.describe("Papers Overview Tests", () => {
         await projectPapersPage.openPaperPreview(stageIndex, paperIndexInStage);
         await page.getByRole("button", { name: "Open paper" }).click();
 
-        // paper view was opened
-        await expect(page.getByRole("heading", { name: paperTitle })).toBeVisible();
-        await expect(paperLocator).toBeHidden();
+        await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
     });
 
     test("When the user double clicks a paper, then the paper view of this paper is opened.", async ({
@@ -117,9 +115,7 @@ test.describe("Papers Overview Tests", () => {
 
         await projectPapersPage.openPaperView(stageIndex, paperIndexInStage);
 
-        // paper view was opened
-        await expect(page.getByRole("heading", { name: paperTitle })).toBeVisible();
-        await expect(paperLocator).toBeHidden();
+        await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
     });
 
     // --- Search Tests ---
@@ -228,7 +224,7 @@ test.describe("Papers Overview Tests", () => {
         await expect(projectPapersPage.getNoSearchResultsText().last()).toBeVisible();
     });
 
-    test("When the user clears the search using Escape, then all papers are shown again.", async ({
+    test("When the user clears the search using 'Esc', then all papers are shown again.", async ({
         projectPapersPage,
     }) => {
         const searchPaperIndex = 3; // Paper 0/3
@@ -345,7 +341,7 @@ test.describe("Papers Overview Tests", () => {
         await expect(projectPapersPage.stageFilterButton).toHaveText("Stages: Stage 0 (1)");
     });
 
-    test("When the user clicks the filters button,then all available filters are displayed. If the user clicks the button again, the filters disappear. ", async ({
+    test("When the user clicks the filters button, then all available filters are displayed. When the user clicks the button again, then the filters disappear. ", async ({
         projectPapersPage,
     }) => {
         for (const filter of projectPapersPage.allFilterButtons) {
@@ -356,5 +352,53 @@ test.describe("Papers Overview Tests", () => {
         for (const filter of projectPapersPage.allFilterButtons) {
             await expect(filter).toBeVisible();
         }
+    });
+
+    // --- Sort Tests ---
+
+    test("When the user sorts the papers, then they are rearranged depending on the selected sort option.", async ({
+        projectPapersPage,
+    }) => {
+        await projectPapersPage.openStage(0);
+
+        await projectPapersPage.selectSortOption("Id: Low to High");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/0 (${getUniqueSequence(0)})`,
+        );
+
+        await projectPapersPage.selectSortOption("Title: Z to A");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/${NUM_PAPERS_PER_STAGE - 1} (${getUniqueSequence(NUM_PAPERS_PER_STAGE - 1)})`,
+        );
+
+        await projectPapersPage.selectSortOption("Year: Oldest to Newest");
+        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+            `Paper 0/0 (${getUniqueSequence(0)})`,
+        );
+    });
+
+    test("When the user reloads the page, then the sort options is restored from the URL.", async ({
+        projectPapersPage,
+        page,
+    }) => {
+        await projectPapersPage.selectSortOption("Title: Z to A");
+        await expect(page).toHaveURL((url) => {
+            const params = url.searchParams;
+            return (
+                params.has("sort") &&
+                params.get("sort") === "Title" &&
+                params.has("order") &&
+                params.get("order") === "desc"
+            );
+        });
+
+        await page.reload();
+
+        await expect(projectPapersPage.sortOptionSelect).toHaveText("Sort by: Title");
+        await projectPapersPage.sortOptionSelect.click();
+        await expect(page.getByRole("option", { name: "Title: Z to A" })).toHaveAttribute(
+            "aria-selected",
+            "true",
+        );
     });
 });
