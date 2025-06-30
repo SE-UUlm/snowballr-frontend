@@ -88,9 +88,6 @@ export const load: PageLoad = async ({ params, parent }) => {
             throw new Error("Couldn't load open reviews.");
         });
 
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    openReviews.catch(() => {});
-
     const loadingDecisionStatistics = loadingProject.then(
         (project) =>
             backendService.getDecisionStatisticsForStage({
@@ -112,9 +109,6 @@ export const load: PageLoad = async ({ params, parent }) => {
             );
         });
 
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    projectInformation.catch(() => {});
-
     const stageProgress: Promise<StageProgressInterface> = Promise.all([
         loadingProject,
         loadingDecisionStatistics,
@@ -126,9 +120,6 @@ export const load: PageLoad = async ({ params, parent }) => {
         .catch(() => {
             throw new Error("Couldn't load stage progress.");
         });
-
-    // attach noop-catch to handle promise rejection correctly (see https://svelte.dev/docs/kit/load#Streaming-with-promises)
-    stageProgress.catch(() => {});
 
     return { openReviews, projectInformation, stageProgress };
 };
