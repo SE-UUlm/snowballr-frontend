@@ -26,5 +26,23 @@ export default defineConfig({
             cleanOnRerun: true,
             reporter: process.env.GITHUB_ACTIONS ? ["lcovonly"] : ["html"],
         },
+        projects: [
+            {
+                extends: true,
+                test: {
+                    name: "unit",
+                    include: ["tests/unit/**/*.{test,spec}.ts"],
+                },
+            },
+            {
+                extends: true,
+                test: {
+                    name: "integration",
+                    include: ["tests/integration/**/*.{test,spec}.ts"],
+                    environment: "jsdom",
+                    setupFiles: ["./vitest-setup.ts"],
+                },
+            },
+        ],
     },
 });
