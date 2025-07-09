@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { ProjectPapers } from "$tests/example-data";
 import { mockApiCall } from "$tests/setupTest";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
 describe("PaperNavigationButton", () => {
     test("When button has direction 'left', then aria-label and tooltip is 'Previous Paper'", async () => {
@@ -16,6 +17,7 @@ describe("PaperNavigationButton", () => {
             },
         });
         reviewMode.isActivated = false;
+        projectPaperLoading.isLoading = false;
         const button = screen.getByRole("button");
         expect(button).toHaveAttribute("aria-label", "Previous Paper");
 
@@ -38,6 +40,7 @@ describe("PaperNavigationButton", () => {
             },
         });
         reviewMode.isActivated = false;
+        projectPaperLoading.isLoading = false;
         const mockCallPreviousPaper = mockApiCall("getPreviousPaper", {
             ...ProjectPapers.demoProjectPaper1,
         });
@@ -55,6 +58,7 @@ describe("PaperNavigationButton", () => {
             },
         });
         reviewMode.isActivated = false;
+        projectPaperLoading.isLoading = false;
         const button = screen.getByRole("button");
         expect(button).toHaveAttribute("aria-label", "Next Paper");
 
@@ -77,6 +81,7 @@ describe("PaperNavigationButton", () => {
             },
         });
         reviewMode.isActivated = false;
+        projectPaperLoading.isLoading = false;
         const mockCallNextPaper = mockApiCall("getNextPaper", {
             ...ProjectPapers.demoProjectPaper1,
         });
@@ -97,6 +102,7 @@ describe("PaperNavigationButton", () => {
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
+        projectPaperLoading.isLoading = false;
         await waitFor(() => {
             expect(mockCallNextPaperToReview).toHaveBeenCalledTimes(1);
         });

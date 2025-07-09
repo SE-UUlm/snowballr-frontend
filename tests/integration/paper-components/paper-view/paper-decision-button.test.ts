@@ -8,6 +8,7 @@ import { Review, ReviewDecision } from "$lib/model/api/review";
 import { getReturnValue } from "$tests/setupTest";
 import { mockSelectedCriteriaContextWithInitialData } from "$tests/integration/test-helper";
 import { ProjectPapers } from "$tests/example-data";
+import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
 describe("PaperDecisionButton", () => {
     test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
@@ -16,15 +17,15 @@ describe("PaperDecisionButton", () => {
         render(PaperDecisionButton, {
             context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
-                projectPaperId: "1",
                 variant: "accept",
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
+        projectPaperLoading.isLoading = false;
 
         const acceptButton = screen.getByRole("button");
         expect(acceptButton).toBeInTheDocument();
-        expect(acceptButton).toHaveTextContent("Accept");
+        await waitFor(() => expect(acceptButton).toHaveTextContent("Accept"));
         expect(acceptButton).toHaveClass("bg-accept-green");
 
         await userEvent.hover(acceptButton);
@@ -46,15 +47,15 @@ describe("PaperDecisionButton", () => {
         render(PaperDecisionButton, {
             context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
-                projectPaperId: "1",
                 variant: "decline",
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
+        projectPaperLoading.isLoading = false;
 
         const declineButton = screen.getByRole("button");
         expect(declineButton).toBeInTheDocument();
-        expect(declineButton).toHaveTextContent("Decline");
+        await waitFor(() => expect(declineButton).toHaveTextContent("Decline"));
         expect(declineButton).toHaveClass("bg-decline-red");
 
         await userEvent.hover(declineButton);
@@ -76,15 +77,15 @@ describe("PaperDecisionButton", () => {
         render(PaperDecisionButton, {
             context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
-                projectPaperId: "1",
                 variant: "maybe",
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
+        projectPaperLoading.isLoading = false;
 
         const maybeButton = screen.getByRole("button");
         expect(maybeButton).toBeInTheDocument();
-        expect(maybeButton).toHaveTextContent("Maybe");
+        await waitFor(() => expect(maybeButton).toHaveTextContent("Maybe"));
         expect(maybeButton).toHaveClass("bg-maybe-yellow");
 
         await userEvent.hover(maybeButton);
@@ -103,12 +104,12 @@ describe("PaperDecisionButton", () => {
     test("When the paper decision button was already clicked, then the button is disabled", async () => {
         render(PaperDecisionButton, {
             props: {
-                projectPaperId: "1",
                 variant: "accept",
                 userReview: createReview(),
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
+        projectPaperLoading.isLoading = false;
 
         const decisionButton = screen.getByRole("button", { name: /Accept/ });
         expect(decisionButton).toBeDisabled();
