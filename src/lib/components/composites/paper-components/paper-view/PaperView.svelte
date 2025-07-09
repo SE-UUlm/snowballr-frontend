@@ -24,6 +24,7 @@
     import { toast } from "svelte-sonner";
     import { UserContextKey } from "$lib/current-user/userContext";
     import { getContext } from "svelte";
+    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -98,7 +99,6 @@
         }
     });
 
-    let loading = $state(true);
     let paperQueue = $state([]);
     let nextProjectPaper: Project_Paper | undefined = $state(undefined);
     const loadingUserReview: Promise<Review | undefined> = $state(
@@ -111,6 +111,7 @@
      */
     $effect(() => {
         (async () => {
+            projectPaperLoading.isLoading = true;
             const promises = [];
             if (loadingPaperId) promises.push(loadingPaperId);
             if (loadingPaperIdForNavigationBar) promises.push(loadingPaperIdForNavigationBar);
@@ -131,7 +132,7 @@
             }
             await Promise.all(promises)
                 .then(() => {
-                    loading = false;
+                    projectPaperLoading.isLoading = false;
                 })
                 .catch(() => {
                     toast.error("Something went wrong while loading the paper!");
@@ -154,9 +155,11 @@
     let isSubmittingReview = $state({ value: false });
     $effect(() => {
         (async () => {
+            projectPaperLoading.isLoading = true;
             userReview = await getUserReviewIfAlreadySubmitted();
             selectedReviewCriteria.criteria = userReview?.selectedCriteriaIds ?? [];
             wasAlreadyReviewedState.wasReviewed = userReview !== undefined;
+            projectPaperLoading.isLoading = false;
         })();
     });
 
@@ -234,24 +237,21 @@ Usage:
                 direction="left"
                 {loadingProject}
                 {loadingProjectPaper}
-                bind:loading
                 bind:paperQueue
                 bind:nextProjectPaper
             />
             {#if reviewMode.isActivated && loadingProject}
-                {#await Promise.all([loadingProject, loadingPaperWrapper]) then [project, paper]}
+                {#await Promise.all([loadingProject]) then [project]}
                     <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
                     <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
                     <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                         <PaperDecisionButton
                             {loadingProject}
                             {loadingProjectPaper}
-                            projectPaperId={paper.id}
                             variant={userReview?.decision === ReviewDecision.DECLINED
                                 ? "selected_decline"
                                 : "decline"}
                             bind:userReview
-                            bind:loading
                             bind:isSubmittingReview
                             bind:paperQueue
                             bind:nextProjectPaper
@@ -260,12 +260,10 @@ Usage:
                             <PaperDecisionButton
                                 {loadingProject}
                                 {loadingProjectPaper}
-                                projectPaperId={paper.id}
                                 variant={userReview?.decision === ReviewDecision.MAYBE
                                     ? "selected_maybe"
                                     : "maybe"}
                                 bind:userReview
-                                bind:loading
                                 bind:isSubmittingReview
                                 bind:paperQueue
                                 bind:nextProjectPaper
@@ -274,12 +272,10 @@ Usage:
                         <PaperDecisionButton
                             {loadingProject}
                             {loadingProjectPaper}
-                            projectPaperId={paper.id}
                             variant={userReview?.decision === ReviewDecision.ACCEPTED
                                 ? "selected_accept"
                                 : "accept"}
                             bind:userReview
-                            bind:loading
                             bind:isSubmittingReview
                             bind:paperQueue
                             bind:nextProjectPaper
@@ -291,7 +287,6 @@ Usage:
                 direction="right"
                 {loadingProject}
                 {loadingProjectPaper}
-                bind:loading
                 bind:paperQueue
                 bind:nextProjectPaper
             />

@@ -14,6 +14,7 @@
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import type { Project, Project_Paper } from "$lib/model/api/project";
+    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
     interface ButtonContent {
         name: string;
@@ -22,25 +23,21 @@
     }
 
     interface PaperDecisionButtonProps {
-        projectPaperId: string;
         variant: PaperDecisionButtonVariant;
         isSubmittingReview?: { value: boolean };
         userReview?: Review;
         loadingProject?: Promise<Project>;
-        loading?: boolean;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
         paperQueue?: Project_Paper[];
         nextProjectPaper?: Project_Paper;
     }
 
     let {
-        projectPaperId,
         variant,
         isSubmittingReview = $bindable({ value: false }),
         userReview = $bindable(undefined),
         loadingProjectPaper,
         loadingProject,
-        loading = $bindable(false),
         paperQueue = $bindable([]),
         nextProjectPaper = $bindable(undefined),
     }: PaperDecisionButtonProps = $props();
@@ -54,7 +51,6 @@
         // the API call is made. However we need a different sate for displaying the loading state of the single
         // decision button. Otherwise, all would have a spinner and label with "Submitting Review".
         isSubmittingReview.value = showLoadingSpinner.value;
-        loading = showLoadingSpinner.value;
     });
 
     /**
@@ -121,8 +117,10 @@
      */
     async function submitReview() {
         try {
+            projectPaperLoading.isLoading = true;
+            const paper = await loadingProjectPaper;
             const review: Review_Create = {
-                projectPaperId: projectPaperId,
+                projectPaperId: paper!.id,
                 decision: getDecision(),
                 selectedCriteriaIds: selectedReviewCriteriaState.criteria,
             };
@@ -140,6 +138,7 @@
                 nextProjectPaper,
                 undefined,
             );
+            if (!nextProjectPaper) projectPaperLoading.isLoading = false;
         } catch (err) {
             toast.error("Could not submit the review!", {
                 description: "Please check your connection to the server.",
@@ -209,7 +208,7 @@ Usage:
         paperDecisionButtonVariants({ variant: variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value || loading}
+    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value || projectPaperLoading.isLoading}
     loading={showLoadingSpinner.value}
     onclick={(args) => loadingWrapper(showLoadingSpinner, submitReview, args)}
     triggerSize="default"
