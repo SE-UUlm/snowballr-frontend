@@ -32,7 +32,11 @@
 
     let buttonStillLoading: boolean = $state(true);
 
-    const isDisabled: boolean = $derived(projectPaperLoading.isLoading || ((direction === "right" ? buttonRightDisabled : buttonLeftDisabled)) || buttonStillLoading);
+    const isDisabled: boolean = $derived(
+        projectPaperLoading.isLoading ||
+            (direction === "right" ? buttonRightDisabled : buttonLeftDisabled) ||
+            buttonStillLoading,
+    );
     let isLoading: boolean = $derived(projectPaperLoading.isLoading || buttonStillLoading);
 
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
@@ -157,7 +161,7 @@ Usage:
     data-testid="navigation-button"
     disabled={isDisabled}
     loading={isLoading}
-    onclick={(args) => loadingWrapper({value: false}, navigate, args)}
+    onclick={(args) => loadingWrapper({ value: false }, navigate, args)}
     triggerSize="default"
     triggerVariant="link"
 >

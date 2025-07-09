@@ -3,7 +3,6 @@ import { getLocalStorageItem, setLocalStorageItem } from "./local-storage-helper
 const STORAGE_KEY = "projectPaperLoading";
 const initialValue = getLocalStorageItem<boolean>(STORAGE_KEY, true);
 
-
 let projectPaperLoadingState = $state(initialValue);
 
 export const projectPaperLoading = {
