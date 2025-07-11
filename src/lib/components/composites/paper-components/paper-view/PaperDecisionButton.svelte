@@ -45,13 +45,8 @@
     const wasAlreadyReviewed = $derived(userReview !== undefined);
     const showLoadingSpinner = $state({ value: false });
 
-    /*  $effect(() => {
-        // Update `isSubmittingReview` every time `showLoadingSpinner` is updated
-        // `isSubmittingReview` is used as a state in the `PaperView` component to disable all decision buttons while
-        // the API call is made. However we need a different sate for displaying the loading state of the single
-        // decision button. Otherwise, all would have a spinner and label with "Submitting Review".
-        isSubmittingReview.value = showLoadingSpinner.value;
-    });*/
+    const isLoading = $derived(projectPaperLoading.isLoading || isSubmittingReview.value);
+    const isDisabled = $derived(isLoading || wasAlreadyReviewed || showLoadingSpinner.value);
 
     /**
      * Returns the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -212,11 +207,8 @@ Usage:
         paperDecisionButtonVariants({ variant: variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview.value ||
-        wasAlreadyReviewed ||
-        showLoadingSpinner.value ||
-        projectPaperLoading.isLoading}
-    loading={projectPaperLoading.isLoading || isSubmittingReview.value}
+    disabled={isDisabled}
+    loading={isLoading}
     onclick={(args) => loadingWrapper(showLoadingSpinner, submitReview, args)}
     triggerSize="default"
     triggerVariant="default"

@@ -32,12 +32,10 @@
 
     let buttonStillLoading: boolean = $state(true);
 
+    const isLoading: boolean = $derived(projectPaperLoading.isLoading || buttonStillLoading);
     const isDisabled: boolean = $derived(
-        projectPaperLoading.isLoading ||
-            (direction === "right" ? buttonRightDisabled : buttonLeftDisabled) ||
-            buttonStillLoading,
+        isLoading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled),
     );
-    let isLoading: boolean = $derived(projectPaperLoading.isLoading || buttonStillLoading);
 
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
