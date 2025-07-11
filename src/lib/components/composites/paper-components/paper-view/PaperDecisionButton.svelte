@@ -14,6 +14,7 @@
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import type { Project, Project_Paper } from "$lib/model/api/project";
+    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
     interface ButtonContent {
         name: string;
@@ -22,25 +23,21 @@
     }
 
     interface PaperDecisionButtonProps {
-        projectPaperId: string;
         variant: PaperDecisionButtonVariant;
         isSubmittingReview?: { value: boolean };
         userReview?: Review;
         loadingProject?: Promise<Project>;
-        loading?: boolean;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
         paperQueue?: Project_Paper[];
         nextProjectPaper?: Project_Paper;
     }
 
     let {
-        projectPaperId,
         variant,
         isSubmittingReview = $bindable({ value: false }),
         userReview = $bindable(undefined),
         loadingProjectPaper,
         loadingProject,
-        loading = $bindable(false),
         paperQueue = $bindable([]),
         nextProjectPaper = $bindable(undefined),
     }: PaperDecisionButtonProps = $props();
@@ -48,14 +45,8 @@
     const wasAlreadyReviewed = $derived(userReview !== undefined);
     const showLoadingSpinner = $state({ value: false });
 
-    $effect(() => {
-        // Update `isSubmittingReview` every time `showLoadingSpinner` is updated
-        // `isSubmittingReview` is used as a state in the `PaperView` component to disable all decision buttons while
-        // the API call is made. However we need a different sate for displaying the loading state of the single
-        // decision button. Otherwise, all would have a spinner and label with "Submitting Review".
-        isSubmittingReview.value = showLoadingSpinner.value;
-        loading = showLoadingSpinner.value;
-    });
+    const isLoading = $derived(projectPaperLoading.isLoading || isSubmittingReview.value);
+    const isDisabled = $derived(isLoading || wasAlreadyReviewed || showLoadingSpinner.value);
 
     /**
      * Returns the content of the button, i.e. the button name, the shortcut and the tooltip text
@@ -121,17 +112,20 @@
      */
     async function submitReview() {
         try {
+            isSubmittingReview.value = true;
+            projectPaperLoading.isLoading = true;
+            const paper = await loadingProjectPaper;
             const review: Review_Create = {
-                projectPaperId: projectPaperId,
+                projectPaperId: paper!.id,
                 decision: getDecision(),
                 selectedCriteriaIds: selectedReviewCriteriaState.criteria,
             };
             variant = "selected_" + variant;
-            backendService.createReview(review).response.then((review) => (userReview = review));
+            await backendService
+                .createReview(review)
+                .response.then((review) => (userReview = review));
+            isSubmittingReview.value = false;
             toast.success("Successfully submitted a review.");
-            if (!nextProjectPaper) {
-                toast.info("No more papers to review.");
-            }
             await navigatePaper(
                 "right",
                 loadingProjectPaper,
@@ -140,6 +134,10 @@
                 nextProjectPaper,
                 undefined,
             );
+            if (!nextProjectPaper) {
+                toast.info("No more papers to review.");
+                projectPaperLoading.isLoading = false;
+            }
         } catch (err) {
             toast.error("Could not submit the review!", {
                 description: "Please check your connection to the server.",
@@ -209,8 +207,8 @@ Usage:
         paperDecisionButtonVariants({ variant: variant }),
     )}
     data-testid={`decision-button-${variant}`}
-    disabled={isSubmittingReview.value || wasAlreadyReviewed || showLoadingSpinner.value || loading}
-    loading={showLoadingSpinner.value}
+    disabled={isDisabled}
+    loading={isLoading}
     onclick={(args) => loadingWrapper(showLoadingSpinner, submitReview, args)}
     triggerSize="default"
     triggerVariant="default"
@@ -222,7 +220,11 @@ Usage:
         {/if}
     {/snippet}
     {#snippet loadingTrigger()}
-        Submitting review
+        {#if isSubmittingReview.value}
+            Submitting review
+        {:else}
+            Loading
+        {/if}
     {/snippet}
     {#snippet content()}
         {getButtonContent().tooltipText}

@@ -8,12 +8,12 @@
     import { toast } from "svelte-sonner";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
     interface Props {
         direction: "left" | "right";
         loadingProject?: Promise<Project>;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
-        loading?: boolean;
         paperQueue?: Project_Paper[];
         nextProjectPaper?: Project_Paper;
         previousProjectPaper?: Project_Paper;
@@ -23,19 +23,21 @@
         direction,
         loadingProject,
         loadingProjectPaper,
-        loading = $bindable(false),
         paperQueue = $bindable([]),
         nextProjectPaper = $bindable(undefined),
         previousProjectPaper = $bindable(undefined),
     }: Props = $props();
     let buttonLeftDisabled: boolean = $state(true);
     let buttonRightDisabled: boolean = $state(true);
-    const showLoadingSpinner = $state({ value: false });
-    const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
-    $effect(() => {
-        loading = showLoadingSpinner.value;
-    });
+    let buttonStillLoading: boolean = $state(true);
+
+    const isLoading: boolean = $derived(projectPaperLoading.isLoading || buttonStillLoading);
+    const isDisabled: boolean = $derived(
+        isLoading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled),
+    );
+
+    const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
     async function getNextProjectPaperToReview(paper: Project_Paper) {
         await backendService
@@ -89,8 +91,8 @@
      * before. Loads the next or previous paper only if all necessary information is available.
      */
     $effect(() => {
-        if (loading) return;
         (async () => {
+            buttonStillLoading = true;
             const paper = await loadingProjectPaper;
             if (!paper) return;
 
@@ -103,6 +105,7 @@
                     await getNextProjectPaper(paper);
                 }
                 buttonRightDisabled = nextProjectPaper === undefined;
+                buttonStillLoading = false;
             } else if (direction === "left") {
                 if (reviewMode.isActivated) {
                     previousProjectPaper = paperQueue[paperQueue.length - 1];
@@ -110,6 +113,7 @@
                     await getPreviousProjectPaper(paper);
                 }
                 buttonLeftDisabled = previousProjectPaper === undefined;
+                buttonStillLoading = false;
             }
         })();
     });
@@ -153,14 +157,14 @@ Usage:
     class="text-primary max-w-xs min-w-32 grow bg-slate-200 shadow-lg hover:bg-slate-400"
     aria-label={tooltipText}
     data-testid="navigation-button"
-    disabled={loading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled)}
-    loading={showLoadingSpinner.value}
-    onclick={(args) => loadingWrapper(showLoadingSpinner, navigate, args)}
+    disabled={isDisabled}
+    loading={isLoading}
+    onclick={(args) => loadingWrapper({ value: false }, navigate, args)}
     triggerSize="default"
     triggerVariant="link"
 >
     {#snippet trigger()}
-        {#if !showLoadingSpinner.value}
+        {#if !isLoading}
             {#if direction === "left"}
                 <ArrowLeft />
             {:else}
