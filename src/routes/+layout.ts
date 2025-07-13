@@ -62,7 +62,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
             console.error(`Session renewal failed: ${error}`);
             return await redirectToSignIn();
         }
-    } else if (authStatus !== AuthenticationStatus.AUTHENTICATED && !onUncheckedPath) {
+    } else if (authStatus !== AuthenticationStatus.AUTHENTICATED) {
         return await redirectToSignIn();
     }
 
