@@ -34,14 +34,18 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         () => undefined,
     );
 
+    // Redirect on gRPC/network failure
     if (authStatusCall === undefined) {
-        setCachedUser(null);
-        return { user: emptyUser };
+        console.error("Authentication status could not be determined. Redirecting to sign-in.");
+        return await redirectToSignIn();
     }
 
+    // Redirect on backend business logic failure
     if (authStatusCall.status.code !== StatusCodes.OK) {
-        setCachedUser(null);
-        return { user: emptyUser };
+        console.error(
+            `Authentication status call failed with status: ${authStatusCall.status.code}. Redirecting to sign-in.`,
+        );
+        return await redirectToSignIn();
     }
 
     const authStatus = authStatusCall.response.authenticationStatus;
