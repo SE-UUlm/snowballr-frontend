@@ -5,9 +5,18 @@ import { sync as globSync } from "glob";
 // Regular expression to match backendService calls
 const apiCallRegex = /backendService\s*\.\s*(\w+)/g;
 
+// Function to remove comments from code
+const removeComments = (content) => {
+    // Remove single line comments
+    content = content.replace(/\/\/.*/g, "");
+    // Remove multi-line comments
+    content = content.replace(/\/\*[\s\S]*?\*\//g, "");
+    return content;
+};
+
 // Function to read file and find API calls
 const findApiCalls = (filePath) => {
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = removeComments(fs.readFileSync(filePath, "utf-8"));
     const matches = [...content.matchAll(apiCallRegex)];
     return matches.map((match) => ({
         method: match[1],
@@ -46,4 +55,4 @@ const methodsList = Object.keys(groupedCalls)
     .sort()
     .map((method) => `- ${method}`)
     .join("\n");
-fs.writeFileSync("api-methods.md", methodsList);
+fs.writeFileSync("all-used-calls.md", methodsList);
