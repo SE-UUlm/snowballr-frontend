@@ -22,7 +22,7 @@
     } from "$lib/utils/custom-context";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
     import { toast } from "svelte-sonner";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import { getContext } from "svelte";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
 
@@ -64,7 +64,7 @@
         criteriaWithReviews,
     } = $derived(data);
 
-    const user = getContext<() => User>(UserContextKey)();
+    const user = getContext<UserContext>(UserContextKey)();
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
     const loadingProjectPaper = $derived.by(() =>

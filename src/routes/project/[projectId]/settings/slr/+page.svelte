@@ -6,12 +6,11 @@
     import { ProjectStatus } from "$lib/model/api/project.js";
     import { getContext, onMount } from "svelte";
     import { isCurrentUserProjectAdmin } from "../helper.js";
-    import type { User } from "$lib/model/api/user.js";
-    import { UserContextKey } from "$lib/current-user/userContext.js";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
-    const user = $derived(getContext<() => User>(UserContextKey)());
+    const user = $derived(getContext<UserContext>(UserContextKey)());
     let slrSettingsLocked = $state(true);
 
     const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));

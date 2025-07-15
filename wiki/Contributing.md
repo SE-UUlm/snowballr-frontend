@@ -133,10 +133,9 @@ To access the current user's data within any Svelte component that is a child of
    ```svelte
    <script lang="ts">
      import { getContext } from "svelte";
-     import { UserContextKey } from "$lib/current-user/userContext";
-     import type { User } from "$lib/model/api/user";
+     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
 
-     const user = $derived(getContext<() => User>(UserContextKey)());
+     const user = $derived(getContext<UserContext>(UserContextKey)());
 
      function greet() {
        console.log(`Hello, ${user.firstName}!`);
@@ -165,8 +164,10 @@ trigger a refresh of the user context to ensure all parts of the application hav
      import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
      import { toast } from "svelte-sonner";
      import { StatusCodes } from "$lib/model/error-codes";
+     import { getContext } from "svelte";
+     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
 
-     const user = $derived(getContext<() => User>(UserContextKey)());
+     const user = $derived(getContext<UserContext>(UserContextKey)());
 
      async function handleNameUpdate(newName: string) {
        try {

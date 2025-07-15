@@ -11,13 +11,12 @@
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { getContext } from "svelte";
-    import type { User } from "$lib/model/api/user";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
-    const user = $derived(getContext<() => User>(UserContextKey)());
+    const user = $derived(getContext<UserContext>(UserContextKey)());
 
     const numberOfSkeletons = 7;
 

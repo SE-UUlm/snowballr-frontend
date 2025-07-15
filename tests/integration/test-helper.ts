@@ -5,7 +5,7 @@ import {
     WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY,
 } from "$lib/utils/custom-context";
 import type { User } from "$lib/model/api/user";
-import { UserContextKey } from "$lib/current-user/userContext";
+import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
 
@@ -42,7 +42,7 @@ export const mockSelectedCriteriaContextWithInitialData = (
     ]);
 
 let MOCK_USER_INSTANCE: User = createUser(Users.johnDoe);
-export const mockUserContext: Map<symbol, () => User> = new Map([
+export const mockUserContext: Map<symbol, UserContext> = new Map([
     [UserContextKey, () => MOCK_USER_INSTANCE],
 ]);
 export function setContextUser(userData: Partial<User>) {

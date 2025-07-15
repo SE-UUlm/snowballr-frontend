@@ -20,7 +20,7 @@ import {
 } from "$tests/integration/test-helper";
 import { PaperDecision } from "$lib/model/api/project";
 import { Criteria, Reviews } from "$tests/example-data";
-import type { User } from "$lib/model/api/user";
+import type { UserContext } from "$lib/current-user/userContext";
 
 describe("PaperView", () => {
     test("When `showButtonBar` is false, then button bar isn't shown", () => {
@@ -85,7 +85,7 @@ describe("PaperView", () => {
         const criteriaContext = mockSelectedCriteriaContextWithInitialData([], true);
         const combinedContext = new Map<
             symbol,
-            (() => User) | SelectedCriteriaContextValue | WasReviewedContextValue
+            UserContext | SelectedCriteriaContextValue | WasReviewedContextValue
         >([...userContext, ...criteriaContext]);
 
         render(PaperView, {
