@@ -4,6 +4,7 @@
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { type Review, ReviewDecision } from "$lib/model/api/review";
+    import type { PaperDecisionButtonVariant } from "./decision-button-variants";
 
     type ButtonBarProps = {
         userReview?: Review;
@@ -20,6 +21,24 @@
     let paperQueue = $state([]);
     let nextProjectPaper: Project_Paper | undefined = $state(undefined);
     let isSubmittingReview = $state({ value: false });
+
+    const decisionButtonsData: {
+        decision: ReviewDecision;
+        variant: PaperDecisionButtonVariant;
+        selectedVariant: PaperDecisionButtonVariant;
+    }[] = [
+        {
+            decision: ReviewDecision.DECLINED,
+            variant: "decline",
+            selectedVariant: "selected_decline",
+        },
+        { decision: ReviewDecision.MAYBE, variant: "maybe", selectedVariant: "selected_maybe" },
+        {
+            decision: ReviewDecision.ACCEPTED,
+            variant: "accept",
+            selectedVariant: "selected_accept",
+        },
+    ];
 </script>
 
 <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
@@ -35,41 +54,21 @@
             <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
             <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
             <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                <PaperDecisionButton
-                    {loadingProject}
-                    {loadingProjectPaper}
-                    variant={userReview?.decision === ReviewDecision.DECLINED
-                        ? "selected_decline"
-                        : "decline"}
-                    bind:userReview
-                    bind:isSubmittingReview
-                    bind:paperQueue
-                    bind:nextProjectPaper
-                />
-                {#if project.settings?.reviewMaybeAllowed}
-                    <PaperDecisionButton
-                        {loadingProject}
-                        {loadingProjectPaper}
-                        variant={userReview?.decision === ReviewDecision.MAYBE
-                            ? "selected_maybe"
-                            : "maybe"}
-                        bind:userReview
-                        bind:isSubmittingReview
-                        bind:paperQueue
-                        bind:nextProjectPaper
-                    />
-                {/if}
-                <PaperDecisionButton
-                    {loadingProject}
-                    {loadingProjectPaper}
-                    variant={userReview?.decision === ReviewDecision.ACCEPTED
-                        ? "selected_accept"
-                        : "accept"}
-                    bind:userReview
-                    bind:isSubmittingReview
-                    bind:paperQueue
-                    bind:nextProjectPaper
-                />
+                {#each decisionButtonsData as data (data.decision)}
+                    {#if data.decision !== ReviewDecision.MAYBE || project.settings?.reviewMaybeAllowed}
+                        <PaperDecisionButton
+                            {loadingProject}
+                            {loadingProjectPaper}
+                            variant={userReview?.decision === data.decision
+                                ? data.selectedVariant
+                                : data.variant}
+                            bind:userReview
+                            bind:isSubmittingReview
+                            bind:paperQueue
+                            bind:nextProjectPaper
+                        />
+                    {/if}
+                {/each}
             </div>
         {/await}
     {/if}
