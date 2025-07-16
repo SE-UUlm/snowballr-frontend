@@ -97,9 +97,6 @@
         }
     });
 
-    const loadingUserReview: Promise<Review | undefined> = $state(
-        getUserReviewIfAlreadySubmitted(),
-    );
     let userReview: Review | undefined = $state(undefined);
 
     /**
@@ -108,24 +105,25 @@
     $effect(() => {
         (async () => {
             projectPaperLoading.isLoading = true;
-            const promises = [];
-            if (loadingPaperId) promises.push(loadingPaperId);
-            if (loadingPaperIdForNavigationBar) promises.push(loadingPaperIdForNavigationBar);
-            if (loadingPaperWrapper) promises.push(loadingPaperWrapper);
-            if (loadingPaper) promises.push(loadingPaper);
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const promises: Promise<any>[] = [
+                loadingPaperId,
+                loadingPaperIdForNavigationBar,
+                loadingPaperWrapper,
+                loadingPaper,
+                loadingProjectPaper,
+                forwardReferencedPapers,
+                backwardReferencedPapers,
+                getUserReviewIfAlreadySubmitted().then((review) => {
+                    userReview = review;
+                }),
+            ];
+
             if (loadingProject) promises.push(loadingProject);
-            if (loadingProjectPaper) promises.push(loadingProjectPaper);
             if (reviewers) promises.push(reviewers);
             if (criteriaWithReviews) promises.push(criteriaWithReviews);
-            if (forwardReferencedPapers) promises.push(forwardReferencedPapers);
-            if (backwardReferencedPapers) promises.push(backwardReferencedPapers);
-            if (researchContextCardProps) promises.push(researchContextCardProps);
-            if (loadingUserReview) {
-                loadingUserReview.then((review) => {
-                    userReview = review;
-                });
-                promises.push(loadingUserReview);
-            }
+
             await Promise.all(promises)
                 .then(() => {
                     projectPaperLoading.isLoading = false;
