@@ -9,24 +9,16 @@ import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-
 
 export const ssr = false;
 
-const emptyUser: User = null as unknown as User;
+const PUBLIC_PATHS = ["/signin", "/signup", "/resetpassword"];
 
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     depends(USER_DEPENDENCY_KEY);
     setFetch(fetch);
 
-    // If the user is on a path that does not require authentication, we return an empty user
-    const uncheckedPaths = ["/signin", "/signup", "/resetpassword"];
-    const onUncheckedPath = uncheckedPaths.includes(url.pathname);
-    if (onUncheckedPath) {
-        return { user: emptyUser };
-    }
-
-    // If the user is already cached, we return the cached user
-    // If the user is not cached (undefined or null), we will fetch the user
-    const cachedUser = getCachedUser();
-    if (cachedUser) {
-        return { user: cachedUser };
+    // Allow access to public paths without checks
+    if (PUBLIC_PATHS.includes(url.pathname)) {
+        setCachedUser(null);
+        return { user: null };
     }
 
     const authStatusCall = await backendService.getAuthenticationStatus(Nothing).then(
@@ -66,6 +58,10 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         return await redirectToSignIn();
     }
 
+    // If the user is cached, return it
+    const cachedUser = getCachedUser();
+    if (cachedUser) return { user: cachedUser };
+
     try {
         const user: User = await backendService.getCurrentUser(Nothing).response;
         setCachedUser(user);
@@ -86,5 +82,5 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
 async function redirectToSignIn() {
     setCachedUser(null);
     await goto("/signin");
-    return { user: emptyUser };
+    return { user: null };
 }
