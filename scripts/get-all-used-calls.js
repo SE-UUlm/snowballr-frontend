@@ -1,3 +1,11 @@
+/**
+ * Script to find all used API calls in the codebase.
+ *
+ * A list of all API calls made through `backendService` is written to a markdown file.
+ *
+ * Usage: node get-all-used-calls.js
+ */
+
 import fs from "fs";
 import path from "path";
 import { sync as globSync } from "glob";
