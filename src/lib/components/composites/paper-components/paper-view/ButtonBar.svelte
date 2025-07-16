@@ -9,7 +9,7 @@
     type ButtonBarProps = {
         userReview?: Review;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
-        loadingProject?: Promise<Project> | undefined;
+        loadingProject: Promise<Project>;
     };
 
     let {
@@ -49,12 +49,13 @@
         bind:paperQueue
         bind:nextProjectPaper
     />
-    {#if reviewMode.isActivated && loadingProject}
-        {#await Promise.all([loadingProject]) then [project]}
+    {#if reviewMode.isActivated}
+        {#await loadingProject then project}
             <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
             <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
             <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
                 {#each decisionButtonsData as data (data.decision)}
+                    <!-- Skip maybe button when the maybe decision is not allowed -->
                     {#if data.decision !== ReviewDecision.MAYBE || project.settings?.reviewMaybeAllowed}
                         <PaperDecisionButton
                             {loadingProject}

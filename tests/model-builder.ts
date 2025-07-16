@@ -11,11 +11,13 @@ import type {
     IndependentPaperViewProps,
     NonProjectPaperViewProps,
     PaperViewProps,
-    ProjectPaperViewProps,
+    ProjectSpecificPaperViewProps,
 } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import type { Review } from "$lib/model/api/review";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
+import type { ProjectPaperViewProps } from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
+import type { ReferencesAndCitationsCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/ReferencesAndCitationsCardContent.svelte";
 
 export function createUser(user: Partial<User> = {}): User {
     return {
@@ -84,12 +86,11 @@ export function loading<T>(value: T, timeoutInMs: number = 0): Promise<T> {
     });
 }
 
-export function createProjectPaperViewProps(
-    props: Partial<ProjectPaperViewProps> = {},
-): ProjectPaperViewProps {
+export function createProjectSpecificPaperViewProps(
+    props: Partial<ProjectSpecificPaperViewProps> = {},
+): ProjectSpecificPaperViewProps {
     return {
         loadingPaper: loading(createProjectPaper()),
-        loadingProject: loading(createProject()),
         reviewers: Promise.resolve([]),
         criteriaWithReviews: Promise.resolve([]),
         ...props,
@@ -101,7 +102,6 @@ export function createNonProjectPaperViewProps(
 ): NonProjectPaperViewProps {
     return {
         loadingPaper: loading(createPaper()),
-        loadingProject: undefined,
         reviewers: undefined,
         criteriaWithReviews: undefined,
         ...props,
@@ -120,12 +120,11 @@ export function createProjectSettings(props: Partial<Project_Settings> = {}): Pr
 
 export function createPaperViewProps(
     props: Partial<IndependentPaperViewProps> = {},
-    dependentProps?: ProjectPaperViewProps | NonProjectPaperViewProps,
+    dependentProps?: ProjectSpecificPaperViewProps | NonProjectPaperViewProps,
 ): PaperViewProps {
     return {
         backwardReferencedPapers: Promise.resolve([]),
         forwardReferencedPapers: Promise.resolve([]),
-        showButtonBar: false,
         backRef: "",
         ...(dependentProps ?? {
             loadingPaper: loading(createProjectPaper()),
@@ -134,6 +133,23 @@ export function createPaperViewProps(
             criteriaWithReviews: Promise.resolve([]),
             isProjectPaperView: true,
         }),
+        ...props,
+    };
+}
+
+export function createProjectPaperViewProps(
+    props: Partial<{ projectId: string; loadingProject: Promise<Project> }> = {},
+    cardContentProps?: ReferencesAndCitationsCardContentProps,
+    projectSpecificProps?: ProjectSpecificPaperViewProps,
+): ProjectPaperViewProps {
+    return {
+        projectId: "demo-project-id",
+        loadingProject: loading(createProject()),
+        ...(cardContentProps ?? {
+            backwardReferencedPapers: Promise.resolve([]),
+            forwardReferencedPapers: Promise.resolve([]),
+        }),
+        ...(projectSpecificProps ?? createProjectSpecificPaperViewProps()),
         ...props,
     };
 }

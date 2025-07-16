@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import ProjectPaperView from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 
     const { data } = $props();
     const {
@@ -23,14 +23,12 @@
     {/await}
 </svelte:head>
 
-<PaperView
-    allowEditModeToggle
-    backRef={`/project/${projectId}/dashboard`}
+<ProjectPaperView
     {backwardReferencedPapers}
     {criteriaWithReviews}
     {forwardReferencedPapers}
     loadingPaper={loadingProjectPaper}
     {loadingProject}
+    {projectId}
     {reviewers}
-    showButtonBar
 />
