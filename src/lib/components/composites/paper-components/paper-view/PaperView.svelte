@@ -7,24 +7,22 @@
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
-    import PaperNavigationButton from "./PaperNavigationButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project, Project_Paper } from "$lib/model/api/project";
     import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
     import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import {
         setAlreadyReviewedContext,
         setSelectedReviewCriteriaContext,
     } from "$lib/utils/custom-context";
-    import { type Review, ReviewDecision } from "$lib/model/api/review";
+    import { type Review } from "$lib/model/api/review";
     import { toast } from "svelte-sonner";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import { getContext } from "svelte";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+    import ButtonBar from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
 
     export interface ProjectPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -99,8 +97,6 @@
         }
     });
 
-    let paperQueue = $state([]);
-    let nextProjectPaper: Project_Paper | undefined = $state(undefined);
     const loadingUserReview: Promise<Review | undefined> = $state(
         getUserReviewIfAlreadySubmitted(),
     );
@@ -152,7 +148,6 @@
     });
     setAlreadyReviewedContext(wasAlreadyReviewedState);
 
-    let isSubmittingReview = $state({ value: false });
     $effect(() => {
         (async () => {
             projectPaperLoading.isLoading = true;
@@ -193,8 +188,6 @@ In the bottom, there are buttons to accept, decline or mark the paper as undecid
 Additionally, there are buttons to navigate to the previous or next paper.
 
 - when `showButtonBar` is false, then no buttons are shown at the bottom of the page
-- when `reviewMode.isActivated` is false, then no decision buttons are shown
-- when `project.settings.reviewMaybeAllowed` is false, then the maybe button is not shown
 
 Edit Mode:
 - in the edit mode, the user can edit the paper details. When the mode is turned off, the details are displayed as read-only.
@@ -232,64 +225,6 @@ Usage:
         />
     </div>
     {#if showButtonBar}
-        <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
-            <PaperNavigationButton
-                direction="left"
-                {loadingProject}
-                {loadingProjectPaper}
-                bind:paperQueue
-                bind:nextProjectPaper
-            />
-            {#if reviewMode.isActivated && loadingProject}
-                {#await Promise.all([loadingProject]) then [project]}
-                    <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
-                    <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-                    <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
-                        <PaperDecisionButton
-                            {loadingProject}
-                            {loadingProjectPaper}
-                            variant={userReview?.decision === ReviewDecision.DECLINED
-                                ? "selected_decline"
-                                : "decline"}
-                            bind:userReview
-                            bind:isSubmittingReview
-                            bind:paperQueue
-                            bind:nextProjectPaper
-                        />
-                        {#if project.settings?.reviewMaybeAllowed}
-                            <PaperDecisionButton
-                                {loadingProject}
-                                {loadingProjectPaper}
-                                variant={userReview?.decision === ReviewDecision.MAYBE
-                                    ? "selected_maybe"
-                                    : "maybe"}
-                                bind:userReview
-                                bind:isSubmittingReview
-                                bind:paperQueue
-                                bind:nextProjectPaper
-                            />
-                        {/if}
-                        <PaperDecisionButton
-                            {loadingProject}
-                            {loadingProjectPaper}
-                            variant={userReview?.decision === ReviewDecision.ACCEPTED
-                                ? "selected_accept"
-                                : "accept"}
-                            bind:userReview
-                            bind:isSubmittingReview
-                            bind:paperQueue
-                            bind:nextProjectPaper
-                        />
-                    </div>
-                {/await}
-            {/if}
-            <PaperNavigationButton
-                direction="right"
-                {loadingProject}
-                {loadingProjectPaper}
-                bind:paperQueue
-                bind:nextProjectPaper
-            />
-        </div>
+        <ButtonBar {loadingProject} {loadingProjectPaper} bind:userReview />
     {/if}
 </main>
