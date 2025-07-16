@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./sign-in-page-fixtures";
+import { test } from "./sign-in-page-fixture";
 import { alice } from "../../utils/helper/users";
 
 test.use({ user: null });
