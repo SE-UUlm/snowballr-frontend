@@ -54,11 +54,11 @@
      */
     function getButtonContent(): ButtonContent {
         switch (variant) {
-            case "accept":
-            case "selected_accept":
+            case "accepted":
+            case "selected_accepted":
                 return { name: "Accept", shortcut: "Ctrl+a", tooltipText: "Accept paper" };
-            case "decline":
-            case "selected_decline":
+            case "declined":
+            case "selected_declined":
                 return { name: "Decline", shortcut: "Ctrl+d", tooltipText: "Decline paper" };
             case "maybe":
             case "selected_maybe":
@@ -77,9 +77,9 @@
      */
     function getDecision(): ReviewDecision {
         switch (variant) {
-            case "accept":
+            case "accepted":
                 return ReviewDecision.ACCEPTED;
-            case "decline":
+            case "declined":
                 return ReviewDecision.DECLINED;
             case "maybe":
                 return ReviewDecision.MAYBE;
@@ -93,9 +93,9 @@
      */
     function getShortcutTrigger(): ShortcutTrigger {
         switch (variant) {
-            case "accept":
+            case "accepted":
                 return { key: "a", modifier: "ctrl" };
-            case "decline":
+            case "declined":
                 return { key: "d", modifier: "ctrl" };
             case "maybe":
                 return { key: "s", modifier: "ctrl" };
@@ -191,8 +191,8 @@ Usage:
         {loadingProjectPaper}
         projectPaperId={paper.id}
         variant={userReview?.decision === ReviewDecision.DECLINED
-            ? "selected_decline"
-            : "decline"}
+            ? "selected_declined"
+            : "declined"}
         bind:userReview
         bind:loading
         bind:isSubmittingReview

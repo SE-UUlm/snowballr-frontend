@@ -29,14 +29,14 @@
     }[] = [
         {
             decision: ReviewDecision.DECLINED,
-            variant: "decline",
-            selectedVariant: "selected_decline",
+            variant: "declined",
+            selectedVariant: "selected_declined",
         },
         { decision: ReviewDecision.MAYBE, variant: "maybe", selectedVariant: "selected_maybe" },
         {
             decision: ReviewDecision.ACCEPTED,
-            variant: "accept",
-            selectedVariant: "selected_accept",
+            variant: "accepted",
+            selectedVariant: "selected_accepted",
         },
     ];
 </script>
