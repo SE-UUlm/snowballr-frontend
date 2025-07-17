@@ -56,13 +56,21 @@ export const load: PageLoad = async ({ depends, parent }) => {
 
     const userId = user.id;
 
-    const allUserProjects = backendService.getAllProjectsForUser({ id: userId }).response;
+    const allActiveUserProjects = backendService.getAllProjectsForUser({ id: userId }).response;
+    const allArchivedUserProjects = backendService.getAllArchivedProjectsForUser({
+        id: userId,
+    }).response;
 
-    const projectsMetadata: Promise<ProjectListEntryInterface[]> = allUserProjects
-        .then(async (projectsResponse) => {
+    const projectsMetadata: Promise<ProjectListEntryInterface[]> = Promise.all([
+        allActiveUserProjects,
+        allArchivedUserProjects,
+    ])
+        .then(async ([active, archived]) => {
             try {
                 return await Promise.all(
-                    projectsResponse.projects.map((project) => requestProjectInformation(project)),
+                    active.projects
+                        .concat(archived.projects)
+                        .map((project) => requestProjectInformation(project)),
                 );
             } catch {
                 throw new Error("Couldn't load project details.");
@@ -72,7 +80,7 @@ export const load: PageLoad = async ({ depends, parent }) => {
             throw new Error("Couldn't load projects.");
         });
 
-    const openReviews: Promise<PaperListEntryInterface[]> = allUserProjects
+    const openReviews: Promise<PaperListEntryInterface[]> = allActiveUserProjects
         .then(async (projectsResponse) => {
             try {
                 return await Promise.all(
