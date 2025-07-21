@@ -168,8 +168,13 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
-            getAvailableFetcherApis: mock({
-                fetcherApis: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
+            getAvailableFetchers: mock({
+                fetcherNames: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
+            }),
+            getAvailableFetcherOptions: mock({
+                options: {
+                    TEST: "FOOBAR",
+                },
             }),
             register: vi.fn(),
             login: vi.fn(),

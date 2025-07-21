@@ -86,7 +86,7 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
                 settings: {
                     reviewMaybeAllowed: true,
                     similarityThreshold: 0,
-                    fetcherApis: [],
+                    fetchers: {},
                     snowballingType: SnowballingType.UNSPECIFIED,
                 },
             };
