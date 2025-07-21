@@ -2,6 +2,7 @@
     import { goto } from "$app/navigation";
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
+    import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/FetcherSettings.svelte";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { ProjectStatus } from "$lib/model/api/project.js";
     import { getContext, onMount } from "svelte";
@@ -60,5 +61,6 @@
             />
         {/if}
         <MaybeAsDecisionSetting {loadingProject} {projectId} {slrSettingsLocked} />
+        <FetcherSettings {projectId} />
     </ProjectSettingsLayout>
 {/if}

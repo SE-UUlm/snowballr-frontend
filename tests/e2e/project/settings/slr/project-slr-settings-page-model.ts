@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { ConfirmMaybeDecisionDialogModel } from "$tests/e2e/project/settings/slr/confirm-maybe-decision-dialog-model";
+import type { AuthSnowballRClient } from "$tests/e2e/utils/helper/mock-backend";
+import { Project, Project_Settings } from "$lib/model/api/project";
 
 export class ProjectSLRSettingsPageModel {
     readonly page: Page;
@@ -13,7 +15,10 @@ export class ProjectSLRSettingsPageModel {
     projectId: string;
     projectPaperId: string;
 
-    constructor(page: Page) {
+    apiClient: AuthSnowballRClient;
+
+    constructor(page: Page, apiClient: AuthSnowballRClient) {
+        this.apiClient = apiClient;
         this.page = page;
         this.projectName = "Project 1";
 
@@ -44,5 +49,51 @@ export class ProjectSLRSettingsPageModel {
         } else {
             await expect(this.maybeAsDecisionSwitch).not.toBeChecked();
         }
+    }
+
+    async insertFetcher(fetcherName: string) {
+        await this.apiClient.updateProject({
+            project: Project.create({
+                id: this.projectId,
+                settings: Project_Settings.create({
+                    fetchers: Object.fromEntries([[fetcherName, {}]]),
+                }),
+            }),
+            mask: {
+                paths: ["settings.fetchers.test"],
+            },
+        });
+    }
+
+    getFetcherRow(fetcherName: string) {
+        return this.page
+            .getByTestId("settings-section-fetcher-settings")
+            .locator("div")
+            .filter({ hasText: fetcherName });
+    }
+
+    getFetcherTitle(fetcherName: string) {
+        return this.page.getByRole("heading", { name: fetcherName, exact: true });
+    }
+
+    async openEditFetcherDialog(fetcherName: string) {
+        const fetcherRow = this.getFetcherRow(fetcherName);
+        await fetcherRow.getByRole("button").nth(0).click();
+    }
+
+    async deleteFetcher(fetcherName: string) {
+        const fetcherRow = this.getFetcherRow(fetcherName);
+        await fetcherRow.getByRole("button").nth(1).click();
+        await this.page.getByTestId("alert-dialog-action").click();
+    }
+
+    async addFetcher(fetcherName: string) {
+        await this.page.getByText("Add Fetcher").click();
+        await this.page.getByRole("button", { name: "Select a fetcher" }).click();
+        await this.page.getByRole("option", { name: fetcherName, exact: true }).click();
+        await expect(
+            this.page.getByRole("option", { name: fetcherName, exact: true }),
+        ).not.toBeVisible();
+        await this.page.getByRole("button", { name: "Add", exact: true }).click();
     }
 }

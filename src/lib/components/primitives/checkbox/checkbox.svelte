@@ -11,6 +11,10 @@
         class: className,
         ...restProps
     }: WithoutChildrenOrChild<CheckboxPrimitive.RootProps> = $props();
+
+    export function setChecked(value: boolean) {
+        checked = value;
+    }
 </script>
 
 <CheckboxPrimitive.Root
