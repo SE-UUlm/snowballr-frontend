@@ -22,38 +22,6 @@ import type { UserContext } from "$lib/current-user/userContext";
 import { PaperDecision } from "$lib/model/api/project";
 
 describe("ProjectPaperView", () => {
-    test("When the user is in review mode, then the decision buttons are shown", async () => {
-        reviewMode.isActivated = true;
-
-        render(ProjectPaperView, {
-            props: createProjectPaperViewProps(
-                {
-                    loadingProject: loading(
-                        createProject({
-                            settings: createProjectSettings({
-                                reviewMaybeAllowed: true,
-                            }),
-                        }),
-                    ),
-                },
-                undefined,
-                createProjectSpecificPaperViewProps({
-                    loadingPaper: loading(createProjectPaper()),
-                    criteriaWithReviews: loading([{ ...Criteria.demoCriterion1, reviews: [] }]),
-                }),
-            ),
-            context: mockUserContext,
-        });
-
-        await waitForComponentLoading();
-
-        const decisionButtons = screen.getAllByTestId("decision-button", { exact: false });
-        expect(decisionButtons).toHaveLength(3);
-        expect(decisionButtons[0]).toHaveTextContent("Decline");
-        expect(decisionButtons[1]).toHaveTextContent("Maybe");
-        expect(decisionButtons[2]).toHaveTextContent("Accept");
-    });
-
     test("When the user already reviewed this paper but is in review mode, then the decision is shown", async () => {
         reviewMode.isActivated = true;
 
@@ -101,35 +69,5 @@ describe("ProjectPaperView", () => {
         const checkbox = within(selectedCriteria).getByRole("checkbox");
         expect(checkbox).toBeDisabled();
         expect(checkbox).toBeChecked();
-    });
-
-    test("When `project.settings.reviewMaybeAllowed` is false, then only the accept and decline buttons are shown", async () => {
-        reviewMode.isActivated = true;
-
-        render(ProjectPaperView, {
-            props: createProjectPaperViewProps(
-                {
-                    loadingProject: loading(
-                        createProject({
-                            settings: createProjectSettings({
-                                reviewMaybeAllowed: false,
-                            }),
-                        }),
-                    ),
-                },
-                undefined,
-                createProjectSpecificPaperViewProps({
-                    loadingPaper: loading(createProjectPaper()),
-                    criteriaWithReviews: loading([{ ...Criteria.demoCriterion1, reviews: [] }]),
-                }),
-            ),
-            context: mockUserContext,
-        });
-
-        await waitForComponentLoading();
-
-        const decisionButtons = screen.getAllByTestId("decision-button", { exact: false });
-        expect(decisionButtons).toHaveLength(2);
-        expect(document.body).not.toHaveTextContent("Maybe");
     });
 });

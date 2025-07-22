@@ -6,7 +6,7 @@
     import { type Review, ReviewDecision } from "$lib/model/api/review";
     import type { PaperDecisionButtonVariant } from "./decision-button-variants";
 
-    type ButtonBarProps = {
+    export type ButtonBarProps = {
         userReview?: Review;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
         loadingProject: Promise<Project>;
