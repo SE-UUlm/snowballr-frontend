@@ -41,6 +41,16 @@
     ];
 </script>
 
+<!--
+@component
+Button bar for the PaperView that shows the navigation buttons and, if the review mode is enabled,
+the decision buttons.
+
+Usage:
+```svelte
+    <ButtonBar {loadingProject} {loadingProjectPaper} bind:userReview />
+```
+-->
 <div class="flex h-fit w-full flex-row justify-between gap-4" data-testid="button-bar">
     <PaperNavigationButton
         direction="left"
