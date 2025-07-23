@@ -17,7 +17,7 @@ describe("PaperDecisionButton", () => {
         render(PaperDecisionButton, {
             context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
-                variant: "accept",
+                variant: "accepted",
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
@@ -47,7 +47,7 @@ describe("PaperDecisionButton", () => {
         render(PaperDecisionButton, {
             context: mockSelectedCriteriaContextWithInitialData(["1"]),
             props: {
-                variant: "decline",
+                variant: "declined",
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },
         });
@@ -104,7 +104,7 @@ describe("PaperDecisionButton", () => {
     test("When the paper decision button was already clicked, then the button is disabled", async () => {
         render(PaperDecisionButton, {
             props: {
-                variant: "accept",
+                variant: "accepted",
                 userReview: createReview(),
                 loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
             },

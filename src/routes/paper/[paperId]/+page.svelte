@@ -20,6 +20,5 @@
     criteriaWithReviews={undefined}
     {forwardReferencedPapers}
     {loadingPaper}
-    loadingProject={undefined}
     reviewers={undefined}
 />

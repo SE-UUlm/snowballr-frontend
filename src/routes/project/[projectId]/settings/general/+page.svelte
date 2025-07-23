@@ -3,13 +3,12 @@
     import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
     import { getContext } from "svelte";
     import { isCurrentUserProjectAdmin } from "../helper.js";
-    import type { User } from "$lib/model/api/user.js";
-    import { UserContextKey } from "$lib/current-user/userContext.js";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
-    const user = $derived(getContext<() => User>(UserContextKey)());
+    const user = $derived(getContext<UserContext>(UserContextKey)());
 
     const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
 </script>

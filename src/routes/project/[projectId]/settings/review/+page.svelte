@@ -1,15 +1,14 @@
 <script lang="ts">
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
-    import { UserContextKey } from "$lib/current-user/userContext.js";
-    import type { User } from "$lib/model/api/user.js";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
     import { getContext } from "svelte";
     import { isCurrentUserProjectAdmin } from "../helper.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
-    const user = $derived(getContext<() => User>(UserContextKey)());
+    const user = $derived(getContext<UserContext>(UserContextKey)());
 
     const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
 </script>

@@ -12,12 +12,12 @@
     import { getContext } from "svelte";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import Alert from "../utils/Alert.svelte";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
 
-    const userContext = getContext<() => User>(UserContextKey);
+    const userContext = getContext<UserContext>(UserContextKey);
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);

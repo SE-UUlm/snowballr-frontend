@@ -5,13 +5,12 @@
     import Inbox from "lucide-svelte/icons/inbox";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
-    import type { User } from "$lib/model/api/user";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
 
-    const user = $derived(getContext<() => User>(UserContextKey)());
+    const user = $derived(getContext<UserContext>(UserContextKey)());
 
     const menuItems: UserMenuTab[] = [
         {

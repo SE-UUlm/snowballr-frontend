@@ -5,7 +5,7 @@
     import { Toaster } from "svelte-sonner";
     import type { LayoutData } from "./$types";
     import { setContext, type Snippet } from "svelte";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import type { User } from "$lib/model/api/user";
 
     let { data, children } = $props<{
@@ -21,7 +21,7 @@
         }
     });
 
-    setContext(UserContextKey, () => userState);
+    setContext<UserContext>(UserContextKey, () => userState);
 
     const isDevMode = env.PUBLIC_IS_DEV_MODE === "true";
     if (isDevMode) {

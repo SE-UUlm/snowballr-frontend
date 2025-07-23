@@ -8,7 +8,7 @@
     import { backendService } from "$lib/grpc-api";
     import { loadUsers } from "$lib/components/composites/input/loading-users";
     import { getContext } from "svelte";
-    import { UserContextKey } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
@@ -27,7 +27,7 @@
         disabled = false,
     }: Props = $props();
 
-    const user = getContext<() => User>(UserContextKey)();
+    const user = getContext<UserContext>(UserContextKey)();
 
     const loading = $state({ value: false });
     let error = $state<ApiError | undefined>(undefined);
