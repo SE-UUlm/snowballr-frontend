@@ -4,6 +4,7 @@
     import type { Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "lucide-svelte/icons/pencil";
+    import Save from "lucide-svelte/icons/save";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -19,6 +20,10 @@
         { value: "1", label: "Information" },
         { value: "2", label: "Document" },
     ];
+
+    function updatePaper() {
+        console.log("Updating paper");
+    }
 </script>
 
 <!--
@@ -45,11 +50,12 @@ Usage:
     </PaperCardContent>
     {#snippet tabListButtonList()}
         {#if allowEditModeToggle}
-            <div class=" pr-2.5">
+            <div class="flex flex-row gap-4 pr-2.5">
+                <Save class="select-none hover:cursor-pointer" onclick={updatePaper} size={24} />
                 <Pencil
                     class="select-none hover:cursor-pointer"
                     onclick={() => (isInEditMode = !isInEditMode)}
-                    size={20}
+                    size={24}
                 />
             </div>
         {/if}
