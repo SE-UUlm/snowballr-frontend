@@ -12,7 +12,7 @@ describe("PaperDetail", () => {
                 key: "Title",
                 value: "Example Title",
                 loadingPaper: loading(createPaper()),
-                areDetailsInEditMode: false,
+                isInEditMode: false,
             },
         });
 
@@ -36,7 +36,7 @@ describe("PaperDetail", () => {
                 key: "Title",
                 value: "Example Title",
                 loadingPaper: loading(createPaper(), 1000),
-                areDetailsInEditMode: false,
+                isInEditMode: false,
             },
         });
 
@@ -55,7 +55,7 @@ describe("PaperDetail", () => {
                 key: "Title",
                 value: "Example Title",
                 loadingPaper: Promise.reject(),
-                areDetailsInEditMode: false,
+                isInEditMode: false,
             },
         });
 

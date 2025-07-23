@@ -3,6 +3,7 @@
     import PaperCardContent from "./PaperCardContent.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    import Pencil from "lucide-svelte/icons/pencil";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -11,6 +12,8 @@
     }
 
     const { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+
+    let isInEditMode = $state(startInEditMode);
 
     const tabs = [
         { value: "1", label: "Information" },
@@ -29,7 +32,7 @@ Usage:
 -->
 <PaperCard data-testid="paper-details-card" {tabs}>
     <PaperCardContent value="1">
-        <PaperDetailsCardContent {allowEditModeToggle} {loadingPaper} {startInEditMode} />
+        <PaperDetailsCardContent {isInEditMode} {loadingPaper} />
     </PaperCardContent>
     <PaperCardContent value="2">
         <span>
@@ -40,4 +43,15 @@ Usage:
             .
         </span>
     </PaperCardContent>
+    {#snippet tabListButtonList()}
+        {#if allowEditModeToggle}
+            <div class=" pr-2.5">
+                <Pencil
+                    class="select-none hover:cursor-pointer"
+                    onclick={() => (isInEditMode = !isInEditMode)}
+                    size={20}
+                />
+            </div>
+        {/if}
+    {/snippet}
 </PaperCard>

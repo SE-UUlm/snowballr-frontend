@@ -3,7 +3,6 @@
     import { getNames } from "$lib/utils/common-helper";
     import ChevronDown from "lucide-svelte/icons/chevron-down";
     import ChevronUp from "lucide-svelte/icons/chevron-up";
-    import Pencil from "lucide-svelte/icons/pencil";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
     import { resource } from "$lib/resource.svelte";
@@ -13,14 +12,10 @@
 
     interface Props {
         loadingPaper: Promise<Paper>;
-        allowEditModeToggle?: boolean;
-        startInEditMode?: boolean;
+        isInEditMode?: boolean;
     }
 
-    const { loadingPaper, allowEditModeToggle = false, startInEditMode = false }: Props = $props();
-
-    let areDetailsInEditMode = $state(startInEditMode);
-    let isAbstractInEditMode = $state(startInEditMode);
+    const { loadingPaper, isInEditMode = false }: Props = $props();
 
     interface BasicInfos {
         Title: string;
@@ -88,33 +83,22 @@
 @component
 Content of the `PaperDetailsCard`, i.e. displays the details.
 
-- `allowEditModeToggle` (default: false) determines whether the paper details, e.g. the abstract or title
-are editable
-- `startInEditMode` (default: false) determines whether the paper details are rendered initially with the edit mode on
-
 Usage:
 ```svelte
-    <PaperDetailsCardContent {paper} {allowEditModeToggle} {startInEditMode} />
+    <PaperDetailsCardContent {paper} />
 ```
 -->
 <section class="flex flex-col gap-2 px-1">
     <div class="flex flex-row items-center justify-between">
         <h2>General Information</h2>
-        {#if allowEditModeToggle}
-            <Pencil
-                class="select-none hover:cursor-pointer"
-                onclick={() => (areDetailsInEditMode = !areDetailsInEditMode)}
-                size={20}
-            />
-        {/if}
     </div>
     <div class="flex flex-col gap-2 px-5">
         {#each Object.entries(basicInfos.value) as [key, value] (key)}
-            <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
+            <PaperDetail id={key} {isInEditMode} {key} {loadingPaper} {value} />
         {/each}
         {#if showAdditionalInfos}
             {#each Object.entries(additionalInfos.value) as [key, value] (key)}
-                <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
+                <PaperDetail id={key} {isInEditMode} {key} {loadingPaper} {value} />
             {/each}
         {/if}
     </div>
@@ -138,13 +122,6 @@ Usage:
 <section class="flex flex-[1_1_0] flex-col gap-2 px-1">
     <div class="flex flex-row items-center justify-between">
         <h2>Abstract</h2>
-        {#if allowEditModeToggle}
-            <Pencil
-                class="select-none hover:cursor-pointer"
-                onclick={() => (isAbstractInEditMode = !isAbstractInEditMode)}
-                size={20}
-            />
-        {/if}
     </div>
     {#await loadingPaper}
         {#each [100, 95, 70, 82, 50, 75, 90] as width, i (i)}
@@ -153,7 +130,7 @@ Usage:
     {:then paper}
         <ToggleableInput
             class="h-full"
-            isEditable={isAbstractInEditMode}
+            isEditable={isInEditMode}
             placeholder="No abstract available"
             value={paper.abstrakt}
         />

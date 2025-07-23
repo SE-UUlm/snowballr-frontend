@@ -11,10 +11,10 @@
         key: string;
         value: unknown;
         loadingPaper: Promise<Paper>;
-        areDetailsInEditMode: boolean;
+        isInEditMode: boolean;
     };
 
-    const { key, value, loadingPaper, areDetailsInEditMode }: Props = $props();
+    const { key, value, loadingPaper, isInEditMode }: Props = $props();
 </script>
 
 <!--
@@ -37,7 +37,7 @@ Usage:
             <Skeleton class={cn("flex h-[1.625rem] rounded-full", value as string)} />
         </div>
     {:then}
-        <ToggleableInput isEditable={areDetailsInEditMode} {value} />
+        <ToggleableInput isEditable={isInEditMode} {value} />
     {:catch}
         <ErrorIndicator errorMessage={`Couldn't load ${key}`} />
     {/await}
