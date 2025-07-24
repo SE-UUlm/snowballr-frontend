@@ -166,7 +166,7 @@ Usage:
                 <InviteUsersInput
                     {initialPossibleMembers}
                     {isErrorOnUsersLoading}
-                    bind:membersInput
+                    bind:invitees={membersInput}
                 />
             </form>
             {#if isErrorOnProjectCreation}

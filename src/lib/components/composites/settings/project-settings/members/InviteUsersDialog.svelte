@@ -122,7 +122,11 @@ Usage:
             class="overflow-x-auto"
             onsubmit={(args) => loadingWrapper(loading, inviteUsers, args)}
         >
-            <InviteUsersInput {initialPossibleMembers} {isErrorOnUsersLoading} bind:membersInput />
+            <InviteUsersInput
+                {initialPossibleMembers}
+                {isErrorOnUsersLoading}
+                bind:invitees={membersInput}
+            />
         </form>
         {#if error}
             <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />

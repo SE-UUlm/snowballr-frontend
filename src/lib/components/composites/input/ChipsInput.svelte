@@ -4,27 +4,29 @@
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import type { ValidationResult } from "$lib/model/general";
     import { cn } from "$lib/utils/shadcn-helper";
+    import { debounce } from "$lib/utils/common-helper";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     interface ChipsInputProps {
-        items: string[];
-        validate: (input: string) => ValidationResult;
         label?: string;
         labelPosition?: "top" | "left";
-        searchSuggestions?: (searchString: string) => string[];
         placeholder?: string;
+        items: string[];
+        validate: (input: string) => ValidationResult;
         resolveAlias?: (item: string) => string | undefined;
         displayItem?: (item: string) => string | undefined;
+        searchSuggestions?: (searchString: string) => Promise<string[]>;
     }
 
     let {
-        items = $bindable(),
-        validate,
         label,
         labelPosition = "top",
-        searchSuggestions,
         placeholder = "",
-        resolveAlias,
+        items = $bindable(),
+        validate,
+        resolveAlias = (item) => item,
         displayItem = (item) => item,
+        searchSuggestions,
     }: ChipsInputProps = $props();
 
     const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
@@ -43,6 +45,7 @@
     let errorMessage: string = $state("");
 
     let suggestions: string[] = $state([]);
+    let isLoadingSuggestions: boolean = $state(false);
     /**
      * Index (from 0 - \<length of suggestions\>) indicating, which suggestion is currently selected.
      * Index -1 represent the state, that no suggestion is selected.
@@ -182,12 +185,30 @@
         }
     }
 
-    // reapply filter on suggestions after each new input
-    $effect(() => {
-        if (searchSuggestions !== undefined) {
-            const possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
-            suggestions = possibleSuggestions.filter((suggestion) => !items.includes(suggestion));
+    const updateSuggestions = debounce(async (searchString: string) => {
+        if (!searchSuggestions || searchString.length === 0) {
+            suggestions = [];
+            return;
         }
+
+        isLoadingSuggestions = true;
+
+        Promise.resolve(searchSuggestions(searchString))
+            .then((possibleSuggestions) => {
+                console.log(possibleSuggestions);
+                suggestions = possibleSuggestions.filter((s) => !items.includes(s));
+            })
+            .catch(() => {
+                suggestions = [];
+            })
+            .finally(() => {
+                isLoadingSuggestions = false;
+            });
+    });
+
+    // update suggestions after each new input (considering a certain time delay for debouncing)
+    $effect(() => {
+        updateSuggestions(inputText.trim());
     });
 </script>
 
@@ -282,6 +303,14 @@ Usage:
         </div>
     {/if}
     <!-- suggestions list -->
+    <!-- TODO: note for the reviewer: i am not very happy with this loading text
+        and its position: any suggestions? -->
+    {#if isLoadingSuggestions}
+        <div class="text-description flex items-center gap-2">
+            <LoaderCircle class="animate-spin" size={16} />
+            <p class="text-sm">Loading suggestions ...</p>
+        </div>
+    {/if}
     {#if suggestions.length > 0 && inputText !== ""}
         <ul
             id={SUGGESTIONS_LIST_ID}

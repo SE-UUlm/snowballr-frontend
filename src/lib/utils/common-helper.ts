@@ -295,6 +295,24 @@ function stringToEnumValue<T extends Record<string, string>>(
     return (Object.values(enumObj) as string[]).includes(value) ? (value as T[keyof T]) : undefined;
 }
 
+/**
+ * Create a debounced function that delays the call of a given function `fn` by `delay` milliseconds.
+ *
+ * This should be used to prevent a function (e.g., fetch invite candidates) from being called too
+ * frequently.
+ *
+ * @param fn - The function to debounce
+ * @param delay - Time to wait (in milliseconds) before calling the function
+ * @returns The debounced version of `fn`
+ */
+function debounce<T extends (...args: never[]) => void>(fn: T, delay = 500): T {
+    let timer: ReturnType<typeof setTimeout>;
+    return ((...args: never[]) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    }) as T;
+}
+
 export {
     getName,
     getNames,
@@ -311,4 +329,5 @@ export {
     wrapLongWords,
     loadingWrapper,
     stringToEnumValue,
+    debounce,
 };

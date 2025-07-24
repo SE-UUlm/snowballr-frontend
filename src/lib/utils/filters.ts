@@ -1,7 +1,6 @@
 import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
 import type { Paper } from "../model/api/paper";
-import { getName, getNames } from "./common-helper";
-import type { User } from "../model/api/user";
+import { getNames } from "./common-helper";
 import type { Project_Paper } from "$lib/model/api/project";
 import type { ProjectPaperFilter } from "$lib/model/general";
 
@@ -158,19 +157,4 @@ function filterProjectPapers(
     }
 }
 
-/**
- * Filter users based on search text and sorts them by best match.
- *
- * The search text is matched against the following fields:
- * - user's name
- * - user's email
- *
- * @param allUsers - List of all users
- * @param searchText - Search text
- * @returns List of users that match the search text
- */
-function filterUsers(allUsers: User[], searchText: string) {
-    return filter(allUsers, (user) => `${getName(user)} ${user.email}`, searchText);
-}
-
-export { filterPapers, filterProjectPapers, filterUsers };
+export { filterPapers, filterProjectPapers };
