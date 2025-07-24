@@ -184,7 +184,7 @@ vi.mock("$lib/grpc-api", () => {
             getAllUsers: mock({ users: Object.values(Users) }),
             getCurrentUser: mock(Users.johnDoe),
             getUserById: mock(({ id }) => createUser({ id })),
-            getUserByEmail: mock(({ id: email }) => createUser({ email })),
+            getUserByEmail: mock(({ email }) => createUser({ email })),
             updateUser: vi.fn(),
             softDeleteUser: vi.fn(),
             softUndeleteUser: vi.fn(),
@@ -252,6 +252,7 @@ vi.mock("$lib/grpc-api", () => {
             getNextPaper: mock(({ id }) => createProjectPaper({ id })),
             getNextPaperToReview: mock(({ id }) => createProjectPaper({ id })),
             getPreviousPaper: mock(({ id }) => createProjectPaper({ id })),
+            getInviteCandidates: vi.fn(),
         },
     };
     return mockBackend;
