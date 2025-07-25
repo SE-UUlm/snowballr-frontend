@@ -2,13 +2,9 @@
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
-    import type { User } from "$lib/model/api/user";
     import type { Project_Member } from "$lib/model/api/project";
     import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
-    import { loadUsers } from "$lib/components/composites/input/loading-users";
-    import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
@@ -27,33 +23,11 @@
         disabled = false,
     }: Props = $props();
 
-    const user = getContext<UserContext>(UserContextKey)();
-
     const loading = $state({ value: false });
     let error = $state<ApiError | undefined>(undefined);
     let open = $state(false);
-    let membersInput: string[] = $state([]);
-    let loadingUsers = $state(true);
-    let isErrorOnUsersLoading = $state(false);
-    let initialPossibleMembers: User[] = $state([]);
-    let actionButtonDisabled = $derived(loading.value || membersInput.length === 0);
-
-    $effect(() => {
-        loadingMembers
-            .then(async (members) => {
-                const result = await loadUsers(
-                    user,
-                    members.map((member) => member.user!),
-                );
-                initialPossibleMembers = result.initialPossibleMembers;
-                isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-            })
-            .catch(() => {
-                initialPossibleMembers = [];
-                isErrorOnUsersLoading = true;
-            })
-            .finally(() => (loadingUsers = false));
-    });
+    let invitees: string[] = $state([]);
+    let actionButtonDisabled = $derived(loading.value || invitees.length === 0);
 
     async function inviteUsers(event: Event) {
         event.preventDefault();
@@ -62,17 +36,16 @@
         try {
             const members = (await loadingMembers).map((member) => member.user?.email);
             // filter out emails of existing members
-            const filteredMembersInput = membersInput.filter(
-                (userEmail) => !members.includes(userEmail),
-            );
+            const filteredInvitees = invitees.filter((userEmail) => !members.includes(userEmail));
             await Promise.all(
-                filteredMembersInput.map(
+                filteredInvitees.map(
                     (userEmail) =>
                         backendService.inviteUserToProject({ projectId, userEmail }).response,
                 ),
             );
-            onUsersInvited?.(membersInput);
-            membersInput = [];
+            onUsersInvited?.(invitees);
+
+            invitees = [];
             open = false;
         } catch (inviteUsersError) {
             error = {
@@ -87,9 +60,10 @@
 
 <!--
 @component
-`Dialog` that lets the user type email addresses and user names that should be invited to the project.
+A dialog that lets the user type email addresses and user names that should be invited to the project,
+similar to the {@link CreateProjectDialog}.
 
-- `loadingMembers` resolved to the already existing members of the project.
+- `loadingMembers` resolve to the already existing members or invitees of the project.
 - `onUsersInvited` is called when the submit button of the dialog is pressed.
     The passed argument contains the email addresses of all users that should be invited
 
@@ -103,10 +77,13 @@ Usage:
 ```
 -->
 <Dialog
+    onCancelClick={() => {
+            invitees = [];
+        }}
     title="Invite Users"
     triggerProps={{
         class: buttonVariants({ variant: "default" }),
-        disabled: loadingUsers || disabled,
+        disabled,
     }}
     bind:open
 >
@@ -122,11 +99,7 @@ Usage:
             class="overflow-x-auto"
             onsubmit={(args) => loadingWrapper(loading, inviteUsers, args)}
         >
-            <InviteUsersInput
-                {initialPossibleMembers}
-                {isErrorOnUsersLoading}
-                bind:invitees={membersInput}
-            />
+            <InviteUsersInput {projectId} bind:invitees />
         </form>
         {#if error}
             <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />

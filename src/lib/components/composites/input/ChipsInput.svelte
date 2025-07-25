@@ -195,7 +195,6 @@
 
         Promise.resolve(searchSuggestions(searchString))
             .then((possibleSuggestions) => {
-                console.log(possibleSuggestions);
                 suggestions = possibleSuggestions.filter((s) => !items.includes(s));
             })
             .catch(() => {
@@ -310,8 +309,7 @@ Usage:
             <LoaderCircle class="animate-spin" size={16} />
             <p class="text-sm">Loading suggestions ...</p>
         </div>
-    {/if}
-    {#if suggestions.length > 0 && inputText !== ""}
+    {:else if suggestions.length > 0 && inputText !== ""}
         <ul
             id={SUGGESTIONS_LIST_ID}
             class="max-h-[160px] overflow-y-scroll rounded-md border"

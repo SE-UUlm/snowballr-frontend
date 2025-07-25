@@ -10,16 +10,9 @@
     interface Props {
         invitees: string[];
         projectId?: string;
-        initialPossibleMembers: User[];
-        isErrorOnUsersLoading: boolean;
     }
 
-    let {
-        invitees = $bindable(),
-        projectId = "",
-        initialPossibleMembers,
-        isErrorOnUsersLoading,
-    }: Props = $props();
+    let { invitees = $bindable(), projectId = "" }: Props = $props();
 
     let isErrorWhileLoadingCandidates = $state(false);
 
@@ -92,13 +85,16 @@
             };
         }
 
-        const isEmail = !Schema.email.safeParse(trimmedInput).success;
+        const isEmail = Schema.email.safeParse(trimmedInput).success;
         const isKnownCandidate = loadedInviteCandidates.some(
             (user) => trimmedInput === getName(user),
         );
 
         if (!isEmail && !isKnownCandidate) {
-            return { success: false, error: "Please enter a valid name or email." };
+            return {
+                success: false,
+                error: "Please enter a valid name or email. Consider that project members can not be invited again.",
+            };
         }
 
         return { success: true };

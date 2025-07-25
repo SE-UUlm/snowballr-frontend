@@ -6,18 +6,12 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { goto, invalidate } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
-    import { User } from "$lib/model/api/user";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import { getContext } from "svelte";
-    import { loadUsers } from "$lib/components/composites/input/loading-users";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import Alert from "../utils/Alert.svelte";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
-
-    const userContext = getContext<UserContext>(UserContextKey);
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -27,46 +21,18 @@
     let projectId = $state<string | undefined>(undefined);
 
     let isErrorOnProjectCreation = $state(false);
-    let isErrorOnUsersLoading = $state(false);
 
     let projectNameInput: Input;
-    let membersInput: string[] = $state([]);
-    let isLoadingUsers = $state(true);
-    let initialPossibleMembers: User[] = $state([]);
-
-    $effect(() => {
-        const currentUser = userContext();
-        if (!currentUser) {
-            isLoadingUsers = false;
-            initialPossibleMembers = [];
-            isErrorOnUsersLoading = false;
-            return;
-        }
-
-        isLoadingUsers = true;
-        loadUsers(currentUser)
-            .then((result) => {
-                initialPossibleMembers = result.initialPossibleMembers;
-                isErrorOnUsersLoading = result.isErrorOnUsersLoading;
-            })
-            .catch((error) => {
-                console.error(`Error loading users: ${error}`);
-                isErrorOnUsersLoading = true;
-                initialPossibleMembers = [];
-            })
-            .finally(() => {
-                isLoadingUsers = false;
-            });
-    });
+    let invitees: string[] = $state([]);
 
     /**
      * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
      */
     async function navigateToProject() {
-        if (projectId !== undefined) {
-            await goto(`/project/${projectId}/dashboard`);
-        } else {
+        if (projectId === undefined) {
             projectWasCreated = false;
+        } else {
+            await goto(`/project/${projectId}/dashboard`);
         }
     }
 
@@ -95,29 +61,29 @@
                 console.error(`Couldn't create project (${error})`);
             });
 
-        await Promise.all(
-            membersInput.map(
-                (memberEmail) =>
-                    backendService.inviteUserToProject({
-                        projectId: projectId!,
-                        userEmail: memberEmail,
-                    }).response,
-            ),
-        )
-            .then(() => {
-                projectWasCreated = true;
-                open = false;
-            })
-            .catch((error) => {
-                isErrorOnProjectCreation = true;
-                console.error(`Couldn't invite users to project (${error})`);
-            });
+        if (projectId !== undefined) {
+            const invitations = invitees.map(
+                (email) =>
+                    backendService.inviteUserToProject({ projectId: projectId!, userEmail: email })
+                        .response,
+            );
+            await Promise.all(invitations)
+                .then(() => {
+                    projectWasCreated = true;
+                    open = false;
+                })
+                .catch((error) => {
+                    isErrorOnProjectCreation = true;
+                    console.error(`Couldn't invite users to project (${error})`);
+                });
+        }
     }
 </script>
 
 <!--
 @component
-`Dialog` used to create a project by providing a project name and an optional list of initial members.
+A dialog used to create a new project by providing a project name and an optional list of initial members
+that should be invited.
 
 Usage:
 ```svelte
@@ -126,6 +92,10 @@ Usage:
 -->
 <div class="px-5">
     <Dialog
+        onCancelClick={() => {
+            invitees = [];
+            isErrorOnProjectCreation = false;
+        }}
         title="Create Project"
         triggerProps={{
             class: cn(
@@ -133,7 +103,6 @@ Usage:
                 buttonVariants({ variant: "default" }),
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             ),
-            disabled: isLoadingUsers,
         }}
         bind:open
     >
@@ -163,11 +132,7 @@ Usage:
                     schema={Schema.projectName}
                     type="text"
                 />
-                <InviteUsersInput
-                    {initialPossibleMembers}
-                    {isErrorOnUsersLoading}
-                    bind:invitees={membersInput}
-                />
+                <InviteUsersInput bind:invitees />
             </form>
             {#if isErrorOnProjectCreation}
                 <Alert
@@ -199,7 +164,7 @@ Usage:
         onclick: () => {
             projectWasCreated = false;
             projectId = undefined;
-            membersInput = [];
+            invitees = [];
 
             // trigger reload of the homepage, so the created project is shown in the projects list
             invalidate("data:allProjectsForUser");
