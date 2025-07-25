@@ -313,6 +313,27 @@ function debounce<T extends (...args: never[]) => void>(fn: T, delay = 500): T {
     }) as T;
 }
 
+/**
+ * Create a debounced function and call it.
+ * See {@link debounce} for further details about creating debounced functions.
+ *
+ * If this function is called multiple times, previous function calls are not interrupted
+ * if they have not been executed yet. To achieve a different behavior, use the {@link debounce}
+ * function manually.
+ *
+ * @param fn - The function to debounce
+ * @param delay - Time to wait (in milliseconds) before calling the function
+ * @param args - (Optional) Arguments that should be passed to the function `fn` when calling it
+ */
+function callDebounced(fn: (...args: unknown[]) => void, delay = 500, args?: unknown[]) {
+    const debouncedFunction = debounce(fn, delay);
+    if (args) {
+        debouncedFunction(args);
+    } else {
+        debouncedFunction();
+    }
+}
+
 export {
     getName,
     getNames,
@@ -330,4 +351,5 @@ export {
     loadingWrapper,
     stringToEnumValue,
     debounce,
+    callDebounced,
 };

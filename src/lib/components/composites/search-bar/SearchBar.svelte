@@ -2,6 +2,7 @@
     import { Input } from "$lib/components/primitives/input/index";
     import { Search } from "lucide-svelte";
     import { getSearchTextFromURL } from "$lib/utils/search-parameters";
+    import { callDebounced, debounce } from "$lib/utils/common-helper";
 
     interface Props {
         placeholderText?: string;
@@ -13,28 +14,19 @@
 
     let searchInput: string = $state(getSearchTextFromURL());
 
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const handleNewInput = () => {
-        if (timeoutId !== null) clearTimeout(timeoutId);
-
-        // Wait a certain amount of time and start search, if no new key is pressed
-        timeoutId = setTimeout(() => onSearch(searchInput), timeoutInMs);
-    };
+    const handleNewInput = debounce(() => onSearch(searchInput), timeoutInMs);
 
     const handleSpecialButtons = (event: KeyboardEvent) => {
         if (event.key === "Escape") {
             // Check, whether user pressed the 'Esc' character to clear input and dispatch focus
             searchInput = "";
-            onSearch(searchInput);
-            if (timeoutId !== null) clearTimeout(timeoutId);
+            callDebounced(() => onSearch(searchInput), 0);
 
             (document.activeElement as HTMLInputElement).blur();
         }
         if (event.key === "Enter") {
             // Check, whether user pressed 'Enter' to start the search directly (and dispatch focus)
-            onSearch(searchInput);
-            if (timeoutId !== null) clearTimeout(timeoutId);
+            callDebounced(() => onSearch(searchInput), 0);
 
             (document.activeElement as HTMLInputElement).blur();
         }
