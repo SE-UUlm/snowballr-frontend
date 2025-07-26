@@ -6,6 +6,9 @@
     import Pencil from "lucide-svelte/icons/pencil";
     import Save from "lucide-svelte/icons/save";
     import { cn } from "$lib/utils/shadcn-helper";
+    import { backendService } from "$lib/grpc-api";
+    import { generateFieldMask } from "protobuf-fieldmask";
+    import { toast } from "svelte-sonner";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -40,9 +43,22 @@
         { value: "2", label: "Document" },
     ];
 
-    function updatePaper() {
-        originalPaper = paper;
-        isPaperModified = false;
+    async function updatePaper() {
+        backendService
+            .updatePaper({
+                paper,
+                mask: {
+                    paths: generateFieldMask(paper),
+                },
+            })
+            .response.then(() => {
+                originalPaper = paper;
+                isPaperModified = false;
+                toast.success("Successfully updated the paper.");
+            })
+            .catch(() => {
+                toast.error("Failed to update the paper.");
+            });
     }
 
     function isEqual(obj1: unknown, obj2: unknown): boolean {
