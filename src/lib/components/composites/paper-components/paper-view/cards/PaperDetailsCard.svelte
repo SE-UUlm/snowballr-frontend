@@ -91,14 +91,16 @@ Usage:
     {#snippet tabListButtonList()}
         {#if allowEditModeToggle}
             <div class="flex flex-row gap-4 pr-2.5">
-                <Save
-                    class={cn(
-                        "select-none hover:cursor-pointer",
-                        isPaperModified ? "" : "opacity-30",
-                    )}
-                    onclick={updatePaper}
-                    size={24}
-                />
+                {#if isInEditMode}
+                    <Save
+                        class={cn(
+                            "select-none hover:cursor-pointer",
+                            isPaperModified ? "" : "opacity-30",
+                        )}
+                        onclick={updatePaper}
+                        size={24}
+                    />
+                {/if}
                 <Pencil
                     class="select-none hover:cursor-pointer"
                     onclick={() => (isInEditMode = !isInEditMode)}
