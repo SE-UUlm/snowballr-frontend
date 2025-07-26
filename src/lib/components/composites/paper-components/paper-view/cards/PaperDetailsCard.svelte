@@ -5,16 +5,35 @@
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "lucide-svelte/icons/pencil";
     import Save from "lucide-svelte/icons/save";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
+        paper: Paper;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
     }
 
-    const { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+    let {
+        loadingPaper,
+        paper = $bindable(),
+        allowEditModeToggle,
+        startInEditMode,
+    }: Props = $props();
 
+    let originalPaper: Paper | undefined = $state(undefined);
     let isInEditMode = $state(startInEditMode);
+    let isPaperModified = $state(false);
+
+    loadingPaper.then((p) => (originalPaper = p));
+
+    $effect(() => {
+        if (paper === undefined || originalPaper === undefined) {
+            return;
+        }
+
+        isPaperModified = !isEqual(originalPaper, paper);
+    });
 
     const tabs = [
         { value: "1", label: "Information" },
@@ -22,7 +41,12 @@
     ];
 
     function updatePaper() {
-        console.log("Updating paper");
+        originalPaper = paper;
+        isPaperModified = false;
+    }
+
+    function isEqual(obj1: unknown, obj2: unknown): boolean {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 </script>
 
@@ -37,7 +61,7 @@ Usage:
 -->
 <PaperCard data-testid="paper-details-card" {tabs}>
     <PaperCardContent value="1">
-        <PaperDetailsCardContent {isInEditMode} {loadingPaper} />
+        <PaperDetailsCardContent {isInEditMode} {loadingPaper} bind:paper />
     </PaperCardContent>
     <PaperCardContent value="2">
         <span>
@@ -51,7 +75,14 @@ Usage:
     {#snippet tabListButtonList()}
         {#if allowEditModeToggle}
             <div class="flex flex-row gap-4 pr-2.5">
-                <Save class="select-none hover:cursor-pointer" onclick={updatePaper} size={24} />
+                <Save
+                    class={cn(
+                        "select-none hover:cursor-pointer",
+                        isPaperModified ? "" : "opacity-30",
+                    )}
+                    onclick={updatePaper}
+                    size={24}
+                />
                 <Pencil
                     class="select-none hover:cursor-pointer"
                     onclick={() => (isInEditMode = !isInEditMode)}

@@ -1,82 +1,39 @@
 <script lang="ts">
     import Button from "$lib/components/primitives/button/button.svelte";
-    import { getNames } from "$lib/utils/common-helper";
     import ChevronDown from "lucide-svelte/icons/chevron-down";
     import ChevronUp from "lucide-svelte/icons/chevron-up";
     import { Skeleton } from "$lib/components/primitives/skeleton";
-    import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
-    import { resource } from "$lib/resource.svelte";
+    import PaperDetail, {
+        type PaperDetailProp,
+    } from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import { getNames } from "$lib/utils/common-helper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
+        paper: Paper;
         isInEditMode?: boolean;
     }
 
-    const { loadingPaper, isInEditMode = false }: Props = $props();
+    let { loadingPaper, paper = $bindable(), isInEditMode = false }: Props = $props();
 
-    interface BasicInfos {
-        Title: string;
-        Authors: string;
-        Year: string;
-        Publisher: string;
-    }
+    const basicInfoProps: PaperDetailProp[] = [
+        { key: "title", label: "Title" },
+        { key: "authors", label: "Authors", transform: getNames },
+        { key: "year", label: "Year" },
+        { key: "publisher", label: "Publisher" },
+    ];
 
-    interface AdditionalInfos {
-        "Publication Type": string;
-        "Publication Name": string;
-        "External ID": string;
-    }
-
-    // Initialize with width values for Skeletons
-    const basicInfos = $derived(
-        resource<Paper, BasicInfos>(loadingPaper, {
-            initialValue: {
-                Title: "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
-                Authors: "w-[4rem] sm:w-[5rem] md:w-[7.3rem] lg:w-[13rem]",
-                Year: "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
-                Publisher: "w-[5rem] sm:w-[6rem] md:w-[8.6rem] lg:w-[15rem]",
-            },
-            onSuccess: (paper) => {
-                return {
-                    Title: paper.title,
-                    Authors: getNames(paper.authors),
-                    Year: paper.year.toString(),
-                    Publisher: paper.publisher,
-                };
-            },
-            onErrorValue: { Title: "", Authors: "", Year: "", Publisher: "" },
-        }),
-    );
-
-    // Initialize with width values for Skeletons
-    const additionalInfos = $derived(
-        resource<Paper, AdditionalInfos>(loadingPaper, {
-            initialValue: {
-                "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
-                "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",
-                "External ID": "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
-            },
-            onSuccess: (paper) => ({
-                "Publication Type": paper.publicationType,
-                "Publication Name": "N/A",
-                "External ID": paper.externalId,
-            }),
-            onErrorValue: {
-                "Publication Type": "",
-                "Publication Name": "",
-                "External ID": "",
-            },
-        }),
-    );
+    const additionalInfoProps: PaperDetailProp[] = [
+        { key: "publicationType", label: "Publication Type" },
+        { key: "publicationName", label: "Publication Name" },
+        { key: "externalId", label: "External ID" },
+    ];
 
     let showAdditionalInfos = $state(false);
-
-    function toggleAdditionalInfos() {
-        showAdditionalInfos = !showAdditionalInfos;
-    }
+    const toggleAdditionalInfos = () => (showAdditionalInfos = !showAdditionalInfos);
 </script>
 
 <!--
@@ -93,12 +50,12 @@ Usage:
         <h2>General Information</h2>
     </div>
     <div class="flex flex-col gap-2 px-5">
-        {#each Object.entries(basicInfos.value) as [key, value] (key)}
-            <PaperDetail id={key} {isInEditMode} {key} {loadingPaper} {value} />
+        {#each basicInfoProps as prop, index (prop.key)}
+            <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
         {/each}
         {#if showAdditionalInfos}
-            {#each Object.entries(additionalInfos.value) as [key, value] (key)}
-                <PaperDetail id={key} {isInEditMode} {key} {loadingPaper} {value} />
+            {#each additionalInfoProps as prop, index (prop.key)}
+                <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
             {/each}
         {/if}
     </div>
@@ -124,14 +81,21 @@ Usage:
         <h2>Abstract</h2>
     </div>
     {#await loadingPaper}
-        {#each [100, 95, 70, 82, 50, 75, 90] as width, i (i)}
-            <Skeleton class="flex h-[1.625rem] rounded-full w-[{width}%]" />
-        {/each}
-    {:then paper}
+        <Skeleton class="flex h-[1.625rem] w-[100%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[95%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[70%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[82%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[50%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[75%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[90%] rounded-full" />
+    {:then}
         <ToggleableInput
             class="h-full"
             isEditable={isInEditMode}
-            placeholder="No abstract available"
+            onInputChange={(c) => {
+                paper = { ...paper, abstrakt: c };
+            }}
+            placeholder="No Abstract available"
             value={paper.abstrakt}
         />
     {:catch}

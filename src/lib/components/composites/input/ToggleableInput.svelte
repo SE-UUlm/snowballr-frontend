@@ -5,9 +5,16 @@
 
     type Props = WithElementRef<HTMLInputAttributes> & {
         isEditable: boolean;
+        onInputChange: (input: string) => void;
     };
 
-    let { isEditable = $bindable(false), value = $bindable(), class: className }: Props = $props();
+    let {
+        isEditable = $bindable(false),
+        value = $bindable(),
+        onInputChange,
+        placeholder,
+        class: className,
+    }: Props = $props();
 </script>
 
 <!--
@@ -29,6 +36,8 @@ Usage:
         className,
     )}
     data-testid="toggleable-input"
+    oninput={(event) => onInputChange((event.target as HTMLTextAreaElement)?.value as string)}
+    {placeholder}
     readonly={!isEditable}
     rows="1"
     {value}

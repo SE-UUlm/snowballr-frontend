@@ -9,7 +9,7 @@
     import type { CriterionWithReviews } from "$lib/model/general";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import type { User } from "$lib/model/api/user";
-    import type { Paper } from "$lib/model/api/paper";
+    import { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
     import { asPaper } from "$lib/utils/model-helper";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
@@ -49,8 +49,14 @@
         bottomBar = undefined,
     }: PaperViewProps = $props();
 
-    const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
-    const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
+    let paper: Paper = $state(Paper.create());
+
+    const loadingPaper = loadingPaperWrapper.then((wrapper) => {
+        const loadedPaper = asPaper(wrapper);
+        paper = loadedPaper;
+        return loadedPaper;
+    });
+    const loadingPaperId = loadingPaper.then((paper) => paper.id);
     // As the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
     const loadingPaperIdForNavigationBar = $derived.by(() =>
@@ -109,7 +115,7 @@ Usage:
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
     <div class="flex h-full w-full flex-row gap-10">
-        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
+        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} bind:paper />
         <PaperResearchContextCard
             {backwardReferencedPapers}
             {forwardReferencedPapers}
