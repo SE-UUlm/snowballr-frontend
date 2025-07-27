@@ -7,10 +7,13 @@ import userEvent from "@testing-library/user-event";
 
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {
+        const paper = createPaper();
+
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: loading(createPaper()),
+                loadingPaper: loading(paper),
+                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -32,7 +35,7 @@ describe("PaperDetailsCard", () => {
             expect(editButton).toBeInTheDocument();
             editButtonCount++;
         }
-        expect(editButtonCount).toBe(2);
+        expect(editButtonCount).toBe(1);
 
         // paper details are in read-only mode
         const toggleableInputs = screen.queryAllByTestId("toggleable-input");
@@ -49,10 +52,13 @@ describe("PaperDetailsCard", () => {
 
     test("When show more information button is pressed, then additional details are shown", async () => {
         const user = userEvent.setup();
+        const paper = createPaper();
+
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(paper),
+                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -85,10 +91,13 @@ describe("PaperDetailsCard", () => {
 
     test("When edit mode is toggled, then paper details are in edit mode", async () => {
         const user = userEvent.setup();
+        const paper = createPaper();
+
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(paper),
+                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -103,25 +112,11 @@ describe("PaperDetailsCard", () => {
                 editButtons.push(svg);
             }
         }
-        expect(editButtons.length).toBe(2);
+        expect(editButtons.length).toBe(1);
 
-        const generalInfoBtn = editButtons[0];
-        const abstractBtn = editButtons[1];
+        const [editButton] = editButtons;
 
-        await user.click(generalInfoBtn);
-
-        await waitFor(() => {
-            const toggleableInputs = screen.queryAllByTestId("toggleable-input");
-            expect(toggleableInputs).toHaveLength(5);
-            for (const input of toggleableInputs.slice(0, 4)) {
-                expect(input).toBeInTheDocument();
-                expect(input).not.toHaveAttribute("readonly");
-            }
-            expect(toggleableInputs[4]).toBeInTheDocument();
-            expect(toggleableInputs[4]).toHaveAttribute("readonly");
-        });
-
-        await user.click(abstractBtn);
+        await user.click(editButton);
 
         await waitFor(() => {
             const toggleableInputs = screen.queryAllByTestId("toggleable-input");
@@ -132,20 +127,7 @@ describe("PaperDetailsCard", () => {
             }
         });
 
-        await user.click(generalInfoBtn);
-
-        await waitFor(() => {
-            const toggleableInputs = screen.queryAllByTestId("toggleable-input");
-            expect(toggleableInputs).toHaveLength(5);
-            for (const input of toggleableInputs.slice(0, 4)) {
-                expect(input).toBeInTheDocument();
-                expect(input).toHaveAttribute("readonly");
-            }
-            expect(toggleableInputs[4]).toBeInTheDocument();
-            expect(toggleableInputs[4]).not.toHaveAttribute("readonly");
-        });
-
-        await user.click(abstractBtn);
+        await user.click(editButton);
 
         await waitFor(() => {
             const toggleableInputs = screen.queryAllByTestId("toggleable-input");
@@ -158,10 +140,13 @@ describe("PaperDetailsCard", () => {
     });
 
     test("When editMode is not allowed, then edit buttons are not shown", async () => {
+        const paper = createPaper();
+
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: Promise.resolve(createPaper()),
+                loadingPaper: loading(paper),
+                paper: paper,
                 allowEditModeToggle: false,
                 startInEditMode: false,
             },
@@ -183,10 +168,13 @@ describe("PaperDetailsCard", () => {
     });
 
     test("When paper is loading, then skeletons are shown", async () => {
+        const paper = createPaper();
+
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                loadingPaper: loading(createPaper(), 1000),
+                loadingPaper: loading(paper, 1000),
+                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },

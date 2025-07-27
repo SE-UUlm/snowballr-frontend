@@ -6,12 +6,17 @@ import { waitForComponentLoading } from "../../test-helper";
 
 describe("PaperDetail", () => {
     test("When props are provided, then component is shown", async () => {
+        const paper = createPaper({ title: "Example Title" });
+
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
-                loadingPaper: loading(createPaper()),
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
+                loadingPaper: loading(paper),
+                paper: paper,
                 isInEditMode: false,
             },
         });
@@ -30,12 +35,17 @@ describe("PaperDetail", () => {
     });
 
     test("When paper is loading, then skeleton is shown", () => {
+        const paper = createPaper();
+
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
-                loadingPaper: loading(createPaper(), 1000),
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
+                loadingPaper: loading(paper, 1000),
+                paper: paper,
                 isInEditMode: false,
             },
         });
@@ -52,9 +62,12 @@ describe("PaperDetail", () => {
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
                 loadingPaper: Promise.reject(),
+                paper: createPaper(),
                 isInEditMode: false,
             },
         });
@@ -63,8 +76,7 @@ describe("PaperDetail", () => {
 
         const spans = document.getElementsByTagName("span");
         expect(spans).toHaveLength(2);
-        const keySpan = spans[0];
-        const valueSpan = spans[1];
+        const [keySpan, valueSpan] = spans;
 
         expect(keySpan.textContent).toEqual("Title");
         expect(valueSpan.textContent).toEqual("Couldn't load Title");
