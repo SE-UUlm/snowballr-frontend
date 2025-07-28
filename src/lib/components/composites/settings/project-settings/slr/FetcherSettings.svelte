@@ -19,6 +19,7 @@
     const { projectId }: Props = $props();
 
     const error: ApiError | undefined = $state();
+    let loading = $state(true)
     let projectSettings: Project_Settings | undefined = $state();
 
     let availableFetchers: string[] | undefined = $state();
@@ -35,15 +36,18 @@
 
     // Update the current state using the provided project
     async function loadProject(project: Project) {
+        loading = true;
         projectSettings = project.settings;
         availableFetchers = await backendService
             .getAvailableFetchers({})
             .then((it) => it.response.fetcherNames);
         usedFetchers = Object.keys(projectSettings?.fetchers || {});
+        loading = false;
     }
 
     // Fetch project (projectId) from backend and update current state with it
     async function refetchProject() {
+        loading = true;
         await backendService
             .getProjectById({ id: projectId })
             .response.then(loadProject)
@@ -87,7 +91,7 @@
     bind:open={removalDialogOpen}
 />
 
-<SettingsSection sectionTitle="Fetcher Settings">
+<SettingsSection sectionTitle="Fetcher Settings" {loading}>
     {#if error}
         <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
     {/if}
