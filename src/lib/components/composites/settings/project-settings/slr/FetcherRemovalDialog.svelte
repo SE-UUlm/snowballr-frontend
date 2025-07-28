@@ -22,12 +22,16 @@
     }: Props = $props();
 
     let error: ApiError | undefined = $state();
+    let loading = $state(false);
 
     // remove the fetcher (fetcher) from the project (projectId)
     async function removeFetcher() {
+        loading = true;
         const updatedFetcherApis = projectSettings?.fetchers ?? {};
         delete updatedFetcherApis[fetcher];
         await updateFetchers(projectId, updatedFetcherApis, onProjectChanged, (it) => (error = it));
+        loading = false;
+        open = false;
     }
 </script>
 
@@ -35,12 +39,10 @@
     actionButtonText="Delete"
     actionProps={{
         variant: "destructive",
-        onclick: () => {
-            removeFetcher();
-            open = false;
-        },
+        onclick: removeFetcher,
     }}
     cancelButtonText="Cancel"
+    {loading}
     title={`Remove "${fetcher}" Fetcher`}
     bind:open
 >

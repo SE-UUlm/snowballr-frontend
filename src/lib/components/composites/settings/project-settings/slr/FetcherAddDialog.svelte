@@ -23,12 +23,17 @@
     }: Props = $props();
 
     let error: ApiError | undefined = $state();
-    let fetcher: string | undefined = $state();
-    const content = $derived(unusedFetchers.find((f) => f === fetcher) ?? "Select a fetcher");
+    let loading = $state(false);
+    let fetchers: string[] = $state([]);
+    const content = $derived(
+        fetchers.length === 0
+            ? "Select a fetcher"
+            : `${fetchers.length} fetcher${fetchers.length > 0 ? "s" : ""} selected`,
+    );
 
     // Add the selected fetcher (value) to the project (projectId)
     async function addFetcher() {
-        if (!fetcher) {
+        if (fetchers.length === 0) {
             error = {
                 errorTitle: "No Fetcher Selected",
                 errorDetails: "You need to select a fetcher first, before you can add one.",
@@ -36,8 +41,13 @@
             return;
         }
 
+        loading = true;
+
         const updatedFetcherApis = projectSettings?.fetchers ?? {};
-        updatedFetcherApis[fetcher] = { options: {} };
+        for (const fetcher of fetchers) {
+            updatedFetcherApis[fetcher] = { options: {} };
+        }
+
         await updateFetchers(
             projectId,
             updatedFetcherApis,
@@ -47,7 +57,20 @@
             },
             (it) => (error = it),
         );
+
+        loading = false;
+
+        fetchers = [];
+        error = undefined;
     }
+
+    // Reset error and selected fetchers when `open` value changes
+    $effect(() => {
+        if (open || !open) {
+            error = undefined;
+            fetchers = [];
+        }
+    });
 </script>
 
 <AlertDialog
@@ -55,10 +78,11 @@
     actionProps={{ onclick: addFetcher }}
     cancelButtonText="Cancel"
     title="Add a Fetcher"
+    bind:loading
     bind:open
 >
     {#snippet description()}
-        <Select.Root type="single" bind:value={fetcher}>
+        <Select.Root type="multiple" bind:value={fetchers}>
             <Select.Trigger class="w-full">
                 {content}
             </Select.Trigger>

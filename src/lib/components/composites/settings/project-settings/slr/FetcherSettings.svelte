@@ -11,6 +11,7 @@
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
+    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
 
     interface Props {
         projectId: string;
@@ -19,7 +20,7 @@
     const { projectId }: Props = $props();
 
     const error: ApiError | undefined = $state();
-    let loading = $state(true)
+    let loading = $state(true);
     let projectSettings: Project_Settings | undefined = $state();
 
     let availableFetchers: string[] | undefined = $state();
@@ -91,7 +92,7 @@
     bind:open={removalDialogOpen}
 />
 
-<SettingsSection sectionTitle="Fetcher Settings" {loading}>
+<SettingsSection {loading} sectionTitle="Fetcher Settings">
     {#if error}
         <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
     {/if}
@@ -133,6 +134,10 @@
     {/if}
 
     {#if unusedFetchers?.length !== 0}
-        <Button onclick={() => (addDialogOpen = true)}><PlusCircle /> Add Fetcher</Button>
+        <LoadingButton label="Add Fetcher" {loading} onclick={() => (addDialogOpen = true)}>
+            {#snippet icon()}
+                <PlusCircle />
+            {/snippet}
+        </LoadingButton>
     {/if}
 </SettingsSection>
