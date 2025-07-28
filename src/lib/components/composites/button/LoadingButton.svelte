@@ -1,15 +1,18 @@
 <script lang="ts">
     import Button, { type ButtonProps } from "$lib/components/primitives/button/button.svelte";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import type { Snippet } from "svelte";
 
     type Props = ButtonProps & {
         label: string;
+        icon?: Snippet;
         loadingLabel?: string;
         loading?: boolean;
     };
 
     const {
         label,
+        icon,
         loadingLabel = label,
         loading = false,
         disabled: disabledProp,
@@ -85,6 +88,7 @@ Usage 2:
         <LoaderCircle class="animate-spin" />
         {loadingLabel}
     {:else}
+        {@render icon?.()}
         {label}
     {/if}
 </Button>
