@@ -25,6 +25,8 @@
     let projectNameInput: Input;
     let invitees: string[] = $state([]);
 
+    let isNavigatingToNewProject = $state(false);
+
     /**
      * Navigates to the created project, if it was successfully loaded and closes the alert dialog.
      */
@@ -158,7 +160,11 @@ Usage:
 <AlertDialog
     actionButtonText="Open"
     actionProps={{
-        onclick: async () => navigateToProject(),
+        onclick: async () => {
+            isNavigatingToNewProject = true;
+            await navigateToProject();
+            isNavigatingToNewProject = false;
+        },
     }}
     cancelProps={{
         onclick: () => {
@@ -170,6 +176,7 @@ Usage:
             invalidate("data:allProjectsForUser");
         },
     }}
+    loading={isNavigatingToNewProject}
     title="Success! Your new project has been created successfully."
     bind:open={projectWasCreated}
 >
