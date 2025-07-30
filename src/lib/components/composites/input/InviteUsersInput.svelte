@@ -48,14 +48,13 @@
             .response.then(({ users }) => {
                 isErrorWhileLoadingCandidates = false;
 
-                const newInviteCandidates = users.filter(
-                    (user) => !isCandidateAlreadyInvitee(user.email),
-                );
-                const retainedCandidates = loadedInviteCandidates.filter((c) =>
-                    invitees.includes(c.email),
-                );
+                const newInviteCandidates = users.filter((user) => !invitees.includes(user.email));
 
-                loadedInviteCandidates = [...newInviteCandidates, ...retainedCandidates];
+                newInviteCandidates.forEach((candidate) => {
+                    if (!loadedInviteCandidates.includes(candidate)) {
+                        loadedInviteCandidates.push(candidate);
+                    }
+                });
 
                 return newInviteCandidates.map((user) => `${getName(user)} <${user.email}>`);
             })
