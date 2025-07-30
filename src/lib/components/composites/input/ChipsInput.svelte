@@ -5,7 +5,6 @@
     import type { ValidationResult } from "$lib/model/general";
     import { cn } from "$lib/utils/shadcn-helper";
     import { debounce } from "$lib/utils/common-helper";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     interface ChipsInputProps {
         label?: string;
@@ -45,7 +44,6 @@
     let errorMessage: string = $state("");
 
     let suggestions: string[] = $state([]);
-    let isLoadingSuggestions: boolean = $state(false);
     /**
      * Index (from 0 - \<length of suggestions\>) indicating, which suggestion is currently selected.
      * Index -1 represent the state, that no suggestion is selected.
@@ -191,19 +189,14 @@
             return;
         }
 
-        isLoadingSuggestions = true;
-
         Promise.resolve(searchSuggestions(searchString))
             .then((possibleSuggestions) => {
                 suggestions = possibleSuggestions.filter((s) => !items.includes(s));
             })
             .catch(() => {
                 suggestions = [];
-            })
-            .finally(() => {
-                isLoadingSuggestions = false;
             });
-    });
+    }, 250);
 
     // update suggestions after each new input (considering a certain time delay for debouncing)
     $effect(() => {
@@ -302,14 +295,9 @@ Usage:
         </div>
     {/if}
     <!-- suggestions list -->
-    <!-- TODO: note for the reviewer: i am not very happy with this loading text
-        and its position: any suggestions? -->
-    {#if isLoadingSuggestions}
-        <div class="text-description flex items-center gap-2">
-            <LoaderCircle class="animate-spin" size={16} />
-            <p class="text-sm">Loading suggestions ...</p>
-        </div>
-    {:else if suggestions.length > 0 && inputText !== ""}
+    <!-- TODO: note for the reviewer: i am not very happy that we dont have any loading
+        indicator: any suggestions? -->
+    {#if suggestions.length > 0 && inputText !== ""}
         <ul
             id={SUGGESTIONS_LIST_ID}
             class="max-h-[160px] overflow-y-scroll rounded-md border"
