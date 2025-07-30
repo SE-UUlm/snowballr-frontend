@@ -31,6 +31,7 @@
     const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
     const SUGGESTIONS_LIST_ID =
         label === undefined ? "chips-suggestions" : "chips-suggestions-" + label;
+    const SUGGESTION = "suggestion-";
 
     /**
      * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
@@ -102,10 +103,13 @@
     }
 
     /**
-     * Set the focus to the suggestions list and reset the {@link selectedChipIndex} to -1.
+     * Scroll the selected suggestion into view  and reset the {@link selectedChipIndex} to -1.
      */
-    function focusSuggestionsList(): void {
-        document.getElementById(SUGGESTIONS_LIST_ID)?.focus();
+    function focusSelectedSuggestion(): void {
+        document.getElementById(`${SUGGESTION}${selectedSuggestionIndex}`)?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+        });
         selectedChipIndex = -1;
     }
 
@@ -159,7 +163,7 @@
                     suggestions.length,
                 );
 
-                focusSuggestionsList();
+                focusSelectedSuggestion();
                 break;
 
             case "ArrowLeft":
@@ -236,23 +240,26 @@ to map this value to another value shown to the user.
 Usage:
 ```svelte
     <ChipsInput
-        bind:items={membersInput}
+        bind:items={invitees}
         label="Members"
-        searchSuggestions={filterPossibleMembers}
+        searchSuggestions={loadInviteCandidates}
     />
 ```
 -->
 <div class="flex w-full flex-col gap-2" data-testid="chips-input-component">
     <div
-        class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row items-center gap-4'}"
+        class={cn(
+            "flex",
+            labelPosition === "top" ? "flex-col gap-2" : "flex-row items-center gap-4",
+        )}
         data-testid="chips-input-container"
     >
         <Label for={INPUT_ID}>{label}</Label>
         <div
-            class="flex w-full flex-wrap items-center gap-2.5 px-4 {items.length === 0
-                ? 'py-2'
-                : 'py-1.5'}
-                text-default border-input-border-slate bg-background overflow-x-auto rounded-md border"
+            class={cn(
+                "text-default border-input-border-slate bg-background flex w-full flex-wrap items-center gap-2.5 overflow-x-auto rounded-md border px-4",
+                items.length === 0 ? "py-2" : "py-1.5",
+            )}
         >
             <!-- chips -->
             {#each items as item, index (item)}
@@ -305,11 +312,12 @@ Usage:
         >
             {#each suggestions as suggestion, i (suggestion)}
                 <Button
+                    id={`${SUGGESTION}${i}`}
                     class={cn(
                         "text-default flex w-full justify-start",
                         selectedSuggestionIndex === i ? "bg-accent" : "",
                     )}
-                    data-testid={"suggestion-" + i}
+                    data-testid={`${SUGGESTION}${i}`}
                     onclick={() => {
                         addItem(suggestion);
                         focusInput(true);

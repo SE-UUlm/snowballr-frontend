@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
 import type { ValidationResult } from "$lib/model/general";
 import userEvent from "@testing-library/user-event";
@@ -203,6 +203,10 @@ describe("ChipsInput", () => {
     });
 
     test("When a search function for suggestions is provided and the user navigates using the up and down arrow keys, then the suggestions are selected and can be autocompleted", async () => {
+        // mock `scrollIntoView` as it is not supported by svelte testing and produces a type error,
+        // although it is not used in this test
+        window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
         render(ChipsInput, {
             props: {
                 items: ["Hello"],
