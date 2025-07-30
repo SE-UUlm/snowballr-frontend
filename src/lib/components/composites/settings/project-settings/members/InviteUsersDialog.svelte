@@ -78,8 +78,8 @@ Usage:
 -->
 <Dialog
     onCancelClick={() => {
-            invitees = [];
-        }}
+        invitees = [];
+    }}
     title="Invite Users"
     triggerProps={{
         class: buttonVariants({ variant: "default" }),
