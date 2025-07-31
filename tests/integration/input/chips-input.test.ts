@@ -132,22 +132,30 @@ describe("ChipsInput", () => {
     test("When the user deletes a chip, then it will be deleted from the displayed chips list and the items list", async () => {
         render(ChipsInput, {
             props: {
-                items: ["Hello", "World", "!"],
+                items: ["Hello", "wonderful", "World", "!"],
                 validate: validateDemo,
             },
         });
 
         await type("{Backspace}");
-
         expect(screen.getByTestId("chips-input")).toHaveFocus();
-        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(2);
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(3);
         expect(screen.queryByText("Hello")).toBeInTheDocument();
+        expect(screen.queryByText("wonderful")).toBeInTheDocument();
         expect(screen.queryByText("World")).toBeInTheDocument();
         expect(screen.queryByText("!")).not.toBeInTheDocument();
 
         await userEvent.click(screen.getByTestId("chip-0").getElementsByTagName("button")[0]);
-        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(1);
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(2);
         expect(screen.queryByText("Hello")).not.toBeInTheDocument();
+        expect(screen.queryByText("wonderful")).toBeInTheDocument();
+        expect(screen.queryByText("World")).toBeInTheDocument();
+
+        await type("{ArrowLeft}");
+        await type("{ArrowLeft}");
+        await type("{Backspace}");
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(1);
+        expect(screen.queryByText("wonderful")).not.toBeInTheDocument();
         expect(screen.queryByText("World")).toBeInTheDocument();
     });
 

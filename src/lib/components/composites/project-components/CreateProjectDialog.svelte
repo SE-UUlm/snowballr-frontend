@@ -111,7 +111,7 @@ Usage:
         {#snippet trigger()}
             <div class="flex flex-row items-center justify-center gap-2.5">
                 <CirclePlus strokeWidth="2.5" />
-                Create Project
+                Create new Project
             </div>
         {/snippet}
         {#snippet description()}

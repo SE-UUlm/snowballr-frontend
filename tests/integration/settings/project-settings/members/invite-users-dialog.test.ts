@@ -60,6 +60,37 @@ describe("InviteUsersDialog", () => {
         expect(actionButton).toHaveAttribute("disabled");
     });
 
+    test("When dialog is closed, then entered invitation candidates are deleted", async () => {
+        const user = userEvent.setup();
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: {
+                projectId: "1",
+                loadingMembers: Promise.resolve([]),
+            },
+            context: mockUserContext,
+        });
+
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
+        await waitFor(async () => user.click(trigger));
+
+        const input = screen.getByRole("textbox");
+        await user.type(input, Members.demoMember1.user.email);
+        await user.tab();
+
+        const chip = screen.getByText(Members.demoMember1.user.firstName, { exact: false });
+        expect(chip).toBeInTheDocument();
+
+        const cancelButton = screen.getByRole("button", { name: "Cancel" });
+        await user.click(cancelButton);
+
+        await waitFor(async () => user.click(trigger));
+        const chipAfterCancel = screen.queryByText(Members.demoMember1.user.firstName, {
+            exact: false,
+        });
+        expect(chipAfterCancel).not.toBeInTheDocument();
+    });
+
     test("When a user is invited successfully, then a success message is displayed", async () => {
         const user = userEvent.setup();
         let invitedUsers: string[] = [];

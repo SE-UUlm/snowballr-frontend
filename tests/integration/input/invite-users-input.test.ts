@@ -62,6 +62,23 @@ describe("InviteUsersInput", () => {
         expect(suggestion).toBeInTheDocument();
     });
 
+    test("When name of a user that is already in the invitee chips list is typed, then it is not displayed as suggestion", async () => {
+        const user = userEvent.setup();
+        const newUser = Users.janeDoe;
+        render(InviteUsersInput, {
+            target: document.body,
+            props: {
+                invitees: [Users.janeDoe.email],
+            },
+        });
+
+        const input = screen.getByRole("textbox");
+        await user.type(input, newUser.firstName);
+
+        const suggestion = screen.queryByText(getName(newUser), { exact: false });
+        expect(suggestion).not.toBeInTheDocument();
+    });
+
     test("When valid user is selected from the suggestion list, then it is added to the invitee list", async () => {
         const user = userEvent.setup();
         const newUser = Users.janeDoe;
