@@ -48,12 +48,12 @@ jobs:
               run: node scripts/wiki-replace-github-urls.js ${{ steps.get_branch_name.outputs.branch_name }}
 
             - name: Check for Broken Links in README
-              uses: becheran/mlc@v0.22.0
+              uses: becheran/mlc@v1.0.0
               with:
                   args: README.md
 
             - name: Check for Broken Links in README
-              uses: becheran/mlc@v0.22.0
+              uses: becheran/mlc@v1.0.0
               with:
                   args: --ignore-links "https://dl.acm.org/doi/*,https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247" wiki/
 
