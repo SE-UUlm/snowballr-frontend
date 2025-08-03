@@ -1,1 +1,1 @@
-export const MOCK_BACKEND_IMAGE = "ghcr.io/se-uulm/snowballr-mock-backend:main";
+export const MOCK_BACKEND_IMAGE = "ghcr.io/se-uulm/snowballr-mock-backend:v5";
