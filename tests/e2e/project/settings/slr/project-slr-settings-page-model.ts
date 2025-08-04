@@ -51,20 +51,6 @@ export class ProjectSLRSettingsPageModel {
         }
     }
 
-    async insertFetcher(fetcherName: string) {
-        await this.apiClient.updateProject({
-            project: Project.create({
-                id: this.projectId,
-                settings: Project_Settings.create({
-                    fetchers: Object.fromEntries([[fetcherName, {}]]),
-                }),
-            }),
-            mask: {
-                paths: ["settings.fetchers.test"],
-            },
-        });
-    }
-
     getFetcherRow(fetcherName: string) {
         return this.page
             .getByTestId("settings-section-fetcher-settings")
@@ -78,7 +64,7 @@ export class ProjectSLRSettingsPageModel {
 
     async openEditFetcherDialog(fetcherName: string) {
         const fetcherRow = this.getFetcherRow(fetcherName);
-        await fetcherRow.getByRole("button").nth(0).click();
+        await fetcherRow.getByRole("button").first().click();
     }
 
     async deleteFetcher(fetcherName: string) {
@@ -91,6 +77,7 @@ export class ProjectSLRSettingsPageModel {
         await this.page.getByText("Add Fetcher").click();
         await this.page.getByRole("button", { name: "Select a fetcher" }).click();
         await this.page.getByRole("option", { name: fetcherName, exact: true }).click();
+        await this.page.getByRole("button", { name: "1 fetcher selected" }).click();
         await expect(
             this.page.getByRole("option", { name: fetcherName, exact: true }),
         ).not.toBeVisible();

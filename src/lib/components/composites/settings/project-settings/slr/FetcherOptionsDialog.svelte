@@ -33,7 +33,17 @@
         defaultValue: string;
     }
 
+    const headers: [string, string][] = [
+        ["Overridden", "Indicates whether the fetcher receives this option."],
+        ["Name", "The name of the option."],
+        ["Value", "The value of the option."],
+        ["Default", "Set the current value to the default value of the option."],
+    ];
+
     let options: Map<string, Option> = $state(new Map());
+    let optionsLoading = $state(false);
+    let saveLoading = $state(false);
+    const loading = $derived(optionsLoading || saveLoading);
 
     $effect(() => {
         if (fetcher !== "" && open) refetchOptions(fetcher);
@@ -41,10 +51,18 @@
 
     // Fetch the available options for a fetcher
     async function refetchOptions(fetcher: string) {
-        loading = true;
+        optionsLoading = true;
         const availableOptions = await backendService
             .getAvailableFetcherOptions({ fetcherName: fetcher })
-            .then((it) => new Map(Object.entries(it.response.options)));
+            .then((it) => new Map(Object.entries(it.response.options)))
+            .catch(() => {
+                error = {
+                    errorTitle: "Available Option Retrieval Failed",
+                    errorDetails:
+                        "Something went wrong when retrieving the available options for this fetcher. Please make sure your internet connection is stable, then try again.",
+                };
+                return new Map();
+            });
         const fetchers = new Map(Object.entries(projectSettings?.fetchers ?? []));
         const fetcherOptions = new Map(Object.entries(fetchers.get(fetcher)?.options ?? {}));
 
@@ -58,11 +76,12 @@
                 },
             ]),
         );
-        loading = false;
+        optionsLoading = false;
     }
 
     // Save fetcher options (options) of the project (projectId)
     async function saveFetcherOptions() {
+        saveLoading = true;
         const updatedFetcherApis = projectSettings?.fetchers ?? {};
         updatedFetcherApis[fetcher] = {
             options: Object.fromEntries(
@@ -73,7 +92,7 @@
             ),
         };
 
-        updateFetchers(
+        await updateFetchers(
             projectId,
             updatedFetcherApis,
             (it) => {
@@ -82,34 +101,26 @@
             },
             (it) => (error = it),
         );
+        saveLoading = false;
     }
-
-    let loading = $state(false);
-
-    const headers: [string, string][] = [
-        ["Overridden", "Indicates wether the fetcher receives this option."],
-        ["Name", "The name of the option."],
-        ["Value", "The value of the option."],
-        ["Default", "Set the current value to the default value of the option."],
-    ];
 </script>
 
 <AlertDialog
     actionButtonText="Save"
     actionProps={{
-        onclick: () => saveFetcherOptions(),
+        onclick: saveFetcherOptions,
     }}
     cancelButtonText="Cancel"
     cancelProps={{
-        onclick: () => {},
+        disabled: optionsLoading,
     }}
+    {loading}
     title="Edit Option Values"
     bind:open
-    bind:loading
 >
     {#snippet description()}
         <div class="flex flex-col gap-4">
-            {#if loading}
+            {#if optionsLoading}
                 {#each [0, 1, 2, 3] as i (i)}
                     <div class="flex flex-row gap-2">
                         <Skeleton class="h-8 w-8" />
@@ -118,7 +129,7 @@
                         <Skeleton class="h-8 w-8" />
                     </div>
                 {/each}
-            {:else if options.size == 0}
+            {:else if options.size === 0}
                 <p>The <b>{fetcher}</b> fetcher cannot be configured using options.</p>
             {:else}
                 <div

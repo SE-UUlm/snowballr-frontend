@@ -4,6 +4,7 @@
     import * as Select from "$lib/components/primitives/select";
     import { Project, Project_Settings } from "$lib/model/api/project";
     import type { ApiError } from "$lib/model/general";
+    import { pluralize } from "$lib/utils/common-helper";
     import { updateFetchers } from "./UpdateFetchers";
 
     interface Props {
@@ -28,7 +29,7 @@
     const content = $derived(
         fetchers.length === 0
             ? "Select a fetcher"
-            : `${fetchers.length} fetcher${fetchers.length > 0 ? "s" : ""} selected`,
+            : `${fetchers.length} ${pluralize(fetchers.length, "fetcher", "fetchers")} selected`,
     );
 
     // Add the selected fetcher (value) to the project (projectId)
@@ -59,9 +60,6 @@
         );
 
         loading = false;
-
-        fetchers = [];
-        error = undefined;
     }
 
     // Reset error and selected fetchers when `open` value changes
@@ -77,6 +75,7 @@
     actionButtonText="Add"
     actionProps={{ onclick: addFetcher }}
     cancelButtonText="Cancel"
+    cancelProps={{ disabled: loading }}
     title="Add a Fetcher"
     bind:loading
     bind:open

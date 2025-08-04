@@ -29,9 +29,16 @@
         loading = true;
         const updatedFetcherApis = projectSettings?.fetchers ?? {};
         delete updatedFetcherApis[fetcher];
-        await updateFetchers(projectId, updatedFetcherApis, onProjectChanged, (it) => (error = it));
+        await updateFetchers(
+            projectId,
+            updatedFetcherApis,
+            (project) => {
+                onProjectChanged(project);
+                open = false;
+            },
+            (it) => (error = it),
+        );
         loading = false;
-        open = false;
     }
 </script>
 
@@ -42,6 +49,9 @@
         onclick: removeFetcher,
     }}
     cancelButtonText="Cancel"
+    cancelProps={{
+        disabled: loading,
+    }}
     {loading}
     title={`Remove "${fetcher}" Fetcher`}
     bind:open

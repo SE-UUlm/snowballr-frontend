@@ -19,7 +19,7 @@
 
     const { projectId }: Props = $props();
 
-    const error: ApiError | undefined = $state();
+    let error: ApiError | undefined = $state();
     let loading = $state(true);
     let projectSettings: Project_Settings | undefined = $state();
 
@@ -32,8 +32,8 @@
     let optionDialogOpen = $state(false);
     let addDialogOpen = $state(false);
     let removalDialogOpen = $state(false);
-    let selectedFetcherForOptionEditing: string = $state("");
-    let selectedFetcherForRemoval: string = $state("");
+    let fetcherToEdit: string = $state("");
+    let fetcherToRemove: string = $state("");
 
     // Update the current state using the provided project
     async function loadProject(project: Project) {
@@ -41,7 +41,15 @@
         projectSettings = project.settings;
         availableFetchers = await backendService
             .getAvailableFetchers({})
-            .then((it) => it.response.fetcherNames);
+            .then((it) => it.response.fetcherNames)
+            .catch(() => {
+                error = {
+                    errorTitle: "Available Fetcher Retrieval Failed",
+                    errorDetails:
+                        "Something went wrong when retrieving the available fetchers. Please make sure your internet connection is stable, then try again.",
+                };
+                return [];
+            });
         usedFetchers = Object.keys(projectSettings?.fetchers || {});
         loading = false;
     }
@@ -49,6 +57,7 @@
     // Fetch project (projectId) from backend and update current state with it
     async function refetchProject() {
         loading = true;
+        error = undefined;
         await backendService
             .getProjectById({ id: projectId })
             .response.then(loadProject)
@@ -69,7 +78,7 @@
 </script>
 
 <FetcherOptionsDialog
-    fetcher={selectedFetcherForOptionEditing}
+    fetcher={fetcherToEdit}
     onProjectChanged={loadProject}
     {projectId}
     {projectSettings}
@@ -85,7 +94,7 @@
 />
 
 <FetcherRemovalDialog
-    fetcher={selectedFetcherForRemoval}
+    fetcher={fetcherToRemove}
     onProjectChanged={loadProject}
     {projectId}
     {projectSettings}
@@ -97,7 +106,7 @@
         <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
     {/if}
     {#if usedFetchers}
-        {#if usedFetchers.length == 0}
+        {#if usedFetchers.length === 0}
             <p>This project has no fetcher configured yet.</p>
         {/if}
 
@@ -107,7 +116,7 @@
                 <div class="flex-1"></div>
                 <Button
                     onclick={() => {
-                        selectedFetcherForOptionEditing = fetcher;
+                        fetcherToEdit = fetcher;
                         optionDialogOpen = true;
                     }}
                     variant="ghost"
@@ -117,7 +126,7 @@
                 <Button
                     class="text-red-400 hover:bg-red-400/10 hover:text-red-400"
                     onclick={() => {
-                        selectedFetcherForRemoval = fetcher;
+                        fetcherToRemove = fetcher;
                         removalDialogOpen = true;
                     }}
                     variant="ghost"
