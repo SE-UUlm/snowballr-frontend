@@ -316,6 +316,9 @@ export function mockFailedApiCall(methodName: keyof ISnowballRClient, errorMessa
 // If window is defined, mock matchMedia
 // window is not defined in unit tests i.e. when running in node environment
 // window.matchMedia needs to be mocked for the Toaster component to work
+//
+// Also mock some pointer event related functions to make select components work
+// in integration tests.
 if (typeof window !== "undefined") {
     Object.defineProperty(window, "matchMedia", {
         writable: true,
@@ -330,4 +333,8 @@ if (typeof window !== "undefined") {
             dispatchEvent: vi.fn(),
         })),
     });
+
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+    window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 }
