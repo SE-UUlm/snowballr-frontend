@@ -9,12 +9,12 @@
         name = $bindable(""),
         value = $bindable(""),
         defaultValue,
-        onValueChanged,
+        onValueChanged = () => {},
     }: {
         name: string;
         value: string;
         defaultValue: string;
-        onValueChanged: (value: string) => void;
+        onValueChanged?: (value: string) => void;
     } = $props();
 
     const selected = $derived(value !== "");
@@ -24,7 +24,7 @@
 
 <SelectionIndicator {selected} />
 <Label style="scrollbar-width: none;" class="w-full overflow-x-scroll overflow-y-hidden">
-    <code>{name}_XYS</code>
+    <code>{name}</code>
 </Label>
 <Input defaultValue={value} placeholder={defaultValue} bind:value />
 <Button disabled={!insertable} onclick={() => (value = defaultValue)} variant="ghost">

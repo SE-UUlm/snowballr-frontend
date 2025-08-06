@@ -24,9 +24,9 @@ export async function updateFetchers(
                 paths: [`settings.fetchers`],
             },
         })
-        .then((it) => {
+        .response.then((it) => {
             toast.success("Successfully updated project settings.");
-            onSuccess(it.response);
+            onSuccess(it);
         })
         .catch((error) => {
             toast.error("Error when updating project.", {

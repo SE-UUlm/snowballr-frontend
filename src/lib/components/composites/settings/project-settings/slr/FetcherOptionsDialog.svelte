@@ -54,7 +54,7 @@
         optionsLoading = true;
         const availableOptions = await backendService
             .getAvailableFetcherOptions({ fetcherName: fetcher })
-            .then((it) => new Map(Object.entries(it.response.options)))
+            .response.then((it) => new Map(Object.entries(it.options)))
             .catch(() => {
                 error = {
                     errorTitle: "Available Option Retrieval Failed",

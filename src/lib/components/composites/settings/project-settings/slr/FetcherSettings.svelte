@@ -41,7 +41,7 @@
         projectSettings = project.settings;
         availableFetchers = await backendService
             .getAvailableFetchers({})
-            .then((it) => it.response.fetcherNames)
+            .response.then((it) => it.fetcherNames)
             .catch(() => {
                 error = {
                     errorTitle: "Available Fetcher Retrieval Failed",

@@ -1,7 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { ConfirmMaybeDecisionDialogModel } from "$tests/e2e/project/settings/slr/confirm-maybe-decision-dialog-model";
 import type { AuthSnowballRClient } from "$tests/e2e/utils/helper/mock-backend";
-import { Project, Project_Settings } from "$lib/model/api/project";
 
 export class ProjectSLRSettingsPageModel {
     readonly page: Page;
