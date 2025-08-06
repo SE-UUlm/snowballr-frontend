@@ -112,7 +112,7 @@
     }}
     cancelButtonText="Cancel"
     cancelProps={{
-        disabled: optionsLoading,
+        disabled: loading,
     }}
     {loading}
     title="Edit Option Values"
