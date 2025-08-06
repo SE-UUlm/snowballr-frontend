@@ -151,8 +151,10 @@ export class DockerMockBackend {
      * to stop the container and free up resources.
      */
     static async create() {
+        // Use ephemeral syntax that doesn't provide a host port, as that is
+        // also supported by podman, unlike `0`.
         const containerId = execSync(
-            `docker run --rm --pull=never -d -p 0:3001 ${MOCK_BACKEND_IMAGE}`,
+            `docker run --rm --pull=never -d -p 3001 ${MOCK_BACKEND_IMAGE}`,
         )
             .toString()
             .trim();
