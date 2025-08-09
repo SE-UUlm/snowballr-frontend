@@ -5,11 +5,38 @@ import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherOptionsDialog from "$lib/components/composites/settings/project-settings/slr/FetcherOptionsDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "$tests/setupTest";
-import { mockUserContext } from "$tests/integration/test-helper";
+import { mockUserContext, waitForComponentLoading } from "$tests/integration/test-helper";
 
 describe("Fetcher Options Dialog", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
+
+    test("When the component is shown, then it is rendered correctly", async () => {
+        const projectData = createProject();
+
+        mockApiCall("getAvailableFetcherOptions", {
+            options: {
+                FOO: "BAR",
+            },
+        });
+
+        render(FetcherOptionsDialog, {
+            target: document.body,
+            context: mockUserContext,
+            props: {
+                projectId: projectData.id,
+                projectSettings: projectData.settings,
+                onProjectChanged: () => {},
+                fetcher: "foobar",
+                open: true,
+            },
+        });
+
+        await waitForComponentLoading();
+        expect(screen.getByText("FOO")).toBeVisible();
+        expect(screen.getByRole("button", { name: "Save" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
+    });
 
     test("When you modify a fetcher, then the settings are adjusted accordingly", async () => {
         const projectData = createProject();
@@ -45,13 +72,10 @@ describe("Fetcher Options Dialog", () => {
             },
         });
 
-        await waitFor(() => expect(screen.getByText("FOO")).toBeVisible());
-
+        await waitForComponentLoading();
         await userEvent.type(screen.getByPlaceholderText("BAR"), "TEST");
-
         expect(screen.getByRole("checkbox")).toBeChecked();
         await userEvent.click(screen.getByRole("button", { name: "Save" }));
-
         await waitFor(() => expect(newProject).toBeDefined());
 
         const fetcherOptions = Object.entries(

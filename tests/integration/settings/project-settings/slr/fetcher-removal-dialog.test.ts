@@ -9,7 +9,34 @@ describe("Fetcher Removal Dialog", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
 
-    test("When a fetcher is deleted, then it is deleted", async () => {
+    test("When the component is shown, then it is rendered correctly", async () => {
+        const projectData = createProject({
+            settings: createProjectSettings({
+                fetchers: {
+                    foobar: {
+                        options: {},
+                    },
+                },
+            }),
+        });
+
+        render(FetcherRemovalDialog, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                projectSettings: projectData.settings,
+                onProjectChanged: () => {},
+                fetcher: "foobar",
+                open: true,
+            },
+        });
+
+        expect(screen.getByRole("button", { name: "Delete" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
+        expect(screen.getByText("foobar", { exact: false })).toBeVisible();
+    });
+
+    test("When a fetcher is deleted, then it is deleted correctly", async () => {
         const projectData = createProject({
             settings: createProjectSettings({
                 fetchers: {

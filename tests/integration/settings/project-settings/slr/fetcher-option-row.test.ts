@@ -7,6 +7,22 @@ describe("Fetcher Option Row", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
 
+    test("When the component is shown, then it is rendered correctly", async () => {
+        render(FetcherOptionRow, {
+            target: document.body,
+            props: {
+                name: "NAME",
+                value: "",
+                defaultValue: "DEFAULT_VALUE",
+            },
+        });
+
+        expect(screen.getByText("NAME", { exact: true })).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("DEFAULT_VALUE")).toBeInTheDocument();
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+        expect(screen.getByRole("button")).toBeInTheDocument();
+    });
+
     test("When you enter nothing, then the value is not overridden", async () => {
         render(FetcherOptionRow, {
             target: document.body,
@@ -21,7 +37,7 @@ describe("Fetcher Option Row", () => {
         expect(checkBox).not.toBeChecked();
     });
 
-    test("When you enter something, then the value is not overridden", async () => {
+    test("When you enter something, then the value is overridden", async () => {
         render(FetcherOptionRow, {
             target: document.body,
             props: {

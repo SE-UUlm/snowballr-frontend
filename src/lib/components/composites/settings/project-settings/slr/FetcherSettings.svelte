@@ -105,7 +105,7 @@
     {#if error}
         <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
     {/if}
-    {#if usedFetchers}
+    {#if !loading && usedFetchers}
         {#if usedFetchers.length === 0}
             <p>This project has no fetcher configured yet.</p>
         {/if}
