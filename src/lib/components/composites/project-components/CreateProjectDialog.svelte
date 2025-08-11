@@ -80,6 +80,14 @@
                 });
         }
     }
+
+    // if dialog is closed, then reset the invitee list
+    $effect(() => {
+        if (!open) {
+            invitees = [];
+            isErrorOnProjectCreation = false;
+        }
+    });
 </script>
 
 <!--
@@ -94,10 +102,6 @@ Usage:
 -->
 <div class="px-5">
     <Dialog
-        onCancelClick={() => {
-            invitees = [];
-            isErrorOnProjectCreation = false;
-        }}
         title="Create Project"
         triggerProps={{
             class: cn(

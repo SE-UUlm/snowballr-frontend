@@ -56,6 +56,13 @@
             console.error(`Couldn't invite users: ${inviteUsersError}`);
         }
     }
+
+    // if dialog is closed, then reset the invitee list
+    $effect(() => {
+        if (!open) {
+            invitees = [];
+        }
+    });
 </script>
 
 <!--
@@ -77,9 +84,6 @@ Usage:
 ```
 -->
 <Dialog
-    onCancelClick={() => {
-        invitees = [];
-    }}
     title="Invite Users"
     triggerProps={{
         class: buttonVariants({ variant: "default" }),
