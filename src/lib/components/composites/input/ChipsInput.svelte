@@ -285,6 +285,7 @@ Usage:
             <input
                 id={INPUT_ID}
                 class="placeholder:text-placeholder max-w-full min-w-10 flex-1 focus:outline-none"
+                autocomplete="off"
                 data-testid={INPUT_ID}
                 onkeydown={handleKeyDown}
                 {placeholder}
