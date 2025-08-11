@@ -23,7 +23,7 @@
 
     /**
      * Checks whether a candidate, represented by the input email or name, already was added as
-     * invitee.
+     * an invitee.
      */
     function isCandidateAlreadyInvitee(input: string): boolean {
         return (
@@ -39,7 +39,7 @@
      * In case of a loading error, an empty list is returned and an error flag is set to
      * display an error alert.
      *
-     * @param input - the content of the input field, i.e. the search string
+     * @param input - the content of the input field, i.e., the search string
      * @returns list of "name \<email\>" representations of users that can be invited
      */
     async function loadInviteCandidates(input: string): Promise<string[]> {
@@ -66,7 +66,7 @@
     }
 
     /**
-     * Checks, whether a given input is valid, i.e.
+     * Checks whether a given input is valid, i.e.
      *   - a valid email
      *   - the name of a registered user
      *   - no duplicate, i.e., neither the name nor the email of a user
