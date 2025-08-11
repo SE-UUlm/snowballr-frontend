@@ -177,6 +177,7 @@ vi.mock("$lib/grpc-api", () => {
                 },
             }),
             register: vi.fn(),
+            verifyEmail: vi.fn(),
             login: vi.fn(),
             logout: vi.fn(),
             getAuthenticationStatus: mock({
@@ -211,6 +212,7 @@ vi.mock("$lib/grpc-api", () => {
             removePaperFromReadingList: vi.fn(),
             getPendingInvitationsForUser: mock({ projects: [Object.values(Projects).at(0)!] }),
             inviteUserToProject: vi.fn(),
+            acceptProjectInvitation: vi.fn(),
             getPendingInvitationsForProject: mock({ users: [Object.values(Users).at(0)!] }),
             getProjectMembers: mock({ members: Object.values(Members) }),
             removeProjectMember: vi.fn(),
