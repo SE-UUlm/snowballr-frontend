@@ -5,7 +5,6 @@
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
-    import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { Nothing } from "$lib/model/api/base.js";
@@ -14,6 +13,8 @@
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import type { RpcError } from "@protobuf-ts/runtime-rpc";
+    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
@@ -51,8 +52,9 @@
         await backendService
             .login(userData)
             .then(async () => await goto("/"))
-            .catch((error) => {
-                if (error.code === StatusCodes.UNAUTHENTICATED) {
+            .catch((error: RpcError) => {
+                const errorCodeValue = GrpcStatusCode[error.code as keyof typeof GrpcStatusCode];
+                if (errorCodeValue === GrpcStatusCode.UNAUTHENTICATED) {
                     signinError = {
                         errorTitle: "Invalid Credentials",
                         errorDetails:

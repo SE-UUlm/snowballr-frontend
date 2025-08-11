@@ -5,7 +5,6 @@
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
-    import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { AuthenticationStatus } from "$lib/model/api/authentication";
@@ -14,6 +13,8 @@
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import type { RpcError } from "@protobuf-ts/runtime-rpc";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -72,8 +73,9 @@
         await backendService
             .register(userData)
             .then(async () => await goto("/"))
-            .catch((error) => {
-                if (error.code === StatusCodes.ALREADY_EXISTS) {
+            .catch((error: RpcError) => {
+                const errorCodeValue = GrpcStatusCode[error.code as keyof typeof GrpcStatusCode];
+                if (errorCodeValue === GrpcStatusCode.ALREADY_EXISTS) {
                     registrationError = {
                         errorTitle: "Email Already Registered",
                         errorDetails:
