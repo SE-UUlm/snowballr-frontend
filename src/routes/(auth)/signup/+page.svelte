@@ -6,13 +6,11 @@
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
     import { goto } from "$app/navigation";
-    import { onMount } from "svelte";
-    import { AuthenticationStatus } from "$lib/model/api/authentication";
-    import { Nothing } from "$lib/model/api/base";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { toast } from "svelte-sonner";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
 
@@ -23,22 +21,7 @@
 
     let registrationError: ApiError | undefined = $state(undefined);
 
-    let isLoadingAuthStatus = $state(true);
     const loading = $state({ value: false });
-
-    onMount(async () => {
-        try {
-            const authStatus = (await backendService.getAuthenticationStatus(Nothing).response)
-                .authenticationStatus;
-            if (authStatus === AuthenticationStatus.AUTHENTICATED) {
-                await goto("/");
-            }
-        } catch (error) {
-            console.error("There was an error acquiring the authentication status:", error);
-        }
-
-        isLoadingAuthStatus = false;
-    });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -72,7 +55,13 @@
 
         await backendService
             .register(userData)
-            .then(async () => await goto("/"))
+            .then(async () => {
+                toast.info("Registration successful!", {
+                    description:
+                        "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
+                });
+                await goto("/signin");
+            })
             .catch((error: RpcError) => {
                 const errorCodeValue = GrpcStatusCode[error.code as keyof typeof GrpcStatusCode];
                 if (errorCodeValue === GrpcStatusCode.ALREADY_EXISTS) {
@@ -97,12 +86,7 @@
     <title>Sign Up</title>
 </svelte:head>
 
-<Card.Root
-    class={cn(
-        "flex w-full max-w-xl flex-col border-slate-500 shadow-lg",
-        isLoadingAuthStatus ? "opacity-0" : "",
-    )}
->
+<Card.Root class={cn("flex w-full max-w-xl flex-col border-slate-500 shadow-lg")}>
     <Card.Header class="flex w-full flex-col">
         <Card.Title class="text-3xl">Sign Up</Card.Title>
         <Card.Description>Enter your information to create an account</Card.Description>
@@ -116,7 +100,7 @@
                 <Input
                     bind:this={firstNameInput}
                     class="w-full"
-                    disabled={isLoadingAuthStatus || loading.value}
+                    disabled={loading.value}
                     errorMessagePrefix="First name"
                     inputId="first-name-input"
                     label="First Name"
@@ -128,7 +112,7 @@
                 <Input
                     bind:this={lastNameInput}
                     class="w-full"
-                    disabled={isLoadingAuthStatus || loading.value}
+                    disabled={loading.value}
                     errorMessagePrefix="Last name"
                     inputId="last-name-input"
                     label="Last Name"
@@ -141,7 +125,7 @@
             <Input
                 bind:this={emailInput}
                 class="w-full"
-                disabled={isLoadingAuthStatus || loading.value}
+                disabled={loading.value}
                 errorMessagePrefix="Email must have"
                 inputId="email-input"
                 label="Email"
@@ -150,11 +134,7 @@
                 schema={Schema.email}
                 type="email"
             />
-            <PasswordInput
-                bind:this={passwordInput}
-                class="w-full"
-                disabled={isLoadingAuthStatus || loading.value}
-            />
+            <PasswordInput bind:this={passwordInput} class="w-full" disabled={loading.value} />
             <LoadingButton
                 class="w-full"
                 label="Create an account"
