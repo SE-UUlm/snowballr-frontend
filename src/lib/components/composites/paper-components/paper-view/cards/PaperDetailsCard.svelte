@@ -11,6 +11,7 @@
     import { toast } from "svelte-sonner";
     import type { StringifiedPaper } from "$lib/model/general";
     import { stringifyPaper } from "$lib/utils/model-helper";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -25,6 +26,7 @@
     let originalPaper: StringifiedPaper | undefined = $state(undefined);
     let isInEditMode = $state(startInEditMode);
     let isPaperModified = $state(false);
+    let isMakingApiCall = $state(false);
 
     loadingPaper.then((p) => {
         originalPaper = stringifyPaper(p);
@@ -68,6 +70,8 @@
             return;
         }
 
+        isMakingApiCall = true;
+
         // Convert stringifiedPaper back to Paper, ensuring correct types
         const paperObject: Paper = {
             ...paper,
@@ -77,7 +81,7 @@
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
-        await backendService
+        const updateCall = backendService
             .updatePaper({
                 paper: paperObject,
                 mask: {
@@ -87,11 +91,17 @@
             .response.then((updatedPaper) => {
                 originalPaper = stringifyPaper(updatedPaper);
                 paper = stringifyPaper(updatedPaper);
-                toast.success("Successfully updated the paper.");
-            })
-            .catch(() => {
-                toast.error("Failed to update the paper.");
             });
+
+        toast.promise(updateCall, {
+            loading: "Updating paper...",
+            success: "Successfully updated the paper.",
+            error: "Failed to update the paper.",
+        });
+
+        await updateCall;
+
+        isMakingApiCall = false;
     }
 
     function isEqual(obj1: unknown, obj2: unknown): boolean {
@@ -125,19 +135,23 @@ Usage:
         {#if allowEditModeToggle}
             <div class="flex flex-row gap-4 pr-2.5">
                 {#if isInEditMode}
-                    <Save
-                        class={cn(
-                            "select-none",
-                            isPaperModified ? "hover:cursor-pointer" : "opacity-30",
-                        )}
-                        aria-label="Save Paper Changes"
-                        data-testid="save-paper-changes-btn"
-                        onclick={async () => {
-                            if (!isPaperModified) return;
-                            await updatePaper();
-                        }}
-                        size={24}
-                    />
+                    {#if isMakingApiCall}
+                        <LoaderCircle class="animate-spin" />
+                    {:else}
+                        <Save
+                            class={cn(
+                                "select-none",
+                                isPaperModified ? "hover:cursor-pointer" : "opacity-30",
+                            )}
+                            aria-label="Save Paper Changes"
+                            data-testid="save-paper-changes-btn"
+                            onclick={async () => {
+                                if (!isPaperModified) return;
+                                await updatePaper();
+                            }}
+                            size={24}
+                        />
+                    {/if}
                 {/if}
                 <Pencil
                     class="select-none hover:cursor-pointer"
