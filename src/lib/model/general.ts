@@ -40,6 +40,11 @@ interface ProjectPaperFilter {
     criteria: string[];
 }
 
+interface Person {
+    firstName: string;
+    lastName: string;
+}
+
 export type {
     ValidationResult,
     ApiError,
@@ -48,4 +53,5 @@ export type {
     Stage,
     PaperStatus,
     ProjectPaperFilter,
+    Person,
 };

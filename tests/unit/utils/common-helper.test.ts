@@ -13,24 +13,23 @@ import {
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import type { Person } from "$lib/model/general";
 
 describe("Extract names from persons", () => {
     test("When no person objects are provided, no names are extracted and stringified", () => {
-        const persons: { firstName: string; lastName: string }[] = [];
+        const persons: Person[] = [];
 
         expect(getNames(persons)).toBe("");
     });
 
     test("When one person is provided, only the person's name is extracted", () => {
-        const persons: { firstName: string; lastName: string }[] = [
-            { firstName: "John", lastName: "Doe" },
-        ];
+        const persons: Person[] = [{ firstName: "John", lastName: "Doe" }];
 
         expect(getNames(persons)).toBe("John Doe");
     });
 
     test("When multiple persons are provided, the names are extracted and concatenated, separated by an ','", () => {
-        const persons: { firstName: string; lastName: string }[] = [
+        const persons: Person[] = [
             { firstName: "John", lastName: "Doe" },
             { firstName: "Jane", lastName: "Doe" },
         ];

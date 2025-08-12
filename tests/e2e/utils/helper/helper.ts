@@ -1,3 +1,4 @@
+import type { Person } from "$lib/model/general";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 /**
@@ -26,15 +27,13 @@ export async function reloadWait(page: Page, element: Locator) {
  * @param page - the current page
  * @returns the first and last name of the user
  */
-export async function getNameOfCurrentUser(
-    page: Page,
-): Promise<{ firstName: string; lastName: string }> {
+export async function getNameOfCurrentUser(page: Page): Promise<Person> {
     await page.getByRole("button", { name: /^[A-Z]{2}$/ }).click();
     const userNameLocator = page.getByRole("group", { name: /^[a-zA-Z]+ [a-zA-Z]+$/, exact: true });
     await expect(userNameLocator).toBeVisible();
     const userName = await userNameLocator.textContent().then((text) => text!.trim());
     await page.mouse.click(0, 0); // Close the menu again (click background)
     await expect(userNameLocator).not.toBeVisible();
-    const [firstName, lastName] = userName!.split(" ");
+    const [firstName, lastName] = userName.split(" ");
     return { firstName, lastName };
 }

@@ -1,5 +1,5 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
-import type { PaperStatus } from "$lib/model/general";
+import type { PaperStatus, Person } from "$lib/model/general";
 import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
 import type { Paper } from "$lib/model/api/paper";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
@@ -8,7 +8,7 @@ import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
  * "\<firstName\> \<lastName\>.
  */
-function getName(person: { firstName: string; lastName: string }): string {
+function getName(person: Person): string {
     return `${person.firstName} ${person.lastName}`;
 }
 
@@ -22,7 +22,7 @@ function getName(person: { firstName: string; lastName: string }): string {
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
-function getNames(persons: { firstName: string; lastName: string }[]): string {
+function getNames(persons: Person[]): string {
     return persons.map((person) => getName(person)).join(", ");
 }
 
