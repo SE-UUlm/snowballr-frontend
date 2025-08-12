@@ -49,11 +49,8 @@
         bottomBar = undefined,
     }: PaperViewProps = $props();
 
-    const loadingPaper = loadingPaperWrapper.then((wrapper) => {
-        const loadedPaper = asPaper(wrapper);
-        return loadedPaper;
-    });
-    const loadingPaperId = loadingPaper.then((paper) => paper.id);
+    const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
+    const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
     // As the navigation bar shows either the paper id or the local / relative id, if the paper
     // is a project paper, the id for the navigation bar must be handled differently
     const loadingPaperIdForNavigationBar = $derived.by(() =>
