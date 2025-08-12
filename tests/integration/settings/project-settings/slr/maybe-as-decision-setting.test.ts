@@ -21,31 +21,35 @@ describe("Maybe As Decision Project Setting", () => {
         vi.restoreAllMocks();
     });
 
-    test("When all props are provided and the SLR settings are not locked, then the component renders correctly, with a title, a switch with a label, and a description", async () => {
-        const mockGetCall = mockApiCall("getProjectById", projectData);
-        render(MaybeAsDecisionSetting, {
-            target: document.body,
-            props: {
-                projectId: projectData.id,
-                loadingProject: loading(projectData),
-                slrSettingsLocked: false,
-            },
-        });
+    test(
+        "When all props are provided and the SLR settings are not locked, then the component renders correctly, with a title, " +
+            "a switch with a label, and a description",
+        async () => {
+            const mockGetCall = mockApiCall("getProjectById", projectData);
+            render(MaybeAsDecisionSetting, {
+                target: document.body,
+                props: {
+                    projectId: projectData.id,
+                    loadingProject: loading(projectData),
+                    slrSettingsLocked: false,
+                },
+            });
 
-        const maybeSwitch = screen.getByRole("switch");
-        await waitFor(() => expect(maybeSwitch).toBeEnabled());
-        expect(maybeAsDecision.isActivated).toBe(false);
-        expect(maybeSwitch).not.toBeChecked();
+            const maybeSwitch = screen.getByRole("switch");
+            await waitFor(() => expect(maybeSwitch).toBeEnabled());
+            expect(maybeAsDecision.isActivated).toBe(false);
+            expect(maybeSwitch).not.toBeChecked();
 
-        expect(screen.getByText("Maybe as Decision")).toBeInTheDocument();
-        expect(screen.getByText("Allow 'Maybe' as decision on a Paper.")).toBeInTheDocument();
-        expect(
-            screen.getByText(
-                "When turned on, a reviewer can set their decision to 'Maybe', next to 'Accept' or 'Decline'.",
-            ),
-        ).toBeInTheDocument();
-        expect(mockGetCall).toHaveBeenCalledExactlyOnceWith({ id: projectData.id });
-    });
+            expect(screen.getByText("Maybe as Decision")).toBeInTheDocument();
+            expect(screen.getByText("Allow 'Maybe' as decision on a Paper.")).toBeInTheDocument();
+            expect(
+                screen.getByText(
+                    "When turned on, a reviewer can set their decision to 'Maybe', next to 'Accept' or 'Decline'.",
+                ),
+            ).toBeInTheDocument();
+            expect(mockGetCall).toHaveBeenCalledExactlyOnceWith({ id: projectData.id });
+        },
+    );
 
     test("When all props are provided and the SLR settings are locked, then the component renders correctly, with a title, a switch with a label, and a description", async () => {
         projectData.status = ProjectStatus.ACTIVE_LOCKED;
@@ -74,7 +78,7 @@ describe("Maybe As Decision Project Setting", () => {
         expect(mockGetCall).toHaveBeenCalledExactlyOnceWith({ id: projectData.id });
     });
 
-    test("When the switch is clicked (initialy off), then a popup should appear, asking for confirmation to change the SLR settings", async () => {
+    test("When the switch is clicked (initially off), then a popup should appear, asking for confirmation to change the SLR settings", async () => {
         const mockGetCall = mockApiCall("getProjectById", projectData);
         render(MaybeAsDecisionSetting, {
             target: document.body,
@@ -101,33 +105,37 @@ describe("Maybe As Decision Project Setting", () => {
         expect(mockGetCall).toHaveBeenCalledOnce();
     });
 
-    test("When the switch is clicked (initially off), and the cancel option is selected, then the popup should close and the switch should remain in its previous state", async () => {
-        const mockGetCall = mockApiCall("getProjectById", projectData);
-        render(MaybeAsDecisionSetting, {
-            target: document.body,
-            props: {
-                projectId: projectData.id,
-                loadingProject: loading(projectData),
-                slrSettingsLocked: false,
-            },
-        });
+    test(
+        "When the switch is clicked (initially off), and the cancel option is selected, then the popup should close " +
+            "and the switch should remain in its previous state",
+        async () => {
+            const mockGetCall = mockApiCall("getProjectById", projectData);
+            render(MaybeAsDecisionSetting, {
+                target: document.body,
+                props: {
+                    projectId: projectData.id,
+                    loadingProject: loading(projectData),
+                    slrSettingsLocked: false,
+                },
+            });
 
-        const maybeSwitch = screen.getByRole("switch");
-        await waitFor(() => expect(maybeSwitch).toBeEnabled());
-        expect(maybeSwitch).not.toBeChecked();
+            const maybeSwitch = screen.getByRole("switch");
+            await waitFor(() => expect(maybeSwitch).toBeEnabled());
+            expect(maybeSwitch).not.toBeChecked();
 
-        maybeSwitch.click();
-        await waitFor(() => expect(screen.getByRole("alertdialog")).toBeInTheDocument());
+            maybeSwitch.click();
+            await waitFor(() => expect(screen.getByRole("alertdialog")).toBeInTheDocument());
 
-        const cancelButton = screen.getByRole("button", { name: "Cancel" });
-        cancelButton.click();
+            const cancelButton = screen.getByRole("button", { name: "Cancel" });
+            cancelButton.click();
 
-        await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
+            await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
 
-        expect(maybeSwitch).not.toBeChecked();
-        expect(maybeAsDecision.isActivated).toBe(false);
-        expect(mockGetCall).toHaveBeenCalledOnce();
-    });
+            expect(maybeSwitch).not.toBeChecked();
+            expect(maybeAsDecision.isActivated).toBe(false);
+            expect(mockGetCall).toHaveBeenCalledOnce();
+        },
+    );
 
     test("When the switch is toggled, then the SLR settings should be updated accordingly", async () => {
         const mockGetCall = mockApiCall("getProjectById", projectData);

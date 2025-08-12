@@ -63,6 +63,7 @@ Usage:
     {:then}
         <ToggleableInput
             isEditable={isInEditMode}
+            {key}
             onInputChange={updateValue}
             placeholder={`No ${label} available`}
             value={paper[key]}

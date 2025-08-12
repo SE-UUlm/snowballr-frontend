@@ -92,6 +92,7 @@ Usage:
         <ToggleableInput
             class="h-full"
             isEditable={isInEditMode}
+            key="abstract"
             onInputChange={(c) => {
                 paper = { ...paper, abstrakt: c };
             }}

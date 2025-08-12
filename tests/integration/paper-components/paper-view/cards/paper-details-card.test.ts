@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { loading, createPaper } from "../../../../model-builder";
 import { waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
+import { mockApiCall } from "$tests/setupTest";
 
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {
@@ -23,21 +24,14 @@ describe("PaperDetailsCard", () => {
         const card = screen.getByTestId("paper-details-card");
         expect(card).toBeInTheDocument();
 
-        // edit mode can be toggled
-        const editButtons = document.getElementsByTagName("svg");
-        let editButtonCount = 0;
-        for (const editButton of editButtons) {
-            if (!editButton.classList.contains("lucide-pencil")) {
-                continue;
-            }
+        const toggleEditModeButtons = screen.queryAllByTestId("toggle-edit-paper-mode-btn");
+        expect(toggleEditModeButtons).toHaveLength(1);
 
-            expect(editButton).toBeInTheDocument();
-            editButtonCount++;
-        }
-        expect(editButtonCount).toBe(1);
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(0);
 
         // paper details are in read-only mode
-        const toggleableInputs = screen.queryAllByTestId("toggleable-input");
+        const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
         expect(toggleableInputs).toHaveLength(5);
         for (const input of toggleableInputs) {
             expect(input).toBeInTheDocument();
@@ -102,21 +96,16 @@ describe("PaperDetailsCard", () => {
 
         await waitForComponentLoading();
 
-        const svgs = document.getElementsByTagName("svg");
-        const editButtons: SVGSVGElement[] = [];
-        for (const svg of svgs) {
-            if (svg.classList.contains("lucide-pencil")) {
-                editButtons.push(svg);
-            }
-        }
-        expect(editButtons.length).toBe(1);
+        const toggleEditModeButtons = screen.queryAllByTestId("toggle-edit-paper-mode-btn");
+        expect(toggleEditModeButtons).toHaveLength(1);
 
-        const [editButton] = editButtons;
+        let savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(0);
 
-        await user.click(editButton);
+        await user.click(toggleEditModeButtons[0]);
 
         await waitFor(() => {
-            const toggleableInputs = screen.queryAllByTestId("toggleable-input");
+            const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
             expect(toggleableInputs).toHaveLength(5);
             for (const input of toggleableInputs) {
                 expect(input).toBeInTheDocument();
@@ -124,16 +113,22 @@ describe("PaperDetailsCard", () => {
             }
         });
 
-        await user.click(editButton);
+        savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(1);
+
+        await user.click(toggleEditModeButtons[0]);
 
         await waitFor(() => {
-            const toggleableInputs = screen.queryAllByTestId("toggleable-input");
+            const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
             expect(toggleableInputs).toHaveLength(5);
             for (const input of toggleableInputs) {
                 expect(input).toBeInTheDocument();
                 expect(input).toHaveAttribute("readonly");
             }
         });
+
+        savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(0);
     });
 
     test("When editMode is not allowed, then edit buttons are not shown", async () => {
@@ -150,17 +145,11 @@ describe("PaperDetailsCard", () => {
 
         await waitForComponentLoading();
 
-        const editButtons = document.getElementsByTagName("svg");
-        let editButtonCount = 0;
-        for (const editButton of editButtons) {
-            if (!editButton.classList.contains("lucide-pencil")) {
-                continue;
-            }
+        const toggleEditModeButtons = screen.queryAllByTestId("toggle-edit-paper-mode-btn");
+        expect(toggleEditModeButtons).toHaveLength(0);
 
-            expect(editButton).toBeInTheDocument();
-            editButtonCount++;
-        }
-        expect(editButtonCount).toBe(0);
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(0);
     });
 
     test("When paper is loading, then skeletons are shown", async () => {
@@ -177,5 +166,90 @@ describe("PaperDetailsCard", () => {
 
         const skeletons = screen.queryAllByTestId("skeleton");
         expect(skeletons).toHaveLength(11);
+    });
+
+    test("When paper is updated, then the API call is invoked", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const mockCall = mockApiCall("updatePaper", paper);
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const titleInput = screen.getByTestId("toggleable-input-title");
+        expect(titleInput).toBeInTheDocument();
+        await user.type(titleInput, " - Updated");
+
+        const abstractInput = screen.getByTestId("toggleable-input-abstract");
+        expect(abstractInput).toBeInTheDocument();
+        await user.type(abstractInput, " - Updated");
+
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(1);
+
+        await user.click(savePaperChangesButtons[0]);
+
+        expect(mockCall).toHaveBeenCalledTimes(1);
+    });
+
+    test("When save paper changes button is clicked without changes present, then the API call isn't invoked", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const mockCall = mockApiCall("updatePaper", paper);
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(1);
+
+        await user.click(savePaperChangesButtons[0]);
+
+        expect(mockCall).toHaveBeenCalledTimes(0);
+    });
+
+    test("When the paper is updated with an invalid year value, then the API call isn't invoked", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const mockCall = mockApiCall("updatePaper", paper);
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const yearInput = screen.getByTestId("toggleable-input-year");
+        expect(yearInput).toBeInTheDocument();
+
+        await user.type(yearInput, "foobar123");
+
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(1);
+
+        await user.click(savePaperChangesButtons[0]);
+
+        expect(mockCall).toHaveBeenCalledTimes(0);
     });
 });

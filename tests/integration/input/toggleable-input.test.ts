@@ -9,6 +9,7 @@ describe("ToggleableInput", () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
+                key: "test-input",
                 isEditable: true,
                 onInputChange: () => {},
             },
@@ -34,6 +35,7 @@ describe("ToggleableInput", () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
+                key: "test-input",
                 isEditable: false,
                 onInputChange: () => {},
             },
@@ -57,6 +59,7 @@ describe("ToggleableInput", () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
+                key: "test-input",
                 isEditable: true,
                 onInputChange: onInputChange,
             },

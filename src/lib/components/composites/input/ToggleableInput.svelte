@@ -4,11 +4,13 @@
     import { cn } from "$lib/utils/shadcn-helper";
 
     type Props = WithElementRef<HTMLInputAttributes> & {
+        key: string;
         isEditable: boolean;
         onInputChange: (input: string) => void;
     };
 
     let {
+        key,
         isEditable = $bindable(false),
         value = $bindable(),
         onInputChange,
@@ -35,7 +37,7 @@ Usage:
         isEditable ? "border-input rounded-md" : "border-transparent",
         className,
     )}
-    data-testid="toggleable-input"
+    data-testid={`toggleable-input-${key}`}
     oninput={(event) => onInputChange((event.target as HTMLTextAreaElement)?.value as string)}
     {placeholder}
     readonly={!isEditable}

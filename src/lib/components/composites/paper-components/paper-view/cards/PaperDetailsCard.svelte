@@ -84,9 +84,9 @@
                     paths: generateFieldMask(paperObject),
                 },
             })
-            .response.then(() => {
-                originalPaper = paper;
-                isPaperModified = false;
+            .response.then((updatedPaper) => {
+                originalPaper = stringifyPaper(updatedPaper);
+                paper = stringifyPaper(updatedPaper);
                 toast.success("Successfully updated the paper.");
             })
             .catch(() => {
@@ -130,15 +130,19 @@ Usage:
                             "select-none",
                             isPaperModified ? "hover:cursor-pointer" : "opacity-30",
                         )}
-                        onclick={() => {
+                        aria-label="Save Paper Changes"
+                        data-testid="save-paper-changes-btn"
+                        onclick={async () => {
                             if (!isPaperModified) return;
-                            updatePaper();
+                            await updatePaper();
                         }}
                         size={24}
                     />
                 {/if}
                 <Pencil
                     class="select-none hover:cursor-pointer"
+                    aria-label="Toggle Edit Paper Mode"
+                    data-testid="toggle-edit-paper-mode-btn"
                     onclick={() => (isInEditMode = !isInEditMode)}
                     size={24}
                 />
