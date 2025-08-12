@@ -10,9 +10,18 @@
     export interface PaperDetailProp {
         key: keyof Paper;
         label: string;
-        transform?: (
+        /**
+         * The method to transform the paper property value to a displayable string.
+         */
+        toDisplayValue?: (
             value: any /* eslint-disable-line @typescript-eslint/no-explicit-any */,
         ) => string;
+        /**
+         * The method to transform the displayed string to the paper property value.
+         */
+        fromDisplayValue?: (
+            value: string,
+        ) => any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
     }
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
@@ -24,7 +33,12 @@
     };
 
     let { prop, index = 0, loadingPaper, paper = $bindable(), isInEditMode }: Props = $props();
-    const { key, label, transform = undefined } = prop;
+    const {
+        key,
+        label,
+        toDisplayValue: toDisplayValue = (v) => v.toString(),
+        fromDisplayValue = (v) => v,
+    } = prop;
 
     const skeletonValues = [
         "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
@@ -36,13 +50,8 @@
         "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
     ];
 
-    function applyValue() {
-        const value = paper[key];
-        return transform ? transform(value) : value;
-    }
-
     function updateValue(newValue: string) {
-        paper = { ...paper, [key]: newValue };
+        paper = { ...paper, [key]: fromDisplayValue(newValue) };
     }
 </script>
 
@@ -72,7 +81,7 @@ Usage:
             isEditable={isInEditMode}
             onInputChange={updateValue}
             placeholder={`No ${label} available`}
-            value={applyValue()}
+            value={toDisplayValue(paper[key])}
         />
     {:catch}
         <ErrorIndicator errorMessage={`Couldn't load ${label}`} />
