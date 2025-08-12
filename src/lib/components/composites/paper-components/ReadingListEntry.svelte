@@ -5,6 +5,7 @@
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
     import type { Paper } from "$lib/model/api/paper";
+    import { ExternalLink } from "lucide-svelte";
 
     interface ReadingListEntryProps {
         paper: Paper;
@@ -33,6 +34,7 @@ This component shows the
 Furthermore this component is clickable and navigates to the corresponding paper view,
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
+If an onClick event handler is provided, a link icon is shown to open the paper.
 
 In addition, it is possible to provide a callback function `onPaperChangedBookmarkStatus()`
 that is propagated to the `PaperBookmarkButton` and defines the behavior
@@ -55,6 +57,16 @@ Usage:
         {...!onClick ? { href: href } : { type: "button" }}
     >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
+        {#if onClick}
+            <a
+                class="text-muted-foreground self-start"
+                {href}
+                onclick={(e) => e.stopPropagation()}
+                title="Open Paper"
+            >
+                <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+            </a>
+        {/if}
     </svelte:element>
     <div class="flex flex-row items-center gap-4">
         <PaperBookmarkButton

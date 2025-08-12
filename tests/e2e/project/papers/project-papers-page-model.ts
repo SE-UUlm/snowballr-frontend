@@ -123,11 +123,13 @@ export class ProjectPapersPageModel {
         await expect(this.paperDetailsCard).toBeVisible();
     }
 
-    /** Double-clicks a paper to open its full view */
+    /** Clicks a paper's link icon to open its full view */
     async openPaperView(stageIndex: number, paperIndexInStage: number) {
         await this.openStage(stageIndex);
         const paperLocator = this.getPaper(stageIndex, paperIndexInStage);
-        await paperLocator.dblclick();
+        const iconLink = paperLocator.getByRole("link", { name: "Open Paper" });
+        (await iconLink.elementHandle())!.waitForElementState("stable");
+        await iconLink.click();
     }
 
     /** Asserts that the paper view of a certain paper was opened */

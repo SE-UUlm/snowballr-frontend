@@ -42,7 +42,8 @@ test.describe("Project Paper View Navigation", () => {
             await projectPapersPage.getStageButton(0).click();
             await projectPapersPage
                 .getPaperByTitle(projectPaperViewPage.projectPaperNames[0])
-                .dblclick();
+                .getByRole("link", { name: "Open Paper" })
+                .click();
 
             await expect(
                 projectPaperViewPage.getHeading(projectPaperViewPage.projectPaperNames[0]),

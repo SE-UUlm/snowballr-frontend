@@ -14,6 +14,7 @@
     import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
+    import { ExternalLink } from "lucide-svelte";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
@@ -49,6 +50,7 @@ This component shows the
 Furthermore this component is clickable and navigates to the corresponding project homepage,
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
+If an onClick event handler is provided, a link icon is shown to open the paper.
 
 Usage:
 ```svelte
@@ -84,6 +86,16 @@ Usage:
             </span>
         {:else}
             <span class="italic">no members</span>
+        {/if}
+        {#if onClick}
+            <a
+                class="text-muted-foreground self-start"
+                {href}
+                onclick={(e) => e.stopPropagation()}
+                title="Open Project"
+            >
+                <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+            </a>
         {/if}
     </div>
     <div class="flex w-fit flex-row items-center justify-start gap-x-5 lg:justify-end lg:gap-x-2.5">

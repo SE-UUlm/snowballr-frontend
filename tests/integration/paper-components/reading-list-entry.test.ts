@@ -24,6 +24,7 @@ describe("ReadingListEntryComponent", () => {
             screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
+        expect(screen.queryByRole("link", { name: "Open Paper" })).not.toBeInTheDocument();
     });
 
     test("When all required props are provided, then the reading list entry is completely shown", async () => {
@@ -45,9 +46,10 @@ describe("ReadingListEntryComponent", () => {
             screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
+        expect(screen.getByRole("link", { name: "Open Paper" })).toBeInTheDocument();
     });
 
-    test("When the user provides a custom onclick function, then it is executed on a single click (and not on double click)", async () => {
+    test("When the user provides a custom onclick function, then it is executed on click", async () => {
         let onClickExecuted: boolean = false;
 
         render(ReadingListEntry, {
@@ -58,16 +60,25 @@ describe("ReadingListEntryComponent", () => {
         });
 
         await waitForComponentLoading();
-
-        await userEvent.dblClick(
-            screen.getByRole("button", { name: "Paper info for reading list entry" }),
-        );
-        expect(onClickExecuted).equal(false);
-
         await userEvent.click(
             screen.getByRole("button", { name: "Paper info for reading list entry" }),
         );
         await new Promise((resolve) => setTimeout(resolve, 350));
         expect(onClickExecuted).equal(true);
+    });
+
+    test("When the user provides a custom onclick function, then the link button opens the paper", async () => {
+        render(ReadingListEntry, {
+            props: {
+                paper: Papers.demoPaper1,
+                onClick: () => {},
+            },
+        });
+
+        await waitForComponentLoading();
+        expect(screen.getByRole("link", { name: "Open Paper" })).toHaveAttribute(
+            "href",
+            "/paper/0",
+        );
     });
 });
