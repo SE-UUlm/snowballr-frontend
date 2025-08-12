@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/svelte";
-import { describe, expect, test } from "vitest";
+import { render, screen, waitFor } from "@testing-library/svelte";
+import { describe, expect, test, vi } from "vitest";
 import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
 import type { ValidationResult } from "$lib/model/general";
 import userEvent from "@testing-library/user-event";
@@ -9,6 +9,13 @@ function validateDemo(input: string): ValidationResult {
         return { success: false, error: "Please enter a correct input!" };
     }
     return { success: true };
+}
+
+const suggestions = ["world", "wild", "banana", "apple"];
+function searchSuggestionsDemo(input: string): Promise<string[]> {
+    return Promise.resolve(
+        suggestions.filter((suggestion) => suggestion.includes(input.toLowerCase())),
+    );
 }
 
 async function type(input: string): Promise<void> {
@@ -56,7 +63,7 @@ describe("ChipsInput", () => {
         expect(screen.getByTestId("chips-input-container")).toHaveClass("flex-row");
     });
 
-    test("When a placeholder text is provided, then the input display this placeholder", () => {
+    test("When a placeholder text is provided, then the input displays this placeholder", () => {
         render(ChipsInput, {
             props: {
                 items: [],
@@ -122,25 +129,33 @@ describe("ChipsInput", () => {
         expect(screen.getByText("Please enter a correct input!")).toBeInTheDocument();
     });
 
-    test("When the user deletes a chip, then it will be deleted from the displayed chips list and the items list.", async () => {
+    test("When the user deletes a chip, then it will be deleted from the displayed chips list and the items list", async () => {
         render(ChipsInput, {
             props: {
-                items: ["Hello", "World", "!"],
+                items: ["Hello", "wonderful", "World", "!"],
                 validate: validateDemo,
             },
         });
 
         await type("{Backspace}");
-
         expect(screen.getByTestId("chips-input")).toHaveFocus();
-        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(2);
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(3);
         expect(screen.queryByText("Hello")).toBeInTheDocument();
+        expect(screen.queryByText("wonderful")).toBeInTheDocument();
         expect(screen.queryByText("World")).toBeInTheDocument();
         expect(screen.queryByText("!")).not.toBeInTheDocument();
 
         await userEvent.click(screen.getByTestId("chip-0").getElementsByTagName("button")[0]);
-        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(1);
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(2);
         expect(screen.queryByText("Hello")).not.toBeInTheDocument();
+        expect(screen.queryByText("wonderful")).toBeInTheDocument();
+        expect(screen.queryByText("World")).toBeInTheDocument();
+
+        await type("{ArrowLeft}");
+        await type("{ArrowLeft}");
+        await type("{Backspace}");
+        expect(screen.getAllByTestId("chip-", { exact: false }).length).toBe(1);
+        expect(screen.queryByText("wonderful")).not.toBeInTheDocument();
         expect(screen.queryByText("World")).toBeInTheDocument();
     });
 
@@ -173,43 +188,43 @@ describe("ChipsInput", () => {
     });
 
     test("When a search function for suggestions is provided and the user inputs a valid string, then matching suggestions are shown", async () => {
-        const suggestions = ["world", "wild", "banana", "apple"];
-
         render(ChipsInput, {
             props: {
                 items: ["Hello"],
                 validate: validateDemo,
-                searchSuggestions: (input: string) =>
-                    suggestions.filter((suggestion) => suggestion.includes(input.toLowerCase())),
+                searchSuggestions: searchSuggestionsDemo,
             },
         });
 
         expect(screen.queryByTestId("chips-suggestions")).not.toBeInTheDocument();
 
         await type("W");
-        expect(screen.queryByTestId("chips-suggestions")).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByTestId("chips-suggestions")).toBeInTheDocument());
         expect(screen.queryAllByTestId("suggestion-", { exact: false }).length).toBe(2);
 
         await type("o");
-        expect(screen.queryAllByTestId("suggestion-", { exact: false }).length).toBe(1);
-
         await type("b");
+        await waitFor(() =>
+            expect(screen.queryByTestId("chips-suggestions")).not.toBeInTheDocument(),
+        );
         expect(screen.queryAllByTestId("suggestion-", { exact: false }).length).toBe(0);
     });
 
     test("When a search function for suggestions is provided and the user navigates using the up and down arrow keys, then the suggestions are selected and can be autocompleted", async () => {
-        const suggestions = ["world", "wild", "banana", "apple"];
+        // mock `scrollIntoView` as it is not supported by svelte testing and produces a type error,
+        // although it is not used in this test
+        window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
         render(ChipsInput, {
             props: {
                 items: ["Hello"],
                 validate: validateDemo,
-                searchSuggestions: (input: string) =>
-                    suggestions.filter((suggestion) => suggestion.includes(input.toLowerCase())),
+                searchSuggestions: searchSuggestionsDemo,
             },
         });
 
         await type("W");
+        await waitFor(() => expect(screen.queryByTestId("chips-suggestions")).toBeInTheDocument());
         await type("{ArrowDown}");
         expect(screen.queryByTestId("suggestion-0")).toHaveClass("bg-accent");
         expect(screen.queryByTestId("suggestion-1")).not.toHaveClass("bg-accent");
@@ -228,18 +243,16 @@ describe("ChipsInput", () => {
     });
 
     test("When a search function for suggestions is provided and the user clicks on a suggestion, then this suggestion is added", async () => {
-        const suggestions = ["world", "wild", "banana", "apple"];
-
         render(ChipsInput, {
             props: {
                 items: ["Hello"],
                 validate: validateDemo,
-                searchSuggestions: (input: string) =>
-                    suggestions.filter((suggestion) => suggestion.includes(input.toLowerCase())),
+                searchSuggestions: searchSuggestionsDemo,
             },
         });
 
         await type("W");
+        await waitFor(() => expect(screen.queryByTestId("chips-suggestions")).toBeInTheDocument());
         await userEvent.click(screen.getByTestId("suggestion-0"));
         expect(screen.queryByTestId("chips-input")).toHaveFocus();
         expect(screen.queryAllByTestId("chip-", { exact: false }).length).toBe(2);

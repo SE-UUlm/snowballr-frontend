@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Papers, ProjectPapers, Users } from "$tests/example-data";
-import { filterPapers, filterProjectPapers, filterUsers } from "$lib/utils/filters";
+import { Papers, ProjectPapers } from "$tests/example-data";
+import { filterPapers, filterProjectPapers } from "$lib/utils/filters";
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import { createPaper, createProjectPaper, createReview } from "$tests/model-builder";
 
@@ -140,26 +140,4 @@ describe("Filter project papers", () => {
             matchingProjectPaper,
         ]);
     });
-});
-
-describe("Filter users", () => {
-    test(
-        "When users should be filtered, but no search is provided, " +
-            "then the same list of users is returned ",
-        async () => {
-            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
-
-            expect(filterUsers(users, "")).toStrictEqual(users);
-        },
-    );
-
-    test(
-        "When users are filtered, then only users matching the search string - " +
-            "considering the FZF matching - are returned.",
-        async () => {
-            const users = [Users.johnDoe, Users.janeDoe, Users.aliceSmith, Users.bobJohnson];
-
-            expect(filterUsers(users, "Doe")).toStrictEqual([Users.johnDoe, Users.janeDoe]);
-        },
-    );
 });

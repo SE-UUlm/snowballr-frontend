@@ -12,7 +12,9 @@ export class HomePageModel {
         this.page = page;
         this.heading = page.getByRole("heading", { name: "SnowballR", exact: true });
         this.createProjectDialog = page.getByRole("dialog", { name: "Create Project" });
-        this.openCreateProjectDialogButton = page.getByTestId("dialog-trigger");
+        this.openCreateProjectDialogButton = page.getByRole("button", {
+            name: "Create new Project",
+        });
     }
 
     /**

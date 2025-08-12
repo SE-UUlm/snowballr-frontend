@@ -9,7 +9,7 @@ import { mockUserContext } from "$tests/integration/test-helper";
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
         mockApiCall("inviteUserToProject", {});
-        mockApiCall("getAllUsers", {
+        mockApiCall("getInviteCandidates", {
             users: [Users.johnDoe, Users.janeDoe, Users.henryMoore],
         });
     });
@@ -18,7 +18,7 @@ describe("InviteUsersDialog", () => {
         vi.restoreAllMocks();
     });
 
-    test("When all props are provided, then it renders correctly", async () => {
+    test("When all props are provided, then the invite users dialog renders correctly", async () => {
         render(InviteUsersDialog, {
             target: document.body,
             props: {
@@ -31,7 +31,7 @@ describe("InviteUsersDialog", () => {
         expect(screen.getByText("Invite Users")).toBeInTheDocument();
     });
 
-    test("When trigger is clicked, then dialog is opened", async () => {
+    test("When trigger is clicked, then the dialog is opened", async () => {
         const user = userEvent.setup();
         render(InviteUsersDialog, {
             target: document.body,
@@ -42,7 +42,7 @@ describe("InviteUsersDialog", () => {
             context: mockUserContext,
         });
 
-        const trigger = await screen.findByTestId("dialog-trigger");
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
         expect(trigger).toBeInTheDocument();
         await waitFor(() => expect(trigger).not.toHaveAttribute("disabled"));
         await waitFor(async () => user.click(trigger));
@@ -55,9 +55,40 @@ describe("InviteUsersDialog", () => {
         expect(
             screen.getByText("Search for an existing user or invite a new user by email."),
         ).toBeInTheDocument();
-        const actionButton = screen.getByText("Send Invitations");
+        const actionButton = screen.getByRole("button", { name: "Send Invitations" });
         expect(actionButton).toBeInTheDocument();
         expect(actionButton).toHaveAttribute("disabled");
+    });
+
+    test("When dialog is closed, then entered invitation candidates are deleted", async () => {
+        const user = userEvent.setup();
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: {
+                projectId: "1",
+                loadingMembers: Promise.resolve([]),
+            },
+            context: mockUserContext,
+        });
+
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
+        await waitFor(async () => user.click(trigger));
+
+        const input = screen.getByRole("textbox");
+        await user.type(input, Members.demoMember1.user.email);
+        await user.tab();
+
+        const chip = screen.getByText(Members.demoMember1.user.firstName, { exact: false });
+        expect(chip).toBeInTheDocument();
+
+        const cancelButton = screen.getByRole("button", { name: "Cancel" });
+        await user.click(cancelButton);
+
+        await waitFor(async () => user.click(trigger));
+        const chipAfterCancel = screen.queryByText(Members.demoMember1.user.firstName, {
+            exact: false,
+        });
+        expect(chipAfterCancel).not.toBeInTheDocument();
     });
 
     test("When a user is invited successfully, then a success message is displayed", async () => {
@@ -75,14 +106,14 @@ describe("InviteUsersDialog", () => {
             context: mockUserContext,
         });
 
-        const trigger = await screen.findByTestId("dialog-trigger");
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user.email);
         await user.tab();
 
-        const inviteButton = screen.getByTestId("invite-users-button");
+        const inviteButton = screen.getByRole("button", { name: "Send Invitations" });
         await user.click(inviteButton);
 
         expect(invitedUsers).toEqual([Members.demoMember1.user.email]);
@@ -101,70 +132,20 @@ describe("InviteUsersDialog", () => {
             context: mockUserContext,
         });
 
-        const trigger = await screen.findByTestId("dialog-trigger");
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user.email);
         await user.tab();
 
-        const inviteButton = screen.getByTestId("invite-users-button");
+        const inviteButton = screen.getByRole("button", { name: "Send Invitations" });
         await user.click(inviteButton);
 
         expect(await screen.findByRole("alert", { name: "Invitation Failed" })).toBeInTheDocument();
         expect(
             screen.getByText(
                 "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
-            ),
-        ).toBeInTheDocument();
-    });
-
-    test("When users loading fails, then error message is shown", async () => {
-        mockFailedApiCall("getAllUsers");
-
-        const user = userEvent.setup();
-        render(InviteUsersDialog, {
-            target: document.body,
-            props: {
-                projectId: "1",
-                loadingMembers: Promise.resolve([]),
-            },
-            context: mockUserContext,
-        });
-
-        const trigger = await screen.findByTestId("dialog-trigger");
-        await waitFor(async () => user.click(trigger));
-
-        expect(
-            await screen.findByRole("alert", { name: "Failed to Load Members" }),
-        ).toBeInTheDocument();
-        expect(
-            screen.getByText(
-                "Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again.",
-            ),
-        ).toBeInTheDocument();
-    });
-
-    test("When members loading fails, then error message is shown", async () => {
-        const user = userEvent.setup();
-        render(InviteUsersDialog, {
-            target: document.body,
-            props: {
-                projectId: "1",
-                loadingMembers: Promise.reject(new Error("Failed to load members")),
-            },
-            context: mockUserContext,
-        });
-
-        const trigger = await screen.findByTestId("dialog-trigger");
-        await waitFor(async () => user.click(trigger));
-
-        expect(
-            await screen.findByRole("alert", { name: "Failed to Load Members" }),
-        ).toBeInTheDocument();
-        expect(
-            screen.getByText(
-                "Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
     });

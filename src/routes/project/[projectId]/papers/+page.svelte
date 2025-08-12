@@ -15,7 +15,7 @@
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
-    import { pluralize } from "$lib/utils/common-helper.js";
+    import { callDebounced, pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import { ExternalLink, Funnel } from "lucide-svelte";
@@ -75,14 +75,16 @@
 
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
-    let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
     $effect(() => {
         if (searchParameters.toString() !== window.location.search.slice(1)) {
-            if (debounceTimeout) clearTimeout(debounceTimeout);
-
-            debounceTimeout = setTimeout(() => {
-                goto(`?${searchParameters.toString()}`, { replaceState: true, keepFocus: true });
-            }, 250);
+            callDebounced(
+                () =>
+                    goto(`?${searchParameters.toString()}`, {
+                        replaceState: true,
+                        keepFocus: true,
+                    }),
+                250,
+            );
         }
     });
 

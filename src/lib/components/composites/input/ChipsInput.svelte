@@ -4,32 +4,35 @@
     import CircleAlert from "lucide-svelte/icons/circle-alert";
     import type { ValidationResult } from "$lib/model/general";
     import { cn } from "$lib/utils/shadcn-helper";
+    import { debounce } from "$lib/utils/common-helper";
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     interface ChipsInputProps {
-        items: string[];
-        validate: (input: string) => ValidationResult;
         label?: string;
         labelPosition?: "top" | "left";
-        searchSuggestions?: (searchString: string) => string[];
         placeholder?: string;
+        items: string[];
+        validate: (input: string) => ValidationResult;
         resolveAlias?: (item: string) => string | undefined;
         displayItem?: (item: string) => string | undefined;
+        searchSuggestions?: (searchString: string) => Promise<string[]>;
     }
 
     let {
-        items = $bindable(),
-        validate,
         label,
         labelPosition = "top",
-        searchSuggestions,
         placeholder = "",
-        resolveAlias,
+        items = $bindable(),
+        validate,
+        resolveAlias = (item) => item,
         displayItem = (item) => item,
+        searchSuggestions,
     }: ChipsInputProps = $props();
 
     const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
     const SUGGESTIONS_LIST_ID =
         label === undefined ? "chips-suggestions" : "chips-suggestions-" + label;
+    const SUGGESTION = "suggestion-";
 
     /**
      * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
@@ -42,6 +45,7 @@
     let isInputValid: boolean = $state(true);
     let errorMessage: string = $state("");
 
+    let isLoadingSuggestions: boolean = $state(false);
     let suggestions: string[] = $state([]);
     /**
      * Index (from 0 - \<length of suggestions\>) indicating, which suggestion is currently selected.
@@ -101,10 +105,13 @@
     }
 
     /**
-     * Set the focus to the suggestions list and reset the {@link selectedChipIndex} to -1.
+     * Scroll the selected suggestion into view  and reset the {@link selectedChipIndex} to -1.
      */
-    function focusSuggestionsList(): void {
-        document.getElementById(SUGGESTIONS_LIST_ID)?.focus();
+    function focusSelectedSuggestion(): void {
+        document.getElementById(`${SUGGESTION}${selectedSuggestionIndex}`)?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+        });
         selectedChipIndex = -1;
     }
 
@@ -158,7 +165,7 @@
                     suggestions.length,
                 );
 
-                focusSuggestionsList();
+                focusSelectedSuggestion();
                 break;
 
             case "ArrowLeft":
@@ -182,12 +189,29 @@
         }
     }
 
-    // reapply filter on suggestions after each new input
-    $effect(() => {
-        if (searchSuggestions !== undefined) {
-            const possibleSuggestions = searchSuggestions(inputText.trim().toLowerCase());
-            suggestions = possibleSuggestions.filter((suggestion) => !items.includes(suggestion));
+    const updateSuggestions = debounce(async (searchString: string) => {
+        if (!searchSuggestions || searchString.length === 0) {
+            suggestions = [];
+            return;
         }
+
+        isLoadingSuggestions = true;
+
+        Promise.resolve(searchSuggestions(searchString))
+            .then((possibleSuggestions) => {
+                suggestions = possibleSuggestions.filter((s) => !items.includes(s));
+            })
+            .catch(() => {
+                suggestions = [];
+            })
+            .finally(() => {
+                isLoadingSuggestions = false;
+            });
+    }, 250);
+
+    // update suggestions after each new input (considering a certain time delay for debouncing)
+    $effect(() => {
+        updateSuggestions(inputText.trim());
     });
 </script>
 
@@ -223,23 +247,26 @@ to map this value to another value shown to the user.
 Usage:
 ```svelte
     <ChipsInput
-        bind:items={membersInput}
+        bind:items={invitees}
         label="Members"
-        searchSuggestions={filterPossibleMembers}
+        searchSuggestions={loadInviteCandidates}
     />
 ```
 -->
 <div class="flex w-full flex-col gap-2" data-testid="chips-input-component">
     <div
-        class="flex {labelPosition === 'top' ? 'flex-col gap-2' : 'flex-row items-center gap-4'}"
+        class={cn(
+            "flex",
+            labelPosition === "top" ? "flex-col gap-2" : "flex-row items-center gap-4",
+        )}
         data-testid="chips-input-container"
     >
         <Label for={INPUT_ID}>{label}</Label>
         <div
-            class="flex w-full flex-wrap items-center gap-2.5 px-4 {items.length === 0
-                ? 'py-2'
-                : 'py-1.5'}
-                text-default border-input-border-slate bg-background overflow-x-auto rounded-md border"
+            class={cn(
+                "text-default border-input-border-slate bg-background flex w-full flex-wrap items-center gap-2.5 overflow-x-auto rounded-md border px-4",
+                items.length === 0 ? "py-2" : "py-1.5",
+            )}
         >
             <!-- chips -->
             {#each items as item, index (item)}
@@ -265,12 +292,17 @@ Usage:
             <input
                 id={INPUT_ID}
                 class="placeholder:text-placeholder max-w-full min-w-10 flex-1 focus:outline-none"
+                autocomplete="off"
                 data-testid={INPUT_ID}
                 onkeydown={handleKeyDown}
                 {placeholder}
                 type="text"
                 bind:value={inputText}
             />
+
+            {#if isLoadingSuggestions}
+                <LoaderCircle class="animate-spin" />
+            {/if}
         </div>
     </div>
     {#if !isInputValid}
@@ -290,11 +322,12 @@ Usage:
         >
             {#each suggestions as suggestion, i (suggestion)}
                 <Button
+                    id={`${SUGGESTION}${i}`}
                     class={cn(
                         "text-default flex w-full justify-start",
                         selectedSuggestionIndex === i ? "bg-accent" : "",
                     )}
-                    data-testid={"suggestion-" + i}
+                    data-testid={`${SUGGESTION}${i}`}
                     onclick={() => {
                         addItem(suggestion);
                         focusInput(true);

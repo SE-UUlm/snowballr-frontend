@@ -79,7 +79,7 @@ Usage:
         <ChipsInput
             label="Define keywords that are highlighted in the abstract of a paper when the review mode is activated."
             placeholder="Add keyword"
-            validate={(newTag) => validateTag(newTag)}
+            validate={validateTag}
             bind:items={tags}
         />
     </div>

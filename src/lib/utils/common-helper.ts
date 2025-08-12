@@ -295,6 +295,45 @@ function stringToEnumValue<T extends Record<string, string>>(
     return (Object.values(enumObj) as string[]).includes(value) ? (value as T[keyof T]) : undefined;
 }
 
+/**
+ * Create a debounced function that delays the call of a given function `fn` by `delay` milliseconds.
+ *
+ * This should be used to prevent a function (e.g., fetch invite candidates) from being called too
+ * frequently.
+ *
+ * @param fn - The function to debounce
+ * @param delay - Time to wait (in milliseconds) before calling the function
+ * @returns The debounced version of `fn`
+ */
+function debounce<T extends (...args: never[]) => void>(fn: T, delay = 500): T {
+    let timer: ReturnType<typeof setTimeout>;
+    return ((...args: never[]) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    }) as T;
+}
+
+/**
+ * Create a debounced function and call it.
+ * See {@link debounce} for further details about creating debounced functions.
+ *
+ * If this function is called multiple times, previous function calls are not interrupted
+ * if they have not been executed yet. To achieve a different behavior, use the {@link debounce}
+ * function manually.
+ *
+ * @param fn - The function to debounce
+ * @param delay - Time to wait (in milliseconds) before calling the function
+ * @param args - (Optional) Arguments that should be passed to the function `fn` when calling it
+ */
+function callDebounced(fn: (...args: unknown[]) => void, delay = 500, args?: unknown[]) {
+    const debouncedFunction = debounce(fn, delay);
+    if (args) {
+        debouncedFunction(args);
+    } else {
+        debouncedFunction();
+    }
+}
+
 export {
     getName,
     getNames,
@@ -311,4 +350,6 @@ export {
     wrapLongWords,
     loadingWrapper,
     stringToEnumValue,
+    debounce,
+    callDebounced,
 };

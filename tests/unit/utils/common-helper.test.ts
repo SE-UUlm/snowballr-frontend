@@ -1,6 +1,8 @@
-import { describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
+    callDebounced,
     comparePaperId,
+    debounce,
     doesPaperNeedReview,
     getNames,
     groupBy,
@@ -185,5 +187,67 @@ describe("Wrap long words in a text", () => {
         expect(result).toBe(
             'This is a <span class="break-all">verylongwordthatneedstobewrapped</span>',
         );
+    });
+});
+
+describe("Debounce a function", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.clearAllTimers();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    test("When a debounced function is called, then the function is called after the given delay", () => {
+        const mockFn = vi.fn();
+        callDebounced(mockFn, 300, ["test argument"]);
+
+        expect(mockFn).not.toHaveBeenCalled();
+        vi.advanceTimersByTime(299);
+        expect(mockFn).not.toHaveBeenCalled();
+        vi.advanceTimersByTime(1);
+
+        expect(mockFn).toHaveBeenCalledWith(["test argument"]);
+        expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    test("When a debounced function is called multiple times (using `callDebounced`), then all function calls are invoked", () => {
+        const mockFn = vi.fn();
+
+        callDebounced(mockFn);
+        vi.advanceTimersByTime(200);
+        callDebounced(mockFn);
+        vi.advanceTimersByTime(200);
+        callDebounced(mockFn);
+
+        vi.advanceTimersByTime(500);
+
+        expect(mockFn).toHaveBeenCalledTimes(3);
+    });
+
+    test("When a debounced function is created and repeatedly called, then only the last call is invoked", () => {
+        const mockFn = vi.fn();
+        const debouncedFunction = debounce(mockFn, 500);
+
+        debouncedFunction();
+        vi.advanceTimersByTime(200);
+        debouncedFunction();
+        vi.advanceTimersByTime(200);
+        debouncedFunction();
+
+        vi.advanceTimersByTime(500);
+
+        expect(mockFn).toHaveBeenCalledTimes(1);
+    });
+
+    test("When no arguments are provided, then the function is executed without any arguments", () => {
+        const mockFn = vi.fn();
+        callDebounced(mockFn, 250);
+
+        vi.advanceTimersByTime(250);
+
+        expect(mockFn).toHaveBeenCalledWith();
     });
 });

@@ -1,63 +1,108 @@
 <script lang="ts">
     import ChipsInput from "./ChipsInput.svelte";
     import type { User } from "$lib/model/api/user";
-    import { filterUsers } from "$lib/utils/filters";
     import { getName } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import { Schema } from "$lib/schemas";
     import Alert from "../utils/Alert.svelte";
+    import { backendService } from "$lib/grpc-api.js";
 
     interface Props {
-        membersInput: string[];
-        initialPossibleMembers: User[];
-        isErrorOnUsersLoading: boolean;
+        invitees: string[];
+        projectId?: string;
     }
 
-    let {
-        membersInput = $bindable(),
-        initialPossibleMembers,
-        isErrorOnUsersLoading,
-    }: Props = $props();
+    let { invitees = $bindable(), projectId = "" }: Props = $props();
 
-    let possibleMembers: User[] = $derived(
-        initialPossibleMembers.filter((member) => !membersInput.includes(member.email)),
-    );
+    let isErrorWhileLoadingCandidates = $state(false);
+
+    /** Collection of loaded invite candidates based on the current input and already added
+     *  input candidates that should be definitely invited
+     */
+    let loadedInviteCandidates = $state<User[]>([]);
 
     /**
-     * Filters all possible members by checking, whether their name or email contains the search string.
-     *
-     * Furthermore, the filtered list is sorted by the score from the FZF algorithm, i.e.
-     * the members with the best matching name or email are at the beginning of the list (and will
-     * appear at the top of the suggestions list).
-     *
-     * @param input - the content of the input field, i.e. the search string
-     * @returns list of "name \<email\>" (sorted) representations of users that can be invited
+     * Checks whether a candidate, represented by the input email or name, already was added as
+     * an invitee.
      */
-    function filterPossibleMembers(input: string): string[] {
-        return filterUsers(possibleMembers, input).map(
-            (member) => `${getName(member)} <${member.email}>`,
+    function isCandidateAlreadyInvitee(input: string): boolean {
+        return (
+            invitees.includes(input) ||
+            loadedInviteCandidates.some((c) => getName(c) === input && invitees.includes(c.email))
         );
     }
 
     /**
-     * Checks, whether a given input is a valid name of a registered user or an email.
+     * Fetches a list of invite candidates from the backend based on the given search string.
+     * The backend is responsible for filtering and ranking the users.
+     *
+     * In case of a loading error, an empty list is returned and an error flag is set to
+     * display an error alert.
+     *
+     * @param input - the content of the input field, i.e., the search string
+     * @returns list of "name \<email\>" representations of users that can be invited
+     */
+    async function loadInviteCandidates(input: string): Promise<string[]> {
+        return backendService
+            .getInviteCandidates({ query: input, projectId })
+            .response.then(({ users }) => {
+                isErrorWhileLoadingCandidates = false;
+
+                const newInviteCandidates = users.filter((user) => !invitees.includes(user.email));
+
+                newInviteCandidates.forEach((candidate) => {
+                    if (!loadedInviteCandidates.includes(candidate)) {
+                        loadedInviteCandidates.push(candidate);
+                    }
+                });
+
+                return newInviteCandidates.map((user) => `${getName(user)} <${user.email}>`);
+            })
+            .catch(() => {
+                isErrorWhileLoadingCandidates = true;
+                loadedInviteCandidates = [];
+                return [];
+            });
+    }
+
+    /**
+     * Checks whether a given input is valid, i.e.
+     *   - a valid email
+     *   - the name of a registered user
+     *   - no duplicate, i.e., neither the name nor the email of a user
+     *     already in the list of invitees
+     *
+     *  Depending on the reason why the input is invalid, different error messages are returned.
      */
     function validateInput(input: string): ValidationResult {
-        if (!Schema.email.safeParse(input.trim()).success) {
-            const matchingMembers = possibleMembers.filter(
-                (member) => getName(member) === input.trim(),
-            );
-            if (matchingMembers.length === 0) {
-                return { success: false, error: "Please enter a valid name or email." };
-            }
+        const trimmedInput = input.trim();
+
+        if (isCandidateAlreadyInvitee(trimmedInput)) {
+            return {
+                success: false,
+                error: "This candidate has already been added to the invite list.",
+            };
         }
+
+        const isEmail = Schema.email.safeParse(trimmedInput).success;
+        const isKnownCandidate = loadedInviteCandidates.some(
+            (user) => trimmedInput === getName(user),
+        );
+
+        if (!isEmail && !isKnownCandidate) {
+            return {
+                success: false,
+                error: "Please enter a valid name or email. Consider that project members can not be invited again.",
+            };
+        }
+
         return { success: true };
     }
 
     /**
      * Maps a valid name to the email of the user.
      *
-     * If multiple users with the given name exist, the name can not be mapped and a hint is displayed.
+     * If multiple users with the given name exist, the first matching user is taken.
      *
      * Example:
      * The user \{ firstName: "John", lastName: "Doe", email: "john.doe\@example.com", ... \}
@@ -68,15 +113,13 @@
      * all are mapped to "john.doe\@example.com"
      *
      * @param input - the name, email or combination of name \<email\> of a known user
-     * @returns the corresponding email of the user identified by the given name, email or name + email combination
+     * @returns the corresponding email of the user identified by the input
      */
     function mapNameToEmail(input: string): string | undefined {
-        const possibleMatchedUser = possibleMembers.filter((user) => {
+        return loadedInviteCandidates.find((user) => {
             const name = getName(user);
             return [name, user.email, `${name} <${user.email}>`].includes(input);
-        });
-
-        return possibleMatchedUser.at(0)?.email;
+        })?.email;
     }
 
     /**
@@ -86,22 +129,26 @@
      * @returns the name of the user or undefined, if the no user with the given email was found
      */
     function mapEmailToName(input: string): string | undefined {
-        const user = initialPossibleMembers.find((user) => input === user.email);
+        const user = loadedInviteCandidates.find((user) => input === user.email);
         return user !== undefined ? getName(user) : input;
     }
 </script>
 
 <!--
 @component
-Input element that allows the user to search for and invite existing users and
-to invite non-existing users by their email address.
+Input element that allows the user to search for and invite existing users directly or
+to invite not registered users by their email address.
+
+The email addresses of the candidates that were input and should be invited are bound to
+`invitee` property. Optionally, it is possible to provide a `project_id` if new members
+should be invited into an existing project and current project members should not be proposed
+as invite candidates.
 
 Usage:
 ```svelte
     <InviteUsersInput
-        bind:membersInput
-        {initialPossibleMembers}
-        {isErrorOnUsersLoading}
+        bind:invitee
+        projectId={"1"}
     />
 ```
 -->
@@ -110,14 +157,14 @@ Usage:
         displayItem={mapEmailToName}
         label="Members"
         resolveAlias={mapNameToEmail}
-        searchSuggestions={filterPossibleMembers}
+        searchSuggestions={loadInviteCandidates}
         validate={validateInput}
-        bind:items={membersInput}
+        bind:items={invitees}
     />
-    {#if isErrorOnUsersLoading}
+    {#if isErrorWhileLoadingCandidates}
         <Alert
-            details="Something went wrong while loading possible members. Please make sure your internet connection is stable, then try again."
-            title="Failed to Load Members"
+            details="Something went wrong while loading possible project members. Please make sure your internet connection is stable, then try again."
+            title="Failed to load invite candidates."
             variant="error"
         />
     {/if}

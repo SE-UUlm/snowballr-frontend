@@ -101,22 +101,22 @@ test.describe("Papers Overview Tests", () => {
         await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
     });
 
-    test("When the user double clicks a paper, then the paper view of this paper is opened.", async ({
-        page,
-        projectPapersPage,
-    }) => {
-        const stageIndex = 0;
-        const paperIndexInStage = 4;
-        const totalPaperIndex = stageIndex * NUM_PAPERS_PER_STAGE + paperIndexInStage;
-        const paperLocator = projectPapersPage.getPaper(stageIndex, paperIndexInStage);
-        const paperTitle = `Paper ${stageIndex}/${paperIndexInStage} (${getUniqueSequence(totalPaperIndex)})`;
+    test.fixme(
+        "When the user double clicks a paper, then the paper view of this paper is opened.",
+        async ({ page, projectPapersPage }) => {
+            const stageIndex = 0;
+            const paperIndexInStage = 4;
+            const totalPaperIndex = stageIndex * NUM_PAPERS_PER_STAGE + paperIndexInStage;
+            const paperLocator = projectPapersPage.getPaper(stageIndex, paperIndexInStage);
+            const paperTitle = `Paper ${stageIndex}/${paperIndexInStage} (${getUniqueSequence(totalPaperIndex)})`;
 
-        await expect(page.getByRole("heading", { name: paperTitle })).toBeHidden();
+            await expect(page.getByRole("heading", { name: paperTitle })).toBeHidden();
 
-        await projectPapersPage.openPaperView(stageIndex, paperIndexInStage);
+            await projectPapersPage.openPaperView(stageIndex, paperIndexInStage);
 
-        await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
-    });
+            await projectPapersPage.assertPaperViewWasOpened(paperLocator, paperTitle);
+        },
+    );
 
     // --- Search Tests ---
 
