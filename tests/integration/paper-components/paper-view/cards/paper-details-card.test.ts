@@ -13,7 +13,6 @@ describe("PaperDetailsCard", () => {
             target: document.body,
             props: {
                 loadingPaper: loading(paper),
-                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -58,7 +57,6 @@ describe("PaperDetailsCard", () => {
             target: document.body,
             props: {
                 loadingPaper: loading(paper),
-                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -97,7 +95,6 @@ describe("PaperDetailsCard", () => {
             target: document.body,
             props: {
                 loadingPaper: loading(paper),
-                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
@@ -146,7 +143,6 @@ describe("PaperDetailsCard", () => {
             target: document.body,
             props: {
                 loadingPaper: loading(paper),
-                paper: paper,
                 allowEditModeToggle: false,
                 startInEditMode: false,
             },
@@ -174,7 +170,6 @@ describe("PaperDetailsCard", () => {
             target: document.body,
             props: {
                 loadingPaper: loading(paper, 1000),
-                paper: paper,
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },

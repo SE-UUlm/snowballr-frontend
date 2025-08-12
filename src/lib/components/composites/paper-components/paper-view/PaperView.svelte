@@ -49,11 +49,8 @@
         bottomBar = undefined,
     }: PaperViewProps = $props();
 
-    let paper: Paper = $state(Paper.create());
-
     const loadingPaper = loadingPaperWrapper.then((wrapper) => {
         const loadedPaper = asPaper(wrapper);
-        paper = loadedPaper;
         return loadedPaper;
     });
     const loadingPaperId = loadingPaper.then((paper) => paper.id);
@@ -115,7 +112,7 @@ Usage:
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
     <div class="flex h-full w-full flex-row gap-10">
-        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} bind:paper />
+        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
             {backwardReferencedPapers}
             {forwardReferencedPapers}

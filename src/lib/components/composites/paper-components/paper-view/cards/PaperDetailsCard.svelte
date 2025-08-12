@@ -1,7 +1,7 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import type { Paper } from "$lib/model/api/paper";
+    import { Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "lucide-svelte/icons/pencil";
     import Save from "lucide-svelte/icons/save";
@@ -12,23 +12,22 @@
 
     interface Props {
         loadingPaper: Promise<Paper>;
-        paper: Paper;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
     }
 
-    let {
-        loadingPaper,
-        paper = $bindable(),
-        allowEditModeToggle,
-        startInEditMode,
-    }: Props = $props();
+    let { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+
+    let paper: Paper = $state(Paper.create());
 
     let originalPaper: Paper | undefined = $state(undefined);
     let isInEditMode = $state(startInEditMode);
     let isPaperModified = $state(false);
 
-    loadingPaper.then((p) => (originalPaper = p));
+    loadingPaper.then((p) => {
+        originalPaper = p;
+        paper = p;
+    });
 
     $effect(() => {
         if (paper === undefined || originalPaper === undefined) {
