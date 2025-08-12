@@ -9,7 +9,7 @@ import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 
 export const ssr = false;
 
-const PUBLIC_PATHS = ["/signin", "/signup", "/resetpassword"];
+const PUBLIC_PATHS = ["/signin", "/signup", "/resetpassword", "/verifyemail"];
 
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     depends(USER_DEPENDENCY_KEY);
