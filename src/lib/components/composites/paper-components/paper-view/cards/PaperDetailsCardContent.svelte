@@ -9,12 +9,11 @@
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import { getNames } from "$lib/utils/common-helper";
-    import type { Person } from "$lib/model/general";
+    import type { StringifiedPaper } from "$lib/model/general";
 
     interface Props {
         loadingPaper: Promise<Paper>;
-        paper: Paper;
+        paper: StringifiedPaper;
         isInEditMode?: boolean;
     }
 
@@ -22,13 +21,8 @@
 
     const basicInfoProps: PaperDetailProp[] = [
         { key: "title", label: "Title" },
-        {
-            key: "authors",
-            label: "Authors",
-            toDisplayValue: getNames,
-            fromDisplayValue: stringToAuthors,
-        },
-        { key: "year", label: "Year", fromDisplayValue: parseInt },
+        { key: "authors", label: "Authors" },
+        { key: "year", label: "Year" },
         { key: "publisher", label: "Publisher" },
     ];
 
@@ -37,22 +31,6 @@
         { key: "publicationName", label: "Publication Name" },
         { key: "externalId", label: "External ID" },
     ];
-
-    function stringToAuthors(value: string): Person[] {
-        const authorStrings = value.split(/,\s*/g);
-        const authors: Person[] = authorStrings.map((authorString) => {
-            const parts = authorString.split(/\s+/g);
-            const person: Person = {
-                // Everything is the first name except the last part
-                // TODO: this assumption is very error prone and we should use structured HTML to fix this
-                firstName: parts.slice(0, parts.length - 1).join(" "),
-                lastName: parts[parts.length - 1],
-            };
-            return person;
-        });
-
-        return authors;
-    }
 
     let showAdditionalInfos = $state(false);
     const toggleAdditionalInfos = () => (showAdditionalInfos = !showAdditionalInfos);

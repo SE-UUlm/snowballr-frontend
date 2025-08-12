@@ -1,7 +1,7 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import { Paper } from "$lib/model/api/paper";
+    import { Author, Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "lucide-svelte/icons/pencil";
     import Save from "lucide-svelte/icons/save";
@@ -9,6 +9,8 @@
     import { backendService } from "$lib/grpc-api";
     import { generateFieldMask } from "protobuf-fieldmask";
     import { toast } from "svelte-sonner";
+    import type { StringifiedPaper } from "$lib/model/general";
+    import { stringifyPaper } from "$lib/utils/model-helper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -18,15 +20,15 @@
 
     let { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
 
-    let paper: Paper = $state(Paper.create());
+    let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
-    let originalPaper: Paper | undefined = $state(undefined);
+    let originalPaper: StringifiedPaper | undefined = $state(undefined);
     let isInEditMode = $state(startInEditMode);
     let isPaperModified = $state(false);
 
     loadingPaper.then((p) => {
-        originalPaper = p;
-        paper = p;
+        originalPaper = stringifyPaper(p);
+        paper = stringifyPaper(p);
     });
 
     $effect(() => {
@@ -42,12 +44,44 @@
         { value: "2", label: "Document" },
     ];
 
+    function stringToAuthors(value: string): Author[] {
+        const authorStrings = value.split(/,\s*/g).filter((v) => v.length !== 0);
+        const authors: Author[] = authorStrings.map((authorString) => {
+            const parts = authorString.split(/\s+/g);
+            const person: Author = {
+                // Everything is the first name except the last part
+                // TODO: this assumption is very error prone and we should use structured HTML to fix this
+                firstName: parts.slice(0, parts.length - 1).join(" "),
+                lastName: parts[parts.length - 1],
+                orcid: "",
+            };
+            return person;
+        });
+
+        return authors;
+    }
+
     async function updatePaper() {
-        backendService
+        const year = Number(paper.year);
+        if (!Number.isInteger(year)) {
+            toast.error("The year has a non-numerical value.");
+            return;
+        }
+
+        // Convert stringifiedPaper back to Paper, ensuring correct types
+        const paperObject: Paper = {
+            ...paper,
+            year,
+            authors: stringToAuthors(paper.authors),
+            hasPdf: paper.hasPdf === "true",
+            backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
+        };
+
+        await backendService
             .updatePaper({
-                paper,
+                paper: paperObject,
                 mask: {
-                    paths: generateFieldMask(paper),
+                    paths: generateFieldMask(paperObject),
                 },
             })
             .response.then(() => {
@@ -93,10 +127,13 @@ Usage:
                 {#if isInEditMode}
                     <Save
                         class={cn(
-                            "select-none hover:cursor-pointer",
-                            isPaperModified ? "" : "opacity-30",
+                            "select-none",
+                            isPaperModified ? "hover:cursor-pointer" : "opacity-30",
                         )}
-                        onclick={updatePaper}
+                        onclick={() => {
+                            if (!isPaperModified) return;
+                            updatePaper();
+                        }}
                         size={24}
                     />
                 {/if}

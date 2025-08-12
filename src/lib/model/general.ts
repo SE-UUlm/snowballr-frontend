@@ -1,5 +1,6 @@
 import { Project_Paper } from "$lib/model/api/project";
 import type { Criterion } from "./api/criterion";
+import type { Paper } from "./api/paper";
 import type { Review } from "./api/review";
 
 /**
@@ -45,6 +46,10 @@ interface Person {
     lastName: string;
 }
 
+type StringifiedPaper = {
+    [K in keyof Paper]: string;
+};
+
 export type {
     ValidationResult,
     ApiError,
@@ -54,4 +59,5 @@ export type {
     PaperStatus,
     ProjectPaperFilter,
     Person,
+    StringifiedPaper,
 };

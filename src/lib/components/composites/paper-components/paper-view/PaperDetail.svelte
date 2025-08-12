@@ -6,39 +6,23 @@
     import type { HTMLAttributes } from "svelte/elements";
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "../../utils/ErrorIndicator.svelte";
+    import type { StringifiedPaper } from "$lib/model/general";
 
     export interface PaperDetailProp {
-        key: keyof Paper;
+        key: keyof StringifiedPaper;
         label: string;
-        /**
-         * The method to transform the paper property value to a displayable string.
-         */
-        toDisplayValue?: (
-            value: any /* eslint-disable-line @typescript-eslint/no-explicit-any */,
-        ) => string;
-        /**
-         * The method to transform the displayed string to the paper property value.
-         */
-        fromDisplayValue?: (
-            value: string,
-        ) => any /* eslint-disable-line @typescript-eslint/no-explicit-any */;
     }
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         prop: PaperDetailProp;
         index?: number;
         loadingPaper: Promise<Paper>;
-        paper: Paper;
+        paper: StringifiedPaper;
         isInEditMode: boolean;
     };
 
     let { prop, index = 0, loadingPaper, paper = $bindable(), isInEditMode }: Props = $props();
-    const {
-        key,
-        label,
-        toDisplayValue: toDisplayValue = (v) => v.toString(),
-        fromDisplayValue = (v) => v,
-    } = prop;
+    const { key, label } = prop;
 
     const skeletonValues = [
         "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
@@ -51,7 +35,7 @@
     ];
 
     function updateValue(newValue: string) {
-        paper = { ...paper, [key]: fromDisplayValue(newValue) };
+        paper = { ...paper, [key]: newValue };
     }
 </script>
 
@@ -81,7 +65,7 @@ Usage:
             isEditable={isInEditMode}
             onInputChange={updateValue}
             placeholder={`No ${label} available`}
-            value={toDisplayValue(paper[key])}
+            value={paper[key]}
         />
     {:catch}
         <ErrorIndicator errorMessage={`Couldn't load ${label}`} />

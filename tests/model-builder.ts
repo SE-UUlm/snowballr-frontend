@@ -14,11 +14,12 @@ import type {
     ProjectSpecificPaperViewProps,
 } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import type { Review } from "$lib/model/api/review";
-import type { CriterionWithReviews } from "$lib/model/general";
+import type { CriterionWithReviews, StringifiedPaper } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
 import type { ProjectPaperViewProps } from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
 import type { ButtonBarProps } from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
+import { stringifyPaper } from "$lib/utils/model-helper";
 
 export function createUser(user: Partial<User> = {}): User {
     return {
@@ -44,6 +45,13 @@ export function createProject(project: Partial<Project> = {}): Project {
 export function createPaper(paper: Partial<Paper> = {}): Paper {
     return {
         ...Papers.demoPaper1,
+        ...paper,
+    };
+}
+
+export function createStringifiedPaper(paper: Partial<StringifiedPaper> = {}): StringifiedPaper {
+    return {
+        ...stringifyPaper(Papers.demoPaper1),
         ...paper,
     };
 }
