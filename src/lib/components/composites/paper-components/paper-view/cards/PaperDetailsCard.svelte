@@ -19,9 +19,10 @@
         loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
+        isInCreationMode: boolean;
     }
 
-    let { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+    let { loadingPaper, allowEditModeToggle, startInEditMode, isInCreationMode }: Props = $props();
 
     let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
@@ -81,7 +82,11 @@
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
-        await updatePaper(paperData);
+        if (isInCreationMode) {
+            await createPaper(Paper.create(paperData));
+        } else {
+            await updatePaper(paperData);
+        }
     }
 
     async function updatePaper(paperData: Partial<Paper>) {
@@ -104,6 +109,28 @@
         // Add noop-catch so that promise rejection is not uncaught in tests
         // noop-catch cannot be added before toast.promise because error case wouldn't be handled
         await updateCall
+            .catch(() => {})
+            .finally(() => {
+                isMakingApiCall = false;
+            });
+    }
+
+    async function createPaper(paperData: Paper) {
+        const creationCall = backendService
+            .createPaper(paperData)
+            .response.then((createdPaper) => {
+                originalPaper = stringifyPaper(createdPaper);
+                paper = stringifyPaper(createdPaper);
+                return createdPaper;
+            });
+
+        toast.promise(creationCall, {
+            loading: "Creation paper...",
+            success: (paper) => `Successfully created the paper with the ID ${paper.id}.`,
+            error: "Failed to create the paper.",
+        });
+
+        const createdPaper = await creationCall
             .catch(() => {})
             .finally(() => {
                 isMakingApiCall = false;
@@ -166,13 +193,15 @@ Usage:
                         />
                     {/if}
                 {/if}
-                <Pencil
-                    class="select-none hover:cursor-pointer"
-                    aria-label="Toggle Edit Paper Mode"
-                    data-testid="toggle-edit-paper-mode-btn"
-                    onclick={() => (isInEditMode = !isInEditMode)}
-                    size={24}
-                />
+                {#if !isInCreationMode}
+                    <Pencil
+                        class="select-none hover:cursor-pointer"
+                        aria-label="Toggle Edit Paper Mode"
+                        data-testid="toggle-edit-paper-mode-btn"
+                        onclick={() => (isInEditMode = !isInEditMode)}
+                        size={24}
+                    />
+                {/if}
             </div>
         {/if}
     {/snippet}

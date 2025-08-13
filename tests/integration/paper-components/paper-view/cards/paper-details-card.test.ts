@@ -13,6 +13,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -50,6 +51,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -88,6 +90,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -137,6 +140,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: false,
                 startInEditMode: false,
@@ -158,6 +162,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper, 1000),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -176,6 +181,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,
@@ -208,6 +214,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,
@@ -232,6 +239,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,
@@ -261,6 +269,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
+                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,

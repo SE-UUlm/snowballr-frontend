@@ -5,7 +5,7 @@
     const { data } = $props();
     const { projectId, loadingProject } = data;
 
-    let paper: Paper = Paper.create({
+    const paper: Paper = Paper.create({
         year: new Date().getFullYear(),
     });
 </script>
@@ -21,11 +21,12 @@
 </svelte:head>
 <PaperView
     allowEditModeToggle
-    startInEditMode
     backRef={`/project/${projectId}/dashboard`}
     backwardReferencedPapers={Promise.resolve([])}
     criteriaWithReviews={undefined}
     forwardReferencedPapers={Promise.resolve([])}
+    isInCreationMode
     loadingPaper={Promise.resolve(paper)}
     reviewers={undefined}
+    startInEditMode
 />
