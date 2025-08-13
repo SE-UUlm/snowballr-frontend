@@ -80,5 +80,7 @@ Usage:
 ```
 -->
 <SettingsLayout {selectedTab} {tabs}>
-    {@render children?.()}
+    <div class="flex flex-col overflow-visible gap-5">
+        {@render children?.()}
+    </div>
 </SettingsLayout>
