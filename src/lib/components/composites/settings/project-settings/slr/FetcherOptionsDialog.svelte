@@ -8,6 +8,7 @@
     import { updateFetchers } from "./UpdateFetchers";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import FetcherOptionRow from "./FetcherOptionRow.svelte";
+    import { Lock } from "lucide-svelte";
 
     let error: ApiError | undefined = $state();
 
@@ -17,6 +18,7 @@
         onProjectChanged: (project: Project) => void;
         fetcher: string;
         open?: boolean;
+        slrSettingsLocked?: boolean;
     }
 
     let {
@@ -25,6 +27,7 @@
         projectSettings,
         onProjectChanged,
         open = $bindable(false),
+        slrSettingsLocked = false,
     }: Props = $props();
 
     interface Option {
@@ -105,10 +108,16 @@
     }
 </script>
 
+{#snippet lockIcon()}
+    <Lock />
+{/snippet}
+
 <AlertDialog
     actionButtonText="Save"
+    actionIcon={slrSettingsLocked ? lockIcon : undefined}
     actionProps={{
         onclick: saveFetcherOptions,
+        disabled: slrSettingsLocked,
     }}
     cancelButtonText="Cancel"
     cancelProps={{
@@ -153,6 +162,7 @@
                             onValueChanged={(value) => {
                                 options.get(name)!.value = value;
                             }}
+                            {slrSettingsLocked}
                             {value}
                         />
                     {/each}

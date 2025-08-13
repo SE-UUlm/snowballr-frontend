@@ -6,7 +6,7 @@
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import { Edit, PlusCircle, Trash } from "lucide-svelte";
+    import { Edit, Lock, PlusCircle, Trash } from "lucide-svelte";
     import type { ApiError } from "$lib/model/general";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
@@ -15,9 +15,10 @@
 
     interface Props {
         projectId: string;
+        slrSettingsLocked?: boolean;
     }
 
-    const { projectId }: Props = $props();
+    const { projectId, slrSettingsLocked = false }: Props = $props();
 
     let error: ApiError | undefined = $state();
     let loading = $state(true);
@@ -82,6 +83,7 @@
     onProjectChanged={loadProject}
     {projectId}
     {projectSettings}
+    {slrSettingsLocked}
     bind:open={optionDialogOpen}
 />
 
@@ -125,6 +127,7 @@
                 </Button>
                 <Button
                     class="text-red-400 hover:bg-red-400/10 hover:text-red-400"
+                    disabled={slrSettingsLocked}
                     onclick={() => {
                         fetcherToRemove = fetcher;
                         removalDialogOpen = true;
@@ -143,9 +146,18 @@
     {/if}
 
     {#if unusedFetchers?.length !== 0}
-        <LoadingButton label="Add Fetcher" {loading} onclick={() => (addDialogOpen = true)}>
+        <LoadingButton
+            disabled={slrSettingsLocked}
+            label="Add Fetcher"
+            {loading}
+            onclick={() => (addDialogOpen = true)}
+        >
             {#snippet icon()}
-                <PlusCircle />
+                {#if slrSettingsLocked}
+                    <Lock />
+                {:else}
+                    <PlusCircle />
+                {/if}
             {/snippet}
         </LoadingButton>
     {/if}

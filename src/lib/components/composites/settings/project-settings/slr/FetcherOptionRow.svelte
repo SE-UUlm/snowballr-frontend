@@ -10,11 +10,13 @@
         value = $bindable(""),
         defaultValue,
         onValueChanged = () => {},
+        slrSettingsLocked = false,
     }: {
         name: string;
         value: string;
         defaultValue: string;
         onValueChanged?: (value: string) => void;
+        slrSettingsLocked?: boolean;
     } = $props();
 
     const selected = $derived(value !== "");
@@ -26,7 +28,11 @@
 <Label style="scrollbar-width: none;" class="w-full overflow-x-scroll overflow-y-hidden">
     <code>{name}</code>
 </Label>
-<Input defaultValue={value} placeholder={defaultValue} bind:value />
-<Button disabled={!insertable} onclick={() => (value = defaultValue)} variant="ghost">
+<Input defaultValue={value} disabled={slrSettingsLocked} placeholder={defaultValue} bind:value />
+<Button
+    disabled={!insertable || slrSettingsLocked}
+    onclick={() => (value = defaultValue)}
+    variant="ghost"
+>
     <ClipboardPaste />
 </Button>

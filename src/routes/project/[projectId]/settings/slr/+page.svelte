@@ -61,6 +61,6 @@
             />
         {/if}
         <MaybeAsDecisionSetting {loadingProject} {projectId} {slrSettingsLocked} />
-        <FetcherSettings {projectId} />
+        <FetcherSettings {projectId} {slrSettingsLocked} />
     </ProjectSettingsLayout>
 {/if}
