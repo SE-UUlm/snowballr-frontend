@@ -4,12 +4,12 @@
     } from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
     import { Separator } from "$lib/components/primitives/separator";
     import type { Paper } from "$lib/model/api/paper";
-    import PaperCard from "./PaperCard.svelte";
-    import PaperCardContent from "./PaperCardContent.svelte";
-    import ReferencesAndCitationsCardContent, {
-        type ReferencesAndCitationsCardContentProps,
-    } from "./ReferencesAndCitationsCardContent.svelte";
-    import ReviewCriteriaList, { type ReviewCriteriaListProps } from "./ReviewCriteriaList.svelte";
+    import PaperCard from "$lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
+    import PaperCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
+    import ReferencesCardContent from "$lib/components/composites/paper-components/paper-view/cards/ReferencesCardContent.svelte";
+    import ReviewCriteriaList, {
+        type ReviewCriteriaListProps,
+    } from "$lib/components/composites/paper-components/paper-view/cards/ReviewCriteriaList.svelte";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 
     export type ProjectResearchContextCardProps = ReviewCriteriaListProps &
@@ -21,7 +21,12 @@
         criteriaWithReviews: undefined;
     }
 
-    export type PaperResearchContextCardProps = ReferencesAndCitationsCardContentProps &
+    export interface ForwardAndBackwardReferencesCardContentProps {
+        backwardReferencedPapers: Promise<Paper[]>;
+        forwardReferencedPapers: Promise<Paper[]>;
+    }
+
+    export type PaperResearchContextCardProps = ForwardAndBackwardReferencesCardContentProps &
         (ProjectResearchContextCardProps | NonProjectResearchContextCardProps);
 
     const {
@@ -33,13 +38,15 @@
     }: PaperResearchContextCardProps = $props();
 
     const reviewInfoTab = { value: "1", label: "Review Information" };
-    const referencesTab = { value: "2", label: "Forward/Backward References" };
+    const forwardReferencesTab = { value: "2", label: "Backward References" };
+    const backwardReferencesTab = { value: "3", label: "Forward References" };
+    const referencesTabs = [backwardReferencesTab, forwardReferencesTab];
 
     const tabs = reviewers
         ? reviewMode.isActivated
-            ? [reviewInfoTab, referencesTab]
-            : [referencesTab, reviewInfoTab]
-        : [referencesTab];
+            ? [reviewInfoTab, ...referencesTabs]
+            : [...referencesTabs, reviewInfoTab]
+        : referencesTabs;
 </script>
 
 <!--
@@ -81,6 +88,15 @@ Usage:
         {/if}
     </PaperCardContent>
     <PaperCardContent value="2">
-        <ReferencesAndCitationsCardContent {backwardReferencedPapers} {forwardReferencedPapers} />
+        <ReferencesCardContent
+            loadingReferencedPapers={backwardReferencedPapers}
+            title="Backward References"
+        />
+    </PaperCardContent>
+    <PaperCardContent value="3">
+        <ReferencesCardContent
+            loadingReferencedPapers={forwardReferencedPapers}
+            title="Forward References"
+        />
     </PaperCardContent>
 </PaperCard>

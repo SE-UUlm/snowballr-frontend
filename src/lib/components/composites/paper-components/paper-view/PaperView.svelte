@@ -4,13 +4,13 @@
     import PaperResearchContextCard, {
         type NonProjectResearchContextCardProps,
         type ProjectResearchContextCardProps,
+        type ForwardAndBackwardReferencesCardContentProps,
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import type { User } from "$lib/model/api/user";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
-    import type { ReferencesAndCitationsCardContentProps } from "./cards/ReferencesAndCitationsCardContent.svelte";
     import { asPaper } from "$lib/utils/model-helper";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { type Snippet } from "svelte";
@@ -27,7 +27,7 @@
         criteriaWithReviews: undefined;
     }
 
-    export type IndependentPaperViewProps = ReferencesAndCitationsCardContentProps & {
+    export type IndependentPaperViewProps = ForwardAndBackwardReferencesCardContentProps & {
         backRef: string;
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
