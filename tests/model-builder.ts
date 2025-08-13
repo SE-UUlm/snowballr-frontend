@@ -17,7 +17,7 @@ import type { Review } from "$lib/model/api/review";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { Criterion } from "$lib/model/api/criterion";
 import type { ProjectPaperViewProps } from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
-import type { ReferencesAndCitationsCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
+import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
 import type { ButtonBarProps } from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
 
 export function createUser(user: Partial<User> = {}): User {
@@ -140,7 +140,7 @@ export function createPaperViewProps(
 
 export function createProjectPaperViewProps(
     props: Partial<{ projectId: string; loadingProject: Promise<Project> }> = {},
-    cardContentProps?: ReferencesAndCitationsCardContentProps,
+    cardContentProps?: ForwardAndBackwardReferencesCardContentProps,
     projectSpecificProps?: ProjectSpecificPaperViewProps,
 ): ProjectPaperViewProps {
     return {

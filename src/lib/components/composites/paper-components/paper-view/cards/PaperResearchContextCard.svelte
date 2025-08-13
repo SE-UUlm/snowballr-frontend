@@ -21,12 +21,12 @@
         criteriaWithReviews: undefined;
     }
 
-    export interface ReferencesAndCitationsCardContentProps {
+    export interface ForwardAndBackwardReferencesCardContentProps {
         backwardReferencedPapers: Promise<Paper[]>;
         forwardReferencedPapers: Promise<Paper[]>;
     }
 
-    export type PaperResearchContextCardProps = ReferencesAndCitationsCardContentProps &
+    export type PaperResearchContextCardProps = ForwardAndBackwardReferencesCardContentProps &
         (ProjectResearchContextCardProps | NonProjectResearchContextCardProps);
 
     const {
@@ -38,7 +38,7 @@
     }: PaperResearchContextCardProps = $props();
 
     const reviewInfoTab = { value: "1", label: "Review Information" };
-    const forwardReferencesTab = { value: "2", label: "Citations" };
+    const forwardReferencesTab = { value: "2", label: "Backward References" };
     const backwardReferencesTab = { value: "3", label: "Forward References" };
     const referencesTabs = [backwardReferencesTab, forwardReferencesTab];
 
@@ -90,7 +90,7 @@ Usage:
     <PaperCardContent value="2">
         <ReferencesCardContent
             loadingReferencedPapers={backwardReferencedPapers}
-            title="Citations"
+            title="Backward References"
         />
     </PaperCardContent>
     <PaperCardContent value="3">

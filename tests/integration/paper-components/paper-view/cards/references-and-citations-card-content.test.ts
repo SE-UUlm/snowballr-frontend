@@ -5,7 +5,7 @@ import { Papers } from "$tests/example-data";
 import { waitForComponentLoading } from "$tests/integration/test-helper";
 import userEvent from "@testing-library/user-event";
 
-describe("ReferencesAndCitationsCardContent", () => {
+describe("ReferencesCardContent", () => {
     test("When props are provided, then component is shown", async () => {
         render(ReferencesCardContent, {
             target: document.body,

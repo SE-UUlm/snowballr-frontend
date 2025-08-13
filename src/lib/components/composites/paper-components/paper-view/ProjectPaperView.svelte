@@ -3,7 +3,7 @@
         type ProjectSpecificPaperViewProps,
     } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
     import ButtonBar from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
-    import type { ReferencesAndCitationsCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
+    import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { Project } from "$lib/model/api/project";
     import type { Review } from "$lib/model/api/review.js";
     import {
@@ -18,7 +18,7 @@
     export type ProjectPaperViewProps = {
         projectId: string;
         loadingProject: Promise<Project>;
-    } & ReferencesAndCitationsCardContentProps &
+    } & ForwardAndBackwardReferencesCardContentProps &
         ProjectSpecificPaperViewProps;
 
     const {
