@@ -58,7 +58,7 @@
         { value: "2", label: "Document" },
     ];
 
-    async function updatePaper() {
+    async function savePaperModifications() {
         const year = Number(paper.year);
         if (!Number.isInteger(year)) {
             toast.error("The year has a non-numerical value.");
@@ -81,6 +81,10 @@
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
+        await updatePaper(paperData);
+    }
+
+    async function updatePaper(paperData: Partial<Paper>) {
         const updateCall = backendService
             .updatePaper({
                 paper: Paper.create(paperData),
@@ -156,7 +160,7 @@ Usage:
                             data-testid="save-paper-changes-btn"
                             onclick={async () => {
                                 if (!isPaperModified) return;
-                                await updatePaper();
+                                await savePaperModifications();
                             }}
                             size={24}
                         />
