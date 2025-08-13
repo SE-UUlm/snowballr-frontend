@@ -75,12 +75,7 @@ Usage:
                 <span class="text-hint italic">No papers currently in this stage.</span>
             {/if}
 
-            <Button
-                onclick={() => {
-                    // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
-                    console.log(`Add paper to stage ${stage.stageIndex}`);
-                }}
-            >
+            <Button href={`/project/${projectId}/paper/new`}>
                 <CirclePlus strokeWidth="2.5" />
                 Add Paper
             </Button>

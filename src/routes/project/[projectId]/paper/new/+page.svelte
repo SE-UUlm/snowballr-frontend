@@ -1,25 +1,13 @@
 <script lang="ts">
-    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import { Paper } from "$lib/model/api/paper.js";
 
     const { data } = $props();
     const { projectId, loadingProject } = data;
-    const paper = {
-        id: projectId,
-        externalId: "EXT12345",
-        title: "An Analysis of TypeScript Performance",
-        abstrakt:
-            "This paper examines the performance characteristics of TypeScript in large-scale applications.",
-        year: 2023,
-        publisher: "Tech Journal",
-        publicationName: "Journal of Modern Programming",
-        publicationType: "Journal Article",
-        hasPdf: true,
-        authors: [
-            { firstName: "John", lastName: "Doe" },
-            { firstName: "Jane", lastName: "Smith" },
-        ],
-        backwardReferencedIds: ["1", "2"],
-    };
+
+    let paper: Paper = Paper.create({
+        year: new Date().getFullYear(),
+    });
 </script>
 
 <svelte:head>
@@ -31,14 +19,13 @@
         <title>Add Paper</title>
     {/await}
 </svelte:head>
-{#await loadingProject}
-    <p>Loading...</p>
-{:then}
-    <PaperNavigationBar
-        backRef={`/project/${projectId}/dashboard`}
-        loadingPaper={Promise.resolve(paper)}
-        loadingPaperId={Promise.resolve(paper.id)}
-    />
-{:catch error}
-    <p>{error.message}</p>
-{/await}
+<PaperView
+    allowEditModeToggle
+    startInEditMode
+    backRef={`/project/${projectId}/dashboard`}
+    backwardReferencedPapers={Promise.resolve([])}
+    criteriaWithReviews={undefined}
+    forwardReferencedPapers={Promise.resolve([])}
+    loadingPaper={Promise.resolve(paper)}
+    reviewers={undefined}
+/>
