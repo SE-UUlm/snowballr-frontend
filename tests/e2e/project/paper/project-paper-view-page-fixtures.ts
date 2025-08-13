@@ -52,7 +52,7 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
 
             paper = await apiClient.createPaper(createPaper({ title: "Paper 1" })).response;
 
-            await apiClient.addPaperToProject({
+            const projectPaper = await apiClient.addPaperToProject({
                 projectId: project.id,
                 paperId: paper.id,
                 stage: 0n,
@@ -60,13 +60,16 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
 
             projectPaperViewPage.projectPaperNames.push(paper.title);
 
+            projectPaperViewPage.projectId = project.id;
+            projectPaperViewPage.localProjectPaperIds.push(projectPaper.localId);
+
             await page.goto(`/project/${project.id}/dashboard`);
             await expect(
                 projectPaperViewPage.getHeading(projectPaperViewPage.projectName),
             ).toBeVisible();
             await use(projectPaperViewPage);
         } finally {
-            if (paper) apiClient.removePaperFromProject({ id: paper.id });
+            if (paper) await apiClient.removePaperFromProject({ id: paper.id });
             if (project) await apiClient.softDeleteProject({ id: project.id });
         }
     },
@@ -142,6 +145,7 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
             await apiClient.softDeleteProject({ id: projectPaperViewPage.projectId });
         }
     },
+
     paperNavigation: async ({ page, apiClient }, use) => {
         const projectPaperViewPage = new ProjectPaperViewPageModel(page);
 
@@ -169,7 +173,7 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
                 projectPaperIds.push(projectPaper.id);
                 projectPaperViewPage.localProjectPaperIds.push(projectPaper.localId);
                 projectPaperViewPage.projectPaperNames.push(projectPaper.paper!.title);
-                if (parseInt(projectPaper.localId) % 2 !== 0) {
+                if (parseInt(projectPaper.localId, 10) % 2 !== 0) {
                     await apiClient.createReview({
                         projectPaperId: projectPaper.id,
                         ...Reviews.demoReview1,
