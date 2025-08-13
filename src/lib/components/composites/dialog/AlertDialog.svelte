@@ -15,7 +15,8 @@
         description?: Snippet;
         cancelProps?: AlertDialogCancelProps;
         cancelButtonText?: string;
-        actionProps?: Omit<AlertDialogActionProps, "disabled">;
+        actionProps?: AlertDialogActionProps;
+        actionIcon?: Snippet;
         actionButtonText?: string;
         actionButtonLoadingText?: string;
         errorText?: string;
@@ -38,6 +39,7 @@
         loading = $bindable(false),
         error = undefined,
         open = $bindable(false),
+        actionIcon,
     }: Props = $props();
 </script>
 
@@ -134,12 +136,13 @@ Usage:
             <AlertDialog.Action
                 {...actionProps}
                 data-testid="alert-dialog-action"
-                disabled={loading}
+                disabled={actionProps.disabled || loading}
             >
                 {#if loading}
                     <LoaderCircle class="animate-spin" />
                     {actionButtonLoadingText}
                 {:else}
+                    {@render actionIcon?.()}
                     {actionButtonText}
                 {/if}
             </AlertDialog.Action>
