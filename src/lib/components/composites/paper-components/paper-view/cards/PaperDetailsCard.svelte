@@ -14,6 +14,8 @@
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import { goto } from "$app/navigation";
+    import type { Project_Paper } from "$lib/model/api/project";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -82,11 +84,16 @@
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
+        let promise;
         if (isInCreationMode) {
-            await createPaper(Paper.create(paperData));
+            promise = createPaper(Paper.create(paperData));
         } else {
-            await updatePaper(paperData);
+            promise = updatePaper(paperData);
         }
+
+        // Add noop-catch so that promise rejection is not uncaught in tests
+        // noop-catch cannot be added before toast.promise because error case wouldn't be handled
+        await promise.catch(() => {}).finally(() => (isMakingApiCall = false));
     }
 
     async function updatePaper(paperData: Partial<Paper>) {
@@ -106,13 +113,7 @@
             error: "Failed to update the paper.",
         });
 
-        // Add noop-catch so that promise rejection is not uncaught in tests
-        // noop-catch cannot be added before toast.promise because error case wouldn't be handled
-        await updateCall
-            .catch(() => {})
-            .finally(() => {
-                isMakingApiCall = false;
-            });
+        return updateCall;
     }
 
     async function createPaper(paperData: Paper) {
@@ -121,20 +122,27 @@
             .response.then((createdPaper) => {
                 originalPaper = stringifyPaper(createdPaper);
                 paper = stringifyPaper(createdPaper);
-                return createdPaper;
+
+                return backendService.addPaperToProject({
+                    paperId: createdPaper.id,
+                    projectId: "5",
+                    stage: 0n,
+                }).response;
             });
 
         toast.promise(creationCall, {
-            loading: "Creation paper...",
-            success: (paper) => `Successfully created the paper with the ID ${paper.id}.`,
+            loading: "Creating paper...",
+            success: (projectPaper: Project_Paper) =>
+                `Successfully created the paper '${projectPaper.paper?.title}'.`,
             error: "Failed to create the paper.",
         });
 
-        const createdPaper = await creationCall
-            .catch(() => {})
-            .finally(() => {
-                isMakingApiCall = false;
-            });
+        return creationCall.then(async (projectPaper) => {
+            await goto(`/project/5/paper/${projectPaper.localId}`);
+            return projectPaper;
+        });
+
+        // TODO: add to specific project
     }
 
     beforeNavigate(({ cancel }) => {
