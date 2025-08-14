@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { ReviewDecision } from "$lib/model/api/review";
 
 test.describe("Project Paper View Navigation", () => {
-    test.fixme(
+    test(
         "When navigating to the project paper view, then the page is displayed",
         async ({
             page,
