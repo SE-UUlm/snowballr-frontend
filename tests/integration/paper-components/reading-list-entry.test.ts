@@ -31,7 +31,7 @@ describe("ReadingListEntryComponent", () => {
         render(ReadingListEntry, {
             props: {
                 paper: Papers.demoPaper1,
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 
@@ -71,7 +71,7 @@ describe("ReadingListEntryComponent", () => {
         render(ReadingListEntry, {
             props: {
                 paper: Papers.demoPaper1,
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 

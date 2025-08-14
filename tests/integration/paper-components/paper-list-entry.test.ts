@@ -167,7 +167,7 @@ describe("PaperListEntryComponent", () => {
             props: {
                 paper: Papers.demoPaper1,
                 projectId: undefined,
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 

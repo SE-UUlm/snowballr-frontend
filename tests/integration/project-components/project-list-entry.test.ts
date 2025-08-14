@@ -42,7 +42,7 @@ describe("ProjectListEntryComponent", () => {
                     ],
                 },
                 information: { projectProgress: 0.2 },
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 
@@ -101,7 +101,7 @@ describe("ProjectListEntryComponent", () => {
                     members: [],
                 },
                 information: { projectProgress: 20 },
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 
