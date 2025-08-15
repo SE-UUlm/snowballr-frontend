@@ -1,13 +1,15 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import { Separator } from "$lib/components/primitives/separator";
+    import { LoaderCircle } from "lucide-svelte";
 
     interface SettingsSectionProps {
         sectionTitle: string;
         children: Snippet;
+        loading?: boolean;
     }
 
-    const { sectionTitle, children }: SettingsSectionProps = $props();
+    const { sectionTitle, children, loading = false }: SettingsSectionProps = $props();
 </script>
 
 <!--
@@ -30,7 +32,12 @@ Usage:
     class="flex h-fit w-full flex-col gap-3 overflow-y-auto"
     data-testid={`settings-section-${sectionTitle.toLowerCase().replace(" ", "-")}`}
 >
-    <h2>{sectionTitle}</h2>
+    <div class="flex flex-row items-center gap-3">
+        <h2>{sectionTitle}</h2>
+        {#if loading}
+            <LoaderCircle class="animate-spin" />
+        {/if}
+    </div>
     <Separator />
     {@render children?.()}
 </section>

@@ -25,7 +25,7 @@ type ProjectSlrSettingsPageFixtures = {
  */
 export const test = base.extend<ProjectSlrSettingsPageFixtures>({
     projectSLRSettingsPage: async ({ page, apiClient }, use) => {
-        const projectSLRSettingsPage = new ProjectSLRSettingsPageModel(page);
+        const projectSLRSettingsPage = new ProjectSLRSettingsPageModel(page, apiClient);
 
         try {
             await apiClient

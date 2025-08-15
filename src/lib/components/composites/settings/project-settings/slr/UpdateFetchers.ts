@@ -1,0 +1,41 @@
+import { backendService } from "$lib/grpc-api";
+import type { FetcherOptions } from "$lib/model/api/fetcher";
+import { Project, Project_Settings } from "$lib/model/api/project";
+import type { ApiError } from "$lib/model/general";
+import { toast } from "svelte-sonner";
+
+export type Fetchers = { [key: string]: FetcherOptions };
+
+export async function updateFetchers(
+    projectId: string,
+    fetchers: Fetchers,
+    onSuccess: (updatedProject: Project) => void = () => {},
+    onError: (error: ApiError) => void = () => {},
+) {
+    await backendService
+        .updateProject({
+            project: Project.create({
+                id: projectId,
+                settings: Project_Settings.create({
+                    fetchers,
+                }),
+            }),
+            mask: {
+                paths: [`settings.fetchers`],
+            },
+        })
+        .response.then((it) => {
+            toast.success("Successfully updated project settings.");
+            onSuccess(it);
+        })
+        .catch((error) => {
+            toast.error("Error when updating project.", {
+                description: error,
+            });
+            onError({
+                errorTitle: "Project Settings Update Failed",
+                errorDetails:
+                    "Something went wrong when updating the project settings. Please make sure your internet connection is stable, then try again.",
+            });
+        });
+}

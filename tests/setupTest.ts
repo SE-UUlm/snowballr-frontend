@@ -168,8 +168,13 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
-            getAvailableFetcherApis: mock({
-                fetcherApis: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
+            getAvailableFetchers: mock({
+                fetcherNames: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
+            }),
+            getAvailableFetcherOptions: mock({
+                options: {
+                    TEST: "FOOBAR",
+                },
             }),
             register: vi.fn(),
             login: vi.fn(),
@@ -311,6 +316,9 @@ export function mockFailedApiCall(methodName: keyof ISnowballRClient, errorMessa
 // If window is defined, mock matchMedia
 // window is not defined in unit tests i.e. when running in node environment
 // window.matchMedia needs to be mocked for the Toaster component to work
+//
+// Also mock some pointer event related functions to make select components work
+// in integration tests.
 if (typeof window !== "undefined") {
     Object.defineProperty(window, "matchMedia", {
         writable: true,
@@ -325,4 +333,8 @@ if (typeof window !== "undefined") {
             dispatchEvent: vi.fn(),
         })),
     });
+
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+    window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 }

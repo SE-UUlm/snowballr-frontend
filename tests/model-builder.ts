@@ -113,7 +113,7 @@ export function createProjectSettings(props: Partial<Project_Settings> = {}): Pr
     return {
         reviewMaybeAllowed: false,
         similarityThreshold: 0.5,
-        fetcherApis: [],
+        fetchers: {},
         snowballingType: SnowballingType.BOTH,
         ...props,
     };
