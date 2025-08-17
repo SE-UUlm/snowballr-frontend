@@ -66,13 +66,21 @@ Usage:
     {...!onClick ? { href: href } : { type: "button" }}
 >
     <div class="flex h-fit min-w-0 flex-col">
-        <h2 class="truncate">
+        <h2 class="flex flex-row gap-2 truncate">
             {project.name}
             <!-- Show admin badge in dev mode when current user is admin of project -->
             {#if isDevMode && membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
-                <Badge class="ml-2" title="You are an admin of this project" variant="outline">
-                    admin
-                </Badge>
+                <Badge title="You are an admin of this project" variant="outline">admin</Badge>
+            {/if}
+            {#if onClick}
+                <a
+                    class="text-muted-foreground self-start"
+                    {href}
+                    onclick={(e) => e.stopPropagation()}
+                    title="Open Project"
+                >
+                    <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+                </a>
             {/if}
         </h2>
 
@@ -86,16 +94,6 @@ Usage:
             </span>
         {:else}
             <span class="italic">no members</span>
-        {/if}
-        {#if onClick}
-            <a
-                class="text-muted-foreground self-start"
-                {href}
-                onclick={(e) => e.stopPropagation()}
-                title="Open Project"
-            >
-                <ExternalLink class="mt-[0.375rem] size-[1rem]" />
-            </a>
         {/if}
     </div>
     <div class="flex w-fit flex-row items-center justify-start gap-x-5 lg:justify-end lg:gap-x-2.5">

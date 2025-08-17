@@ -51,7 +51,7 @@ Usage:
 >
     <svelte:element
         this={!onClick ? "a" : "button"}
-        class="flex flex-auto"
+        class="flex flex-auto gap-2"
         aria-label="Paper info for reading list entry"
         onclick={handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
         {...!onClick ? { href: href } : { type: "button" }}
