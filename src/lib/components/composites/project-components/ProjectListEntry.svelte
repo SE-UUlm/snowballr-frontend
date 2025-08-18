@@ -14,6 +14,7 @@
     import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
+    import { ExternalLink } from "lucide-svelte";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
@@ -49,6 +50,7 @@ This component shows the
 Furthermore this component is clickable and navigates to the corresponding project homepage,
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
+If an onClick event handler is provided, a link icon is shown to open the paper.
 
 Usage:
 ```svelte
@@ -64,13 +66,21 @@ Usage:
     {...!onClick ? { href: href } : { type: "button" }}
 >
     <div class="flex h-fit min-w-0 flex-col">
-        <h2 class="truncate">
+        <h2 class="flex flex-row gap-2 truncate">
             {project.name}
             <!-- Show admin badge in dev mode when current user is admin of project -->
             {#if isDevMode && membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
-                <Badge class="ml-2" title="You are an admin of this project" variant="outline">
-                    admin
-                </Badge>
+                <Badge title="You are an admin of this project" variant="outline">admin</Badge>
+            {/if}
+            {#if onClick}
+                <a
+                    class="text-muted-foreground self-start"
+                    {href}
+                    onclick={(e) => e.stopPropagation()}
+                    title="Open Project"
+                >
+                    <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+                </a>
             {/if}
         </h2>
 

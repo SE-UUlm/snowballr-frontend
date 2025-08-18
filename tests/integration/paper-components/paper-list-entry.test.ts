@@ -31,6 +31,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByRole("link").children[0]).not.toHaveClass("border-l-4");
         // and no user avatar exist indicate the individual review decision
         expect(screen.getByRole("link").childElementCount).toBe(1);
+        expect(screen.queryByRole("link", { name: "Open Paper" })).not.toBeInTheDocument();
     });
 
     test("When review information except an onClick handler are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
@@ -59,6 +60,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByRole("link").children[0]).not.toHaveClass("border-l-4");
         // and no user avatar exist indicate the individual review decision
         expect(screen.getByRole("link").childElementCount).toBe(1);
+        expect(screen.queryByRole("link", { name: "Open Paper" })).not.toBeInTheDocument();
     });
 
     test("When all required props are provided, then the paper list entry is completely shown (without review information)", async () => {
@@ -81,6 +83,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByRole("button").children[0]).not.toHaveClass("border-l-4");
         // and no user avatar exist indicate the individual review decision
         expect(screen.getByRole("button").childElementCount).toBe(1);
+        expect(screen.getByRole("link", { name: "Open Paper" })).toBeInTheDocument();
     });
 
     test("When review information are provided, but should not be shown, then the paper list entry is completely shown without review information", async () => {
@@ -142,7 +145,7 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByTestId("paper-list-entry").children[1]).toHaveTextContent("JD");
     });
 
-    test("When the user provides a custom onclick function, then it is executed on a single click (and not on double click)", async () => {
+    test("When the user provides a custom onclick function, then it is executed on click", async () => {
         let onClickExecuted: boolean = false;
 
         render(PaperEntry, {
@@ -154,12 +157,24 @@ describe("PaperListEntryComponent", () => {
         });
 
         await waitForComponentLoading();
-
-        await userEvent.dblClick(screen.getByRole("button"));
-        expect(onClickExecuted).equal(false);
-
         await userEvent.click(screen.getByRole("button"));
         await new Promise((resolve) => setTimeout(resolve, 350));
         expect(onClickExecuted).equal(true);
+    });
+
+    test("When the user provides a custom onclick function, then the link button opens the paper", async () => {
+        render(PaperEntry, {
+            props: {
+                paper: Papers.demoPaper1,
+                projectId: undefined,
+                onClick: () => {}, // force link icon to be shown
+            },
+        });
+
+        await waitForComponentLoading();
+        expect(screen.getByRole("link", { name: "Open Paper" })).toHaveAttribute(
+            "href",
+            "/paper/0",
+        );
     });
 });

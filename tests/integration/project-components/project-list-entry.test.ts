@@ -28,6 +28,7 @@ describe("ProjectListEntryComponent", () => {
         // Project (stage) progress is visualized using a progress bar
         expect(screen.queryByText("20")).not.toBeInTheDocument();
         expect(screen.queryByTestId("stage-progress-bar")).toHaveValue(20);
+        expect(screen.queryByRole("link", { name: "Open Project" })).not.toBeInTheDocument();
     });
 
     test("When all required props are provided, then the project list entry is completely shown.", () => {
@@ -41,7 +42,7 @@ describe("ProjectListEntryComponent", () => {
                     ],
                 },
                 information: { projectProgress: 0.2 },
-                onClick: () => {},
+                onClick: () => {}, // force link icon to be shown
             },
         });
 
@@ -54,6 +55,7 @@ describe("ProjectListEntryComponent", () => {
         // Project (stage) progress is visualized using a progress bar
         expect(screen.queryByText("20")).not.toBeInTheDocument();
         expect(screen.queryByTestId("stage-progress-bar")).toHaveValue(20);
+        expect(screen.getByRole("link", { name: "Open Project" })).toBeInTheDocument();
     });
 
     test("When no members are provided, then the list entry shows a hint.", () => {
@@ -89,5 +91,23 @@ describe("ProjectListEntryComponent", () => {
         expect(screen.getByText("Stage 3")).toBeInTheDocument();
 
         expect(screen.getByRole("link")).toHaveClass("opacity-25");
+    });
+
+    test("When the user provides a custom onclick function, then the link button opens the project", async () => {
+        render(ProjectListEntry, {
+            props: {
+                project: Projects.demoProjectArchived,
+                membersList: {
+                    members: [],
+                },
+                information: { projectProgress: 20 },
+                onClick: () => {}, // force link icon to be shown
+            },
+        });
+
+        expect(screen.getByRole("link", { name: "Open Project" })).toHaveAttribute(
+            "href",
+            "/project/1/dashboard",
+        );
     });
 });

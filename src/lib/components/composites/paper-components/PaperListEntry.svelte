@@ -14,6 +14,7 @@
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
+    import { ExternalLink } from "lucide-svelte";
 
     /**
      * Interface for the paper list entries.
@@ -65,6 +66,7 @@ as well as, if not in review mode, the review information about this paper.
 Furthermore this component is clickable and navigates to the corresponding paper view,
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
+If an onClick event handler is provided, a link icon is shown to open the paper.
 
 Usage:
 ```svelte
@@ -81,7 +83,7 @@ Usage:
 >
     <div
         class={cn(
-            "flex flex-auto rounded-md px-3 py-2",
+            "flex flex-auto gap-2 rounded-md px-3 py-2",
             !reviewMode.isActivated && isProjectPaper(paper)
                 ? `border-l-4 ${getStatusColor(paper.decision, "border")}`
                 : "",
@@ -91,6 +93,16 @@ Usage:
             loadingPaper={Promise.resolve(asPaper(paper))}
             loadingPaperId={Promise.resolve(paperId)}
         />
+        {#if onClick}
+            <a
+                class="text-muted-foreground self-start"
+                {href}
+                onclick={(e) => e.stopPropagation()}
+                title="Open Paper"
+            >
+                <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+            </a>
+        {/if}
     </div>
     {#if !reviewMode.isActivated && isProjectPaper(paper)}
         {#each paper.reviews as review (review.id)}
