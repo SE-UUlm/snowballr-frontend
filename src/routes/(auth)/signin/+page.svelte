@@ -12,6 +12,7 @@
     import { loadingWrapper } from "$lib/utils/common-helper";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import { isGrpcError } from "$lib/utils/common-helper.js";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
@@ -35,8 +36,7 @@
             .login(userData)
             .then(async () => await goto("/"))
             .catch((error: RpcError) => {
-                const errorCodeValue = GrpcStatusCode[error.code as keyof typeof GrpcStatusCode];
-                if (errorCodeValue === GrpcStatusCode.UNAUTHENTICATED) {
+                if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {
                     signinError = {
                         errorTitle: "Invalid Credentials",
                         errorDetails:

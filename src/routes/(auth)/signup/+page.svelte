@@ -13,6 +13,7 @@
     import { toast } from "svelte-sonner";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
+    import { isGrpcError } from "$lib/utils/common-helper.js";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -63,8 +64,7 @@
                 await goto("/signin");
             })
             .catch((error: RpcError) => {
-                const errorCodeValue = GrpcStatusCode[error.code as keyof typeof GrpcStatusCode];
-                if (errorCodeValue === GrpcStatusCode.ALREADY_EXISTS) {
+                if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
                     registrationError = {
                         errorTitle: "Email Already Registered",
                         errorDetails:

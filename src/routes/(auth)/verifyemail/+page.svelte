@@ -3,6 +3,7 @@
     import { Button } from "$lib/components/primitives/button";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import { getGrpcStatusCode } from "$lib/utils/common-helper";
 
     let { data } = $props();
     const { verificationPromise } = data;
@@ -16,7 +17,7 @@
         }
 
         const rpcError = error as RpcError;
-        const statusCodeValue = GrpcStatusCode[rpcError.code as keyof typeof GrpcStatusCode];
+        const statusCodeValue = getGrpcStatusCode(rpcError.code);
 
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:

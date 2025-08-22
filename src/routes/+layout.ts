@@ -6,6 +6,7 @@ import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { goto } from "$app/navigation";
 import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+import { isGrpcError } from "$lib/utils/common-helper";
 
 export const ssr = false;
 
@@ -33,8 +34,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     }
 
     // Redirect on backend business logic failure
-    let errorCodeValue = GrpcStatusCode[authStatusCall.status.code as keyof typeof GrpcStatusCode];
-    if (errorCodeValue !== GrpcStatusCode.OK) {
+    if (!isGrpcError(authStatusCall.status.code, GrpcStatusCode.OK)) {
         console.error(
             `Authentication status call failed with status: ${authStatusCall.status.code}. Redirecting to sign-in.`,
         );
@@ -46,9 +46,8 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     if (authStatus === AuthenticationStatus.ACCESS_TOKEN_EXPIRED) {
         try {
             const renewResponse = await backendService.renewSession(Nothing);
-            errorCodeValue =
-                GrpcStatusCode[authStatusCall.status.code as keyof typeof GrpcStatusCode];
-            if (errorCodeValue !== GrpcStatusCode.OK) {
+
+            if (!isGrpcError(authStatusCall.status.code, GrpcStatusCode.OK)) {
                 console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
                 return await redirectToSignIn();
             }
