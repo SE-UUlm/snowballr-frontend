@@ -5,37 +5,21 @@
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
     import type { ApiError } from "$lib/model/general";
-    import { StatusCodes } from "$lib/model/error-codes";
     import { goto } from "$app/navigation";
-    import { onMount } from "svelte";
-    import { Nothing } from "$lib/model/api/base.js";
-    import { AuthenticationStatus } from "$lib/model/api/authentication.js";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import type { RpcError } from "@protobuf-ts/runtime-rpc";
+    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import { isGrpcError } from "$lib/utils/common-helper.js";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
     let signinError: ApiError | undefined = $state(undefined);
 
-    let isLoadingAuthStatus = $state(true);
     const loading = $state({ value: false });
-
-    onMount(async () => {
-        try {
-            const authStatus = (await backendService.getAuthenticationStatus(Nothing).response)
-                .authenticationStatus;
-            if (authStatus === AuthenticationStatus.AUTHENTICATED) {
-                await goto("/");
-            }
-        } catch (error) {
-            console.error("There was an error acquiring the authentication status:", error);
-        }
-
-        isLoadingAuthStatus = false;
-    });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -51,8 +35,8 @@
         await backendService
             .login(userData)
             .then(async () => await goto("/"))
-            .catch((error) => {
-                if (error.code === StatusCodes.UNAUTHENTICATED) {
+            .catch((error: RpcError) => {
+                if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {
                     signinError = {
                         errorTitle: "Invalid Credentials",
                         errorDetails:
@@ -74,12 +58,7 @@
     <title>Sign In</title>
 </svelte:head>
 
-<Card.Root
-    class={cn(
-        "flex w-full max-w-xl flex-col border-slate-500 shadow-lg",
-        isLoadingAuthStatus ? "opacity-0" : "",
-    )}
->
+<Card.Root class={cn("flex w-full max-w-xl flex-col border-slate-500 shadow-lg")}>
     <Card.Header class="flex w-full flex-col">
         <Card.Title class="text-3xl">Sign In</Card.Title>
         <Card.Description>Enter your credentials to sign in to your account</Card.Description>
@@ -92,7 +71,7 @@
             <Input
                 bind:this={emailInput}
                 class="w-full"
-                disabled={isLoadingAuthStatus || loading.value}
+                disabled={loading.value}
                 errorMessagePrefix="Email must have"
                 inputId="email-input"
                 label="Email"
@@ -104,7 +83,7 @@
             <PasswordInput
                 bind:this={passwordInput}
                 class="w-full"
-                disabled={isLoadingAuthStatus || loading.value}
+                disabled={loading.value}
                 link={{ href: "/resetpassword", text: "Forgot Password?" }}
                 validate={false}
             />

@@ -1,11 +1,10 @@
 import { SnowballRClient } from "$lib/model/api/main.client";
 import type { Browser, Page } from "@playwright/test";
-import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { exec, execSync } from "node:child_process";
 import { CookieJar, Cookie } from "tough-cookie";
 import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
-import { StatusCodes } from "$lib/model/error-codes";
 import { Nothing } from "$lib/model/api/base";
 import { MOCK_BACKEND_IMAGE } from "./mock-backend-version";
 
@@ -168,7 +167,9 @@ export class DockerMockBackend {
             try {
                 const client = new AuthSnowballRClient(backend);
                 const response = await client.getAuthenticationStatus(Nothing);
-                if (response.status.code === StatusCodes.OK) {
+                const errorCodeValue =
+                    GrpcStatusCode[response.status.code as keyof typeof GrpcStatusCode];
+                if (errorCodeValue === GrpcStatusCode.OK) {
                     break;
                 } else {
                     process.exit(
