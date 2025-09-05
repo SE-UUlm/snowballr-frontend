@@ -28,7 +28,7 @@ export class ProjectPapersPageModel {
     constructor(page: Page) {
         this.page = page;
 
-        this.paperDetailsCard = page.locator('aside[data-testid="paper-details-card"]');
+        this.paperDetailsCard = page.getByTestId("paper-details-card");
         this.searchBarInput = page.getByPlaceholder("Search paper");
         this.clearFiltersButton = page.getByRole("button", { name: "Reset" });
         this.showFiltersButton = page.getByRole("button", { name: "Filter", exact: false });
