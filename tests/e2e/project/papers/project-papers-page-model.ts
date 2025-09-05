@@ -46,7 +46,7 @@ export class ProjectPapersPageModel {
             this.decisionFilterButton,
             this.criteriaFilterButton,
         ];
-        this.sortOptionSelect = page.getByRole("button", { name: "Sort by: ", exact: false });
+        this.sortOptionSelect = page.getByRole("button", { name: "Sort by", exact: false });
 
         this.projectName = "Project 1";
         this.projectPaperNames = [];
@@ -128,7 +128,7 @@ export class ProjectPapersPageModel {
         await this.openStage(stageIndex);
         const paperLocator = this.getPaper(stageIndex, paperIndexInStage);
         const iconLink = paperLocator.getByRole("link", { name: "Open Paper" });
-        (await iconLink.elementHandle())!.waitForElementState("stable");
+        await (await iconLink.elementHandle())!.waitForElementState("stable");
         await iconLink.click();
     }
 
