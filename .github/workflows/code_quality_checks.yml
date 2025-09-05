@@ -104,13 +104,13 @@ jobs:
                   node_version: ${{ env.node_version }}
 
             - name: Download unit test coverage report
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                   name: unit-code-coverage-report
                   path: coverage/unit
 
             - name: Download integration test coverage report
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                   name: integration-code-coverage-report
                   path: coverage/integration
