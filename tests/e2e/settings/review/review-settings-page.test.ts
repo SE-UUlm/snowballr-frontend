@@ -12,7 +12,7 @@ test.describe("Review Settings Navigation", () => {
         // Directly navigate to the review settings
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getSettingsLink().click();
         await settingsSideBar.review.click();
         await expect(reviewSettingsPage.reviewModeSwitch).toBeVisible();
@@ -59,7 +59,7 @@ test.describe("Review Mode Tests", () => {
         await homePage.openProjectPaper(reviewSettingsPage.paperName);
         await expect(projectPaperViewPage.acceptButton).toBeVisible();
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getSettingsLink().click();
         await settingsSideBar.review.click();
 

@@ -6,7 +6,7 @@ test.describe("Sign Out Tests", () => {
         signInPage,
         navigationBarModel,
     }) => {
-        await navigationBarModel.getUserAvatarButton().click();
+        await navigationBarModel.openUserMenu();
         await navigationBarModel.getSignOutLink().click();
         await expect(signInPage.heading).toBeVisible();
     });

@@ -15,8 +15,7 @@ test.describe("Paper View Navigation", () => {
         await homePage.openProjectPaper(paperViewPage.paperNames[0]);
         await projectPaperViewPage.getReadingListButton(true).click();
         await expect(navigationBar.getUserAvatarButton()).toBeVisible();
-        await navigationBar.getUserAvatarButton().click();
-        await expect(navigationBar.getReadingListLink()).toBeVisible();
+        await navigationBar.openUserMenu();
         await navigationBar.getReadingListLink().click();
         await expect(paperViewPage.getReferencesListEntry(0)).toBeVisible();
         await readingListPage.readingListEntries.first().click();

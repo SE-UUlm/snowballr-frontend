@@ -12,7 +12,7 @@ test.describe("Shortcuts Settings Navigation", () => {
         // Directly navigate to the account settings
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getSettingsLink().click();
         await settingsSideBar.shortcuts.click();
         await expect(shortcutsSettingsPage.shortcutsVisibilitySwitch).toBeVisible();

@@ -1,4 +1,4 @@
-import { type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export class NavigationBarModel {
     readonly page: Page;
@@ -7,6 +7,21 @@ export class NavigationBarModel {
     constructor(page: Page) {
         this.page = page;
         this.goBackButton = this.page.getByRole("link", { name: "Back to" });
+    }
+
+    /**
+     * Opens the menu to navigate to further pages, e.g., the reading list
+     *
+     * Therefore, the user avatar is clicked and the links are awaited to be stabilized and clickable.
+     */
+    async openUserMenu() {
+        await this.getUserAvatarButton().click();
+
+        await expect(this.getReadingListLink()).toBeVisible();
+        await expect(this.getArchivedProjectsLink()).toBeVisible();
+        await expect(this.getInvitationsLink()).toBeVisible();
+        await expect(this.getSettingsLink()).toBeVisible();
+        await expect(this.getSignOutLink()).toBeVisible();
     }
 
     /**

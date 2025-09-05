@@ -10,7 +10,7 @@ test.describe("Invitation Navigation", () => {
         // Directly navigate to the invitations
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getInvitationsLink().click();
         await expect(invitationsPage.heading).toBeVisible();
     });
