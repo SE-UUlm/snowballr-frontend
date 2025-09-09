@@ -232,6 +232,7 @@ test.describe("Update Paper Tests", () => {
     });
 
     test("When the user enters an invalid year and saves, then an error toast is shown", async ({
+        page,
         projectPaperViewPage,
     }) => {
         await projectPaperViewPage.openProjectPaperView(
@@ -244,6 +245,7 @@ test.describe("Update Paper Tests", () => {
 
         // Set invalid year
         const yearInput = projectPaperViewPage.getToggleableInput("year");
+        const previousYear = await yearInput.inputValue();
         await yearInput.fill("");
         await yearInput.fill("abcd");
 
@@ -252,5 +254,10 @@ test.describe("Update Paper Tests", () => {
 
         // Expect validation error toast
         await expect(projectPaperViewPage.yearValidationErrorToast).toBeVisible();
+
+        await page.reload();
+
+        // Expect no changes were saved
+        await expect(yearInput).toHaveValue(previousYear);
     });
 });
