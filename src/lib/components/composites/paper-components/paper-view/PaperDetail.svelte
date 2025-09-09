@@ -41,11 +41,11 @@
 
 <!--
 @component
-Paper Detail component to display a single detail of a paper.
+Paper detail component to display a single detail of a paper, e.g., the title or the publisher.
 
 Usage:
 ```svelte
-    <PaperDetail {key} {label} {loadingPaper} {isInEditMode} bind:paper />
+    <PaperDetail prop={{ key, label }} {loadingPaper} {isInEditMode} bind:paper />
 ```
 -->
 <div id={key} class="flex flex-row gap-2" data-testid="paper-detail">
