@@ -112,10 +112,11 @@
 <!--
 @component
 `PaperCard` for displaying the details of a paper in the `PaperView` component.
+It also provides the functionality to update the paper details.
 
 Usage:
 ```svelte
-    <PaperDetailsCard {paper} {allowEditModeToggle} {startInEditMode} />
+    <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
 ```
 -->
 <PaperCard data-testid="paper-details-card" {tabs}>
