@@ -34,7 +34,7 @@
     });
 
     $effect(() => {
-        if (paper === undefined || originalPaper === undefined) {
+        if (paper.id === "" || originalPaper === undefined) {
             return;
         }
 
@@ -99,9 +99,9 @@
             error: "Failed to update the paper.",
         });
 
-        await updateCall;
-
-        isMakingApiCall = false;
+        await updateCall.finally(() => {
+            isMakingApiCall = false;
+        });
     }
 
     function isEqual(obj1: unknown, obj2: unknown): boolean {
