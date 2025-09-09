@@ -220,7 +220,7 @@
             <Card.Root
                 class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
             >
-                <PaperDetailsCardContent {loadingPaper} paper={stringifyPaper(Paper.create())} />
+                <PaperDetailsCardContent {loadingPaper} paper={stringifyPaper(selectedPaper.paper ?? Paper.create())} />
                 <div class="absolute top-5 right-5 flex flex-row gap-2.5">
                     <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
                     <a
