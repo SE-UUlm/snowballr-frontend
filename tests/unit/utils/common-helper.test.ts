@@ -7,6 +7,7 @@ import {
     getNames,
     groupBy,
     isPaperUndecided,
+    isStringEqual,
     pluralize,
     wrapLongWords,
 } from "$lib/utils/common-helper";
@@ -248,5 +249,30 @@ describe("Debounce a function", () => {
         vi.advanceTimersByTime(250);
 
         expect(mockFn).toHaveBeenCalledWith();
+    });
+});
+
+describe("Check String equality", () => {
+    test("When both objects are the same, then they are equal", () => {
+        const obj = { a: 1, b: [2, 3] };
+        expect(isStringEqual(obj, obj)).toBe(true);
+    });
+
+    test("When both objects have the same structure and values, then they are equal", () => {
+        const obj1 = { a: 1, b: [2, 3] };
+        const obj2 = { a: 1, b: [2, 3] };
+        expect(isStringEqual(obj1, obj2)).toBe(true);
+    });
+
+    test("When both objects have different structures or values, then they are not equal", () => {
+        const obj1 = { a: 1, b: [2, 3] };
+        const obj2 = { a: 1, b: [2, 4] };
+        expect(isStringEqual(obj1, obj2)).toBe(false);
+    });
+
+    test("When comparing different types, then they are not equal", () => {
+        expect(isStringEqual({ a: 1 }, [1])).toBe(false);
+        expect(isStringEqual(null, undefined)).toBe(false);
+        expect(isStringEqual(42, "42")).toBe(false);
     });
 });

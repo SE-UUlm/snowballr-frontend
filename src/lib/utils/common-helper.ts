@@ -293,7 +293,7 @@ function stringToEnumValue<T extends Record<string, string>>(
     enumObj: T,
     value: string,
 ): T[keyof T] | undefined {
-    return (Object.values(enumObj) as string[]).includes(value) ? (value as T[keyof T]) : undefined;
+    return Object.values(enumObj).includes(value) ? (value as T[keyof T]) : undefined;
 }
 
 /**
@@ -357,6 +357,17 @@ export function isGrpcError(code: number | string, status: GrpcStatusCode): bool
     return codeValue === status;
 }
 
+/**
+ * Checks whether two objects are equal by comparing their JSON string representations.
+ *
+ * @param obj1 - First object to compare
+ * @param obj2 - Second object to compare
+ * true if the objects are equal, false otherwise.
+ */
+function isStringEqual(obj1: unknown, obj2: unknown): boolean {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
+
 export {
     getName,
     getNames,
@@ -375,4 +386,5 @@ export {
     stringToEnumValue,
     debounce,
     callDebounced,
+    isStringEqual,
 };

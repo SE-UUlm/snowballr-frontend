@@ -12,6 +12,7 @@
     import type { StringifiedPaper } from "$lib/model/general";
     import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import { isStringEqual } from "$lib/utils/common-helper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -38,7 +39,7 @@
             return;
         }
 
-        isPaperModified = !isEqual(originalPaper, paper);
+        isPaperModified = !isStringEqual(originalPaper, paper);
     });
 
     const tabs = [
@@ -102,10 +103,6 @@
         await updateCall.finally(() => {
             isMakingApiCall = false;
         });
-    }
-
-    function isEqual(obj1: unknown, obj2: unknown): boolean {
-        return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 </script>
 
