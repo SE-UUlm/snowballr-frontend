@@ -62,7 +62,10 @@ export const test = base.extend<ProjectPapersPageFixtures>({
                 papers.push(apiClient.createPaper(createPaper({ title, authors, year })).response);
                 projectPapersPage.projectPaperNames.push(title);
             }
-            const createdPapers = await Promise.all(papers);
+            const createdPapers: Paper[] = [];
+            for (const paper of papers) {
+                createdPapers.push(await paper);
+            }
 
             const projectPaperPromises: Promise<Project_Paper>[] = createdPapers.map((paper, i) => {
                 const stageIndex = Math.floor(i / NUM_PAPERS_PER_STAGE) === 0 ? 0n : 1n;
@@ -72,9 +75,9 @@ export const test = base.extend<ProjectPapersPageFixtures>({
                     paperId: paper.id,
                 }).response;
             });
-            projectPapersPage.projectPaperIds = (await Promise.all(projectPaperPromises)).map(
-                (pp) => pp.id,
-            );
+            for (const projectPaper of projectPaperPromises) {
+                projectPapersPage.projectPaperIds.push((await projectPaper).id);
+            }
 
             await page.goto(`project/${projectPapersPage.projectId}/papers`);
             await expect(projectPapersPage.showFiltersButton).toBeVisible();

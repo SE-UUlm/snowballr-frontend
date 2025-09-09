@@ -155,7 +155,7 @@ export class ProjectPaperViewPageModel {
      */
     async changeReviewMode(reviewMode: boolean, paperName: string) {
         const projectNavigationBar = new ProjectNavigationBarModel(this.page);
-        await projectNavigationBar.getUserAvatarButton().click();
+        await projectNavigationBar.openUserMenu();
         await projectNavigationBar.getSettingsLink().click();
         await new SettingsSidebarModel(this.page).review.click();
         await new ReviewSettingsPageModel(this.page).setReviewMode(reviewMode);

@@ -9,9 +9,16 @@ Closes <!-- issue reference -->
 
 Either tick or cross out the items that do not apply (using \~\~example text\~\~) and give a reason why the item does not apply.
 
+### Author
+
 - [ ] I have updated the documentation accordingly and commented my code
+- [ ] I manually tested the changes
 - [ ] I have added tests that prove my fix is effective or that my feature works
   - [ ] unit tests
   - [ ] integration tests
   - [ ] end-to-end tests
-- [ ] (for reviewer) I have checked the implementation against the requirements
+
+### Reviewer
+
+- [ ] I have checked the implementation against the requirements
+- [ ] I have checked for flaky tests in the CI

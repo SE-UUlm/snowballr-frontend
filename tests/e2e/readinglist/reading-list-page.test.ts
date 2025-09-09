@@ -15,7 +15,7 @@ test.describe("Reading List Navigation", () => {
         // Directly navigate to the reading list
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getReadingListLink().click();
         await expect(readingListPage.heading).toBeVisible();
     });
@@ -107,7 +107,7 @@ test.describe("Reading List Tests", () => {
         await projectPaperView.getReadingListButton(false).click();
         await expect(projectPaperView.getReadingListButton(true)).toBeVisible(); // Verify button change
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getReadingListLink().click();
 
         // Verify it's gone from the list

@@ -12,14 +12,14 @@ test.describe("Account Settings Navigation", () => {
         // Directly navigate to the account settings
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getSettingsLink().click();
         await expect(accountSettingsPage.firstNameInput).toBeVisible();
 
         // Navigate to the account settings page via the shortcuts settings page
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getSettingsLink().click();
         await settingsSideBar.shortcuts.click();
         await expect(shortcutsSettingsPage.shortcutsVisibilitySwitch).toBeVisible();

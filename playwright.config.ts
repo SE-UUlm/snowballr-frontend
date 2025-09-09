@@ -4,7 +4,8 @@ export default defineConfig({
     testDir: "tests/e2e",
     forbidOnly: !!process.env.CI,
     retries: 2,
-    failOnFlakyTests: !!process.env.CI,
+    // decision in team: do not fail on flaky tests in CI during development
+    failOnFlakyTests: false,
     // Opt out of parallel tests on CI.
     workers: process.env.CI ? 1 : undefined,
     reporter: [

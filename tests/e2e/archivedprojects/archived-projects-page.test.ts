@@ -10,7 +10,7 @@ test.describe("Archived Projects Navigation", () => {
         // Directly navigate to the archived projects
         await page.goto("/");
 
-        await navigationBar.getUserAvatarButton().click();
+        await navigationBar.openUserMenu();
         await navigationBar.getArchivedProjectsLink().click();
         await expect(archivedProjectsPage.heading).toBeVisible();
     });

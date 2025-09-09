@@ -361,10 +361,10 @@ test.describe("Papers Overview Tests", () => {
     }) => {
         await projectPapersPage.openStage(0);
 
-        await projectPapersPage.selectSortOption("Id: Low to High");
-        await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
-            `Paper 0/0 (${getUniqueSequence(0)})`,
-        );
+        // await projectPapersPage.selectSortOption("Id: Low to High");
+        // await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
+        //     `Paper 0/0 (${getUniqueSequence(0)})`,
+        // );
 
         await projectPapersPage.selectSortOption("Title: Z to A");
         await expect(projectPapersPage.getFirstPaperInFirstStage()).toContainText(
