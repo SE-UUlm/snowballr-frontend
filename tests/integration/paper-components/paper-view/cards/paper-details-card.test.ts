@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { loading, createPaper } from "../../../../model-builder";
 import { waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {
@@ -251,5 +251,37 @@ describe("PaperDetailsCard", () => {
         await user.click(savePaperChangesButtons[0]);
 
         expect(mockCall).toHaveBeenCalledTimes(0);
+    });
+
+    test("When the paper update call fails, then the save button is not disabled", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const mockCall = mockFailedApiCall("updatePaper");
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const titleInput = screen.getByTestId("toggleable-input-title");
+        expect(titleInput).toBeInTheDocument();
+        await user.type(titleInput, " - Updated");
+
+        const savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
+        expect(savePaperChangesButtons).toHaveLength(1);
+
+        await user.click(savePaperChangesButtons[0]);
+
+        expect(mockCall).toHaveBeenCalledTimes(1);
+
+        await waitFor(() => {
+            expect(savePaperChangesButtons[0]).not.toBeDisabled();
+        });
     });
 });
