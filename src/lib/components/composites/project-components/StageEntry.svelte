@@ -8,6 +8,7 @@
     import { filterProjectPapers } from "$lib/utils/filters";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import AddPaperDialogButton from "./AddPaperDialogButton.svelte";
 
     interface Props {
         projectId: string;
@@ -82,6 +83,7 @@ Usage:
                 <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
                     <CirclePlus strokeWidth="2.5" /> Add Paper
                 </Button>
+                <AddPaperDialogButton {projectId} stage={stage.stageIndex} />
             {/if}
         </div>
     </Accordion.Content>
