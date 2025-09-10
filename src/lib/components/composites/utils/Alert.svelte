@@ -4,29 +4,40 @@
     import CircleCheck from "@lucide/svelte/icons/circle-check";
     import Info from "@lucide/svelte/icons/info";
     import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     export type AlertVariant = "default" | "success" | "info" | "warning" | "error";
     type Props = {
         title: string;
         details?: string;
         variant?: AlertVariant;
+        inline?: boolean;
     };
 
-    const { title, details, variant = "default" }: Props = $props();
+    const { title, details, variant = "default", inline }: Props = $props();
 </script>
 
-<Alert.Root aria-label={title} {variant}>
+<Alert.Root
+    class={inline ? "flex flex-row items-center overflow-scroll p-2" : ""}
+    aria-label={title}
+    {variant}
+>
+    {@const iconClass = cn("size-4 min-w-4", inline ? "static!" : "")}
     {#if variant === "success"}
-        <CircleCheck class="size-4" role="img" />
+        <CircleCheck class={iconClass} role="img" />
     {:else if variant === "info"}
-        <Info class="size-4" role="img" />
+        <Info class={iconClass} role="img" />
     {:else if variant === "warning"}
-        <TriangleAlert class="size-4" role="img" />
+        <TriangleAlert class={iconClass} role="img" />
     {:else if variant === "error"}
-        <CircleAlert class="size-4" role="img" />
+        <CircleAlert class={iconClass} role="img" />
     {/if}
-    <Alert.Title>{title}</Alert.Title>
+    <Alert.Title class={cn(inline ? "m-0 pl-2! whitespace-nowrap" : "")}>
+        {title}{inline ? ": " : ""}
+    </Alert.Title>
     {#if details}
-        <Alert.Description>{details}</Alert.Description>
+        <Alert.Description class={inline ? "pl-2! whitespace-nowrap" : ""}>
+            {details}
+        </Alert.Description>
     {/if}
 </Alert.Root>
