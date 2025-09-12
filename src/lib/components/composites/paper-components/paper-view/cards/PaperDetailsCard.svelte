@@ -13,6 +13,7 @@
     import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { isStringEqual } from "$lib/utils/common-helper";
+    import { beforeNavigate } from "$app/navigation";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -104,6 +105,13 @@
             isMakingApiCall = false;
         });
     }
+
+    beforeNavigate(({ cancel }) => {
+        if (!isPaperModified) return;
+        if (!confirm('Are you sure you want to leave this page? You have unsaved changes that will be lost.')) {
+            cancel();
+        }
+    });
 </script>
 
 <!--
