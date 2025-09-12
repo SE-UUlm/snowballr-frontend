@@ -40,9 +40,12 @@
 @component
 Content of the `PaperDetailsCard`, i.e. displays the details.
 
+We require the `loadingPaper` promise to know when the paper is fully loaded, but also need the bound paper state, so
+we can modify the paper's properties.
+
 Usage:
 ```svelte
-    <PaperDetailsCardContent {paper} />
+    <PaperDetailsCardContent {loadingPaper} bind:paper />
 ```
 -->
 <section class="flex flex-col gap-2 px-1">

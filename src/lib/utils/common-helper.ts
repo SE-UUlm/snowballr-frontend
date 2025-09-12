@@ -362,7 +362,7 @@ export function isGrpcError(code: number | string, status: GrpcStatusCode): bool
  *
  * @param obj1 - First object to compare
  * @param obj2 - Second object to compare
- * true if the objects are equal, false otherwise.
+ * @returns `true` if the objects are equal, `false` otherwise.
  */
 function isStringEqual(obj1: unknown, obj2: unknown): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
