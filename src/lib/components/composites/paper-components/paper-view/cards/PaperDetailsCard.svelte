@@ -108,7 +108,10 @@
 
     beforeNavigate(({ cancel }) => {
         if (!isPaperModified) return;
-        if (!confirm('Are you sure you want to leave this page? You have unsaved changes that will be lost.')) {
+        const isConfirmed = confirm(
+            "Are you sure you want to leave this page? You have unsaved changes that will be lost.",
+        );
+        if (!isConfirmed) {
             cancel();
         }
     });
