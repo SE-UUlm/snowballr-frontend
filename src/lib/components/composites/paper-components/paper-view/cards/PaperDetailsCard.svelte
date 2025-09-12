@@ -101,9 +101,13 @@
             error: "Failed to update the paper.",
         });
 
-        await updateCall.finally(() => {
-            isMakingApiCall = false;
-        });
+        // Add noop-catch so that promise rejection is not uncaught in tests
+        // noop-catch cannot be added before toast.promise because error case wouldn't be handled
+        await updateCall
+            .catch(() => {})
+            .finally(() => {
+                isMakingApiCall = false;
+            });
     }
 
     beforeNavigate(({ cancel }) => {
