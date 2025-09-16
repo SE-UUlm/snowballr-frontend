@@ -27,7 +27,7 @@
         stage,
         open = $bindable(false),
         includeLocal = $bindable(false),
-        includeFetchers = $bindable(true)
+        includeFetchers = $bindable(true),
     }: Props = $props();
 
     let error: ApiError | undefined = $state();
@@ -111,7 +111,7 @@
 
     function setOpen(newOpen: boolean) {
         if (!loading) {
-            open = newOpen
+            open = newOpen;
         }
     }
 </script>
@@ -133,7 +133,13 @@
     </Button>
 {/snippet}
 
-{#snippet paperView(paper: Paper, testid: string, buttonTestid: string, icon: "plus" | "trash", onClick: () => void)}
+{#snippet paperView(
+    paper: Paper,
+    testid: string,
+    buttonTestid: string,
+    icon: "plus" | "trash",
+    onClick: () => void,
+)}
     {@const authorString = paper.authors.map((it) => `${it.firstName} ${it.lastName}`).join(", ")}
     <div
         class="border-muted hover:bg-muted/50 flex flex-row items-center gap-2 rounded-md border p-2"
@@ -146,7 +152,7 @@
             </div>
             <div class="text-muted-foreground text-xs">{paper.year} - {paper.publicationName}</div>
         </div>
-        <Button onclick={onClick} data-testid={buttonTestid} size="icon" variant="outline">
+        <Button data-testid={buttonTestid} onclick={onClick} size="icon" variant="outline">
             {#if icon === "plus"}
                 <CirclePlus />
             {:else}

@@ -29,13 +29,13 @@ describe("AddPaperDialogButton", () => {
     async function selectPaper(index: number) {
         const all = screen.getAllByTestId("add-paper-to-selected");
         assert(index < all.length);
-        await user.click(all[index])
+        await user.click(all[index]);
     }
 
     async function unselectPaper(index: number) {
         const all = screen.getAllByTestId("remove-paper-from-selected");
         assert(index < all.length);
-        await user.click(all[index])
+        await user.click(all[index]);
     }
 
     test("When local papers could not be fetched, then an error is displayed", async () => {
@@ -47,7 +47,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
             },
@@ -70,7 +70,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
             },
@@ -85,7 +85,19 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When local papers are successfully fetched, then they are displayed", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ title: "Foo", authors: [{ firstName: "Alice", lastName: "Smith" }], year: 2025, publicationName: "Journal of Testing" }] }));
+        mockApiCall(
+            "searchLocalPapers",
+            Paper_List.create({
+                papers: [
+                    {
+                        title: "Foo",
+                        authors: [{ firstName: "Alice", lastName: "Smith" }],
+                        year: 2025,
+                        publicationName: "Journal of Testing",
+                    },
+                ],
+            }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -93,7 +105,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
             },
@@ -105,11 +117,23 @@ describe("AddPaperDialogButton", () => {
         expect(await screen.findByText("Alice Smith", { exact: false })).toBeVisible();
         expect(await screen.findByText("Journal of Testing", { exact: false })).toBeVisible();
         expect(await screen.findByText("2025", { exact: false })).toBeVisible();
-        expect(screen.getAllByTestId("paper-available-to-be-added").length).toBe(1)
+        expect(screen.getAllByTestId("paper-available-to-be-added").length).toBe(1);
     });
 
     test("When fetcher papers are successfully fetched, then they are displayed", async () => {
-        mockApiCall("searchFetcherPapers", Paper_List.create({ papers: [{ title: "Foo", authors: [{ firstName: "Alice", lastName: "Smith" }], year: 2025, publicationName: "Journal of Testing" }] }));
+        mockApiCall(
+            "searchFetcherPapers",
+            Paper_List.create({
+                papers: [
+                    {
+                        title: "Foo",
+                        authors: [{ firstName: "Alice", lastName: "Smith" }],
+                        year: 2025,
+                        publicationName: "Journal of Testing",
+                    },
+                ],
+            }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -117,7 +141,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
             },
@@ -132,8 +156,14 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When local and fetcher papers are successfully fetched, then they are displayed", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }));
-        mockApiCall("searchFetcherPapers", Paper_List.create({ papers: [{ id: "2", title: "Bar" }] }));
+        mockApiCall(
+            "searchLocalPapers",
+            Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }),
+        );
+        mockApiCall(
+            "searchFetcherPapers",
+            Paper_List.create({ papers: [{ id: "2", title: "Bar" }] }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -141,7 +171,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
             },
@@ -154,8 +184,14 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When local and fetcher papers return a paper with the same id, then only the local one is shown", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }));
-        mockApiCall("searchFetcherPapers", Paper_List.create({ papers: [{ id: "1", title: "Bar" }] }));
+        mockApiCall(
+            "searchLocalPapers",
+            Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }),
+        );
+        mockApiCall(
+            "searchFetcherPapers",
+            Paper_List.create({ papers: [{ id: "1", title: "Bar" }] }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -163,7 +199,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
             },
@@ -176,7 +212,10 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When a paper with undefined authors is encountered, then 'Unknown Authors' is displayed", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ title: "Foo", authors: undefined }] }));
+        mockApiCall(
+            "searchLocalPapers",
+            Paper_List.create({ papers: [{ title: "Foo", authors: undefined }] }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -184,7 +223,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
             },
@@ -205,7 +244,7 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
             },
@@ -214,11 +253,11 @@ describe("AddPaperDialogButton", () => {
         await search("test");
 
         expect(await screen.findByText("Foo", { exact: false })).toBeVisible();
-        expect(screen.getAllByTestId("paper-available-to-be-added").length).toBe(1)
-        expect(screen.queryByTestId("paper-to-be-added")).not.toBeInTheDocument()
-        await selectPaper(0)
-        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument()
-        expect(screen.getAllByTestId("paper-to-be-added").length).toBe(1)
+        expect(screen.getAllByTestId("paper-available-to-be-added").length).toBe(1);
+        expect(screen.queryByTestId("paper-to-be-added")).not.toBeInTheDocument();
+        await selectPaper(0);
+        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument();
+        expect(screen.getAllByTestId("paper-to-be-added").length).toBe(1);
         expect(await screen.findByText("Foo", { exact: false })).toBeVisible();
     });
 
@@ -231,23 +270,23 @@ describe("AddPaperDialogButton", () => {
             props: {
                 open: true,
                 projectId: "1",
-                stage: 1,
+                stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
             },
         });
 
         await search("test");
-        await selectPaper(0)
+        await selectPaper(0);
         mockApiCall("searchLocalPapers", Paper_List.create({ papers: [] }));
         await search("test");
 
         expect(await screen.findByText("Foo", { exact: false })).toBeVisible();
-        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument()
-        expect(screen.getAllByTestId("paper-to-be-added").length).toBe(1)
+        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument();
+        expect(screen.getAllByTestId("paper-to-be-added").length).toBe(1);
         await unselectPaper(0);
-        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument()
-        expect(screen.queryByTestId("paper-to-be-added")).not.toBeInTheDocument()
+        expect(screen.queryByTestId("paper-available-to-be-added")).not.toBeInTheDocument();
+        expect(screen.queryByTestId("paper-to-be-added")).not.toBeInTheDocument();
         expect(screen.queryByText("Foo", { exact: false })).not.toBeInTheDocument();
     });
 });
