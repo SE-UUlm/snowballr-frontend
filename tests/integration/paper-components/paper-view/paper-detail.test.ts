@@ -1,18 +1,25 @@
 import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { loading, createPaper } from "../../../model-builder";
+import { loading, createStringifiedPaper, createPaper } from "../../../model-builder";
 import { waitForComponentLoading } from "../../test-helper";
+import { stringifyPaper } from "$lib/utils/model-helper";
 
 describe("PaperDetail", () => {
     test("When props are provided, then component is shown", async () => {
+        const paper = createPaper({ title: "Example Title" });
+        const stringifiedPaper = stringifyPaper(paper);
+
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
-                loadingPaper: loading(createPaper()),
-                areDetailsInEditMode: false,
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
+                loadingPaper: loading(paper),
+                paper: stringifiedPaper,
+                isInEditMode: false,
             },
         });
 
@@ -30,13 +37,19 @@ describe("PaperDetail", () => {
     });
 
     test("When paper is loading, then skeleton is shown", () => {
+        const paper = createPaper();
+        const stringifiedPaper = stringifyPaper(paper);
+
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
-                loadingPaper: loading(createPaper(), 1000),
-                areDetailsInEditMode: false,
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
+                loadingPaper: loading(paper, 1000),
+                paper: stringifiedPaper,
+                isInEditMode: false,
             },
         });
 
@@ -52,10 +65,13 @@ describe("PaperDetail", () => {
         render(PaperDetail, {
             target: document.body,
             props: {
-                key: "Title",
-                value: "Example Title",
+                prop: {
+                    key: "title",
+                    label: "Title",
+                },
                 loadingPaper: Promise.reject(),
-                areDetailsInEditMode: false,
+                paper: createStringifiedPaper(),
+                isInEditMode: false,
             },
         });
 
@@ -63,8 +79,7 @@ describe("PaperDetail", () => {
 
         const spans = document.getElementsByTagName("span");
         expect(spans).toHaveLength(2);
-        const keySpan = spans[0];
-        const valueSpan = spans[1];
+        const [keySpan, valueSpan] = spans;
 
         expect(keySpan.textContent).toEqual("Title");
         expect(valueSpan.textContent).toEqual("Couldn't load Title");

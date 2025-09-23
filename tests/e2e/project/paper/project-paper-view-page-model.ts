@@ -16,9 +16,14 @@ export class ProjectPaperViewPageModel {
     readonly exampleHardExclusionCriterion: Locator;
     readonly nextPaperButton: Locator;
     readonly previousPaperButton: Locator;
+    readonly toggleEditModeButton: Locator;
+    readonly savePaperChangesButton: Locator;
 
     readonly submittedReviewToast: Locator;
     readonly noMorePapersToReviewToast: Locator;
+    readonly updatedPaperSuccessToast: Locator;
+    readonly yearValidationErrorToast: Locator;
+    readonly updatedPaperErrorToast: Locator;
 
     readonly projectName: string;
 
@@ -39,9 +44,14 @@ export class ProjectPaperViewPageModel {
             : this.getFirstListEntry("button");
         this.nextPaperButton = page.locator("button[aria-label='Next Paper']");
         this.previousPaperButton = page.locator("button[aria-label='Previous Paper']");
+        this.toggleEditModeButton = page.getByTestId("toggle-edit-paper-mode-btn");
+        this.savePaperChangesButton = page.getByTestId("save-paper-changes-btn");
 
         this.submittedReviewToast = page.getByText("Successfully submitted a review.");
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
+        this.updatedPaperSuccessToast = page.getByText("Successfully updated the paper.");
+        this.yearValidationErrorToast = page.getByText("The year has a non-numerical value.");
+        this.updatedPaperErrorToast = page.getByText("Failed to update the paper.");
 
         this.projectName = "Project 1";
 
@@ -162,5 +172,12 @@ export class ProjectPaperViewPageModel {
 
         await projectNavigationBar.goBackButton.click();
         await new HomePageModel(this.page).openProjectPaper(paperName);
+    }
+
+    /**
+     * Returns the toggleable input for the given key.
+     */
+    getToggleableInput(key: string): Locator {
+        return this.page.getByTestId(`toggleable-input-${key}`);
     }
 }

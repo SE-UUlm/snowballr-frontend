@@ -1,120 +1,64 @@
 <script lang="ts">
     import Button from "$lib/components/primitives/button/button.svelte";
-    import { getNames } from "$lib/utils/common-helper";
     import ChevronDown from "lucide-svelte/icons/chevron-down";
     import ChevronUp from "lucide-svelte/icons/chevron-up";
-    import Pencil from "lucide-svelte/icons/pencil";
     import { Skeleton } from "$lib/components/primitives/skeleton";
-    import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
-    import { resource } from "$lib/resource.svelte";
+    import PaperDetail, {
+        type PaperDetailProp,
+    } from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import type { StringifiedPaper } from "$lib/model/general";
 
     interface Props {
         loadingPaper: Promise<Paper>;
-        allowEditModeToggle?: boolean;
-        startInEditMode?: boolean;
+        paper: StringifiedPaper;
+        isInEditMode?: boolean;
     }
 
-    const { loadingPaper, allowEditModeToggle = false, startInEditMode = false }: Props = $props();
+    let { loadingPaper, paper = $bindable(), isInEditMode = false }: Props = $props();
 
-    let areDetailsInEditMode = $state(startInEditMode);
-    let isAbstractInEditMode = $state(startInEditMode);
+    const basicInfoProps: PaperDetailProp[] = [
+        { key: "title", label: "Title" },
+        { key: "authors", label: "Authors" },
+        { key: "year", label: "Year" },
+        { key: "publisher", label: "Publisher" },
+    ];
 
-    interface BasicInfos {
-        Title: string;
-        Authors: string;
-        Year: string;
-        Publisher: string;
-    }
-
-    interface AdditionalInfos {
-        "Publication Type": string;
-        "Publication Name": string;
-        "External ID": string;
-    }
-
-    // Initialize with width values for Skeletons
-    const basicInfos = $derived(
-        resource<Paper, BasicInfos>(loadingPaper, {
-            initialValue: {
-                Title: "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",
-                Authors: "w-[4rem] sm:w-[5rem] md:w-[7.3rem] lg:w-[13rem]",
-                Year: "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
-                Publisher: "w-[5rem] sm:w-[6rem] md:w-[8.6rem] lg:w-[15rem]",
-            },
-            onSuccess: (paper) => {
-                return {
-                    Title: paper.title,
-                    Authors: getNames(paper.authors),
-                    Year: paper.year.toString(),
-                    Publisher: paper.publisher,
-                };
-            },
-            onErrorValue: { Title: "", Authors: "", Year: "", Publisher: "" },
-        }),
-    );
-
-    // Initialize with width values for Skeletons
-    const additionalInfos = $derived(
-        resource<Paper, AdditionalInfos>(loadingPaper, {
-            initialValue: {
-                "Publication Type": "w-[2rem] sm:w-[2.5rem] md:w-[3rem] lg:w-[3.5rem]",
-                "Publication Name": "w-[3.5rem] sm:w-[4.8rem] md:w-[7rem] lg:w-[12.5rem]",
-                "External ID": "w-[2.5rem] sm:w-[3.25rem] md:w-[5rem] lg:w-[9rem]",
-            },
-            onSuccess: (paper) => ({
-                "Publication Type": paper.publicationType,
-                "Publication Name": "N/A",
-                "External ID": paper.externalId,
-            }),
-            onErrorValue: {
-                "Publication Type": "",
-                "Publication Name": "",
-                "External ID": "",
-            },
-        }),
-    );
+    const additionalInfoProps: PaperDetailProp[] = [
+        { key: "publicationType", label: "Publication Type" },
+        { key: "publicationName", label: "Publication Name" },
+        { key: "externalId", label: "External ID" },
+    ];
 
     let showAdditionalInfos = $state(false);
-
-    function toggleAdditionalInfos() {
-        showAdditionalInfos = !showAdditionalInfos;
-    }
+    const toggleAdditionalInfos = () => (showAdditionalInfos = !showAdditionalInfos);
 </script>
 
 <!--
 @component
 Content of the `PaperDetailsCard`, i.e. displays the details.
 
-- `allowEditModeToggle` (default: false) determines whether the paper details, e.g. the abstract or title
-are editable
-- `startInEditMode` (default: false) determines whether the paper details are rendered initially with the edit mode on
+We require the `loadingPaper` promise to know when the paper is fully loaded, but also need the bound paper state, so
+we can modify the paper's properties.
 
 Usage:
 ```svelte
-    <PaperDetailsCardContent {paper} {allowEditModeToggle} {startInEditMode} />
+    <PaperDetailsCardContent {loadingPaper} bind:paper />
 ```
 -->
 <section class="flex flex-col gap-2 px-1">
     <div class="flex flex-row items-center justify-between">
         <h2>General Information</h2>
-        {#if allowEditModeToggle}
-            <Pencil
-                class="select-none hover:cursor-pointer"
-                onclick={() => (areDetailsInEditMode = !areDetailsInEditMode)}
-                size={20}
-            />
-        {/if}
     </div>
     <div class="flex flex-col gap-2 px-5">
-        {#each Object.entries(basicInfos.value) as [key, value] (key)}
-            <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
+        {#each basicInfoProps as prop, index (prop.key)}
+            <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
         {/each}
         {#if showAdditionalInfos}
-            {#each Object.entries(additionalInfos.value) as [key, value] (key)}
-                <PaperDetail id={key} {areDetailsInEditMode} {key} {loadingPaper} {value} />
+            {#each additionalInfoProps as prop, index (prop.key)}
+                <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
             {/each}
         {/if}
     </div>
@@ -138,23 +82,24 @@ Usage:
 <section class="flex flex-[1_1_0] flex-col gap-2 px-1">
     <div class="flex flex-row items-center justify-between">
         <h2>Abstract</h2>
-        {#if allowEditModeToggle}
-            <Pencil
-                class="select-none hover:cursor-pointer"
-                onclick={() => (isAbstractInEditMode = !isAbstractInEditMode)}
-                size={20}
-            />
-        {/if}
     </div>
     {#await loadingPaper}
-        {#each [100, 95, 70, 82, 50, 75, 90] as width, i (i)}
-            <Skeleton class="flex h-[1.625rem] rounded-full w-[{width}%]" />
-        {/each}
-    {:then paper}
+        <Skeleton class="flex h-[1.625rem] w-[100%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[95%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[70%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[82%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[50%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[75%] rounded-full" />
+        <Skeleton class="flex h-[1.625rem] w-[90%] rounded-full" />
+    {:then}
         <ToggleableInput
             class="h-full"
-            isEditable={isAbstractInEditMode}
-            placeholder="No abstract available"
+            isEditable={isInEditMode}
+            key="abstract"
+            onInputChange={(c) => {
+                paper = { ...paper, abstrakt: c };
+            }}
+            placeholder="No Abstract available"
             value={paper.abstrakt}
         />
     {:catch}

@@ -7,30 +7,30 @@ import {
     getNames,
     groupBy,
     isPaperUndecided,
+    isStringEqual,
     pluralize,
     wrapLongWords,
 } from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import type { Person } from "$lib/model/general";
 
 describe("Extract names from persons", () => {
     test("When no person objects are provided, no names are extracted and stringified", () => {
-        const persons: { firstName: string; lastName: string }[] = [];
+        const persons: Person[] = [];
 
         expect(getNames(persons)).toBe("");
     });
 
     test("When one person is provided, only the person's name is extracted", () => {
-        const persons: { firstName: string; lastName: string }[] = [
-            { firstName: "John", lastName: "Doe" },
-        ];
+        const persons: Person[] = [{ firstName: "John", lastName: "Doe" }];
 
         expect(getNames(persons)).toBe("John Doe");
     });
 
     test("When multiple persons are provided, the names are extracted and concatenated, separated by an ','", () => {
-        const persons: { firstName: string; lastName: string }[] = [
+        const persons: Person[] = [
             { firstName: "John", lastName: "Doe" },
             { firstName: "Jane", lastName: "Doe" },
         ];
@@ -249,5 +249,30 @@ describe("Debounce a function", () => {
         vi.advanceTimersByTime(250);
 
         expect(mockFn).toHaveBeenCalledWith();
+    });
+});
+
+describe("Check String equality", () => {
+    test("When both objects are the same, then they are equal", () => {
+        const obj = { a: 1, b: [2, 3] };
+        expect(isStringEqual(obj, obj)).toBe(true);
+    });
+
+    test("When both objects have the same structure and values, then they are equal", () => {
+        const obj1 = { a: 1, b: [2, 3] };
+        const obj2 = { a: 1, b: [2, 3] };
+        expect(isStringEqual(obj1, obj2)).toBe(true);
+    });
+
+    test("When both objects have different structures or values, then they are not equal", () => {
+        const obj1 = { a: 1, b: [2, 3] };
+        const obj2 = { a: 1, b: [2, 4] };
+        expect(isStringEqual(obj1, obj2)).toBe(false);
+    });
+
+    test("When comparing different types, then they are not equal", () => {
+        expect(isStringEqual({ a: 1 }, [1])).toBe(false);
+        expect(isStringEqual(null, undefined)).toBe(false);
+        expect(isStringEqual(42, "42")).toBe(false);
     });
 });

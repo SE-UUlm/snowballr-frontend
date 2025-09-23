@@ -11,9 +11,10 @@
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         tabs: Tab[];
         children: Snippet;
+        tabListButtonList?: Snippet;
     };
 
-    const { tabs, children, class: className, ...restProps }: Props = $props();
+    const { tabs, children, tabListButtonList, class: className, ...restProps }: Props = $props();
 </script>
 
 <!-- Use PaperCardContent elements as children with values according to the tabs props -->
@@ -33,6 +34,10 @@ Usage:
         <PaperCardContent value="research-context">
             <p>Research context content</p>
         </PaperCardContent>
+        {#snippet tabListButtonList()}
+            <button>This is a button</button>
+            <button>This is a button too</button>
+        {/snippet}
     </PaperCard>
 ```
 -->
@@ -42,7 +47,7 @@ Usage:
 >
     <section class="flex h-full w-full flex-col">
         <Tabs.Root class="flex h-full flex-col" value={tabs.length === 0 ? "" : tabs[0].value}>
-            <UnderlineTabsList {tabs} />
+            <UnderlineTabsList buttonList={tabListButtonList} {tabs} />
             <Card.Content class="flex h-full flex-col p-5">
                 {@render children()}
             </Card.Content>

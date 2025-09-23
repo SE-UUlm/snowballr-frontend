@@ -1,15 +1,17 @@
 import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
 import { render, screen } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
 import { keyboard } from "@testing-library/user-event/dist/cjs/setup/directApi.js";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 describe("ToggleableInput", () => {
     test("When isEditable is set to true, then input border is shown and content can be edited", async () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
+                key: "test-input",
                 isEditable: true,
-                value: "",
+                onInputChange: () => {},
             },
         });
 
@@ -33,7 +35,9 @@ describe("ToggleableInput", () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
+                key: "test-input",
                 isEditable: false,
+                onInputChange: () => {},
             },
         });
 
@@ -46,5 +50,26 @@ describe("ToggleableInput", () => {
         expect(input.classList.contains("border-transparent")).toBe(true);
 
         expect(input).toHaveAttribute("readonly");
+    });
+
+    test("When input is changed, then onInputChange is called", async () => {
+        const user = userEvent.setup();
+        const onInputChange = vi.fn();
+
+        render(ToggleableInput, {
+            target: document.body,
+            props: {
+                key: "test-input",
+                isEditable: true,
+                onInputChange: onInputChange,
+            },
+        });
+
+        const input = screen.getByRole("textbox");
+        expect(input).toBeInTheDocument();
+
+        await user.type(input, "Test");
+
+        expect(onInputChange).toHaveBeenCalledWith("Test");
     });
 });

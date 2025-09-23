@@ -136,8 +136,8 @@
             );
             if (!nextProjectPaper) {
                 toast.info("No more papers to review.");
-                projectPaperLoading.isLoading = false;
             }
+            projectPaperLoading.isLoading = false;
         } catch (err) {
             toast.error("Could not submit the review!", {
                 description: "Please check your connection to the server.",

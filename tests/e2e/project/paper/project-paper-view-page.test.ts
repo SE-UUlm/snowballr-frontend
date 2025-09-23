@@ -67,6 +67,7 @@ test.describe("Paper Navigation Tests", () => {
                 .first(),
         ).toBeVisible();
     });
+
     test("When the user is not in review mode and clicks the previous paper button, then the previous paper in the same project with the preceeding localId is shown.", async ({
         page,
         paperNavigation,
@@ -82,6 +83,7 @@ test.describe("Paper Navigation Tests", () => {
                 .first(),
         ).toBeVisible();
     });
+
     test("When the user is in review mode and clicks the next paper button, then the next paper in the same project without submitted review is shown.", async ({
         page,
         paperNavigation,
@@ -95,6 +97,7 @@ test.describe("Paper Navigation Tests", () => {
             }),
         ).toBeVisible();
     });
+
     test("When the user is in review mode and clicks the previous paper button, then the last visited paper in the same project is shown.", async ({
         page,
         paperNavigation,
@@ -202,4 +205,59 @@ test.describe("Decide on Paper Tests", () => {
             ).toBeChecked();
         },
     );
+});
+
+test.describe("Update Paper Tests", () => {
+    test("When the user edits a field and saves, then a success toast is shown", async ({
+        projectPaperViewPage,
+    }) => {
+        await projectPaperViewPage.openProjectPaperView(
+            projectPaperViewPage.projectId,
+            projectPaperViewPage.localProjectPaperIds[0],
+        );
+
+        // Enter edit mode
+        await projectPaperViewPage.toggleEditModeButton.click();
+
+        // Change title
+        const titleInput = projectPaperViewPage.getToggleableInput("title");
+        await titleInput.fill("");
+        await titleInput.fill("Updated Title");
+
+        // Save
+        await projectPaperViewPage.savePaperChangesButton.click();
+
+        // Expect success toast
+        await expect(projectPaperViewPage.updatedPaperSuccessToast).toBeVisible();
+    });
+
+    test("When the user enters an invalid year and saves, then an error toast is shown", async ({
+        page,
+        projectPaperViewPage,
+    }) => {
+        await projectPaperViewPage.openProjectPaperView(
+            projectPaperViewPage.projectId,
+            projectPaperViewPage.localProjectPaperIds[0],
+        );
+
+        // Enter edit mode
+        await projectPaperViewPage.toggleEditModeButton.click();
+
+        // Set invalid year
+        const yearInput = projectPaperViewPage.getToggleableInput("year");
+        const previousYear = await yearInput.inputValue();
+        await yearInput.fill("");
+        await yearInput.fill("abcd");
+
+        // Attempt to save
+        await projectPaperViewPage.savePaperChangesButton.click();
+
+        // Expect validation error toast
+        await expect(projectPaperViewPage.yearValidationErrorToast).toBeVisible();
+
+        await page.reload();
+
+        // Expect no changes were saved
+        await expect(yearInput).toHaveValue(previousYear);
+    });
 });

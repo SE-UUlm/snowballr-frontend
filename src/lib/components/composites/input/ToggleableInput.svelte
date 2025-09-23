@@ -4,22 +4,30 @@
     import { cn } from "$lib/utils/shadcn-helper";
 
     type Props = WithElementRef<HTMLInputAttributes> & {
+        key: string;
         isEditable: boolean;
+        onInputChange: (input: string) => void;
     };
 
-    let { isEditable = $bindable(false), value = $bindable(), class: className }: Props = $props();
+    let {
+        key,
+        isEditable = $bindable(false),
+        value = $bindable(),
+        onInputChange,
+        placeholder,
+        class: className,
+    }: Props = $props();
 </script>
 
 <!--
 @component
 A textarea that can be toggled between read-only and editable mode.
 
-The `inputAction` and `inputActionProps` props are used to pass an action to the textarea.
-This is used in `AbstractToggleableInput` and probably won't be needed elsewhere.
+The `onInputChange` method is called whenever the input of the input changes.
 
 Usage:
 ```svelte
-    <ToggleableInput {isEditable} {value} />
+    <ToggleableInput {isEditable} {key} onInputChange={(input) => foo(input)} />
 ```
 -->
 <textarea
@@ -28,7 +36,9 @@ Usage:
         isEditable ? "border-input rounded-md" : "border-transparent",
         className,
     )}
-    data-testid="toggleable-input"
+    data-testid={`toggleable-input-${key}`}
+    oninput={(event) => onInputChange((event.target as HTMLTextAreaElement)?.value as string)}
+    {placeholder}
     readonly={!isEditable}
     rows="1"
     {value}

@@ -40,6 +40,8 @@
     import { sortProjectPaper } from "$lib/utils/sorters";
     import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
     import { updateSortParams } from "$lib/utils/search-parameters.js";
+    import { Paper } from "$lib/model/api/paper.js";
+    import { stringifyPaper } from "$lib/utils/model-helper.js";
 
     let { data } = $props();
     const {
@@ -218,7 +220,10 @@
             <Card.Root
                 class="border-container-border-grey relative flex h-full w-full flex-col gap-5 p-5 shadow-lg"
             >
-                <PaperDetailsCardContent {loadingPaper} />
+                <PaperDetailsCardContent
+                    {loadingPaper}
+                    paper={stringifyPaper(selectedPaper.paper ?? Paper.create())}
+                />
                 <div class="absolute top-5 right-5 flex flex-row gap-2.5">
                     <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
                     <a

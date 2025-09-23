@@ -1,5 +1,6 @@
 import { Project_Paper } from "$lib/model/api/project";
 import type { Criterion } from "./api/criterion";
+import type { Paper } from "./api/paper";
 import type { Review } from "./api/review";
 
 /**
@@ -40,6 +41,15 @@ interface ProjectPaperFilter {
     criteria: string[];
 }
 
+interface Person {
+    firstName: string;
+    lastName: string;
+}
+
+type StringifiedPaper = {
+    [K in keyof Paper]: string;
+};
+
 export type {
     ValidationResult,
     ApiError,
@@ -48,4 +58,6 @@ export type {
     Stage,
     PaperStatus,
     ProjectPaperFilter,
+    Person,
+    StringifiedPaper,
 };

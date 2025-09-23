@@ -295,10 +295,9 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
     methodName: T,
     value: R,
 ): MockInstance<(...args: unknown[]) => Promise<{ response: R }>> {
-    const mockInstance = vi.spyOn(backendService, methodName).mockImplementation(() => {
+    return vi.spyOn(backendService, methodName).mockImplementation(() => {
         return { response: Promise.resolve(value) } as ReturnType<(typeof backendService)[T]>;
     });
-    return mockInstance;
 }
 
 /**
@@ -308,7 +307,7 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
  * @param errorMessage - The error message to return
  */
 export function mockFailedApiCall(methodName: keyof ISnowballRClient, errorMessage = "") {
-    vi.spyOn(backendService, methodName).mockImplementation(() => {
+    return vi.spyOn(backendService, methodName).mockImplementation(() => {
         return { response: Promise.reject(new Error(errorMessage)) } as ReturnType<
             (typeof backendService)[typeof methodName]
         >;
