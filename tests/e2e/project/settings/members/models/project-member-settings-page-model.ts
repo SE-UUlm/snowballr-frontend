@@ -147,7 +147,7 @@ export class ProjectMemberSettingsPageModel {
      * @param expectedCounts - the expected counts of project members
      */
     async assertNumberOfProjectMembers(expectedCounts: Partial<ProjectMemberCounts>) {
-        const allEntries = this.page.getByRole("listitem");
+        const allEntries = this.page.getByTestId("project-member-list").getByRole("listitem");
         const admins = allEntries.filter({ hasText: "Role: Admin" });
         const members = allEntries.filter({ hasText: "Role: Member" });
         const invitees = allEntries.filter({ hasText: "Invitation Pending ..." });

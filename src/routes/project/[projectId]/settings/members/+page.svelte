@@ -111,7 +111,10 @@
         {:else}
             <h1>Members</h1>
         {/if}
-        <ul class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5">
+        <ul
+            class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
+            data-testid="project-member-list"
+        >
             {#await loadingMembersLocal}
                 {#each { length: numberOfSkeletons }, i}
                     <ProjectMemberListEntrySkeleton />
