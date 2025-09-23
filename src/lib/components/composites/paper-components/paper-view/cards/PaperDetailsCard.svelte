@@ -30,9 +30,19 @@
     let isPaperModified = $state(false);
     let isMakingApiCall = $state(false);
 
-    loadingPaper.then((p) => {
-        originalPaper = stringifyPaper(p);
-        paper = stringifyPaper(p);
+    $effect(() => {
+        const currentPaperPromise = loadingPaper;
+        if (!currentPaperPromise) return;
+
+        currentPaperPromise
+            .then((resolvedPaper) => {
+                // Skip if a new promise has been assigned while waiting
+                if (currentPaperPromise !== loadingPaper) return;
+
+                originalPaper = stringifyPaper(resolvedPaper);
+                paper = stringifyPaper(resolvedPaper);
+            })
+            .catch(() => {});
     });
 
     $effect(() => {
