@@ -71,7 +71,7 @@
         "protobuf-fieldmask": "^2.0.0",
         "svelte": "^5.34.9",
         "svelte-check": "^4.3.1",
-        "svelte-sonner": "^0.3.28",
+        "svelte-sonner": "^1.0.5",
         "sveltekit-lighthouse-runner": "^1.0.0",
         "tailwind-merge": "^3.3.0",
         "tailwind-variants": "^1.0.0",
