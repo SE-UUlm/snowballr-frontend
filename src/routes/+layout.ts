@@ -10,7 +10,13 @@ import { isGrpcError } from "$lib/utils/common-helper";
 
 export const ssr = false;
 
-const PUBLIC_PATHS = ["/signin", "/signup", "/resetpassword", "/verifyemail"];
+const PUBLIC_PATHS = [
+    "/signin",
+    "/signup",
+    "/resetpassword",
+    "/verifyemail",
+    "/acceptprojectinvitation",
+];
 
 export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     depends(USER_DEPENDENCY_KEY);
