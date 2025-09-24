@@ -19,7 +19,6 @@ export class NavigationBarModel {
 
         await expect(this.getReadingListLink()).toBeVisible();
         await expect(this.getArchivedProjectsLink()).toBeVisible();
-        await expect(this.getInvitationsLink()).toBeVisible();
         await expect(this.getSettingsLink()).toBeVisible();
         await expect(this.getSignOutLink()).toBeVisible();
     }
@@ -63,19 +62,6 @@ export class NavigationBarModel {
             return this.page.getByRole("link", { name: /Archived Projects.+/ });
         }
         return this.page.getByRole("link", { name: "Archived Projects", exact: true });
-    }
-
-    /**
-     * Returns the invitations navigation bar link. If shortcuts is true, then the link text
-     * includes the shortcut, otherwise not.
-     *
-     * @param shortcuts - true, if the link text shall include the shortcut
-     */
-    getInvitationsLink(shortcuts: boolean = true) {
-        if (shortcuts) {
-            return this.page.getByRole("link", { name: /Invitations.+/ });
-        }
-        return this.page.getByRole("link", { name: "Invitations", exact: true });
     }
 
     /**
