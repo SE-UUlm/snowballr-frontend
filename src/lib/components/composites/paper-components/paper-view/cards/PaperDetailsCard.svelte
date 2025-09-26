@@ -120,6 +120,7 @@
         const projectIdRegex = /\/project\/(.+?)\/.*/;
         const matches = projectIdRegex.exec(window.location.pathname);
         const projectId = matches !== null ? matches[1] : undefined;
+        const stage = new URLSearchParams(window.location.search).get("stage");
 
         const creationCall: Promise<Paper | Project_Paper> = backendService
             .createPaper(paperObject)
@@ -132,7 +133,7 @@
                 return await backendService.addPaperToProject({
                     paperId: createdPaper.id,
                     projectId: projectId,
-                    stage: 0n,
+                    stage: BigInt(stage ?? ""),
                 }).response;
             });
 

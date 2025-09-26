@@ -75,7 +75,7 @@ Usage:
                 <span class="text-hint italic">No papers currently in this stage.</span>
             {/if}
 
-            <Button href={`/project/${projectId}/paper/new`}>
+            <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
                 <CirclePlus strokeWidth="2.5" />
                 Add Paper
             </Button>
