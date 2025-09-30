@@ -22,7 +22,8 @@ export const load: PageLoad = async ({ url }) => {
         return {
             verificationPromise: Promise.reject({
                 errorTitle: "Email Verification Failed",
-                errorDetails: "The verification link is missing a token. Please check the link provided in your email.",
+                errorDetails:
+                    "The verification link is missing a token. Please check the link provided in your email.",
             }),
         };
     }

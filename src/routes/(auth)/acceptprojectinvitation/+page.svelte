@@ -24,12 +24,14 @@
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return {
                     errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails: "This acceptance link is invalid. Please check the link and try again.",
+                    errorDetails:
+                        "This acceptance link is invalid. Please check the link and try again.",
                 };
             case GrpcStatusCode.NOT_FOUND:
                 return {
                     errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails: "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
+                    errorDetails:
+                        "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
                 };
             case GrpcStatusCode.FAILED_PRECONDITION:
                 return {
@@ -43,7 +45,8 @@
                 );
                 return {
                     errorTitle: "Server Error",
-                    errorDetails: "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
+                    errorDetails:
+                        "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
                 };
         }
     }

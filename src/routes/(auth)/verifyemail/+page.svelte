@@ -24,18 +24,21 @@
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return {
                     errorTitle: "Email Verification Failed",
-                    errorDetails: "This verification link is invalid. Please try signing up again to receive a new link.",
+                    errorDetails:
+                        "This verification link is invalid. Please try signing up again to receive a new link.",
                 };
             case GrpcStatusCode.NOT_FOUND:
                 return {
                     errorTitle: "Email Verification Failed",
-                    errorDetails: "The verification link has probably expired. Please try signing up again to receive a new link.",
+                    errorDetails:
+                        "The verification link has probably expired. Please try signing up again to receive a new link.",
                 };
             default:
                 console.error("Unexpected error occurred during email verification:", error);
                 return {
                     errorTitle: "Server Error",
-                    errorDetails: "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
+                    errorDetails:
+                        "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
                 };
         }
     }

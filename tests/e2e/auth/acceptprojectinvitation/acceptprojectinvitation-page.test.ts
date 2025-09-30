@@ -19,7 +19,9 @@ test.describe("Accept Project Invitation Tests", () => {
         acceptProjectInvitationPage,
     }) => {
         await page.goto("/acceptprojectinvitation");
-        await expect(acceptProjectInvitationPage.heading).toHaveText("Accepting the Project Invitation Failed");
+        await expect(acceptProjectInvitationPage.heading).toHaveText(
+            "Accepting the Project Invitation Failed",
+        );
         await expect(acceptProjectInvitationPage.body).toHaveText(
             "The acceptance link is missing a token. Please check the link provided in your email.",
         );

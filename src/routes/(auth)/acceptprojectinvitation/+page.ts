@@ -8,7 +8,8 @@ export const load: PageLoad = async ({ url }) => {
         return {
             acceptancePromise: Promise.reject({
                 errorTitle: "Accepting the Project Invitation Failed",
-                errorDetails: "The acceptance link is missing a token. Please check the link provided in your email.",
+                errorDetails:
+                    "The acceptance link is missing a token. Please check the link provided in your email.",
             }),
         };
     }
