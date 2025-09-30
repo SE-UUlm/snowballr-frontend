@@ -4,15 +4,16 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { getGrpcStatusCode } from "$lib/utils/common-helper";
+    import type { ApiError } from "$lib/model/general";
 
     let { data } = $props();
     const { verificationPromise } = data;
 
-    type ErrorDetails = { headline: string; body: string } | RpcError;
+    type EmailVerificationError = ApiError | RpcError;
 
-    function getErrorDetails(error: ErrorDetails): { headline: string; body: string } {
-        const customError = error as { headline: string; body: string };
-        if (customError.headline && customError.headline) {
+    function getErrorDetails(error: EmailVerificationError): ApiError {
+        const customError = error as ApiError;
+        if (customError.errorTitle && customError.errorDetails) {
             return customError;
         }
 
@@ -22,19 +23,19 @@
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return {
-                    headline: "Verification Failed",
-                    body: "This verification link is invalid. Please try signing up again to receive a new link.",
+                    errorTitle: "Verification Failed",
+                    errorDetails: "This verification link is invalid. Please try signing up again to receive a new link.",
                 };
             case GrpcStatusCode.DEADLINE_EXCEEDED:
                 return {
-                    headline: "Verification Failed",
-                    body: "The verification link has expired. Please try signing up again to receive a new link.",
+                    errorTitle: "Verification Failed",
+                    errorDetails: "The verification link has expired. Please try signing up again to receive a new link.",
                 };
             default:
                 console.error("Unexpected error occurred during email verification:", error);
                 return {
-                    headline: "Server Error",
-                    body: "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
+                    errorTitle: "Server Error",
+                    errorDetails: "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
                 };
         }
     }
@@ -68,8 +69,8 @@
         <Button class="mt-6" onclick={() => goto("/signin")}>Back to Sign In</Button>
     {:catch error}
         {@const errorDetails = getErrorDetails(error)}
-        <h1 class="mb-4 text-8xl">{errorDetails.headline}</h1>
-        <div class="text-default">{errorDetails.body}</div>
+        <h1 class="mb-4 text-8xl">{errorDetails.errorTitle}</h1>
+        <div class="text-default">{errorDetails.errorDetails}</div>
 
         <Button class="mt-6" onclick={() => goto("/signup")}>Back to Sign Up</Button>
     {/await}

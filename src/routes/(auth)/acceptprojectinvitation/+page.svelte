@@ -4,15 +4,16 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { getGrpcStatusCode } from "$lib/utils/common-helper";
+    import type { ApiError } from "$lib/model/general";
 
     let { data } = $props();
     const { acceptancePromise: acceptancePromise } = data;
 
-    type ErrorDetails = { headline: string; body: string } | RpcError;
+    type InvitationAcceptanceError = ApiError | RpcError;
 
-    function getErrorDetails(error: ErrorDetails): { headline: string; body: string } {
-        const customError = error as { headline: string; body: string };
-        if (customError.headline && customError.headline) {
+    function getErrorDetails(error: InvitationAcceptanceError): ApiError {
+        const customError = error as ApiError;
+        if (customError.errorTitle && customError.errorDetails) {
             return customError;
         }
 
@@ -22,18 +23,18 @@
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return {
-                    headline: "Accepting Failed",
-                    body: "This Acceptance link is invalid. Please check the link and try again.",
+                    errorTitle: "Accepting Failed",
+                    errorDetails: "This Acceptance link is invalid. Please check the link and try again.",
                 };
             case GrpcStatusCode.DEADLINE_EXCEEDED:
                 return {
-                    headline: "Accepting Failed",
-                    body: "The Acceptance link has expired. Please check the link and try again.",
+                    errorTitle: "Accepting Failed",
+                    errorDetails: "The Acceptance link has expired. Please check the link and try again.",
                 };
             case GrpcStatusCode.FAILED_PRECONDITION:
                 return {
-                    headline: "Accepting Failed",
-                    body: "Please register before accepting the invitation.",
+                    errorTitle: "Accepting Failed",
+                    errorDetails: "Please register before accepting the invitation.",
                 };
             default:
                 console.error(
@@ -41,8 +42,8 @@
                     rpcError,
                 );
                 return {
-                    headline: "Server Error",
-                    body: "We couldn't connect to our servers to accept you ivnitation. Please check your internet connection and try again.",
+                    errorTitle: "Server Error",
+                    errorDetails: "We couldn't connect to our servers to accept you ivnitation. Please check your internet connection and try again.",
                 };
         }
     }
@@ -76,8 +77,8 @@
         <Button class="mt-6" onclick={() => goto("/signin")}>Back to Sign In</Button>
     {:catch error}
         {@const errorDetails = getErrorDetails(error)}
-        <h1 class="mb-4 text-8xl">{errorDetails.headline}</h1>
-        <div class="text-default">{errorDetails.body}</div>
+        <h1 class="mb-4 text-8xl">{errorDetails.errorTitle}</h1>
+        <div class="text-default">{errorDetails.errorDetails}</div>
 
         <Button class="mt-6" onclick={() => goto("/signup")}>Back to Sign Up</Button>
     {/await}
