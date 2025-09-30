@@ -7,11 +7,11 @@
     import type { ApiError } from "$lib/model/general";
 
     let { data } = $props();
-    const { verificationPromise } = data;
+    const { acceptancePromise } = data;
 
-    type EmailVerificationError = ApiError | RpcError;
+    type InvitationAcceptanceError = ApiError | RpcError;
 
-    function getErrorDetails(error: EmailVerificationError): ApiError {
+    function getErrorDetails(error: InvitationAcceptanceError): ApiError {
         const customError = error as ApiError;
         if (customError.errorTitle && customError.errorDetails) {
             return customError;
@@ -23,27 +23,35 @@
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return {
-                    errorTitle: "Email Verification Failed",
+                    errorTitle: "Accepting the Project Invitation Failed",
                     errorDetails:
-                        "This verification link is invalid. Please try signing up again to receive a new link.",
+                        "This acceptance link is invalid. Please check the link and try again.",
                 };
             case GrpcStatusCode.NOT_FOUND:
                 return {
-                    errorTitle: "Email Verification Failed",
+                    errorTitle: "Accepting the Project Invitation Failed",
                     errorDetails:
-                        "The verification link has probably expired. Please try signing up again to receive a new link.",
+                        "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
+                };
+            case GrpcStatusCode.FAILED_PRECONDITION:
+                return {
+                    errorTitle: "Accepting the Project Invitation Failed",
+                    errorDetails: "Please register before accepting the invitation.",
                 };
             default:
-                console.error("Unexpected error occurred during email verification:", error);
+                console.error(
+                    "Unexpected error occurred during project invitation acceptance:",
+                    rpcError,
+                );
                 return {
                     errorTitle: "Server Error",
                     errorDetails:
-                        "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
+                        "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
                 };
         }
     }
 
-    verificationPromise
+    acceptancePromise
         ?.then(() => {
             setTimeout(async () => await goto("/signin"), 3000);
         })
@@ -54,24 +62,24 @@
 </script>
 
 <svelte:head>
-    {#await verificationPromise}
-        <title>Email Verification | Verifying...</title>
+    {#await acceptancePromise}
+        <title>Accept Project Invitation | Verifying...</title>
     {:then}
-        <title>Email Verification | Success</title>
+        <title>Accept Project Invitation | Success</title>
     {:catch}
-        <title>Email Verification | Failed</title>
+        <title>Accept Project Invitation | Failed</title>
     {/await}
 </svelte:head>
 
 <main class="flex h-full w-full flex-col items-center justify-center gap-1 text-center">
-    {#await verificationPromise}
-        <h1 class="mb-4 text-8xl">Verifying...</h1>
-        <div class="text-default">Please wait while we check your verification link.</div>
+    {#await acceptancePromise}
+        <h1 class="mb-4 text-8xl">Accepting...</h1>
+        <div class="text-default">Please wait while we check your acceptance link.</div>
     {:then}
         <h1 class="mb-4 text-8xl">Success!</h1>
         <div class="text-default">
-            Your email address has been successfully verified. You will be automatically redirected
-            to the sign-in page.
+            You have successfully accepted the project invitation. You will be redirected to the
+            sign-in page shortly.
         </div>
 
         <Button class="mt-6" onclick={() => goto("/signin")}>Back to Sign In</Button>

@@ -2,7 +2,6 @@
     import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
     import BookOpen from "lucide-svelte/icons/book-open";
     import Archive from "lucide-svelte/icons/archive";
-    import Inbox from "lucide-svelte/icons/inbox";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
@@ -26,13 +25,6 @@
             href: "/archivedprojects",
             icon: Archive,
             shortcut: "⌘⇧A",
-        },
-        {
-            value: "invitations",
-            label: "Invitations",
-            href: "/invitations",
-            icon: Inbox,
-            shortcut: "⌘⇧I",
         },
         {
             value: "settings",
