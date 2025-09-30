@@ -7,7 +7,7 @@
     import type { ApiError } from "$lib/model/general";
 
     let { data } = $props();
-    const { acceptancePromise: acceptancePromise } = data;
+    const { acceptancePromise } = data;
 
     type InvitationAcceptanceError = ApiError | RpcError;
 
