@@ -26,10 +26,10 @@
                     errorTitle: "Accepting the Project Invitation Failed",
                     errorDetails: "This acceptance link is invalid. Please check the link and try again.",
                 };
-            case GrpcStatusCode.DEADLINE_EXCEEDED:
+            case GrpcStatusCode.NOT_FOUND:
                 return {
                     errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails: "The acceptance link has expired. Please contact the project admin to send a new invitation.",
+                    errorDetails: "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
                 };
             case GrpcStatusCode.FAILED_PRECONDITION:
                 return {
