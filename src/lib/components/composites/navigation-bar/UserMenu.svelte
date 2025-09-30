@@ -1,7 +1,6 @@
 <script lang="ts">
     import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
     import BookOpen from "lucide-svelte/icons/book-open";
-    import Archive from "lucide-svelte/icons/archive";
     import Settings from "lucide-svelte/icons/settings";
     import LogOut from "lucide-svelte/icons/log-out";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
@@ -18,13 +17,6 @@
             href: "/readinglist",
             icon: BookOpen,
             shortcut: "⌘⇧R",
-        },
-        {
-            value: "archived-projects",
-            label: "Archived Projects",
-            href: "/archivedprojects",
-            icon: Archive,
-            shortcut: "⌘⇧A",
         },
         {
             value: "settings",

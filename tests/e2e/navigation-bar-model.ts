@@ -18,7 +18,6 @@ export class NavigationBarModel {
         await this.getUserAvatarButton().click();
 
         await expect(this.getReadingListLink()).toBeVisible();
-        await expect(this.getArchivedProjectsLink()).toBeVisible();
         await expect(this.getSettingsLink()).toBeVisible();
         await expect(this.getSignOutLink()).toBeVisible();
     }
@@ -52,19 +51,6 @@ export class NavigationBarModel {
     }
 
     /**
-     * Returns the archived projects navigation bar link. If shortcuts is true, then the link text
-     * includes the shortcut, otherwise not.
-     *
-     * @param shortcuts - true, if the link text shall include the shortcut
-     */
-    getArchivedProjectsLink(shortcuts: boolean = true) {
-        if (shortcuts) {
-            return this.page.getByRole("link", { name: /Archived Projects.+/ });
-        }
-        return this.page.getByRole("link", { name: "Archived Projects", exact: true });
-    }
-
-    /**
      * Returns the setting navigation bar link. If shortcuts is true, then the link text
      * includes the shortcut, otherwise not.
      *
@@ -78,7 +64,7 @@ export class NavigationBarModel {
     }
 
     /**
-     * Returns the sign out navigation bar link. If shortcuts is true, then the link text
+     * Returns the sign-out navigation bar link. If shortcuts is true, then the link text
      * includes the shortcut, otherwise not.
      *
      * @param shortcuts - true, if the link text shall include the shortcut
