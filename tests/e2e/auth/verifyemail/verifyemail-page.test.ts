@@ -24,7 +24,7 @@ test.describe("Email Verification Tests", () => {
         verifyEmailPage,
     }) => {
         await page.goto("/verifyemail");
-        await expect(verifyEmailPage.heading).toHaveText("Verification Failed");
+        await expect(verifyEmailPage.heading).toHaveText("Email Verification Failed");
         await expect(verifyEmailPage.body).toHaveText(
             "The verification link is missing a token. Please check the link provided in your email.",
         );

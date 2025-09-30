@@ -3,7 +3,7 @@ import { test } from "./acceptprojectinvitation-page-fixture";
 
 test.use({ user: null });
 
-test.describe("Accept Project Invitation Verification Navigation", () => {
+test.describe("Accept Project Invitation Navigation", () => {
     test("When navigating to the accept project invitation page, then the page is displayed", async ({
         page,
         acceptProjectInvitationPage,
@@ -14,12 +14,12 @@ test.describe("Accept Project Invitation Verification Navigation", () => {
 });
 
 test.describe("Accept Project Invitation Tests", () => {
-    test("When navigating to the accept project invitation page with no token, then the page is displayed and the correct message displayed", async ({
+    test("When navigating to the accept project invitation page with no token, then the page and 'missing a token' error message is displayed", async ({
         page,
         acceptProjectInvitationPage,
     }) => {
         await page.goto("/acceptprojectinvitation");
-        await expect(acceptProjectInvitationPage.heading).toHaveText("Accepting Failed");
+        await expect(acceptProjectInvitationPage.heading).toHaveText("Accepting the Project Invitation Failed");
         await expect(acceptProjectInvitationPage.body).toHaveText(
             "The acceptance link is missing a token. Please check the link provided in your email.",
         );

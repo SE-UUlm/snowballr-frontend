@@ -7,7 +7,7 @@ export const load: PageLoad = async ({ url }) => {
     if (!token) {
         return {
             acceptancePromise: Promise.reject({
-                errorTitle: "Accepting Failed",
+                errorTitle: "Accepting the Project Invitation Failed",
                 errorDetails: "The acceptance link is missing a token. Please check the link provided in your email.",
             }),
         };
