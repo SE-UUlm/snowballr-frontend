@@ -40,9 +40,14 @@
         }
     }
 
-    verificationPromise?.then(() => {
-        setTimeout(async () => await goto("/signin"), 3000);
-    });
+    verificationPromise
+        ?.then(() => {
+            setTimeout(async () => await goto("/signin"), 3000);
+        })
+        .catch(() => {
+            // No redirect, errors are shown in the UI
+            // This prevents unhandled promise rejection
+        });
 </script>
 
 <svelte:head>
