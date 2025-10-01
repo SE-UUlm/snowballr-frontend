@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "type": "module",
     "license": "GPL-3.0-or-later",
+    "packageManager": "npm@11.3.0",
     "scripts": {
         "dev": "vite dev --open",
         "build": "vite build",
