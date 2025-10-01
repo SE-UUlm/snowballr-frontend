@@ -129,7 +129,7 @@ jobs:
               run: lcov -a coverage/unit/lcov.info -a coverage/integration/lcov.info --output-file final-lcov.info
 
             - name: Report code coverage
-              uses: zgosalvez/github-actions-report-lcov@v4
+              uses: zgosalvez/github-actions-report-lcov@v5
               with:
                   coverage-files: final-lcov.info
                   artifact-name: code-coverage-report
