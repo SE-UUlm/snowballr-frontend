@@ -38,7 +38,7 @@
         "@svelte-put/shortcut": "^4.1.0",
         "@sveltejs/adapter-node": "^5.3.2",
         "@sveltejs/kit": "^2.21.1",
-        "@sveltejs/vite-plugin-svelte": "^5.0.3",
+        "@sveltejs/vite-plugin-svelte": "^6.2.1",
         "@tailwindcss/postcss": "^4.1.7",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/svelte": "^5.2.6",
