@@ -142,7 +142,6 @@ requiring it to be installed and running.
 1. **Use the test fixture**:
    Instead of importing the `test` fixture directly from "@playwright/test",
    use the `test` variable exported from one of the following:
-
    - [`utils/fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/shared-fixture.ts)
      (a new mock backend is started for each worker)
    - [`utils/fixtures/isolated-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/isolated-fixture.ts)
@@ -171,7 +170,6 @@ requiring it to be installed and running.
    as good as possible by simulating each click in the tests.
 
    The name of the model is defined by the following guidelines:
-
    - `custom-name-page-model.ts` (if the model represents a full page)
    - `custom-name-navigation-bar-model.ts` (if the model represents a navigation bar)
    - `custom-name-sidebar-model.ts` (if the model represents a sidebar)
