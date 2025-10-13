@@ -3,7 +3,7 @@ import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
 describe("Build field mask", () => {
     test("When an empty object is provided, then an empty paths array is returned.", () => {
-        expect(buildFieldMask("", {})).toEqual({ paths: [] });
+        expect(buildFieldMask({})).toEqual({ paths: [] });
     });
 
     test("When a simple object is provided without prefix, then field names are converted to snake_case.", () => {
@@ -12,7 +12,7 @@ describe("Build field mask", () => {
             lastName: "Doe",
             userId: 123,
         };
-        expect(buildFieldMask("", input)).toEqual({
+        expect(buildFieldMask(input)).toEqual({
             paths: ["first_name", "last_name", "user_id"],
         });
     });
@@ -24,7 +24,7 @@ describe("Build field mask", () => {
                 lastName: "Doe",
             },
         };
-        expect(buildFieldMask("", input)).toEqual({
+        expect(buildFieldMask(input)).toEqual({
             paths: ["personal_info.first_name", "personal_info.last_name"],
         });
     });
@@ -34,7 +34,7 @@ describe("Build field mask", () => {
             firstName: "John",
             lastName: "Doe",
         };
-        expect(buildFieldMask("user", input)).toEqual({
+        expect(buildFieldMask(input, "user")).toEqual({
             paths: ["user.first_name", "user.last_name"],
         });
     });
@@ -50,7 +50,7 @@ describe("Build field mask", () => {
                 },
             },
         };
-        expect(buildFieldMask("user", input)).toEqual({
+        expect(buildFieldMask(input, "user")).toEqual({
             paths: [
                 "user.personal_info.first_name",
                 "user.personal_info.last_name",

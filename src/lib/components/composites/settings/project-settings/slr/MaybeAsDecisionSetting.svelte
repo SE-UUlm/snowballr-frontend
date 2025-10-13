@@ -8,9 +8,9 @@
     import { backendService } from "$lib/grpc-api";
     import { Project_Settings, type Project } from "$lib/model/api/project";
     import type { ApiError } from "$lib/model/general";
-    import { generateFieldMask } from "protobuf-fieldmask";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
+    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
     interface Props {
         projectId: string;
@@ -44,19 +44,14 @@
 
         await loadingProject
             .then(async (project) => {
-                project.settings ??= Project_Settings.create();
-                project.settings.reviewMaybeAllowed = targetCheckedState;
-
-                const maskPaths = generateFieldMask(project).filter(
-                    (path) => path === "settings.reviewMaybeAllowed",
-                );
+                const projectSettingsData: Partial<Project_Settings> = {
+                    reviewMaybeAllowed: targetCheckedState,
+                };
 
                 await backendService
                     .updateProject({
                         project,
-                        mask: {
-                            paths: maskPaths,
-                        },
+                        mask: buildFieldMask(projectSettingsData, "project"),
                     })
                     .response.then(() => {
                         maybeAsDecision.isActivated = targetCheckedState;

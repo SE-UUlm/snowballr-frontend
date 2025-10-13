@@ -5,13 +5,13 @@
     import { onMount } from "svelte";
     import { Project } from "$lib/model/api/project";
     import { Schema } from "$lib/schemas";
-    import { generateFieldMask } from "protobuf-fieldmask";
     import type { ApiError } from "$lib/model/general";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
     import Alert, { type AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
     interface Props {
         projectId: string;
@@ -80,9 +80,7 @@
         await backendService
             .updateProject({
                 project: Project.create(projectData),
-                mask: {
-                    paths: generateFieldMask(projectData),
-                },
+                mask: buildFieldMask(projectData, "project"),
             })
             .response.then(async () => {
                 await invalidate("data:getProjectById");

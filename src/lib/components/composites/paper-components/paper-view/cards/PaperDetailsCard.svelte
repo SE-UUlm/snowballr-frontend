@@ -7,13 +7,13 @@
     import Save from "lucide-svelte/icons/save";
     import { cn } from "$lib/utils/shadcn-helper";
     import { backendService } from "$lib/grpc-api";
-    import { generateFieldMask } from "protobuf-fieldmask";
     import { toast } from "svelte-sonner";
     import type { StringifiedPaper } from "$lib/model/general";
     import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { isStringEqual } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
+    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -85,7 +85,7 @@
         isMakingApiCall = true;
 
         // Convert stringifiedPaper back to Paper, ensuring correct types
-        const paperObject: Paper = {
+        const paperData: Paper = {
             ...paper,
             year,
             authors: stringToAuthors(paper.authors),
@@ -95,10 +95,8 @@
 
         const updateCall = backendService
             .updatePaper({
-                paper: paperObject,
-                mask: {
-                    paths: generateFieldMask(paperObject),
-                },
+                paper: paperData,
+                mask: buildFieldMask(paperData, "paper"),
             })
             .response.then((updatedPaper) => {
                 originalPaper = stringifyPaper(updatedPaper);

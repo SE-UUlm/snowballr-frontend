@@ -1,7 +1,6 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
 import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
 import { Project, SnowballingType } from "$lib/model/api/project";
-import { generateFieldMask } from "protobuf-fieldmask";
 import { Criteria, Reviews } from "$tests/example-data";
 import type { Paper } from "$lib/model/api/paper";
 import { createPaper } from "$tests/model-builder";
@@ -12,6 +11,7 @@ import { expect } from "@playwright/test";
 import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
 import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
 import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
+import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
 type ProjectPaperViewPageFixtures = {
     projectPaperViewPage: ProjectPaperViewPageModel;
@@ -95,9 +95,7 @@ export const test = base.extend<ProjectPaperViewPageFixtures>({
             };
             await apiClient.updateProject({
                 project: Project.create(projectSettings),
-                mask: {
-                    paths: generateFieldMask(projectSettings),
-                },
+                mask: buildFieldMask(projectSettings, "project"),
             }).response;
 
             await Promise.all([

@@ -6,13 +6,13 @@
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
-    import { generateFieldMask } from "protobuf-fieldmask";
     import { getContext } from "svelte";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
+    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
     const user = $derived(getContext<UserContext>(UserContextKey)());
 
@@ -49,9 +49,7 @@
         await backendService
             .updateUser({
                 user: User.create(userData),
-                mask: {
-                    paths: generateFieldMask(userData),
-                },
+                mask: buildFieldMask(userData, "user"),
             })
             .response.then(async () => {
                 triggerCurrentUserRefresh();
