@@ -35,6 +35,8 @@ export function buildFieldMask<T>(dataObj: T, prefix: string = ""): FieldMask {
     const fields = generateFieldMask(dataObj);
 
     const paths = fields.map((field) => {
+        // filter(Boolean) is needed to remove empty strings after the split, e.g. "foo.bar."
+        // becomes ["foo", "bar"] instead of ["foo", "bar", ""]
         const path = field.split(".").filter(Boolean).map(camelToSnakeCase);
         return prefix === "" ? path.join(".") : `${prefix}.${path.join(".")}`;
     });
