@@ -12,17 +12,19 @@ export async function updateFetchers(
     onSuccess: (updatedProject: Project) => void = () => {},
     onError: (error: ApiError) => void = () => {},
 ) {
+    const projectData: Partial<Project> = {
+        id: projectId,
+        settings: Project_Settings.create({
+            fetchers: fetchers,
+        }),
+    };
+
     await backendService
         .updateProject({
-            project: Project.create({
-                id: projectId,
-                settings: Project_Settings.create({
-                    fetchers,
-                }),
-            }),
-            mask: {
-                paths: [`settings.fetchers`],
-            },
+            project: Project.create(projectData),
+            // Manually set the path list because the generated field mask does not detect that the
+            // map for the fetchers is set.
+            mask: { paths: ["project.settings.fetchers"] },
         })
         .response.then((it) => {
             toast.success("Successfully updated project settings.");

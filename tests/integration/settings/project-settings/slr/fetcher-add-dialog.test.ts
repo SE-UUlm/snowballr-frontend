@@ -44,7 +44,7 @@ describe("Fetcher Add Dialog", () => {
         ).toBeVisible();
     });
 
-    test("When the select box is openend, then the unused fetchers are shown", async () => {
+    test("When the select box is opened, then the unused fetchers are shown", async () => {
         const projectData = createProject();
         const unusedFetchers = ["FetcherFoo", "FetcherBar", "FetcherTest"];
 
@@ -150,7 +150,7 @@ describe("Fetcher Add Dialog", () => {
 
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
-                paths: ["settings.fetchers"],
+                paths: ["project.settings.fetchers"],
             },
             project: Project.create({
                 id: projectData.id,

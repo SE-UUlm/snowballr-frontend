@@ -88,7 +88,7 @@ describe("Fetcher Options Dialog", () => {
         });
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
-                paths: ["settings.fetchers"],
+                paths: ["project.settings.fetchers"],
             },
             project: Project.create({
                 id: projectData.id,
