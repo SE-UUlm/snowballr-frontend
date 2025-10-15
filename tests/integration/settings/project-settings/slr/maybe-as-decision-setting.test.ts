@@ -1,7 +1,7 @@
 import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
 import { ProjectStatus } from "$lib/model/api/project";
-import { createProject, createProjectSettings, loading } from "$tests/model-builder";
+import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
@@ -30,7 +30,6 @@ describe("Maybe As Decision Project Setting", () => {
                 target: document.body,
                 props: {
                     projectId: projectData.id,
-                    loadingProject: loading(projectData),
                     slrSettingsLocked: false,
                 },
             });
@@ -58,7 +57,6 @@ describe("Maybe As Decision Project Setting", () => {
             target: document.body,
             props: {
                 projectId: projectData.id,
-                loadingProject: loading(projectData),
                 slrSettingsLocked: true,
             },
         });
@@ -84,7 +82,6 @@ describe("Maybe As Decision Project Setting", () => {
             target: document.body,
             props: {
                 projectId: projectData.id,
-                loadingProject: loading(projectData),
                 slrSettingsLocked: false,
             },
         });
@@ -114,7 +111,6 @@ describe("Maybe As Decision Project Setting", () => {
                 target: document.body,
                 props: {
                     projectId: projectData.id,
-                    loadingProject: loading(projectData),
                     slrSettingsLocked: false,
                 },
             });
@@ -144,7 +140,6 @@ describe("Maybe As Decision Project Setting", () => {
             target: document.body,
             props: {
                 projectId: projectData.id,
-                loadingProject: loading(projectData),
                 slrSettingsLocked: false,
             },
         });
@@ -186,7 +181,6 @@ describe("Maybe As Decision Project Setting", () => {
             target: document.body,
             props: {
                 projectId: projectData.id,
-                loadingProject: loading(projectData),
                 slrSettingsLocked: false,
             },
         });
@@ -223,7 +217,6 @@ describe("Maybe As Decision Project Setting", () => {
             target: document.body,
             props: {
                 projectId: projectData.id,
-                loadingProject: loading(projectData),
                 slrSettingsLocked: false,
             },
         });

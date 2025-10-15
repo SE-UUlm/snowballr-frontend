@@ -60,7 +60,7 @@
                 variant="warning"
             />
         {/if}
-        <MaybeAsDecisionSetting {loadingProject} {projectId} {slrSettingsLocked} />
+        <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} />
         <FetcherSettings {projectId} {slrSettingsLocked} />
     </ProjectSettingsLayout>
 {/if}

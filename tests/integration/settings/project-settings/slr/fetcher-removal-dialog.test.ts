@@ -71,7 +71,7 @@ describe("Fetcher Removal Dialog", () => {
         screen.getByRole("button", { name: "Delete" }).click();
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
-                paths: ["settings.fetchers"],
+                paths: ["project.settings.fetchers"],
             },
             project: Project.create({
                 id: projectData.id,

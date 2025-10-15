@@ -6,19 +6,18 @@
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Project_Settings, type Project } from "$lib/model/api/project";
+    import { Project_Settings, Project } from "$lib/model/api/project";
     import type { ApiError } from "$lib/model/general";
-    import { generateFieldMask } from "protobuf-fieldmask";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
+    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
     interface Props {
         projectId: string;
-        loadingProject: Promise<Project>;
         slrSettingsLocked?: boolean;
     }
 
-    const { projectId, loadingProject, slrSettingsLocked = false }: Props = $props();
+    const { projectId, slrSettingsLocked = false }: Props = $props();
 
     // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
     let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
@@ -42,41 +41,36 @@
     async function toggleIsMaybeAsDecisionSettingStatus(targetCheckedState: boolean) {
         isUpdatingMaybeAsDecisionSettingStatus = true;
 
-        await loadingProject
-            .then(async (project) => {
-                project.settings ??= Project_Settings.create();
-                project.settings.reviewMaybeAllowed = targetCheckedState;
+        const projectData: Partial<Project> = {
+            id: projectId,
+            settings: Project_Settings.create({
+                reviewMaybeAllowed: targetCheckedState,
+            }),
+        };
 
-                const maskPaths = generateFieldMask(project).filter(
-                    (path) => path === "settings.reviewMaybeAllowed",
-                );
+        // Build the field mask for the project update. Since project settings must be updated
+        // as a whole object (because they are part of the `UpdateProject` call), we filter
+        // the paths to only include `review_maybe_allowed`, so only that setting is updated.
+        const fieldMaskPaths = buildFieldMask(projectData, "project").paths;
+        const updatedFieldMaskPaths = fieldMaskPaths.filter((path) =>
+            path.includes("review_maybe_allowed"),
+        );
 
-                await backendService
-                    .updateProject({
-                        project,
-                        mask: {
-                            paths: maskPaths,
-                        },
-                    })
-                    .response.then(() => {
-                        maybeAsDecision.isActivated = targetCheckedState;
-                        toast.success("Successfully updated project settings.");
-                    })
-                    .catch((error) => {
-                        console.error("Error updating project settings:", error);
-                        updateSLRSettingsError = {
-                            errorTitle: "Project Settings Update Failed",
-                            errorDetails:
-                                "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
-                        };
-                    });
+        await backendService
+            .updateProject({
+                project: Project.create(projectData),
+                mask: { paths: updatedFieldMaskPaths },
+            })
+            .response.then(() => {
+                maybeAsDecision.isActivated = targetCheckedState;
+                toast.success("Successfully updated project settings.");
             })
             .catch((error) => {
-                console.error("Error fetching project settings:", error);
+                console.error("Error updating project settings:", error);
                 updateSLRSettingsError = {
-                    errorTitle: "Project Settings Load Failed",
+                    errorTitle: "Project Settings Update Failed",
                     errorDetails:
-                        "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
+                        "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
                 };
             })
             .finally(() => {
@@ -153,7 +147,7 @@ The `slrSettingsLocked` prop can be used to disable the switch if the SLR settin
 
 Usage:
 ```svelte
-  <MaybeAsDecisionSetting {projectId} {loadingProject} {slrSettingsLocked} />
+  <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} />
 ```
 -->
 <SettingsSection sectionTitle="Maybe as Decision">
