@@ -9,7 +9,7 @@
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
     import type { StringifiedPaper } from "$lib/model/general";
-    import { stringifyPaper } from "$lib/utils/model-helper";
+    import { asPaper, isProjectPaper, stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
@@ -49,7 +49,7 @@
     });
 
     $effect(() => {
-        if (paper.id === "" || originalPaper === undefined) {
+        if ((paper.id === "" && !isInCreationMode) || originalPaper === undefined) {
             return;
         }
 
@@ -116,33 +116,40 @@
         return updateCall;
     }
 
-    async function createPaper(paperData: Paper) {
-        const creationCall = backendService
-            .createPaper(paperData)
-            .response.then((createdPaper) => {
+    async function createPaper(paperObject: Paper) {
+        const projectIdRegex = /\/project\/(.+?)\/.*/;
+        const matches = projectIdRegex.exec(window.location.pathname);
+        const projectId = matches !== null ? matches[1] : undefined;
+
+        const creationCall: Promise<Paper | Project_Paper> = backendService
+            .createPaper(paperObject)
+            .response.then(async (createdPaper) => {
                 originalPaper = stringifyPaper(createdPaper);
                 paper = stringifyPaper(createdPaper);
 
-                return backendService.addPaperToProject({
+                if (projectId === undefined) return createdPaper;
+
+                return await backendService.addPaperToProject({
                     paperId: createdPaper.id,
-                    projectId: "5",
+                    projectId: projectId,
                     stage: 0n,
                 }).response;
             });
 
         toast.promise(creationCall, {
             loading: "Creating paper...",
-            success: (projectPaper: Project_Paper) =>
-                `Successfully created the paper '${projectPaper.paper?.title}'.`,
+            success: (paper: Paper | Project_Paper) =>
+                `Successfully created the paper '${asPaper(paper).title}'.`,
             error: "Failed to create the paper.",
         });
 
-        return creationCall.then(async (projectPaper) => {
-            await goto(`/project/5/paper/${projectPaper.localId}`);
-            return projectPaper;
+        return creationCall.then(async (paper) => {
+            if (isProjectPaper(paper)) {
+                await goto(`/project/${projectId}/paper/${paper.localId}`);
+            } else {
+                await goto(`/paper/${paper.id}`);
+            }
         });
-
-        // TODO: add to specific project
     }
 
     beforeNavigate(({ cancel }) => {
