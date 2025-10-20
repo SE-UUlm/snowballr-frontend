@@ -1,8 +1,9 @@
-import { assert, expect, test, describe } from "vitest";
+import { assert, describe, expect, test } from "vitest";
 import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { loading, createProject } from "../../model-builder";
+import { createProject, loading } from "../../model-builder";
 import { mockUserContext, waitForComponentLoading } from "../test-helper";
+import { ProjectStatus } from "$lib/model/api/project";
 
 describe("ProjectNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {
@@ -14,6 +15,7 @@ describe("ProjectNavigationBar", () => {
                     createProject({
                         id: "123",
                         name: "Example Project Title",
+                        status: ProjectStatus.ACTIVE,
                     }),
                 ),
                 defaultTabValue: "statistics",
@@ -64,7 +66,31 @@ describe("ProjectNavigationBar", () => {
         const projectTitle = screen.getByText("Example Project Title");
         expect(projectTitle).toBeInTheDocument();
 
-        // Project ID isn't shown
+        // Project ID and 'Archived' badge isn't shown
         assert.throws(() => screen.getByText("123"));
+        assert.throws(() => screen.getByText("Archived"));
+    });
+
+    test("When the project is archived, then an additional 'Archived' badge is shown", async () => {
+        render(ProjectNavigationBar, {
+            target: document.body,
+            props: {
+                projectId: "123",
+                loadingProject: loading(
+                    createProject({
+                        id: "123",
+                        name: "Example Project Title",
+                        status: ProjectStatus.ARCHIVED,
+                    }),
+                ),
+                defaultTabValue: "statistics",
+            },
+            context: mockUserContext,
+        });
+
+        await waitForComponentLoading();
+
+        const archivedBadge = screen.getByText("Archived");
+        expect(archivedBadge).toBeInTheDocument();
     });
 });
