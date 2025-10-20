@@ -1,31 +1,31 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import ClickOutsideOrEscapeActionComponent from "./ClickOutsideOrEscapeActionComponent.svelte";
+import ClickOutsideOrEscapeAttachmentComponent from "./ClickOutsideOrEscapeAttachmentComponent.svelte";
 
 describe("Click outside or press escape action", () => {
-    test("When a component is created with the 'clickOutsideOrEscape' action and the user clicks outside, then the 'ClickedOutsideOrEscape' event is fired.", async () => {
+    test("When a component is created with the 'clickOutsideOrEscape' attachment and the user clicks outside, then the 'onClickedOutsideOrEscape' callback is called.", async () => {
         const onEvent = vi.fn();
-        render(ClickOutsideOrEscapeActionComponent, { onEvent });
+        render(ClickOutsideOrEscapeAttachmentComponent, { onEvent });
 
         await userEvent.click(screen.getByTestId("outside-action-container"));
         expect(onEvent).toHaveBeenCalled();
     });
 
-    test("When a component is created with the 'clickOutsideOrEscape' action and the user presses escape, then the 'ClickedOutsideOrEscape' event is fired.", async () => {
+    test("When a component is created with the 'clickOutsideOrEscape' attachment and the user presses escape, then the 'onClickedOutsideOrEscape' callback is called.", async () => {
         const onEvent = vi.fn();
-        render(ClickOutsideOrEscapeActionComponent, { onEvent });
+        render(ClickOutsideOrEscapeAttachmentComponent, { onEvent });
 
         await userEvent.type(screen.getByTestId("outside-action-container"), "{Escape}");
         expect(onEvent).toHaveBeenCalled();
     });
 
     test(
-        "When a component is created with the 'clickOutsideOrEscape' action and the user clicks inside the component or " +
-            "presses any key except escape, then the 'ClickedOutsideOrEscape' event is not fired.",
+        "When a component is created with the 'clickOutsideOrEscape' attachment and the user clicks inside the component or " +
+            "presses any key except escape, then the 'onClickedOutsideOrEscape' callback is not called.",
         async () => {
             const onEvent = vi.fn();
-            render(ClickOutsideOrEscapeActionComponent, { onEvent });
+            render(ClickOutsideOrEscapeAttachmentComponent, { onEvent });
 
             await userEvent.click(screen.getByTestId("action-container"));
             expect(onEvent).not.toHaveBeenCalled();
