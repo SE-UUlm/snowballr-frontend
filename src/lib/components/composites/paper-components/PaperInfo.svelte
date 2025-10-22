@@ -13,6 +13,10 @@
     };
 
     const { loadingPaper, loadingPaperId = undefined, class: className }: Props = $props();
+
+    function isUuid(id: string) {
+        return Number.isNaN(Number(id));
+    }
 </script>
 
 <!--
@@ -32,7 +36,13 @@ for a project paper, the local / relative project paper id.
     <div class={cn("grid grid-flow-row gap-0", className)}>
         <div class="flex flex-row items-center gap-1 truncate">
             {#if id}
-                <div class="text-default-sb-nc w-fit text-neutral-500">#{id}</div>
+                <div class="text-default-sb-nc w-fit text-neutral-500">
+                    {#if isUuid(id)}
+                        <span title={id}>#{id.substring(0, 8)}</span>
+                    {:else}
+                        #{id}
+                    {/if}
+                </div>
             {/if}
             <h2 class="place-content-center truncate">{paper.title}</h2>
         </div>
