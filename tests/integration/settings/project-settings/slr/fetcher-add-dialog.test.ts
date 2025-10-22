@@ -34,7 +34,7 @@ describe("Fetcher Add Dialog", () => {
         ).toBeVisible();
         expect(
             screen.getByRole("button", {
-                name: "Add",
+                name: "Add Fetchers",
             }),
         ).toBeVisible();
         expect(
@@ -142,7 +142,7 @@ describe("Fetcher Add Dialog", () => {
         await userEvent.click(screen.getByRole("option", { name: unusedFetchers[0] }));
         await userEvent.click(screen.getByRole("option", { name: unusedFetchers[1] }));
         await userEvent.click(selectBox);
-        await userEvent.click(screen.getByRole("button", { name: "Add" }));
+        await userEvent.click(screen.getByRole("button", { name: "Add Fetchers" }));
         await waitFor(() => expect(newProject).toBeDefined());
 
         const fetchers = Object.keys(newProject?.settings?.fetchers ?? {});

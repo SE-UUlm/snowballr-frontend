@@ -31,7 +31,7 @@ describe("Fetcher Removal Dialog", () => {
             },
         });
 
-        expect(screen.getByRole("button", { name: "Delete" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Remove Fetcher" })).toBeVisible();
         expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
         expect(screen.getByText("foobar", { exact: false })).toBeVisible();
     });
@@ -68,7 +68,7 @@ describe("Fetcher Removal Dialog", () => {
             },
         });
 
-        screen.getByRole("button", { name: "Delete" }).click();
+        screen.getByRole("button", { name: "Remove Fetcher" }).click();
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
                 paths: ["project.settings.fetchers"],

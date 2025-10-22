@@ -147,9 +147,8 @@
 
     {#if unusedFetchers?.length !== 0}
         <LoadingButton
-            disabled={slrSettingsLocked}
-            label="Add Fetcher"
-            {loading}
+            disabled={slrSettingsLocked || loading}
+            label="Add Fetcher(s)"
             onclick={() => (addDialogOpen = true)}
         >
             {#snippet icon()}

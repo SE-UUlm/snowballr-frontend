@@ -113,17 +113,19 @@
 {/snippet}
 
 <AlertDialog
-    actionButtonText="Save"
+    actionButtonLoadingText="Saving Options"
+    actionButtonText="Save Options"
     actionIcon={slrSettingsLocked ? lockIcon : undefined}
     actionProps={{
         onclick: saveFetcherOptions,
-        disabled: slrSettingsLocked,
+        disabled: slrSettingsLocked || optionsLoading || options.size === 0,
+        class: "w-38",
     }}
     cancelButtonText="Cancel"
     cancelProps={{
         disabled: loading,
     }}
-    {loading}
+    loading={saveLoading}
     title="Edit Option Values"
     bind:open
 >

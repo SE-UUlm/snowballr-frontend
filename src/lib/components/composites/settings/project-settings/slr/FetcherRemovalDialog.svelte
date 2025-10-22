@@ -43,10 +43,12 @@
 </script>
 
 <AlertDialog
-    actionButtonText="Delete"
+    actionButtonLoadingText="Removing Fetcher"
+    actionButtonText="Remove Fetcher"
     actionProps={{
         variant: "destructive",
         onclick: removeFetcher,
+        class: "w-42",
     }}
     cancelButtonText="Cancel"
     cancelProps={{
