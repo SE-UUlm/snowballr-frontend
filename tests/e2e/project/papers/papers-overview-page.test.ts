@@ -130,7 +130,6 @@ test.describe("Papers Overview Tests", () => {
         const author = createAuthor({
             firstName: "New",
             lastName: "Author",
-            orcid: "",
         });
         const newPaper = await apiClient.createPaper(createPaper({ title, authors: [author] }))
             .response;

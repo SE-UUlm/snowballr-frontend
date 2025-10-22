@@ -88,11 +88,11 @@ export const Users = {
 };
 
 export const Authors = {
-    johnDoe: { firstName: "John", lastName: "Doe", orcid: "0000-0001-2345-6789" },
-    janeSmith: { firstName: "Jane", lastName: "Smith", orcid: "0000-0002-3456-7890" },
-    aliceBrown: { firstName: "Alice", lastName: "Brown", orcid: "0000-0003-4567-8901" },
-    bobJohnson: { firstName: "Bob", lastName: "Johnson", orcid: "0000-0004-5678-9012" },
-    emilyDavis: { firstName: "Emily", lastName: "Davis", orcid: "0000-0005-6789-0123" },
+    johnDoe: { firstName: "John", lastName: "Doe" },
+    janeSmith: { firstName: "Jane", lastName: "Smith" },
+    aliceBrown: { firstName: "Alice", lastName: "Brown" },
+    bobJohnson: { firstName: "Bob", lastName: "Johnson" },
+    emilyDavis: { firstName: "Emily", lastName: "Davis" },
 };
 
 export const Projects = {
