@@ -225,3 +225,9 @@
         @apply text-primary text-lg font-semibold tracking-normal;
     }
 }
+
+.highlight {
+    border-radius: 2px;
+    background-color: yellow;
+    color: black;
+}

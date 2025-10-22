@@ -7,14 +7,33 @@
     import { filterPapers } from "$lib/utils/filters";
     import type { Paper } from "$lib/model/api/paper";
     import { loadReadingList } from "./helper.js";
+    import { getSearchTextFromURL, updateSearchTextParam } from "$lib/utils/search-parameters";
+    import { SvelteURLSearchParams } from "svelte/reactivity";
+    import { page } from "$app/state";
+    import { callDebounced } from "$lib/utils/common-helper";
+    import { goto } from "$app/navigation";
 
     const { data } = $props();
     const { loadingReadingList } = data;
 
     let currentFullReadingList = $state<Promise<Paper[]>>(loadingReadingList);
     let filteredReadingList = $state<Promise<Paper[]>>(loadingReadingList);
-    let currentSearchText = $state<string>("");
+    let currentSearchText = $state(getSearchTextFromURL());
     let noSearchResults = $state(false);
+    let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
+
+    $effect(() => {
+        if (searchParameters.toString() !== window.location.search.slice(1)) {
+            callDebounced(
+                () =>
+                    goto(`?${searchParameters.toString()}`, {
+                        replaceState: true,
+                        keepFocus: true,
+                    }),
+                250,
+            );
+        }
+    });
 
     function filterReadingList(searchText: string) {
         currentSearchText = searchText;
@@ -61,7 +80,14 @@
         numberOfSkeletons={7}
     >
         {#snippet preListContent()}
-            <SearchBar onSearch={filterReadingList} timeoutInMs={0} />
+            <SearchBar
+                onSearch={(text) => {
+                    filterReadingList(text);
+                    currentSearchText = text;
+                    searchParameters = updateSearchTextParam(currentSearchText, searchParameters);
+                }}
+                timeoutInMs={0}
+            />
         {/snippet}
         {#snippet listItemComponent(paper)}
             <ReadingListEntry {onPaperChangedBookmarkStatus} {paper} />
