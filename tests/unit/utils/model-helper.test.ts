@@ -13,7 +13,7 @@ describe("Stringify a paper", () => {
 
         const stringifiedPaper = stringifyPaper(paper);
 
-        expect(stringifiedPaper.authors).toBe("John Doe, Jane Doe");
+        expect(stringifiedPaper.authors).toBe("John Doe; Jane Doe");
     });
 
     test("When the paper has a year, then the year is converted to a string", () => {

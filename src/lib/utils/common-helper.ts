@@ -18,12 +18,13 @@ function getName(person: Person): string {
  *
  * @param persons - the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
+ * @param separator - (optional) the string that is used to separate the names (default: ", ")
  * @returns the names of the persons as string (\<first name\> \<last name\>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
-function getNames(persons: Person[]): string {
-    return persons.map((person) => getName(person)).join(", ");
+function getNames(persons: Person[], separator: string = ", "): string {
+    return persons.map((person) => getName(person)).join(separator);
 }
 
 /**

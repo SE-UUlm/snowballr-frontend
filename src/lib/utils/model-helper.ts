@@ -20,7 +20,7 @@ function stringifyPaper(paper: Paper): StringifiedPaper {
     for (const key of Object.keys(paper)) {
         const paperKey = key as keyof Paper;
         if (key === "authors") {
-            stringifiedPaper[paperKey] = getNames(paper[paperKey] as unknown as Author[]);
+            stringifiedPaper[paperKey] = getNames(paper[paperKey] as unknown as Author[], "; ");
         } else {
             stringifiedPaper[paperKey] = paper[paperKey].toString();
         }
