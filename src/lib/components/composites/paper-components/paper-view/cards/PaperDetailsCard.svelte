@@ -1,7 +1,7 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import { Author, Paper } from "$lib/model/api/paper";
+    import { Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "lucide-svelte/icons/pencil";
     import Save from "lucide-svelte/icons/save";
@@ -11,7 +11,7 @@
     import type { StringifiedPaper } from "$lib/model/general";
     import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
-    import { isStringEqual } from "$lib/utils/common-helper";
+    import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 
@@ -57,23 +57,6 @@
         { value: "1", label: "Information" },
         { value: "2", label: "Document" },
     ];
-
-    function stringToAuthors(value: string): Author[] {
-        const authorStrings = value.split(/,\s*/g).filter((v) => v.length !== 0);
-        const authors: Author[] = authorStrings.map((authorString) => {
-            const parts = authorString.split(/\s+/g);
-            const person: Author = {
-                // Everything is the first name except the last part
-                // TODO: this assumption is very error prone and we should use structured HTML to fix this
-                firstName: parts.slice(0, parts.length - 1).join(" "),
-                lastName: parts[parts.length - 1],
-                orcid: "",
-            };
-            return person;
-        });
-
-        return authors;
-    }
 
     async function updatePaper() {
         const year = Number(paper.year);

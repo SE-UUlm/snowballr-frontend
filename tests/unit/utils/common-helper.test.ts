@@ -9,6 +9,7 @@ import {
     isPaperUndecided,
     isStringEqual,
     pluralize,
+    stringToAuthors,
     wrapLongWords,
 } from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
@@ -274,5 +275,120 @@ describe("Check String equality", () => {
         expect(isStringEqual({ a: 1 }, [1])).toBe(false);
         expect(isStringEqual(null, undefined)).toBe(false);
         expect(isStringEqual(42, "42")).toBe(false);
+    });
+});
+
+describe("Extract authors from string", () => {
+    test("When the string is empty, then no authors are extracted", () => {
+        const text = "";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([]);
+    });
+
+    test("When the string contains one author, then this author is extracted", () => {
+        const text = "John Doe";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([{ firstName: "John", lastName: "Doe" }]);
+    });
+
+    test("When the string contains multiple authors separated by semicolons, then all authors are extracted", () => {
+        const text = "John Doe; Jane Smith; Alice Johnson";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+            { firstName: "Alice", lastName: "Johnson" },
+        ]);
+    });
+
+    test("When the string contains extra spaces around semicolons, then authors are extracted correctly", () => {
+        const text = "  John Doe  ; Jane Smith ;   Alice Johnson  ";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+            { firstName: "Alice", lastName: "Johnson" },
+        ]);
+    });
+
+    test("When the string contains no spaces around semicolons, then authors are extracted correctly", () => {
+        const text = "John Doe;Jane Smith;Alice Johnson";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+            { firstName: "Alice", lastName: "Johnson" },
+        ]);
+    });
+
+    test("When the string contains consecutive semicolons, then no empty authors are created", () => {
+        const text = "John Doe;; Jane Smith; ; Alice Johnson;";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+            { firstName: "Alice", lastName: "Johnson" },
+        ]);
+    });
+
+    test("When an author has only one name, then it is treated as the last name", () => {
+        const text = "Plato; John Doe";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "", lastName: "Plato" },
+            { firstName: "John", lastName: "Doe" },
+        ]);
+    });
+
+    test("When an author has multiple first names, then all but the last are treated as first names", () => {
+        const text = "Mary Ann Smith; John Doe";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "Mary Ann", lastName: "Smith" },
+            { firstName: "John", lastName: "Doe" },
+        ]);
+    });
+
+    test("When an author has leading or trailing spaces, then they are trimmed", () => {
+        const text = "  John   Doe  ;  Jane   Smith  ";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+        ]);
+    });
+
+    test("When the string contains only semicolons and spaces, then no authors are extracted", () => {
+        const text = "  ;   ;  ; ";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([]);
+    });
+
+    test("When the string has the format 'Last, First', then the names are extracted correctly", () => {
+        const text = "Doe, John; Smith, Jane";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+        ]);
+    });
+
+    test("When the string has mixed formats, then the names are extracted correctly", () => {
+        const text = "Doe, John; Jane Smith; Brown, Bob";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+            { firstName: "Bob", lastName: "Brown" },
+        ]);
+    });
+
+    test("When an author has multiple commas in the name, then only the first comma is used to split first and last names", () => {
+        const text = "Doe, John, Jr.; Smith, Jane";
+        const authors = stringToAuthors(text);
+        expect(authors).toEqual([
+            { firstName: "John, Jr.", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
+        ]);
     });
 });
