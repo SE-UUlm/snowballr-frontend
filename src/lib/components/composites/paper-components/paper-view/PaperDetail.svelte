@@ -5,8 +5,10 @@
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
     import type { Paper } from "$lib/model/api/paper";
-    import ErrorIndicator from "../../utils/ErrorIndicator.svelte";
+    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
+    import CircleHelp from "lucide-svelte/icons/circle-help";
+    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 
     export interface PaperDetailProp {
         key: keyof StringifiedPaper;
@@ -19,9 +21,17 @@
         loadingPaper: Promise<Paper>;
         paper: StringifiedPaper;
         isInEditMode: boolean;
+        hint?: string;
     };
 
-    let { prop, index = 0, loadingPaper, paper = $bindable(), isInEditMode }: Props = $props();
+    let {
+        prop,
+        index = 0,
+        loadingPaper,
+        paper = $bindable(),
+        isInEditMode,
+        hint = undefined,
+    }: Props = $props();
     const { key, label } = prop;
 
     const skeletonValues = [
@@ -61,13 +71,31 @@ Usage:
             />
         </div>
     {:then}
-        <ToggleableInput
-            isEditable={isInEditMode}
-            {key}
-            onInputChange={updateValue}
-            placeholder={`No ${label} available`}
-            value={paper[key]}
-        />
+        <div class="flex w-full flex-row gap-1">
+            <ToggleableInput
+                isEditable={isInEditMode}
+                {key}
+                onInputChange={updateValue}
+                placeholder={`No ${label} available`}
+                value={paper[key]}
+            />
+            {#if hint && isInEditMode}
+                <Tooltip
+                    class="p-0 [&_svg]:size-6"
+                    aria-label={hint}
+                    openOnClick
+                    triggerSize="fit"
+                    triggerVariant="none"
+                >
+                    {#snippet trigger()}
+                        <CircleHelp class="text-neutral-500" />
+                    {/snippet}
+                    {#snippet content()}
+                        {hint}
+                    {/snippet}
+                </Tooltip>
+            {/if}
+        </div>
     {:catch}
         <ErrorIndicator errorMessage={`Couldn't load ${label}`} />
     {/await}

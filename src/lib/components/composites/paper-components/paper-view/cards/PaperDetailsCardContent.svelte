@@ -34,6 +34,8 @@
 
     let showAdditionalInfos = $state(false);
     const toggleAdditionalInfos = () => (showAdditionalInfos = !showAdditionalInfos);
+    const authorHint =
+        "Provide authors in the format 'John Doe' or 'Doe, John' and separate them with a semicolon.";
 </script>
 
 <!--
@@ -54,7 +56,14 @@ Usage:
     </div>
     <div class="flex flex-col gap-2 px-5">
         {#each basicInfoProps as prop, index (prop.key)}
-            <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
+            <PaperDetail
+                hint={prop.key === "authors" ? authorHint : undefined}
+                {index}
+                {isInEditMode}
+                {loadingPaper}
+                {prop}
+                bind:paper
+            />
         {/each}
         {#if showAdditionalInfos}
             {#each additionalInfoProps as prop, index (prop.key)}
