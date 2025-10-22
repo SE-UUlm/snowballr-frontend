@@ -122,14 +122,23 @@
         const projectId = matches !== null ? matches[1] : undefined;
         const stage = new URLSearchParams(window.location.search).get("stage");
 
-        const creationCall: Promise<Paper | Project_Paper> = backendService
+        let promise: Promise<Paper | Project_Paper> = backendService
             .createPaper(paperObject)
             .response.then(async (createdPaper) => {
                 originalPaper = stringifyPaper(createdPaper);
                 paper = stringifyPaper(createdPaper);
 
-                if (projectId === undefined) return createdPaper;
+                return createdPaper;
+            });
 
+        toast.promise(promise, {
+            loading: "Creating paper...",
+            success: (paper) => `Successfully created the paper '${asPaper(paper).title}'.`,
+            error: "Failed to create the paper.",
+        });
+
+        if (projectId) {
+            promise = promise.then(async (createdPaper) => {
                 return await backendService.addPaperToProject({
                     paperId: createdPaper.id,
                     projectId: projectId,
@@ -137,14 +146,14 @@
                 }).response;
             });
 
-        toast.promise(creationCall, {
-            loading: "Creating paper...",
-            success: (paper: Paper | Project_Paper) =>
-                `Successfully created the paper '${asPaper(paper).title}'.`,
-            error: "Failed to create the paper.",
-        });
+            toast.promise(promise, {
+                loading: "Adding paper to project...",
+                success: () => "Successfully added the paper to the project.",
+                error: "Failed to add the paper to the project.",
+            });
+        }
 
-        return creationCall.then(async (paper) => {
+        return promise.then(async (paper) => {
             if (isProjectPaper(paper)) {
                 await goto(`/project/${projectId}/paper/${paper.localId}`);
             } else {
