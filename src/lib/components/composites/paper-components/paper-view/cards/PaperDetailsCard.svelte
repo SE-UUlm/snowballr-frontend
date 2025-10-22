@@ -68,17 +68,22 @@
         isMakingApiCall = true;
 
         // Convert stringifiedPaper back to Paper, ensuring correct types
-        const paperData: Paper = {
-            ...paper,
+        const paperData: Partial<Paper> = {
+            id: paper.id,
+            externalId: paper.externalId,
+            title: paper.title,
+            abstrakt: paper.abstrakt,
             year,
+            publisher: paper.publisher,
+            publicationName: paper.publicationName,
+            publicationType: paper.publicationType,
             authors: stringToAuthors(paper.authors),
-            hasPdf: paper.hasPdf === "true",
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
         const updateCall = backendService
             .updatePaper({
-                paper: paperData,
+                paper: Paper.create(paperData),
                 mask: buildFieldMask(paperData, "paper"),
             })
             .response.then((updatedPaper) => {
