@@ -15,8 +15,8 @@
         publicationType: "Journal Article",
         hasPdf: true,
         authors: [
-            { firstName: "John", lastName: "Doe", orcid: "0000-0001-2345-6789" },
-            { firstName: "Jane", lastName: "Smith", orcid: "0000-0002-3456-7890" },
+            { firstName: "John", lastName: "Doe" },
+            { firstName: "Jane", lastName: "Smith" },
         ],
         backwardReferencedIds: ["1", "2"],
     };

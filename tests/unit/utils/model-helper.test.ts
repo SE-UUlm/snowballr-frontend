@@ -6,14 +6,14 @@ describe("Stringify a paper", () => {
     test("When the paper has authors, then the authors are converted to names", () => {
         const paper = createPaper({
             authors: [
-                { firstName: "John", lastName: "Doe", orcid: "1234" },
-                { firstName: "Jane", lastName: "Doe", orcid: "5678" },
+                { firstName: "John", lastName: "Doe" },
+                { firstName: "Jane", lastName: "Doe" },
             ],
         });
 
         const stringifiedPaper = stringifyPaper(paper);
 
-        expect(stringifiedPaper.authors).toBe("John Doe, Jane Doe");
+        expect(stringifiedPaper.authors).toBe("John Doe; Jane Doe");
     });
 
     test("When the paper has a year, then the year is converted to a string", () => {

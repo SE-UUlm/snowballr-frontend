@@ -55,7 +55,6 @@ export const test = base.extend<ProjectPapersPageFixtures>({
                     {
                         firstName: stageIndex === 0 ? `Alpha${paperIndex}` : `Beta${paperIndex}`,
                         lastName: "Author",
-                        orcid: "",
                     },
                 ];
 

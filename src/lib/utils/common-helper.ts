@@ -1,7 +1,7 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
 import type { PaperStatus, Person } from "$lib/model/general";
 import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
-import type { Paper } from "$lib/model/api/paper";
+import type { Author, Paper } from "$lib/model/api/paper";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 
 /**
@@ -18,12 +18,13 @@ function getName(person: Person): string {
  *
  * @param persons - the list of objects, which at least have a firstName (of type string) and a lastName (of type string)
  *          as object properties. More object properties are allowed and ignored.
+ * @param separator - (optional) the string that is used to separate the names (default: ", ")
  * @returns the names of the persons as string (\<first name\> \<last name\>) concatenated and separated by an ','.
  *          If there is only one person, only the person's name is shown and
  *          if there is no person, an empty string is returned.
  */
-function getNames(persons: Person[]): string {
-    return persons.map((person) => getName(person)).join(", ");
+function getNames(persons: Person[], separator: string = ", "): string {
+    return persons.map((person) => getName(person)).join(separator);
 }
 
 /**
@@ -368,6 +369,52 @@ function isStringEqual(obj1: unknown, obj2: unknown): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
+/**
+ * Extracts authors from a string.
+ *
+ * We assume that authors are separated by semicolons (';').
+ *
+ * @param text - The string containing the authors.
+ * @returns An array of Author objects.
+ */
+function stringToAuthors(text: string): Author[] {
+    const authorStrings = text
+        .trim()
+        .split(/\s*;\s*/g)
+        .filter((p) => p.length !== 0);
+    return authorStrings.map(stringToAuthor);
+}
+
+/**
+ * Extracts a single author from a string.
+ *
+ * We assume that the author is either in the format "first_name last_name" or "last_name, first_name".
+ *
+ * @param text - The string containing the author.
+ * @returns An Author object.
+ */
+function stringToAuthor(text: string): Author {
+    let firstName = "";
+    let lastName = "";
+
+    // If text contains comma, then we assume the format last_name, first_name
+    if (text.includes(",")) {
+        const parts = text.split(/\s*,\s*/g);
+        lastName = parts[0];
+        firstName = parts.slice(1).join(", "); // In case there are multiple commas
+    } else {
+        const parts = text.split(/\s+/g);
+        if (parts.length === 1) {
+            lastName = parts[0];
+        } else {
+            firstName = parts.slice(0, parts.length - 1).join(" ");
+            lastName = parts[parts.length - 1];
+        }
+    }
+
+    return { firstName, lastName };
+}
+
 export {
     getName,
     getNames,
@@ -387,4 +434,5 @@ export {
     debounce,
     callDebounced,
     isStringEqual,
+    stringToAuthors,
 };

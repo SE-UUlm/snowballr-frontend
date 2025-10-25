@@ -25,10 +25,8 @@ describe("PaperDetail", () => {
 
         await waitForComponentLoading();
 
-        const spans = document.getElementsByTagName("span");
-        expect(spans).toHaveLength(1);
-        const keySpan = spans[0];
-        expect(keySpan.textContent).toEqual("Title");
+        const span = screen.getByTestId("details-label");
+        expect(span.textContent).toEqual("Title");
 
         const textareas = document.getElementsByTagName("textarea");
         expect(textareas).toHaveLength(1);
@@ -53,11 +51,8 @@ describe("PaperDetail", () => {
             },
         });
 
-        const spans = document.getElementsByTagName("span");
-        expect(spans.length).toEqual(1);
-        const keySpan = spans[0];
-
-        expect(keySpan.textContent).toEqual("Title");
+        const span = screen.getByTestId("details-label");
+        expect(span.textContent).toEqual("Title");
         expect(screen.queryByTestId("skeleton")).not.toBeNull();
     });
 
@@ -77,11 +72,10 @@ describe("PaperDetail", () => {
 
         await waitForComponentLoading();
 
-        const spans = document.getElementsByTagName("span");
-        expect(spans).toHaveLength(2);
-        const [keySpan, valueSpan] = spans;
+        const span = screen.getByTestId("details-label");
+        expect(span.textContent).toEqual("Title");
 
-        expect(keySpan.textContent).toEqual("Title");
-        expect(valueSpan.textContent).toEqual("Couldn't load Title");
+        const errorSpan = screen.getByTestId("error-indicator-label");
+        expect(errorSpan.textContent).toEqual("Couldn't load Title");
     });
 });
