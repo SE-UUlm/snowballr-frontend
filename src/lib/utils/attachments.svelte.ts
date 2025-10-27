@@ -1,4 +1,5 @@
 import type { Attachment } from "svelte/attachments";
+import { ProjectStatus } from "$lib/model/api/project";
 
 /**
  * Attaches two event listeners that call the passed function when the user clicks outside the element
@@ -6,7 +7,7 @@ import type { Attachment } from "svelte/attachments";
  *
  * @param onClickedOutsideOrEscape - The callback to be called when the user clicks outside the element or presses the escape key.
  */
-function clickOutsideOrEscape(onClickedOutsideOrEscape: () => void): Attachment<Element> {
+function clickOutsideOrEscape(onClickedOutsideOrEscape: () => void): Attachment {
     return (element: Element) => {
         const handleClick = (event: Event) => {
             if (!element.contains(<Node>event.target)) {
@@ -30,4 +31,21 @@ function clickOutsideOrEscape(onClickedOutsideOrEscape: () => void): Attachment<
     };
 }
 
-export { clickOutsideOrEscape };
+/**
+ * Attaches a disabled attribute to all child elements that are interactive if the project is archived.
+ *
+ * @param projectStatus - The current status of the project.
+ */
+function disableIfProjectArchived(projectStatus: ProjectStatus): Attachment {
+    return (element: Element) => {
+        const interactiveChildren = element.querySelectorAll("input,button,select,textarea");
+
+        const isProjectArchived = projectStatus === ProjectStatus.ARCHIVED;
+        if (isProjectArchived) {
+            element.setAttribute("disabled", "true");
+            interactiveChildren.forEach((child) => child.setAttribute("disabled", "true"));
+        }
+    };
+}
+
+export { clickOutsideOrEscape, disableIfProjectArchived };
