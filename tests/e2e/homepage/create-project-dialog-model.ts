@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import type { User } from "../utils/helper/mock-backend";
+import type { User } from "../utils/helper/backend-setup";
 
 export class CreateProjectDialogModel {
     readonly page: Page;

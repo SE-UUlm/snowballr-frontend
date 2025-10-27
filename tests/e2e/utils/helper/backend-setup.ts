@@ -6,8 +6,13 @@ import { CookieJar, Cookie } from "tough-cookie";
 import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
 import { Nothing } from "$api/base";
-import { MOCK_BACKEND_IMAGE } from "./mock-backend-version";
+import { BACKEND_IMAGE } from "./backend-version";
 
+/**
+ * Checks if the docker daemon is running.
+ *
+ * Docker is considered to be running if the docker version can be retrieved without any errors.
+ */
 async function isDockerInstalled(): Promise<boolean> {
     return new Promise((resolve) => {
         exec("docker version", (error) => {
@@ -31,6 +36,7 @@ export type User = {
 
 /**
  * A wrapper around SnowballRClient which retains authentication cookies.
+ *
  * SnowballRClient in node uses the default node-provided fetch which doesn't
  * keep track of cookies and is thus unable to authenticate properly.
  */
@@ -41,22 +47,22 @@ export class AuthSnowballRClient extends SnowballRClient {
     }
     private cookieJar;
 
-    constructor(mockBackend: DockerMockBackend) {
+    constructor(backend: DockerBackend) {
         const cookieJar = new CookieJar();
         const transport = new GrpcWebFetchTransport({
-            baseUrl: mockBackend.endpoint,
+            baseUrl: backend.endpoint,
             fetch: cookieFetch(crossFetch, cookieJar),
             fetchInit: { credentials: "include" },
         });
         super(transport);
 
         this.cookieJar = cookieJar;
-        this.endpoint = mockBackend.endpoint;
+        this.endpoint = backend.endpoint;
     }
 
     /**
      * Injects the authentication cookies into a playwright page. This way, the
-     * page does not need to go through the sign in process.
+     * page does not need to go through the sign-in process.
      */
     async injectCredentials(page: Page) {
         const cookies = (await this.cookieJar.getCookies(this.cookieEndpoint)).map((c) => {
@@ -101,17 +107,17 @@ export class AuthSnowballRClient extends SnowballRClient {
 }
 
 /**
- * Manages a docker-backed mock backend.
- * Use `DockerMockBackend.create()` instead of trying to construct a new
+ * Manages a docker-backed backend.
+ * Use `DockerBackend.create()` instead of trying to construct a new
  * instance using `new`.
- * DO NOT FORGET to call `dispose` after you are finished using this instance
+ * Remember to call `dispose` after you are finished using this instance
  * to stop the container and free up resources.
  *
- * The port is choosen automatically and may be accessed using the `port`
+ * The port is chosen automatically and may be accessed using the `port`
  * attribute. Use `endpoint` to connect to this instance or make use of
  * `AuthSnowballRClient` instead.
  */
-export class DockerMockBackend {
+export class DockerBackend {
     get endpoint() {
         return `http://localhost:${this.port}`;
     }
@@ -122,7 +128,7 @@ export class DockerMockBackend {
     ) {}
 
     /**
-     * Stop the docker instance of the mock backend and free up resources.
+     * Stop the docker instance of the backend and free up resources.
      */
     dispose() {
         execSync(`docker stop ${this.containerId}`);
@@ -130,10 +136,9 @@ export class DockerMockBackend {
 
     /**
      * The backend url of the frontend is difficult to adjust within a test.
-     * This function reroutes every api call of the frontend to this mock
-     * backend.
+     * This function reroutes every api call of the frontend to this backend.
      * It does so by intercepting every call to '.../snowballr.SnowballR/...'
-     * and rewriting the URL to target this mock backend instead.
+     * and rewriting the URL to target this backend instead.
      */
     async setupRouting(page: Page) {
         await page.route("**/snowballr.SnowballR/**", (route, request) => {
@@ -144,24 +149,22 @@ export class DockerMockBackend {
     }
 
     /**
-     * Create a new `DockerMockBackend` listening on a random port.
+     * Create a new `DockerBackend` listening on a random port.
      *
-     * DO NOT FORGET to call `dispose` after you are finished using this instance
+     * Remember to call `dispose` after you are finished using this instance
      * to stop the container and free up resources.
      */
     static async create() {
         // Use ephemeral syntax that doesn't provide a host port, as that is
         // also supported by podman, unlike `0`.
-        const containerId = execSync(
-            `docker run --rm --pull=never -d -p 3001 ${MOCK_BACKEND_IMAGE}`,
-        )
+        const containerId = execSync(`docker run --rm --pull=never -d -p 3001 ${BACKEND_IMAGE}`)
             .toString()
             .trim();
         const port = parseInt(
             execSync(`docker port ${containerId}`).toString().trim().split(":")[1].trim(),
         );
 
-        const backend = new DockerMockBackend(containerId, port);
+        const backend = new DockerBackend(containerId, port);
 
         while (true) {
             try {
@@ -173,7 +176,7 @@ export class DockerMockBackend {
                     break;
                 } else {
                     process.exit(
-                        "unexpected result from mock backend, 'getAuthenticationStatus' should always return OK",
+                        "unexpected result from backend, 'getAuthenticationStatus' should always return OK",
                     );
                 }
             } catch {
@@ -185,22 +188,22 @@ export class DockerMockBackend {
     }
 
     /**
-     * Create a new `DockerMockBackend` listening on a random port and a new
-     * playwright driver page targeting the newly created mock backend instance.
+     * Create a new `DockerBackend` listening on a random port and a new
+     * playwright driver page targeting the newly created backend instance.
      * This automatically sets up routing of api calls.
      *
-     * DO NOT FORGET to call `dispose` after you are finished using this instance
+     * Remember to call `dispose` after you are finished using this instance
      * to stop the container and free up resources.
      */
     static async createWithPage(
         browser: Browser,
         baseURL: string = "http://localhost:4173",
-    ): Promise<[Page, DockerMockBackend]> {
+    ): Promise<[Page, DockerBackend]> {
         const page = await browser.newPage({
             baseURL,
         });
-        const dockerMockBackend = await DockerMockBackend.create();
-        dockerMockBackend.setupRouting(page);
-        return [page, dockerMockBackend];
+        const dockerBackend = await DockerBackend.create();
+        await dockerBackend.setupRouting(page);
+        return [page, dockerBackend];
     }
 }

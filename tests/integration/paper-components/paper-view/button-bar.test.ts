@@ -6,7 +6,7 @@ import {
     createProjectPaper,
     createProjectSettings,
     loading,
-    createBUttonBarProps,
+    createButtonBarProps,
 } from "$tests/model-builder";
 import { mockUserContext } from "$tests/integration/test-helper";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
@@ -17,7 +17,7 @@ describe("ButtonBar", () => {
 
         render(ButtonBar, {
             target: document.body,
-            props: createBUttonBarProps(),
+            props: createButtonBarProps(),
         });
 
         const navigationButtons = screen.getAllByTestId("navigation-button");
@@ -38,7 +38,7 @@ describe("ButtonBar", () => {
 
         render(ButtonBar, {
             target: document.body,
-            props: createBUttonBarProps({
+            props: createButtonBarProps({
                 loadingProjectPaper: loading(createProjectPaper()),
                 loadingProject: loading(project),
             }),
@@ -66,7 +66,7 @@ describe("ButtonBar", () => {
 
         render(ButtonBar, {
             target: document.body,
-            props: createBUttonBarProps({
+            props: createButtonBarProps({
                 loadingProjectPaper: loading(createProjectPaper()),
                 loadingProject: loading(project),
             }),
