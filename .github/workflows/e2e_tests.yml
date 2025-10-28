@@ -12,16 +12,53 @@ on:
 env:
     node_version: ${{ vars.NODE_VERSION }}
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
+    tests_per_shard: ${{ vars.TESTS_PER_SHARD }}
 
 jobs:
+    determine-shards:
+        name: Determine Number of Shards
+        runs-on: ubuntu-latest
+        outputs:
+            matrix: ${{ steps.create-matrix.outputs.matrix }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+              with:
+                  submodules: "recursive"
+
+            - name: Setup
+              uses: ./.github/workflows/setup/
+              with:
+                  node_version: ${{ env.node_version }}
+
+            - name: Create Shard Matrix
+              id: create-matrix
+              run: |
+                  # Get total count of E2E tests
+                  test_count="$(npx playwright test --list --reporter list | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
+                  if ! [[ "$test_count" =~ ^[0-9]+$ ]]; then
+                    echo "Error: Failed to extract a valid test count. Got: '$test_count'"
+                    exit 1
+                  fi
+
+                  # Get number of shards (default to 1)
+                  shards=$((test_count / ${{ env.tests_per_shard }})); [ $shards -eq 0 ] && shards=1
+                  echo "Dividing $test_count tests on $shards shards"
+
+                  # Create Shard Matrix
+                  shardArray=$(seq -s, 1 $shards | sed 's/,/","/g')
+                  matrix=$(echo "{\"shard\": [\"$shardArray\"]}")
+                  echo "Matrix: $matrix"
+                  echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
     e2e-test:
         name: End-to-End Testing with Playwright
         runs-on: ubuntu-latest
         timeout-minutes: 30
+        needs: determine-shards
         strategy:
             fail-fast: false
-            matrix:
-                shard: [1, 2, 3, 4]
+            matrix: ${{ fromJSON(needs.determine-shards.outputs.matrix) }}
         steps:
             - name: Checkout code
               uses: actions/checkout@v5
