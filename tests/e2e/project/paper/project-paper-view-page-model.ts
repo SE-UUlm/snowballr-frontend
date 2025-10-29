@@ -22,8 +22,8 @@ export class ProjectPaperViewPageModel {
     readonly submittedReviewToast: Locator;
     readonly noMorePapersToReviewToast: Locator;
     readonly updatedPaperSuccessToast: Locator;
+    readonly createdPaperSuccessToast: Locator;
     readonly yearValidationErrorToast: Locator;
-    readonly updatedPaperErrorToast: Locator;
 
     readonly projectName: string;
 
@@ -50,8 +50,8 @@ export class ProjectPaperViewPageModel {
         this.submittedReviewToast = page.getByText("Successfully submitted a review.");
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
         this.updatedPaperSuccessToast = page.getByText("Successfully updated the paper.");
+        this.createdPaperSuccessToast = page.getByText("Successfully created the paper");
         this.yearValidationErrorToast = page.getByText("The year has a non-numerical value.");
-        this.updatedPaperErrorToast = page.getByText("Failed to update the paper.");
 
         this.projectName = "Project 1";
 
@@ -78,6 +78,17 @@ export class ProjectPaperViewPageModel {
     async openProjectPaperView(projectId: string, paperId: string) {
         await this.page.goto(`/project/${projectId}/paper/${paperId}`);
         await expect(this.nextPaperButton).toBeVisible();
+    }
+
+    /**
+     * Navigates to a create project paper view.
+     *
+     * @param projectId - The id of the project
+     * @param paperId - The local project paper id
+     */
+    async openCreateProjectPaperView(projectId: string, stage: string) {
+        await this.page.goto(`/project/${projectId}/paper/new?stage=${stage}`);
+        await expect(this.savePaperChangesButton).toBeVisible();
     }
 
     /**

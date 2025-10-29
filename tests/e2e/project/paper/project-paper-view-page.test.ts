@@ -261,3 +261,46 @@ test.describe("Update Paper Tests", () => {
         await expect(yearInput).toHaveValue(previousYear);
     });
 });
+
+test.describe("Create Paper Tests", () => {
+    test("When the user fills out the create paper form and saves, then a success toast is shown", async ({
+        projectPaperViewPage,
+    }) => {
+        await projectPaperViewPage.openCreateProjectPaperView(projectPaperViewPage.projectId, "1");
+
+        // Fill out form
+        const titleInput = projectPaperViewPage.getToggleableInput("title");
+        await titleInput.fill("New Paper Title");
+
+        const authorsInput = projectPaperViewPage.getToggleableInput("authors");
+        await authorsInput.fill("John Doe; Jane Smith");
+
+        const yearInput = projectPaperViewPage.getToggleableInput("year");
+        await yearInput.fill("2024");
+
+        // Save
+        await projectPaperViewPage.savePaperChangesButton.click();
+
+        // Expect success toast
+        await expect(projectPaperViewPage.createdPaperSuccessToast).toBeVisible();
+
+        // Expect that paper view shows the newly created paper
+        await expect(projectPaperViewPage.getHeading("New Paper Title")).toBeVisible();
+    });
+
+    test("When the user enters an invalid year and saves, then an error toast is shown", async ({
+        projectPaperViewPage,
+    }) => {
+        await projectPaperViewPage.openCreateProjectPaperView(projectPaperViewPage.projectId, "1");
+
+        // Set invalid year
+        const yearInput = projectPaperViewPage.getToggleableInput("year");
+        await yearInput.fill("abcd");
+
+        // Attempt to create
+        await projectPaperViewPage.savePaperChangesButton.click();
+
+        // Expect validation error toast
+        await expect(projectPaperViewPage.yearValidationErrorToast).toBeVisible();
+    });
+});
