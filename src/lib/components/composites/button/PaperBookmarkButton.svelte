@@ -121,6 +121,7 @@ Usage:
 <Tooltip
     class={cn("text-primary bg-transparent [&_svg]:size-6", className)}
     aria-label={tooltipText}
+    data-testid="paper-bookmark-btn"
     disabled={isUpdatingBookmarkStatus}
     onclick={toggleBookmarkStatus}
     onmouseenter={onMouseEnter}

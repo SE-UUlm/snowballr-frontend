@@ -14,4 +14,14 @@ describe("PaperView", () => {
         const reviewInfoTab = screen.queryByText("Review Information");
         expect(reviewInfoTab).toBeNull();
     });
+
+    test("When the paper view is opened in the creation mode, then the paper bookmark button is not shown", () => {
+        render(PaperView, {
+            props: createPaperViewProps({ isInCreationMode: true }),
+            context: mockUserContext,
+        });
+
+        const bookmarkButton = screen.queryByTestId("paper-bookmark-btn");
+        expect(bookmarkButton).toBeNull();
+    });
 });
