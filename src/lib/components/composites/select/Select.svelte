@@ -11,9 +11,17 @@
         options: SelectOption[];
         categoryLabel?: string;
         selectedValues?: string[];
+        disabled?: boolean;
+        noSelectIsAllSelect?: boolean;
     }
 
-    let { options, categoryLabel = "categories", selectedValues = $bindable([]) }: Props = $props();
+    let {
+        options,
+        categoryLabel = "categories",
+        selectedValues = $bindable([]),
+        disabled = false,
+        noSelectIsAllSelect = true,
+    }: Props = $props();
 
     const ALL_OPTIONS = "all-options";
     let doSelectAllOptions = $state(false);
@@ -35,7 +43,7 @@
     function getSelectLabel(selectedValues: string[] | undefined): string {
         if (
             !selectedValues ||
-            selectedValues.length === 0 ||
+            (selectedValues.length === 0 && noSelectIsAllSelect) ||
             selectedValues.length === options.length
         ) {
             return `All ${categoryLabel} (${options.length})`;
@@ -107,7 +115,12 @@ Usage:
     <Select categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
 ```
 -->
-<Select.Root onValueChange={selectOrUnselectAllOptions} type="multiple" bind:value={selectedValues}>
+<Select.Root
+    {disabled}
+    onValueChange={selectOrUnselectAllOptions}
+    type="multiple"
+    bind:value={selectedValues}
+>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
     <Select.Content class="max-h-[300px]">
         {#if options.length === 0}

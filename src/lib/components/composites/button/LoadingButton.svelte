@@ -79,7 +79,7 @@ Usage 2:
         label="Process data"
         loadingLabel="Processing data"
         onclick={(args) => loadingWrapper(loading, foo, args)} // wrap `foo` in the wrapper function
-        bind:loading={loading.value}
+        loading={loading.value}
     />
 ```
 -->
