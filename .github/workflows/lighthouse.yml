@@ -37,7 +37,7 @@ jobs:
               run: npm run lighthouse:all -- --params="projectId=11,paperId=11-0"
 
             - name: Archive coverage report
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               with:
                   name: lighthouse-report
                   path: lighthouse-reports
