@@ -6,6 +6,7 @@ on:
             - main
             - develop
     pull_request:
+    merge_group:
 
 env:
     node_version: ${{ vars.NODE_VERSION }}
