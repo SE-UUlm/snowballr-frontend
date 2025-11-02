@@ -51,7 +51,7 @@ export class ProjectPaperViewPageModel {
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
         this.updatedPaperSuccessToast = page.getByText("Successfully updated the paper.");
         this.createdPaperSuccessToast = page.getByText("Successfully created the paper");
-        this.yearValidationErrorToast = page.getByText("The year has a non-numerical value.");
+        this.yearValidationErrorToast = page.getByText("The year has to be a numerical value.");
 
         this.projectName = "Project 1";
 
