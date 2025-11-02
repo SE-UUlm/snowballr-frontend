@@ -72,7 +72,7 @@ Usage:
                     No papers in this stage match your search or filter.
                 </span>
             {:else if totalPaperCount === 0}
-                <span class="text-hint italic">No papers currently in this stage.</span>
+                <span class="text-hint italic">No papers are currently in this stage.</span>
             {/if}
 
             <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>

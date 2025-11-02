@@ -63,8 +63,8 @@
 
     async function savePaperModifications() {
         const year = Number(paper.year);
-        if (!Number.isInteger(year)) {
-            toast.error("The year has a non-numerical value.");
+        if (!Number.isInteger(year) || paper.year.trim().length === 0) {
+            toast.error("The year has to be a numerical value.");
             return;
         }
 
@@ -126,7 +126,7 @@
             .createPaper(paperObject)
             .response.then(async (createdPaper) => {
                 originalPaper = stringifyPaper(createdPaper);
-                paper = stringifyPaper(createdPaper);
+                paper = originalPaper;
 
                 return createdPaper;
             });
@@ -220,10 +220,15 @@ Usage:
                 {/if}
                 {#if !isInCreationMode}
                     <Pencil
-                        class="select-none hover:cursor-pointer"
+                        class={cn(
+                            "select-none",
+                            isPaperModified ? "opacity-30" : "hover:cursor-pointer",
+                        )}
                         aria-label="Toggle Edit Paper Mode"
                         data-testid="toggle-edit-paper-mode-btn"
-                        onclick={() => (isInEditMode = !isInEditMode)}
+                        onclick={() => {
+                            if (!isPaperModified) isInEditMode = !isInEditMode;
+                        }}
                         size={24}
                     />
                 {/if}

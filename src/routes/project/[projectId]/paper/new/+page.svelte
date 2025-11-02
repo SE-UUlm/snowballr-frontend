@@ -6,7 +6,7 @@
     const { projectId, loadingProject } = data;
 
     const paper: Paper = Paper.create({
-        year: new Date().getFullYear(),
+        year: "" as unknown as number,
     });
 </script>
 

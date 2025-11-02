@@ -81,21 +81,14 @@ export class ProjectPaperViewPageModel {
     }
 
     /**
-     * Navigates to a create project paper view.
+     * Navigates to a create project paper view of a specific stage.
      *
      * @param projectId - The id of the project
-     * @param paperId - The local project paper id
+     * @param stage - The stage of the project paper to be created
      */
     async openCreateProjectPaperView(projectId: string, stage: string) {
         await this.page.goto(`/project/${projectId}/paper/new?stage=${stage}`);
         await expect(this.savePaperChangesButton).toBeVisible();
-    }
-
-    /**
-     * Navigates to the first referenced paper and ensures the page is loaded.
-     */
-    async navigateToReferencedPaper() {
-        await this.referenceListEntry0.click();
     }
 
     /**
