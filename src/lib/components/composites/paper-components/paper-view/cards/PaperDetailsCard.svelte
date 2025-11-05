@@ -43,7 +43,7 @@
                 if (currentPaperPromise !== loadingPaper) return;
 
                 originalPaper = stringifyPaper(resolvedPaper);
-                paper = stringifyPaper(resolvedPaper);
+                paper = originalPaper;
             })
             .catch(() => {});
     });
@@ -104,7 +104,7 @@
             })
             .response.then((updatedPaper) => {
                 originalPaper = stringifyPaper(updatedPaper);
-                paper = stringifyPaper(updatedPaper);
+                paper = originalPaper;
             });
 
         toast.promise(updateCall, {
