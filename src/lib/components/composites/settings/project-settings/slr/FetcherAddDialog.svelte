@@ -72,8 +72,9 @@
 </script>
 
 <AlertDialog
-    actionButtonText="Add"
-    actionProps={{ onclick: addFetcher }}
+    actionButtonLoadingText={pluralize(fetchers, "Adding Fetcher", "Adding Fetchers")}
+    actionButtonText={pluralize(fetchers, "Add Fetcher", "Add Fetchers")}
+    actionProps={{ onclick: addFetcher, disabled: fetchers.length === 0, class: "w-38" }}
     cancelButtonText="Cancel"
     cancelProps={{ disabled: loading }}
     title="Add a Fetcher"

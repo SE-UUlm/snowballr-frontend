@@ -34,7 +34,7 @@ describe("Fetcher Options Dialog", () => {
 
         await waitForComponentLoading();
         expect(screen.getByText("FOO")).toBeVisible();
-        expect(screen.getByRole("button", { name: "Save" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Save Options" })).toBeVisible();
         expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
     });
 
@@ -75,7 +75,7 @@ describe("Fetcher Options Dialog", () => {
         await waitForComponentLoading();
         await userEvent.type(screen.getByPlaceholderText("BAR"), "TEST");
         expect(screen.getByRole("checkbox")).toBeChecked();
-        await userEvent.click(screen.getByRole("button", { name: "Save" }));
+        await userEvent.click(screen.getByRole("button", { name: "Save Options" }));
         await waitFor(() => expect(newProject).toBeDefined());
 
         const fetcherOptions = Object.entries(

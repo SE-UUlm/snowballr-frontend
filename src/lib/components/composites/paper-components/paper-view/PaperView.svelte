@@ -31,6 +31,7 @@
         backRef: string;
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
+        isInCreationMode?: boolean;
         bottomBar?: Snippet;
     };
 
@@ -43,6 +44,7 @@
         backRef,
         allowEditModeToggle = false,
         startInEditMode = false,
+        isInCreationMode = false,
         loadingPaper: loadingPaperWrapper,
         reviewers,
         criteriaWithReviews,
@@ -105,11 +107,18 @@ Usage:
 -->
 <div class="flex h-fit w-full flex-row items-center justify-between gap-4">
     <PaperNavigationBar {backRef} {loadingPaper} loadingPaperId={loadingPaperIdForNavigationBar} />
-    <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {loadingPaperId} />
+    {#if !isInCreationMode}
+        <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {loadingPaperId} />
+    {/if}
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
     <div class="flex h-full w-full flex-row gap-10">
-        <PaperDetailsCard {allowEditModeToggle} {loadingPaper} {startInEditMode} />
+        <PaperDetailsCard
+            {allowEditModeToggle}
+            {isInCreationMode}
+            {loadingPaper}
+            {startInEditMode}
+        />
         <PaperResearchContextCard
             {backwardReferencedPapers}
             {forwardReferencedPapers}

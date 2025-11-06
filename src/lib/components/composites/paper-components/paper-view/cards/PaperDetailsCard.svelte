@@ -9,19 +9,22 @@
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
     import type { StringifiedPaper } from "$lib/model/general";
-    import { stringifyPaper } from "$lib/utils/model-helper";
+    import { asPaper, isProjectPaper, stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import { goto } from "$app/navigation";
+    import type { Project_Paper } from "$lib/model/api/project";
 
     interface Props {
         loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
+        isInCreationMode: boolean;
     }
 
-    let { loadingPaper, allowEditModeToggle, startInEditMode }: Props = $props();
+    let { loadingPaper, allowEditModeToggle, startInEditMode, isInCreationMode }: Props = $props();
 
     let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
@@ -40,13 +43,13 @@
                 if (currentPaperPromise !== loadingPaper) return;
 
                 originalPaper = stringifyPaper(resolvedPaper);
-                paper = stringifyPaper(resolvedPaper);
+                paper = originalPaper;
             })
             .catch(() => {});
     });
 
     $effect(() => {
-        if (paper.id === "" || originalPaper === undefined) {
+        if ((paper.id === "" && !isInCreationMode) || originalPaper === undefined) {
             return;
         }
 
@@ -58,10 +61,10 @@
         { value: "2", label: "Document" },
     ];
 
-    async function updatePaper() {
+    async function savePaperModifications() {
         const year = Number(paper.year);
-        if (!Number.isInteger(year)) {
-            toast.error("The year has a non-numerical value.");
+        if (!Number.isInteger(year) || paper.year.trim().length === 0) {
+            toast.error("The year has to be a numerical value.");
             return;
         }
 
@@ -81,6 +84,19 @@
             backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
+        let promise;
+        if (isInCreationMode) {
+            promise = createPaper(Paper.create(paperData));
+        } else {
+            promise = updatePaper(paperData);
+        }
+
+        // Add noop-catch so that promise rejection is not uncaught in tests
+        // noop-catch cannot be added before toast.promise because error case wouldn't be handled
+        await promise.catch(() => {}).finally(() => (isMakingApiCall = false));
+    }
+
+    async function updatePaper(paperData: Partial<Paper>) {
         const updateCall = backendService
             .updatePaper({
                 paper: Paper.create(paperData),
@@ -88,7 +104,7 @@
             })
             .response.then((updatedPaper) => {
                 originalPaper = stringifyPaper(updatedPaper);
-                paper = stringifyPaper(updatedPaper);
+                paper = originalPaper;
             });
 
         toast.promise(updateCall, {
@@ -97,13 +113,53 @@
             error: "Failed to update the paper.",
         });
 
-        // Add noop-catch so that promise rejection is not uncaught in tests
-        // noop-catch cannot be added before toast.promise because error case wouldn't be handled
-        await updateCall
-            .catch(() => {})
-            .finally(() => {
-                isMakingApiCall = false;
+        return updateCall;
+    }
+
+    async function createPaper(paperObject: Paper) {
+        const projectIdRegex = /\/project\/(.+?)\/.*/;
+        const matches = projectIdRegex.exec(window.location.pathname);
+        const projectId = matches !== null ? matches[1] : undefined;
+        const stage = new URLSearchParams(window.location.search).get("stage");
+
+        let promise: Promise<Paper | Project_Paper> = backendService
+            .createPaper(paperObject)
+            .response.then(async (createdPaper) => {
+                originalPaper = stringifyPaper(createdPaper);
+                paper = originalPaper;
+
+                return createdPaper;
             });
+
+        toast.promise(promise, {
+            loading: "Creating paper...",
+            success: (paper) => `Successfully created the paper '${asPaper(paper).title}'.`,
+            error: "Failed to create the paper.",
+        });
+
+        if (projectId) {
+            promise = promise.then(async (createdPaper) => {
+                return await backendService.addPaperToProject({
+                    paperId: createdPaper.id,
+                    projectId: projectId,
+                    stage: BigInt(stage ?? ""),
+                }).response;
+            });
+
+            toast.promise(promise, {
+                loading: "Adding paper to project...",
+                success: () => "Successfully added the paper to the project.",
+                error: "Failed to add the paper to the project.",
+            });
+        }
+
+        return promise.then(async (paper) => {
+            if (isProjectPaper(paper)) {
+                await goto(`/project/${projectId}/paper/${paper.localId}`);
+            } else {
+                await goto(`/paper/${paper.id}`);
+            }
+        });
     }
 
     beforeNavigate(({ cancel }) => {
@@ -156,19 +212,26 @@ Usage:
                             data-testid="save-paper-changes-btn"
                             onclick={async () => {
                                 if (!isPaperModified) return;
-                                await updatePaper();
+                                await savePaperModifications();
                             }}
                             size={24}
                         />
                     {/if}
                 {/if}
-                <Pencil
-                    class="select-none hover:cursor-pointer"
-                    aria-label="Toggle Edit Paper Mode"
-                    data-testid="toggle-edit-paper-mode-btn"
-                    onclick={() => (isInEditMode = !isInEditMode)}
-                    size={24}
-                />
+                {#if !isInCreationMode}
+                    <Pencil
+                        class={cn(
+                            "select-none",
+                            isPaperModified ? "opacity-30" : "hover:cursor-pointer",
+                        )}
+                        aria-label="Toggle Edit Paper Mode"
+                        data-testid="toggle-edit-paper-mode-btn"
+                        onclick={() => {
+                            if (!isPaperModified) isInEditMode = !isInEditMode;
+                        }}
+                        size={24}
+                    />
+                {/if}
             </div>
         {/if}
     {/snippet}

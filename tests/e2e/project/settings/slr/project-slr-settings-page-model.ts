@@ -73,13 +73,13 @@ export class ProjectSLRSettingsPageModel {
     }
 
     async addFetcher(fetcherName: string) {
-        await this.page.getByText("Add Fetcher").click();
+        await this.page.getByText("Add Fetcher(s)").click();
         await this.page.getByRole("button", { name: "Select a fetcher" }).click();
         await this.page.getByRole("option", { name: fetcherName, exact: true }).click();
         await this.page.getByRole("button", { name: "1 fetcher selected" }).click();
         await expect(
             this.page.getByRole("option", { name: fetcherName, exact: true }),
         ).not.toBeVisible();
-        await this.page.getByRole("button", { name: "Add", exact: true }).click();
+        await this.page.getByRole("button", { name: "Add Fetcher", exact: true }).click();
     }
 }

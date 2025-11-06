@@ -22,8 +22,8 @@ export class ProjectPaperViewPageModel {
     readonly submittedReviewToast: Locator;
     readonly noMorePapersToReviewToast: Locator;
     readonly updatedPaperSuccessToast: Locator;
+    readonly createdPaperSuccessToast: Locator;
     readonly yearValidationErrorToast: Locator;
-    readonly updatedPaperErrorToast: Locator;
 
     readonly projectName: string;
 
@@ -50,8 +50,8 @@ export class ProjectPaperViewPageModel {
         this.submittedReviewToast = page.getByText("Successfully submitted a review.");
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
         this.updatedPaperSuccessToast = page.getByText("Successfully updated the paper.");
-        this.yearValidationErrorToast = page.getByText("The year has a non-numerical value.");
-        this.updatedPaperErrorToast = page.getByText("Failed to update the paper.");
+        this.createdPaperSuccessToast = page.getByText("Successfully created the paper");
+        this.yearValidationErrorToast = page.getByText("The year has to be a numerical value.");
 
         this.projectName = "Project 1";
 
@@ -81,10 +81,14 @@ export class ProjectPaperViewPageModel {
     }
 
     /**
-     * Navigates to the first referenced paper and ensures the page is loaded.
+     * Navigates to a create project paper view of a specific stage.
+     *
+     * @param projectId - The id of the project
+     * @param stage - The stage of the project paper to be created
      */
-    async navigateToReferencedPaper() {
-        await this.referenceListEntry0.click();
+    async openCreateProjectPaperView(projectId: string, stage: string) {
+        await this.page.goto(`/project/${projectId}/paper/new?stage=${stage}`);
+        await expect(this.savePaperChangesButton).toBeVisible();
     }
 
     /**

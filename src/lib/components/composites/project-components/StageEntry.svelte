@@ -72,15 +72,10 @@ Usage:
                     No papers in this stage match your search or filter.
                 </span>
             {:else if totalPaperCount === 0}
-                <span class="text-hint italic">No papers currently in this stage.</span>
+                <span class="text-hint italic">No papers are currently in this stage.</span>
             {/if}
 
-            <Button
-                onclick={() => {
-                    // TODO: This is done in https://github.com/SE-UUlm/snowballr-frontend/issues/35
-                    console.log(`Add paper to stage ${stage.stageIndex}`);
-                }}
-            >
+            <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
                 <CirclePlus strokeWidth="2.5" />
                 Add Paper
             </Button>
