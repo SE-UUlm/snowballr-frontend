@@ -5,7 +5,6 @@
     import type { Project, Project_Paper } from "$lib/model/api/project";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { toast } from "svelte-sonner";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
@@ -45,13 +44,8 @@
             .response.then((nextPaper) => {
                 nextProjectPaper = nextPaper;
             })
-            .catch((error) => {
+            .catch(() => {
                 nextProjectPaper = undefined;
-                if (error.message !== "No%20next%20paper%20available.") {
-                    toast.error("Error while loading the next paper");
-                    console.error("Error while loading the next paper:" + error);
-                    return;
-                }
             });
     }
 
@@ -61,12 +55,8 @@
             .response.then((nextPaper) => {
                 nextProjectPaper = nextPaper;
             })
-            .catch((error) => {
+            .catch(() => {
                 nextProjectPaper = undefined;
-                if (error.message !== "No%20next%20paper%20available.") {
-                    toast.error("Error while loading the next paper");
-                    console.error("Error while loading the next paper:" + error);
-                }
             });
     }
 
@@ -76,12 +66,8 @@
             .response.then((previousPaper) => {
                 previousProjectPaper = previousPaper;
             })
-            .catch((error) => {
+            .catch(() => {
                 previousProjectPaper = undefined;
-                if (error.message !== "No%20previous%20paper%20available.") {
-                    toast.error("Error while loading the next paper");
-                    console.error("Error while loading the next paper:" + error);
-                }
             });
     }
 
@@ -143,14 +129,14 @@ such paper could be found.
 
 Usage:
 ```svelte
-<PaperNavigationButton
-                direction="right"
-                {loadingProject}
-                {loadingProjectPaper}
-                bind:loading
-                bind:paperQueue
-                bind:nextProjectPaper
-            />
+    <PaperNavigationButton
+        direction="right"
+        {loadingProject}
+        {loadingProjectPaper}
+        bind:loading
+        bind:paperQueue
+        bind:nextProjectPaper
+    />
 ```
 -->
 <Tooltip
