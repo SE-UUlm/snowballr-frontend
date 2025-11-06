@@ -46,7 +46,7 @@ Usage:
 {:else}
     <div
         class={cn(
-            "bg-background text-default flex h-10 w-full items-center overflow-hidden px-2",
+            "bg-background text-default flex h-10 w-full items-center overflow-hidden px-[0.475rem]",
             !value ? "text-slate-500" : "",
             className,
         )}
