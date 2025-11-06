@@ -34,11 +34,16 @@ describe("PaperDetailsCard", () => {
 
         // paper details are in read-only mode
         const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
-        expect(toggleableInputs).toHaveLength(5);
+        expect(toggleableInputs).toHaveLength(4);
         for (const input of toggleableInputs) {
             expect(input).toBeInTheDocument();
-            expect(input).toHaveAttribute("readonly");
+            expect(input.tagName).toBe("DIV");
         }
+        const toggleableTextareas = screen.queryAllByTestId("toggleable-textarea", {
+            exact: false,
+        });
+        expect(toggleableTextareas).toHaveLength(1);
+        expect(toggleableTextareas[0]).toBeInTheDocument();
 
         // additional details are not shown by default
         const showMoreButton = screen.queryByTestId("toggle-additional-infos-btn");
@@ -110,11 +115,16 @@ describe("PaperDetailsCard", () => {
 
         await waitFor(() => {
             const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
-            expect(toggleableInputs).toHaveLength(5);
+            expect(toggleableInputs).toHaveLength(4);
             for (const input of toggleableInputs) {
                 expect(input).toBeInTheDocument();
-                expect(input).not.toHaveAttribute("readonly");
+                expect(input.tagName).toBe("INPUT");
             }
+            const toggleableTextareas = screen.queryAllByTestId("toggleable-textarea", {
+                exact: false,
+            });
+            expect(toggleableTextareas).toHaveLength(1);
+            expect(toggleableTextareas[0]).toBeInTheDocument();
         });
 
         savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
@@ -124,11 +134,16 @@ describe("PaperDetailsCard", () => {
 
         await waitFor(() => {
             const toggleableInputs = screen.queryAllByTestId("toggleable-input", { exact: false });
-            expect(toggleableInputs).toHaveLength(5);
+            expect(toggleableInputs).toHaveLength(4);
             for (const input of toggleableInputs) {
                 expect(input).toBeInTheDocument();
-                expect(input).toHaveAttribute("readonly");
+                expect(input.tagName).toBe("DIV");
             }
+            const toggleableTextareas = screen.queryAllByTestId("toggleable-textarea", {
+                exact: false,
+            });
+            expect(toggleableTextareas).toHaveLength(1);
+            expect(toggleableTextareas[0]).toBeInTheDocument();
         });
 
         savePaperChangesButtons = screen.queryAllByTestId("save-paper-changes-btn");
@@ -207,7 +222,7 @@ describe("PaperDetailsCard", () => {
             expect(titleInput).toBeInTheDocument();
             await user.type(titleInput, " - Changed");
 
-            const abstractInput = screen.getByTestId("toggleable-input-abstract");
+            const abstractInput = screen.getByTestId("toggleable-textarea-abstract");
             expect(abstractInput).toBeInTheDocument();
             await user.type(abstractInput, " - Changed");
 

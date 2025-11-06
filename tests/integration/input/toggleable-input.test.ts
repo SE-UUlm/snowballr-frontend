@@ -31,7 +31,7 @@ describe("ToggleableInput", () => {
         expect(input).toHaveValue("");
     });
 
-    test("When isEditable is set to false, then input border is not shown and content cannot be edited", () => {
+    test("When isEditable is set to false, then no input border is shown", () => {
         render(ToggleableInput, {
             target: document.body,
             props: {
@@ -41,15 +41,13 @@ describe("ToggleableInput", () => {
             },
         });
 
-        const input = screen.getByRole("textbox");
+        const input = screen.getByTestId("toggleable-input-test-input");
         expect(input).toBeInTheDocument();
 
-        expect(input.classList.contains("border")).toBe(true);
+        expect(input.classList.contains("border")).toBe(false);
         expect(input.classList.contains("border-input")).toBe(false);
         expect(input.classList.contains("rounded-md")).toBe(false);
-        expect(input.classList.contains("border-transparent")).toBe(true);
-
-        expect(input).toHaveAttribute("readonly");
+        expect(input.tagName).toBe("DIV");
     });
 
     test("When input is changed, then onInputChange is called", async () => {
