@@ -139,4 +139,22 @@ test.describe("Reading List Tests", () => {
         await readingListPage.expectNumberOfEntries(NUM_PAPERS_DEFAULT + 1);
         await expect(readingListPage.getPaperByTitle(EXTRA_PAPER_TITLE)).toBeVisible();
     });
+
+    test("When the user searches in the reading list, then the searched query is correctly highlighted.", async ({
+        readingListPage,
+    }) => {
+        await readingListPage.expectNumberOfEntries(NUM_PAPERS_DEFAULT);
+
+        // Search for the common prefix
+        await readingListPage.searchBarInput.fill(PREDICTABLE_PAPER_TITLE_PREFIX);
+        await readingListPage.expectNumberOfEntries(NUM_PAPERS_DEFAULT);
+        const highlightedTexts = await readingListPage.getHighlightedTexts();
+        PREDICTABLE_PAPER_TITLE_PREFIX.split(" ").forEach((partialName) => {
+            expect(highlightedTexts).toContain(partialName);
+        });
+
+        // Clear search
+        await readingListPage.searchBarInput.press("Escape");
+        await readingListPage.expectNumberOfEntries(NUM_PAPERS_DEFAULT);
+    });
 });
