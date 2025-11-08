@@ -2,7 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Blob, Nothing } from "$lib/model/api/base";
+    import { Nothing } from "$lib/model/api/base";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import Select from "$lib/components/composites/select/Select.svelte";
     import { ExportRequest } from "$lib/model/api/export";
@@ -32,19 +32,17 @@
     async function exportProject() {
         loadingExport.value = false;
 
-        const promises: Promise<Blob>[] = [];
-        for (const format of selectedFormats) {
+        const promises = selectedFormats.map((format) => {
             const request: ExportRequest = {
                 id: projectId,
                 format,
             };
-            const promise = backendService.exportProject(request).response;
-            promises.push(promise);
-        }
+            return backendService.exportProject(request).response;
+        });
 
-        await Promise.all(promises).then((blobs) => {
-            for (const blob of blobs) {
-                downloadBlob(blob, "foo.json");
+        await Promise.all(promises).then((exportResponses) => {
+            for (const response of exportResponses) {
+                downloadBlob(response.data, response.fileName);
             }
         });
     }

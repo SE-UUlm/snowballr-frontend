@@ -1,13 +1,11 @@
-import { Blob } from "$lib/model/api/base";
-
 /**
- * Offers a download of the given blob with the specified filename.
+ * Offers a download of the given data with the specified filename.
  *
- * @param blob - the blob to download
+ * @param byteArray - the data to be downloaded
  * @param filename - the desired filename for the downloaded file
  */
-export function downloadBlob(blob: Blob, filename: string): void {
-    const normalizedData = new Uint8Array(blob.data);
+export function downloadBlob(byteArray: Uint8Array<ArrayBufferLike>, filename: string): void {
+    const normalizedData = new Uint8Array(byteArray);
 
     // create a browser Blob and object URL
     const file = new window.Blob([normalizedData], {
