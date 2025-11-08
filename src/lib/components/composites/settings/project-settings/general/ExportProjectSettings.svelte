@@ -2,11 +2,12 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Blob } from "$lib/model/api/base";
+    import { Blob, Nothing } from "$lib/model/api/base";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import Select from "$lib/components/composites/select/Select.svelte";
-    import { AvailableExportFormatsReply, ExportRequest } from "$lib/model/api/export";
+    import { ExportRequest } from "$lib/model/api/export";
     import { loadingWrapper, pluralize } from "$lib/utils/common-helper";
+    import { downloadBlob } from "$lib/utils/download-file";
 
     interface Props {
         projectId: string;
@@ -19,17 +20,9 @@
     let selectedFormats = $state<string[]>([]);
     const loadingExport = $state({ value: false });
 
-    const formatsPromise = new Promise<AvailableExportFormatsReply>((resolve) => {
-        setTimeout(() => {
-            resolve(
-                AvailableExportFormatsReply.create({ formats: ["JSON", "XML", "CSV", "XLSX"] }),
-            );
-        }, 10000);
-    })
-
-        /*const formatsPromise = backendService
+    const formatsPromise = backendService
         .getAvailableExportFormats(Nothing)
-        .response*/ .then((availableFormats) => {
+        .response.then((availableFormats) => {
             formats = availableFormats.formats;
         })
         .finally(() => {
@@ -50,7 +43,9 @@
         }
 
         await Promise.all(promises).then((blobs) => {
-            console.log("Look at my blobs", blobs);
+            for (const blob of blobs) {
+                downloadBlob(blob, "foo.json");
+            }
         });
     }
 </script>
