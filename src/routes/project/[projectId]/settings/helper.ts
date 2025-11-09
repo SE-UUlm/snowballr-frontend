@@ -1,6 +1,8 @@
 import { backendService } from "$lib/grpc-api";
 import { MemberRole, type Project_Member } from "$lib/model/api/project";
 import type { User } from "$lib/model/api/user";
+import { getContext } from "svelte";
+import { type UserContext, UserContextKey } from "$lib/current-user/userContext";
 import { resource } from "$lib/resource.svelte";
 
 export type MemberInfo = Project_Member & {
@@ -43,22 +45,18 @@ function compareNames(a: MemberInfo, b: MemberInfo): number {
  * Checks if the current user is an admin of the project.
  *
  * @param loadingMembers - Promise that resolves to the list of members
- * @param user - The user to check if they are an admin
  * @returns An object with a boolean value indicating if the user is an admin of the project
  */
-export function isCurrentUserProjectAdmin(
-    loadingMembers: Promise<MemberInfo[]>,
-    user: User,
-): { value: boolean | undefined } {
-    return resource<boolean, boolean | undefined>(
-        loadingMembers.then(
-            (members) =>
-                members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,
-        ),
-        {
-            initialValue: undefined,
-            onErrorValue: false,
-            resourceName: "isCurrentUserAdmin",
-        },
+export function isCurrentUserProjectAdmin(loadingMembers: Promise<MemberInfo[]>) {
+    const user = getContext<UserContext>(UserContextKey)();
+    const loadingIsCurrentMemberAdmin = loadingMembers.then(
+        (members) =>
+            members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,
     );
+
+    return resource(loadingIsCurrentMemberAdmin, {
+        initialValue: undefined,
+        onErrorValue: false,
+        resourceName: "isCurrentUserAdmin",
+    });
 }

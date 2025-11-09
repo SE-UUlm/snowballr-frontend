@@ -1,16 +1,12 @@
 <script lang="ts">
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
-    import { getContext } from "svelte";
-    import { isCurrentUserProjectAdmin } from "../helper.js";
+    import { isCurrentUserProjectAdmin } from "../helper";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
-    const user = $derived(getContext<UserContext>(UserContextKey)());
-
-    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
+    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers));
 </script>
 
 <svelte:head>
@@ -23,14 +19,12 @@
     {/await}
 </svelte:head>
 
-{#if isCurrentUserAdmin.value !== undefined}
-    <ProjectSettingsLayout
-        isCurrentUserAdmin={isCurrentUserAdmin.value}
-        {projectId}
-        selectedTab="review"
-    >
-        <div class="flex flex-col gap-9 overflow-auto p-2.5">
-            <KeywordSettings {projectId} />
-        </div>
-    </ProjectSettingsLayout>
-{/if}
+<ProjectSettingsLayout
+    isCurrentUserAdmin={isCurrentUserAdmin.value ?? false}
+    {projectId}
+    selectedTab="review"
+>
+    <div class="flex flex-col gap-9 overflow-auto p-2.5">
+        <KeywordSettings {projectId} />
+    </div>
+</ProjectSettingsLayout>
