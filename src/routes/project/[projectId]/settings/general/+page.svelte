@@ -2,6 +2,7 @@
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
     import { isCurrentUserProjectAdmin } from "../helper";
+    import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -26,5 +27,6 @@
 >
     <div class="flex flex-col gap-9 overflow-auto p-2.5">
         <ProjectNameSettings {loadingProject} {projectId} />
+        <ArchiveProjectSettings {loadingProject} {projectId} />
     </div>
 </ProjectSettingsLayout>

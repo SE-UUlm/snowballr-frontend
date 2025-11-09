@@ -29,10 +29,15 @@ function camelToSnakeCase(s: string): string {
  *
  * @param dataObj - The data object for which the field mask needs to be generated.
  * @param prefix - An optional string to prepend to each field path. Defaults to "".
+ * @param excludeFields - An optional string list containing field names to exclude from the mask. Defaults to a list containing "id".
  * @returns A FieldMask object containing the path array that lists all the fields in snake_case format.
  */
-export function buildFieldMask<T>(dataObj: T, prefix: string = ""): FieldMask {
-    const fields = generateFieldMask(dataObj);
+export function buildFieldMask<T>(
+    dataObj: T,
+    prefix: string = "",
+    excludeFields = ["id"],
+): FieldMask {
+    const fields = generateFieldMask(dataObj).filter((field) => !excludeFields.includes(field));
 
     const paths = fields.map((field) => {
         // filter(Boolean) is needed to remove empty strings after the split, e.g. "foo.bar."
