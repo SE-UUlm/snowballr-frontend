@@ -10,8 +10,7 @@
     import { setSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte.js";
     import { toast } from "svelte-sonner";
-    import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
+    import { getUserContext } from "$lib/custom-context/user-context";
 
     export type ProjectPaperViewProps = {
         projectId: string;
@@ -29,7 +28,7 @@
         loadingProject,
     }: ProjectPaperViewProps = $props();
 
-    const user = getContext<UserContext>(UserContextKey)();
+    const user = $derived(getUserContext());
     let userReview: Review | undefined = $state(undefined);
 
     /**

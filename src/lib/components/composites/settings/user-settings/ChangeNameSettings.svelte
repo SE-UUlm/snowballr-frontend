@@ -5,12 +5,11 @@
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
-    import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import { getUserContext } from "$lib/custom-context/user-context";
     import {
         createActionError,
         createActionWarning,
@@ -18,7 +17,7 @@
     } from "$lib/model/action-error";
     import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
 
-    const user = $derived(getContext<UserContext>(UserContextKey)());
+    const user = $derived(getUserContext());
 
     let firstNameInput: Input;
     let lastNameInput: Input;

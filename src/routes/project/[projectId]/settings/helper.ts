@@ -1,9 +1,8 @@
 import { backendService } from "$lib/grpc-api";
 import { MemberRole, type Project_Member } from "$lib/model/api/project";
 import type { User } from "$lib/model/api/user";
-import { getContext } from "svelte";
-import { type UserContext, UserContextKey } from "$lib/custom-context/user-context";
 import { resource } from "$lib/resource.svelte";
+import { getUserContext } from "$lib/custom-context/user-context";
 
 export type MemberInfo = Project_Member & {
     isInvitationPending: boolean;
@@ -48,7 +47,7 @@ function compareNames(a: MemberInfo, b: MemberInfo): number {
  * @returns An object with a boolean value indicating if the user is an admin of the project
  */
 export function isCurrentUserProjectAdmin(loadingMembers: Promise<MemberInfo[]>) {
-    const user = getContext<UserContext>(UserContextKey)();
+    const user = getUserContext();
     const loadingIsCurrentMemberAdmin = loadingMembers.then(
         (members) =>
             members.find((member) => member.user!.id === user.id)?.role === MemberRole.ADMIN,

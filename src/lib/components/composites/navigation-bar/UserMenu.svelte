@@ -5,10 +5,9 @@
     import LogOut from "lucide-svelte/icons/log-out";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
-    import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
+    import { getUserContext } from "$lib/custom-context/user-context";
 
-    const user = $derived(getContext<UserContext>(UserContextKey)());
+    const user = $derived(getUserContext());
 
     const menuItems: UserMenuTab[] = [
         {

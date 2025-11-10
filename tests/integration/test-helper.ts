@@ -3,7 +3,7 @@ import { expect } from "vitest";
 import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "$lib/custom-context/was-paper-reviewed-context";
 import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/custom-context/selected-review-criteria-context";
 import type { User } from "$lib/model/api/user";
-import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
+import { USER_KEY, type UserContext } from "$lib/custom-context/user-context";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
 
@@ -41,7 +41,7 @@ export const mockSelectedCriteriaContextWithInitialData = (
 
 let MOCK_USER_INSTANCE: User = createUser(Users.johnDoe);
 export const mockUserContext: Map<symbol, UserContext> = new Map([
-    [UserContextKey, () => MOCK_USER_INSTANCE],
+    [USER_KEY, () => MOCK_USER_INSTANCE],
 ]);
 export function setContextUser(userData: Partial<User>) {
     MOCK_USER_INSTANCE = createUser(userData);
