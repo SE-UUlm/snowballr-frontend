@@ -5,6 +5,7 @@ import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 
 describe("Maybe As Decision Project Setting", () => {
     const projectData = createProject();
@@ -32,6 +33,7 @@ describe("Maybe As Decision Project Setting", () => {
                     projectId: projectData.id,
                     slrSettingsLocked: false,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             const maybeSwitch = screen.getByRole("switch");
@@ -59,6 +61,7 @@ describe("Maybe As Decision Project Setting", () => {
                 projectId: projectData.id,
                 slrSettingsLocked: true,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const maybeSwitch = screen.getByRole("switch");
@@ -84,6 +87,7 @@ describe("Maybe As Decision Project Setting", () => {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const maybeSwitch = screen.getByRole("switch");
@@ -113,6 +117,7 @@ describe("Maybe As Decision Project Setting", () => {
                     projectId: projectData.id,
                     slrSettingsLocked: false,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             const maybeSwitch = screen.getByRole("switch");
@@ -142,6 +147,7 @@ describe("Maybe As Decision Project Setting", () => {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const maybeSwitch = screen.getByRole("switch");
@@ -183,6 +189,7 @@ describe("Maybe As Decision Project Setting", () => {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const maybeSwitch = screen.getByRole("switch");
@@ -219,6 +226,7 @@ describe("Maybe As Decision Project Setting", () => {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         expect(

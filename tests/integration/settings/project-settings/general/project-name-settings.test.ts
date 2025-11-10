@@ -5,6 +5,7 @@ import { Projects } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { createProject, loading } from "$tests/model-builder";
+import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 
 describe("ProjectNameSettings", () => {
     test("When all props are provided, then it renders correctly, with two labels, one input field and a button", async () => {
@@ -14,6 +15,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         expect(screen.queryByText("General")).toBeInTheDocument();
@@ -40,6 +42,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const projectRenameInput = screen.getByLabelText("Project Name");
@@ -84,6 +87,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const projectRenameInput = screen.getByLabelText("Project Name");
@@ -105,6 +109,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: failedPromise,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         expect(
@@ -126,6 +131,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const projectRenameInput = screen.getByLabelText("Project Name");
@@ -156,6 +162,7 @@ describe("ProjectNameSettings", () => {
                 projectId: Projects.demoProjectActive.id,
                 loadingProject: loading(Projects.demoProjectActive, 5000),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const projectRenameInput = screen.getByLabelText("Project Name");

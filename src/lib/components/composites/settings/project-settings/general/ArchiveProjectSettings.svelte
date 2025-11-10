@@ -6,29 +6,19 @@
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
-    import { resource } from "$lib/resource.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         projectId: string;
-        loadingProject: Promise<Project>;
     }
 
-    const { projectId, loadingProject }: Props = $props();
+    const { projectId }: Props = $props();
 
-    const loadingIsProjectArchived = $derived(
-        loadingProject.then((project) => project.status === ProjectStatus.ARCHIVED),
-    );
-    const isAlreadyArchived = $derived(
-        resource(loadingIsProjectArchived, {
-            initialValue: false,
-            onErrorValue: false,
-            resourceName: "project status",
-        }),
-    );
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     const settingsDescription = $derived(
-        isAlreadyArchived.value
+        isProjectArchived
             ? "This project is archived. Reactivate it to make changes and continue your SLR."
             : "Archiving makes the project read-only. You’ll need to reactivate it to make any changes or continue the SLR.",
     );
@@ -45,7 +35,7 @@
 
         const projectData: Partial<Project> = {
             id: projectId,
-            status: isAlreadyArchived.value ? ProjectStatus.ACTIVE : ProjectStatus.ARCHIVED,
+            status: isProjectArchived ? ProjectStatus.ACTIVE : ProjectStatus.ARCHIVED,
         };
 
         await backendService
@@ -54,15 +44,13 @@
                 mask: buildFieldMask(projectData, "project"),
             })
             .response.then(async () => {
-                await invalidate("data:getProjectById");
                 toast.success(
-                    `Successfully ${isAlreadyArchived.value ? "activated" : "archived"} the project.`,
+                    `Successfully ${isProjectArchived ? "activated" : "archived"} the project.`,
                 );
+                await invalidate("data:getProjectById");
             })
             .catch(() => {
-                toast.error(
-                    `Could not ${isAlreadyArchived.value ? "activate" : "archive"} the project.`,
-                );
+                toast.error(`Could not ${isProjectArchived ? "activate" : "archive"} the project.`);
             });
     }
 </script>
@@ -74,16 +62,16 @@ status to active if the project is archived.
 
 Usage:
 ```svelte
-    <ArchiveProjectSettings {loadingProject} {projectId}/>
+    <ArchiveProjectSettings {projectId}/>
 ```
 -->
 <SettingsSection sectionTitle="Archive Project">
     <p class="text-md">{settingsDescription}</p>
     <LoadingButton
         class="text-md w-full md:w-44"
-        label={isAlreadyArchived.value ? "Activate Project" : "Archive Project"}
+        label={isProjectArchived ? "Activate Project" : "Archive Project"}
         loading={loading.value}
-        loadingLabel={isAlreadyArchived.value ? "Activating Project" : "Archiving Project"}
+        loadingLabel={isProjectArchived ? "Activating Project" : "Archiving Project"}
         onclick={(args) => loadingWrapper(loading, handleSubmit, args)}
         type="submit"
     />

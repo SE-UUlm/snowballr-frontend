@@ -6,6 +6,7 @@ import { mockApiCall } from "$tests/setupTest";
 import { createProject } from "$tests/model-builder";
 import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
 import { ProjectStatus } from "$lib/model/api/project";
+import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 
 describe("ArchiveProjectSettings", () => {
     test("When an active project is provided, then it renders correctly with an 'Archive Project' button", async () => {
@@ -13,8 +14,8 @@ describe("ArchiveProjectSettings", () => {
             target: document.body,
             props: {
                 projectId: Projects.demoProjectActive.id,
-                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const description = screen.getByText("Archiving makes the project read-only.", {
@@ -35,8 +36,8 @@ describe("ArchiveProjectSettings", () => {
             target: document.body,
             props: {
                 projectId: Projects.demoProjectActive.id,
-                loadingProject: Promise.resolve(Projects.demoProjectActive),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const archiveButton = screen.getByRole("button", { name: "Archive Project" });
@@ -55,8 +56,8 @@ describe("ArchiveProjectSettings", () => {
             target: document.body,
             props: {
                 projectId: archivedProject.id,
-                loadingProject: Promise.resolve(archivedProject),
             },
+            context: mockIsProjectArchivedContext(true),
         });
 
         const archivedProjectDescription = await screen.findByText("This project is archived.", {
@@ -69,20 +70,5 @@ describe("ArchiveProjectSettings", () => {
 
         await userEvent.click(activateButton);
         expect(mockCall).toHaveBeenCalled();
-    });
-
-    test("When the project could not be load, then it assumes the project is not archived", async () => {
-        const mockFailGetProject = Promise.reject(new Error("Failed to load project"));
-
-        render(ArchiveProjectSettings, {
-            target: document.body,
-            props: {
-                projectId: Projects.demoProjectActive.id,
-                loadingProject: mockFailGetProject,
-            },
-        });
-
-        const archiveButton = screen.getByRole("button", { name: "Archive Project" });
-        expect(archiveButton).toBeInTheDocument();
     });
 });

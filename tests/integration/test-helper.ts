@@ -6,6 +6,7 @@ import type { User } from "$lib/model/api/user";
 import { USER_KEY, type UserContext } from "$lib/custom-context/user-context";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
+import { IS_PROJECT_ARCHIVED_KEY } from "$lib/custom-context/is-project-archived-context";
 
 /**
  * Awaits until all skeletons are removed from the screen.
@@ -49,3 +50,9 @@ export function setContextUser(userData: Partial<User>) {
 export function resetUserContext() {
     MOCK_USER_INSTANCE = createUser(Users.johnDoe);
 }
+
+export interface IsProjectArchivedValue {
+    isProjectArchived: boolean;
+}
+export const mockIsProjectArchivedContext = (isProjectArchived = false) =>
+    new Map<symbol, IsProjectArchivedValue>([[IS_PROJECT_ARCHIVED_KEY, { isProjectArchived }]]);

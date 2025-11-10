@@ -16,6 +16,7 @@
         type ActionError,
     } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         projectId: string;
@@ -23,6 +24,8 @@
     }
 
     const { projectId, loadingProject }: Props = $props();
+
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     let projectName: string = $state("");
 
@@ -122,7 +125,7 @@ Usage:
         <Input
             bind:this={projectNameInput}
             class="h-full w-full"
-            disabled={loadingProjectName || loading.value}
+            disabled={loadingProjectName || loading.value || isProjectArchived}
             inputId="project-name-input"
             label="Project Name"
             placeholder={loadingProjectName ? "Loading" : "New Project Name"}
@@ -133,6 +136,7 @@ Usage:
         />
         <LoadingButton
             class="text-md w-full md:mt-5.5 md:w-44 lg:w-42 xl:w-40"
+            disabled={isProjectArchived}
             form="project-update"
             label="Rename"
             loading={loading.value}

@@ -6,10 +6,11 @@
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import { Edit, Lock, PlusCircle, Trash } from "lucide-svelte";
+    import { SquarePen, Lock, CirclePlus, Trash } from "lucide-svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
@@ -19,6 +20,8 @@
     }
 
     const { projectId, slrSettingsLocked = false }: Props = $props();
+
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     let loadAvailableFetchersError: ActionError = $state(undefined);
     let loading = $state(true);
@@ -118,17 +121,18 @@
                 <h4>{fetcher}</h4>
                 <div class="flex-1"></div>
                 <Button
+                    disabled={isProjectArchived}
                     onclick={() => {
                         fetcherToEdit = fetcher;
                         optionDialogOpen = true;
                     }}
                     variant="ghost"
                 >
-                    <Edit />
+                    <SquarePen />
                 </Button>
                 <Button
                     class="text-red-400 hover:bg-red-400/10 hover:text-red-400"
-                    disabled={slrSettingsLocked}
+                    disabled={slrSettingsLocked || isProjectArchived}
                     onclick={() => {
                         fetcherToRemove = fetcher;
                         removalDialogOpen = true;
@@ -148,7 +152,7 @@
 
     {#if unusedFetchers?.length !== 0}
         <LoadingButton
-            disabled={slrSettingsLocked || loading}
+            disabled={slrSettingsLocked || loading || isProjectArchived}
             label="Add Fetcher(s)"
             onclick={() => (addDialogOpen = true)}
         >
@@ -156,7 +160,7 @@
                 {#if slrSettingsLocked}
                     <Lock />
                 {:else}
-                    <PlusCircle />
+                    <CirclePlus />
                 {/if}
             {/snippet}
         </LoadingButton>

@@ -11,12 +11,13 @@
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { getUserContext } from "$lib/custom-context/user-context";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
     const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers));
-
     const user = $derived(getUserContext());
 
     const numberOfSkeletons = 7;
@@ -101,7 +102,7 @@
                 </div>
             {/if}
             <InviteUsersDialog
-                disabled={reloadingMembers}
+                disabled={reloadingMembers || isProjectArchived}
                 loadingMembers={loadingMembersLocal}
                 {onUsersInvited}
                 {projectId}
@@ -124,7 +125,7 @@
         {:then members}
             {#each members as member, i (member.user!.id)}
                 <ProjectMemberListEntry
-                    disabled={reloadingMembers}
+                    disabled={reloadingMembers || isProjectArchived}
                     isAdminView={isCurrentUserAdmin.value ?? false}
                     isCurrentUser={member.user!.id === user.id}
                     {member}
