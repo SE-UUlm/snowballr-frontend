@@ -18,7 +18,7 @@ import {
 } from "$tests/integration/test-helper";
 import { Criteria, Reviews } from "$tests/example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import type { UserContext } from "$lib/current-user/userContext";
+import type { UserContext } from "$lib/custom-context/user-context";
 import { PaperDecision } from "$lib/model/api/project";
 
 describe("ProjectPaperView", () => {

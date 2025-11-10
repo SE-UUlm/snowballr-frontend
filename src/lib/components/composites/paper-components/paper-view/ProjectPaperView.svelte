@@ -6,14 +6,12 @@
     import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { Project } from "$lib/model/api/project";
     import type { Review } from "$lib/model/api/review.js";
-    import {
-        setAlreadyReviewedContext,
-        setSelectedReviewCriteriaContext,
-    } from "$lib/utils/custom-context.js";
+    import { setAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
+    import { setSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte.js";
     import { toast } from "svelte-sonner";
     import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
 
     export type ProjectPaperViewProps = {
         projectId: string;

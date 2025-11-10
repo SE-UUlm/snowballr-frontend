@@ -11,7 +11,7 @@
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);

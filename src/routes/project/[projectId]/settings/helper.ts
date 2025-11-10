@@ -2,7 +2,7 @@ import { backendService } from "$lib/grpc-api";
 import { MemberRole, type Project_Member } from "$lib/model/api/project";
 import type { User } from "$lib/model/api/user";
 import { getContext } from "svelte";
-import { type UserContext, UserContextKey } from "$lib/current-user/userContext";
+import { type UserContext, UserContextKey } from "$lib/custom-context/user-context";
 import { resource } from "$lib/resource.svelte";
 
 export type MemberInfo = Project_Member & {

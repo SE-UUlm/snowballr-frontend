@@ -6,7 +6,7 @@
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
     import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";

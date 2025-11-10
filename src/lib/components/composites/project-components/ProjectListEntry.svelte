@@ -10,7 +10,7 @@
     } from "$lib/model/api/project";
     import { goto } from "$app/navigation";
     import { env } from "$env/dynamic/public";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
     import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";

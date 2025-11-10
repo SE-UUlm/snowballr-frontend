@@ -8,7 +8,7 @@
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { type Review, type Review_Create, ReviewDecision } from "$lib/model/api/review";
-    import { getSelectedReviewCriteriaContext } from "$lib/utils/custom-context";
+    import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { toast } from "svelte-sonner";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";

@@ -1,11 +1,9 @@
 import { waitFor, screen } from "@testing-library/svelte";
 import { expect } from "vitest";
-import {
-    SELECTED_REVIEW_CRITERIA_KEY,
-    WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY,
-} from "$lib/utils/custom-context";
+import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "$lib/custom-context/was-paper-reviewed-context";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/custom-context/selected-review-criteria-context";
 import type { User } from "$lib/model/api/user";
-import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+import { UserContextKey, type UserContext } from "$lib/custom-context/user-context";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
 
