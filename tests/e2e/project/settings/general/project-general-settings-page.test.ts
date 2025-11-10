@@ -28,6 +28,7 @@ test.describe("Project Name Settings Navigation", () => {
 
         await projectSettingsSideBar.general.click();
         await expect(projectSettingsPage.renameButton).toBeVisible();
+        await expect(projectSettingsPage.archiveButton).toBeVisible();
         await expect(projectSettingsPage.heading).toBeVisible();
     });
 });
@@ -75,4 +76,18 @@ test.describe("Project Name Settings Test", () => {
         await expect(page.getByRole("heading", { name: "New Project" })).toBeVisible();
         await expect(page.getByText("Successfully updated project name.")).toBeVisible();
     });
+});
+
+test.describe("Archive / Reactivate Project Tests", () => {
+    test.fixme(
+        "When the user archives an active project, then a 'Archived' badge is shown and " +
+            "all interactive elements except the 'Activate Project' button are disabled",
+        async () => {},
+    );
+
+    test.fixme(
+        "When the user reactivates an archived project, then the 'Archived' badge is removed and " +
+            "all interactive elements are enabled again",
+        async () => {},
+    );
 });
