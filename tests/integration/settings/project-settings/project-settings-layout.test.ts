@@ -20,8 +20,8 @@ describe("ProjectSettingsLayout", () => {
         // Check if tabs have correct content
         expect(tabs[0]).toHaveTextContent("General");
         expect(tabs[1]).toHaveTextContent("Members");
-        expect(tabs[2]).toHaveTextContent("SLR");
-        expect(tabs[3]).toHaveTextContent("Review");
+        expect(tabs[2]).toHaveTextContent("Review");
+        expect(tabs[3]).toHaveTextContent("SLR");
     });
 
     test("When tab is selected, then selected tab is highlighted", () => {

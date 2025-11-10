@@ -34,18 +34,18 @@
             adminOnly: false,
         },
         {
-            value: "slr",
-            label: "SLR",
-            href: `/project/${projectId}/settings/slr`,
-            icon: Snowflake,
-            adminOnly: true,
-        },
-        {
             value: "review",
             label: "Review",
             href: `/project/${projectId}/settings/review`,
             icon: ClipboardCheck,
             adminOnly: false,
+        },
+        {
+            value: "slr",
+            label: "SLR",
+            href: `/project/${projectId}/settings/slr`,
+            icon: Snowflake,
+            adminOnly: true,
         },
     ];
 
