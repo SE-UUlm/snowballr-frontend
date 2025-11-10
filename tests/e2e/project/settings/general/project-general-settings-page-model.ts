@@ -5,6 +5,7 @@ export class ProjectGeneralSettingsPageModel {
     readonly heading: Locator;
     readonly projectNameInput: Locator;
     readonly renameButton: Locator;
+    readonly archiveButton: Locator;
     readonly errorAlert: Locator;
 
     projectId: string;
@@ -18,6 +19,7 @@ export class ProjectGeneralSettingsPageModel {
         this.heading = page.getByRole("heading", { name: this.projectName });
         this.projectNameInput = page.getByLabel("Project Name");
         this.renameButton = page.getByRole("button", { name: "Rename" });
+        this.archiveButton = page.getByRole("button", { name: "Archive Project" });
         this.errorAlert = page.getByRole("alert");
     }
 

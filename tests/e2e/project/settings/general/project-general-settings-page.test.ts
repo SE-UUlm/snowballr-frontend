@@ -28,6 +28,7 @@ test.describe("Project Name Settings Navigation", () => {
 
         await projectSettingsSideBar.general.click();
         await expect(projectSettingsPage.renameButton).toBeVisible();
+        await expect(projectSettingsPage.archiveButton).toBeVisible();
         await expect(projectSettingsPage.heading).toBeVisible();
     });
 });
@@ -79,4 +80,18 @@ test.describe("Project Name Settings Test", () => {
 
 test.describe.fixme("Project Export Test", () => {
     // TODO: Add project export tests when real backend is used for e2e tests
+});
+
+test.describe("Archive / Reactivate Project Tests", () => {
+    test.fixme(
+        "When the user archives an active project, then a 'Archived' badge is shown and " +
+            "all interactive elements except the 'Activate Project' button are disabled",
+        async () => {},
+    );
+
+    test.fixme(
+        "When the user reactivates an archived project, then the 'Archived' badge is removed and " +
+            "all interactive elements are enabled again",
+        async () => {},
+    );
 });
