@@ -8,7 +8,8 @@ import {
     type SortOption,
     type SortOptionLabel,
 } from "$lib/model/sort-criteria";
-import { stringToEnumValue } from "$lib/utils/common-helper";
+import { callDebounced, stringToEnumValue } from "$lib/utils/common-helper";
+import { goto } from "$app/navigation";
 
 /**
  * Returns the 'searchText' query parameter from the current URL.
@@ -134,4 +135,23 @@ export function updateSortParams(
         searchParams.delete("order");
     }
     return searchParams;
+}
+
+/**
+ * Updates the URl params and executes a debounced navigation to the new URL if the given search
+ * parameters differ from the current search parameters.
+ *
+ * @param searchParameters - The search parameters to compare and potentially navigate to.
+ */
+export function updateUrlParams(searchParameters: SvelteURLSearchParams): void {
+    if (searchParameters.toString() !== window.location.search.slice(1)) {
+        callDebounced(
+            () =>
+                goto(`?${searchParameters.toString()}`, {
+                    replaceState: true,
+                    keepFocus: true,
+                }),
+            250,
+        );
+    }
 }

@@ -59,13 +59,15 @@ for a project paper, the local / relative project paper id.
         </div>
         <div class="text-hint flex flex-row items-center truncate">
             {#if paper.authors.length > 0}
-                {#each highlightWords( { text: getNames(paper.authors), query: safeSearchQuery, matchExactly: false }, ) as chunk (chunk.key)}
-                    {#if chunk.match}
-                        <span class="highlight">{chunk.text}</span>
-                    {:else}
-                        {chunk.text}
-                    {/if}
-                {/each}
+                <span class="place-content-start truncate">
+                    {#each highlightWords( { text: getNames(paper.authors), query: safeSearchQuery, matchExactly: false }, ) as chunk (chunk.key)}
+                        {#if chunk.match}
+                            <span class="highlight">{chunk.text}</span>
+                        {:else}
+                            {chunk.text}
+                        {/if}
+                    {/each}
+                </span>
             {:else}
                 <span class="italic">unknown authors</span>
             {/if}

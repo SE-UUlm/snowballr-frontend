@@ -226,8 +226,6 @@
     }
 }
 
-.highlight {
-    border-radius: 2px;
-    background-color: yellow;
-    color: black;
+@utility highlight {
+    @apply bg-amber-300 text-black;
 }

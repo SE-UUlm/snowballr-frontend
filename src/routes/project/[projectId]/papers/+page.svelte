@@ -15,7 +15,7 @@
     import type { Project_Paper } from "$lib/model/api/project";
     import Trash from "lucide-svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
-    import { callDebounced, pluralize } from "$lib/utils/common-helper.js";
+    import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import { ExternalLink, Funnel } from "lucide-svelte";
@@ -30,9 +30,9 @@
         getSortOptionFromURL,
         updateFiltersParam,
         updateSearchTextParam,
+        updateUrlParams,
     } from "$lib/utils/search-parameters";
     import { SvelteURLSearchParams } from "svelte/reactivity";
-    import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { onMount } from "svelte";
     import type { SortOptionLabel } from "$lib/model/sort-criteria";
@@ -78,16 +78,7 @@
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
     $effect(() => {
-        if (searchParameters.toString() !== window.location.search.slice(1)) {
-            callDebounced(
-                () =>
-                    goto(`?${searchParameters.toString()}`, {
-                        replaceState: true,
-                        keepFocus: true,
-                    }),
-                250,
-            );
-        }
+        updateUrlParams(searchParameters);
     });
 
     // update query parameters when the user selects / unselects a filter

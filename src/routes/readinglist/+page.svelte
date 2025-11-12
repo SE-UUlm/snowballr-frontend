@@ -7,11 +7,13 @@
     import { filterPapers } from "$lib/utils/filters";
     import type { Paper } from "$lib/model/api/paper";
     import { loadReadingList } from "./helper.js";
-    import { getSearchTextFromURL, updateSearchTextParam } from "$lib/utils/search-parameters";
+    import {
+        getSearchTextFromURL,
+        updateSearchTextParam,
+        updateUrlParams,
+    } from "$lib/utils/search-parameters";
     import { SvelteURLSearchParams } from "svelte/reactivity";
     import { page } from "$app/state";
-    import { callDebounced } from "$lib/utils/common-helper";
-    import { goto } from "$app/navigation";
 
     const { data } = $props();
     const { loadingReadingList } = data;
@@ -23,16 +25,7 @@
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());
 
     $effect(() => {
-        if (searchParameters.toString() !== window.location.search.slice(1)) {
-            callDebounced(
-                () =>
-                    goto(`?${searchParameters.toString()}`, {
-                        replaceState: true,
-                        keepFocus: true,
-                    }),
-                250,
-            );
-        }
+        updateUrlParams(searchParameters);
     });
 
     function filterReadingList(searchText: string) {
