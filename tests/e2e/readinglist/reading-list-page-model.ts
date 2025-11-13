@@ -107,7 +107,20 @@ export class ReadingListPageModel {
         await this.getEntryRemoveButton(entry).click();
     }
 
+    /**
+     * Verifies that the number of entries in the reading list matches the expected count.
+     *
+     * @param numberOfEntries - The expected number of entries in the reading list.
+     */
     async expectNumberOfEntries(numberOfEntries: number) {
         await expect(this.readingListEntries).toHaveCount(numberOfEntries);
+    }
+
+    /**
+     * Retrieves all highlighted words on the page.
+     */
+    async getHighlightedTexts() {
+        await expect(this.page.locator(".highlight").last()).toBeVisible();
+        return this.page.locator(".highlight").allTextContents();
     }
 }

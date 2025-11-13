@@ -225,3 +225,7 @@
         @apply text-primary text-lg font-semibold tracking-normal;
     }
 }
+
+@utility highlight {
+    @apply bg-amber-300 text-black;
+}

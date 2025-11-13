@@ -6,6 +6,8 @@
     import type { HTMLAttributes } from "svelte/elements";
     import { cn } from "$lib/utils/shadcn-helper";
     import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
+    import highlightWords from "highlight-words";
+    import { getSearchTextFromURL } from "$lib/utils/search-parameters";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         loadingPaper: Promise<Omit<Paper, "id">>;
@@ -13,6 +15,7 @@
     };
 
     const { loadingPaper, loadingPaperId = undefined, class: className }: Props = $props();
+    const safeSearchQuery = $derived(getSearchTextFromURL());
 
     function isUuid(id: string) {
         return Number.isNaN(Number(id));
@@ -44,11 +47,27 @@ for a project paper, the local / relative project paper id.
                     {/if}
                 </div>
             {/if}
-            <h2 class="place-content-center truncate">{paper.title}</h2>
+            <h2 class="place-content-center truncate">
+                {#each highlightWords( { text: paper.title, query: safeSearchQuery, matchExactly: false }, ) as chunk (chunk.key)}
+                    {#if chunk.match}
+                        <span class="highlight">{chunk.text}</span>
+                    {:else}
+                        {chunk.text}
+                    {/if}
+                {/each}
+            </h2>
         </div>
         <div class="text-hint flex flex-row items-center truncate">
             {#if paper.authors.length > 0}
-                <span class="place-content-start truncate">{getNames(paper.authors)}</span>
+                <span class="place-content-start truncate">
+                    {#each highlightWords( { text: getNames(paper.authors), query: safeSearchQuery, matchExactly: false }, ) as chunk (chunk.key)}
+                        {#if chunk.match}
+                            <span class="highlight">{chunk.text}</span>
+                        {:else}
+                            {chunk.text}
+                        {/if}
+                    {/each}
+                </span>
             {:else}
                 <span class="italic">unknown authors</span>
             {/if}
