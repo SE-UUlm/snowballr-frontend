@@ -54,7 +54,7 @@ describe.sequential("CreateProjectDialog", () => {
         await user.tab();
 
         const membersInput = screen.getByRole("textbox", { name: "Members" });
-        await user.type(membersInput, Members.demoMember1.user.email);
+        await user.type(membersInput, Members.demoMember1.user!.email);
         await user.tab();
 
         const createButton = screen.getByRole("button", { name: "Create Project" });
@@ -98,10 +98,10 @@ describe.sequential("CreateProjectDialog", () => {
         await user.tab();
 
         const membersInput = screen.getByRole("textbox", { name: "Members" });
-        await user.type(membersInput, Members.demoMember1.user.email);
+        await user.type(membersInput, Members.demoMember1.user!.email);
         await user.tab();
 
-        const chip = screen.getByText(Members.demoMember1.user.firstName, { exact: false });
+        const chip = screen.getByText(Members.demoMember1.user!.firstName, { exact: false });
         expect(chip).toBeInTheDocument();
 
         const cancelButton = screen.getByRole("button", { name: "Cancel" });
@@ -109,7 +109,7 @@ describe.sequential("CreateProjectDialog", () => {
 
         await openCreateProjectDialogIfNotOpen();
 
-        const chipAfterCancel = screen.queryByText(Members.demoMember1.user.firstName, {
+        const chipAfterCancel = screen.queryByText(Members.demoMember1.user!.firstName, {
             exact: false,
         });
         expect(chipAfterCancel).not.toBeInTheDocument();
