@@ -21,10 +21,10 @@ export function waitForComponentLoading(): Promise<void> {
     });
 }
 
-export interface SelectedCriteriaContextValue {
+export interface SelectedCriteriaContext {
     criteria: string[];
 }
-export interface WasReviewedContextValue {
+export interface WasReviewedContext {
     wasReviewed: boolean;
 }
 export const mockSelectedCriteriaContext = new Map([
@@ -35,7 +35,7 @@ export const mockSelectedCriteriaContextWithInitialData = (
     selectedCriteria?: string[],
     wasAlreadyReviewed?: boolean,
 ) =>
-    new Map([
+    new Map<symbol, SelectedCriteriaContext | WasReviewedContext>([
         [SELECTED_REVIEW_CRITERIA_KEY, { criteria: selectedCriteria ?? [] }],
         [WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY, { wasReviewed: wasAlreadyReviewed ?? false }],
     ]);
@@ -51,8 +51,8 @@ export function resetUserContext() {
     MOCK_USER_INSTANCE = createUser(Users.johnDoe);
 }
 
-export interface IsProjectArchivedValue {
+export interface IsProjectArchivedContext {
     isProjectArchived: boolean;
 }
 export const mockIsProjectArchivedContext = (isProjectArchived = false) =>
-    new Map<symbol, IsProjectArchivedValue>([[IS_PROJECT_ARCHIVED_KEY, { isProjectArchived }]]);
+    new Map<symbol, IsProjectArchivedContext>([[IS_PROJECT_ARCHIVED_KEY, { isProjectArchived }]]);

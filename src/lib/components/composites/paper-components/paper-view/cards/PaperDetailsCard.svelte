@@ -16,6 +16,7 @@
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { goto } from "$app/navigation";
     import type { Project_Paper } from "$lib/model/api/project";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -25,6 +26,8 @@
     }
 
     let { loadingPaper, allowEditModeToggle, startInEditMode, isInCreationMode }: Props = $props();
+
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
@@ -206,12 +209,14 @@ Usage:
                         <Save
                             class={cn(
                                 "select-none",
-                                isPaperModified ? "hover:cursor-pointer" : "opacity-30",
+                                isPaperModified && !isProjectArchived
+                                    ? "hover:cursor-pointer"
+                                    : "opacity-30",
                             )}
                             aria-label="Save Paper Changes"
                             data-testid="save-paper-changes-btn"
                             onclick={async () => {
-                                if (!isPaperModified) return;
+                                if (!isPaperModified || isProjectArchived) return;
                                 await savePaperModifications();
                             }}
                             size={24}
@@ -222,12 +227,15 @@ Usage:
                     <Pencil
                         class={cn(
                             "select-none",
-                            isPaperModified ? "opacity-30" : "hover:cursor-pointer",
+                            isPaperModified || isProjectArchived
+                                ? "opacity-30"
+                                : "hover:cursor-pointer",
                         )}
                         aria-label="Toggle Edit Paper Mode"
                         data-testid="toggle-edit-paper-mode-btn"
                         onclick={() => {
-                            if (!isPaperModified) isInEditMode = !isInEditMode;
+                            if (!isPaperModified && !isProjectArchived)
+                                isInEditMode = !isInEditMode;
                         }}
                         size={24}
                     />

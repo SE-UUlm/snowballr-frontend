@@ -2,7 +2,7 @@ import PaperDetailsCard from "$lib/components/composites/paper-components/paper-
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { loading, createPaper, createProjectPaper } from "../../../../model-builder";
-import { waitForComponentLoading } from "../../../test-helper";
+import { mockIsProjectArchivedContext, waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { type ISnowballRClient } from "$lib/model/api/main.client";
@@ -19,6 +19,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitForComponentLoading();
@@ -62,6 +63,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitForComponentLoading();
@@ -101,6 +103,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitForComponentLoading();
@@ -161,6 +164,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: false,
                 startInEditMode: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitForComponentLoading();
@@ -183,6 +187,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: false,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const skeletons = screen.queryAllByTestId("skeleton");
@@ -214,6 +219,7 @@ describe("PaperDetailsCard", () => {
                     allowEditModeToggle: true,
                     startInEditMode: true,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             await waitForComponentLoading();
@@ -251,6 +257,7 @@ describe("PaperDetailsCard", () => {
                     allowEditModeToggle: true,
                     startInEditMode: true,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             await waitForComponentLoading();
@@ -280,6 +287,7 @@ describe("PaperDetailsCard", () => {
                     allowEditModeToggle: true,
                     startInEditMode: true,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             await waitForComponentLoading();
@@ -313,6 +321,7 @@ describe("PaperDetailsCard", () => {
                     allowEditModeToggle: true,
                     startInEditMode: true,
                 },
+                context: mockIsProjectArchivedContext(),
             });
 
             await waitForComponentLoading();
@@ -348,6 +357,7 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: true,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitForComponentLoading();
@@ -380,8 +390,30 @@ describe("PaperDetailsCard", () => {
                 allowEditModeToggle: true,
                 startInEditMode: true,
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         expect(screen.queryByTestId("toggle-edit-paper-mode-btn")).toBeNull();
+    });
+
+    test("When the project of the project paper is archived, then the edit button is disabled", async () => {
+        const paper = createPaper();
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                isInCreationMode: false,
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: false,
+            },
+            context: mockIsProjectArchivedContext(true),
+        });
+
+        await waitForComponentLoading();
+
+        const toggleEditModeButtons = screen.queryAllByTestId("toggle-edit-paper-mode-btn");
+        expect(toggleEditModeButtons).toHaveLength(1);
+        expect(toggleEditModeButtons[0]).toHaveClass("opacity-30"); // Indicates disabled
     });
 });
