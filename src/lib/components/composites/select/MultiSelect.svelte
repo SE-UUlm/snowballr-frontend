@@ -8,7 +8,6 @@
         categoryLabel?: string;
         selectedValues?: string[];
         disabled?: boolean;
-        noSelectIsAllSelect?: boolean;
     }
 
     let {
@@ -16,7 +15,6 @@
         categoryLabel = "categories",
         selectedValues = $bindable([]),
         disabled = false,
-        noSelectIsAllSelect = true,
     }: Props = $props();
 
     const ALL_OPTIONS = "all-options";
@@ -39,7 +37,7 @@
     function getSelectLabel(selectedValues: string[] | undefined): string {
         if (
             !selectedValues ||
-            (selectedValues.length === 0 && noSelectIsAllSelect) ||
+            selectedValues.length === 0 ||
             selectedValues.length === options.length
         ) {
             return `All ${categoryLabel} (${options.length})`;

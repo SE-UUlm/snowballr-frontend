@@ -4,10 +4,10 @@
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import { ExportRequest } from "$lib/model/api/export";
     import { loadingWrapper, pluralize } from "$lib/utils/common-helper";
     import { downloadBlob } from "$lib/utils/download-file";
+    import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
 
     interface Props {
         projectId: string;
@@ -17,7 +17,7 @@
 
     let loadingFormats = $state(true);
     let formats = $state<string[]>([]);
-    let selectedFormats = $state<string[]>([]);
+    let selectedFormat = $state<string | undefined>(undefined);
     const loadingExport = $state({ value: false });
 
     const formatsPromise = backendService
@@ -30,21 +30,25 @@
         });
 
     async function exportProject() {
-        loadingExport.value = false;
+        if (!selectedFormat) {
+            return;
+        }
 
-        const promises = selectedFormats.map((format) => {
-            const request: ExportRequest = {
-                id: projectId,
-                format,
-            };
-            return backendService.exportProject(request).response;
-        });
+        loadingExport.value = true;
 
-        await Promise.all(promises).then((exportResponses) => {
-            for (const response of exportResponses) {
-                downloadBlob(response.data, response.fileName);
-            }
-        });
+        const request: ExportRequest = {
+            id: projectId,
+            format: selectedFormat,
+        };
+
+        await backendService
+            .exportProject(request)
+            .response.then(({ data, fileName }) => {
+                downloadBlob(data, fileName);
+            })
+            .finally(() => {
+                loadingExport.value = false;
+            });
     }
 </script>
 
@@ -61,16 +65,15 @@
         <ErrorIndicator errorMessage="Failed loading formats"></ErrorIndicator>
     {/await}
     <div class="flew-row flex">
-        <MultiSelect
-            categoryLabel="Formats"
+        <SingleSelect
+            categoryLabel="format"
             disabled={loadingFormats}
-            noSelectIsAllSelect={false}
             options={formats.map((f) => ({ label: f, value: f }))}
-            bind:selectedValues={selectedFormats}
+            bind:selectedValue={selectedFormat}
         />
         <LoadingButton
-            class="w-fit"
-            disabled={selectedFormats.length === 0}
+            class="w-44"
+            disabled={!selectedFormat}
             label="Export Project"
             loading={loadingExport.value}
             loadingLabel="Exporting Project"
