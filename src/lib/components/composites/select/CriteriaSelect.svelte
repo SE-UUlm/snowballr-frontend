@@ -1,5 +1,7 @@
 <script lang="ts">
-    import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import MultiSelect, {
+        type SelectOption,
+    } from "$lib/components/composites/select/MultiSelect.svelte";
     import { Criterion } from "$lib/model/api/criterion";
     import { resource } from "$lib/resource.svelte";
 
@@ -25,4 +27,4 @@
     );
 </script>
 
-<Select categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />
+<MultiSelect categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />

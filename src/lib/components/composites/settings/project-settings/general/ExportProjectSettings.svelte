@@ -4,7 +4,7 @@
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import Select from "$lib/components/composites/select/Select.svelte";
+    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import { ExportRequest } from "$lib/model/api/export";
     import { loadingWrapper, pluralize } from "$lib/utils/common-helper";
     import { downloadBlob } from "$lib/utils/download-file";
@@ -61,7 +61,7 @@
         <ErrorIndicator errorMessage="Failed loading formats"></ErrorIndicator>
     {/await}
     <div class="flew-row flex">
-        <Select
+        <MultiSelect
             categoryLabel="Formats"
             disabled={loadingFormats}
             noSelectIsAllSelect={false}

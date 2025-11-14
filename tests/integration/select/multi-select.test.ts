@@ -1,11 +1,11 @@
-import Select from "$lib/components/composites/select/Select.svelte";
+import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { get, type Writable, writable } from "svelte/store";
-import TestSelect from "./TestSelect.svelte";
+import TestSelect from "./TestMultiSelect.svelte";
 
-describe("Select", () => {
+describe("MultiSelect", () => {
     beforeEach(() => {
         // Apparently, these methods are not implemented in jsdom but used by the Select component
         // See https://github.com/testing-library/user-event/discussions/1087
@@ -16,7 +16,7 @@ describe("Select", () => {
     });
 
     test("When all props are provided, then component is shown", () => {
-        render(Select, {
+        render(MultiSelect, {
             target: document.body,
             props: {
                 options: [
@@ -33,7 +33,7 @@ describe("Select", () => {
 
     test("When select is clicked, then options are shown", async () => {
         const user = userEvent.setup();
-        render(Select, {
+        render(MultiSelect, {
             target: document.body,
             props: {
                 options: [
@@ -57,7 +57,7 @@ describe("Select", () => {
 
     test("When option is selected, then select label is updated", async () => {
         const user = userEvent.setup();
-        render(Select, {
+        render(MultiSelect, {
             target: document.body,
             props: {
                 options: [
@@ -89,7 +89,7 @@ describe("Select", () => {
 
     test("When all options are selected, then default label is shown", async () => {
         const user = userEvent.setup();
-        render(Select, {
+        render(MultiSelect, {
             target: document.body,
             props: {
                 options: [
@@ -151,7 +151,7 @@ describe("Select", () => {
 
     test("When no options are provided, then hint is shown", async () => {
         const user = userEvent.setup();
-        render(Select, {
+        render(MultiSelect, {
             target: document.body,
             props: {
                 options: [],

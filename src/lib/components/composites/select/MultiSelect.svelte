@@ -112,7 +112,7 @@ Custom select component that allows users to select multiple options from a list
 
 Usage:
 ```svelte
-    <Select categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
+    <MultiSelect categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
 ```
 -->
 <Select.Root
