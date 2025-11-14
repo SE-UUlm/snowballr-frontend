@@ -1,8 +1,7 @@
 <script lang="ts">
-    import MultiSelect, {
-        type SelectOption,
-    } from "$lib/components/composites/select/MultiSelect.svelte";
+    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import type { User } from "$lib/model/api/user";
+    import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
     import { getName } from "$lib/utils/common-helper";
 

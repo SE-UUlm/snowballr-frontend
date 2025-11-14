@@ -1,11 +1,7 @@
 <script lang="ts">
     import * as Select from "$lib/components/primitives/select/index.js";
     import { Separator } from "$lib/components/primitives/separator";
-
-    export interface SelectOption {
-        value: string;
-        label: string;
-    }
+    import type { SelectOption } from "$lib/model/select-option";
 
     interface Props {
         options: SelectOption[];
