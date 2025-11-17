@@ -75,17 +75,17 @@ describe("InviteUsersDialog", () => {
         await waitFor(async () => user.click(trigger));
 
         const input = screen.getByRole("textbox");
-        await user.type(input, Members.demoMember1.user.email);
+        await user.type(input, Members.demoMember1.user!.email);
         await user.tab();
 
-        const chip = screen.getByText(Members.demoMember1.user.firstName, { exact: false });
+        const chip = screen.getByText(Members.demoMember1.user!.firstName, { exact: false });
         expect(chip).toBeInTheDocument();
 
         const cancelButton = screen.getByRole("button", { name: "Cancel" });
         await user.click(cancelButton);
 
         await waitFor(async () => user.click(trigger));
-        const chipAfterCancel = screen.queryByText(Members.demoMember1.user.firstName, {
+        const chipAfterCancel = screen.queryByText(Members.demoMember1.user!.firstName, {
             exact: false,
         });
         expect(chipAfterCancel).not.toBeInTheDocument();
@@ -110,13 +110,13 @@ describe("InviteUsersDialog", () => {
         await waitFor(async () => user.click(trigger));
 
         const emailInput = screen.getByRole("textbox");
-        await user.type(emailInput, Members.demoMember1.user.email);
+        await user.type(emailInput, Members.demoMember1.user!.email);
         await user.tab();
 
         const inviteButton = screen.getByRole("button", { name: "Send Invitations" });
         await user.click(inviteButton);
 
-        expect(invitedUsers).toEqual([Members.demoMember1.user.email]);
+        expect(invitedUsers).toEqual([Members.demoMember1.user!.email]);
     });
 
     test("When inviting a user fails, then an error message is displayed", async () => {
@@ -136,7 +136,7 @@ describe("InviteUsersDialog", () => {
         await waitFor(async () => user.click(trigger));
 
         const emailInput = screen.getByRole("textbox");
-        await user.type(emailInput, Members.demoMember1.user.email);
+        await user.type(emailInput, Members.demoMember1.user!.email);
         await user.tab();
 
         const inviteButton = screen.getByRole("button", { name: "Send Invitations" });

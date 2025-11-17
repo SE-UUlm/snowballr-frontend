@@ -36,7 +36,7 @@
         await backendService
             .removeProjectMember({
                 projectId,
-                userId: member.user!.id,
+                userEmail: member.user!.email,
             })
             .response.then(() => {
                 onMemberRemoved?.(member);

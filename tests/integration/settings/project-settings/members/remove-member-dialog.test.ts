@@ -37,7 +37,7 @@ describe("RemoveMemberDialog", () => {
 
     test("When the trigger is clicked, then the dialog is opened", async () => {
         const user = userEvent.setup();
-        const memberName = getName(defaultMember.user);
+        const memberName = getName(defaultMember.user!);
         render(RemoveMemberDialog, {
             target: document.body,
             props: {
