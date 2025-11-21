@@ -6,7 +6,6 @@
     import { Schema } from "$lib/schemas";
     import { goto } from "$app/navigation";
     import { cn } from "$lib/utils/shadcn-helper";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { toast } from "svelte-sonner";
@@ -14,6 +13,7 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { isGrpcError } from "$lib/utils/common-helper.js";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -143,13 +143,7 @@
                 loadingLabel="Creating an account"
                 type="submit"
             />
-            {#if registrationError}
-                <Alert
-                    details={registrationError.errorDetails}
-                    title={registrationError.errorTitle}
-                    variant="error"
-                />
-            {/if}
+            <ActionErrorAlert error={registrationError} />
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?

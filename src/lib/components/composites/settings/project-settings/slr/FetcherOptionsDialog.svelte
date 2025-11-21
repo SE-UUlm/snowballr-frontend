@@ -1,6 +1,5 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, Project_Settings } from "$lib/model/api/project";
@@ -9,6 +8,7 @@
     import FetcherOptionRow from "./FetcherOptionRow.svelte";
     import { Lock } from "lucide-svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     let loadFetcherOptionsError: ActionError = $state(undefined);
 
@@ -172,14 +172,7 @@
                     {/each}
                 </div>
             {/if}
-
-            {#if loadFetcherOptionsError}
-                <Alert
-                    details={loadFetcherOptionsError.errorDetails}
-                    title={loadFetcherOptionsError.errorTitle}
-                    variant="error"
-                />
-            {/if}
+            <ActionErrorAlert error={loadFetcherOptionsError} />
         </div>
     {/snippet}
 </AlertDialog>

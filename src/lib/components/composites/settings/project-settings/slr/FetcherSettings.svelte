@@ -7,11 +7,11 @@
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
     import { Edit, Lock, PlusCircle, Trash } from "lucide-svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;
@@ -107,13 +107,7 @@
 />
 
 <SettingsSection {loading} sectionTitle="Fetcher Settings">
-    {#if loadAvailableFetchersError}
-        <Alert
-            details={loadAvailableFetchersError.errorDetails}
-            title={loadAvailableFetchersError.errorTitle}
-            variant="error"
-        />
-    {/if}
+    <ActionErrorAlert error={loadAvailableFetchersError} />
     {#if !loading && usedFetchers}
         {#if usedFetchers.length === 0}
             <p>This project has no fetcher configured yet.</p>

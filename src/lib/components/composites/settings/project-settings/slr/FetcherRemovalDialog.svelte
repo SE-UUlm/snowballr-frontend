@@ -1,6 +1,6 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { updateFetchers } from "./UpdateFetchers";
@@ -63,13 +63,6 @@
             Removing the fetcher also irreversibly removes the values of the options you may have
             configured.
         </p>
-
-        {#if removeFetcherError}
-            <Alert
-                details={removeFetcherError.errorDetails}
-                title={removeFetcherError.errorTitle}
-                variant="error"
-            />
-        {/if}
+        <ActionErrorAlert error={removeFetcherError} />
     {/snippet}
 </AlertDialog>

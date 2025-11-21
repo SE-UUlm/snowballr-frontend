@@ -162,7 +162,7 @@ describe("InviteUsersInput", () => {
         await user.type(input, newUser.email);
 
         expect(
-            await screen.findByRole("alert", { name: "Failed to load invite candidates." }),
+            await screen.findByRole("alert", { name: "Failed to Load Invitee Candidates" }),
         ).toBeInTheDocument();
     });
 });

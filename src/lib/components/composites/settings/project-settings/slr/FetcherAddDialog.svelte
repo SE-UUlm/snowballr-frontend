@@ -1,6 +1,6 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import * as Select from "$lib/components/primitives/select";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { Project, Project_Settings } from "$lib/model/api/project";
@@ -93,13 +93,6 @@
                 {/each}
             </Select.Content>
         </Select.Root>
-
-        {#if addFetcherError}
-            <Alert
-                details={addFetcherError.errorDetails}
-                title={addFetcherError.errorTitle}
-                variant="error"
-            />
-        {/if}
+        <ActionErrorAlert error={addFetcherError} />
     {/snippet}
 </AlertDialog>

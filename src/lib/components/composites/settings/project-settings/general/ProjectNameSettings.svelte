@@ -7,7 +7,6 @@
     import { Schema } from "$lib/schemas";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
@@ -16,6 +15,7 @@
         createActionWarning,
         type ActionError,
     } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;
@@ -140,13 +140,5 @@ Usage:
             type="submit"
         />
     </form>
-    {#if updateProjectError}
-        <div class="max-w-100 md:max-w-150">
-            <Alert
-                details={updateProjectError.errorDetails}
-                title={updateProjectError.errorTitle}
-                variant={updateProjectError.variant}
-            />
-        </div>
-    {/if}
+    <ActionErrorAlert class="max-w-100 md:max-w-150" error={updateProjectError} />
 </SettingsSection>

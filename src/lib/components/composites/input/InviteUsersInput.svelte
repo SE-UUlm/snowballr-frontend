@@ -4,8 +4,9 @@
     import { getName } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import { Schema } from "$lib/schemas";
-    import Alert from "../utils/Alert.svelte";
     import { backendService } from "$lib/grpc-api.js";
+    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
+    import { createActionError } from "$lib/model/action-error";
 
     interface Props {
         invitees: string[];
@@ -161,11 +162,11 @@ Usage:
         validate={validateInput}
         bind:items={invitees}
     />
-    {#if isErrorWhileLoadingCandidates}
-        <Alert
-            details="Something went wrong while loading possible project members. Please make sure your internet connection is stable, then try again."
-            title="Failed to load invite candidates."
-            variant="error"
-        />
-    {/if}
+    <ActionErrorAlert
+        error={isErrorWhileLoadingCandidates
+            ? createActionError("Failed to Load Invitee Candidates", {
+                  action: "loading possible project members",
+              })
+            : undefined}
+    />
 </div>

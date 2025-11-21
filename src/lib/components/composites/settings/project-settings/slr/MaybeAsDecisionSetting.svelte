@@ -1,7 +1,6 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { Label } from "$lib/components/primitives/label";
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
@@ -11,6 +10,7 @@
     import { toast } from "svelte-sonner";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;
@@ -164,14 +164,7 @@ Usage:
             </p>
         </div>
     </div>
-    {#if updateSLRSettingsError}
-        <Alert
-            details={updateSLRSettingsError.errorDetails}
-            title={updateSLRSettingsError.errorTitle}
-            variant="error"
-        />
-    {/if}
-
+    <ActionErrorAlert error={updateSLRSettingsError} />
     <AlertDialog
         actionButtonText="Confirm"
         actionProps={{

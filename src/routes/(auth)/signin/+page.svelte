@@ -6,13 +6,13 @@
     import { Schema } from "$lib/schemas";
     import { goto } from "$app/navigation";
     import { cn } from "$lib/utils/shadcn-helper";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { isGrpcError } from "$lib/utils/common-helper.js";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
@@ -96,13 +96,7 @@
                 loadingLabel="Signing In"
                 type="submit"
             />
-            {#if signInError}
-                <Alert
-                    details={signInError.errorDetails}
-                    title={signInError.errorTitle}
-                    variant="error"
-                />
-            {/if}
+            <ActionErrorAlert error={signInError} />
         </form>
         <div class="mt-4 text-center text-sm">
             You don't have an account yet?

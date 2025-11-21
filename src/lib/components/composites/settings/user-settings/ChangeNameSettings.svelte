@@ -7,7 +7,6 @@
     import SettingsSection from "../SettingsSection.svelte";
     import { getContext } from "svelte";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
-    import Alert from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
@@ -17,6 +16,7 @@
         createActionWarning,
         type ActionError,
     } from "$lib/model/action-error";
+    import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
 
     const user = $derived(getContext<UserContext>(UserContextKey)());
 
@@ -121,13 +121,5 @@ Usage:
             type="submit"
         />
     </form>
-    {#if updateUserError}
-        <div class="max-w-100 md:max-w-200">
-            <Alert
-                details={updateUserError.errorDetails}
-                title={updateUserError.errorTitle}
-                variant={updateUserError.variant}
-            />
-        </div>
-    {/if}
+    <ActionErrorAlert class="max-w-100 md:max-w-200" error={updateUserError} />
 </SettingsSection>

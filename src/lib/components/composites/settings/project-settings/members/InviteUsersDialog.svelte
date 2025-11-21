@@ -4,10 +4,10 @@
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import type { Project_Member } from "$lib/model/api/project";
     import { backendService } from "$lib/grpc-api";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;
@@ -106,13 +106,7 @@ Usage:
         >
             <InviteUsersInput {projectId} bind:invitees />
         </form>
-        {#if inviteUsersError}
-            <Alert
-                details={inviteUsersError.errorDetails}
-                title={inviteUsersError.errorTitle}
-                variant="error"
-            />
-        {/if}
+        <ActionErrorAlert error={inviteUsersError} />
     {/snippet}
     {#snippet footer()}
         <LoadingButton

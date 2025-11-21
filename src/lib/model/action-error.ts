@@ -4,13 +4,13 @@ import { env } from "$env/dynamic/public";
 /**
  * Standardized error/warning object for action error handling.
  */
-export type ActionError =
-    | {
-          errorTitle: string;
-          errorDetails?: string;
-          variant: AlertVariant;
-      }
-    | undefined;
+export type ActionError = ActionErrorBase | undefined;
+
+export interface ActionErrorBase {
+    errorTitle: string;
+    errorDetails?: string;
+    variant: AlertVariant;
+}
 
 /**
  * Details for an ActionError, either a description of the action that failed or whole custom details.

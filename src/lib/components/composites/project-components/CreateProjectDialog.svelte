@@ -9,9 +9,10 @@
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import Alert from "../utils/Alert.svelte";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
+    import { createActionError } from "$lib/model/action-error";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -140,13 +141,13 @@ Usage:
                 />
                 <InviteUsersInput bind:invitees />
             </form>
-            {#if isErrorOnProjectCreation}
-                <Alert
-                    details="Something went wrong while creating the project. Please make sure your internet connection is stable, then try again."
-                    title="Failed to Create Project"
-                    variant="error"
-                />
-            {/if}
+            <ActionErrorAlert
+                error={isErrorOnProjectCreation
+                    ? createActionError("Failed to Create Project", {
+                          action: "creating the project",
+                      })
+                    : undefined}
+            />
         {/snippet}
         {#snippet footer()}
             <LoadingButton
