@@ -1,5 +1,5 @@
 import type { AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
-import { env } from "$env/dynamic/public";
+import { IS_IN_DEV_MODE, IS_IN_TEST_MODE } from "$lib/constants";
 
 /**
  * Standardized error/warning object for action error handling.
@@ -38,7 +38,7 @@ export function createActionError(
     details: ActionErrorDetails,
     error: Error | undefined = undefined,
 ): ActionError {
-    if (error && env.PUBLIC_IS_DEV_MODE === "true") {
+    if (error && (IS_IN_DEV_MODE || IS_IN_TEST_MODE)) {
         console.error(`Action Error - '${title}':`, error);
     }
     return {
