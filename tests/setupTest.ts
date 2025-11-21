@@ -342,3 +342,6 @@ if (typeof window !== "undefined") {
     window.HTMLElement.prototype.hasPointerCapture = vi.fn();
     window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 }
+
+global.URL.createObjectURL = vi.fn();
+global.URL.revokeObjectURL = vi.fn();
