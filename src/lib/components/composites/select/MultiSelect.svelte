@@ -7,15 +7,9 @@
         options: SelectOption[];
         categoryLabel?: string;
         selectedValues?: string[];
-        disabled?: boolean;
     }
 
-    let {
-        options,
-        categoryLabel = "categories",
-        selectedValues = $bindable([]),
-        disabled = false,
-    }: Props = $props();
+    let { options, categoryLabel = "categories", selectedValues = $bindable([]) }: Props = $props();
 
     const ALL_OPTIONS = "all-options";
     let doSelectAllOptions = $state(false);
@@ -109,12 +103,7 @@ Usage:
     <MultiSelect categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
 ```
 -->
-<Select.Root
-    {disabled}
-    onValueChange={selectOrUnselectAllOptions}
-    type="multiple"
-    bind:value={selectedValues}
->
+<Select.Root onValueChange={selectOrUnselectAllOptions} type="multiple" bind:value={selectedValues}>
     <Select.Trigger class="w-fit">{label}</Select.Trigger>
     <Select.Content class="max-h-[300px]">
         {#if options.length === 0}
