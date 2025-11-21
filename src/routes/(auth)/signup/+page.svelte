@@ -4,7 +4,6 @@
     import * as Card from "$lib/components/primitives/card/index.js";
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
-    import type { ApiError } from "$lib/model/general";
     import { goto } from "$app/navigation";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
@@ -14,13 +13,14 @@
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { isGrpcError } from "$lib/utils/common-helper.js";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
-    let registrationError: ApiError | undefined = $state(undefined);
+    let registrationError: ActionError = $state(undefined);
 
     const loading = $state({ value: false });
 
@@ -40,10 +40,9 @@
             else if (!isPasswordValid) failedInput = "Password";
             else throw "unreachable";
 
-            registrationError = {
-                errorTitle: "Invalid Input",
-                errorDetails: `The input "${failedInput}" is not valid. Please check and try again.`,
-            };
+            registrationError = createActionError("Invalid Input", {
+                customDetails: `The input "${failedInput}" is not valid. Please check and try again.`,
+            });
             return;
         }
 
@@ -65,19 +64,21 @@
             })
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
-                    registrationError = {
-                        errorTitle: "Email Already Registered",
-                        errorDetails:
-                            "An account with this email address already exists. Try logging in or resetting your password.",
-                    };
+                    registrationError = createActionError(
+                        "Email already Registered",
+                        {
+                            customDetails:
+                                "An account with this email address already exists. Try logging in or resetting your password.",
+                        },
+                        error,
+                    );
                 } else {
-                    registrationError = {
-                        errorTitle: "Registration Failed",
-                        errorDetails:
-                            "Something went wrong during registration. Please make sure your internet connection is stable, then try again.",
-                    };
+                    registrationError = createActionError(
+                        "Registration Failed",
+                        { action: "registering your account" },
+                        error,
+                    );
                 }
-                console.error(error);
             });
     }
 </script>

@@ -5,13 +5,17 @@
     import { onMount } from "svelte";
     import { Project } from "$lib/model/api/project";
     import { Schema } from "$lib/schemas";
-    import type { ApiError } from "$lib/model/general";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
-    import Alert, { type AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
+    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import {
+        createActionError,
+        createActionWarning,
+        type ActionError,
+    } from "$lib/model/action-error";
 
     interface Props {
         projectId: string;
@@ -24,7 +28,7 @@
 
     let projectNameInput: Input;
 
-    let updateProjectError: (ApiError & { variant: AlertVariant }) | undefined = $state(undefined);
+    let updateProjectError: ActionError = $state(undefined);
 
     let loadingProjectName = $state(false);
     const loading = $state({ value: false });
@@ -39,13 +43,13 @@
                 projectName = project.name;
             })
             .catch((error) => {
-                updateProjectError = {
-                    errorTitle: "Failed to Load Project",
-                    errorDetails:
-                        "Something went wrong while loading the project name. Please make sure your internet connection is stable, then try again.",
-                    variant: "error",
-                };
-                console.error(`Couldn't load the project name: ${error}`);
+                updateProjectError = createActionError(
+                    "Failed to Load the Project",
+                    {
+                        action: "loading the project name",
+                    },
+                    error,
+                );
             });
         loadingProjectName = false;
     });
@@ -68,12 +72,10 @@
         };
 
         if (projectName === projectData.name) {
-            updateProjectError = {
-                errorTitle: "No Changes Detected",
-                errorDetails:
+            updateProjectError = createActionWarning("No Changes Detected", {
+                customDetails:
                     "To successfully change the project's name, you must provide a new one that is different from the current one.",
-                variant: "warning",
-            };
+            });
             return;
         }
 
@@ -91,13 +93,13 @@
                 (document.activeElement as HTMLElement)?.blur();
             })
             .catch((error) => {
-                updateProjectError = {
-                    errorTitle: "Failed to Update Project",
-                    errorDetails:
-                        "Something went wrong while updating the project name. Please make sure your internet connection is stable, then try again.",
-                    variant: "error",
-                };
-                console.error(`Couldn't update project: ${error}`);
+                updateProjectError = createActionError(
+                    "Failed to Update the Project",
+                    {
+                        action: "updating the project name",
+                    },
+                    error,
+                );
             });
     }
 </script>

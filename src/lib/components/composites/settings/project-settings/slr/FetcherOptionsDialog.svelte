@@ -4,13 +4,13 @@
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, Project_Settings } from "$lib/model/api/project";
-    import type { ApiError } from "$lib/model/general";
     import { updateFetchers } from "./UpdateFetchers";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import FetcherOptionRow from "./FetcherOptionRow.svelte";
     import { Lock } from "lucide-svelte";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
 
-    let error: ApiError | undefined = $state();
+    let loadFetcherOptionsError: ActionError = $state(undefined);
 
     interface Props {
         projectId: string;
@@ -58,12 +58,14 @@
         const availableOptions = await backendService
             .getAvailableFetcherOptions({ fetcherName: fetcher })
             .response.then((it) => new Map(Object.entries(it.options)))
-            .catch(() => {
-                error = {
-                    errorTitle: "Available Option Retrieval Failed",
-                    errorDetails:
-                        "Something went wrong when retrieving the available options for this fetcher. Please make sure your internet connection is stable, then try again.",
-                };
+            .catch((error) => {
+                loadFetcherOptionsError = createActionError(
+                    "Failed to Retrieve available Options",
+                    {
+                        action: "retrieving the available options for this fetcher",
+                    },
+                    error,
+                );
                 return new Map();
             });
         const fetchers = new Map(Object.entries(projectSettings?.fetchers ?? []));
@@ -102,7 +104,7 @@
                 open = false;
                 onProjectChanged(it);
             },
-            (it) => (error = it),
+            (it) => (loadFetcherOptionsError = it),
         );
         saveLoading = false;
     }
@@ -171,8 +173,12 @@
                 </div>
             {/if}
 
-            {#if error}
-                <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
+            {#if loadFetcherOptionsError}
+                <Alert
+                    details={loadFetcherOptionsError.errorDetails}
+                    title={loadFetcherOptionsError.errorTitle}
+                    variant="error"
+                />
             {/if}
         </div>
     {/snippet}

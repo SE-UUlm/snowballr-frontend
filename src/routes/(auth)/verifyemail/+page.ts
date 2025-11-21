@@ -3,6 +3,7 @@ import { backendService } from "$lib/grpc-api";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { Nothing } from "$lib/model/api/base";
 import type { PageLoad } from "./$types";
+import { createActionError } from "$lib/model/action-error";
 
 export const load: PageLoad = async ({ url }) => {
     // Check if the user is already authenticated (only verify if user is not authenticated)
@@ -20,11 +21,12 @@ export const load: PageLoad = async ({ url }) => {
 
     if (!token) {
         return {
-            verificationPromise: Promise.reject({
-                errorTitle: "Email Verification Failed",
-                errorDetails:
-                    "The verification link is missing a token. Please check the link provided in your email.",
-            }),
+            verificationPromise: Promise.reject(
+                createActionError("Email Verification Failed", {
+                    customDetails:
+                        "The verification link is missing a token. Please check the link provided in your email.",
+                }),
+            ),
         };
     }
 

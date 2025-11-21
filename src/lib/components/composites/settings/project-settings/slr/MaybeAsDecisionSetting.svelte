@@ -7,10 +7,10 @@
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project_Settings, Project } from "$lib/model/api/project";
-    import type { ApiError } from "$lib/model/general";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
 
     interface Props {
         projectId: string;
@@ -30,7 +30,7 @@
 
     const disabled = $derived(slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus);
 
-    let updateSLRSettingsError: ApiError | undefined = $state(undefined);
+    let updateSLRSettingsError: ActionError = $state(undefined);
 
     /**
      * Toggles the 'reviewMaybeAllowed' setting in the project settings.
@@ -66,12 +66,11 @@
                 toast.success("Successfully updated project settings.");
             })
             .catch((error) => {
-                console.error("Error updating project settings:", error);
-                updateSLRSettingsError = {
-                    errorTitle: "Project Settings Update Failed",
-                    errorDetails:
-                        "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
-                };
+                updateSLRSettingsError = createActionError(
+                    "Failed to Update Project Settings",
+                    { action: "updating the project settings" },
+                    error,
+                );
             })
             .finally(() => {
                 isUpdatingMaybeAsDecisionSettingStatus = false;
@@ -122,12 +121,11 @@
                 maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
             })
             .catch((error) => {
-                console.error("Error fetching project settings:", error);
-                updateSLRSettingsError = {
-                    errorTitle: "Project Settings Load Failed",
-                    errorDetails:
-                        "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
-                };
+                updateSLRSettingsError = createActionError(
+                    "Failed to Load Project Settings",
+                    { action: "loading the project settings" },
+                    error,
+                );
 
                 maybeAsDecision.isActivated = false;
             })

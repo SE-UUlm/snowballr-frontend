@@ -7,11 +7,11 @@
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
     import { Edit, Lock, PlusCircle, Trash } from "lucide-svelte";
-    import type { ApiError } from "$lib/model/general";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
 
     interface Props {
         projectId: string;
@@ -20,7 +20,7 @@
 
     const { projectId, slrSettingsLocked = false }: Props = $props();
 
-    let error: ApiError | undefined = $state();
+    let loadAvailableFetchersError: ActionError = $state(undefined);
     let loading = $state(true);
     let projectSettings: Project_Settings | undefined = $state();
 
@@ -43,12 +43,14 @@
         availableFetchers = await backendService
             .getAvailableFetchers({})
             .response.then((it) => it.fetcherNames)
-            .catch(() => {
-                error = {
-                    errorTitle: "Available Fetcher Retrieval Failed",
-                    errorDetails:
-                        "Something went wrong when retrieving the available fetchers. Please make sure your internet connection is stable, then try again.",
-                };
+            .catch((error) => {
+                loadAvailableFetchersError = createActionError(
+                    "Failed to Retrieve available Fetchers",
+                    {
+                        action: "retrieving the available fetchers",
+                    },
+                    error,
+                );
                 return [];
             });
         usedFetchers = Object.keys(projectSettings?.fetchers || {});
@@ -58,17 +60,18 @@
     // Fetch project (projectId) from backend and update current state with it
     async function refetchProject() {
         loading = true;
-        error = undefined;
+        loadAvailableFetchersError = undefined;
         await backendService
             .getProjectById({ id: projectId })
             .response.then(loadProject)
             .catch((error) => {
-                console.error("Error fetching project settings:", error);
-                error = {
-                    errorTitle: "Project Settings Load Failed",
-                    errorDetails:
-                        "Something went wrong when loading the project settings. Please make sure your internet connection is stable, then try again.",
-                };
+                loadAvailableFetchersError = createActionError(
+                    "Failed to Load the Project Settings",
+                    {
+                        action: "loading the project settings",
+                    },
+                    error,
+                );
             });
     }
 
@@ -104,8 +107,12 @@
 />
 
 <SettingsSection {loading} sectionTitle="Fetcher Settings">
-    {#if error}
-        <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
+    {#if loadAvailableFetchersError}
+        <Alert
+            details={loadAvailableFetchersError.errorDetails}
+            title={loadAvailableFetchersError.errorTitle}
+            variant="error"
+        />
     {/if}
     {#if !loading && usedFetchers}
         {#if usedFetchers.length === 0}

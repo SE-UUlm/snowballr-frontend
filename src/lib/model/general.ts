@@ -9,11 +9,6 @@ import type { Review } from "./api/review";
 
 type ValidationResult = { success: true } | { success: false; error: string };
 
-interface ApiError {
-    errorTitle: string;
-    errorDetails?: string;
-}
-
 type PaperStatus = "Not reviewed" | "Undecided" | "Accepted" | "Declined";
 
 /**
@@ -52,7 +47,6 @@ type StringifiedPaper = {
 
 export type {
     ValidationResult,
-    ApiError,
     CriterionWithReviews,
     CriteriaList,
     Stage,

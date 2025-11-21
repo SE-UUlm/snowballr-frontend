@@ -4,7 +4,6 @@
     import * as Card from "$lib/components/primitives/card/index.js";
     import { backendService } from "$lib/grpc-api";
     import { Schema } from "$lib/schemas";
-    import type { ApiError } from "$lib/model/general";
     import { goto } from "$app/navigation";
     import { cn } from "$lib/utils/shadcn-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
@@ -13,17 +12,18 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { isGrpcError } from "$lib/utils/common-helper.js";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
 
-    let signinError: ApiError | undefined = $state(undefined);
+    let signInError: ActionError = $state(undefined);
 
     const loading = $state({ value: false });
 
     async function handleSubmit(event: Event) {
         event.preventDefault();
-        signinError = undefined;
+        signInError = undefined;
 
         if (!emailInput.validate()) return;
 
@@ -37,19 +37,21 @@
             .then(async () => await goto("/"))
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {
-                    signinError = {
-                        errorTitle: "Invalid Credentials",
-                        errorDetails:
-                            "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
-                    };
+                    signInError = createActionError(
+                        "Invalid Credentials",
+                        {
+                            customDetails:
+                                "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
+                        },
+                        error,
+                    );
                 } else {
-                    signinError = {
-                        errorTitle: "Sign-In Failed",
-                        errorDetails:
-                            "Something went wrong during sign-in. Please make sure your internet connection is stable, then try again.",
-                    };
+                    signInError = createActionError(
+                        "Sign In Failed",
+                        { action: "signing you in" },
+                        error,
+                    );
                 }
-                console.error(error);
             });
     }
 </script>
@@ -94,10 +96,10 @@
                 loadingLabel="Signing In"
                 type="submit"
             />
-            {#if signinError}
+            {#if signInError}
                 <Alert
-                    details={signinError.errorDetails}
-                    title={signinError.errorTitle}
+                    details={signInError.errorDetails}
+                    title={signInError.errorTitle}
                     variant="error"
                 />
             {/if}
