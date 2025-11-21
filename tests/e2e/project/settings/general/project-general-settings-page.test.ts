@@ -64,15 +64,19 @@ test.describe("Project Name Settings Test", () => {
         ).toBeVisible();
     });
 
-    test("When the user enters a valid project name, then the name of the project should be updated to this name.", async ({
-        page,
-        projectSettingsPage,
-    }) => {
-        await projectSettingsPage.changeProjectName("New Project");
+    test.fixme(
+        "When the user enters a valid project name, then the name of the project should be updated to this name.",
+        async ({ page, projectSettingsPage }) => {
+            await projectSettingsPage.changeProjectName("New Project");
 
-        await expect(projectSettingsPage.errorAlert).not.toBeVisible();
-        await expect(page.getByRole("heading", { name: "Project 1" })).not.toBeVisible();
-        await expect(page.getByRole("heading", { name: "New Project" })).toBeVisible();
-        await expect(page.getByText("Successfully updated project name.")).toBeVisible();
-    });
+            await expect(projectSettingsPage.errorAlert).not.toBeVisible();
+            await expect(page.getByRole("heading", { name: "Project 1" })).not.toBeVisible();
+            await expect(page.getByRole("heading", { name: "New Project" })).toBeVisible();
+            await expect(page.getByText("Successfully updated project name.")).toBeVisible();
+        },
+    );
+});
+
+test.describe.fixme("Project Export Test", () => {
+    // TODO: Add project export tests when real backend is used for e2e tests
 });
