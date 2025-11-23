@@ -258,7 +258,7 @@ test.describe("Update Paper Tests", () => {
         await page.reload();
 
         // Expect no changes were saved
-        await expect(yearInput).toHaveValue(previousYear);
+        await expect(yearInput).toHaveText(previousYear);
     });
 });
 

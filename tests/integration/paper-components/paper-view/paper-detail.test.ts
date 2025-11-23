@@ -28,10 +28,10 @@ describe("PaperDetail", () => {
         const span = screen.getByTestId("details-label");
         expect(span.textContent).toEqual("Title");
 
-        const textareas = document.getElementsByTagName("textarea");
+        const textareas = screen.getAllByTestId("toggleable-input-title");
         expect(textareas).toHaveLength(1);
         const input = textareas[0];
-        expect(input.value).toEqual("Example Title");
+        expect(input.textContent).toEqual("Example Title");
     });
 
     test("When paper is loading, then skeleton is shown", () => {
