@@ -37,7 +37,7 @@ Usage:
     <CriteriaList listTitle="Hard Exclusion" {reviewers} {criteria} />
 ```
 -->
-<section class="flex flex-col gap-5 overflow-hidden">
+<section class="flex flex-col gap-5">
     <NamedList
         {emptyHint}
         errorHint="Couldn't load criteria"

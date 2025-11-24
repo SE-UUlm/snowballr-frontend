@@ -22,7 +22,7 @@ Usage:
     </PaperCardContent>
 ```
 -->
-<Tabs.Content class="h-full overflow-hidden" {value}>
+<Tabs.Content class="h-full" {value}>
     <div class="flex h-full flex-col gap-5">
         {@render children()}
     </div>
