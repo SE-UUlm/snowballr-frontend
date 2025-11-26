@@ -6,10 +6,10 @@
     import PaperDetail, {
         type PaperDetailProp,
     } from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
-    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
+    import ToggleableTextArea from "$lib/components/composites/input/ToggleableTextArea.svelte";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -101,8 +101,7 @@ Usage:
         <Skeleton class="flex h-[1.625rem] w-[75%] rounded-full" />
         <Skeleton class="flex h-[1.625rem] w-[90%] rounded-full" />
     {:then}
-        <ToggleableInput
-            class="h-full"
+        <ToggleableTextArea
             isEditable={isInEditMode}
             key="abstract"
             onInputChange={(c) => {

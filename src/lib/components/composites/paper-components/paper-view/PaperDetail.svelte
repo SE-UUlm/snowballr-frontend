@@ -60,7 +60,7 @@ Usage:
 -->
 <div id={key} class="flex flex-row gap-2" data-testid="paper-detail">
     <!-- Match top padding of input -->
-    <span class="flex w-24 flex-row items-center gap-2 pt-[0.3125rem] xl:w-42">
+    <span class="flex w-28 flex-row items-center gap-2 lg:w-32 xl:w-42">
         <span data-testid="details-label">{label}</span>
         {#if hint && isInEditMode}
             <Tooltip
@@ -89,15 +89,13 @@ Usage:
             />
         </div>
     {:then}
-        <div class="flex w-full flex-row gap-1">
-            <ToggleableInput
-                isEditable={isInEditMode}
-                {key}
-                onInputChange={updateValue}
-                placeholder={`No ${label} available`}
-                value={paper[key]}
-            />
-        </div>
+        <ToggleableInput
+            isEditable={isInEditMode}
+            {key}
+            onInputChange={updateValue}
+            placeholder={`No ${label} available`}
+            value={paper[key]}
+        />
     {:catch}
         <ErrorIndicator errorMessage={`Couldn't load ${label}`} />
     {/await}

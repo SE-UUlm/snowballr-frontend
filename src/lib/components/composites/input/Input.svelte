@@ -14,7 +14,7 @@
 
     export type InputProps = WithElementRef<HTMLInputAttributes> & {
         inputId: string;
-        label: string;
+        label?: string;
         placeholder?: string;
         required: boolean;
         type: HTMLInputTypeAttribute;
@@ -202,14 +202,18 @@ Usage:
 ```
 -->
 <div class={cn("flex flex-col gap-2", className)}>
-    <div class="flex flex-row items-center justify-between">
-        <Label for={inputId}>{label}</Label>
-        {#if link}
-            <a class="text-sm underline" href={link.href}>
-                {link.text}
-            </a>
-        {/if}
-    </div>
+    {#if label || link}
+        <div class="flex flex-row items-center justify-between">
+            {#if label}
+                <Label for={inputId}>{label}</Label>
+            {/if}
+            {#if link}
+                <a class="text-sm underline" href={link.href}>
+                    {link.text}
+                </a>
+            {/if}
+        </div>
+    {/if}
     <div class="relative flex flex-row items-center">
         <Input
             id={inputId}
