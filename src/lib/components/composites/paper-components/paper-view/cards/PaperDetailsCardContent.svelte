@@ -93,13 +93,13 @@ Usage:
         <h2>Abstract</h2>
     </div>
     {#await loadingPaper}
-        <Skeleton class="flex h-[1.625rem] w-[100%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[95%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[70%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[82%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[50%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[75%] rounded-full" />
-        <Skeleton class="flex h-[1.625rem] w-[90%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-full rounded-full" />
+        <Skeleton class="flex h-6.5 w-[95%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-[70%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-[82%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-[50%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-[75%] rounded-full" />
+        <Skeleton class="flex h-6.5 w-[90%] rounded-full" />
     {:then}
         <ToggleableTextArea
             isEditable={isInEditMode}

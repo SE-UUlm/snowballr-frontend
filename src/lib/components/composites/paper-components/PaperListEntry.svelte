@@ -100,7 +100,7 @@ Usage:
                 onclick={(e) => e.stopPropagation()}
                 title="Open Paper"
             >
-                <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+                <ExternalLink class="mt-1.5 size-4" />
             </a>
         {/if}
     </div>

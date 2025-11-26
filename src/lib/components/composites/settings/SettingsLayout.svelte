@@ -44,10 +44,8 @@ Usage:
     </SettingsLayout>
 ```
 -->
-<div
-    class="flex h-full w-full flex-row gap-4 overflow-hidden px-0 py-2.5 md:px-[1.75rem] lg:px-[3.75rem]"
->
-    <nav class="flex h-full w-full max-w-[20%] min-w-[9rem] flex-col gap-2.5 px-1.5 py-2.5">
+<div class="flex h-full w-full flex-row gap-4 overflow-hidden px-0 py-2.5 md:px-7 lg:px-15">
+    <nav class="flex h-full w-full max-w-[20%] min-w-36 flex-col gap-2.5 px-1.5 py-2.5">
         {#each tabs as tab, i (i)}
             <a
                 class={cn(

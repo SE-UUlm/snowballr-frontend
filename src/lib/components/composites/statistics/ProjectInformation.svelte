@@ -35,7 +35,7 @@ Usage:
     />
 ```
 -->
-<div class="w-full px-5 py-2 break-words" data-testid="project-information">
+<div class="w-full px-5 py-2 wrap-break-word" data-testid="project-information">
     {#await projectInformation}
         <div class="flex flex-col gap-y-3">
             {#each { length: 4 }}

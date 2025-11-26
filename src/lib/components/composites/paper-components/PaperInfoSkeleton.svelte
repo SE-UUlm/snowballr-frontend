@@ -10,5 +10,5 @@
             data-testid="paper-title-skeleton"
         />
     </div>
-    <Skeleton class="h-[1.125rem] w-15 rounded-full sm:w-20 md:w-25 lg:w-30 xl:w-40 2xl:w-50" />
+    <Skeleton class="h-4.5 w-15 rounded-full sm:w-20 md:w-25 lg:w-30 xl:w-40 2xl:w-50" />
 </div>

@@ -82,10 +82,7 @@ Usage:
     {#await loadingPaper}
         <div class="pt-2">
             <Skeleton
-                class={cn(
-                    "flex h-[1.625rem] rounded-full",
-                    skeletonValues[index % skeletonValues.length],
-                )}
+                class={cn("flex h-6.5 rounded-full", skeletonValues[index % skeletonValues.length])}
             />
         </div>
     {:then}
