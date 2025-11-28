@@ -79,7 +79,7 @@ Usage:
                     onclick={(e) => e.stopPropagation()}
                     title="Open Project"
                 >
-                    <ExternalLink class="mt-[0.375rem] size-[1rem]" />
+                    <ExternalLink class="mt-1.5 size-4" />
                 </a>
             {/if}
         </h2>

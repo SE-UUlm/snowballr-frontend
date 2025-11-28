@@ -18,7 +18,7 @@ Usage:
 <SettingsSection sectionTitle="Shortcuts Visibility">
     <div class="flex space-x-2">
         <Switch id="shortcuts-visibility-switch" bind:checked={shortcuts.isVisible} />
-        <div class="grid w-full max-w-100 gap-1.5 pt-0.25 md:max-w-200">
+        <div class="grid w-full max-w-100 gap-1.5 pt-px md:max-w-200">
             <Label
                 class="text-base leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 for="shortcuts-visibility-switch"

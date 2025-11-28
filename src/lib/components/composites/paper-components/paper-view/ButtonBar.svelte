@@ -63,7 +63,7 @@ Usage:
         {#await loadingProject then project}
             <!-- flex grow is very high so that it grows first, before the navigation buttons do -->
             <!-- max-width is max-width of buttons + gap, which is the reason why they have fixed values -->
-            <div class="flex max-w-[62rem] flex-grow-1000 justify-center gap-4">
+            <div class="flex max-w-248 flex-grow-1000 justify-center gap-4">
                 {#each decisionButtonsData as data (data.decision)}
                     <!-- Skip maybe button when the maybe decision is not allowed -->
                     {#if data.decision !== ReviewDecision.MAYBE || project.settings?.reviewMaybeAllowed}
