@@ -21,6 +21,17 @@
     }: Props = $props();
 </script>
 
+<!--
+@component
+A reusable navigation bar component to navigate to other pages and the user menu.
+
+Usage:
+```svelte
+    <NavigationBar backref="/previous-page" defaultTabValue={0} {tabs}>
+        <h2>This is a title!</h2>
+    </NavigationBar>
+```
+-->
 <header>
     <Card.Root class="w-fit shadow-lg">
         <nav class="grid h-18 grid-flow-col items-center gap-3 px-4 py-2">

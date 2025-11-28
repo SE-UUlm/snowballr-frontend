@@ -42,11 +42,11 @@ When creating a new component, please follow these guidelines:
 2. **Naming**: Use PascalCase for component files (e.g., `MyComponent.svelte`) and kebab-case for normal TS files (e.g.,
    `my-helper.ts`)
 3. **Props**: Clearly define the props your component accepts. Use TypeScript for type safety.
-4. **Documentation**: Add TSDoc comments to your component and its props to explain their purpose and usage.
+4. **Documentation**: Add comments to your component to explain its purpose, usage and the meaning of its props.
 5. **Testing**: Write integration tests for your component in the `tests/integration/` directory to ensure its
    functionality (see [the testing section](#testing)).
 
-Example Structure for `MyNewComponent`:
+Example structure for `MyNewComponent`:
 
 ```svelte
 <script lang="ts">
@@ -88,7 +88,7 @@ is a good example of a well-structured component.
 ### How to Pass HTML Attributes to a custom component
 
 Sometimes we want to set HTML attributes inside the component from outside when using it. For this we can change the
-Props interface. From:
+`Props` interface. From:
 
 ```svelte
 <script lang="ts">
