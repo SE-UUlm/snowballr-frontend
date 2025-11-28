@@ -59,7 +59,7 @@ npm run compile:proto
 ```
 
 You can find the generated API code in the
-[`src/lib/model/api`](https://github.com/SE-UUlm/snowballr-frontend/tree/af9ba337b6b40a3d573b62d420153763920e8481/src/lib/model/api)
+[`src/lib/model/api`](https://github.com/SE-UUlm/snowballr-frontend/tree/develop/src/lib/model/api)
 directory.
 
 Now you're good to go! Start the development server with:
