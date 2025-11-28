@@ -41,7 +41,7 @@ Usage:
 {:else}
     <div
         class={cn(
-            "bg-background text-default h-full w-full overflow-y-hidden border border-transparent px-1.5 py-1",
+            "bg-background text-default flex h-full w-full flex-[1_1_0] overflow-y-auto border border-transparent px-1.5 py-1",
             !value ? "text-neutral-500/85" : "",
         )}
         data-testid={`toggleable-textarea-${key}`}

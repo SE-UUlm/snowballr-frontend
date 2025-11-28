@@ -48,7 +48,7 @@ Usage:
     <section class="flex h-full w-full flex-col">
         <Tabs.Root class="flex h-full flex-col" value={tabs.length === 0 ? "" : tabs[0].value}>
             <UnderlineTabsList buttonList={tabListButtonList} {tabs} />
-            <Card.Content class="flex h-full flex-col p-5">
+            <Card.Content class="flex h-full flex-col overflow-y-auto p-5">
                 {@render children()}
             </Card.Content>
         </Tabs.Root>
