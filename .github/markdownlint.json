@@ -4,5 +4,6 @@
         "line_length": 120,
         "tables": false
     },
-    "first-line-heading": false
+    "first-line-heading": false,
+    "table-column-style": "aligned"
 }
