@@ -15,21 +15,21 @@ To set up the development environment, follow the steps in
 
 ```plaintext
 .
-├── api/ (snowballr-api submodule)
-├── scripts/ (helper scripts used in CI/CD or development)
+├── api/                    (snowballr-api submodule)
+├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/
 │   │   ├── components/
 │   │   │   ├── composites/ (our components)
 │   │   │   └── primitives/ (shadcn/ui components)
 │   │   └── model/
-│   │       └── api/ (auto-generated API code)
-│   └── routes/ (website layout)
+│   │       └── api/        (auto-generated API code)
+│   └── routes/             (website layout)
 ├── tests/
 │   ├── e2e/
 │   ├── integration/
 │   └── unit/
-└── wiki/ (this wiki)
+└── wiki/                   (this wiki)
 ```
 
 ## Creating a New Component
