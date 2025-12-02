@@ -5,6 +5,7 @@
     "license": "GPL-3.0-or-later",
     "packageManager": "npm@11.3.0",
     "scripts": {
+        "postinstall": "tiged SE-UUlm/snowballr-api/proto#v0.13.0 node_modules/snowballr-api",
         "dev": "vite dev --open",
         "build": "vite build",
         "preview": "vite preview --open",
@@ -79,6 +80,7 @@
         "tailwind-variants": "^1.0.0",
         "tailwindcss": "^4.1.16",
         "tailwindcss-animate": "^1.0.7",
+        "tiged": "^2.12.7",
         "tough-cookie": "^5.1.2",
         "ts-protoc-gen": "^0.15.0",
         "typescript": "^5.8.3",
