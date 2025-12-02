@@ -71,7 +71,6 @@ export default ts.config(
             "e2e-report/",
             "node_modules/",
             "src/lib/model/api/",
-            "api/",
         ],
     },
     {
