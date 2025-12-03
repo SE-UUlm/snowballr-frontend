@@ -13,7 +13,7 @@ jobs:
         name: Lighthouse Auditing
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout code
+            - name: Checkout repository
               uses: actions/checkout@v6
               with:
                   submodules: "recursive"
@@ -36,7 +36,7 @@ jobs:
             - name: Run Lighthouse
               run: npm run lighthouse:all -- --params="projectId=11,paperId=11-0"
 
-            - name: Archive coverage report
+            - name: Upload coverage report
               uses: actions/upload-artifact@v5
               with:
                   name: lighthouse-report

@@ -21,7 +21,7 @@ jobs:
         outputs:
             matrix: ${{ steps.create-matrix.outputs.matrix }}
         steps:
-            - name: Checkout code
+            - name: Checkout repository
               uses: actions/checkout@v6
               with:
                   submodules: "recursive"
@@ -60,7 +60,7 @@ jobs:
             fail-fast: false
             matrix: ${{ fromJSON(needs.determine-shards.outputs.matrix) }}
         steps:
-            - name: Checkout code
+            - name: Checkout repository
               uses: actions/checkout@v6
               with:
                   # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
