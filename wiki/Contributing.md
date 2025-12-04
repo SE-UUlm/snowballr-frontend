@@ -15,21 +15,21 @@ To set up the development environment, follow the steps in
 
 ```plaintext
 .
-├── api/ (snowballr-api submodule)
-├── scripts/ (helper scripts used in CI/CD or development)
+├── api/                    (snowballr-api submodule)
+├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/
 │   │   ├── components/
 │   │   │   ├── composites/ (our components)
 │   │   │   └── primitives/ (shadcn/ui components)
 │   │   └── model/
-│   │       └── api/ (auto-generated API code)
-│   └── routes/ (website layout)
+│   │       └── api/        (auto-generated API code)
+│   └── routes/             (website layout)
 ├── tests/
 │   ├── e2e/
 │   ├── integration/
 │   └── unit/
-└── wiki/ (this wiki)
+└── wiki/                   (this wiki)
 ```
 
 ## Creating a New Component
@@ -339,3 +339,9 @@ npm run lighthouse -- --dir=/settings
 # or
 npm run lighthouse:all -- --dir=/settings
 ```
+
+## Release Procedure
+
+We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed and used by the
+users. To release a new version of the frontend, follow the steps in the
+[SnowballR Wiki](https://github.com/SE-UUlm/snowballr/wiki/Contributing#release-procedure).
