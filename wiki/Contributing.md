@@ -339,3 +339,9 @@ npm run lighthouse -- --dir=/settings
 # or
 npm run lighthouse:all -- --dir=/settings
 ```
+
+## Release Procedure
+
+We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed and used by the
+users. To release a new version of the frontend, follow the steps in the
+[SnowballR Wiki](https://github.com/SE-UUlm/snowballr/wiki/Contributing#release-procedure).
