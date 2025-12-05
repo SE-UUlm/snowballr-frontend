@@ -23,6 +23,15 @@
     }
 </script>
 
+<!--
+@component
+Custom select component that allows users to select only a single option from a list of options.
+
+Usage:
+```svelte
+    <SingleSelect categoryLabel="format" {options} bind:selectedValue={selectedFormat} />
+```
+-->
 <Select.Root {disabled} type="single" bind:value={selectedValue}>
     <Select.Trigger class="w-42">
         <span class="flex w-full flex-row justify-center">{label}</span>

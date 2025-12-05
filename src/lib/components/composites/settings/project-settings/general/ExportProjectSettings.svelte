@@ -74,6 +74,15 @@
     }
 </script>
 
+<!--
+@component
+Component for exporting the project in a selected format.
+
+Usage:
+```svelte
+    <ExportProjectSettings {projectId} />
+```
+-->
 <SettingsSection sectionTitle="Export Project">
     {#await formatsPromise}
         <span class="italic">Loading formats ...</span>

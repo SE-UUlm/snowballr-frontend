@@ -342,5 +342,6 @@ if (typeof window !== "undefined") {
     window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 }
 
+// Mock URL.createObjectURL and URL.revokeObjectURL for tests that involve file downloads
 global.URL.createObjectURL = vi.fn();
 global.URL.revokeObjectURL = vi.fn();
