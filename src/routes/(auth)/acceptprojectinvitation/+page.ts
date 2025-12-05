@@ -1,4 +1,5 @@
 import { backendService } from "$lib/grpc-api";
+import { createActionError } from "$lib/model/action-error";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ url }) => {
@@ -6,11 +7,12 @@ export const load: PageLoad = async ({ url }) => {
 
     if (!token) {
         return {
-            acceptancePromise: Promise.reject({
-                errorTitle: "Accepting the Project Invitation Failed",
-                errorDetails:
-                    "The acceptance link is missing a token. Please check the link provided in your email.",
-            }),
+            acceptancePromise: Promise.reject(
+                createActionError("Accepting the Project Invitation Failed", {
+                    customDetails:
+                        "The acceptance link is missing a token. Please check the link provided in your email.",
+                }),
+            ),
         };
     }
 

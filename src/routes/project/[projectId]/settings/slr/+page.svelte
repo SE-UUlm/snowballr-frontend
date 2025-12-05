@@ -3,11 +3,12 @@
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/FetcherSettings.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import { ProjectStatus } from "$lib/model/api/project.js";
     import { getContext, onMount } from "svelte";
     import { isCurrentUserProjectAdmin } from "../helper.js";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { createActionWarning } from "$lib/model/action-error.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -53,13 +54,14 @@
 
 {#if isCurrentUserAdmin.value}
     <ProjectSettingsLayout isCurrentUserAdmin={true} {projectId} selectedTab="slr">
-        {#if slrSettingsLocked}
-            <Alert
-                details="To ensure consistency, SLR settings can’t be changed after a review has been submitted."
-                title="SLR Settings are Locked"
-                variant="warning"
-            />
-        {/if}
+        <ActionErrorAlert
+            error={slrSettingsLocked
+                ? createActionWarning("SLR Settings are Locked", {
+                      customDetails:
+                          "To ensure consistency, SLR settings can't be changed after a review has been submitted.",
+                  })
+                : undefined}
+        />
         <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} />
         <FetcherSettings {projectId} {slrSettingsLocked} />
     </ProjectSettingsLayout>

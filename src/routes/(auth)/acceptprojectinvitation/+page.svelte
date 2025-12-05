@@ -4,50 +4,53 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { getGrpcStatusCode } from "$lib/utils/common-helper";
-    import type { ApiError } from "$lib/model/general";
+    import { createActionError, isActionError, type ActionError } from "$lib/model/action-error.js";
 
     let { data } = $props();
     const { acceptancePromise } = data;
 
-    type InvitationAcceptanceError = ApiError | RpcError;
+    type InvitationAcceptanceError = ActionError | RpcError;
 
-    function getErrorDetails(error: InvitationAcceptanceError): ApiError {
-        const customError = error as ApiError;
-        if (customError.errorTitle && customError.errorDetails) {
-            return customError;
+    function getErrorDetails(error: InvitationAcceptanceError): ActionError {
+        if (isActionError(error)) {
+            return error;
         }
 
-        const rpcError = error as RpcError;
-        const statusCodeValue = getGrpcStatusCode(rpcError.code);
-
+        const statusCodeValue = getGrpcStatusCode(error.code);
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:
-                return {
-                    errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails:
-                        "This acceptance link is invalid. Please check the link and try again.",
-                };
-            case GrpcStatusCode.NOT_FOUND:
-                return {
-                    errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails:
-                        "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
-                };
-            case GrpcStatusCode.FAILED_PRECONDITION:
-                return {
-                    errorTitle: "Accepting the Project Invitation Failed",
-                    errorDetails: "Please register before accepting the invitation.",
-                };
-            default:
-                console.error(
-                    "Unexpected error occurred during project invitation acceptance:",
-                    rpcError,
+                return createActionError(
+                    "Accepting the Project Invitation Failed",
+                    {
+                        customDetails:
+                            "This acceptance link is invalid. Please check the link and try again.",
+                    },
+                    error,
                 );
-                return {
-                    errorTitle: "Server Error",
-                    errorDetails:
-                        "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
-                };
+            case GrpcStatusCode.NOT_FOUND:
+                return createActionError(
+                    "Accepting the Project Invitation Failed",
+                    {
+                        customDetails:
+                            "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
+                    },
+                    error,
+                );
+            case GrpcStatusCode.FAILED_PRECONDITION:
+                return createActionError(
+                    "Accepting the Project Invitation Failed",
+                    { customDetails: "Please register before accepting the invitation." },
+                    error,
+                );
+            default:
+                return createActionError(
+                    "Server Error",
+                    {
+                        customDetails:
+                            "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
+                    },
+                    error,
+                );
         }
     }
 
@@ -85,8 +88,8 @@
         <Button class="mt-6" onclick={() => goto("/signin")}>Back to Sign In</Button>
     {:catch error}
         {@const errorDetails = getErrorDetails(error)}
-        <h1 class="mb-4 text-8xl">{errorDetails.errorTitle}</h1>
-        <div class="text-default">{errorDetails.errorDetails}</div>
+        <h1 class="mb-4 text-8xl">{errorDetails?.errorTitle}</h1>
+        <div class="text-default">{errorDetails?.errorDetails}</div>
 
         <Button class="mt-6" onclick={() => goto("/signup")}>Back to Sign Up</Button>
     {/await}

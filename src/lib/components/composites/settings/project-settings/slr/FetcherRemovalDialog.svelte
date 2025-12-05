@@ -1,8 +1,8 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import type { ActionError } from "$lib/model/action-error";
     import { Project, Project_Settings } from "$lib/model/api/project";
-    import type { ApiError } from "$lib/model/general";
     import { updateFetchers } from "./UpdateFetchers";
 
     interface Props {
@@ -21,7 +21,7 @@
         open = $bindable(),
     }: Props = $props();
 
-    let error: ApiError | undefined = $state();
+    let removeFetcherError: ActionError = $state(undefined);
     let loading = $state(false);
 
     // remove the fetcher (fetcher) from the project (projectId)
@@ -36,7 +36,7 @@
                 onProjectChanged(project);
                 open = false;
             },
-            (it) => (error = it),
+            (it) => (removeFetcherError = it),
         );
         loading = false;
     }
@@ -63,9 +63,6 @@
             Removing the fetcher also irreversibly removes the values of the options you may have
             configured.
         </p>
-
-        {#if error}
-            <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
-        {/if}
+        <ActionErrorAlert error={removeFetcherError} />
     {/snippet}
 </AlertDialog>

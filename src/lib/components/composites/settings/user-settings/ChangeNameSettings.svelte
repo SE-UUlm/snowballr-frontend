@@ -1,25 +1,29 @@
 <script lang="ts">
     import { backendService } from "$lib/grpc-api";
     import { User } from "$lib/model/api/user";
-    import type { ApiError } from "$lib/model/general";
     import { Schema } from "$lib/schemas";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
     import { getContext } from "svelte";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
-    import Alert, { type AlertVariant } from "../../utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import {
+        createActionError,
+        createActionWarning,
+        type ActionError,
+    } from "$lib/model/action-error";
+    import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
 
     const user = $derived(getContext<UserContext>(UserContextKey)());
 
     let firstNameInput: Input;
     let lastNameInput: Input;
 
-    let updateUserError: (ApiError & { variant: AlertVariant }) | undefined = $state(undefined);
+    let updateUserError: ActionError = $state(undefined);
     const loading = $state({ value: false });
 
     async function handleSubmit(event: Event) {
@@ -37,12 +41,10 @@
         };
 
         if (userData.firstName === user.firstName && userData.lastName === user.lastName) {
-            updateUserError = {
-                errorTitle: "No Changes Detected",
-                errorDetails:
+            updateUserError = createActionWarning("No Changes Detected", {
+                customDetails:
                     "To successfully change your name, you must provide a new one that is different from your current one.",
-                variant: "warning",
-            };
+            });
             return;
         }
 
@@ -59,13 +61,11 @@
                 (document.activeElement as HTMLElement)?.blur();
             })
             .catch((error) => {
-                updateUserError = {
-                    errorTitle: "Failed to Update User",
-                    errorDetails:
-                        "Something went wrong while updating the user. Please make sure your internet connection is stable, then try again.",
-                    variant: "error",
-                };
-                console.error(`Couldn't update user name: ${error}`);
+                updateUserError = createActionError(
+                    "Failed to Update User",
+                    { action: "updating the user" },
+                    error,
+                );
             });
     }
 </script>
@@ -121,13 +121,5 @@ Usage:
             type="submit"
         />
     </form>
-    {#if updateUserError}
-        <div class="max-w-100 md:max-w-200">
-            <Alert
-                details={updateUserError.errorDetails}
-                title={updateUserError.errorTitle}
-                variant={updateUserError.variant}
-            />
-        </div>
-    {/if}
+    <ActionErrorAlert class="max-w-100 md:max-w-200" error={updateUserError} />
 </SettingsSection>

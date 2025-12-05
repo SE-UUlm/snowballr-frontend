@@ -3,11 +3,11 @@
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import type { Project_Member } from "$lib/model/api/project";
-    import type { ApiError } from "$lib/model/general";
     import { backendService } from "$lib/grpc-api";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;
@@ -24,7 +24,7 @@
     }: Props = $props();
 
     const loading = $state({ value: false });
-    let error = $state<ApiError | undefined>(undefined);
+    let inviteUsersError: ActionError = $state(undefined);
     let open = $state(false);
     let invitees: string[] = $state([]);
     let actionButtonDisabled = $derived(loading.value || invitees.length === 0);
@@ -32,7 +32,7 @@
     async function inviteUsers(event: Event) {
         event.preventDefault();
 
-        error = undefined;
+        inviteUsersError = undefined;
         try {
             const members = (await loadingMembers).map((member) => member.user?.email);
             // filter out emails of existing members
@@ -47,13 +47,14 @@
 
             invitees = [];
             open = false;
-        } catch (inviteUsersError) {
-            error = {
-                errorTitle: "Invitation Failed",
-                errorDetails:
-                    "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
-            };
-            console.error(`Couldn't invite users: ${inviteUsersError}`);
+        } catch (error) {
+            inviteUsersError = createActionError(
+                "Invitation Failed",
+                {
+                    action: "inviting the users",
+                },
+                error as Error | undefined,
+            );
         }
     }
 
@@ -105,9 +106,7 @@ Usage:
         >
             <InviteUsersInput {projectId} bind:invitees />
         </form>
-        {#if error}
-            <Alert details={error.errorDetails} title={error.errorTitle} variant="error" />
-        {/if}
+        <ActionErrorAlert error={inviteUsersError} />
     {/snippet}
     {#snippet footer()}
         <LoadingButton

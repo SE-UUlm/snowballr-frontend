@@ -1,7 +1,7 @@
 import { backendService } from "$lib/grpc-api";
+import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { FetcherOptions } from "$lib/model/api/fetcher";
 import { Project, Project_Settings } from "$lib/model/api/project";
-import type { ApiError } from "$lib/model/general";
 import { toast } from "svelte-sonner";
 
 export type Fetchers = { [key: string]: FetcherOptions };
@@ -10,7 +10,7 @@ export async function updateFetchers(
     projectId: string,
     fetchers: Fetchers,
     onSuccess: (updatedProject: Project) => void = () => {},
-    onError: (error: ApiError) => void = () => {},
+    onError: (error: ActionError) => void = () => {},
 ) {
     const projectData: Partial<Project> = {
         id: projectId,
@@ -34,10 +34,14 @@ export async function updateFetchers(
             toast.error("Error when updating project.", {
                 description: error,
             });
-            onError({
-                errorTitle: "Project Settings Update Failed",
-                errorDetails:
-                    "Something went wrong when updating the project settings. Please make sure your internet connection is stable, then try again.",
-            });
+            onError(
+                createActionError(
+                    "Project Settings Update Failed",
+                    {
+                        action: "updating the project settings",
+                    },
+                    error,
+                ),
+            );
         });
 }

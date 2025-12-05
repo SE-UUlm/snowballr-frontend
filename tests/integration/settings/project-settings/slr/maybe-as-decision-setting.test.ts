@@ -196,11 +196,11 @@ describe("Maybe As Decision Project Setting", () => {
         screen.getByRole("button", { name: "Confirm" }).click();
 
         expect(
-            await screen.findByRole("alert", { name: "Project Settings Update Failed" }),
+            await screen.findByRole("alert", { name: "Failed to Update Project Settings" }),
         ).toBeInTheDocument();
         expect(
             screen.getByText(
-                "Something went wrong updating the project settings. Please make sure your internet connection is stable, then try again.",
+                "Something went wrong while updating the project settings. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
 
@@ -222,11 +222,11 @@ describe("Maybe As Decision Project Setting", () => {
         });
 
         expect(
-            await screen.findByRole("alert", { name: "Project Settings Load Failed" }),
+            await screen.findByRole("alert", { name: "Failed to Load Project Settings" }),
         ).toBeInTheDocument();
         expect(
             screen.getByText(
-                "Something went wrong loading the project settings. Please make sure your internet connection is stable, then try again.",
+                "Something went wrong while loading the project settings. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
     });

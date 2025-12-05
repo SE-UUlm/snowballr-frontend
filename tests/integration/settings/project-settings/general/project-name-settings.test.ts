@@ -109,7 +109,7 @@ describe("ProjectNameSettings", () => {
 
         expect(
             await screen.findByRole("alert", {
-                name: "Failed to Load Project",
+                name: "Failed to Load the Project",
             }),
         ).toBeInTheDocument();
         expect(
@@ -140,7 +140,7 @@ describe("ProjectNameSettings", () => {
 
         expect(
             await screen.findByRole("alert", {
-                name: "Failed to Update Project",
+                name: "Failed to Update the Project",
             }),
         ).toBeInTheDocument();
         expect(
