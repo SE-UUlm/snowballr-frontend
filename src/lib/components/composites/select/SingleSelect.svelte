@@ -5,21 +5,23 @@
     interface Props {
         options: SelectOption[];
         categoryLabel?: string;
-        disabled: boolean;
+        disabled?: boolean;
         selectedValue?: string;
     }
 
     let {
         options,
-        categoryLabel = "categories",
-        disabled,
+        categoryLabel = "category",
+        disabled = false,
         selectedValue = $bindable(undefined),
     }: Props = $props();
 
     let label = $derived(getSelectLabel(selectedValue));
 
     function getSelectLabel(selectedValue: string | undefined): string {
-        return !selectedValue ? `No ${categoryLabel} selected` : selectedValue;
+        const selectedLabel = options.find((option) => option.value === selectedValue)?.label;
+
+        return !selectedLabel ? `No ${categoryLabel} selected` : selectedLabel;
     }
 </script>
 

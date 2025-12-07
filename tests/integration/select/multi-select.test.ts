@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { get, type Writable, writable } from "svelte/store";
-import TestSelect from "./TestMultiSelect.svelte";
+import TestMultiSelect from "./TestMultiSelect.svelte";
 
 describe("MultiSelect", () => {
     beforeEach(() => {
@@ -74,7 +74,6 @@ describe("MultiSelect", () => {
         await user.click(trigger);
 
         const option1 = screen.getByText("Option 1", { exact: false });
-
         await user.click(option1);
 
         expect(trigger).toHaveTextContent("categories: Option 1 (with a very very ... (1)");
@@ -119,7 +118,7 @@ describe("MultiSelect", () => {
             const user = userEvent.setup();
             const selectedValues: Writable<string[]> = writable([]);
 
-            render(TestSelect, {
+            render(TestMultiSelect, {
                 options: [
                     { value: "option-1", label: "Option 1" },
                     { value: "option-2", label: "Option 2" },
