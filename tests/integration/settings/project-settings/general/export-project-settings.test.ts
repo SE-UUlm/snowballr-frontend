@@ -15,7 +15,6 @@ describe("ExportProjectSettings", () => {
         });
 
         expect(screen.getByRole("heading", { name: "Export Project" })).toBeInTheDocument();
-        expect(screen.queryByText("Loading formats ...")).toBeInTheDocument();
 
         const exportButton = screen.getByRole("button", { name: "Export Project" });
         expect(exportButton).toBeInTheDocument();

@@ -3,13 +3,13 @@
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Nothing } from "$lib/model/api/base";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { ExportRequest } from "$lib/model/api/export";
-    import { loadingWrapper, pluralize } from "$lib/utils/common-helper";
+    import { loadingWrapper } from "$lib/utils/common-helper";
     import { downloadBlob } from "$lib/utils/download-file";
     import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { onMount } from "svelte";
 
     interface Props {
         projectId: string;
@@ -23,23 +23,25 @@
     const loadingExport = $state({ value: false });
     let exportProjectError: ActionError = $state(undefined);
 
-    const formatsPromise = backendService
-        .getAvailableExportFormats(Nothing)
-        .response.then((availableFormats) => {
-            formats = availableFormats.formats;
-        })
-        .catch((error) => {
-            exportProjectError = createActionError(
-                "Failed to Load the Export Formats",
-                {
-                    action: "loading the export formats",
-                },
-                error,
-            );
-        })
-        .finally(() => {
-            loadingFormats = false;
-        });
+    onMount(() => {
+        backendService
+            .getAvailableExportFormats(Nothing)
+            .response.then((availableFormats) => {
+                formats = availableFormats.formats;
+            })
+            .catch((error) => {
+                exportProjectError = createActionError(
+                    "Failed to Load the Export Formats",
+                    {
+                        action: "loading the export formats",
+                    },
+                    error,
+                );
+            })
+            .finally(() => {
+                loadingFormats = false;
+            });
+    });
 
     async function exportProject() {
         if (!selectedFormat) {
@@ -84,17 +86,6 @@ Usage:
 ```
 -->
 <SettingsSection sectionTitle="Export Project">
-    {#await formatsPromise}
-        <span class="italic">Loading formats ...</span>
-    {:then}
-        <span>
-            You can export the project in the following
-            {pluralize(formats, "format", "formats")}:
-            {formats.join(", ")}.
-        </span>
-    {:catch}
-        <ErrorIndicator errorMessage="Failed loading formats"></ErrorIndicator>
-    {/await}
     <div class="flew-row flex">
         <SingleSelect
             categoryLabel="format"
