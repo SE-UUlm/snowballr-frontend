@@ -5,10 +5,8 @@
  * @param filename - the desired filename for the downloaded file
  */
 export function downloadBlob(byteArray: Uint8Array<ArrayBufferLike>, filename: string): void {
-    const normalizedData = new Uint8Array(byteArray);
-
     // create a browser Blob and object URL
-    const file = new window.Blob([normalizedData], {
+    const file = new window.Blob([byteArray], {
         type: "application/octet-stream",
     });
     const url = URL.createObjectURL(file);
