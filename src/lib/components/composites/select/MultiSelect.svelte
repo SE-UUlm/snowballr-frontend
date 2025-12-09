@@ -1,11 +1,7 @@
 <script lang="ts">
     import * as Select from "$lib/components/primitives/select/index.js";
     import { Separator } from "$lib/components/primitives/separator";
-
-    export interface SelectOption {
-        value: string;
-        label: string;
-    }
+    import type { SelectOption } from "$lib/model/select-option";
 
     interface Props {
         options: SelectOption[];
@@ -104,7 +100,7 @@ Custom select component that allows users to select multiple options from a list
 
 Usage:
 ```svelte
-    <Select categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
+    <MultiSelect categoryLabel="Years" {options} bind:selectedValues={selectedYears} />
 ```
 -->
 <Select.Root onValueChange={selectOrUnselectAllOptions} type="multiple" bind:value={selectedValues}>

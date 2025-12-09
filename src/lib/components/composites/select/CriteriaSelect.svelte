@@ -1,6 +1,7 @@
 <script lang="ts">
-    import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import { Criterion } from "$lib/model/api/criterion";
+    import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
 
     interface Props {
@@ -25,4 +26,4 @@
     );
 </script>
 
-<Select categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />
+<MultiSelect categoryLabel="Criteria" {options} bind:selectedValues={selectedCriteria} />

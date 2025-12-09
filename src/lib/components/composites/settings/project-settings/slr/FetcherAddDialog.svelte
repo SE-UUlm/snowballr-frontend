@@ -5,7 +5,7 @@
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { pluralize } from "$lib/utils/common-helper";
-    import { updateFetchers } from "./UpdateFetchers";
+    import { updateFetchers } from "./update-fetchers";
 
     interface Props {
         projectId: string;

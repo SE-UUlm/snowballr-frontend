@@ -1,6 +1,7 @@
 <script lang="ts">
-    import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import type { User } from "$lib/model/api/user";
+    import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
     import { getName } from "$lib/utils/common-helper";
 
@@ -26,4 +27,4 @@
     );
 </script>
 
-<Select categoryLabel="Reviewers" {options} bind:selectedValues={selectedReviewers} />
+<MultiSelect categoryLabel="Reviewers" {options} bind:selectedValues={selectedReviewers} />

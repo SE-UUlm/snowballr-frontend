@@ -1,6 +1,7 @@
 <script lang="ts">
-    import Select, { type SelectOption } from "$lib/components/composites/select/Select.svelte";
+    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
     import { PaperDecision } from "$lib/model/api/project";
+    import type { SelectOption } from "$lib/model/select-option";
     import { getStatusText } from "$lib/utils/common-helper";
 
     interface Props {
@@ -22,4 +23,4 @@
     const options = $state<SelectOption[]>(defaultOptions);
 </script>
 
-<Select categoryLabel="Decisions" {options} bind:selectedValues={selectedDecisions} />
+<MultiSelect categoryLabel="Decisions" {options} bind:selectedValues={selectedDecisions} />

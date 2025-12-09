@@ -1,12 +1,12 @@
 <script lang="ts">
     import { cn } from "$lib/utils/shadcn-helper";
-    import { env } from "$env/dynamic/public";
     import "../app.css";
     import { Toaster } from "svelte-sonner";
     import type { LayoutData } from "./$types";
     import { setContext, type Snippet } from "svelte";
     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
     import type { User } from "$lib/model/api/user";
+    import { IS_IN_DEV_MODE } from "$lib/constants";
 
     let { data, children } = $props<{
         data: LayoutData;
@@ -23,8 +23,7 @@
 
     setContext<UserContext>(UserContextKey, () => userState);
 
-    const isDevMode = env.PUBLIC_IS_DEV_MODE === "true";
-    if (isDevMode) {
+    if (IS_IN_DEV_MODE) {
         console.warn("Running in development mode");
     }
 </script>
@@ -36,7 +35,7 @@
     {@render children()}
 </div>
 
-{#if isDevMode}
+{#if IS_IN_DEV_MODE}
     <div
         class={cn(
             "absolute right-1 bottom-1 rounded-md px-1.5",

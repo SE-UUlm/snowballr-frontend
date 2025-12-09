@@ -210,7 +210,6 @@ vi.mock("$lib/grpc-api", () => {
             isPaperOnReadingList: mock({ value: false }),
             addPaperToReadingList: vi.fn(),
             removePaperFromReadingList: vi.fn(),
-            getPendingInvitationsForUser: mock({ projects: [Object.values(Projects).at(0)!] }),
             inviteUserToProject: vi.fn(),
             acceptProjectInvitation: vi.fn(),
             getPendingInvitationsForProject: mock({ users: [Object.values(Users).at(0)!] }),
@@ -342,3 +341,7 @@ if (typeof window !== "undefined") {
     window.HTMLElement.prototype.hasPointerCapture = vi.fn();
     window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 }
+
+// Mock URL.createObjectURL and URL.revokeObjectURL for tests that involve file downloads
+global.URL.createObjectURL = vi.fn();
+global.URL.revokeObjectURL = vi.fn();

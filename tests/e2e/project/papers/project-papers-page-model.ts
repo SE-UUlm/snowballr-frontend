@@ -155,7 +155,7 @@ export class ProjectPapersPageModel {
 
     /**
      * Applies given filters by selecting the corresponding values in the
-     * `Select` components for stages, years and decisions.
+     * `MultiSelect` components for stages, years and decisions.
      *
      * @remarks
      * This method does not check, whether the given stage, year or decision can be selected!

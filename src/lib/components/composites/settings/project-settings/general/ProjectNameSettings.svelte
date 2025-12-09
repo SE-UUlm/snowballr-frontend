@@ -110,7 +110,7 @@ Component for changing the project name settings.
 
 Usage:
 ```svelte
-    <ProjectNameSettings {loadingProject} {projectId}/>
+    <ProjectNameSettings {loadingProject} {projectId} />
 ```
 -->
 <SettingsSection sectionTitle="General">

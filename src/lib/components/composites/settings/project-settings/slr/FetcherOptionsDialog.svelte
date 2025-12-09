@@ -3,7 +3,7 @@
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, Project_Settings } from "$lib/model/api/project";
-    import { updateFetchers } from "./UpdateFetchers";
+    import { updateFetchers } from "./update-fetchers";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import FetcherOptionRow from "./FetcherOptionRow.svelte";
     import { Lock } from "lucide-svelte";
