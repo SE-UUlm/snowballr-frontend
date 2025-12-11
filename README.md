@@ -1,4 +1,4 @@
-# SnowballR
+# SnowballR Frontend
 
 **SnowballR** is a web-based tool supporting _Systematic Literature Reviews (SLR)_.
 
