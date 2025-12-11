@@ -12,7 +12,7 @@ export class SignInPageModel {
 
     constructor(page: Page) {
         this.page = page;
-        this.heading = page.getByRole("heading", { name: "Sign In", exact: true });
+        this.heading = page.getByRole("heading", { name: "Sign In to SnowballR", exact: true });
         this.emailInput = page.getByLabel("Email", { exact: true });
         this.passwordInput = page.getByLabel("Password", { exact: true });
         this.signInButton = page.getByRole("button", { name: "Sign In", exact: true });
