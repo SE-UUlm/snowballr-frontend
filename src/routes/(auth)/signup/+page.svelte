@@ -14,6 +14,7 @@
     import { isGrpcError } from "$lib/utils/common-helper.js";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import logo from "$lib/assets/snowballr-logo_512.png";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -88,9 +89,12 @@
 </svelte:head>
 
 <Card.Root class={cn("flex w-full max-w-xl flex-col border-slate-500 shadow-lg")}>
-    <Card.Header class="flex w-full flex-col">
-        <Card.Title class="text-3xl">Sign Up</Card.Title>
-        <Card.Description>Enter your information to create an account</Card.Description>
+    <Card.Header class="flex h-fit w-full flex-row">
+        <img class="h-35 w-35" alt="SnowballR Logo" src={logo} />
+        <div class="flex h-35 w-full flex-col justify-center">
+            <Card.Title class="text-3xl">Sign Up to SnowballR</Card.Title>
+            <Card.Description>Enter your information to create an account</Card.Description>
+        </div>
     </Card.Header>
     <Card.Content class="flex w-full flex-col">
         <form

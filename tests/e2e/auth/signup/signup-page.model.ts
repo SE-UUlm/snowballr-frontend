@@ -13,7 +13,7 @@ export class SignUpPageModel {
 
     constructor(page: Page) {
         this.page = page;
-        this.heading = page.getByRole("heading", { name: "Sign Up", exact: true });
+        this.heading = page.getByRole("heading", { name: "Sign Up to SnowballR", exact: true });
         this.firstNameInput = page.getByLabel("First Name", { exact: true });
         this.lastNameInput = page.getByLabel("Last Name", { exact: true });
         this.emailInput = page.getByLabel("Email", { exact: true });
