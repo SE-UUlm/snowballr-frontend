@@ -23,8 +23,6 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v6
-              with:
-                  submodules: "recursive"
 
             - name: Setup
               uses: ./.github/workflows/setup/
@@ -66,7 +64,6 @@ jobs:
                   # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
                   # See https://github.com/actions/checkout for more details.
                   fetch-depth: 0
-                  submodules: "recursive"
 
             - name: E2E-Setup
               uses: ./.github/workflows/e2e-setup/

@@ -1,12 +1,17 @@
 In this section, we explain how to contribute to the Snowballr frontend project. We cover the following topics:
 
 - [Project Layout](#project-layout)
+- [Creating a New Component](#creating-a-new-component)
+  - [How to Pass HTML Attributes to a custom component](#how-to-pass-html-attributes-to-a-custom-component)
+  - [Skeletons](#skeletons)
+  - [Loading state on actions](#loading-state-on-actions)
 - [User Context](#user-context)
   - [How the User is Fetched and Made Available](#how-the-user-is-fetched-and-made-available)
   - [How to Use the User Context in Components](#how-to-use-the-user-context-in-components)
   - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
+- [Release Procedure](#release-procedure)
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
@@ -15,7 +20,6 @@ To set up the development environment, follow the steps in
 
 ```plaintext
 .
-├── api/                    (snowballr-api submodule)
 ├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/

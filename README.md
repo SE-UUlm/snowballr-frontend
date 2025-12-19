@@ -53,7 +53,6 @@ The fastest way to get started is to use the provided Docker setup. To do so, ru
 ```bash
 git clone git@github.com:SE-UUlm/snowballr-frontend.git
 cd snowballr-frontend
-git submodule update --init --recursive
 docker compose up
 ```
 
