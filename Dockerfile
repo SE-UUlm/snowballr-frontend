@@ -13,6 +13,9 @@ WORKDIR /usr/src/app
 # Create a stage for installing production dependencies.
 FROM base AS build
 
+# Install Git - it is used by tiged to fetch the API
+RUN apk add git
+
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage bind mounts to package.json and package-lock.json to avoid having to copy them
