@@ -50,13 +50,7 @@ cd snowballr-frontend
 npm install
 ```
 
-Next, generate the API code:
-
-```bash
-npm run compile:proto
-```
-
-You can find the generated API code in the
+You can find the generated API client code in the
 [`src/lib/model/api`](https://github.com/SE-UUlm/snowballr-frontend/tree/develop/src/lib/model/api)
 directory.
 

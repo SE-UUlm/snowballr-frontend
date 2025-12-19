@@ -16,6 +16,9 @@ FROM base AS build
 # Install Git - it is used by tiged to fetch the API
 RUN apk add git
 
+# Create the directory for the generated API code
+RUN mkdir -p src/lib/model/api/
+
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage bind mounts to package.json and package-lock.json to avoid having to copy them
@@ -27,8 +30,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 # Copy the rest of the source files into the image.
 COPY . .
-# Build gRPC API
-RUN npm run compile:proto
 # We need to pass a sample base API URL so that the server can be built.
 # The actual variable will be passed at runtime.
 RUN echo 'PUBLIC_API_BASE_URL=http://localhost:8080' > .env
