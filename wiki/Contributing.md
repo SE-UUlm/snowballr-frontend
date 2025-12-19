@@ -12,6 +12,7 @@ In this section, we explain how to contribute to the Snowballr frontend project.
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
 - [Release Procedure](#release-procedure)
+- [Use another API Version](#use-another-api-version)
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
@@ -344,3 +345,10 @@ npm run lighthouse:all -- --dir=/settings
 We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed and used by the
 users. To release a new version of the frontend, follow the steps in the
 [SnowballR Wiki](https://github.com/SE-UUlm/snowballr/wiki/Contributing#release-procedure).
+
+## Use another API Version
+
+To use another API version than the currently used one, go to the `package.json` file and change the reference (after
+`#`) to the desired version. Make sure that the version exists in the
+[API repository](https://github.com/SE-UUlm/snowballr-api). After changing the version, run `npm install` to update the
+dependencies.
