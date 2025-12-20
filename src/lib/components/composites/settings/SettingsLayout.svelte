@@ -8,9 +8,10 @@
         tabs: IconLinkTab[];
         selectedTab: (typeof tabs)[number]["value"];
         children?: Snippet | undefined;
+        isScrollable?: boolean;
     }
 
-    const { tabs, selectedTab, children = undefined }: Props = $props();
+    const { tabs, selectedTab, children = undefined, isScrollable = true }: Props = $props();
 </script>
 
 <!--
@@ -61,7 +62,9 @@ Usage:
         {/each}
     </nav>
     <Separator orientation="vertical" />
-    <main class="flex h-full w-full flex-col gap-3 overflow-y-auto p-2.5">
+    <main
+        class={cn("flex h-full w-full flex-col gap-3 p-2.5", isScrollable ? "overflow-y-auto" : "")}
+    >
         {@render children?.()}
     </main>
 </div>
