@@ -14,6 +14,7 @@
     import { asPaper } from "$lib/utils/model-helper";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { type Snippet } from "svelte";
+    import { LoaderCircle } from "lucide-svelte";
 
     export interface ProjectSpecificPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -108,7 +109,11 @@ Usage:
 <div class="flex h-fit w-full flex-row items-center justify-between gap-4">
     <PaperNavigationBar {backRef} {loadingPaper} loadingPaperId={loadingPaperIdForNavigationBar} />
     {#if !isInCreationMode}
-        <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {loadingPaperId} />
+        {#await loadingPaperId}
+            <LoaderCircle class="animate-spin" />
+        {:then paperId}
+            <PaperBookmarkButton class="h-fit" isBookmarkedDefault={false} {paperId} />
+        {/await}
     {/if}
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">

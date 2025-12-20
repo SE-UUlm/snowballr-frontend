@@ -10,7 +10,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: false,
             },
         });
@@ -25,7 +25,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: true,
             },
         });
@@ -41,7 +41,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: false,
             },
         });
@@ -64,7 +64,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: true,
             },
         });
@@ -91,7 +91,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: false,
                 onPaperChangedBookmarkStatus: testFunction,
             },
@@ -121,7 +121,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: false,
                 onPaperChangedBookmarkStatus: testFunction,
             },
@@ -145,7 +145,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: true,
                 onPaperChangedBookmarkStatus: testFunction,
             },
@@ -167,7 +167,7 @@ describe("PaperBookmarkButton", () => {
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
-                loadingPaperId: Promise.resolve("1"),
+                paperId: "1",
                 isBookmarkedDefault: false,
                 onPaperChangedBookmarkStatus: testFunction,
             },
