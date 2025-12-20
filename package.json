@@ -34,6 +34,7 @@
         "compile:proto": "protoc --ts_out src/lib/model/api --ts_opt generate_dependencies --proto_path node_modules/snowballr-api/ node_modules/snowballr-api/main.proto"
     },
     "devDependencies": {
+        "@internationalized/date": "^3.10.1",
         "@playwright/test": "^1.57.0",
         "@protobuf-ts/grpcweb-transport": "^2.11.1",
         "@protobuf-ts/plugin": "^2.11.1",
@@ -51,7 +52,7 @@
         "@types/node": "^24.1.0",
         "@vitest/coverage-v8": "^3.2.4",
         "@vitest/ui": "^3.0.2",
-        "bits-ui": "^2.1.0",
+        "bits-ui": "^2.14.4",
         "clsx": "^2.1.1",
         "cross-fetch": "^4.1.0",
         "d3": "^7.9.0",
