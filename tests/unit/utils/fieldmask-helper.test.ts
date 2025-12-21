@@ -59,4 +59,15 @@ describe("Build field mask", () => {
             ],
         });
     });
+
+    test("When fields should be excluded from the mask, then they are not part of the built field mask.", () => {
+        const input = {
+            id: 123,
+            firstName: "John",
+            lastName: "Doe",
+        };
+        expect(buildFieldMask(input)).toEqual({
+            paths: ["first_name", "last_name"],
+        });
+    });
 });

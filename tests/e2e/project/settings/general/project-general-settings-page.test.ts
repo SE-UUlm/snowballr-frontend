@@ -28,6 +28,7 @@ test.describe("Project Name Settings Navigation", () => {
 
         await projectSettingsSideBar.general.click();
         await expect(projectSettingsPage.renameButton).toBeVisible();
+        await expect(projectSettingsPage.archiveButton).toBeVisible();
         await expect(projectSettingsPage.heading).toBeVisible();
     });
 });
@@ -79,4 +80,38 @@ test.describe("Project Name Settings Test", () => {
 
 test.describe.fixme("Project Export Test", () => {
     // TODO: Add project export tests when real backend is used for e2e tests
+});
+
+test.describe("Archive Project Tests", () => {
+    test(
+        "When the user archives an active project, then a 'Archived' badge is shown and " +
+            "all interactive elements except the 'Activate Project' button are disabled",
+        async ({ projectSettingsPage }) => {
+            await expect(projectSettingsPage.archivedBadge).not.toBeVisible();
+            await expect(projectSettingsPage.renameButton).toBeEnabled();
+
+            await projectSettingsPage.archiveButton.click();
+
+            await expect(projectSettingsPage.archivedBadge).toBeVisible();
+            await expect(projectSettingsPage.renameButton).toBeDisabled();
+            await expect(projectSettingsPage.archiveButton).toBeHidden();
+            await expect(projectSettingsPage.reactivateButton).toBeVisible();
+        },
+    );
+
+    test(
+        "When the user reactivates an archived project, then the 'Archived' badge is removed and " +
+            "all interactive elements are enabled again",
+        async ({ projectSettingsPage }) => {
+            await projectSettingsPage.archiveButton.click();
+            await expect(projectSettingsPage.archivedBadge).toBeVisible();
+
+            await projectSettingsPage.reactivateButton.click();
+
+            await expect(projectSettingsPage.archivedBadge).toBeHidden();
+            await expect(projectSettingsPage.renameButton).toBeEnabled();
+            await expect(projectSettingsPage.archiveButton).toBeVisible();
+            await expect(projectSettingsPage.reactivateButton).toBeHidden();
+        },
+    );
 });

@@ -13,12 +13,14 @@ import {
     mockSelectedCriteriaContextWithInitialData,
     mockUserContext,
     waitForComponentLoading,
-    type SelectedCriteriaContextValue,
-    type WasReviewedContextValue,
+    type SelectedCriteriaContext,
+    type WasReviewedContext,
+    mockIsProjectArchivedContext,
+    type IsProjectArchivedContext,
 } from "$tests/integration/test-helper";
 import { Criteria, Reviews } from "$tests/example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import type { UserContext } from "$lib/current-user/userContext";
+import type { UserContext } from "$lib/custom-context/user-context";
 import { PaperDecision } from "$lib/model/api/project";
 
 describe("ProjectPaperView", () => {
@@ -27,10 +29,11 @@ describe("ProjectPaperView", () => {
 
         const userContext = mockUserContext;
         const criteriaContext = mockSelectedCriteriaContextWithInitialData([], true);
+        const isProjectArchivedContext = mockIsProjectArchivedContext();
         const combinedContext = new Map<
             symbol,
-            UserContext | SelectedCriteriaContextValue | WasReviewedContextValue
-        >([...userContext, ...criteriaContext]);
+            UserContext | SelectedCriteriaContext | WasReviewedContext | IsProjectArchivedContext
+        >([...userContext, ...criteriaContext, ...isProjectArchivedContext]);
 
         render(ProjectPaperView, {
             props: createProjectPaperViewProps(

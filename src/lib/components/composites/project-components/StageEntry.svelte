@@ -7,6 +7,7 @@
     import { pluralize } from "$lib/utils/common-helper";
     import { filterProjectPapers } from "$lib/utils/filters";
     import CirclePlus from "lucide-svelte/icons/circle-plus";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         projectId: string;
@@ -27,6 +28,8 @@
     let filteredPapers = $derived(filterProjectPapers(stage.papers ?? [], filter, searchText));
 
     let totalPaperCount = $derived(stage.papers?.length ?? 0);
+
+    let { isProjectArchived } = $derived(getIsProjectArchivedContext());
 </script>
 
 <!--
@@ -75,10 +78,11 @@ Usage:
                 <span class="text-hint italic">No papers are currently in this stage.</span>
             {/if}
 
-            <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
-                <CirclePlus strokeWidth="2.5" />
-                Add Paper
-            </Button>
+            {#if !isProjectArchived}
+                <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
+                    <CirclePlus strokeWidth="2.5" /> Add Paper
+                </Button>
+            {/if}
         </div>
     </Accordion.Content>
 </Accordion.Item>

@@ -1,13 +1,12 @@
 import { waitFor, screen } from "@testing-library/svelte";
 import { expect } from "vitest";
-import {
-    SELECTED_REVIEW_CRITERIA_KEY,
-    WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY,
-} from "$lib/utils/custom-context";
+import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "$lib/custom-context/was-paper-reviewed-context";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/custom-context/selected-review-criteria-context";
 import type { User } from "$lib/model/api/user";
-import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+import { USER_KEY, type UserContext } from "$lib/custom-context/user-context";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
+import { IS_PROJECT_ARCHIVED_KEY } from "$lib/custom-context/is-project-archived-context";
 
 /**
  * Awaits until all skeletons are removed from the screen.
@@ -22,10 +21,10 @@ export function waitForComponentLoading(): Promise<void> {
     });
 }
 
-export interface SelectedCriteriaContextValue {
+export interface SelectedCriteriaContext {
     criteria: string[];
 }
-export interface WasReviewedContextValue {
+export interface WasReviewedContext {
     wasReviewed: boolean;
 }
 export const mockSelectedCriteriaContext = new Map([
@@ -36,14 +35,14 @@ export const mockSelectedCriteriaContextWithInitialData = (
     selectedCriteria?: string[],
     wasAlreadyReviewed?: boolean,
 ) =>
-    new Map([
+    new Map<symbol, SelectedCriteriaContext | WasReviewedContext>([
         [SELECTED_REVIEW_CRITERIA_KEY, { criteria: selectedCriteria ?? [] }],
         [WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY, { wasReviewed: wasAlreadyReviewed ?? false }],
     ]);
 
 let MOCK_USER_INSTANCE: User = createUser(Users.johnDoe);
 export const mockUserContext: Map<symbol, UserContext> = new Map([
-    [UserContextKey, () => MOCK_USER_INSTANCE],
+    [USER_KEY, () => MOCK_USER_INSTANCE],
 ]);
 export function setContextUser(userData: Partial<User>) {
     MOCK_USER_INSTANCE = createUser(userData);
@@ -51,3 +50,9 @@ export function setContextUser(userData: Partial<User>) {
 export function resetUserContext() {
     MOCK_USER_INSTANCE = createUser(Users.johnDoe);
 }
+
+export interface IsProjectArchivedContext {
+    isProjectArchived: boolean;
+}
+export const mockIsProjectArchivedContext = (isProjectArchived = false) =>
+    new Map<symbol, IsProjectArchivedContext>([[IS_PROJECT_ARCHIVED_KEY, { isProjectArchived }]]);

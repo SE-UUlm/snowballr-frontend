@@ -11,6 +11,7 @@
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         projectId: string;
@@ -28,7 +29,11 @@
     let dialogDescription = $state("");
     let pendingActionConfirmCallback: (() => void) | null = $state(null);
 
-    const disabled = $derived(slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus);
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
+
+    const disabled = $derived(
+        slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus || isProjectArchived,
+    );
 
     let updateSLRSettingsError: ActionError = $state(undefined);
 

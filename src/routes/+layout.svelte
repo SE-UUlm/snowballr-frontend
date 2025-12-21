@@ -3,8 +3,8 @@
     import "../app.css";
     import { Toaster } from "svelte-sonner";
     import type { LayoutData } from "./$types";
-    import { setContext, type Snippet } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { type Snippet } from "svelte";
+    import { setUserContext } from "$lib/custom-context/user-context";
     import type { User } from "$lib/model/api/user";
     import { IS_IN_DEV_MODE } from "$lib/constants";
 
@@ -20,8 +20,7 @@
             userState = data.user;
         }
     });
-
-    setContext<UserContext>(UserContextKey, () => userState);
+    setUserContext(() => userState);
 
     if (IS_IN_DEV_MODE) {
         console.warn("Running in development mode");

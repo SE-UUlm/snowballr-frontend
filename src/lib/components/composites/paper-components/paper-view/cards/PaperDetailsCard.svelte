@@ -16,6 +16,7 @@
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { goto } from "$app/navigation";
     import type { Project_Paper } from "$lib/model/api/project";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -25,6 +26,8 @@
     }
 
     let { loadingPaper, allowEditModeToggle, startInEditMode, isInCreationMode }: Props = $props();
+
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
@@ -197,7 +200,7 @@ Usage:
         </span>
     </PaperCardContent>
     {#snippet tabListButtonList()}
-        {#if allowEditModeToggle}
+        {#if allowEditModeToggle && !isProjectArchived}
             <div class="flex flex-row gap-4 pr-2.5">
                 {#if isInEditMode}
                     {#if isMakingApiCall}

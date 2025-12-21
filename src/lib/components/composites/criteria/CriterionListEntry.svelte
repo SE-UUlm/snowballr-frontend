@@ -6,10 +6,8 @@
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$lib/model/api/user";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import {
-        getAlreadyReviewedContext,
-        getSelectedReviewCriteriaContext,
-    } from "$lib/utils/custom-context";
+    import { getAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
+    import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
 
     interface Props {
         reviewers: User[];

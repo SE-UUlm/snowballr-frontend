@@ -234,28 +234,23 @@ the need for `null` checks in downstream components that rely on user data.
 
 ### How to Use the User Context in Components
 
-To access the current user's data within any Svelte component that is a child of the main layout:
+To access the current user's data within any Svelte component that is a child of the main layout use
+`getUserContext`. Wrap this in `$derived` to create a reactive variable that automatically updates when the user
+context changes.
 
-1. Import necessary utilities:
-   You'll need `getContext` from Svelte, the `UserContextKey`, and potentially the `User` type.
-2. Retrieve and use the user data:
-   Use `getContext` with `UserContextKey` to get the getter function, and then call it. Wrap this in `$derived` to
-   create a reactive variable that automatically updates when the user context changes.
+```svelte
+<script lang="ts">
+  import { getUserContext } from "$lib/custom-context/user-context";
 
-   ```svelte
-   <script lang="ts">
-     import { getContext } from "svelte";
-     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+  const user = $derived(getUserContext());
 
-     const user = $derived(getContext<UserContext>(UserContextKey)());
+  function greet() {
+    console.log(`Hello, ${user.firstName}!`);
+  }
+</script>
 
-     function greet() {
-       console.log(`Hello, ${user.firstName}!`);
-     }
-   </script>
-
-   <p>Welcome, {user.firstName} {user.lastName}!</p>
-   ```
+<p>Welcome, {user.firstName} {user.lastName}!</p>
+```
 
 ### Refreshing User Data
 
@@ -277,9 +272,9 @@ trigger a refresh of the user context to ensure all parts of the application hav
      import { toast } from "svelte-sonner";
      import { StatusCodes } from "$lib/model/error-codes";
      import { getContext } from "svelte";
-     import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+     import { getUserContext } from "$lib/custom-context/user-context";
 
-     const user = $derived(getContext<UserContext>(UserContextKey)());
+     const user = $derived(getUserContext());
 
      async function handleNameUpdate(newName: string) {
        try {
@@ -310,7 +305,7 @@ For information about our testing setup, see [Testing](https://github.com/SE-UUl
 
 > [!WARNING] Our Lighthouse setup is currently not working due to recent changes. We are working on fixing it.
 
-We use Lighthouse to audit the performance, accessibility and best practices of our app.
+We use Lighthouse to audit the performance, accessibility, and best practices of our app.
 To run a Lighthouse audit on the app, you can use the following command:
 
 ```bash

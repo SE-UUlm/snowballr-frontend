@@ -80,7 +80,6 @@ describe("NavigationBar", () => {
         // Drop Down Menu isn't shown by default
         assert.throws(() => screen.getByText("John Doe"));
         assert.throws(() => screen.getByText("Reading List"));
-        assert.throws(() => screen.getByText("Archived Projects"));
         assert.throws(() => screen.getByText("Invitations"));
         assert.throws(() => screen.getByText("Sign Out"));
     });

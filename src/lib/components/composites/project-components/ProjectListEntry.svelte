@@ -10,16 +10,15 @@
     } from "$lib/model/api/project";
     import { goto } from "$app/navigation";
     import { env } from "$env/dynamic/public";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
-    import { getContext } from "svelte";
     import type { User } from "$lib/model/api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import { ExternalLink } from "lucide-svelte";
+    import { getUserContext } from "$lib/custom-context/user-context";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
     if (isDevMode) {
-        user = getContext<UserContext>(UserContextKey)();
+        user = getUserContext();
     }
 
     export interface ProjectListEntryInterface {

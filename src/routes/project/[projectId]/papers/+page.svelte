@@ -22,7 +22,7 @@
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
-    import { clickOutsideOrEscape } from "$lib/utils/actions.svelte";
+    import { clickOutsideOrEscape } from "$lib/utils/attachments.svelte";
     import type { ProjectPaperFilter } from "$lib/model/general";
     import {
         getFilterFromURL,
@@ -201,11 +201,8 @@
     {#if loadingPaper && selectedPaper}
         <aside
             class="h-full w-[65%] min-w-75"
+            {@attach clickOutsideOrEscape(() => (selectedPaper = undefined))}
             data-testid="paper-details-card"
-            onClickedOutsideOrEscape={() => {
-                selectedPaper = undefined;
-            }}
-            use:clickOutsideOrEscape
             transition:fly={{ duration: 200, x: 150, opacity: 0 }}
         >
             <Card.Root

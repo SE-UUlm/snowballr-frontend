@@ -4,41 +4,32 @@
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/FetcherSettings.svelte";
     import { ProjectStatus } from "$lib/model/api/project.js";
-    import { getContext, onMount } from "svelte";
-    import { isCurrentUserProjectAdmin } from "../helper.js";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext.js";
+    import { resource } from "$lib/resource.svelte";
+    import { isCurrentUserProjectAdmin } from "../helper";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionWarning } from "$lib/model/action-error.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
-    const user = $derived(getContext<UserContext>(UserContextKey)());
-    let slrSettingsLocked = $state(true);
 
-    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
+    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers));
 
+    const loadingIsProjectNotActive = $derived(
+        loadingProject.then((project) => project.status !== ProjectStatus.ACTIVE),
+    );
+    const slrSettingsLocked = $derived(
+        resource(loadingIsProjectNotActive, {
+            initialValue: true,
+            onErrorValue: false,
+            resourceName: "project status",
+        }),
+    );
+
+    // Redirect to general settings if the user is not an admin
     $effect(() => {
-        // Redirect to general settings if the user is not an admin
         if (isCurrentUserAdmin.value !== undefined && !isCurrentUserAdmin.value) {
-            console.log(isCurrentUserAdmin.value);
             goto(`/project/${projectId}/settings/general`, { replaceState: true });
         }
-    });
-
-    onMount(() => {
-        async function checkIfSLRSettingsAreLocked() {
-            return await loadingProject
-                .then((project) => {
-                    return project.status !== ProjectStatus.ACTIVE;
-                })
-                .catch(() => {
-                    return true; // If loading fails, assume settings are not locked
-                });
-        }
-
-        checkIfSLRSettingsAreLocked().then((locked) => {
-            slrSettingsLocked = locked;
-        });
     });
 </script>
 
@@ -52,17 +43,19 @@
     {/await}
 </svelte:head>
 
-{#if isCurrentUserAdmin.value}
-    <ProjectSettingsLayout isCurrentUserAdmin={true} {projectId} selectedTab="slr">
-        <ActionErrorAlert
-            error={slrSettingsLocked
-                ? createActionWarning("SLR Settings are Locked", {
-                      customDetails:
-                          "To ensure consistency, SLR settings can't be changed after a review has been submitted.",
-                  })
-                : undefined}
-        />
-        <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} />
-        <FetcherSettings {projectId} {slrSettingsLocked} />
-    </ProjectSettingsLayout>
-{/if}
+<ProjectSettingsLayout
+    isCurrentUserAdmin={isCurrentUserAdmin.value ?? false}
+    {projectId}
+    selectedTab="slr"
+>
+    <ActionErrorAlert
+        error={slrSettingsLocked
+            ? createActionWarning("SLR Settings are Locked", {
+                  customDetails:
+                      "To ensure consistency, SLR settings can't be changed after a review has been submitted.",
+              })
+            : undefined}
+    />
+    <MaybeAsDecisionSetting {projectId} slrSettingsLocked={slrSettingsLocked.value} />
+    <FetcherSettings {projectId} slrSettingsLocked={slrSettingsLocked.value} />
+</ProjectSettingsLayout>

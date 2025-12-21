@@ -10,18 +10,19 @@
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
-    import { getContext } from "svelte";
-    import { UserContextKey, type UserContext } from "$lib/current-user/userContext";
+    import { getUserContext } from "$lib/custom-context/user-context";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
 
-    const user = $derived(getContext<UserContext>(UserContextKey)());
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
+    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers));
+    const user = $derived(getUserContext());
 
     const numberOfSkeletons = 7;
 
     let loadingMembersLocal = $derived<Promise<MemberInfo[]>>(loadingMembers);
-    const isCurrentUserAdmin = $derived(isCurrentUserProjectAdmin(loadingMembers, user));
     let reloadingMembers = $state(false);
 
     async function reloadMembers(errorMessage: string) {
@@ -86,68 +87,65 @@
     {/await}
 </svelte:head>
 
-{#if isCurrentUserAdmin.value !== undefined}
-    <ProjectSettingsLayout
-        isCurrentUserAdmin={isCurrentUserAdmin.value}
-        {projectId}
-        selectedTab="members"
+<ProjectSettingsLayout
+    isCurrentUserAdmin={isCurrentUserAdmin.value ?? false}
+    {projectId}
+    selectedTab="members"
+>
+    {#if isCurrentUserAdmin.value ?? false}
+        <div class="flex flex-row items-center justify-between">
+            <h1>Manage Access</h1>
+            {#if reloadingMembers}
+                <div class="flex flex-row gap-3 text-lg text-gray-400">
+                    <LoaderCircle class="animate-spin" />
+                    <span>Reloading Members</span>
+                </div>
+            {/if}
+            <InviteUsersDialog
+                disabled={reloadingMembers || isProjectArchived}
+                loadingMembers={loadingMembersLocal}
+                {onUsersInvited}
+                {projectId}
+            />
+        </div>
+    {:else}
+        <h1>Members</h1>
+    {/if}
+    <ul
+        class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
+        data-testid="project-member-list"
     >
-        {#if isCurrentUserAdmin.value}
-            <div class="flex flex-row items-center justify-between">
-                <h1>Manage Access</h1>
-                {#if reloadingMembers}
-                    <div class="flex flex-row gap-3 text-lg text-gray-400">
-                        <LoaderCircle class="animate-spin" />
-                        <span>Reloading Members</span>
-                    </div>
+        {#await loadingMembersLocal}
+            {#each { length: numberOfSkeletons }, i}
+                <ProjectMemberListEntrySkeleton />
+                {#if i < numberOfSkeletons - 1}
+                    <Separator />
                 {/if}
-                <InviteUsersDialog
-                    disabled={reloadingMembers}
-                    loadingMembers={loadingMembersLocal}
-                    {onUsersInvited}
+            {/each}
+        {:then members}
+            {#each members as member, i (member.user!.id)}
+                <ProjectMemberListEntry
+                    disabled={reloadingMembers || isProjectArchived}
+                    isAdminView={isCurrentUserAdmin.value ?? false}
+                    isCurrentUser={member.user!.id === user.id}
+                    {member}
+                    {onMemberPromoted}
+                    {onMemberRemoved}
                     {projectId}
                 />
-            </div>
-        {:else}
-            <h1>Members</h1>
-        {/if}
-        <ul
-            class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
-            data-testid="project-member-list"
-        >
-            {#await loadingMembersLocal}
-                {#each { length: numberOfSkeletons }, i}
-                    <ProjectMemberListEntrySkeleton />
-                    {#if i < numberOfSkeletons - 1}
-                        <Separator />
-                    {/if}
-                {/each}
-            {:then members}
-                {#each members as member, i (member.user!.id)}
-                    <ProjectMemberListEntry
-                        disabled={reloadingMembers}
-                        isAdminView={isCurrentUserAdmin.value}
-                        isCurrentUser={member.user!.id === user.id}
-                        {member}
-                        {onMemberPromoted}
-                        {onMemberRemoved}
-                        {projectId}
-                    />
-                    {#if i < members.length - 1}
-                        <Separator />
-                    {/if}
-                {/each}
-                {#if members.length === 0}
-                    <li class="m-auto py-1">
-                        <span class="text-hint">No members found</span>
-                    </li>
+                {#if i < members.length - 1}
+                    <Separator />
                 {/if}
-            {:catch error}
-                {console.error(`Couldn't load project members: ${error}`)}
-                <li class="m-auto py-4">
-                    <ErrorIndicator errorMessage="Couldn't load project members" />
+            {/each}
+            {#if members.length === 0}
+                <li class="m-auto py-1">
+                    <span class="text-hint">No members found</span>
                 </li>
-            {/await}
-        </ul>
-    </ProjectSettingsLayout>
-{/if}
+            {/if}
+        {:catch}
+            <li class="m-auto py-4">
+                <ErrorIndicator errorMessage="Couldn't load project members" />
+            </li>
+        {/await}
+    </ul>
+</ProjectSettingsLayout>
