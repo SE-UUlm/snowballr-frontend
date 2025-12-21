@@ -43,7 +43,9 @@ function disableIfProjectArchived(projectStatus: ProjectStatus): Attachment {
         const isProjectArchived = projectStatus === ProjectStatus.ARCHIVED;
         if (isProjectArchived) {
             element.setAttribute("disabled", "true");
-            interactiveChildren.forEach((child) => child.setAttribute("disabled", "true"));
+            interactiveChildren.forEach((child) => {
+                child.setAttribute("disabled", "true");
+            });
         }
     };
 }
