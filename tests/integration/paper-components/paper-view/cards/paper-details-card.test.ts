@@ -396,7 +396,7 @@ describe("PaperDetailsCard", () => {
         expect(screen.queryByTestId("toggle-edit-paper-mode-btn")).toBeNull();
     });
 
-    test("When the project of the project paper is archived, then the edit button is disabled", async () => {
+    test("When the project of the project paper is archived, then the edit button is not shown", async () => {
         const paper = createPaper();
 
         render(PaperDetailsCard, {
@@ -412,8 +412,7 @@ describe("PaperDetailsCard", () => {
 
         await waitForComponentLoading();
 
-        const toggleEditModeButtons = screen.queryAllByTestId("toggle-edit-paper-mode-btn");
-        expect(toggleEditModeButtons).toHaveLength(1);
-        expect(toggleEditModeButtons[0]).toHaveClass("opacity-30"); // Indicates disabled
+        const toggleEditModeButtons = screen.queryByTestId("toggle-edit-paper-mode-btn");
+        expect(toggleEditModeButtons).not.toBeInTheDocument();
     });
 });

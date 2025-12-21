@@ -200,7 +200,7 @@ Usage:
         </span>
     </PaperCardContent>
     {#snippet tabListButtonList()}
-        {#if allowEditModeToggle}
+        {#if allowEditModeToggle && !isProjectArchived}
             <div class="flex flex-row gap-4 pr-2.5">
                 {#if isInEditMode}
                     {#if isMakingApiCall}
@@ -209,14 +209,12 @@ Usage:
                         <Save
                             class={cn(
                                 "select-none",
-                                isPaperModified && !isProjectArchived
-                                    ? "hover:cursor-pointer"
-                                    : "opacity-30",
+                                isPaperModified ? "hover:cursor-pointer" : "opacity-30",
                             )}
                             aria-label="Save Paper Changes"
                             data-testid="save-paper-changes-btn"
                             onclick={async () => {
-                                if (!isPaperModified || isProjectArchived) return;
+                                if (!isPaperModified) return;
                                 await savePaperModifications();
                             }}
                             size={24}
@@ -227,15 +225,12 @@ Usage:
                     <Pencil
                         class={cn(
                             "select-none",
-                            isPaperModified || isProjectArchived
-                                ? "opacity-30"
-                                : "hover:cursor-pointer",
+                            isPaperModified ? "opacity-30" : "hover:cursor-pointer",
                         )}
                         aria-label="Toggle Edit Paper Mode"
                         data-testid="toggle-edit-paper-mode-btn"
                         onclick={() => {
-                            if (!isPaperModified && !isProjectArchived)
-                                isInEditMode = !isInEditMode;
+                            if (!isPaperModified) isInEditMode = !isInEditMode;
                         }}
                         size={24}
                     />
