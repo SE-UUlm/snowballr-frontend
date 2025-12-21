@@ -7,6 +7,6 @@
     "first-line-heading": false,
     "table-column-style": "aligned",
     "no-inline-html": {
-        "allowed_elements": ["div", "picture", "img"]
+        "allowed_elements": ["div", "picture", "img", "a"]
     }
 }

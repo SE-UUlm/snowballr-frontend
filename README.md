@@ -1,7 +1,37 @@
 <div align="center">
-  <picture>
-    <img alt="SnowballR Logo" src="images/snowballr-logo-with-text.png" width="700"/>
-  </picture>
+    <picture>
+        <img alt="SnowballR Logo" src="images/snowballr-logo-with-text.png" width="700"/>
+    </picture>
+</div>
+
+<div align="center">
+    <a href="https://github.com/SE-UUlm/snowballr-frontend/releases/latest">
+        <!-- TODO: Enable once we have a release
+        <img alt="Version" src="https://img.shields.io/github/v/release/SE-UUlm/snowballr-frontend?label=Version&color=light-green">
+        -->
+        <img alt="Version" src="https://img.shields.io/badge/Version-Not%20Releases%20Yet-red">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-frontend/actions/workflows/code_quality_checks.yml">
+        <img alt="Code Quality Workflow Status" src="https://img.shields.io/github/actions/workflow/status/SE-UUlm/snowballr-frontend/code_quality_checks.yml?logo=github&label=Code%20Quality">
+    </a>
+    <a href="https://snowballr.informatik.uni-ulm.de">
+        <img alt="Production Website" src="https://custom-icon-badges.demolab.com/badge/Production_Website-gray?logo=snowballr">
+    </a>
+    <a href="https://snowballr-dev.informatik.uni-ulm.de">
+        <img alt="Development Website" src="https://custom-icon-badges.demolab.com/badge/Development_Website-gray?logo=snowballr">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-frontend/pkgs/container/snowballr-frontend">
+        <img alt="Docker" src="https://img.shields.io/badge/Docker-ghcr.io-blue">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-frontend/wiki">
+        <img alt="GitHub Wiki" src="https://img.shields.io/badge/Wiki-grey?logo=github">
+    </a>
+    <a href="https://deepwiki.com/SE-UUlm/snowballr-frontend">
+        <img alt="Ask DeepWiki" src="https://deepwiki.com/badge.svg">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-frontend/blob/main/LICENSE">
+        <img alt="License" src="https://img.shields.io/github/license/SE-UUlm/snowballr-frontend?label=License">
+    </a>
 </div>
 
 # SnowballR Frontend
@@ -11,7 +41,7 @@
 ## SnowballR's use cases
 
 ![Open Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aopen%20is%3Aissue%20label%3A%22use%20case%22%20&label=open)
-![Closed Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=green)
+![Closed Use Cases](https://img.shields.io/github/issues-search?query=repo%3ASE-UUlm%2Fsnowballr-frontend%20is%3Aclosed%20is%3Aissue%20label%3A%22use%20case%22%20&label=closed&color=light-green)
 
 You can find all use cases
 [here](https://github.com/SE-UUlm/snowballr-frontend/issues?q=is%3Aissue%20label%3A%22use%20case%22%20).
