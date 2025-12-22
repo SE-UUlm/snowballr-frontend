@@ -24,7 +24,7 @@ jobs:
               with:
                   node-version: ${{ env.node-version }}
                   source-branch: develop
-                  ignore-links: "https://dl.acm.org/doi/*,https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247"
+                  ignore-links: "https://dl.acm.org/doi/*"
                   ignore-paths: "src/,tests/"
 
     publish-wiki:

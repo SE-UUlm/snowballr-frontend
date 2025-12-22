@@ -1,12 +1,18 @@
 In this section, we explain how to contribute to the Snowballr frontend project. We cover the following topics:
 
 - [Project Layout](#project-layout)
+- [Creating a New Component](#creating-a-new-component)
+  - [How to Pass HTML Attributes to a custom component](#how-to-pass-html-attributes-to-a-custom-component)
+  - [Skeletons](#skeletons)
+  - [Loading state on actions](#loading-state-on-actions)
 - [User Context](#user-context)
   - [How the User is Fetched and Made Available](#how-the-user-is-fetched-and-made-available)
   - [How to Use the User Context in Components](#how-to-use-the-user-context-in-components)
   - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
 - [Lighthouse](#lighthouse)
+- [Release Procedure](#release-procedure)
+- [Use another API Version](#use-another-api-version)
 
 To set up the development environment, follow the steps in
 [Getting Started](https://github.com/SE-UUlm/snowballr-frontend/wiki/Getting-Started).
@@ -15,7 +21,6 @@ To set up the development environment, follow the steps in
 
 ```plaintext
 .
-├── api/                    (snowballr-api submodule)
 ├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/
@@ -340,3 +345,10 @@ npm run lighthouse:all -- --dir=/settings
 We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed and used by the
 users. To release a new version of the frontend, follow the steps in the
 [SnowballR Wiki](https://github.com/SE-UUlm/snowballr/wiki/Contributing#release-procedure).
+
+## Use another API Version
+
+To use another API version than the currently used one, go to the `package.json` file and change the reference (after
+`#`) of the `fetch-api` command to the desired version. Make sure that the version exists in the
+[API repository](https://github.com/SE-UUlm/snowballr-api). After changing the version, run `npm install` to update the
+dependencies and recompile the API client code.

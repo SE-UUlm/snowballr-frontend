@@ -3,7 +3,6 @@ The fastest way to get started is to use the provided Docker setup. To do so, ru
 ```bash
 git clone git@github.com:SE-UUlm/snowballr-frontend.git
 cd snowballr-frontend
-git submodule update --init --recursive
 docker compose up
 ```
 
@@ -48,17 +47,10 @@ To build the project from source, run the following commands:
 ```bash
 git clone git@github.com:SE-UUlm/snowballr-frontend.git
 cd snowballr-frontend
-git submodule update --init --recursive
 npm install
 ```
 
-Next, generate the API code [[1](#footnote-1)]:
-
-```bash
-npm run compile:proto
-```
-
-You can find the generated API code in the
+You can find the generated API client code in the
 [`src/lib/model/api`](https://github.com/SE-UUlm/snowballr-frontend/tree/develop/src/lib/model/api)
 directory.
 
@@ -75,12 +67,3 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
-
-<!-- markdownlint-disable MD033 -->
-
-<a name="footnote-1">[1]</a> Make sure, that the used API version was manually set to the desired stable version,
-otherwise set it (see
-[Stackoverflow post](https://stackoverflow.com/questions/1777854/how-can-i-specify-a-branch-tag-when-adding-a-git-submodule/1778247#1778247)
-for further hints).
-
-<!-- markdownlint-enable MD033 -->
