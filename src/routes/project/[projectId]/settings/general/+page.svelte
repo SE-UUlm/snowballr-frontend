@@ -26,7 +26,7 @@
     {projectId}
     selectedTab="general"
 >
-    <div class="flex flex-col gap-9 overflow-auto p-2.5">
+    <div class="flex flex-col gap-9 p-2.5">
         <ProjectNameSettings {loadingProject} {projectId} />
         <ArchiveProjectSettings {projectId} />
         <ExportProjectSettings {projectId} />

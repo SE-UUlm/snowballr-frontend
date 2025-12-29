@@ -3,15 +3,16 @@
     import type { IconLinkTab } from "$lib/model/tabs";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { Snippet } from "svelte";
+    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 
     interface Props {
         tabs: IconLinkTab[];
         selectedTab: (typeof tabs)[number]["value"];
         children?: Snippet | undefined;
-        isScrollable?: boolean;
+        allScrollable?: boolean;
     }
 
-    const { tabs, selectedTab, children = undefined, isScrollable = true }: Props = $props();
+    const { tabs, selectedTab, children = undefined, allScrollable = true }: Props = $props();
 </script>
 
 <!--
@@ -45,6 +46,13 @@ Usage:
     </SettingsLayout>
 ```
 -->
+
+{#snippet content()}
+    <main class={cn("flex h-full w-full flex-col gap-3 p-2.5", allScrollable ? "" : "")}>
+        {@render children?.()}
+    </main>
+{/snippet}
+
 <div class="flex h-full w-full flex-row gap-4 overflow-hidden px-0 py-2.5 md:px-7 lg:px-15">
     <nav class="flex h-full w-full max-w-[20%] min-w-36 flex-col gap-2.5 px-1.5 py-2.5">
         {#each tabs as tab, i (i)}
@@ -62,9 +70,11 @@ Usage:
         {/each}
     </nav>
     <Separator orientation="vertical" />
-    <main
-        class={cn("flex h-full w-full flex-col gap-3 p-2.5", isScrollable ? "overflow-y-auto" : "")}
-    >
-        {@render children?.()}
-    </main>
+    {#if allScrollable}
+        <ScrollArea class="overflow-hidden">
+            {@render content()}
+        </ScrollArea>
+    {:else}
+        {@render content()}
+    {/if}
 </div>

@@ -29,7 +29,7 @@ Usage:
 ```
 -->
 <section
-    class="flex h-fit w-full flex-col gap-3 overflow-y-auto"
+    class="flex h-fit w-full flex-col gap-3"
     data-testid={`settings-section-${sectionTitle.toLowerCase().replace(" ", "-")}`}
 >
     <div class="flex flex-row items-center gap-3">

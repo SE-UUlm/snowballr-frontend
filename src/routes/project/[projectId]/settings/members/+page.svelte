@@ -90,8 +90,8 @@
 </svelte:head>
 
 <ProjectSettingsLayout
+    allScrollable={false}
     isCurrentUserAdmin={isCurrentUserAdmin.value ?? false}
-    isScrollable={false}
     {projectId}
     selectedTab="members"
 >

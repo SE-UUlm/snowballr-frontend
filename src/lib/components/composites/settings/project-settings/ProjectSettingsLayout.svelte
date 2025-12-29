@@ -15,7 +15,7 @@
         selectedTab: ProjectTabValue;
         children?: Snippet | undefined;
         isCurrentUserAdmin: boolean;
-        isScrollable?: boolean;
+        allScrollable?: boolean;
     }
 
     let {
@@ -23,7 +23,7 @@
         selectedTab,
         children = undefined,
         isCurrentUserAdmin,
-        isScrollable = true,
+        allScrollable = true,
     }: Props = $props();
 
     const ALL_TABS = [
@@ -87,8 +87,8 @@ Usage:
     </ProjectSettingsLayout>
 ```
 -->
-<SettingsLayout {isScrollable} {selectedTab} {tabs}>
-    <div class={cn("flex flex-col gap-5", isScrollable ? "overflow-visible" : "overflow-hidden")}>
+<SettingsLayout {allScrollable} {selectedTab} {tabs}>
+    <div class={cn("flex flex-col gap-5", allScrollable ? "" : "overflow-hidden")}>
         {@render children?.()}
     </div>
 </SettingsLayout>
