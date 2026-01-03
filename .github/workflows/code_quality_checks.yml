@@ -48,7 +48,7 @@ jobs:
               run: npm run test:unit
 
             - name: Upload coverage report
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               if: ${{ !cancelled() }}
               with:
                   name: unit-code-coverage-report
@@ -72,7 +72,7 @@ jobs:
               run: npm run test:integration
 
             - name: Upload coverage report
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               if: ${{ !cancelled() }}
               with:
                   name: integration-code-coverage-report
@@ -130,7 +130,7 @@ jobs:
                   update-comment: true
 
             - name: Upload coverage report
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               if: ${{ !cancelled() }}
               with:
                   name: final-code-coverage-report
