@@ -97,13 +97,13 @@ jobs:
                   node_version: ${{ env.node_version }}
 
             - name: Download unit test coverage report
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: unit-code-coverage-report
                   path: coverage/unit
 
             - name: Download integration test coverage report
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: integration-code-coverage-report
                   path: coverage/integration
@@ -147,7 +147,7 @@ jobs:
               uses: actions/checkout@v6
 
             - name: Download coverage report
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: final-code-coverage-report
                   path: .
