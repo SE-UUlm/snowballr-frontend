@@ -20,6 +20,7 @@ import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$lib/model/api/project";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { backendService } from "$lib/grpc-api";
+import ResizeObserver from "resize-observer-polyfill";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -345,3 +346,6 @@ if (typeof window !== "undefined") {
 // Mock URL.createObjectURL and URL.revokeObjectURL for tests that involve file downloads
 global.URL.createObjectURL = vi.fn();
 global.URL.revokeObjectURL = vi.fn();
+
+// Use the ResizeObserver polyfill for tests
+global.ResizeObserver = ResizeObserver;

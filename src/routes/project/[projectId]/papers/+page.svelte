@@ -42,6 +42,7 @@
     import { updateSortParams } from "$lib/utils/search-parameters.js";
     import { Paper } from "$lib/model/api/paper.js";
     import { stringifyPaper } from "$lib/utils/model-helper.js";
+    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 
     let { data } = $props();
     const {
@@ -168,7 +169,7 @@
                 </div>
             {/if}
         </div>
-        <div class="h-full w-full overflow-y-auto">
+        <ScrollArea class="h-full w-full overflow-y-auto">
             {#await loadingStages}
                 <span class="text-hint">Loading stages...</span>
             {:then stages}
@@ -176,7 +177,7 @@
                     {stages.length}
                     {pluralize(stages, "Stage", "Stages")}
                 </span>
-                <Accordion.Root type="multiple">
+                <Accordion.Root class="pr-2.5" type="multiple">
                     {#each stages as { stageIndex, papers } (stageIndex)}
                         <StageEntry
                             filter={papersFilters}
@@ -196,7 +197,7 @@
             {:catch}
                 <ErrorIndicator errorMessage="Couldn't load stages" />
             {/await}
-        </div>
+        </ScrollArea>
     </div>
     {#if loadingPaper && selectedPaper}
         <aside

@@ -12,6 +12,7 @@
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -65,7 +66,8 @@
     }
 
     async function onMemberRemoved(member: Project_Member) {
-        const name = getName(member.user!);
+        let name = getName(member.user!);
+        if (name.trim().length === 0) name = member.user!.email;
         await reloadMembers(`Couldn't remove ${name} from project.`);
         toast.success(`Removed ${name} from the project`);
     }
@@ -88,12 +90,13 @@
 </svelte:head>
 
 <ProjectSettingsLayout
+    allScrollable={false}
     isCurrentUserAdmin={isCurrentUserAdmin.value ?? false}
     {projectId}
     selectedTab="members"
 >
     {#if isCurrentUserAdmin.value ?? false}
-        <div class="flex flex-row items-center justify-between">
+        <div class="flex flex-row items-center justify-between pr-2.5">
             <h1>Manage Access</h1>
             {#if reloadingMembers}
                 <div class="flex flex-row gap-3 text-lg text-gray-400">
@@ -111,41 +114,43 @@
     {:else}
         <h1>Members</h1>
     {/if}
-    <ul
-        class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
-        data-testid="project-member-list"
-    >
-        {#await loadingMembersLocal}
-            {#each { length: numberOfSkeletons }, i}
-                <ProjectMemberListEntrySkeleton />
-                {#if i < numberOfSkeletons - 1}
-                    <Separator />
+    <ScrollArea class="flex h-full overflow-hidden pr-2.5">
+        <ul
+            class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
+            data-testid="project-member-list"
+        >
+            {#await loadingMembersLocal}
+                {#each { length: numberOfSkeletons }, i}
+                    <ProjectMemberListEntrySkeleton />
+                    {#if i < numberOfSkeletons - 1}
+                        <Separator />
+                    {/if}
+                {/each}
+            {:then members}
+                {#each members as member, i (member.user!.email)}
+                    <ProjectMemberListEntry
+                        disabled={reloadingMembers || isProjectArchived}
+                        isAdminView={isCurrentUserAdmin.value ?? false}
+                        isCurrentUser={member.user!.id === user.id}
+                        {member}
+                        {onMemberPromoted}
+                        {onMemberRemoved}
+                        {projectId}
+                    />
+                    {#if i < members.length - 1}
+                        <Separator />
+                    {/if}
+                {/each}
+                {#if members.length === 0}
+                    <li class="m-auto py-1">
+                        <span class="text-hint">No members found</span>
+                    </li>
                 {/if}
-            {/each}
-        {:then members}
-            {#each members as member, i (member.user!.id)}
-                <ProjectMemberListEntry
-                    disabled={reloadingMembers || isProjectArchived}
-                    isAdminView={isCurrentUserAdmin.value ?? false}
-                    isCurrentUser={member.user!.id === user.id}
-                    {member}
-                    {onMemberPromoted}
-                    {onMemberRemoved}
-                    {projectId}
-                />
-                {#if i < members.length - 1}
-                    <Separator />
-                {/if}
-            {/each}
-            {#if members.length === 0}
-                <li class="m-auto py-1">
-                    <span class="text-hint">No members found</span>
+            {:catch}
+                <li class="m-auto py-4">
+                    <ErrorIndicator errorMessage="Couldn't load project members" />
                 </li>
-            {/if}
-        {:catch}
-            <li class="m-auto py-4">
-                <ErrorIndicator errorMessage="Couldn't load project members" />
-            </li>
-        {/await}
-    </ul>
+            {/await}
+        </ul>
+    </ScrollArea>
 </ProjectSettingsLayout>

@@ -6,6 +6,7 @@
     import ClipboardCheck from "lucide-svelte/icons/clipboard-check";
     import type { IconLinkTab } from "$lib/model/tabs";
     import SettingsLayout from "../SettingsLayout.svelte";
+    import { cn } from "$lib/utils/shadcn-helper";
 
     type ProjectTabValue = "general" | "members" | "slr" | "review";
 
@@ -14,9 +15,16 @@
         selectedTab: ProjectTabValue;
         children?: Snippet | undefined;
         isCurrentUserAdmin: boolean;
+        allScrollable?: boolean;
     }
 
-    let { projectId, selectedTab, children = undefined, isCurrentUserAdmin }: Props = $props();
+    let {
+        projectId,
+        selectedTab,
+        children = undefined,
+        isCurrentUserAdmin,
+        allScrollable = true,
+    }: Props = $props();
 
     const ALL_TABS = [
         {
@@ -79,8 +87,8 @@ Usage:
     </ProjectSettingsLayout>
 ```
 -->
-<SettingsLayout {selectedTab} {tabs}>
-    <div class="flex flex-col gap-5 overflow-visible">
+<SettingsLayout {allScrollable} {selectedTab} {tabs}>
+    <div class={cn("flex flex-col gap-5", allScrollable ? "" : "overflow-hidden")}>
         {@render children?.()}
     </div>
 </SettingsLayout>
