@@ -6,6 +6,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { debounce } from "$lib/utils/common-helper";
     import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 
     interface ChipsInputProps {
         label?: string;
@@ -315,28 +316,26 @@ Usage:
     {/if}
     <!-- suggestions list -->
     {#if suggestions.length > 0 && inputText !== ""}
-        <ul
-            id={SUGGESTIONS_LIST_ID}
-            class="max-h-[160px] overflow-y-scroll rounded-md border"
-            data-testid={SUGGESTIONS_LIST_ID}
-        >
-            {#each suggestions as suggestion, i (suggestion)}
-                <Button
-                    id={`${SUGGESTION}${i}`}
-                    class={cn(
-                        "text-default flex w-full justify-start",
-                        selectedSuggestionIndex === i ? "bg-accent" : "",
-                    )}
-                    data-testid={`${SUGGESTION}${i}`}
-                    onclick={() => {
-                        addItem(suggestion);
-                        focusInput(true);
-                    }}
-                    variant="ghostWithoutHover"
-                >
-                    {suggestion}
-                </Button>
-            {/each}
-        </ul>
+        <ScrollArea class="rounded-md border">
+            <ul id={SUGGESTIONS_LIST_ID} class="max-h-40" data-testid={SUGGESTIONS_LIST_ID}>
+                {#each suggestions as suggestion, i (suggestion)}
+                    <Button
+                        id={`${SUGGESTION}${i}`}
+                        class={cn(
+                            "text-default flex w-full justify-start",
+                            selectedSuggestionIndex === i ? "bg-accent" : "",
+                        )}
+                        data-testid={`${SUGGESTION}${i}`}
+                        onclick={() => {
+                            addItem(suggestion);
+                            focusInput(true);
+                        }}
+                        variant="ghostWithoutHover"
+                    >
+                        {suggestion}
+                    </Button>
+                {/each}
+            </ul>
+        </ScrollArea>
     {/if}
 </div>
