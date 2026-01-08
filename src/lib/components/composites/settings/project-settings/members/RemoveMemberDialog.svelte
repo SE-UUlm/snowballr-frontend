@@ -62,7 +62,7 @@ Usage:
     actionButtonLoadingText="Removing Member From This Project"
     actionButtonText="Remove Member From This Project"
     actionProps={{
-        class: "w-76",
+        class: "w-full sm:w-76",
         variant: "destructiveSubtle",
         onclick: (args) => loadingWrapper(loading, removeMember, args),
     }}

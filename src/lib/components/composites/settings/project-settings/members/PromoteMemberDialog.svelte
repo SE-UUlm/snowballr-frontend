@@ -77,7 +77,7 @@ Usage:
     actionButtonLoadingText="Promoting Member to a Project Admin"
     actionButtonText="Promote Member to a Project Admin"
     actionProps={{
-        class: "w-78",
+        class: "w-full sm:w-78",
         variant: "destructiveSubtle",
         onclick: (args) => loadingWrapper(loading, promoteMember, args),
     }}
