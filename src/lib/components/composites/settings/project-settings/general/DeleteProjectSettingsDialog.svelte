@@ -81,6 +81,9 @@ Usage:
         disabled: loadingProjectName || !canDeleteProject,
         onclick: (args) => loadingWrapper(loading, deleteProject, args),
     }}
+    cancelProps={{
+        onclick: () => (confirmationText = ""),
+    }}
     error={deleteProjectError}
     errorText="Couldn't delete this project"
     loading={loading.value}
@@ -101,7 +104,7 @@ Usage:
             <span>
                 Enter <span class="font-bold">{projectName}</span> below to confirm the project deletion.
             </span>
-            <Input bind:value={confirmationText} />
+            <Input data-testid="confirmation-input" bind:value={confirmationText} />
         </div>
     {/snippet}
 </AlertDialog>
