@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button";
     import Input from "$lib/components/primitives/input/input.svelte";
@@ -7,6 +8,7 @@
     import type { Project } from "$lib/model/api/project";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { onMount } from "svelte";
+    import { toast } from "svelte-sonner";
 
     interface Props {
         projectId: string;
@@ -51,8 +53,9 @@
 
         await backendService
             .softDeleteProject({ id: projectId })
-            .response.then(() => {
-                open = false;
+            .response.then(async () => {
+                toast.success("Successfully deleted the project.");
+                await goto("/");
             })
             .catch((error) => {
                 deleteProjectError = error;

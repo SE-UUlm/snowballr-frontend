@@ -32,7 +32,8 @@
                     "Accepting the Project Invitation Failed",
                     {
                         customDetails:
-                            "The acceptance link has probably expired. Please contact the project admin to send a new invitation.",
+                            "The acceptance link has probably expired. Please contact the project admin to send a new invitation." +
+                            " The project may also have been deleted in the meantime.",
                     },
                     error,
                 );
