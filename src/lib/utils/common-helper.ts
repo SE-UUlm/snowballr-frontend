@@ -1,5 +1,5 @@
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
-import type { PaperStatus, Person } from "$lib/model/general";
+import type { PaperStatus, Person, PersonWithEmail } from "$lib/model/general";
 import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
 import type { Author, Paper } from "$lib/model/api/paper";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
@@ -7,9 +7,24 @@ import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 /**
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
  * "\<firstName\> \<lastName\>.
+ * If either firstName or lastName is missing, only the other one is returned.
+ *
+ * @param person - the person object
+ * @returns the name of the person as string
  */
 function getName(person: Person): string {
-    return `${person.firstName} ${person.lastName}`;
+    return `${person.firstName} ${person.lastName}`.trim();
+}
+
+/**
+ * Same as {@link getName} but returns the email of the person if the name is empty.
+ *
+ * @param person - the person object
+ * @returns the name of the person or the email if the name is empty
+ */
+function getNameOrEmail(person: PersonWithEmail): string {
+    const name = getName(person);
+    return name.length > 0 ? name : person.email;
 }
 
 /**
@@ -417,6 +432,7 @@ function stringToAuthor(text: string): Author {
 
 export {
     getName,
+    getNameOrEmail,
     getNames,
     isPaperUndecided,
     doesPaperNeedReview,
