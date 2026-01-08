@@ -7,6 +7,8 @@
     import type { AlertDialogCancelProps } from "$lib/components/primitives/alert-dialog/alert-dialog-cancel.svelte";
     import { wrapLongWords } from "$lib/utils/common-helper";
     import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import { isActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
 
     interface Props {
         triggerProps?: DialogTriggerProps;
@@ -127,7 +129,11 @@ Usage:
             </AlertDialog.Description>
         </AlertDialog.Header>
         {#if error}
-            <Alert title={errorText} variant="error" />
+            {#if isActionError(error)}
+                <ActionErrorAlert {error} />
+            {:else}
+                <Alert title={errorText} variant="error" />
+            {/if}
         {/if}
         <AlertDialog.Footer>
             <AlertDialog.Cancel {...cancelProps} data-testid="alert-dialog-cancel">

@@ -4,6 +4,7 @@
     import { isCurrentUserProjectAdmin } from "../helper";
     import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
     import ExportProjectSettings from "$lib/components/composites/settings/project-settings/general/ExportProjectSettings.svelte";
+    import DangerZoneSettings from "$lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -30,5 +31,6 @@
         <ProjectNameSettings {loadingProject} {projectId} />
         <ArchiveProjectSettings {projectId} />
         <ExportProjectSettings {projectId} />
+        <DangerZoneSettings {loadingProject} {projectId} />
     </div>
 </ProjectSettingsLayout>
