@@ -18,7 +18,7 @@
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
-    import { ExternalLink, Funnel } from "lucide-svelte";
+    import { ExternalLink, Funnel, LoaderCircle } from "lucide-svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
@@ -214,7 +214,11 @@
                     paper={stringifyPaper(selectedPaper.paper ?? Paper.create())}
                 />
                 <div class="absolute top-5 right-5 flex flex-row gap-2.5">
-                    <PaperBookmarkButton loadingPaperId={loadingPaper.then((paper) => paper.id)} />
+                    {#await loadingPaper}
+                        <LoaderCircle class="animate-spin" />
+                    {:then paper}
+                        <PaperBookmarkButton paperId={paper.id} />
+                    {/await}
                     <a
                         class="flex items-center"
                         href={`/project/${projectId}/paper/${selectedPaper.localId}`}

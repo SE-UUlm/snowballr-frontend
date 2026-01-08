@@ -71,8 +71,8 @@ Usage:
     <div class="flex flex-row items-center gap-4">
         <PaperBookmarkButton
             isBookmarkedDefault={true}
-            loadingPaperId={Promise.resolve(id)}
             {onPaperChangedBookmarkStatus}
+            paperId={id}
         />
         <DownloadButton loadingPaperId={Promise.resolve(id)} />
     </div>

@@ -6,16 +6,17 @@
     import { resource } from "$lib/resource.svelte";
     import { backendService } from "$lib/grpc-api";
     import { cn } from "$lib/utils/shadcn-helper";
+    import { LoaderCircle } from "lucide-svelte";
 
     interface Props {
-        loadingPaperId: Promise<string>;
+        paperId: string;
         isBookmarkedDefault?: boolean;
         onPaperChangedBookmarkStatus?: () => void;
         class?: string;
     }
 
     const {
-        loadingPaperId,
+        paperId,
         isBookmarkedDefault = false,
         onPaperChangedBookmarkStatus = undefined,
         class: className,
@@ -24,12 +25,7 @@
     // `isUpdatingBookmarkStatus` is initially set to `true` to represent the loading state
     let isUpdatingBookmarkStatus = $state(true);
 
-    const loadingBookmarkStatus = loadingPaperId.then((id) => checkInitialBookmarkStatus(id));
-    const paperId = resource<string, string | undefined>(loadingPaperId, {
-        initialValue: undefined,
-        resourceName: "paper id",
-    });
-
+    const loadingBookmarkStatus = checkInitialBookmarkStatus(paperId);
     const isBookmarked = resource<boolean, boolean>(loadingBookmarkStatus, {
         initialValue: isBookmarkedDefault,
         resourceName: "bookmark status",
@@ -58,18 +54,12 @@
     /**
      * Adds the paper to the reading list, if it is not already added yet, otherwise removes it.
      */
-    function toggleBookmarkStatus() {
+    async function toggleBookmarkStatus() {
         isUpdatingBookmarkStatus = true;
 
-        if (paperId.value === undefined) {
-            console.error("Paper id is undefined");
-            isUpdatingBookmarkStatus = false;
-            return;
-        }
-
         if (isBookmarked.value) {
-            backendService
-                .removePaperFromReadingList({ id: paperId.value })
+            await backendService
+                .removePaperFromReadingList({ id: paperId })
                 .response.then(() => {
                     isBookmarked.value = false;
                     onPaperChangedBookmarkStatus?.();
@@ -78,8 +68,8 @@
                     console.error("Error removing paper from reading list:", error);
                 });
         } else {
-            backendService
-                .addPaperToReadingList({ id: paperId.value })
+            await backendService
+                .addPaperToReadingList({ id: paperId })
                 .response.then(() => {
                     isBookmarked.value = true;
                     onPaperChangedBookmarkStatus?.();
@@ -112,7 +102,7 @@ Usage:
     }
 
     <PaperBookmarkButton
-        loadingPaperId={Promise.resolve(paperId)}
+        {paperId}
         isBookmarkedDefault={true}
         onPaperChangedBookmarkStatus={ChangedBookmarkStatusLogging}
     />
@@ -128,7 +118,9 @@ Usage:
     onmouseleave={onMouseLeave}
 >
     {#snippet trigger()}
-        {#if isHovered}
+        {#if isUpdatingBookmarkStatus}
+            <LoaderCircle class="animate-spin" />
+        {:else if isHovered}
             {#if isBookmarked.value}
                 <BookmarkMinus />
             {:else}
