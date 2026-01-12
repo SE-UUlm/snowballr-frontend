@@ -115,3 +115,22 @@ test.describe("Archive Project Tests", () => {
         },
     );
 });
+
+test.describe("Delete Project Tests", () => {
+    test("When the user deletes a project, then they are redirected to the home page and the project is removed from the project list", async ({
+        projectSettingsPage,
+        homePage,
+    }) => {
+        await projectSettingsPage.deleteProject();
+
+        await expect(
+            projectSettingsPage.page.getByText(
+                `Successfully deleted '${projectSettingsPage.projectName}'.`,
+            ),
+        ).toBeVisible();
+        await expect(homePage.heading).toBeVisible();
+        await expect(
+            projectSettingsPage.page.getByRole("link", { name: projectSettingsPage.projectName }),
+        ).not.toBeVisible();
+    });
+});

@@ -54,7 +54,7 @@
         await backendService
             .softDeleteProject({ id: projectId })
             .response.then(async () => {
-                toast.success("Successfully deleted the project.");
+                toast.success(`Successfully deleted '${projectName}'.`);
                 await goto("/");
             })
             .catch((error) => {
