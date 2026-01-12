@@ -17,10 +17,10 @@ function getName(person: Person): string {
 }
 
 /**
- * Same as {@link getName} but returns the email of the person if the name is empty.
+ * Same as {@link getName} but returns the email of the person if the name is not provided.
  *
  * @param person - the person object
- * @returns the name of the person or the email if the name is empty
+ * @returns the name of the person or the email if the name is not provided
  */
 function getNameOrEmail(person: PersonWithEmail): string {
     const name = getName(person);
