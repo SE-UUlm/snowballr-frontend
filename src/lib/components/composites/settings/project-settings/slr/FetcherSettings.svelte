@@ -19,7 +19,7 @@
         slrSettingsLocked?: boolean;
     }
 
-    const { projectId, slrSettingsLocked = false }: Props = $props();
+    const { projectId, slrSettingsLocked }: Props = $props();
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -27,10 +27,10 @@
     let loading = $state(true);
     let projectSettings: Project_Settings | undefined = $state();
 
-    let availableFetchers: string[] | undefined = $state();
-    let usedFetchers: string[] | undefined = $state();
+    let availableFetchers: string[] = $state([]);
+    let usedFetchers: string[] = $state([]);
     let unusedFetchers = $derived(
-        availableFetchers?.filter((it) => usedFetchers?.find((x) => x == it) === undefined),
+        availableFetchers.filter((it) => usedFetchers.indexOf(it) === -1),
     );
 
     let optionDialogOpen = $state(false);
@@ -60,8 +60,7 @@
         loading = false;
     }
 
-    // Fetch project (projectId) from backend and update current state with it
-    async function refetchProject() {
+    onMount(async () => {
         loading = true;
         loadAvailableFetchersError = undefined;
         await backendService
@@ -76,11 +75,7 @@
                     error,
                 );
             });
-    }
-
-    // Instantly load project from backend when this component loads
-    onMount(async () => {
-        await refetchProject();
+        loading = false;
     });
 </script>
 
@@ -97,7 +92,7 @@
     onProjectChanged={loadProject}
     {projectId}
     {projectSettings}
-    unusedFetchers={unusedFetchers ?? []}
+    {unusedFetchers}
     bind:open={addDialogOpen}
 />
 
@@ -111,38 +106,42 @@
 
 <SettingsSection {loading} sectionTitle="Fetcher Settings">
     <ActionErrorAlert error={loadAvailableFetchersError} />
-    {#if !loading && usedFetchers}
-        {#if usedFetchers.length === 0}
+    {#if !loading}
+        {#if availableFetchers.length === 0}
+            <p>This SnowballR instance has no registered fetchers yet.</p>
+        {:else if usedFetchers.length === 0}
             <p>This project has no fetcher configured yet.</p>
         {/if}
 
-        {#each usedFetchers as fetcher (fetcher)}
-            <div class="flex flex-row items-center gap-4">
-                <h4>{fetcher}</h4>
-                <div class="flex-1"></div>
-                <Button
-                    disabled={isProjectArchived}
-                    onclick={() => {
-                        fetcherToEdit = fetcher;
-                        optionDialogOpen = true;
-                    }}
-                    variant="ghost"
-                >
-                    <SquarePen />
-                </Button>
-                <Button
-                    class="text-red-400 hover:bg-red-400/10 hover:text-red-400"
-                    disabled={slrSettingsLocked || isProjectArchived}
-                    onclick={() => {
-                        fetcherToRemove = fetcher;
-                        removalDialogOpen = true;
-                    }}
-                    variant="ghost"
-                >
-                    <Trash />
-                </Button>
-            </div>
-        {/each}
+        <ul>
+            {#each usedFetchers as fetcher (fetcher)}
+                <li class="flex flex-row items-center gap-4">
+                    <h4>{fetcher}</h4>
+                    <div class="flex-1"></div>
+                    <Button
+                        disabled={isProjectArchived}
+                        onclick={() => {
+                            fetcherToEdit = fetcher;
+                            optionDialogOpen = true;
+                        }}
+                        variant="ghost"
+                    >
+                        <SquarePen />
+                    </Button>
+                    <Button
+                        class="border-none bg-white hover:bg-red-400/10"
+                        disabled={slrSettingsLocked || isProjectArchived}
+                        onclick={() => {
+                            fetcherToRemove = fetcher;
+                            removalDialogOpen = true;
+                        }}
+                        variant="destructiveSubtle"
+                    >
+                        <Trash />
+                    </Button>
+                </li>
+            {/each}
+        </ul>
     {:else}
         <Skeleton class="h-8 w-24" />
         <Skeleton class="h-8 w-32" />
@@ -150,7 +149,7 @@
         <Skeleton class="h-8 w-38" />
     {/if}
 
-    {#if unusedFetchers?.length !== 0}
+    {#if unusedFetchers.length !== 0}
         <LoadingButton
             disabled={slrSettingsLocked || loading || isProjectArchived}
             label="Add Fetcher(s)"
