@@ -15,6 +15,7 @@
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import logo from "$lib/assets/snowballr-logo_512.png";
+    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "$lib/utils/search-parameters";
 
     let firstNameInput: Input;
     let lastNameInput: Input;
@@ -61,7 +62,7 @@
                     description:
                         "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
                 });
-                await goto("/signin");
+                await goto(getRedirectUrlOrValue("/signin"));
             })
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
@@ -151,7 +152,7 @@
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?
-            <a class="underline" href="/signin"> Sign In </a>
+            <a class="underline" href={addRedirectUrlIfExists("/signin")}> Sign In </a>
         </div>
     </Card.Content>
 </Card.Root>

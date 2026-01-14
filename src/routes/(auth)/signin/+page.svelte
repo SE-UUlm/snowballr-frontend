@@ -14,6 +14,7 @@
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import logo from "$lib/assets/snowballr-logo_512.png";
+    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "$lib/utils/search-parameters";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;
@@ -35,7 +36,7 @@
 
         await backendService
             .login(userData)
-            .then(async () => await goto("/"))
+            .then(async () => await goto(getRedirectUrlOrValue("/")))
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {
                     signInError = createActionError(
@@ -104,7 +105,7 @@
         </form>
         <div class="mt-4 text-center text-sm">
             You don't have an account yet?
-            <a class="underline" href="/signup"> Sign Up </a>
+            <a class="underline" href={addRedirectUrlIfExists("/signup")}> Sign Up </a>
         </div>
     </Card.Content>
 </Card.Root>
