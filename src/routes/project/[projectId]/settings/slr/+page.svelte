@@ -49,7 +49,7 @@
     selectedTab="slr"
 >
     <ActionErrorAlert
-        error={slrSettingsLocked
+        error={slrSettingsLocked.value
             ? createActionWarning("SLR Settings are Locked", {
                   customDetails:
                       "To ensure consistency, SLR settings can't be changed after a review has been submitted.",
