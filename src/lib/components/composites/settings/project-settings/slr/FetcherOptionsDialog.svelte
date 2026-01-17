@@ -121,7 +121,7 @@
     actionProps={{
         onclick: saveFetcherOptions,
         disabled: slrSettingsLocked || optionsLoading || options.size === 0,
-        class: "w-38",
+        class: "w-full sm:w-38",
     }}
     cancelButtonText="Cancel"
     cancelProps={{

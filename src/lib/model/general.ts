@@ -41,6 +41,10 @@ interface Person {
     lastName: string;
 }
 
+type PersonWithEmail = Person & {
+    email: string;
+};
+
 type StringifiedPaper = {
     [K in keyof Paper]: string;
 };
@@ -53,5 +57,6 @@ export type {
     PaperStatus,
     ProjectPaperFilter,
     Person,
+    PersonWithEmail,
     StringifiedPaper,
 };

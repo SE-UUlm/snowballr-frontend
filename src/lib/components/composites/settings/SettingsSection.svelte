@@ -1,15 +1,42 @@
+<script lang="ts" module>
+    export const settingsSectionVariants = tv({
+        base: "flex w-full flex-col gap-3",
+        variants: {
+            variant: {
+                default: "",
+                destructive: "border-error rounded-xl border py-4",
+            },
+        },
+        defaultVariants: {
+            variant: "default",
+        },
+    });
+
+    export type SettingsSectionVariant = VariantProps<typeof settingsSectionVariants>["variant"];
+
+    export interface SettingsSectionProps {
+        sectionTitle: string;
+        children: Snippet;
+        loading?: boolean;
+        variant?: SettingsSectionVariant;
+    }
+</script>
+
 <script lang="ts">
     import type { Snippet } from "svelte";
     import { Separator } from "$lib/components/primitives/separator";
     import { LoaderCircle } from "lucide-svelte";
+    import { tv, type VariantProps } from "tailwind-variants";
+    import { cn } from "$lib/utils/shadcn-helper";
 
-    interface SettingsSectionProps {
-        sectionTitle: string;
-        children: Snippet;
-        loading?: boolean;
-    }
+    const {
+        sectionTitle,
+        children,
+        loading = false,
+        variant = "default",
+    }: SettingsSectionProps = $props();
 
-    const { sectionTitle, children, loading = false }: SettingsSectionProps = $props();
+    const hasSeparator = variant === "default";
 </script>
 
 <!--
@@ -33,11 +60,15 @@ Usage:
     data-testid={`settings-section-${sectionTitle.toLowerCase().replace(" ", "-")}`}
 >
     <div class="flex flex-row items-center gap-3">
-        <h2>{sectionTitle}</h2>
+        <h2 class:text-error={variant !== "default"}>{sectionTitle}</h2>
         {#if loading}
             <LoaderCircle class="animate-spin" />
         {/if}
     </div>
-    <Separator />
-    {@render children?.()}
+    {#if hasSeparator}
+        <Separator />
+    {/if}
+    <div class={cn(settingsSectionVariants({ variant }))}>
+        {@render children?.()}
+    </div>
 </section>

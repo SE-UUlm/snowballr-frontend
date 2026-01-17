@@ -53,7 +53,7 @@ export class ProjectSLRSettingsPageModel {
     getFetcherRow(fetcherName: string) {
         return this.page
             .getByTestId("settings-section-fetcher-settings")
-            .locator("div")
+            .getByRole("listitem")
             .filter({ hasText: fetcherName });
     }
 

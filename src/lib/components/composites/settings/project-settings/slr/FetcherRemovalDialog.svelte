@@ -46,9 +46,9 @@
     actionButtonLoadingText="Removing Fetcher"
     actionButtonText="Remove Fetcher"
     actionProps={{
-        variant: "destructive",
+        variant: "destructiveSubtle",
         onclick: removeFetcher,
-        class: "w-42",
+        class: "w-full sm:w-42",
     }}
     cancelButtonText="Cancel"
     cancelProps={{

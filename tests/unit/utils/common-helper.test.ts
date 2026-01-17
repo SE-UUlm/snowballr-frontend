@@ -4,6 +4,8 @@ import {
     comparePaperId,
     debounce,
     doesPaperNeedReview,
+    getName,
+    getNameOrEmail,
     getNames,
     groupBy,
     isPaperUndecided,
@@ -15,7 +17,55 @@ import {
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
 import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
-import type { Person } from "$lib/model/general";
+import type { Person, PersonWithEmail } from "$lib/model/general";
+
+describe("Extract name from a person", () => {
+    test("When the person has both first and last name, both are returned", () => {
+        const person: Person = { firstName: "John", lastName: "Doe" };
+
+        expect(getName(person)).toBe("John Doe");
+    });
+
+    test("When the person has only a first name, only the first name is returned", () => {
+        const person: Person = { firstName: "John", lastName: "" };
+
+        expect(getName(person)).toBe("John");
+    });
+
+    test("When the person has only a last name, only the last name is returned", () => {
+        const person: Person = { firstName: "", lastName: "Doe" };
+
+        expect(getName(person)).toBe("Doe");
+    });
+
+    test("When the person has neither a first nor a last name, an empty string is returned", () => {
+        const person: Person = { firstName: "", lastName: "" };
+
+        expect(getName(person)).toBe("");
+    });
+});
+
+describe("Get name or email from person", () => {
+    test("When the person has both first and last name, both are returned", () => {
+        const person: PersonWithEmail = {
+            firstName: "John",
+            lastName: "Doe",
+            email: "john.doe@example.com",
+        };
+
+        expect(getNameOrEmail(person)).toBe("John Doe");
+    });
+
+    test("When the person has no name, the email is returned", () => {
+        const person: PersonWithEmail = {
+            firstName: "",
+            lastName: "",
+            email: "john.doe@example.com",
+        };
+
+        expect(getNameOrEmail(person)).toBe("john.doe@example.com");
+    });
+});
 
 describe("Extract names from persons", () => {
     test("When no person objects are provided, no names are extracted and stringified", () => {

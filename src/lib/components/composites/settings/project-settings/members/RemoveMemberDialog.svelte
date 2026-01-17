@@ -1,6 +1,6 @@
 <script lang="ts">
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
+    import { getNameOrEmail, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import Trash from "lucide-svelte/icons/trash";
     import { MemberRole, type Project_Member } from "$lib/model/api/project";
@@ -22,7 +22,7 @@
         disabled: disabledProp = false,
     }: Props = $props();
 
-    const memberName = getName(member.user!);
+    const memberName = getNameOrEmail(member.user!);
     // Make isDisabled reactive
     // When we update the members list in the members settings page, this wouldn't get updated otherwise
     let disabled = $derived(isCurrentUser || member.role === MemberRole.ADMIN || disabledProp);
@@ -62,7 +62,7 @@ Usage:
     actionButtonLoadingText="Removing Member From This Project"
     actionButtonText="Remove Member From This Project"
     actionProps={{
-        class: "w-76",
+        class: "w-full sm:w-76",
         variant: "destructiveSubtle",
         onclick: (args) => loadingWrapper(loading, removeMember, args),
     }}

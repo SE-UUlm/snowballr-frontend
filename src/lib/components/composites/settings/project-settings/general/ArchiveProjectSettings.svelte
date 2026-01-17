@@ -20,7 +20,7 @@
     const settingsDescription = $derived(
         isProjectArchived
             ? "This project is archived. Reactivate it to make changes and continue your SLR."
-            : "Archiving makes the project read-only. You’ll need to reactivate it to make any changes or continue the SLR.",
+            : "Archiving makes the project read-only. You'll need to reactivate it to make any changes or continue the SLR.",
     );
 
     const loading = $state({ value: false });
@@ -68,7 +68,7 @@ Usage:
 <SettingsSection sectionTitle="Archive Project">
     <p class="text-md">{settingsDescription}</p>
     <LoadingButton
-        class="text-md w-full md:w-44"
+        class="text-md w-44"
         label={isProjectArchived ? "Activate Project" : "Archive Project"}
         loading={loading.value}
         loadingLabel={isProjectArchived ? "Activating Project" : "Archiving Project"}

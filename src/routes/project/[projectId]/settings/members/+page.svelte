@@ -4,7 +4,7 @@
     import ProjectMemberListEntrySkeleton from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import { Project_Member } from "$lib/model/api/project.js";
-    import { getName, pluralize } from "$lib/utils/common-helper.js";
+    import { getName, getNameOrEmail, pluralize } from "$lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
@@ -66,8 +66,7 @@
     }
 
     async function onMemberRemoved(member: Project_Member) {
-        let name = getName(member.user!);
-        if (name.trim().length === 0) name = member.user!.email;
+        const name = getNameOrEmail(member.user!);
         await reloadMembers(`Couldn't remove ${name} from project.`);
         toast.success(`Removed ${name} from the project`);
     }
