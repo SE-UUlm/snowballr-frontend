@@ -21,6 +21,7 @@ import { PaperDecision } from "$lib/model/api/project";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { backendService } from "$lib/grpc-api";
 import ResizeObserver from "resize-observer-polyfill";
+import { boolean } from "zod";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -41,10 +42,11 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     goto: () => Promise.resolve(),
     invalidate: () => Promise.resolve(),
     invalidateAll: () => Promise.resolve(),
-    preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
-    preloadCode: () => Promise.resolve(),
     onNavigate: () => {},
+    preloadCode: () => Promise.resolve(),
+    preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
     pushState: () => {},
+    refreshAll: () => Promise.resolve(),
     replaceState: () => {},
 }));
 
