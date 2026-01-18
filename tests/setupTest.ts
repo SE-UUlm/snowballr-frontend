@@ -1,11 +1,8 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { expect, type Mock, type MockInstance, vi } from "vitest";
-import type { Navigation, Page } from "@sveltejs/kit";
-import { readable } from "svelte/store";
 import * as environment from "$app/environment";
 import * as navigation from "$app/navigation";
-import * as stores from "$app/stores";
 import {
     createCriterion,
     createPaper,
@@ -21,7 +18,6 @@ import { PaperDecision } from "$lib/model/api/project";
 import { AuthenticationStatus } from "$lib/model/api/authentication";
 import { backendService } from "$lib/grpc-api";
 import ResizeObserver from "resize-observer-polyfill";
-import { boolean } from "zod";
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -49,53 +45,6 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     refreshAll: () => Promise.resolve(),
     replaceState: () => {},
 }));
-
-// Mock SvelteKit runtime module $app/stores
-vi.mock("$app/stores", (): typeof stores => {
-    const getStores: typeof stores.getStores = () => {
-        const navigating = readable<Navigation | null>(null);
-        const page = readable<Page>({
-            url: new URL("http://localhost"),
-            params: {},
-            route: {
-                id: null,
-            },
-            status: 200,
-            error: null,
-            data: {},
-            state: {},
-            form: undefined,
-        });
-
-        const updated = { subscribe: readable(false).subscribe, check: async () => false };
-
-        return { navigating, page, updated };
-    };
-
-    const page: typeof stores.page = {
-        subscribe(fn) {
-            return getStores().page.subscribe(fn);
-        },
-    };
-    const navigating: typeof stores.navigating = {
-        subscribe(fn) {
-            return getStores().navigating.subscribe(fn);
-        },
-    };
-    const updated: typeof stores.updated = {
-        subscribe(fn) {
-            return getStores().updated.subscribe(fn);
-        },
-        check: async () => false,
-    };
-
-    return {
-        getStores,
-        navigating,
-        page,
-        updated,
-    };
-});
 
 // inspired from https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
 vi.mock("$app/state", async () => {
