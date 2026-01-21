@@ -13,13 +13,13 @@ import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
 
 describe("Helper search text URL query parameter", () => {
     test("When the query parameter for the search text is present, then it will be successfully read and returned.", async () => {
-        page.url = new URL("http://localhost/test?searchText=hello+world");
+        page.url.search = "searchText=hello+world";
 
         expect(getSearchTextFromURL()).toBe("hello world");
     });
 
     test("When the query parameter for the search text is not present, then an empty string will be returned.", async () => {
-        page.url = new URL("http://localhost/test");
+        page.url.search = "";
 
         expect(getSearchTextFromURL()).toBe("");
         expect(getSearchTextFromURL()).not.toBe("hello world");
@@ -50,9 +50,8 @@ describe("Helper search text URL query parameter", () => {
 
 describe("Helper filters URL query parameters", () => {
     test("When the query parameters for the filters are present, then they will be successfully read and returned.", async () => {
-        page.url = new URL(
-            "http://localhost/test?decisions=1&stages=0&reviewers=paula.thompson%40example.com&publishers=IEEE%2CCRC+Press&years=2019%2C2020&criteria=15",
-        );
+        page.url.search =
+            "decisions=1&stages=0&reviewers=paula.thompson%40example.com&publishers=IEEE%2CCRC+Press&years=2019%2C2020&criteria=15";
 
         expect(getFilterFromURL()).toStrictEqual({
             stages: ["0"],
@@ -65,7 +64,7 @@ describe("Helper filters URL query parameters", () => {
     });
 
     test("When a query parameters for a filter is not present, then an empty array will be returned for this filter.", async () => {
-        page.url = new URL("http://localhost/test?decisions=");
+        page.url.search = "decisions=";
 
         expect(getFilterFromURL()).toStrictEqual({
             stages: [],
@@ -118,13 +117,13 @@ describe("Helper filters URL query parameters", () => {
 
 describe("Helper sort URL query parameter", () => {
     test("When the query parameter for the sort option is present, then it will be successfully read and returned.", async () => {
-        page.url = new URL("http://localhost/test?sort=Title&order=desc");
+        page.url.search = "sort=Title&order=desc";
 
         expect(getSortOptionFromURL()).toBe("Title: Z to A");
     });
 
     test("When the query parameter for the sort option is not present, then the default sort option 'Id: Low to High' is returned.", async () => {
-        page.url = new URL("http://localhost/test");
+        page.url.search = "";
 
         expect(getSortOptionFromURL()).toBe("Id: Low to High");
     });
