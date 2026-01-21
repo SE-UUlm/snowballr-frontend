@@ -91,6 +91,7 @@ function isPublicPath(path: string) {
  * This function is used when the user is not authenticated or when an error occurs
  * that implies the user is not authenticated.
  *
+ * @param url - The current URL object to preserve redirect information.
  * @returns An empty user object.
  */
 async function redirectToSignIn(url: URL) {
