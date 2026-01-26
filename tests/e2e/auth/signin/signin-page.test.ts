@@ -50,4 +50,20 @@ test.describe("Sign In Tests", () => {
             await page.waitForURL("/resetpassword");
         },
     );
+
+    test("When the user accesses a page that requires authentication, then they are redirected to sign-in and back after signing in", async ({
+        page,
+        signInPage,
+        readingListPage,
+    }) => {
+        await page.goto("/readinglist");
+        await expect(signInPage.heading).toBeVisible();
+
+        await signInPage.emailInput.fill(alice.email);
+        await signInPage.passwordInput.fill(alice.password);
+        await signInPage.signInButton.click();
+
+        await expect(readingListPage.heading).toBeVisible();
+        await expect(page).toHaveURL("/readinglist");
+    });
 });

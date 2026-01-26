@@ -4,11 +4,13 @@ import { alice } from "$tests/e2e/utils/helper/users";
 import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
 import { expect } from "@playwright/test";
 import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
+import { ReadingListPageModel } from "$tests/e2e/readinglist/reading-list-page-model";
 
 type SignInPageFixtures = {
     signInPage: SignInPageModel;
     homePage: HomePageModel;
     signUpPage: SignUpPageModel;
+    readingListPage: ReadingListPageModel;
 };
 
 /**
@@ -33,5 +35,9 @@ export const test = base.extend<SignInPageFixtures>({
 
     signUpPage: async ({ page }, use) => {
         await use(new SignUpPageModel(page));
+    },
+
+    readingListPage: async ({ page }, use) => {
+        await use(new ReadingListPageModel(page));
     },
 });
