@@ -10,7 +10,6 @@ In this section, we explain how to contribute to the Snowballr frontend project.
   - [How to Use the User Context in Components](#how-to-use-the-user-context-in-components)
   - [Refreshing User Data](#refreshing-user-data)
 - [Testing](#testing)
-- [Lighthouse](#lighthouse)
 - [Release Procedure](#release-procedure)
 - [Use another API Version](#use-another-api-version)
 
@@ -305,40 +304,6 @@ trigger a refresh of the user context to ensure all parts of the application hav
 ## Testing
 
 For information about our testing setup, see [Testing](https://github.com/SE-UUlm/snowballr-frontend/wiki/Testing).
-
-## Lighthouse
-
-> [!WARNING] Our Lighthouse setup is currently not working due to recent changes. We are working on fixing it.
-
-We use Lighthouse to audit the performance, accessibility, and best practices of our app.
-To run a Lighthouse audit on the app, you can use the following command:
-
-```bash
-npm run lighthouse
-```
-
-To run all available routes, use:
-
-```bash
-npm run lighthouse:all
-```
-
-The report will be saved in the `./lighthouse-reports` directory. To automatically open the report in your browser,
-you can use the `--view` flag:
-
-```bash
-npm run lighthouse -- --view
-# or
-npm run lighthouse:all -- --view
-```
-
-To only run a sub-route, you can use the `--dir` flag:
-
-```bash
-npm run lighthouse -- --dir=/settings
-# or
-npm run lighthouse:all -- --dir=/settings
-```
 
 ## Release Procedure
 
