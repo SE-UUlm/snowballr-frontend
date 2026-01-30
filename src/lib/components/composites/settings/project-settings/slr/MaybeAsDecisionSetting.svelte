@@ -8,7 +8,6 @@
     import { Project_Settings, Project } from "$lib/model/api/project";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
@@ -54,22 +53,14 @@
             }),
         };
 
-        // Build the field mask for the project update. Since project settings must be updated
-        // as a whole object (because they are part of the `UpdateProject` call), we filter
-        // the paths to only include `review_maybe_allowed`, so only that setting is updated.
-        const fieldMaskPaths = buildFieldMask(projectData, "project").paths;
-        const updatedFieldMaskPaths = fieldMaskPaths.filter((path) =>
-            path.includes("review_maybe_allowed"),
-        );
-
         await backendService
             .updateProject({
                 project: Project.create(projectData),
-                mask: { paths: updatedFieldMaskPaths },
+                mask: { paths: ["project.settings.review_maybe_allowed"] },
             })
             .response.then(() => {
                 maybeAsDecision.isActivated = targetCheckedState;
-                toast.success("Successfully updated project settings.");
+                toast.success("Successfully updated the project settings.");
             })
             .catch((error) => {
                 updateSLRSettingsError = createActionError(
@@ -142,11 +133,15 @@
 
 <!--
 @component
-This component renders a section within the SLR project settings. It allows administrators to toggle this setting for the project.
-When enabled, reviewers can gain the ability to select 'Maybe' as a decision on a paper, in addition to the standard options. If disabled, the 'Maybe' option will be removed from the decision options.
-Before the setting is changed, a confirmation dialog is presented to the admin, requiring them to confirm their choice to either enable or disable the 'Maybe as Decision' functionality.
+This component renders a section within the SLR project settings. It allows administrators to toggle this setting for
+the project.
+When enabled, reviewers can gain the ability to select 'Maybe' as a decision on a paper, in addition to the standard
+options. If disabled, the 'Maybe' option will be removed from the decision options.
+Before the setting is changed, a confirmation dialog is presented to the admin, requiring them to confirm their choice
+to either enable or disable the 'Maybe as Decision' functionality.
 
-The `slrSettingsLocked` prop can be used to disable the switch if the SLR settings are locked, preventing any changes to this setting.
+The `slrSettingsLocked` prop can be used to disable the switch if the SLR settings are locked, preventing any changes to
+this setting.
 
 Usage:
 ```svelte

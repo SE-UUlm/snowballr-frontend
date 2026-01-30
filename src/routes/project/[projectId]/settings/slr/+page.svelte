@@ -8,6 +8,7 @@
     import { isCurrentUserProjectAdmin } from "../helper";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionWarning } from "$lib/model/action-error.js";
+    import SnowballingTypeSettings from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -55,6 +56,11 @@
                       "To ensure consistency, SLR settings can't be changed after a review has been submitted.",
               })
             : undefined}
+    />
+    <SnowballingTypeSettings
+        {loadingProject}
+        {projectId}
+        slrSettingsLocked={slrSettingsLocked.value}
     />
     <MaybeAsDecisionSetting
         {loadingProject}
