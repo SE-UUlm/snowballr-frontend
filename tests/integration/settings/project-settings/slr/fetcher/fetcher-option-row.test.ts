@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import FetcherOptionRow from "$lib/components/composites/settings/project-settings/slr/FetcherOptionRow.svelte";
+import FetcherOptionRow from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherOptionRow.svelte";
 import userEvent from "@testing-library/user-event";
 
 describe("Fetcher Option Row", () => {

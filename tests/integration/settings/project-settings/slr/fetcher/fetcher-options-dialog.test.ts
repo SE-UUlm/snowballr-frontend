@@ -2,7 +2,7 @@ import { Project, Project_Settings } from "$lib/model/api/project";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import FetcherOptionsDialog from "$lib/components/composites/settings/project-settings/slr/FetcherOptionsDialog.svelte";
+import FetcherOptionsDialog from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherOptionsDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "$tests/setupTest";
 import { mockUserContext, waitForComponentLoading } from "$tests/integration/test-helper";

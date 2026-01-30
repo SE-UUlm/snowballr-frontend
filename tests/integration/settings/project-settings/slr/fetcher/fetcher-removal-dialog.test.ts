@@ -2,7 +2,7 @@ import { Project, Project_Settings } from "$lib/model/api/project";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import FetcherRemovalDialog from "$lib/components/composites/settings/project-settings/slr/FetcherRemovalDialog.svelte";
+import FetcherRemovalDialog from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherRemovalDialog.svelte";
 import { mockApiCall } from "$tests/setupTest";
 
 describe("Fetcher Removal Dialog", () => {
