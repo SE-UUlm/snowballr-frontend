@@ -56,6 +56,10 @@
               })
             : undefined}
     />
-    <MaybeAsDecisionSetting {projectId} slrSettingsLocked={slrSettingsLocked.value} />
-    <FetcherSettings {projectId} slrSettingsLocked={slrSettingsLocked.value} />
+    <MaybeAsDecisionSetting
+        {loadingProject}
+        {projectId}
+        slrSettingsLocked={slrSettingsLocked.value}
+    />
+    <FetcherSettings {loadingProject} {projectId} slrSettingsLocked={slrSettingsLocked.value} />
 </ProjectSettingsLayout>

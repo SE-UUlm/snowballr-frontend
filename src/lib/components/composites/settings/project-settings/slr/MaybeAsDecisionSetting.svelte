@@ -16,9 +16,10 @@
     interface Props {
         projectId: string;
         slrSettingsLocked?: boolean;
+        loadingProject: Promise<Project>;
     }
 
-    const { projectId, slrSettingsLocked = false }: Props = $props();
+    const { projectId, slrSettingsLocked = false, loadingProject }: Props = $props();
 
     // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
     let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
@@ -120,9 +121,8 @@
     }
 
     onMount(async () => {
-        await backendService
-            .getProjectById({ id: projectId })
-            .response.then((response) => {
+        await loadingProject
+            .then((response) => {
                 maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
             })
             .catch((error) => {
@@ -150,7 +150,7 @@ The `slrSettingsLocked` prop can be used to disable the switch if the SLR settin
 
 Usage:
 ```svelte
-  <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} />
+  <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} {loadingProject} />
 ```
 -->
 <SettingsSection sectionTitle="Maybe as Decision">

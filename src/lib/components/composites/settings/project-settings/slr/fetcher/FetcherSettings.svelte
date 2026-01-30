@@ -17,9 +17,10 @@
     interface Props {
         projectId: string;
         slrSettingsLocked?: boolean;
+        loadingProject: Promise<Project>;
     }
 
-    const { projectId, slrSettingsLocked }: Props = $props();
+    const { projectId, slrSettingsLocked, loadingProject }: Props = $props();
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -63,18 +64,15 @@
     onMount(async () => {
         loading = true;
         loadAvailableFetchersError = undefined;
-        await backendService
-            .getProjectById({ id: projectId })
-            .response.then(loadProject)
-            .catch((error) => {
-                loadAvailableFetchersError = createActionError(
-                    "Failed to Load the Project Settings",
-                    {
-                        action: "loading the project settings",
-                    },
-                    error,
-                );
-            });
+        await loadingProject.then(loadProject).catch((error) => {
+            loadAvailableFetchersError = createActionError(
+                "Failed to Load the Project Settings",
+                {
+                    action: "loading the project settings",
+                },
+                error,
+            );
+        });
         loading = false;
     });
 </script>
