@@ -20,7 +20,7 @@ test.describe("SLR Settings Navigation", () => {
     });
 });
 
-test.describe("SLR Settings Tests", () => {
+test.describe("SLR Settings Tests - Maybe as Decision", () => {
     test("When the 'Maybe as Decision' option is turned on, then the option 'Maybe' should be visible", async ({
         projectSLRSettingsPage,
         projectPaperViewPage,
@@ -65,4 +65,49 @@ test.describe("SLR Settings Tests", () => {
     test.fixme("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
     test.fixme("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
     test.fixme("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
+});
+
+test.describe("SLR Settings Tests - Snowballing Type", () => {
+    test("When the SLR settings are not locked, then the radio buttons are enabled", async ({
+        projectSLRSettingsPage,
+    }) => {
+        await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeEnabled();
+        await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeEnabled();
+        await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeEnabled();
+    });
+
+    test.fixme(
+        "When the SLR settings are locked, then the radio buttons are disabled",
+        async ({ projectSLRSettingsPage }) => {
+            // await projectSLRSettingsPage.setProjectStatusActiveLocked();
+
+            await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeDisabled();
+            await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeDisabled();
+            await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeDisabled();
+        },
+    );
+
+    test("When a different snowballing type is selected, then the project is updated and the selection changes", async ({
+        page,
+        projectSLRSettingsPage,
+    }) => {
+        await projectSLRSettingsPage.selectSnowballingType("Both");
+        await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeChecked();
+
+        // Wait until the success toast disappears
+        await expect(
+            page.getByText("Successfully updated the project settings."),
+        ).not.toBeVisible();
+
+        await projectSLRSettingsPage.selectSnowballingType("Forward");
+        await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeChecked();
+
+        // Wait until the success toast disappears
+        await expect(
+            page.getByText("Successfully updated the project settings."),
+        ).not.toBeVisible();
+
+        await projectSLRSettingsPage.selectSnowballingType("Backward");
+        await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeChecked();
+    });
 });
