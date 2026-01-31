@@ -109,9 +109,11 @@
     <ActionErrorAlert error={loadAvailableFetchersError} />
     {#if !loading}
         {#if availableFetchers.length === 0}
-            <p>This SnowballR instance has no registered fetchers yet.</p>
+            <span class="text-hint italic">
+                This SnowballR instance has no registered fetchers yet.
+            </span>
         {:else if usedFetchers.length === 0}
-            <p>This project has no fetcher configured yet.</p>
+            <span class="text-hint italic">This project has no fetcher configured yet.</span>
         {/if}
 
         <ul>
@@ -150,19 +152,18 @@
         <Skeleton class="h-8 w-38" />
     {/if}
 
-    {#if unusedFetchers.length !== 0}
-        <LoadingButton
-            disabled={slrSettingsLocked || loading || isProjectArchived}
-            label="Add Fetcher(s)"
-            onclick={() => (addDialogOpen = true)}
-        >
-            {#snippet icon()}
-                {#if slrSettingsLocked}
-                    <Lock />
-                {:else}
-                    <CirclePlus />
-                {/if}
-            {/snippet}
-        </LoadingButton>
-    {/if}
+    <LoadingButton
+        class="w-full sm:w-100"
+        disabled={slrSettingsLocked || loading || isProjectArchived || unusedFetchers.length === 0}
+        label="Add Fetcher(s)"
+        onclick={() => (addDialogOpen = true)}
+    >
+        {#snippet icon()}
+            {#if slrSettingsLocked}
+                <Lock />
+            {:else}
+                <CirclePlus />
+            {/if}
+        {/snippet}
+    </LoadingButton>
 </SettingsSection>
