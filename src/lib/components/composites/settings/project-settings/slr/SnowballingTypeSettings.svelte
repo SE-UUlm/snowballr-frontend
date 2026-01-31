@@ -7,7 +7,7 @@
     import { backendService } from "$lib/grpc-api";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { toast } from "svelte-sonner";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {

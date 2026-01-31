@@ -6,7 +6,7 @@
     import { updateFetchers } from "./update-fetchers";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import FetcherOptionRow from "./FetcherOptionRow.svelte";
-    import { Lock } from "lucide-svelte";
+    import Lock from "@lucide/svelte/icons/lock";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
 

@@ -2,8 +2,8 @@
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
     import Button from "$lib/components/primitives/button/button.svelte";
-    import ChevronDown from "lucide-svelte/icons/chevron-down";
-    import ChevronUp from "lucide-svelte/icons/chevron-up";
+    import ChevronDown from "@lucide/svelte/icons/chevron-down";
+    import ChevronUp from "@lucide/svelte/icons/chevron-up";
     import * as Accordion from "$lib/components/primitives/accordion/index.js";
     import * as Card from "$lib/components/primitives/card/index.js";
     import StagesSelect from "$lib/components/composites/select/StagesSelect.svelte";
@@ -13,12 +13,14 @@
     import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
     import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
     import type { Project_Paper } from "$lib/model/api/project";
-    import Trash from "lucide-svelte/icons/trash-2";
+    import Trash from "@lucide/svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
-    import { ExternalLink, Funnel, LoaderCircle } from "lucide-svelte";
+    import ExternalLink from "@lucide/svelte/icons/external-link";
+    import Funnel from "@lucide/svelte/icons/funnel";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";

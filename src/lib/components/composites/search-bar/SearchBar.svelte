@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Input } from "$lib/components/primitives/input/index";
-    import { Search } from "lucide-svelte";
+    import Search from "@lucide/svelte/icons/search";
     import { getSearchTextFromURL } from "$lib/utils/search-parameters";
     import { callDebounced, debounce } from "$lib/utils/common-helper";
 

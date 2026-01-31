@@ -7,7 +7,7 @@
     import type { Paper } from "$lib/model/api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
-    import CircleHelp from "lucide-svelte/icons/circle-help";
+    import CircleHelp from "@lucide/svelte/icons/circle-help";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 
     export interface PaperDetailProp {

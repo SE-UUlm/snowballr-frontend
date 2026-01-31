@@ -8,7 +8,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import type { TooltipTriggerProps, WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
     type Props = WithElementRef<TooltipTriggerProps> & {
         trigger: Snippet;

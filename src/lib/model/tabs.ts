@@ -1,5 +1,4 @@
-import type { Icon } from "lucide-svelte";
-import type { ComponentType } from "svelte";
+import type { Icon } from "@lucide/svelte";
 
 interface Tab {
     value: string;
@@ -9,8 +8,7 @@ interface Tab {
 type LinkTab = Tab & { href: string };
 
 type IconLinkTab = LinkTab & {
-    // The icon library still uses the deprecated ComponentType type
-    icon: ComponentType<Icon>;
+    icon: typeof Icon;
 };
 
 type UserMenuTab = IconLinkTab & {

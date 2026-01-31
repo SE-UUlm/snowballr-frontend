@@ -25,7 +25,7 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import { Separator } from "$lib/components/primitives/separator";
-    import { LoaderCircle } from "lucide-svelte";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { tv, type VariantProps } from "tailwind-variants";
     import { cn } from "$lib/utils/shadcn-helper";
 

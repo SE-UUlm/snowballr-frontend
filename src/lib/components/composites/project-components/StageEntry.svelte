@@ -6,7 +6,7 @@
     import type { ProjectPaperFilter, Stage } from "$lib/model/general";
     import { pluralize } from "$lib/utils/common-helper";
     import { filterProjectPapers } from "$lib/utils/filters";
-    import CirclePlus from "lucide-svelte/icons/circle-plus";
+    import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {

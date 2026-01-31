@@ -6,7 +6,10 @@
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import { SquarePen, Lock, CirclePlus, Trash } from "lucide-svelte";
+    import SquarePen from "@lucide/svelte/icons/square-pen";
+    import Lock from "@lucide/svelte/icons/lock";
+    import CirclePlus from "@lucide/svelte/icons/circle-plus";
+    import Trash from "@lucide/svelte/icons/trash";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
     import Button, { type ButtonProps } from "$lib/components/primitives/button/button.svelte";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import type { Snippet } from "svelte";
 
     type Props = ButtonProps & {
