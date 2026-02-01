@@ -1,6 +1,7 @@
 <script lang="ts">
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
+    import NumberOfReviewersSettings from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
     import { isCurrentUserProjectAdmin } from "../helper";
 
     let { data } = $props();
@@ -25,6 +26,9 @@
     selectedTab="review"
 >
     <div class="flex flex-col gap-9 p-2.5">
+        {#if isCurrentUserAdmin.value}
+            <NumberOfReviewersSettings {loadingProject} {projectId} />
+        {/if}
         <KeywordSettings {projectId} />
     </div>
 </ProjectSettingsLayout>
