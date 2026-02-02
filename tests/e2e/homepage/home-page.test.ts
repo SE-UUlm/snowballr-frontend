@@ -112,8 +112,5 @@ test.describe("Project Creation Tests", () => {
         await expect(page.getByText("(0 papers)")).toBeVisible();
     });
 
-    test.fixme(
-        "When the user creates a project, then the project is created with the default settings",
-        async () => {},
-    );
+    test.fixme("When the user creates a project, then the project is created with the default settings", async () => {});
 });

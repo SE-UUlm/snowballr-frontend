@@ -43,13 +43,13 @@ test.describe("Sign In Tests", () => {
         await expect(signUpPage.heading).toBeVisible();
     });
 
-    test.fixme(
-        "When the user clicks 'Forgot Password?', then they are redirected to forgot password page",
-        async ({ page, signInPage }) => {
-            await signInPage.forgotPasswordLink.click();
-            await page.waitForURL("/resetpassword");
-        },
-    );
+    test.fixme("When the user clicks 'Forgot Password?', then they are redirected to forgot password page", async ({
+        page,
+        signInPage,
+    }) => {
+        await signInPage.forgotPasswordLink.click();
+        await page.waitForURL("/resetpassword");
+    });
 
     test("When the user accesses a page that requires authentication, then they are redirected to sign-in and back after signing in", async ({
         page,

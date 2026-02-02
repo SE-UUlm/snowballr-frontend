@@ -29,18 +29,18 @@ test.describe("Sign Up Tests", () => {
         await expect(signUpPage.errorAlert).toBeVisible();
     });
 
-    test.fixme(
-        "When the user enters a valid password (satisfying all criteria), then a info toast is displayed and the user is redirected to the sign-in page",
-        async ({ signUpPage, signInPage }) => {
-            await signUpPage.firstNameInput.fill("John");
-            await signUpPage.lastNameInput.fill("Doe");
-            await signUpPage.emailInput.fill("john.doe@example.com");
-            await signUpPage.passwordInput.fill("Valid_Password12!");
+    test.fixme("When the user enters a valid password (satisfying all criteria), then a info toast is displayed and the user is redirected to the sign-in page", async ({
+        signUpPage,
+        signInPage,
+    }) => {
+        await signUpPage.firstNameInput.fill("John");
+        await signUpPage.lastNameInput.fill("Doe");
+        await signUpPage.emailInput.fill("john.doe@example.com");
+        await signUpPage.passwordInput.fill("Valid_Password12!");
 
-            await signUpPage.signUpButton.click();
-            await expect(signInPage.heading).toBeVisible();
-        },
-    );
+        await signUpPage.signUpButton.click();
+        await expect(signInPage.heading).toBeVisible();
+    });
 
     test("When the user clicks 'Sign In' then they are redirected to the sign-in page", async ({
         signUpPage,

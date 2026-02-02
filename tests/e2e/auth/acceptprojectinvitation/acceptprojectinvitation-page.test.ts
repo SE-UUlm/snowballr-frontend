@@ -28,18 +28,9 @@ test.describe("Accept Project Invitation Tests", () => {
         await expect(acceptProjectInvitationPage.backToSignUpButton).toBeVisible();
     });
 
-    test.fixme(
-        "When providing an invalid token, then the corresponding error is displayed",
-        async () => {},
-    );
+    test.fixme("When providing an invalid token, then the corresponding error is displayed", async () => {});
 
-    test.fixme(
-        "When providing a valid token, but the user is not yet registered, then the corresponding error is displayed",
-        async () => {},
-    );
+    test.fixme("When providing a valid token, but the user is not yet registered, then the corresponding error is displayed", async () => {});
 
-    test.fixme(
-        "When providing a valid token, then the corresponding success message is displayed and redirected to the sign-in page",
-        async () => {},
-    );
+    test.fixme("When providing a valid token, then the corresponding success message is displayed and redirected to the sign-in page", async () => {});
 });
