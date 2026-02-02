@@ -14,10 +14,7 @@ test.describe("Email Verification Navigation", () => {
 });
 
 test.describe("Email Verification Tests", () => {
-    test.fixme(
-        "When the user is already signed in, then they are redirected to the home page",
-        async () => {},
-    );
+    test.fixme("When the user is already signed in, then they are redirected to the home page", async () => {});
 
     test("When navigating to the verify email page with no token, then the page is displayed and the correct message displayed", async ({
         page,
@@ -31,13 +28,7 @@ test.describe("Email Verification Tests", () => {
         await expect(verifyEmailPage.backToSignUpButton).toBeVisible();
     });
 
-    test.fixme(
-        "When providing an invalid token, then the corresponding error is displayed",
-        async () => {},
-    );
+    test.fixme("When providing an invalid token, then the corresponding error is displayed", async () => {});
 
-    test.fixme(
-        "When providing a valid token, then the corresponding success message is displayed and redirected to the sign-in page",
-        async () => {},
-    );
+    test.fixme("When providing a valid token, then the corresponding success message is displayed and redirected to the sign-in page", async () => {});
 });

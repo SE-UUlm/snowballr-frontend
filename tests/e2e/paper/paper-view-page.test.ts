@@ -33,12 +33,11 @@ test.describe("Paper View Tests", () => {
         await expect(paperViewPage.generalInformationLabel).toBeVisible();
     });
 
-    test.fixme(
-        "When the user clicks on the document button, then pdf document is displayed",
-        async ({ paperViewPage }) => {
-            await paperViewPage.documentButton.click();
-        },
-    );
+    test.fixme("When the user clicks on the document button, then pdf document is displayed", async ({
+        paperViewPage,
+    }) => {
+        await paperViewPage.documentButton.click();
+    });
 
     test("When the user clicks on the show more information button, then the publication type, publication name and the external id is displayed", async ({
         paperViewPage,

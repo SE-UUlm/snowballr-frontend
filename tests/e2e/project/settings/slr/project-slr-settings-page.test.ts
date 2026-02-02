@@ -62,16 +62,7 @@ test.describe("SLR Settings Tests", () => {
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).not.toBeChecked();
     });
 
-    test.fixme(
-        "When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed",
-        async () => {},
-    );
-    test.fixme(
-        "When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed",
-        async () => {},
-    );
-    test.fixme(
-        "When the current user is not a project admin, then the user gets redirected to the general settings tab",
-        async () => {},
-    );
+    test.fixme("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
+    test.fixme("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
+    test.fixme("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
 });

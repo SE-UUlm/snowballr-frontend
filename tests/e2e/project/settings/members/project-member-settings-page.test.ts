@@ -149,76 +149,74 @@ test.describe("Promote Members Tests", () => {
         );
     });
 
-    test.fixme(
-        "When the user promotes an invited user, then the user is correctly invited.",
-        async () => {},
-    );
-    test.fixme(
-        "When the promote user dialog is opened and cancelled, then the user is not promoted.",
-        async ({ projectMembersSettingsPage, promoteMemberDialog }) => {
-            await projectMembersSettingsPage.inviteUser(
-                projectMembersSettingsPage.userEmail,
-                projectMembersSettingsPage,
-            );
+    test.fixme("When the user promotes an invited user, then the user is correctly invited.", async () => {});
+    test.fixme("When the promote user dialog is opened and cancelled, then the user is not promoted.", async ({
+        projectMembersSettingsPage,
+        promoteMemberDialog,
+    }) => {
+        await projectMembersSettingsPage.inviteUser(
+            projectMembersSettingsPage.userEmail,
+            projectMembersSettingsPage,
+        );
 
-            await projectMembersSettingsPage.openPromoteMemberDialog({
+        await projectMembersSettingsPage.openPromoteMemberDialog({
+            email: projectMembersSettingsPage.userEmail,
+        });
+        await promoteMemberDialog.cancel();
+        await expect(promoteMemberDialog.dialog).not.toBeVisible();
+        await projectMembersSettingsPage.checkForUser(
+            projectMembersSettingsPage.userEmail,
+            "email",
+        );
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 2,
+            admins: 1,
+            members: 1,
+            invitees: 1,
+            invitedMembers: 1,
+            invitedAdmins: 0,
+        });
+    });
+
+    test.fixme("When other users are listed, then they can be promoted to project admins.", async ({
+        page,
+        projectMembersSettingsPage,
+        promoteMemberDialog,
+    }) => {
+        await projectMembersSettingsPage.inviteUser(
+            projectMembersSettingsPage.userEmail,
+            projectMembersSettingsPage,
+        );
+        await projectMembersSettingsPage.openPromoteMemberDialog({
+            email: projectMembersSettingsPage.userEmail,
+        });
+
+        await promoteMemberDialog.promote();
+        await expect(promoteMemberDialog.dialog).not.toBeVisible();
+        await expect(page.getByText(`Promoted John Doe to a Project Admin`)).toBeVisible();
+        await projectMembersSettingsPage.checkForUser(
+            projectMembersSettingsPage.userEmail,
+            "email",
+        );
+        await expect(
+            projectMembersSettingsPage.getOpenPromoteMemberDialogButton({
                 email: projectMembersSettingsPage.userEmail,
-            });
-            await promoteMemberDialog.cancel();
-            await expect(promoteMemberDialog.dialog).not.toBeVisible();
-            await projectMembersSettingsPage.checkForUser(
-                projectMembersSettingsPage.userEmail,
-                "email",
-            );
-            await projectMembersSettingsPage.assertNumberOfProjectMembers({
-                all: 2,
-                admins: 1,
-                members: 1,
-                invitees: 1,
-                invitedMembers: 1,
-                invitedAdmins: 0,
-            });
-        },
-    );
-
-    test.fixme(
-        "When other users are listed, then they can be promoted to project admins.",
-        async ({ page, projectMembersSettingsPage, promoteMemberDialog }) => {
-            await projectMembersSettingsPage.inviteUser(
-                projectMembersSettingsPage.userEmail,
-                projectMembersSettingsPage,
-            );
-            await projectMembersSettingsPage.openPromoteMemberDialog({
+            }),
+        ).toHaveText("Role: Admin");
+        await expect(
+            projectMembersSettingsPage.getOpenRemoveMemberDialogButton({
                 email: projectMembersSettingsPage.userEmail,
-            });
-
-            await promoteMemberDialog.promote();
-            await expect(promoteMemberDialog.dialog).not.toBeVisible();
-            await expect(page.getByText(`Promoted John Doe to a Project Admin`)).toBeVisible();
-            await projectMembersSettingsPage.checkForUser(
-                projectMembersSettingsPage.userEmail,
-                "email",
-            );
-            await expect(
-                projectMembersSettingsPage.getOpenPromoteMemberDialogButton({
-                    email: projectMembersSettingsPage.userEmail,
-                }),
-            ).toHaveText("Role: Admin");
-            await expect(
-                projectMembersSettingsPage.getOpenRemoveMemberDialogButton({
-                    email: projectMembersSettingsPage.userEmail,
-                }),
-            ).toBeDisabled();
-            await projectMembersSettingsPage.assertNumberOfProjectMembers({
-                all: 2,
-                admins: 2,
-                members: 0,
-                invitees: 1,
-                invitedAdmins: 1,
-                invitedMembers: 0,
-            });
-        },
-    );
+            }),
+        ).toBeDisabled();
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 2,
+            admins: 2,
+            members: 0,
+            invitees: 1,
+            invitedAdmins: 1,
+            invitedMembers: 0,
+        });
+    });
 });
 
 test.describe("Remove Members Tests", () => {
@@ -237,27 +235,27 @@ test.describe("Remove Members Tests", () => {
         ).toBeDisabled();
     });
 
-    test.fixme(
-        "When other users are listed, then they can be removed from the project.",
-        async ({ projectMembersSettingsPage, page }) => {
-            const userEmail = "john.doe@example.com";
-            await projectMembersSettingsPage.inviteUser(userEmail, projectMembersSettingsPage);
+    test.fixme("When other users are listed, then they can be removed from the project.", async ({
+        projectMembersSettingsPage,
+        page,
+    }) => {
+        const userEmail = "john.doe@example.com";
+        await projectMembersSettingsPage.inviteUser(userEmail, projectMembersSettingsPage);
 
-            await projectMembersSettingsPage.openRemoveMemberDialog({ email: userEmail });
-            await projectMembersSettingsPage.removeMemberDialog.remove();
-            await expect(projectMembersSettingsPage.removeMemberDialog.dialog).not.toBeVisible();
-            await expect(page.getByText(`Removed ${userEmail} from the project`)).toBeVisible();
-            await projectMembersSettingsPage.checkForUser(userEmail, "email", false);
-            await projectMembersSettingsPage.assertNumberOfProjectMembers({
-                all: 1,
-                admins: 1,
-                members: 0,
-                invitees: 0,
-                invitedAdmins: 0,
-                invitedMembers: 0,
-            });
-        },
-    );
+        await projectMembersSettingsPage.openRemoveMemberDialog({ email: userEmail });
+        await projectMembersSettingsPage.removeMemberDialog.remove();
+        await expect(projectMembersSettingsPage.removeMemberDialog.dialog).not.toBeVisible();
+        await expect(page.getByText(`Removed ${userEmail} from the project`)).toBeVisible();
+        await projectMembersSettingsPage.checkForUser(userEmail, "email", false);
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 1,
+            admins: 1,
+            members: 0,
+            invitees: 0,
+            invitedAdmins: 0,
+            invitedMembers: 0,
+        });
+    });
 
     test("When the remove user dialog is opened and cancelled, then the user is not removed.", async ({
         projectMembersSettingsPage,
@@ -279,46 +277,37 @@ test.describe("Remove Members Tests", () => {
         });
     });
 
-    test.fixme(
-        "When a registered user is removed from the project, then they can be invited again",
-        async ({ page, projectMembersSettingsPage, apiClient }) => {
-            const user = {
-                firstName: "John",
-                lastName: "Doe",
-                email: "john.doe@example.com",
-                password: "password",
-            };
-            await apiClient.register(user);
-            await projectMembersSettingsPage.inviteUser(
-                user.email,
-                projectMembersSettingsPage,
-                true,
-            );
+    test.fixme("When a registered user is removed from the project, then they can be invited again", async ({
+        page,
+        projectMembersSettingsPage,
+        apiClient,
+    }) => {
+        const user = {
+            firstName: "John",
+            lastName: "Doe",
+            email: "john.doe@example.com",
+            password: "password",
+        };
+        await apiClient.register(user);
+        await projectMembersSettingsPage.inviteUser(user.email, projectMembersSettingsPage, true);
 
-            await projectMembersSettingsPage.openRemoveMemberDialog(user);
-            await projectMembersSettingsPage.removeMemberDialog.remove();
-            await expect(projectMembersSettingsPage.removeMemberDialog.dialog).not.toBeVisible();
-            await expect(page.getByText(`Removed John Doe from the project`)).toBeVisible();
-            await projectMembersSettingsPage.checkForUser("John Doe", "name", false);
-            await projectMembersSettingsPage.assertNumberOfProjectMembers({
-                all: 1,
-                admins: 1,
-                members: 0,
-                invitees: 0,
-                invitedAdmins: 0,
-                invitedMembers: 0,
-            });
+        await projectMembersSettingsPage.openRemoveMemberDialog(user);
+        await projectMembersSettingsPage.removeMemberDialog.remove();
+        await expect(projectMembersSettingsPage.removeMemberDialog.dialog).not.toBeVisible();
+        await expect(page.getByText(`Removed John Doe from the project`)).toBeVisible();
+        await projectMembersSettingsPage.checkForUser("John Doe", "name", false);
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 1,
+            admins: 1,
+            members: 0,
+            invitees: 0,
+            invitedAdmins: 0,
+            invitedMembers: 0,
+        });
 
-            // Invite the user again, this fails when no suggestion is shown
-            await projectMembersSettingsPage.inviteUser(
-                user.email,
-                projectMembersSettingsPage,
-                true,
-            );
-            await expect(
-                page.getByText(`Invited ${user.email} to the project`).last(),
-            ).toBeVisible();
-            await projectMembersSettingsPage.checkForUser("John Doe", "name");
-        },
-    );
+        // Invite the user again, this fails when no suggestion is shown
+        await projectMembersSettingsPage.inviteUser(user.email, projectMembersSettingsPage, true);
+        await expect(page.getByText(`Invited ${user.email} to the project`).last()).toBeVisible();
+        await projectMembersSettingsPage.checkForUser("John Doe", "name");
+    });
 });
