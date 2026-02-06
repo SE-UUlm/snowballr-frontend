@@ -103,7 +103,7 @@ export class ProjectSLRSettingsPageModel {
                 break;
         }
 
-        radio.click();
+        await radio.click();
 
         await expect(radio).toBeChecked();
         await expect(
