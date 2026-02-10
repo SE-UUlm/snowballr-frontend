@@ -21,42 +21,36 @@
     let disabled = $derived(loading || slrSettingsLocked);
 
     interface RadioItemProp {
-        id: string;
+        id: SnowballingType;
         label: string;
-        value: SnowballingType;
         description: string;
     }
     const options: RadioItemProp[] = [
         {
-            id: "forward",
+            id: SnowballingType.FORWARD,
             label: "Forward",
-            value: SnowballingType.FORWARD,
             description: "Only forward references are fetched",
         },
         {
-            id: "backward",
+            id: SnowballingType.BACKWARD,
             label: "Backward",
-            value: SnowballingType.BACKWARD,
             description: "Only backward references are fetched",
         },
         {
-            id: "both",
+            id: SnowballingType.BOTH,
             label: "Both",
-            value: SnowballingType.BOTH,
             description: "Both forward and backward references are fetched",
         },
     ];
-    let selectedTypeId: (typeof options)[number]["id"] = $state("");
-    let initialTypeId = $state("");
+    let selectedType: SnowballingType = $state(SnowballingType.UNSPECIFIED);
+    let initialType: SnowballingType = $state(SnowballingType.UNSPECIFIED);
     let updateSLRSettingsError: ActionError = $state(undefined);
 
     onMount(() => {
         loadingProject
             .then((project) => {
-                const type = project.settings?.snowballingType;
-                selectedTypeId =
-                    options.find((option) => option.value === type)?.id ?? options[0].id;
-                initialTypeId = selectedTypeId;
+                selectedType = project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED;
+                initialType = selectedType;
             })
             .catch((error) => {
                 updateSLRSettingsError = createActionError(
@@ -71,17 +65,14 @@
     });
 
     async function onTypeSelected() {
-        if (initialTypeId === selectedTypeId) return;
-
-        const selectedValue = options.find((option) => option.id === selectedTypeId)?.value;
-        if (!selectedValue) return;
+        if (initialType === selectedType || selectedType === SnowballingType.UNSPECIFIED) return;
 
         loading = true;
         updateSLRSettingsError = undefined;
         const projectData: Partial<Project> = {
             id: projectId,
             settings: Project_Settings.create({
-                snowballingType: selectedValue,
+                snowballingType: selectedType,
             }),
         };
 
@@ -91,7 +82,7 @@
                 mask: { paths: ["project.settings.snowballing_type"] },
             })
             .response.then(() => {
-                initialTypeId = selectedTypeId;
+                initialType = selectedType;
                 toast.success("Successfully updated the project settings.");
             })
             .catch((error) => {
@@ -100,7 +91,7 @@
                     { action: "updating the Snowballing Type" },
                     error,
                 );
-                selectedTypeId = initialTypeId;
+                selectedType = initialType;
             })
             .finally(() => {
                 loading = false;
@@ -133,10 +124,10 @@ Usage:
             Wohlin et. al 2014
         </a>)
     </p>
-    <RadioGroup.Root bind:value={selectedTypeId}>
+    <RadioGroup.Root bind:value={selectedType}>
         {#each options as option (option.id)}
             <div class="flex items-center space-x-2">
-                {#if loading && selectedTypeId === option.id}
+                {#if loading && selectedType === option.id}
                     <LoaderCircle class="size-4 animate-spin" />
                 {:else}
                     <RadioGroup.Item

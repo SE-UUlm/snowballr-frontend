@@ -13,7 +13,7 @@ describe("SnowballingTypeSettings", () => {
         }),
     });
 
-    test("When all props are provided and the SLR settings not locked, then the component renders correctly", async () => {
+    test("When all props are provided and the SLR settings aren't locked, then the component renders correctly", async () => {
         projectData.settings!.snowballingType = SnowballingType.BOTH;
         render(SnowballingTypeSettings, {
             target: document.body,
