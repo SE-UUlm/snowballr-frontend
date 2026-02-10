@@ -88,7 +88,7 @@ Usage:
 ```
 -->
 <SettingsLayout {allScrollable} {selectedTab} {tabs}>
-    <div class={cn("flex flex-col gap-5", allScrollable ? "" : "overflow-hidden")}>
+    <div class={cn("flex flex-col gap-9", allScrollable ? "" : "overflow-hidden")}>
         {@render children?.()}
     </div>
 </SettingsLayout>
