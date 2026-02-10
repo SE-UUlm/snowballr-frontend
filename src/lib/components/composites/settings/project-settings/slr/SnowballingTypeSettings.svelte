@@ -21,35 +21,37 @@
     let disabled = $derived(loading || slrSettingsLocked);
 
     interface RadioItemProp {
-        id: SnowballingType;
+        id: string;
         label: string;
         description: string;
     }
     const options: RadioItemProp[] = [
         {
-            id: SnowballingType.FORWARD,
+            id: String(SnowballingType.FORWARD),
             label: "Forward",
             description: "Only forward references are fetched",
         },
         {
-            id: SnowballingType.BACKWARD,
+            id: String(SnowballingType.BACKWARD),
             label: "Backward",
             description: "Only backward references are fetched",
         },
         {
-            id: SnowballingType.BOTH,
+            id: String(SnowballingType.BOTH),
             label: "Both",
             description: "Both forward and backward references are fetched",
         },
     ];
-    let selectedType: SnowballingType = $state(SnowballingType.UNSPECIFIED);
-    let initialType: SnowballingType = $state(SnowballingType.UNSPECIFIED);
+    let selectedType: string = $state(String(SnowballingType.UNSPECIFIED));
+    let initialType: string = $state(String(SnowballingType.UNSPECIFIED));
     let updateSLRSettingsError: ActionError = $state(undefined);
 
     onMount(() => {
         loadingProject
             .then((project) => {
-                selectedType = project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED;
+                selectedType = String(
+                    project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED,
+                );
                 initialType = selectedType;
             })
             .catch((error) => {
@@ -65,14 +67,15 @@
     });
 
     async function onTypeSelected() {
-        if (initialType === selectedType || selectedType === SnowballingType.UNSPECIFIED) return;
+        if (initialType === selectedType || selectedType === String(SnowballingType.UNSPECIFIED))
+            return;
 
         loading = true;
         updateSLRSettingsError = undefined;
         const projectData: Partial<Project> = {
             id: projectId,
             settings: Project_Settings.create({
-                snowballingType: selectedType,
+                snowballingType: Number(selectedType),
             }),
         };
 
