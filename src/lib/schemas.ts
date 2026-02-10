@@ -23,7 +23,7 @@ export type ZodIssueSubCode = keyof typeof ZodIssueSubCode;
  */
 function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, message?: string) {
     return context.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         params: { subCode },
         message,
     });
@@ -34,11 +34,11 @@ function addCustomIssue(context: z.RefinementCtx, subCode: ZodIssueSubCode, mess
  */
 const firstNameSchema = z
     .string()
-    .min(1, { message: "must contain at least 1 non-whitespace character" })
-    .max(100, { message: "must contain at most 100 non-whitespace characters" })
+    .min(1, { error: "must contain at least 1 non-whitespace character" })
+    .max(100, { error: "must contain at most 100 non-whitespace characters" })
     .refine((value) => value === value.trim(), {
         params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
-        message: "cannot start or end with whitespace",
+        error: "cannot start or end with whitespace",
     });
 
 /**
@@ -46,17 +46,17 @@ const firstNameSchema = z
  */
 const lastNameSchema = z
     .string()
-    .min(1, { message: "must contain at least 1 non-whitespace character" })
-    .max(100, { message: "must contain at most 100 non-whitespace characters" })
+    .min(1, { error: "must contain at least 1 non-whitespace character" })
+    .max(100, { error: "must contain at most 100 non-whitespace characters" })
     .refine((value) => value === value.trim(), {
         params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
-        message: "cannot start or end with whitespace",
+        error: "cannot start or end with whitespace",
     });
 
 /**
  * Schema for the email of a user.
  */
-const emailSchema = z.string().email({ message: "a valid format" });
+const emailSchema = z.email({ error: "a valid format" });
 
 const upperCaseLetters = "A-ZÄÖÜ";
 const lowerCaseLetters = "a-zäöü";
@@ -80,8 +80,8 @@ function hasMinNumberOfCharacterSet(password: string, characterSet: string, minN
  */
 const passwordSchema = z
     .string()
-    .min(8, { message: "at least 8 characters" })
-    .max(128, { message: "at most 128 characters" })
+    .min(8, { error: "at least 8 characters" })
+    .max(128, { error: "at most 128 characters" })
     .superRefine((password, context) => {
         if (!passwordRegex.test(password)) {
             addCustomIssue(
@@ -125,11 +125,11 @@ const passwordSchema = z
  */
 const projectNameSchema = z
     .string()
-    .min(1, { message: "Please provide a non-blank project name" })
-    .max(100, { message: "The project name is limited to 100 characters" })
+    .min(1, { error: "Please provide a non-blank project name" })
+    .max(100, { error: "The project name is limited to 100 characters" })
     .refine((value) => value === value.trim(), {
         params: { subCode: ZodIssueSubCode.no_leading_trailing_whitespace },
-        message: "The project name cannot start or end with whitespace",
+        error: "The project name cannot start or end with whitespace",
     });
 
 export const Schema = {

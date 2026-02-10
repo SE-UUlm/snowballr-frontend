@@ -20,7 +20,7 @@
         type: HTMLInputTypeAttribute;
         link?: { href: string; text: string };
         inputClass?: string;
-        schema?: z.ZodFirstPartySchemaTypes;
+        schema?: z.ZodType;
         onButtonClick?: () => void;
         buttonContent?: Snippet;
         buttonProps?: HTMLButtonAttributes;
@@ -65,21 +65,24 @@
         }
 
         const parsedSchema = schema.safeParse("");
-        validationCriteria = errorsToCriteria(parsedSchema.error?.errors ?? []);
+        validationCriteria = issuesToCriteria(parsedSchema.error?.issues ?? []);
     }
 
-    function errorsToCriteria(errors: z.ZodIssue[]): ValidationCriterion[] {
-        return errors.map((error) => {
-            const code = error.code;
+    function issuesToCriteria(issues: z.core.$ZodIssue[]): ValidationCriterion[] {
+        return issues.map((issue) => {
+            const code = issue.code;
             const subCode =
-                "params" in error && error.params !== undefined
-                    ? error.params["subCode"]
+                "params" in issue && issue.params !== undefined
+                    ? issue.params["subCode"]
                     : undefined;
-            return { code, subCode, isMet: false, message: error.message };
+            return { code, subCode, isMet: false, message: issue.message };
         });
     }
 
-    function doesIssueMatchCriterion(criterion: ValidationCriterion, issue: z.ZodIssue): boolean {
+    function doesIssueMatchCriterion(
+        criterion: ValidationCriterion,
+        issue: z.core.$ZodIssue,
+    ): boolean {
         if (criterion.code !== issue.code) {
             return false;
         }
@@ -120,8 +123,8 @@
             validationCriteria = validationCriteria.map((criterion) => {
                 // If no error is found, the criterion is met
                 const isMet =
-                    parsedSchema.error?.errors.find((error) =>
-                        doesIssueMatchCriterion(criterion, error),
+                    parsedSchema.error?.issues.find((issue) =>
+                        doesIssueMatchCriterion(criterion, issue),
                     ) === undefined;
 
                 hasAtLeastOneError = hasAtLeastOneError || !isMet;
@@ -129,7 +132,7 @@
             });
             isValid = !hasAtLeastOneError;
         } else {
-            validationCriteria = errorsToCriteria(parsedSchema.error?.errors ?? []);
+            validationCriteria = issuesToCriteria(parsedSchema.error?.issues ?? []);
             isValid = validationCriteria.length === 0;
         }
 
