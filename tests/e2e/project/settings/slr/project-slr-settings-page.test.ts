@@ -76,16 +76,15 @@ test.describe("SLR Settings Tests - Snowballing Type", () => {
         await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeEnabled();
     });
 
-    test.fixme(
-        "When the SLR settings are locked, then the radio buttons are disabled",
-        async ({ projectSLRSettingsPage }) => {
-            // await projectSLRSettingsPage.setProjectStatusActiveLocked();
+    test.fixme("When the SLR settings are locked, then the radio buttons are disabled", async ({
+        projectSLRSettingsPage,
+    }) => {
+        // await projectSLRSettingsPage.setProjectStatusActiveLocked();
 
-            await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeDisabled();
-            await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeDisabled();
-            await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeDisabled();
-        },
-    );
+        await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeDisabled();
+        await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeDisabled();
+        await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeDisabled();
+    });
 
     test("When a different snowballing type is selected, then the project is updated and the selection changes", async ({
         page,
