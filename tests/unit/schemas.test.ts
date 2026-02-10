@@ -14,11 +14,11 @@ import { z, ZodIssueCode } from "zod";
  */
 function schemaTest(
     name: string,
-    schema: z.ZodFirstPartySchemaTypes,
+    schema: z.ZodType,
     func: (testValid: typeof _testValid, testInvalid: typeof _testInvalid) => void,
 ) {
     function getErrorMessage(result?: z.ZodError): string {
-        return result?.errors.map((error) => error.message).join("\n") ?? "<no error message>";
+        return result?.issues.map((issue) => issue.message).join("\n") ?? "<no error message>";
     }
 
     /**
@@ -36,11 +36,11 @@ function schemaTest(
         expect(result.data, "Validation data doesn't match expected output").toBe(expectedOutput);
     }
 
-    function formatError(error: z.ZodIssue) {
-        if (error.code === z.ZodIssueCode.custom) {
-            return `${error.code}:${error.params?.subCode}`;
+    function formatIssue(issue: z.core.$ZodIssue) {
+        if (issue.code === "custom") {
+            return `${issue.code}:${issue.params?.subCode}`;
         } else {
-            return error.code;
+            return issue.code;
         }
     }
 
@@ -58,7 +58,7 @@ function schemaTest(
             false,
         );
 
-        const errorCodes = result.error?.errors.map(formatError) ?? [];
+        const errorCodes = result.error?.issues.map(formatIssue) ?? [];
         if (checkAllCodes) {
             checkForAllCodes(errorCodes, codes, input);
         } else {
@@ -113,7 +113,7 @@ function customCode(subCode: ZodIssueSubCode): string {
 
 schemaTest("First Name Schema", Schema.firstName, (testValid, testInvalid) => {
     test("When first name is empty, then validation fails", () => {
-        testInvalid("", { codes: [z.ZodIssueCode.too_small] });
+        testInvalid("", { codes: ["too_small"] });
     });
 
     test.each([" ", "  "])("When first name is blank, then validation fails", (input) => {
@@ -121,7 +121,7 @@ schemaTest("First Name Schema", Schema.firstName, (testValid, testInvalid) => {
     });
 
     test("When first name is more than 100 characters long, then validation fails", () => {
-        testInvalid("a".repeat(101), { codes: [z.ZodIssueCode.too_big] });
+        testInvalid("a".repeat(101), { codes: ["too_big"] });
     });
 
     test.each(Array.from({ length: 100 }, (_, i) => i + 1))(
@@ -150,7 +150,7 @@ schemaTest("First Name Schema", Schema.firstName, (testValid, testInvalid) => {
 
 schemaTest("Last Name Schema", Schema.lastName, (testValid, testInvalid) => {
     test("When last name is empty, then validation fails", () => {
-        testInvalid("", { codes: [z.ZodIssueCode.too_small] });
+        testInvalid("", { codes: ["too_small"] });
     });
 
     test.each([" ", "  "])("When last name is blank, then validation fails", (input) => {
@@ -158,7 +158,7 @@ schemaTest("Last Name Schema", Schema.lastName, (testValid, testInvalid) => {
     });
 
     test("When last name is more than 100 characters long, then validation fails", () => {
-        testInvalid("a".repeat(101), { codes: [z.ZodIssueCode.too_big] });
+        testInvalid("a".repeat(101), { codes: ["too_big"] });
     });
 
     test.each(Array.from({ length: 100 }, (_, i) => i + 1))(
@@ -201,13 +201,13 @@ schemaTest("Email Schema", Schema.email, (testValid, testInvalid) => {
         "john.doe@com..",
         "john.doe@.com.",
     ])("When invalid email '%s' is tested, then validation fails", (input) => {
-        testInvalid(input, { codes: [z.ZodIssueCode.invalid_string] });
+        testInvalid(input, { codes: ["invalid_format"] });
     });
 
     test.each([" john.doe@example.com", "john.doe@example.com ", " john.doe@example.com "])(
         "When email '%s' with trailing or leading spaces is tested, then validation fails",
         (input) => {
-            testInvalid(input, { codes: [z.ZodIssueCode.invalid_string] });
+            testInvalid(input, { codes: ["invalid_format"] });
         },
     );
 
@@ -224,14 +224,14 @@ schemaTest("Password Schema", Schema.password, (testValid, testInvalid) => {
         "When password is less than %f character(s) long, then validations fails",
         (length) => {
             testInvalid("a".repeat(length), {
-                codes: [z.ZodIssueCode.too_small],
+                codes: ["too_small"],
                 checkAllCodes: false,
             });
         },
     );
 
     test("When password is more than 128 characters long, then validations fails", () => {
-        testInvalid("a".repeat(129), { codes: [z.ZodIssueCode.too_big], checkAllCodes: false });
+        testInvalid("a".repeat(129), { codes: ["too_big"], checkAllCodes: false });
     });
 
     test("When input contains less than 2 upper case letters, then validation fails", () => {
@@ -296,7 +296,7 @@ schemaTest("Project name Schema", Schema.projectName, (testValid, testInvalid) =
     });
 
     test("When the project name is more than 100 characters long, then validation fails", () => {
-        testInvalid("a".repeat(101), { codes: [z.ZodIssueCode.too_big] });
+        testInvalid("a".repeat(101), { codes: ["too_big"] });
     });
 
     test.each(Array.from({ length: 100 }, (_, i) => i + 1))(

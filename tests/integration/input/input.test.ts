@@ -81,7 +81,9 @@ describe("Input", () => {
             errorMessages = screen.queryAllByTestId("error-message");
             expect(errorMessages.length).toBeGreaterThan(0);
         });
-        expect(errorMessages[0]).toHaveTextContent("String must contain at least 10 character(s)");
+        expect(errorMessages[0]).toHaveTextContent(
+            "Too small: expected string to have >=10 characters",
+        );
     });
 
     test("When a button is provided, then button is shown and can be clicked.", () => {
