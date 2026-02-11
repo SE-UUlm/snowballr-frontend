@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CirclePlus } from "lucide-svelte";
+    import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { buttonVariants } from "$lib/components/primitives/button";
     import Input from "$lib/components/composites/input/Input.svelte";
     import { Schema } from "$lib/schemas";

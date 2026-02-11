@@ -26,12 +26,12 @@ describe("Maybe As Decision Project Setting", () => {
         "When all props are provided and the SLR settings are not locked, then the component renders correctly, with a title, " +
             "a switch with a label, and a description",
         async () => {
-            const mockGetCall = mockApiCall("getProjectById", projectData);
             render(MaybeAsDecisionSetting, {
                 target: document.body,
                 props: {
                     projectId: projectData.id,
                     slrSettingsLocked: false,
+                    loadingProject: Promise.resolve(projectData),
                 },
                 context: mockIsProjectArchivedContext(),
             });
@@ -48,18 +48,17 @@ describe("Maybe As Decision Project Setting", () => {
                     "When turned on, a reviewer can set their decision to 'Maybe', next to 'Accept' or 'Decline'.",
                 ),
             ).toBeInTheDocument();
-            expect(mockGetCall).toHaveBeenCalledExactlyOnceWith({ id: projectData.id });
         },
     );
 
     test("When all props are provided and the SLR settings are locked, then the component renders correctly, with a title, a switch with a label, and a description", async () => {
         projectData.status = ProjectStatus.ACTIVE_LOCKED;
-        const mockGetCall = mockApiCall("getProjectById", projectData);
         render(MaybeAsDecisionSetting, {
             target: document.body,
             props: {
                 projectId: projectData.id,
                 slrSettingsLocked: true,
+                loadingProject: Promise.resolve(projectData),
             },
             context: mockIsProjectArchivedContext(),
         });
@@ -76,16 +75,15 @@ describe("Maybe As Decision Project Setting", () => {
                 "When turned on, a reviewer can set their decision to 'Maybe', next to 'Accept' or 'Decline'.",
             ),
         ).toBeInTheDocument();
-        expect(mockGetCall).toHaveBeenCalledExactlyOnceWith({ id: projectData.id });
     });
 
     test("When the switch is clicked (initially off), then a popup should appear, asking for confirmation to change the SLR settings", async () => {
-        const mockGetCall = mockApiCall("getProjectById", projectData);
         render(MaybeAsDecisionSetting, {
             target: document.body,
             props: {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
             },
             context: mockIsProjectArchivedContext(),
         });
@@ -103,19 +101,18 @@ describe("Maybe As Decision Project Setting", () => {
         ).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument();
-        expect(mockGetCall).toHaveBeenCalledOnce();
     });
 
     test(
         "When the switch is clicked (initially off), and the cancel option is selected, then the popup should close " +
             "and the switch should remain in its previous state",
         async () => {
-            const mockGetCall = mockApiCall("getProjectById", projectData);
             render(MaybeAsDecisionSetting, {
                 target: document.body,
                 props: {
                     projectId: projectData.id,
                     slrSettingsLocked: false,
+                    loadingProject: Promise.resolve(projectData),
                 },
                 context: mockIsProjectArchivedContext(),
             });
@@ -134,18 +131,17 @@ describe("Maybe As Decision Project Setting", () => {
 
             expect(maybeSwitch).not.toBeChecked();
             expect(maybeAsDecision.isActivated).toBe(false);
-            expect(mockGetCall).toHaveBeenCalledOnce();
         },
     );
 
     test("When the switch is toggled, then the SLR settings should be updated accordingly", async () => {
-        const mockGetCall = mockApiCall("getProjectById", projectData);
         const mockUpdateCall = mockApiCall("updateProject", projectData);
         render(MaybeAsDecisionSetting, {
             target: document.body,
             props: {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
             },
             context: mockIsProjectArchivedContext(),
         });
@@ -176,18 +172,17 @@ describe("Maybe As Decision Project Setting", () => {
         });
         expect(maybeAsDecision.isActivated).toBe(false);
 
-        expect(mockGetCall).toHaveBeenCalledOnce();
         expect(mockUpdateCall).toHaveBeenCalledTimes(2);
     });
 
     test("When the api call fails, then an error message is displayed", async () => {
-        const mockGetCall = mockApiCall("getProjectById", projectData);
         mockFailedApiCall("updateProject");
         render(MaybeAsDecisionSetting, {
             target: document.body,
             props: {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
             },
             context: mockIsProjectArchivedContext(),
         });
@@ -214,17 +209,15 @@ describe("Maybe As Decision Project Setting", () => {
         expect(maybeSwitch).not.toBeChecked();
         await waitFor(() => expect(maybeSwitch).toBeEnabled());
         expect(maybeAsDecision.isActivated).toBe(false);
-
-        expect(mockGetCall).toHaveBeenCalledOnce();
     });
 
     test("When the project fails to resolve, then an error message is displayed", async () => {
-        mockFailedApiCall("getProjectById");
         render(MaybeAsDecisionSetting, {
             target: document.body,
             props: {
                 projectId: projectData.id,
                 slrSettingsLocked: false,
+                loadingProject: Promise.reject(new Error("Failed to load project")),
             },
             context: mockIsProjectArchivedContext(),
         });

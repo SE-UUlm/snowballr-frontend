@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ArrowLeft from "lucide-svelte/icons/arrow-left";
+    import ArrowLeft from "@lucide/svelte/icons/arrow-left";
     import * as Card from "$lib/components/primitives/card/index.js";
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";

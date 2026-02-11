@@ -1,6 +1,9 @@
 <script lang="ts">
     import * as Alert from "$lib/components/primitives/alert";
-    import { CircleAlertIcon, CircleCheckIcon, InfoIcon, TriangleAlertIcon } from "lucide-svelte";
+    import CircleAlert from "@lucide/svelte/icons/circle-alert";
+    import CircleCheck from "@lucide/svelte/icons/circle-check";
+    import Info from "@lucide/svelte/icons/info";
+    import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
 
     export type AlertVariant = "default" | "success" | "info" | "warning" | "error";
     type Props = {
@@ -14,13 +17,13 @@
 
 <Alert.Root aria-label={title} {variant}>
     {#if variant === "success"}
-        <CircleCheckIcon class="size-4" role="img" />
+        <CircleCheck class="size-4" role="img" />
     {:else if variant === "info"}
-        <InfoIcon class="size-4" role="img" />
+        <Info class="size-4" role="img" />
     {:else if variant === "warning"}
-        <TriangleAlertIcon class="size-4" role="img" />
+        <TriangleAlert class="size-4" role="img" />
     {:else if variant === "error"}
-        <CircleAlertIcon class="size-4" role="img" />
+        <CircleAlert class="size-4" role="img" />
     {/if}
     <Alert.Title>{title}</Alert.Title>
     {#if details}

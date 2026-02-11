@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CircleAlert from "lucide-svelte/icons/circle-alert";
+    import CircleAlert from "@lucide/svelte/icons/circle-alert";
 
     interface Props {
         errorMessage: string;

@@ -1,7 +1,7 @@
 <script lang="ts">
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
-    import { Download } from "lucide-svelte";
+    import Download from "@lucide/svelte/icons/download";
 
     interface Props {
         loadingPaperId: Promise<string>;

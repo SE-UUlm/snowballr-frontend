@@ -2,7 +2,7 @@
     import type { AlertDialogActionProps } from "$lib/components/primitives/alert-dialog/alert-dialog-action.svelte";
     import * as AlertDialog from "$lib/components/primitives/alert-dialog/index.js";
     import type { Snippet } from "svelte";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import type { DialogTriggerProps } from "bits-ui";
     import type { AlertDialogCancelProps } from "$lib/components/primitives/alert-dialog/alert-dialog-cancel.svelte";
     import { wrapLongWords } from "$lib/utils/common-helper";

@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Avatar from "$lib/components/primitives/avatar/index.js";
-    import Check from "lucide-svelte/icons/check";
-    import X from "lucide-svelte/icons/x";
+    import Check from "@lucide/svelte/icons/check";
+    import X from "@lucide/svelte/icons/x";
     import { ReviewDecision } from "$lib/model/api/review";
     import type { User } from "$lib/model/api/user";
     import { cn } from "$lib/utils/shadcn-helper";

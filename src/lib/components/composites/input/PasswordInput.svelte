@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Eye from "lucide-svelte/icons/eye";
-    import EyeClosed from "lucide-svelte/icons/eye-closed";
+    import Eye from "@lucide/svelte/icons/eye";
+    import EyeClosed from "@lucide/svelte/icons/eye-closed";
     import { Schema } from "$lib/schemas";
     import Input, { type InputProps } from "./Input.svelte";
 

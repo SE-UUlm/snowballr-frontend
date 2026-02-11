@@ -8,6 +8,9 @@ export class ProjectSLRSettingsPageModel {
 
     readonly heading: Locator;
     readonly maybeAsDecisionSwitch: Locator;
+    readonly snowballingTypeForwardRadio: Locator;
+    readonly snowballingTypeBackwardRadio: Locator;
+    readonly snowballingTypeBothRadio: Locator;
 
     readonly projectName: string;
 
@@ -27,6 +30,9 @@ export class ProjectSLRSettingsPageModel {
         this.maybeAsDecisionSwitch = page.getByRole("switch", {
             name: "Allow 'Maybe' as decision on a Paper",
         });
+        this.snowballingTypeForwardRadio = page.getByRole("radio", { name: "Forward" });
+        this.snowballingTypeBackwardRadio = page.getByRole("radio", { name: "Backward" });
+        this.snowballingTypeBothRadio = page.getByRole("radio", { name: "Both" });
 
         this.projectId = "";
         this.projectPaperId = "";
@@ -81,5 +87,27 @@ export class ProjectSLRSettingsPageModel {
             this.page.getByRole("option", { name: fetcherName, exact: true }),
         ).not.toBeVisible();
         await this.page.getByRole("button", { name: "Add Fetcher", exact: true }).click();
+    }
+
+    async selectSnowballingType(type: "Forward" | "Backward" | "Both") {
+        let radio: Locator;
+        switch (type) {
+            case "Forward":
+                radio = this.snowballingTypeForwardRadio;
+                break;
+            case "Backward":
+                radio = this.snowballingTypeBackwardRadio;
+                break;
+            case "Both":
+                radio = this.snowballingTypeBothRadio;
+                break;
+        }
+
+        await radio.click();
+
+        await expect(radio).toBeChecked();
+        await expect(
+            this.page.getByText("Successfully updated the project settings."),
+        ).toBeVisible();
     }
 }

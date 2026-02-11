@@ -12,7 +12,7 @@
     import { env } from "$env/dynamic/public";
     import type { User } from "$lib/model/api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
-    import { ExternalLink } from "lucide-svelte";
+    import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";

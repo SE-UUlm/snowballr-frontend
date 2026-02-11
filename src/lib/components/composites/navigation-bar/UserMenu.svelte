@@ -1,8 +1,8 @@
 <script lang="ts">
     import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
-    import BookOpen from "lucide-svelte/icons/book-open";
-    import Settings from "lucide-svelte/icons/settings";
-    import LogOut from "lucide-svelte/icons/log-out";
+    import BookOpen from "@lucide/svelte/icons/book-open";
+    import Settings from "@lucide/svelte/icons/settings";
+    import LogOut from "@lucide/svelte/icons/log-out";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getUserContext } from "$lib/custom-context/user-context";

@@ -14,7 +14,7 @@
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import type { Paper } from "$lib/model/api/paper";
     import type { Project_Paper } from "$lib/model/api/project";
-    import { ExternalLink } from "lucide-svelte";
+    import ExternalLink from "@lucide/svelte/icons/external-link";
 
     /**
      * Interface for the paper list entries.

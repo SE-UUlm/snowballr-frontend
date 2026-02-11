@@ -14,7 +14,7 @@
     import { asPaper } from "$lib/utils/model-helper";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { type Snippet } from "svelte";
-    import { LoaderCircle } from "lucide-svelte";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
     export interface ProjectSpecificPaperViewProps {
         loadingPaper: Promise<Project_Paper>;

@@ -6,7 +6,10 @@
     import { Project, Project_Settings } from "$lib/model/api/project";
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import { SquarePen, Lock, CirclePlus, Trash } from "lucide-svelte";
+    import SquarePen from "@lucide/svelte/icons/square-pen";
+    import Lock from "@lucide/svelte/icons/lock";
+    import CirclePlus from "@lucide/svelte/icons/circle-plus";
+    import Trash from "@lucide/svelte/icons/trash";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
@@ -17,9 +20,10 @@
     interface Props {
         projectId: string;
         slrSettingsLocked?: boolean;
+        loadingProject: Promise<Project>;
     }
 
-    const { projectId, slrSettingsLocked }: Props = $props();
+    const { projectId, slrSettingsLocked, loadingProject }: Props = $props();
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -63,18 +67,15 @@
     onMount(async () => {
         loading = true;
         loadAvailableFetchersError = undefined;
-        await backendService
-            .getProjectById({ id: projectId })
-            .response.then(loadProject)
-            .catch((error) => {
-                loadAvailableFetchersError = createActionError(
-                    "Failed to Load the Project Settings",
-                    {
-                        action: "loading the project settings",
-                    },
-                    error,
-                );
-            });
+        await loadingProject.then(loadProject).catch((error) => {
+            loadAvailableFetchersError = createActionError(
+                "Failed to Load the Project Settings",
+                {
+                    action: "loading the project settings",
+                },
+                error,
+            );
+        });
         loading = false;
     });
 </script>
@@ -108,9 +109,11 @@
     <ActionErrorAlert error={loadAvailableFetchersError} />
     {#if !loading}
         {#if availableFetchers.length === 0}
-            <p>This SnowballR instance has no registered fetchers yet.</p>
+            <span class="text-hint italic">
+                This SnowballR instance has no registered fetchers yet.
+            </span>
         {:else if usedFetchers.length === 0}
-            <p>This project has no fetcher configured yet.</p>
+            <span class="text-hint italic">This project has no fetcher configured yet.</span>
         {/if}
 
         <ul>
@@ -149,19 +152,18 @@
         <Skeleton class="h-8 w-38" />
     {/if}
 
-    {#if unusedFetchers.length !== 0}
-        <LoadingButton
-            disabled={slrSettingsLocked || loading || isProjectArchived}
-            label="Add Fetcher(s)"
-            onclick={() => (addDialogOpen = true)}
-        >
-            {#snippet icon()}
-                {#if slrSettingsLocked}
-                    <Lock />
-                {:else}
-                    <CirclePlus />
-                {/if}
-            {/snippet}
-        </LoadingButton>
-    {/if}
+    <LoadingButton
+        class="w-full sm:w-100"
+        disabled={slrSettingsLocked || loading || isProjectArchived || unusedFetchers.length === 0}
+        label="Add Fetcher(s)"
+        onclick={() => (addDialogOpen = true)}
+    >
+        {#snippet icon()}
+            {#if slrSettingsLocked}
+                <Lock />
+            {:else}
+                <CirclePlus />
+            {/if}
+        {/snippet}
+    </LoadingButton>
 </SettingsSection>

@@ -6,7 +6,10 @@
         SortDirection,
         type SortOptionLabel,
     } from "$lib/model/sort-criteria";
-    import { ArrowDown10, ArrowDownZA, ArrowDown01, ArrowDownAZ } from "lucide-svelte";
+    import ArrowDown10 from "@lucide/svelte/icons/arrow-down-1-0";
+    import ArrowDownZA from "@lucide/svelte/icons/arrow-down-z-a";
+    import ArrowDown01 from "@lucide/svelte/icons/arrow-down-0-1";
+    import ArrowDownAZ from "@lucide/svelte/icons/arrow-down-a-z";
     import ArrowDownYN from "$lib/svg/ArrowDownYN.svelte";
     import ArrowDownNY from "$lib/svg/ArrowDownNY.svelte";
 

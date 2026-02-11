@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Button } from "$lib/components/primitives/button";
-    import { ClipboardPaste } from "lucide-svelte";
+    import ClipboardPaste from "@lucide/svelte/icons/clipboard-paste";
     import SelectionIndicator from "$lib/components/composites/utils/SelectionIndicator.svelte";
     import { Input } from "$lib/components/primitives/input";
     import Label from "$lib/components/primitives/label/label.svelte";

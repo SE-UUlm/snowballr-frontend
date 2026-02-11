@@ -9,7 +9,7 @@
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";

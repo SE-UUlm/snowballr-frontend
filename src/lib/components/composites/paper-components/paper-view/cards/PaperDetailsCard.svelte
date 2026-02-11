@@ -3,14 +3,14 @@
     import PaperCardContent from "./PaperCardContent.svelte";
     import { Paper } from "$lib/model/api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
-    import Pencil from "lucide-svelte/icons/pencil";
-    import Save from "lucide-svelte/icons/save";
+    import Pencil from "@lucide/svelte/icons/pencil";
+    import Save from "@lucide/svelte/icons/save";
     import { cn } from "$lib/utils/shadcn-helper";
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
     import type { StringifiedPaper } from "$lib/model/general";
     import { asPaper, isProjectPaper, stringifyPaper } from "$lib/utils/model-helper";
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+    import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";

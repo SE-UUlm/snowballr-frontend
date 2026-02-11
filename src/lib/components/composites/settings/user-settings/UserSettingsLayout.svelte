@@ -2,9 +2,10 @@
     import type { Snippet } from "svelte";
     import type { IconLinkTab } from "$lib/model/tabs";
     import SettingsLayout from "../SettingsLayout.svelte";
-    import ClipboardCheck from "lucide-svelte/icons/clipboard-check";
-    import Settings from "lucide-svelte/icons/settings";
-    import { Box, Keyboard } from "lucide-svelte";
+    import ClipboardCheck from "@lucide/svelte/icons/clipboard-check";
+    import Settings from "@lucide/svelte/icons/settings";
+    import Box from "@lucide/svelte/icons/box";
+    import Keyboard from "@lucide/svelte/icons/keyboard";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {

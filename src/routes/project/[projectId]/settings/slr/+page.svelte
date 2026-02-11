@@ -2,12 +2,13 @@
     import { goto } from "$app/navigation";
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
-    import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/FetcherSettings.svelte";
+    import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherSettings.svelte";
     import { ProjectStatus } from "$lib/model/api/project.js";
     import { resource } from "$lib/resource.svelte";
     import { isCurrentUserProjectAdmin } from "../helper";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionWarning } from "$lib/model/action-error.js";
+    import SnowballingTypeSettings from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -56,6 +57,15 @@
               })
             : undefined}
     />
-    <MaybeAsDecisionSetting {projectId} slrSettingsLocked={slrSettingsLocked.value} />
-    <FetcherSettings {projectId} slrSettingsLocked={slrSettingsLocked.value} />
+    <SnowballingTypeSettings
+        {loadingProject}
+        {projectId}
+        slrSettingsLocked={slrSettingsLocked.value}
+    />
+    <MaybeAsDecisionSetting
+        {loadingProject}
+        {projectId}
+        slrSettingsLocked={slrSettingsLocked.value}
+    />
+    <FetcherSettings {loadingProject} {projectId} slrSettingsLocked={slrSettingsLocked.value} />
 </ProjectSettingsLayout>

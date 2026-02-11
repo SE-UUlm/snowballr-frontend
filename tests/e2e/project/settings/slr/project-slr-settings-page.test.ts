@@ -20,7 +20,7 @@ test.describe("SLR Settings Navigation", () => {
     });
 });
 
-test.describe("SLR Settings Tests", () => {
+test.describe("SLR Settings Tests - Maybe as Decision", () => {
     test("When the 'Maybe as Decision' option is turned on, then the option 'Maybe' should be visible", async ({
         projectSLRSettingsPage,
         projectPaperViewPage,
@@ -63,6 +63,5 @@ test.describe("SLR Settings Tests", () => {
     });
 
     test.fixme("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
-    test.fixme("When the project is set to 'ACTIVE_LOCKED', then the 'Maybe as Decision' setting cannot be changed", async () => {});
     test.fixme("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
 });
