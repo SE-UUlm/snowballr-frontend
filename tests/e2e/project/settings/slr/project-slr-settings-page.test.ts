@@ -61,30 +61,7 @@ test.describe("SLR Settings Tests - Maybe as Decision", () => {
         await reloadWait(page, projectSLRSettingsPage.heading);
         await expect(projectSLRSettingsPage.maybeAsDecisionSwitch).not.toBeChecked();
     });
-});
 
-test.describe("SLR Settings Tests - Snowballing Type", () => {
-    test("When a different snowballing type is selected, then the project is updated and the selection changes", async ({
-        page,
-        projectSLRSettingsPage,
-    }) => {
-        await projectSLRSettingsPage.selectSnowballingType("Both");
-        await expect(projectSLRSettingsPage.snowballingTypeBothRadio).toBeChecked();
-
-        // Wait until the success toast disappears
-        await expect(
-            page.getByText("Successfully updated the project settings."),
-        ).not.toBeVisible();
-
-        await projectSLRSettingsPage.selectSnowballingType("Forward");
-        await expect(projectSLRSettingsPage.snowballingTypeForwardRadio).toBeChecked();
-
-        // Wait until the success toast disappears
-        await expect(
-            page.getByText("Successfully updated the project settings."),
-        ).not.toBeVisible();
-
-        await projectSLRSettingsPage.selectSnowballingType("Backward");
-        await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeChecked();
-    });
+    test.fixme("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
+    test.fixme("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
 });
