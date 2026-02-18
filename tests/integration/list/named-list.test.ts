@@ -224,6 +224,6 @@ describe("NamedListComponent", () => {
         expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
         expect(screen.queryAllByTestId("skeleton").length).toBe(0);
 
-        expect(screen.getByText("Error: Test Error"));
+        expect(screen.getByText("Error: Test Error")).toBeInTheDocument();
     });
 });

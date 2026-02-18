@@ -114,7 +114,9 @@ function pluralize(count: number | { length: number }, singular: string, plural:
  */
 function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string, T[]> {
     return list.reduce((result: Record<string, T[]>, item: T) => {
-        (result[keySelector(item)] ??= []).push(item);
+        const key = keySelector(item);
+        result[key] ??= [];
+        result[key].push(item);
         return result;
     }, {});
 }
@@ -422,8 +424,8 @@ function stringToAuthor(text: string): Author {
         if (parts.length === 1) {
             lastName = parts[0];
         } else {
-            firstName = parts.slice(0, parts.length - 1).join(" ");
-            lastName = parts[parts.length - 1];
+            firstName = parts.slice(0, -1).join(" ");
+            lastName = parts.at(-1) ?? "";
         }
     }
 

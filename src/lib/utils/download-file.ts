@@ -6,7 +6,7 @@
  */
 export function downloadBlob(byteArray: Uint8Array<ArrayBufferLike>, filename: string): void {
     // create a browser Blob and object URL
-    const file = new window.Blob([byteArray], {
+    const file = new globalThis.Blob([byteArray], {
         type: "application/octet-stream",
     });
     const url = URL.createObjectURL(file);
@@ -19,6 +19,6 @@ export function downloadBlob(byteArray: Uint8Array<ArrayBufferLike>, filename: s
     document.body.appendChild(a);
     a.click();
 
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
 }

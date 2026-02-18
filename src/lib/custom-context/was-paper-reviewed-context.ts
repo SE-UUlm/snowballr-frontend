@@ -9,6 +9,6 @@ export const WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY = Symbol("wasProjectPaperAlr
 export function setAlreadyReviewedContext(alreadyReviewed: WasReviewedState) {
     setContext(WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY, alreadyReviewed);
 }
-export function getAlreadyReviewedContext() {
-    return getContext(WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY) as WasReviewedState;
+export function getAlreadyReviewedContext(): WasReviewedState {
+    return getContext(WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY);
 }

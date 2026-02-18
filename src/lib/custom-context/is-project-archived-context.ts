@@ -8,6 +8,6 @@ export const IS_PROJECT_ARCHIVED_KEY = Symbol("isProjectArchived");
 export function setIsProjectArchivedContext(isProjectArchived: IsProjectArchivedState) {
     setContext(IS_PROJECT_ARCHIVED_KEY, isProjectArchived);
 }
-export function getIsProjectArchivedContext() {
-    return getContext(IS_PROJECT_ARCHIVED_KEY) as IsProjectArchivedState;
+export function getIsProjectArchivedContext(): IsProjectArchivedState {
+    return getContext(IS_PROJECT_ARCHIVED_KEY);
 }

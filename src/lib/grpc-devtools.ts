@@ -4,9 +4,8 @@
 import { RpcError, type RpcInterceptor } from "@protobuf-ts/runtime-rpc";
 
 declare global {
-    interface Window {
-        __GRPCWEB_DEVTOOLS__?: boolean;
-    }
+    // Augment globalThis to include the devtools flag as boolean
+    var __GRPCWEB_DEVTOOLS__: boolean | undefined;
 }
 
 const type = "__GRPCWEB_DEVTOOLS__";
@@ -14,7 +13,7 @@ const type = "__GRPCWEB_DEVTOOLS__";
 export const grpcWebDevToolsInterceptor: RpcInterceptor = {
     interceptUnary(next, method, input, options) {
         const res = next(method, input, options);
-        if (window.__GRPCWEB_DEVTOOLS__) {
+        if (globalThis.__GRPCWEB_DEVTOOLS__) {
             const methodType = "unary";
             const methodName = `${method.service.typeName}/${method.name}`;
             const request = method.I.toJson(res.request);
@@ -47,7 +46,7 @@ export const grpcWebDevToolsInterceptor: RpcInterceptor = {
     },
     interceptServerStreaming(next, method, input, options) {
         const res = next(method, input, options);
-        if (window.__GRPCWEB_DEVTOOLS__) {
+        if (globalThis.__GRPCWEB_DEVTOOLS__) {
             const methodName = `${method.service.typeName}/${method.name}`;
             const methodType = "server_streaming";
             window.postMessage({

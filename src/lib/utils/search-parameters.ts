@@ -38,10 +38,10 @@ export function updateSearchTextParam(
     searchText: string,
     searchParams: SvelteURLSearchParams,
 ): SvelteURLSearchParams {
-    if (searchText !== "") {
-        searchParams.set("searchText", searchText);
-    } else {
+    if (searchText === "") {
         searchParams.delete("searchText");
+    } else {
+        searchParams.set("searchText", searchText);
     }
     return searchParams;
 }
@@ -147,7 +147,7 @@ export function updateSortParams(
  * @param searchParameters - The search parameters to compare and potentially navigate to.
  */
 export function updateUrlParams(searchParameters: SvelteURLSearchParams): void {
-    if (searchParameters.toString() !== window.location.search.slice(1)) {
+    if (searchParameters.toString() !== globalThis.location.search.slice(1)) {
         callDebounced(
             () =>
                 goto(`?${searchParameters.toString()}`, {
