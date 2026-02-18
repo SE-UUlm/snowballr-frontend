@@ -9,6 +9,6 @@ export const SELECTED_REVIEW_CRITERIA_KEY = Symbol("selectedReviewCriteria");
 export function setSelectedReviewCriteriaContext(selectedCriteria: CriteriaList) {
     setContext(SELECTED_REVIEW_CRITERIA_KEY, selectedCriteria);
 }
-export function getSelectedReviewCriteriaContext() {
-    return getContext(SELECTED_REVIEW_CRITERIA_KEY) as CriteriaList;
+export function getSelectedReviewCriteriaContext(): CriteriaList {
+    return getContext(SELECTED_REVIEW_CRITERIA_KEY);
 }

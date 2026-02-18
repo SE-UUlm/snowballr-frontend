@@ -64,9 +64,9 @@ const numbers = "0-9";
 const specialCharacters = "#$%&@^`~.,:;\"'\\/|_-<>*+!?={[()]}ß";
 // Keep specialCharacters to display, but escape characters for regex
 const specialCharactersRegex = specialCharacters
-    .replace("/", "\\/")
-    .replace("-", "\\-")
-    .replace("]", "\\]");
+    .replace("/", String.raw`\/`)
+    .replace("-", String.raw`\-`)
+    .replace("]", String.raw`\]`);
 const passwordRegex = new RegExp(
     `^[${upperCaseLetters}${lowerCaseLetters}${numbers}${specialCharactersRegex}]*$`,
 );

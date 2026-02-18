@@ -24,15 +24,13 @@ export function setUserContext(user: UserContext) {
  * @returns The user from context or cache.
  */
 export function getUserContext(): User {
-    const ctx = getContext(USER_KEY) as UserContext | undefined;
+    const ctx: UserContext | undefined = getContext(USER_KEY);
     let user: User | null | undefined = null;
     if (ctx && typeof ctx === "function") {
         user = ctx();
     }
 
-    if (!user) {
-        user = getCachedUser();
-    }
+    user ??= getCachedUser();
 
     return user!;
 }

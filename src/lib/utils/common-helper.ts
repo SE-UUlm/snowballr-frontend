@@ -114,7 +114,9 @@ function pluralize(count: number | { length: number }, singular: string, plural:
  */
 function groupBy<T>(list: T[], keySelector: (arg0: T) => string): Record<string, T[]> {
     return list.reduce((result: Record<string, T[]>, item: T) => {
-        (result[keySelector(item)] ??= []).push(item);
+        const key = keySelector(item);
+        result[key] ??= [];
+        result[key].push(item);
         return result;
     }, {});
 }
@@ -200,11 +202,11 @@ function getStatusText(paperDecision: PaperDecision): PaperStatus {
  * @returns A negative number if `a < b`, a positive number if `a > b`, or 0 if they are equal
  */
 function comparePaperId(a: string, b: string): number {
-    const idA = parseInt(a, 10);
-    const idB = parseInt(b, 10);
+    const idA = Number.parseInt(a, 10);
+    const idB = Number.parseInt(b, 10);
 
-    const isANaN = isNaN(idA);
-    const isBNaN = isNaN(idB);
+    const isANaN = Number.isNaN(idA);
+    const isBNaN = Number.isNaN(idB);
 
     if (isANaN && isBNaN) return a.localeCompare(b);
     else if (isANaN && !isBNaN) return 1;
@@ -394,8 +396,8 @@ function isStringEqual(obj1: unknown, obj2: unknown): boolean {
  */
 function stringToAuthors(text: string): Author[] {
     const authorStrings = text
-        .trim()
-        .split(/\s*;\s*/g)
+        .split(";")
+        .map((p) => p.trim())
         .filter((p) => p.length !== 0);
     return authorStrings.map(stringToAuthor);
 }
@@ -414,7 +416,7 @@ function stringToAuthor(text: string): Author {
 
     // If text contains comma, then we assume the format last_name, first_name
     if (text.includes(",")) {
-        const parts = text.split(/\s*,\s*/g);
+        const parts = text.split(",").map((p) => p.trim());
         lastName = parts[0];
         firstName = parts.slice(1).join(", "); // In case there are multiple commas
     } else {
@@ -422,8 +424,8 @@ function stringToAuthor(text: string): Author {
         if (parts.length === 1) {
             lastName = parts[0];
         } else {
-            firstName = parts.slice(0, parts.length - 1).join(" ");
-            lastName = parts[parts.length - 1];
+            firstName = parts.slice(0, -1).join(" ");
+            lastName = parts.at(-1) ?? "";
         }
     }
 

@@ -7,7 +7,6 @@ on:
     pull_request:
 
 env:
-    node_version: ${{ vars.NODE_VERSION }}
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
 
 jobs:
@@ -20,8 +19,6 @@ jobs:
 
             - name: Setup
               uses: ./.github/workflows/setup/
-              with:
-                  node_version: ${{ env.node_version }}
 
             - name: Build application
               run: npm run build
@@ -40,7 +37,7 @@ jobs:
         if: github.ref_type == 'tag'
         permissions:
             contents: write
-        uses: SE-UUlm/snowballr-ci/.github/workflows/release.yml@v1.0.0
+        uses: SE-UUlm/snowballr-ci/.github/workflows/release.yml@v1
         with:
             artifact-name: build-artifact
             asset-path: snowballr-frontend-${{ github.ref_name }}.zip
