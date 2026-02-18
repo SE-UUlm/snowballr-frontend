@@ -10,7 +10,6 @@ on:
     workflow_dispatch:
 
 env:
-    node_version: ${{ vars.NODE_VERSION }}
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
     tests_per_shard: ${{ vars.TESTS_PER_SHARD }}
 
@@ -26,8 +25,6 @@ jobs:
 
             - name: Setup
               uses: ./.github/workflows/setup/
-              with:
-                  node_version: ${{ env.node_version }}
 
             - name: Create Shard Matrix
               id: create-matrix
@@ -67,8 +64,6 @@ jobs:
 
             - name: E2E-Setup
               uses: ./.github/workflows/e2e-setup/
-              with:
-                  node_version: ${{ env.node_version }}
 
             - uses: dorny/paths-filter@v3
               id: changes

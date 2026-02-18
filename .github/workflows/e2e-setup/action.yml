@@ -1,16 +1,10 @@
 name: End-to-End Tests Setup
 description: Setup End-to-End Testing
-inputs:
-    node_version:
-        description: "Node.js version"
-        required: true
 runs:
     using: composite
     steps:
         - name: Setup
           uses: ./.github/workflows/setup/
-          with:
-              node_version: ${{ env.node_version }}
 
         # Seems to be some obscure interaction between IPv6 and Docker in GitHub Pipelines
         # Possible fix taken from here:

@@ -8,9 +8,6 @@ on:
     pull_request:
     workflow_dispatch:
 
-env:
-    node-version: ${{ vars.NODE_VERSION }}
-
 jobs:
     lint-md:
         name: Linting Markdown
@@ -22,7 +19,7 @@ jobs:
             - name: Lint Markdown
               uses: SE-UUlm/snowballr-ci/src/lint-md@v1.0.0
               with:
-                  node-version: ${{ env.node-version }}
+                  node-version: 22
                   source-branch: develop
                   ignore-links: "https://dl.acm.org/doi/*"
                   ignore-paths: "src/,tests/"
