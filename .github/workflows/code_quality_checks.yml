@@ -146,7 +146,7 @@ jobs:
                   path: .
 
             - name: Teamscale Upload
-              uses: SE-UUlm/snowballr-ci/src/teamscale-upload@v1.0.0
+              uses: SE-UUlm/snowballr-ci/src/teamscale-upload@v1
               with:
                   project: "d8724f02-e6d7-4d13-8f07-bdf631ceaf2e"
                   access-key: ${{ secrets.TEAMSCALE_ACCESS_KEY }}
