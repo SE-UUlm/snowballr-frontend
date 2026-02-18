@@ -1,6 +1,15 @@
 {
     "name": "snowballr-frontend",
-    "version": "0.0.1",
+    "version": "0.1.0",
+    "description": "SnowballR is a web-based tool supporting Systematic Literature Reviews (SLR).",
+    "homepage": "https://github.com/SE-UUlm/snowballr-frontend",
+    "bugs": {
+        "url": "https://github.com/SE-UUlm/snowballr-frontend/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SE-UUlm/snowballr-frontend.git"
+    },
     "type": "module",
     "license": "GPL-3.0-or-later",
     "packageManager": "npm@11.3.0",
