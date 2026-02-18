@@ -200,11 +200,11 @@ function getStatusText(paperDecision: PaperDecision): PaperStatus {
  * @returns A negative number if `a < b`, a positive number if `a > b`, or 0 if they are equal
  */
 function comparePaperId(a: string, b: string): number {
-    const idA = parseInt(a, 10);
-    const idB = parseInt(b, 10);
+    const idA = Number.parseInt(a, 10);
+    const idB = Number.parseInt(b, 10);
 
-    const isANaN = isNaN(idA);
-    const isBNaN = isNaN(idB);
+    const isANaN = Number.isNaN(idA);
+    const isBNaN = Number.isNaN(idB);
 
     if (isANaN && isBNaN) return a.localeCompare(b);
     else if (isANaN && !isBNaN) return 1;
