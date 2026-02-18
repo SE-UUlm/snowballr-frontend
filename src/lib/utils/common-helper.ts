@@ -396,8 +396,8 @@ function isStringEqual(obj1: unknown, obj2: unknown): boolean {
  */
 function stringToAuthors(text: string): Author[] {
     const authorStrings = text
-        .trim()
-        .split(/\s*;\s*/g)
+        .split(";")
+        .map((p) => p.trim())
         .filter((p) => p.length !== 0);
     return authorStrings.map(stringToAuthor);
 }
@@ -416,7 +416,7 @@ function stringToAuthor(text: string): Author {
 
     // If text contains comma, then we assume the format last_name, first_name
     if (text.includes(",")) {
-        const parts = text.split(/\s*,\s*/g);
+        const parts = text.split(",").map((p) => p.trim());
         lastName = parts[0];
         firstName = parts.slice(1).join(", "); // In case there are multiple commas
     } else {
