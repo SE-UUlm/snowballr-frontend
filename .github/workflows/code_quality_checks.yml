@@ -88,13 +88,13 @@ jobs:
               uses: ./.github/workflows/setup/
 
             - name: Download unit test coverage report
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                   name: unit-code-coverage-report
                   path: coverage/unit
 
             - name: Download integration test coverage report
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                   name: integration-code-coverage-report
                   path: coverage/integration
@@ -140,7 +140,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Download coverage report
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                   name: final-code-coverage-report
                   path: .
@@ -168,7 +168,7 @@ jobs:
               uses: ./.github/workflows/setup/
 
             - name: Download coverage report
-              uses: actions/download-artifact@v7
+              uses: actions/download-artifact@v8
               with:
                   name: final-code-coverage-report
                   path: .
