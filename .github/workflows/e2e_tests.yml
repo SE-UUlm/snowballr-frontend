@@ -110,7 +110,7 @@ jobs:
                   run-e2e-tests --grep-invert $(echo \"${EXCLUDED_TEST_FILES:-""}\") --pass-with-no-tests
 
             - name: Archive Playwright report
-              uses: actions/upload-artifact@v6
+              uses: actions/upload-artifact@v7
               if: ${{ !cancelled() }}
               with:
                   name: playwright-report-${{ matrix.shard }}
