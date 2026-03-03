@@ -119,13 +119,15 @@ is not found in the map, the group will be labeled as "Unknown".
             <h2>{listName}</h2>
         {/if}
         {@render preListContent?.()}
-        <ul class="scroll-box space-y-4 pb-1">
-            {#each { length: numberOfSkeletons }, i}
-                <li>
-                    {@render listItemSkeleton(i)}
-                </li>
-            {/each}
-        </ul>
+        <ScrollArea class="overflow-y-hidden pr-2.5">
+            <ul class="space-y-4 pb-1">
+                {#each { length: numberOfSkeletons }, i}
+                    <li>
+                        {@render listItemSkeleton(i)}
+                    </li>
+                {/each}
+            </ul>
+        </ScrollArea>
     {:then loadedItems}
         {#if listName}
             {#if showNumberOfListItems}

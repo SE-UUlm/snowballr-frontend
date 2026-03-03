@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach } from "vitest";
+import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import NamedList from "$lib/components/composites/list/NamedList.svelte";
 import { createRawSnippet } from "svelte";
@@ -12,27 +12,23 @@ const listItemComponent = createRawSnippet<[unknown]>((componentData) => {
     return { render: () => `<span data-testid="example-list-item">${componentData}</span>` };
 });
 
-let deterministicKey = 0;
-const deterministicKeySelector = () => deterministicKey++;
+type ListItemContent = { id: number; content: string };
+const keySelector = (item: ListItemContent) => item.id;
 
 describe("NamedListComponent", () => {
-    beforeEach(() => {
-        deterministicKey = 0;
-    });
-
     test("When all required props are provided, then the named list is completely shown.", async () => {
-        const componentData: Promise<string[]> = Promise.resolve(
-            Array.from({ length: 15 }, (_, i) => `Hello world ${i}`),
+        const componentData: Promise<ListItemContent[]> = Promise.resolve(
+            Array.from({ length: 15 }, (_, i) => ({ id: i, content: `Hello world ${i}` })),
         );
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
                 listItemComponent,
                 listItemSkeleton,
                 numberOfSkeletons: 10,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -46,11 +42,11 @@ describe("NamedListComponent", () => {
     });
 
     test("When the number of items should be shown, then the name of the list is extended by the number of list items.", async () => {
-        const componentData: Promise<string[]> = Promise.resolve(
-            Array.from({ length: 5 }, (_, i) => `Hello world ${i}`),
+        const componentData: Promise<ListItemContent[]> = Promise.resolve(
+            Array.from({ length: 5 }, (_, i) => ({ id: i, content: `Hello world ${i}` })),
         );
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
@@ -58,7 +54,7 @@ describe("NamedListComponent", () => {
                 listItemSkeleton,
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -69,11 +65,11 @@ describe("NamedListComponent", () => {
     });
 
     test("When the number of items should be shown and is given explicitly, then the name of the list is extended by the given number of list items.", async () => {
-        const componentData: Promise<string[]> = Promise.resolve(
-            Array.from({ length: 5 }, (_, i) => `Hello world ${i}`),
+        const componentData: Promise<ListItemContent[]> = Promise.resolve(
+            Array.from({ length: 5 }, (_, i) => ({ id: i, content: `Hello world ${i}` })),
         );
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
@@ -82,7 +78,7 @@ describe("NamedListComponent", () => {
                 numberOfSkeletons: 10,
                 showNumberOfListItems: true,
                 numberOfItems: 10,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -93,18 +89,27 @@ describe("NamedListComponent", () => {
     });
 
     test("When the list is loading, then skeleton elements are shown", async () => {
-        const componentData: Promise<string[]> = new Promise<string[]>((resolve) =>
-            setTimeout(() => resolve(Array.from({ length: 5 }, (_, i) => `Hello world ${i}`)), 100),
+        const componentData = new Promise<ListItemContent[]>((resolve) =>
+            setTimeout(
+                () =>
+                    resolve(
+                        Array.from({ length: 5 }, (_, i) => ({
+                            id: i,
+                            content: `Hello world ${i}`,
+                        })),
+                    ),
+                100,
+            ),
         );
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
                 listItemComponent,
                 listItemSkeleton,
                 numberOfSkeletons: 5,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -134,7 +139,7 @@ describe("NamedListComponent", () => {
                 listItemComponent,
                 listItemSkeleton,
                 numberOfSkeletons: 5,
-                keySelector: deterministicKeySelector,
+                keySelector: (item) => (item as ComponentInterface).name,
                 groupSelector: (item) => (item as ComponentInterface).group,
                 groupLabels,
             },
@@ -154,18 +159,18 @@ describe("NamedListComponent", () => {
     });
 
     test("When the list was loaded successfully, but no items exist, then a hint is shown (if provided)", async () => {
-        const componentData: Promise<string[]> = Promise.resolve(
-            Array.from({ length: 0 }, (_, i) => `Hello world ${i}`),
+        const componentData: Promise<ListItemContent[]> = Promise.resolve(
+            Array.from({ length: 0 }, (_, i) => ({ id: i, content: `Hello world ${i}` })),
         );
 
-        const { unmount } = render(NamedList, {
+        const { unmount } = render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
                 listItemComponent,
                 listItemSkeleton,
                 numberOfSkeletons: 10,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -179,7 +184,7 @@ describe("NamedListComponent", () => {
         // 0 list items are displayed
         expect(screen.queryAllByTestId("example-list-item").length).toBe(0);
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
@@ -187,7 +192,7 @@ describe("NamedListComponent", () => {
                 listItemSkeleton,
                 numberOfSkeletons: 10,
                 emptyHint: "Test hint for empty list",
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
@@ -202,20 +207,20 @@ describe("NamedListComponent", () => {
     });
 
     test("When the list item couldn't be loaded, then the error message is shown", async () => {
-        const componentData: Promise<string[]> = new Promise<string[]>((_, reject) =>
+        const componentData = new Promise<ListItemContent[]>((_, reject) =>
             setTimeout(() => {
                 return reject(new Error("Test Error"));
             }, 100),
         );
 
-        render(NamedList, {
+        render(NamedList<ListItemContent>, {
             props: {
                 listName: "Test List",
                 items: componentData,
                 listItemComponent,
                 listItemSkeleton,
                 numberOfSkeletons: 10,
-                keySelector: deterministicKeySelector,
+                keySelector,
             },
         });
 
