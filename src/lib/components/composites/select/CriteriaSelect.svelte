@@ -11,10 +11,12 @@
 
     let { loadingCriteria, selectedCriteria = $bindable(undefined) }: Props = $props();
 
-    const criteria = resource<Criterion[], Criterion[]>(loadingCriteria, {
-        initialValue: [],
-        resourceName: "criteria",
-    });
+    const criteria = $derived(
+        resource<Criterion[], Criterion[]>(loadingCriteria, {
+            initialValue: [],
+            resourceName: "criteria",
+        }),
+    );
 
     let options = $derived<SelectOption[]>(
         criteria.value.map((criterion) => {

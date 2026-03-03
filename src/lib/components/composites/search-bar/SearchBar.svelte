@@ -14,7 +14,7 @@
 
     let searchInput: string = $state(getSearchTextFromURL());
 
-    const handleNewInput = debounce(() => onSearch(searchInput), timeoutInMs);
+    const handleNewInput = $derived(debounce(() => onSearch(searchInput), timeoutInMs));
 
     const handleSpecialButtons = (event: KeyboardEvent) => {
         if (event.key === "Escape") {

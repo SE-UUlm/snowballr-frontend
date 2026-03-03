@@ -25,11 +25,13 @@
     // `isUpdatingBookmarkStatus` is initially set to `true` to represent the loading state
     let isUpdatingBookmarkStatus = $state(true);
 
-    const loadingBookmarkStatus = checkInitialBookmarkStatus(paperId);
-    const isBookmarked = resource<boolean, boolean>(loadingBookmarkStatus, {
-        initialValue: isBookmarkedDefault,
-        resourceName: "bookmark status",
-    });
+    const loadingBookmarkStatus = $derived(checkInitialBookmarkStatus(paperId));
+    const isBookmarked = $derived(
+        resource<boolean, boolean>(loadingBookmarkStatus, {
+            initialValue: isBookmarkedDefault,
+            resourceName: "bookmark status",
+        }),
+    );
     const tooltipText = $derived(
         isBookmarked.value ? "Remove from reading list" : "Add to reading list",
     );

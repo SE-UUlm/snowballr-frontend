@@ -36,6 +36,8 @@
         variant = "default",
     }: SettingsSectionProps = $props();
 
+    // The variant is hardcoded and should never be changed at runtime.
+    // svelte-ignore state_referenced_locally
     const hasSeparator = variant === "default";
 </script>
 

@@ -21,8 +21,10 @@
         emptyHint,
     }: Props = $props();
 
-    const items = Promise.all([loadingReviewers, loadingCriteria]).then(([reviewers, criteria]) =>
-        criteria.map((criterion) => ({ criterion, reviewers })),
+    const items = $derived(
+        Promise.all([loadingReviewers, loadingCriteria]).then(([reviewers, criteria]) =>
+            criteria.map((criterion) => ({ criterion, reviewers })),
+        ),
     );
 </script>
 

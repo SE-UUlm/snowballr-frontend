@@ -42,11 +42,13 @@
     const backwardReferencesTab = { value: "3", label: "Forward References" };
     const referencesTabs = [backwardReferencesTab, forwardReferencesTab];
 
-    const tabs = reviewers
-        ? reviewMode.isActivated
-            ? [reviewInfoTab, ...referencesTabs]
-            : [...referencesTabs, reviewInfoTab]
-        : referencesTabs;
+    const tabs = $derived(
+        reviewers
+            ? reviewMode.isActivated
+                ? [reviewInfoTab, ...referencesTabs]
+                : [...referencesTabs, reviewInfoTab]
+            : referencesTabs,
+    );
 </script>
 
 <!--

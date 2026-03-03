@@ -10,10 +10,12 @@
     const { loadingPaperId }: Props = $props();
 
     const tooltipText = "Download this paper";
-    const paperId = resource<string, string | undefined>(loadingPaperId, {
-        initialValue: undefined,
-        resourceName: "paper ID",
-    });
+    const paperId = $derived(
+        resource<string, string | undefined>(loadingPaperId, {
+            initialValue: undefined,
+            resourceName: "paper ID",
+        }),
+    );
 
     function downloadPaper() {
         // TODO: Will be implemented in #290

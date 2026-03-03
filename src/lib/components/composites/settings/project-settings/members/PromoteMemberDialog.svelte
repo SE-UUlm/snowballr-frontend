@@ -25,10 +25,10 @@
         disabled = false,
     }: Props = $props();
 
-    const memberName = getName(member.user!);
+    const memberName = $derived(getName(member.user!));
     let role = $derived(member.role === MemberRole.ADMIN ? "Admin" : "Member");
     /**
-     * Member cannot be promoted if the following conditions are met:
+     * Member cannot be promoted if at least one of the following conditions is met:
      * - member is current signed-in user
      * - member is already an admin
      * - current sign-in user is not a project admin (non-admin view)

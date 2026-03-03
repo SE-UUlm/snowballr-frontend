@@ -21,6 +21,8 @@
         `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`,
     );
 
+    // The size of the user avatar is hardcoded and should never be changed
+    // svelte-ignore state_referenced_locally
     const style =
         size === "default"
             ? {

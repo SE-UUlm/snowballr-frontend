@@ -18,9 +18,9 @@
         onClick,
         onPaperChangedBookmarkStatus = undefined,
     }: ReadingListEntryProps = $props();
-    const { id, ...paperWithoutId } = paper;
 
-    const href = `/paper/${id}`;
+    const { id: paperId, ...paperWithoutId } = $derived(paper);
+    const href = $derived(`/paper/${paperId}`);
 </script>
 
 <!--
@@ -69,11 +69,7 @@ Usage:
         {/if}
     </svelte:element>
     <div class="flex flex-row items-center gap-4">
-        <PaperBookmarkButton
-            isBookmarkedDefault={true}
-            {onPaperChangedBookmarkStatus}
-            paperId={id}
-        />
-        <DownloadButton loadingPaperId={Promise.resolve(id)} />
+        <PaperBookmarkButton isBookmarkedDefault={true} {onPaperChangedBookmarkStatus} {paperId} />
+        <DownloadButton loadingPaperId={Promise.resolve(paperId)} />
     </div>
 </div>

@@ -7,7 +7,7 @@
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error";
 
     let { data } = $props();
-    const { verificationPromise } = data;
+    const { verificationPromise } = $derived(data);
 
     type EmailVerificationError = ActionError | RpcError;
 
@@ -48,8 +48,9 @@
         }
     }
 
+    // svelte-ignore state_referenced_locally
     verificationPromise
-        ?.then(() => {
+        .then(() => {
             setTimeout(async () => await goto("/signin"), 3000);
         })
         .catch(() => {

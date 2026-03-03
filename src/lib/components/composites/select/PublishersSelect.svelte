@@ -10,10 +10,12 @@
 
     let { loadingPublishers, selectedPublishers = $bindable(undefined) }: Props = $props();
 
-    const publishers = resource<string[], string[]>(loadingPublishers, {
-        initialValue: [],
-        resourceName: "publishers",
-    });
+    const publishers = $derived(
+        resource<string[], string[]>(loadingPublishers, {
+            initialValue: [],
+            resourceName: "publishers",
+        }),
+    );
 
     let options = $derived<SelectOption[]>(
         publishers.value.map((publisher) => {

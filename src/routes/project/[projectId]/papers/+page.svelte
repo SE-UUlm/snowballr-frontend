@@ -55,13 +55,15 @@
         loadingYears,
         loadingPublishers,
         loadingReviewers,
-    } = data;
+    } = $derived(data);
 
     let selectedPaper = $state<Project_Paper | undefined>(undefined);
     // wrap the selected paper in a promise, as the `PaperDetailsCardContent` needs a loading paper
     let loadingPaper = $derived(selectedPaper ? Promise.resolve(selectedPaper.paper!) : undefined);
 
-    const loadingStageCount = loadingProject.then((project) => project.maxStage).catch(() => -1n);
+    const loadingStageCount = $derived(
+        loadingProject.then((project) => project.maxStage).catch(() => -1n),
+    );
 
     let searchText = $state(getSearchTextFromURL());
 

@@ -32,7 +32,7 @@
         isInEditMode,
         hint = undefined,
     }: Props = $props();
-    const { key, label } = prop;
+    const { key, label } = $derived(prop);
 
     const skeletonValues = [
         "w-[6rem] sm:w-[7.5rem] md:w-[11rem] lg:w-[19.8rem]",

@@ -33,7 +33,7 @@
 
     const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
 
-    const href = `/project/${project.id}/dashboard`;
+    const href = $derived(`/project/${project.id}/dashboard`);
 </script>
 
 <!--

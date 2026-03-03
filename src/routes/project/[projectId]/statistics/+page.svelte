@@ -2,7 +2,7 @@
     import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 
     const { data } = $props();
-    const { projectId, loadingProject } = data;
+    const { projectId, loadingProject } = $derived(data);
 </script>
 
 <svelte:head>

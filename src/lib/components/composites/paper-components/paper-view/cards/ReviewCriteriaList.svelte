@@ -11,14 +11,20 @@
 
     let { reviewers, criteriaWithReviews: loadingCriteria }: ReviewCriteriaListProps = $props();
 
-    const hardExclusions = loadingCriteria.then((criteria) =>
-        criteria.filter((criterion) => criterion.category === CriterionCategory.HARD_EXCLUSION),
+    const hardExclusions = $derived(
+        loadingCriteria.then((criteria) =>
+            criteria.filter((criterion) => criterion.category === CriterionCategory.HARD_EXCLUSION),
+        ),
     );
-    const exclusions = loadingCriteria.then((criteria) =>
-        criteria.filter((criterion) => criterion.category === CriterionCategory.EXCLUSION),
+    const exclusions = $derived(
+        loadingCriteria.then((criteria) =>
+            criteria.filter((criterion) => criterion.category === CriterionCategory.EXCLUSION),
+        ),
     );
-    const inclusions = loadingCriteria.then((criteria) =>
-        criteria.filter((criterion) => criterion.category === CriterionCategory.INCLUSION),
+    const inclusions = $derived(
+        loadingCriteria.then((criteria) =>
+            criteria.filter((criterion) => criterion.category === CriterionCategory.INCLUSION),
+        ),
     );
 </script>
 

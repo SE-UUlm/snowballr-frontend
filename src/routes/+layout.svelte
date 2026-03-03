@@ -13,7 +13,7 @@
         children: Snippet;
     }>();
 
-    let userState = $state<User>(data.user);
+    let userState = $derived<User>(data.user);
 
     $effect(() => {
         if (data && data.user) {
