@@ -20,7 +20,7 @@ type CombinedContext = SelectedCriteriaContext | WasReviewedContext | IsProjectA
 
 describe("PaperDecisionButton", () => {
     test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview");
+        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -53,7 +53,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'decline', then button is visualized and acts as the decline button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview");
+        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -86,7 +86,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview");
+        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
