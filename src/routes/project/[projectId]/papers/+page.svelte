@@ -45,6 +45,7 @@
     import { Paper } from "$api/paper.js";
     import { stringifyPaper } from "$lib/utils/model-helper.js";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import { resolve } from "$app/paths";
 
     let { data } = $props();
     const {
@@ -225,7 +226,7 @@
                     {/await}
                     <a
                         class="flex items-center"
-                        href={`/project/${projectId}/paper/${selectedPaper.localId}`}
+                        href={resolve(`/project/${projectId}/paper/${selectedPaper.localId}`)}
                     >
                         <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
                             {#snippet trigger()}

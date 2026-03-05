@@ -9,6 +9,7 @@
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionWarning } from "$lib/model/action-error.js";
     import SnowballingTypeSettings from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
+    import { resolve } from "$app/paths";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);
@@ -29,7 +30,7 @@
     // Redirect to general settings if the user is not an admin
     $effect(() => {
         if (isCurrentUserAdmin.value !== undefined && !isCurrentUserAdmin.value) {
-            goto(`/project/${projectId}/settings/general`, { replaceState: true });
+            goto(resolve(`/project/${projectId}/settings/general`), { replaceState: true });
         }
     });
 </script>

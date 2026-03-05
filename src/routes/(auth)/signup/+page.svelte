@@ -62,6 +62,7 @@
                     description:
                         "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
                 });
+                // eslint-disable-next-line svelte/no-navigation-without-resolve
                 await goto(getRedirectUrlOrValue("/signin"));
             })
             .catch((error: RpcError) => {
@@ -152,6 +153,7 @@
         </form>
         <div class="mt-4 text-center text-sm">
             Already have an account?
+            <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
             <a class="underline" href={addRedirectUrlIfExists("/signin")}> Sign In </a>
         </div>
     </Card.Content>

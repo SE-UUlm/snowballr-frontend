@@ -13,6 +13,7 @@
     import { loadingWrapper } from "$lib/utils/common-helper";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
     import { createActionError } from "$lib/model/action-error";
+    import { resolve } from "$app/paths";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -35,7 +36,7 @@
         if (projectId === undefined) {
             projectWasCreated = false;
         } else {
-            await goto(`/project/${projectId}/dashboard`);
+            await goto(resolve(`/project/${projectId}/dashboard`));
         }
     }
 

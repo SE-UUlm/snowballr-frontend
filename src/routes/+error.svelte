@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { resolve } from "$app/paths";
     import { page } from "$app/state";
     import { Button } from "$lib/components/primitives/button";
 
@@ -77,5 +78,5 @@
     <h1 class="mb-4 text-8xl">{errorDetails().headline}</h1>
     <div class="text-default">{errorDetails().body}</div>
     <div class="text-default">(Error Code: {page.status})</div>
-    <Button class="mt-6" onclick={() => goto("/")}>Back to Dashboard</Button>
+    <Button class="mt-6" onclick={() => goto(resolve("/"))}>Back to Dashboard</Button>
 </main>

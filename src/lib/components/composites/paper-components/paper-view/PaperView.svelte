@@ -15,6 +15,7 @@
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { type Snippet } from "svelte";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+    import type { ResolvedPathname } from "$app/types";
 
     export interface ProjectSpecificPaperViewProps {
         loadingPaper: Promise<Project_Paper>;
@@ -29,7 +30,7 @@
     }
 
     export type IndependentPaperViewProps = ForwardAndBackwardReferencesCardContentProps & {
-        backRef: string;
+        backRef: ResolvedPathname;
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
         isInCreationMode?: boolean;

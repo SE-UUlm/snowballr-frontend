@@ -2,9 +2,10 @@
     import NavigationBar from "./NavigationBar.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import type { LinkTab } from "$lib/model/tabs";
+    import type { ResolvedPathname } from "$app/types";
 
     interface Props {
-        backRef?: string | undefined;
+        backRef?: ResolvedPathname | undefined;
         loadingTitle: Promise<string>;
         tabs?: LinkTab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;

@@ -136,7 +136,7 @@ export function createPaperViewProps(
     return {
         backwardReferencedPapers: Promise.resolve([]),
         forwardReferencedPapers: Promise.resolve([]),
-        backRef: "",
+        backRef: "/",
         ...(dependentProps ?? {
             loadingPaper: loading(createProjectPaper()),
             loadingProject: loading(createProject()),

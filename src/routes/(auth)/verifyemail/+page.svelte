@@ -5,6 +5,7 @@
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import { getGrpcStatusCode } from "$lib/utils/common-helper";
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error";
+    import { resolve } from "$app/paths";
 
     let { data } = $props();
     const { verificationPromise } = $derived(data);
@@ -51,7 +52,7 @@
     // svelte-ignore state_referenced_locally
     verificationPromise
         .then(() => {
-            setTimeout(async () => await goto("/signin"), 3000);
+            setTimeout(async () => await goto(resolve("/signin")), 3000);
         })
         .catch(() => {
             // No redirect, errors are shown in the UI
@@ -80,12 +81,12 @@
             to the sign-in page.
         </div>
 
-        <Button class="mt-6" onclick={() => goto("/signin")}>Back to Sign In</Button>
+        <Button class="mt-6" onclick={() => goto(resolve("/signin"))}>Back to Sign In</Button>
     {:catch error}
         {@const errorDetails = getErrorDetails(error)}
         <h1 class="mb-4 text-8xl">{errorDetails?.errorTitle}</h1>
         <div class="text-default">{errorDetails?.errorDetails}</div>
 
-        <Button class="mt-6" onclick={() => goto("/signup")}>Back to Sign Up</Button>
+        <Button class="mt-6" onclick={() => goto(resolve("/signup"))}>Back to Sign Up</Button>
     {/await}
 </main>

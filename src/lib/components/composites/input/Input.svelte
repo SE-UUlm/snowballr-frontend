@@ -11,6 +11,7 @@
     } from "svelte/elements";
     import { z } from "zod";
     import InputValidationCriterion from "./InputValidationCriterion.svelte";
+    import type { ResolvedPathname } from "$app/types";
 
     export type InputProps = WithElementRef<HTMLInputAttributes> & {
         inputId: string;
@@ -18,7 +19,7 @@
         placeholder?: string;
         required: boolean;
         type: HTMLInputTypeAttribute;
-        link?: { href: string; text: string };
+        link?: { href: ResolvedPathname; text: string };
         inputClass?: string;
         schema?: z.ZodType;
         onButtonClick?: () => void;
@@ -211,6 +212,8 @@ Usage:
                 <Label for={inputId}>{label}</Label>
             {/if}
             {#if link}
+                <!-- see https://github.com/sveltejs/eslint-plugin-svelte/issues/1319 -->
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                 <a class="text-sm underline" href={link.href}>
                     {link.text}
                 </a>

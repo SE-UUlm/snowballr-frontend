@@ -6,6 +6,7 @@
     import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
     import type { Paper } from "$api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
+    import { resolve } from "$app/paths";
 
     interface ReadingListEntryProps {
         paper: Paper;
@@ -20,7 +21,7 @@
     }: ReadingListEntryProps = $props();
 
     const { id: paperId, ...paperWithoutId } = $derived(paper);
-    const href = $derived(`/paper/${paperId}`);
+    const href = $derived(resolve(`/paper/${paperId}`));
 </script>
 
 <!--
@@ -58,6 +59,8 @@ Usage:
     >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
         {#if onClick}
+            <!-- Here we use a ResolvedPathname but passing it to svelte:element removes the type inference -->
+            <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
             <a
                 class="text-muted-foreground self-start"
                 {href}

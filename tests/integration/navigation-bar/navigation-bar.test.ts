@@ -17,12 +17,12 @@ describe("NavigationBar", () => {
                     {
                         value: "first",
                         label: "First",
-                        href: "/first",
+                        href: "/signin",
                     },
                     {
                         value: "second",
                         label: "Second",
-                        href: "/second",
+                        href: "/signup",
                     },
                 ],
                 defaultTabValue: "first",
@@ -43,13 +43,13 @@ describe("NavigationBar", () => {
         const linkTags = screen.getAllByRole("tab");
         expect(linkTags).toHaveLength(2);
 
-        const firstLinks = linkTags.filter((link) => link.getAttribute("href") === "/first");
+        const firstLinks = linkTags.filter((link) => link.getAttribute("href") === "/signin");
         expect(firstLinks).toHaveLength(1);
         const firstLink = firstLinks[0];
         expect(firstLink).toBeInTheDocument();
         expect(firstLink).toHaveTextContent("First");
 
-        const secondLinks = linkTags.filter((link) => link.getAttribute("href") === "/second");
+        const secondLinks = linkTags.filter((link) => link.getAttribute("href") === "/signup");
         expect(secondLinks).toHaveLength(1);
         const secondLink = secondLinks[0];
         expect(secondLink).toBeInTheDocument();
@@ -93,12 +93,12 @@ describe("NavigationBar", () => {
                     {
                         value: "first",
                         label: "First",
-                        href: "/first",
+                        href: "/signin",
                     },
                     {
                         value: "second",
                         label: "Second",
-                        href: "/second",
+                        href: "/signup",
                     },
                 ],
                 defaultTabValue: "first",
@@ -134,12 +134,12 @@ describe("NavigationBar", () => {
                     {
                         value: "first",
                         label: "First",
-                        href: "/first",
+                        href: "/signin",
                     },
                     {
                         value: "second",
                         label: "Second",
-                        href: "/second",
+                        href: "/signup",
                     },
                 ],
                 defaultTabValue: "third",
@@ -165,12 +165,12 @@ describe("NavigationBar", () => {
                     {
                         value: "first",
                         label: "First",
-                        href: "/first",
+                        href: "/signin",
                     },
                     {
                         value: "second",
                         label: "Second",
-                        href: "/second",
+                        href: "/signup",
                     },
                 ],
                 defaultTabValue: "first",

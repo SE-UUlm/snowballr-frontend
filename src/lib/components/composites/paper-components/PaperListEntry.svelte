@@ -15,6 +15,7 @@
     import type { Paper } from "$api/paper";
     import type { Project_Paper } from "$api/project";
     import ExternalLink from "@lucide/svelte/icons/external-link";
+    import { resolve } from "$app/paths";
 
     /**
      * Interface for the paper list entries.
@@ -38,7 +39,9 @@
     const { paper, projectId, onClick }: PaperListEntryProps = $props();
     const paperId = $derived(getDisplayPaperId(paper));
     const href = $derived(
-        isProjectPaper(paper) ? `/project/${projectId}/paper/${paperId}` : `/paper/${paperId}`,
+        isProjectPaper(paper)
+            ? resolve(`/project/${projectId}/paper/${paperId}`)
+            : resolve(`/paper/${paperId}`),
     );
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
@@ -78,7 +81,9 @@ Usage:
     class="border-container-border-grey highlight-on-hover group/paper-list-entry flex w-full flex-row items-center justify-end gap-3 rounded-md border pe-3"
     class:border-l-0={!reviewMode.isActivated}
     data-testid="paper-list-entry"
-    onclick={handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
+    onclick={// see https://github.com/sveltejs/eslint-plugin-svelte/issues/1319
+    // eslint-disable-next-line svelte/no-navigation-without-resolve
+    handleSingleOrDoubleClick(onClick ?? (() => {}), () => goto(href))}
     {...!onClick ? { href: href } : { type: "button" }}
 >
     <div
@@ -94,12 +99,15 @@ Usage:
             loadingPaperId={Promise.resolve(paperId)}
         />
         {#if onClick}
+            <!-- Here we use a ResolvedPathname but passing it to svelte:element removes the type inference -->
+            <!-- eslint-disable svelte/no-navigation-without-resolve -->
             <a
                 class="text-muted-foreground self-start"
                 {href}
                 onclick={(e) => e.stopPropagation()}
                 title="Open Paper"
             >
+                <!-- eslint-enable svelte/no-navigation-without-resolve -->
                 <ExternalLink class="mt-1.5 size-4" />
             </a>
         {/if}

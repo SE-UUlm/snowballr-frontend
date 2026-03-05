@@ -1,5 +1,6 @@
 import { goto } from "$app/navigation";
 import type { Project, Project_Paper } from "$api/project";
+import { resolve } from "$app/paths";
 
 /**
  * Handles the navigation of the navigation button depending on the direction.
@@ -24,10 +25,10 @@ export const navigatePaper = async function (
     if (direction === "right" && nextProjectPaper) {
         const paper = await loadingProjectPaper;
         if (paper) paperQueue.push(paper);
-        await goto(`/project/${project.id}/paper/${nextProjectPaper.localId}`);
+        await goto(resolve(`/project/${project.id}/paper/${nextProjectPaper.localId}`));
     }
     if (direction === "left" && previousProjectPaper) {
         paperQueue.pop();
-        await goto(`/project/${project.id}/paper/${previousProjectPaper.localId}`);
+        await goto(resolve(`/project/${project.id}/paper/${previousProjectPaper.localId}`));
     }
 };

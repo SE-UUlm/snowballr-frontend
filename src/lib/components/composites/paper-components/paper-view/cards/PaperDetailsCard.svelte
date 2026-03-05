@@ -17,6 +17,7 @@
     import { goto } from "$app/navigation";
     import type { Project_Paper } from "$api/project";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { resolve } from "$app/paths";
 
     interface Props {
         loadingPaper: Promise<Paper>;
@@ -158,9 +159,9 @@
 
         return promise.then(async (paper) => {
             if (isProjectPaper(paper)) {
-                await goto(`/project/${projectId}/paper/${paper.localId}`);
+                await goto(resolve(`/project/${projectId}/paper/${paper.localId}`));
             } else {
-                await goto(`/paper/${paper.id}`);
+                await goto(resolve(`/paper/${paper.id}`));
             }
         });
     }

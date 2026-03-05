@@ -8,6 +8,7 @@ import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { isGrpcError } from "$lib/utils/common-helper";
 import { addRedirectUrlIfExists } from "$lib/utils/search-parameters";
+import { resolve } from "$app/paths";
 
 export const ssr = false;
 
@@ -97,6 +98,11 @@ function isPublicPath(path: string) {
 async function redirectToSignIn(url: URL) {
     setCachedUser(null);
     const redirectUrl = encodeURIComponent(addRedirectUrlIfExists(url.pathname + url.search));
-    await goto("/signin?redirect=" + redirectUrl);
+    const path = resolve("/signin");
+    // query params are not yet supported by resolve
+    // was fixed in https://github.com/sveltejs/kit/pull/15458
+    // waiting for new release (>2.53.4)
+    // eslint-disable-next-line svelte/no-navigation-without-resolve
+    await goto(`${path}?redirect=${redirectUrl}`);
     return { user: null };
 }

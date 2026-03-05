@@ -14,6 +14,7 @@
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";
+    import { resolve } from "$app/paths";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
@@ -33,7 +34,7 @@
 
     const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
 
-    const href = $derived(`/project/${project.id}/dashboard`);
+    const href = $derived(resolve(`/project/${project.id}/dashboard`));
 </script>
 
 <!--
@@ -75,6 +76,8 @@ Usage:
                 <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
             {/if}
             {#if onClick}
+                <!-- Here we use a ResolvedPathname but passing it to svelte:element removes the type inference -->
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                 <a
                     class="text-muted-foreground self-start"
                     {href}

@@ -36,6 +36,7 @@
 
         await backendService
             .login(userData)
+            // eslint-disable-next-line svelte/no-navigation-without-resolve
             .then(async () => await goto(getRedirectUrlOrValue("/")))
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {
@@ -105,6 +106,7 @@
         </form>
         <div class="mt-4 text-center text-sm">
             You don't have an account yet?
+            <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
             <a class="underline" href={addRedirectUrlIfExists("/signup")}> Sign Up </a>
         </div>
     </Card.Content>
