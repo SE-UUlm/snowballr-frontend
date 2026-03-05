@@ -6,7 +6,7 @@
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getUserContext } from "$lib/custom-context/user-context";
-    import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     const user = $derived(getUserContext());
 
@@ -40,9 +40,7 @@
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
                 {#each menuItems as item (item.value)}
-                    <!-- see https://github.com/sveltejs/eslint-plugin-svelte/issues/1319 -->
-                    <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                    <a href={item.href}>
+                    <Link href={item.href}>
                         <DropdownMenu.Item>
                             <item.icon class="mr-2 size-4" />
                             <span>{item.label}</span>
@@ -50,17 +48,17 @@
                                 {item.shortcut}
                             </DropdownMenu.Shortcut>
                         </DropdownMenu.Item>
-                    </a>
+                    </Link>
                 {/each}
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
-            <a href={resolve("/signout")}>
+            <Link href="/signout">
                 <DropdownMenu.Item>
                     <LogOut class="mr-2 size-4" />
                     <span>Sign Out</span>
                     <DropdownMenu.Shortcut>⌘⇧Q</DropdownMenu.Shortcut>
                 </DropdownMenu.Item>
-            </a>
+            </Link>
         </DropdownMenu.Group>
     </DropdownMenu.Content>
 </DropdownMenu.Root>

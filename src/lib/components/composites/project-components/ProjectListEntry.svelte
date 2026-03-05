@@ -15,6 +15,7 @@
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
@@ -76,16 +77,14 @@ Usage:
                 <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
             {/if}
             {#if onClick}
-                <!-- Here we use a ResolvedPathname but passing it to svelte:element removes the type inference -->
-                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                <a
+                <Link
                     class="text-muted-foreground self-start"
                     {href}
                     onclick={(e) => e.stopPropagation()}
                     title="Open Project"
                 >
                     <ExternalLink class="mt-1.5 size-4" />
-                </a>
+                </Link>
             {/if}
         </h2>
 

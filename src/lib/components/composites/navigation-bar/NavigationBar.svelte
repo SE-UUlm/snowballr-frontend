@@ -6,6 +6,7 @@
     import UserMenu from "./UserMenu.svelte";
     import type { LinkTab } from "$lib/model/tabs";
     import type { ResolvedPathname } from "$app/types";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     interface Props {
         backRef?: ResolvedPathname | undefined;
@@ -38,11 +39,9 @@ Usage:
         <nav class="grid h-18 grid-flow-col items-center gap-3 px-4 py-2">
             <UserMenu />
             {#if backRef !== undefined}
-                <!-- see https://github.com/sveltejs/eslint-plugin-svelte/issues/1319 -->
-                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                <a aria-label={`Back to ${backRef}`} href={backRef}>
+                <Link aria-label={`Back to ${backRef}`} href={backRef}>
                     <ArrowLeft class="size-6" />
-                </a>
+                </Link>
             {/if}
             <!-- Children can be e.g. a title element -->
             {@render children?.()}

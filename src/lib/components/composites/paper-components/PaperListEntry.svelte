@@ -16,6 +16,7 @@
     import type { Project_Paper } from "$api/project";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     /**
      * Interface for the paper list entries.
@@ -99,17 +100,14 @@ Usage:
             loadingPaperId={Promise.resolve(paperId)}
         />
         {#if onClick}
-            <!-- Here we use a ResolvedPathname but passing it to svelte:element removes the type inference -->
-            <!-- eslint-disable svelte/no-navigation-without-resolve -->
-            <a
+            <Link
                 class="text-muted-foreground self-start"
                 {href}
                 onclick={(e) => e.stopPropagation()}
                 title="Open Paper"
             >
-                <!-- eslint-enable svelte/no-navigation-without-resolve -->
                 <ExternalLink class="mt-1.5 size-4" />
-            </a>
+            </Link>
         {/if}
     </div>
     {#if !reviewMode.isActivated && isProjectPaper(paper)}
