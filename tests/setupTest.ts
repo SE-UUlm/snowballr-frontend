@@ -46,7 +46,7 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     replaceState: () => {},
 }));
 
-// inspired from https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
+// Mock SvelteKit runtime module $app/state, inspired by https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
 vi.mock("$app/state", async () => {
     // This is to avoid mocking of other logic implemented in $app/state,
     // it can be omitted if you don't care about it.
@@ -62,8 +62,52 @@ vi.mock("$app/state", async () => {
 vi.mock("$env/static/public", () => ({ env: {} }));
 vi.mock("$env/dynamic/public", () => ({ env: {} }));
 
-// This type takes the SnowballRClient interface and returns a new "interface" type where each api function returns a MockUnaryCall,
-// i.e. a mocked API call, instead of a normal UnaryCall.
+// Mock browser APIs (for integration tests)
+if (typeof window !== "undefined") {
+    // Mock window.matchMedia for responsive UI components (e.g., Toaster)
+    Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation(function (query) {
+            return {
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            };
+        }),
+    });
+    // Mock functions related to pointer and scroll events for "Select" components work in integration tests.
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+    window.HTMLElement.prototype.releasePointerCapture = vi.fn();
+}
+
+// Mock URL.createObjectURL and URL.revokeObjectURL for tests that involve file downloads
+global.URL.createObjectURL = vi.fn();
+global.URL.revokeObjectURL = vi.fn();
+
+// Use the ResizeObserver polyfill for tests
+global.ResizeObserver = ResizeObserver;
+
+// Utility types for mocking of gRPC API
+
+/**
+ * Mock of the {@link UnaryCall}.
+ *
+ * Only mocks the `response` property and ignores other properties of the `UnaryCall`.
+ */
+interface MockUnaryCall<T> {
+    response: Promise<T>;
+}
+
+/**
+ * Take the SnowballRClient interface and return a new "interface" type.
+ * In the new type each api function returns a {@link MockUnaryCall} instead of `UnaryCall`
+ */
 type MockReturnType<T> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [K in keyof T]: T[K] extends (...args: infer A) => UnaryCall<infer _I, infer R>
@@ -71,17 +115,32 @@ type MockReturnType<T> = {
         : T[K];
 };
 type MockApi = MockReturnType<ISnowballRClient>;
-interface MockUnaryCall<T> {
-    response: Promise<T>;
-}
+
+type InferPromiseType<T> = T extends Promise<infer U> ? U : never;
+/**
+ * Infers the return type of an API call by inferring the type of the response promise of the {@link UnaryCall}.
+ *
+ * @example
+ * ```ts
+ * type ReturnType = InferApiReturnType<"getAllUsers">;
+ * // ReturnType is now { users: User[]; }
+ * // as "getAllUsers" returns `UnaryCall<..., { users: User[] }>`
+ * ```
+ */
+type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType<
+    ReturnType<ISnowballRClient[T]>["response"]
+>;
 
 /**
- * Mocks a backend API call
+ * Mocks a backend API call.
  *
- * Usage:
+ * @example
  * ```ts
- * getUserById: mock(({ id }) => createUser({ id })),
+ * // Mock returning of constant values
  * getAllUsers: mock(Object.values(Users)),
+ *
+ * // Mock returning of dynamic values
+ * getUserById: mock(({ id }) => createUser({ id })),
  * ```
  *
  * @param fn - Either a function that takes an argument and returns a value or a constant value that is returned
@@ -111,10 +170,11 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
     return (await fn.mock.results[0].value.response) as T;
 }
 
-// Mock Backend API
+// Mock the backend API.
+//
 // Here we mock the backend API calls that are used in the application for the integration tests.
-// Note: This is only a base mock, you can/should override this mock in your tests according to your needs.
-// For example, you can mock the backend API to return an error, or to return a specific response.
+// Note: This is only a base mock, you can and mostly should override this mock in your tests according to your needs.
+// For example, you can mock the backend API to return an error or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
 vi.mock("$lib/grpc-api", () => {
@@ -219,25 +279,6 @@ vi.mock("$lib/grpc-api", () => {
     return mockBackend;
 });
 
-type InferPromiseType<T> = T extends Promise<infer U> ? U : never;
-/**
- * Infers the return type of an API call.
- * I.e. an API call always returns a UnaryCall with a response property that is a Promise.
- * This type infers the type of the response promise.
- *
- * Usage:
- * ```ts
- * type ReturnType = InferApiReturnType<"getAllUsers">;
- * // ReturnType is now:
- * // {
- * //     users: User[];
- * // }
- * ```
- */
-type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType<
-    ReturnType<ISnowballRClient[T]>["response"]
->;
-
 /**
  * Mocks an API call to return a specific value.
  *
@@ -248,9 +289,11 @@ type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType
 export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApiCallReturnType<T>>(
     methodName: T,
     value: R,
-): MockInstance<(...args: unknown[]) => Promise<{ response: R }>> {
-    return vi.spyOn(backendService, methodName).mockImplementation(() => {
-        return { response: Promise.resolve(value) } as ReturnType<(typeof backendService)[T]>;
+): MockInstance<ISnowballRClient[T]> {
+    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+
+    return apiCallToMock.mockImplementation(function () {
+        return { response: Promise.resolve(value) };
     });
 }
 
@@ -259,44 +302,15 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
  *
  * @param methodName - The name of the method to mock
  * @param errorMessage - The error message to return
+ * @returns A mock instance of the failed API call
  */
-export function mockFailedApiCall(methodName: keyof ISnowballRClient, errorMessage = "") {
-    return vi.spyOn(backendService, methodName).mockImplementation(() => {
-        return { response: Promise.reject(new Error(errorMessage)) } as ReturnType<
-            (typeof backendService)[typeof methodName]
-        >;
+export function mockFailedApiCall<T extends keyof ISnowballRClient>(
+    methodName: T,
+    errorMessage = "",
+): MockInstance<ISnowballRClient[T]> {
+    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+
+    return apiCallToMock.mockImplementation(function () {
+        return { response: Promise.reject(new Error(errorMessage)) };
     });
 }
-
-// If window is defined, mock matchMedia
-// window is not defined in unit tests i.e. when running in node environment
-// window.matchMedia needs to be mocked for the Toaster component to work
-//
-// Also mock some pointer event related functions to make select components work
-// in integration tests.
-if (typeof window !== "undefined") {
-    Object.defineProperty(window, "matchMedia", {
-        writable: true,
-        value: vi.fn().mockImplementation((query) => ({
-            matches: false,
-            media: query,
-            onchange: null,
-            addListener: vi.fn(),
-            removeListener: vi.fn(),
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            dispatchEvent: vi.fn(),
-        })),
-    });
-
-    window.HTMLElement.prototype.scrollIntoView = vi.fn();
-    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
-    window.HTMLElement.prototype.releasePointerCapture = vi.fn();
-}
-
-// Mock URL.createObjectURL and URL.revokeObjectURL for tests that involve file downloads
-global.URL.createObjectURL = vi.fn();
-global.URL.revokeObjectURL = vi.fn();
-
-// Use the ResizeObserver polyfill for tests
-global.ResizeObserver = ResizeObserver;

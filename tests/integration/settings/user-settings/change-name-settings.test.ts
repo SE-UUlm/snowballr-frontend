@@ -25,7 +25,7 @@ describe("ChangeNameSettings", () => {
     });
 
     test("When one of the input fields is empty, then the button should not change the name", async () => {
-        const mockCall = vi.spyOn(backendService, "updateUser");
+        const mockCall = vi.spyOn(backendService, "updateUser").mockClear();
 
         render(ChangeNameSettings, { context: mockUserContext });
 
