@@ -48,7 +48,6 @@ export const test = base.extend<
 >({
     user: [alice, { scope: "worker", option: true }],
     mockBackend: [
-        // eslint-disable-next-line no-empty-pattern
         async ({}, use) => {
             const mockBackend = await DockerMockBackend.create();
             await use(mockBackend);

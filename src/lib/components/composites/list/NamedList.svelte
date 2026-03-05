@@ -6,7 +6,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 
-    type T = $$Generic; /* eslint-disable-line no-undef */
+    type T = $$Generic;
 
     interface BaseProps<T> {
         listName: string;
