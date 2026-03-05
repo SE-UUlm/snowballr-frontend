@@ -52,7 +52,7 @@ jobs:
     ff-e2e-test:
         name: Fast-Failing End-to-End Testing with Playwright
         # Only run in PRs
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#e2e-run-all') }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: determine-shards
@@ -82,7 +82,7 @@ jobs:
 
     e2e-test:
         name: Complete End-to-End Testing with Playwright
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.body, '#e2e-run-all')) }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: determine-shards
