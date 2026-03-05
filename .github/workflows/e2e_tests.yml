@@ -8,6 +8,10 @@ on:
     pull_request:
     workflow_dispatch:
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
 env:
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
     TESTS_PER_SHARD: ${{ vars.TESTS_PER_SHARD }}
