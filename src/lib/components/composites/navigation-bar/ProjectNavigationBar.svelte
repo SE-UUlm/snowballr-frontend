@@ -14,7 +14,7 @@
 
     const { projectId, loadingProject, defaultTabValue }: Props = $props();
 
-    const tabs: LinkTab[] = [
+    const tabs: LinkTab[] = $derived([
         {
             value: "dashboard",
             label: "Dashboard",
@@ -35,7 +35,7 @@
             label: "Settings",
             href: `/project/${projectId}/settings/general`,
         },
-    ] as const;
+    ] as const);
 
     const backRef = "/";
 </script>

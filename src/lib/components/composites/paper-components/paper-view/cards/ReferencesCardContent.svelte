@@ -13,9 +13,9 @@
 
     let { loadingReferencedPapers: allReferencedPapers, title }: Props = $props();
 
-    const titleLower = title.toLowerCase();
+    const titleLower = $derived(title.toLowerCase());
 
-    let referencedPapers = $state<Promise<Paper[]>>(allReferencedPapers);
+    let referencedPapers = $derived<Promise<Paper[]>>(allReferencedPapers);
     let hasSearchResults = $state(false);
 
     function filterReferencedPapers(searchText: string) {

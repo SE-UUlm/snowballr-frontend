@@ -12,10 +12,12 @@
 
     let { loadingReviewers, selectedReviewers = $bindable(undefined) }: Props = $props();
 
-    const reviewers = resource<User[], User[]>(loadingReviewers, {
-        initialValue: [],
-        resourceName: "reviewers",
-    });
+    const reviewers = $derived(
+        resource<User[], User[]>(loadingReviewers, {
+            initialValue: [],
+            resourceName: "reviewers",
+        }),
+    );
 
     let options = $derived<SelectOption[]>(
         reviewers.value.map((reviewer) => {

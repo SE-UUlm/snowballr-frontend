@@ -3,7 +3,7 @@
     import { Paper } from "$lib/model/api/paper.js";
 
     const { data } = $props();
-    const { projectId, loadingProject } = data;
+    const { projectId, loadingProject } = $derived(data);
 
     const paper: Paper = Paper.create({
         year: "" as unknown as number,

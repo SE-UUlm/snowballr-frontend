@@ -26,7 +26,7 @@
         allScrollable = true,
     }: Props = $props();
 
-    const ALL_TABS = [
+    const ALL_TABS = $derived([
         {
             value: "general",
             label: "General",
@@ -55,7 +55,7 @@
             icon: Snowflake,
             adminOnly: true,
         },
-    ];
+    ]);
 
     let tabs = $derived<IconLinkTab[]>(
         ALL_TABS.filter((tab) => !(tab.adminOnly && !isCurrentUserAdmin)).map(

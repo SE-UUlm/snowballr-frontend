@@ -12,6 +12,8 @@
 
     let { isValid, description, class: className, ...restProps }: Props = $props();
 
+    // The description of a criterion is hardcoded and should never be changed at runtime.
+    // svelte-ignore state_referenced_locally
     const prettyDescription = description.substring(0, 1).toUpperCase() + description.substring(1);
 </script>
 

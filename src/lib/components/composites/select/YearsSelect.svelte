@@ -10,10 +10,12 @@
 
     let { loadingYears, selectedYears = $bindable(undefined) }: Props = $props();
 
-    const years = resource<number[], number[]>(loadingYears, {
-        initialValue: [],
-        resourceName: "years",
-    });
+    const years = $derived(
+        resource<number[], number[]>(loadingYears, {
+            initialValue: [],
+            resourceName: "years",
+        }),
+    );
 
     let options = $derived<SelectOption[]>(
         // Use slice to create a copy of the array before sorting it

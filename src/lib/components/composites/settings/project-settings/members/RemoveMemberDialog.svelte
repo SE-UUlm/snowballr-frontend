@@ -22,7 +22,7 @@
         disabled: disabledProp = false,
     }: Props = $props();
 
-    const memberName = getNameOrEmail(member.user!);
+    const memberName = $derived(getNameOrEmail(member.user!));
     // Make isDisabled reactive
     // When we update the members list in the members settings page, this wouldn't get updated otherwise
     let disabled = $derived(isCurrentUser || member.role === MemberRole.ADMIN || disabledProp);

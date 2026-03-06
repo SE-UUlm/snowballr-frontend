@@ -8,8 +8,7 @@
     import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 
     let { data } = $props();
-    const { openReviews } = data;
-    const { projectsMetadata } = $derived(data);
+    const { openReviews, projectsMetadata } = $derived(data);
 </script>
 
 <svelte:head>

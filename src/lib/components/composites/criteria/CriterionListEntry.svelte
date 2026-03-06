@@ -18,7 +18,9 @@
 
     const selectedReviewCriteriaState = getSelectedReviewCriteriaContext();
     const { wasReviewed } = getAlreadyReviewedContext();
-    const isCriterionInitiallyChecked = selectedReviewCriteriaState.criteria.includes(criterion.id);
+    const isCriterionInitiallyChecked = $derived(
+        selectedReviewCriteriaState.criteria.includes(criterion.id),
+    );
 
     /**
      * If this criterion was not checked before, then it will be added to the selected review

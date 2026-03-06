@@ -11,17 +11,18 @@
 
     const { stage, decisions }: StageProgressInterface = $props();
 
-    const totalNumberOfDecisions = Object.values(decisions.statistics).reduce(
-        (acc, cur) => acc + Number(cur.count),
-        0,
+    const totalNumberOfDecisions = $derived(
+        Object.values(decisions.statistics).reduce((acc, cur) => acc + Number(cur.count), 0),
     );
-    let segments: Segment[] = $state(
+    let segments: Segment[] = $derived(
         Object.values(decisions.statistics).map(({ decision, count }) => ({
             decision: getStatusText(decision),
             value: Number(count) / totalNumberOfDecisions,
         })),
     );
-    const possibleDecisions = Object.values(decisions.statistics).map(({ decision }) => decision);
+    const possibleDecisions = $derived(
+        Object.values(decisions.statistics).map(({ decision }) => decision),
+    );
 
     const SIZE = 152;
     const radius = SIZE / 2;
@@ -38,23 +39,27 @@
         .value((d) => d.value)
         .sort(null);
 
-    let colorScale = $state(
+    let colorScale = $derived(
         d3
             .scaleOrdinal<string>()
             .domain(possibleDecisions.map((decision) => getStatusText(decision)))
             .range(possibleDecisions.map((decision) => getStatusColor(decision, "text"))),
     );
 
-    // check, whether the stage was just created and no decisions can be shown
-    if (totalNumberOfDecisions === 0) {
-        segments = [
-            {
-                decision: "No decision",
-                value: 1,
-            },
-        ];
-        colorScale = d3.scaleOrdinal<string>().domain("No decision").range(["text-gray-200"]);
+    // Check whether the stage was just created and no decisions can be shown
+    function initializeSegmentsAndColorScale() {
+        if (totalNumberOfDecisions === 0) {
+            segments = [
+                {
+                    decision: "No decision",
+                    value: 1,
+                },
+            ];
+            colorScale = d3.scaleOrdinal<string>().domain("No decision").range(["text-gray-200"]);
+        }
     }
+
+    initializeSegmentsAndColorScale();
 </script>
 
 <svg data-testid="stage-progress-chart" height={SIZE} width={SIZE}>

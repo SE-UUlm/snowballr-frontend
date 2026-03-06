@@ -20,9 +20,7 @@ describe("PaperDecisionBanner", () => {
             },
         });
 
-        await waitForComponentLoading();
-
-        const label = screen.getByText("Accepted");
+        const label = await screen.findByText("Accepted");
         expect(label).toBeInTheDocument();
     });
 
@@ -39,9 +37,7 @@ describe("PaperDecisionBanner", () => {
             },
         });
 
-        await waitForComponentLoading();
-
-        const label = screen.getByText("Declined");
+        const label = await screen.findByText("Declined");
         expect(label).toBeInTheDocument();
     });
 
@@ -59,9 +55,7 @@ describe("PaperDecisionBanner", () => {
             },
         });
 
-        await waitForComponentLoading();
-
-        const label = screen.getByText("Undecided");
+        const label = await screen.findByText("Undecided");
         expect(label).toBeInTheDocument();
     });
 
@@ -79,9 +73,7 @@ describe("PaperDecisionBanner", () => {
             },
         });
 
-        await waitForComponentLoading();
-
-        const label = screen.getByText("Not reviewed");
+        const label = await screen.findByText("Not reviewed");
         expect(label).toBeInTheDocument();
     });
 
@@ -99,9 +91,7 @@ describe("PaperDecisionBanner", () => {
             },
         });
 
-        await waitForComponentLoading();
-
-        const label = screen.getByText("Not reviewed");
+        const label = await screen.findByText("Not reviewed");
         expect(label).toBeInTheDocument();
     });
 

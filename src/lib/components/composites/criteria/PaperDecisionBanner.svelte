@@ -16,16 +16,20 @@
 
     const { reviewers: loadingReviewers, loadingProjectPaper }: PaperDecisionBannerProps = $props();
 
-    const bannerColor = resource<Project_Paper, string>(loadingProjectPaper, {
-        initialValue: "bg-unreviewed-gray",
-        onSuccess: (paper) => getStatusColor(paper.decision, "bg"),
-        onErrorValue: "bg-unreviewed-gray",
-    });
-    const bannerLabel = resource<Project_Paper, string>(loadingProjectPaper, {
-        initialValue: "",
-        onSuccess: (paper) => getStatusText(paper.decision),
-        onErrorValue: "Couldn't load paper decision",
-    });
+    const bannerColor = $derived(
+        resource<Project_Paper, string>(loadingProjectPaper, {
+            initialValue: "bg-unreviewed-gray",
+            onSuccess: (paper) => getStatusColor(paper.decision, "bg"),
+            onErrorValue: "bg-unreviewed-gray",
+        }),
+    );
+    const bannerLabel = $derived(
+        resource<Project_Paper, string>(loadingProjectPaper, {
+            initialValue: "",
+            onSuccess: (paper) => getStatusText(paper.decision),
+            onErrorValue: "Couldn't load paper decision",
+        }),
+    );
 </script>
 
 <div

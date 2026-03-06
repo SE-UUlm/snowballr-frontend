@@ -7,7 +7,7 @@
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error.js";
 
     let { data } = $props();
-    const { acceptancePromise } = data;
+    const { acceptancePromise } = $derived(data);
 
     type InvitationAcceptanceError = ActionError | RpcError;
 
@@ -55,8 +55,9 @@
         }
     }
 
+    // svelte-ignore state_referenced_locally
     acceptancePromise
-        ?.then(() => {
+        .then(() => {
             setTimeout(async () => await goto("/signin"), 3000);
         })
         .catch(() => {

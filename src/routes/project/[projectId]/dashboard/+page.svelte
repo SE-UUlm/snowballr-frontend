@@ -8,7 +8,8 @@
     import { Separator } from "$lib/components/primitives/separator";
 
     const { data } = $props();
-    const { projectId, loadingProject, openReviews, projectInformation, stageProgress } = data;
+    const { projectId, loadingProject, openReviews, projectInformation, stageProgress } =
+        $derived(data);
 </script>
 
 <svelte:head>

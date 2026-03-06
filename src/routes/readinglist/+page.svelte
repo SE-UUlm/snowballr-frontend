@@ -16,10 +16,10 @@
     import { page } from "$app/state";
 
     const { data } = $props();
-    const { loadingReadingList } = data;
+    const { loadingReadingList } = $derived(data);
 
-    let currentFullReadingList = $state<Promise<Paper[]>>(loadingReadingList);
-    let filteredReadingList = $state<Promise<Paper[]>>(loadingReadingList);
+    let currentFullReadingList = $derived<Promise<Paper[]>>(loadingReadingList);
+    let filteredReadingList = $derived<Promise<Paper[]>>(loadingReadingList);
     let currentSearchText = $state(getSearchTextFromURL());
     let noSearchResults = $state(false);
     let searchParameters = new SvelteURLSearchParams(page.url.searchParams.toString());

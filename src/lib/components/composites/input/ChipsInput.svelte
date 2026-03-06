@@ -30,35 +30,35 @@
         searchSuggestions,
     }: ChipsInputProps = $props();
 
+    // The label is hardcoded and should never be changed at runtime.
+    // svelte-ignore state_referenced_locally
     const INPUT_ID = label === undefined ? "chips-input" : "chips-input-" + label;
+    // svelte-ignore state_referenced_locally
     const SUGGESTIONS_LIST_ID =
         label === undefined ? "chips-suggestions" : "chips-suggestions-" + label;
     const SUGGESTION = "suggestion-";
 
-    /**
-     * Index (from 0 - \<length of items\>) indicating, which chip is currently selected.
-     * Index -1 represent the state, that no chip is selected.
-     */
+    // Index (from 0 - \<length of items\>) indicating which chip is currently selected.
+    // Index -1 represents the state that no chip is selected.
     let selectedChipIndex: number = $state(-1);
     let inputText: string = $state("");
 
-    // assume input is valid, until the opposite is not proven by a check
+    // Assume input is valid until the opposite is not proven by a check
     let isInputValid: boolean = $state(true);
     let errorMessage: string = $state("");
 
     let isLoadingSuggestions: boolean = $state(false);
     let suggestions: string[] = $state([]);
-    /**
-     * Index (from 0 - \<length of suggestions\>) indicating, which suggestion is currently selected.
-     * Index -1 represent the state, that no suggestion is selected.
-     */
+
+    // Index (from 0 - \<length of suggestions\>) indicating which suggestion is currently selected.
+    // Index -1 represents the state that no suggestion is selected.
     let selectedSuggestionIndex: number = $state(-1);
 
     /**
      * Adds the input to the list of items and add a chip to the visualization.
      *
-     * The input is only added, if it is not a duplicate and not empty (after trimming).
-     * Furthermore, it clears the input.
+     * The input is only added if it is not a duplicate and non-empty (after trimming).
+     * Additionally, the input is cleared.
      *
      * @param item - the item to add
      */
@@ -106,7 +106,7 @@
     }
 
     /**
-     * Scroll the selected suggestion into view  and reset the {@link selectedChipIndex} to -1.
+     * Scroll the selected suggestion into view and reset the {@link selectedChipIndex} to -1.
      */
     function focusSelectedSuggestion(): void {
         document.getElementById(`${SUGGESTION}${selectedSuggestionIndex}`)?.scrollIntoView({
@@ -118,7 +118,7 @@
 
     /**
      * Handles a new (keyboard) input to this component.
-     * That means adding a new / removing an item or navigate between the items / suggestions.
+     * That means adding a new / removing an item or navigating between the items / suggestions.
      */
     function handleKeyDown(event: KeyboardEvent): void {
         isInputValid = true;

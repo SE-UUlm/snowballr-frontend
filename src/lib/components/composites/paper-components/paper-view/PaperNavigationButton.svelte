@@ -36,6 +36,8 @@
         isLoading || (direction === "right" ? buttonRightDisabled : buttonLeftDisabled),
     );
 
+    // The direction is hardcoded and should never be changed at runtime.
+    // svelte-ignore state_referenced_locally
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
     async function getNextProjectPaperToReview(paper: Project_Paper) {

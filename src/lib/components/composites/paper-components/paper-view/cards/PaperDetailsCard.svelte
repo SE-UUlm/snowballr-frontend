@@ -32,7 +32,7 @@
     let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
 
     let originalPaper: StringifiedPaper | undefined = $state(undefined);
-    let isInEditMode = $state(startInEditMode);
+    let isInEditMode = $derived(startInEditMode);
     let isPaperModified = $state(false);
     let isMakingApiCall = $state(false);
 

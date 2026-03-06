@@ -10,8 +10,12 @@
 
     const { tabs, buttonList }: Props = $props();
 
-    const totalTabLabelLength = tabs.map((t) => t.label.length).reduce((a, c) => a + c, 0);
-    const partialTabSpaces = tabs.map((t) => (t.label.length / totalTabLabelLength) * 100);
+    const totalTabLabelLength = $derived(
+        tabs.map((t) => t.label.length).reduce((a, c) => a + c, 0),
+    );
+    const partialTabSpaces = $derived(
+        tabs.map((t) => (t.label.length / totalTabLabelLength) * 100),
+    );
 </script>
 
 <!--
