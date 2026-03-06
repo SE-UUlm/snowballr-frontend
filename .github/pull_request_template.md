@@ -21,4 +21,7 @@ Either tick or cross out the items that do not apply (using \~\~example text\~\~
 ### Reviewer
 
 - [ ] I have checked the implementation against the requirements
-- [ ] I have checked for flaky tests in the CI
+- [ ] I have checked that the E2E tests were performed and that they were not flaky.
+
+<!-- Uncomment if the whole E2E test suite should run -->
+<!-- #e2e-run-all -->

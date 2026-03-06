@@ -6,12 +6,15 @@ on:
             - main
             - develop
     pull_request:
-    merge_group:
     workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+    cancel-in-progress: true
 
 env:
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
-    tests_per_shard: ${{ vars.TESTS_PER_SHARD }}
+    TESTS_PER_SHARD: ${{ vars.TESTS_PER_SHARD }}
 
 jobs:
     determine-shards:
@@ -37,7 +40,7 @@ jobs:
                   fi
 
                   # Get number of shards (default to 1)
-                  shards=$((test_count / ${{ env.tests_per_shard }})); [ $shards -eq 0 ] && shards=1
+                  shards=$((test_count / ${{ env.TESTS_PER_SHARD }})); [ $shards -eq 0 ] && shards=1
                   echo "Dividing $test_count tests on $shards shards"
 
                   # Create Shard Matrix
@@ -46,8 +49,10 @@ jobs:
                   echo "Matrix: $matrix"
                   echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
-    e2e-test:
-        name: End-to-End Testing with Playwright
+    ff-e2e-test:
+        name: Fast-Failing End-to-End Testing with Playwright
+        # Only run in PRs
+        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#e2e-run-all') }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: determine-shards
@@ -58,56 +63,43 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v6
               with:
-                  # Force a non-shallow checkout, so that we can reference $GITHUB_BASE_REF.
-                  # See https://github.com/actions/checkout for more details.
                   fetch-depth: 0
 
             - name: E2E-Setup
               uses: ./.github/workflows/e2e-setup/
 
-            - uses: dorny/paths-filter@v3
-              id: changes
-              with:
-                  filters: |
-                      e2e-tests:
-                        - 'tests/e2e/**'
-
-            - name: Set E2E test command alias
-              run: |
-                  rc=/tmp/rcfile
-                  echo "shopt -s expand_aliases" > $rc
-                  echo "alias run-e2e-tests='npm run test:e2e -- --shard ${{ matrix.shard }}/${{ strategy.job-total }}'" >> $rc
-
             - name: Run only tests for changed code (fail fast)
-              # Skip fast failing test run when not triggered by a pull request and no changes were made to the e2e test directory
-              if: ${{ github.event_name == 'pull_request' && steps.changes.outputs.e2e-tests == 'true' }}
               id: fail-fast-run
-              run: |
-                  source /tmp/rcfile
-                  alias run-e2e-tests-fast='run-e2e-tests --only-changed=origin/${{ github.base_ref }}'
+              run: npm run test:e2e -- --shard ${{ matrix.shard }}/${{ strategy.job-total }} --only-changed=origin/${{ github.base_ref }}
 
-                  # Run fast failing tests
-                  run-e2e-tests-fast
+            - name: Archive Playwright report
+              uses: actions/upload-artifact@v6
+              if: ${{ !cancelled() }}
+              with:
+                  name: ff-playwright-report-${{ matrix.shard }}
+                  path: e2e-report/
+                  retention-days: 30
 
-                  # Store executed tests in JSON file
-                  # The 'only-changed' feature runs all tests of a file that is affected by a change, this way we can exclude whole files in the full run
-                  PLAYWRIGHT_JSON_OUTPUT_NAME=fast-run-report.json run-e2e-tests-fast --list --reporter json > /dev/null
+    e2e-test:
+        name: Complete End-to-End Testing with Playwright
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.body, '#e2e-run-all')) }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        needs: determine-shards
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(needs.determine-shards.outputs.matrix) }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
 
-                  # Print out excluded test files
-                  EXCLUDED_TESTS_COUNT=$(jq '[.suites[].suites[].specs[].title] | length' fast-run-report.json)
-                  EXCLUDED_TEST_FILES=$(jq '[.suites[].title]' fast-run-report.json)
-                  echo "Excluding $EXCLUDED_TESTS_COUNT tests of the following file(s):"
-                  echo -e $(echo $EXCLUDED_TEST_FILES | jq 'join(",\n")')
-                  echo "excluded-test-files=$(echo $EXCLUDED_TEST_FILES | jq 'join("|")')" >> $GITHUB_OUTPUT
+            - name: E2E-Setup
+              uses: ./.github/workflows/e2e-setup/
 
-            - name: Run Playwright
-              run: |
-                  source /tmp/rcfile
-                  EXCLUDED_TEST_FILES=${{ steps.fail-fast-run.outputs.excluded-test-files }}
-
-                  # Run full E2E test suite
-                  # Already executed tests from the fast-failing run are excluded (defaults to empty list)
-                  run-e2e-tests --grep-invert $(echo \"${EXCLUDED_TEST_FILES:-""}\") --pass-with-no-tests
+            - name: Run E2E tests
+              run: npm run test:e2e -- --shard ${{ matrix.shard }}/${{ strategy.job-total }}
 
             - name: Archive Playwright report
               uses: actions/upload-artifact@v7
