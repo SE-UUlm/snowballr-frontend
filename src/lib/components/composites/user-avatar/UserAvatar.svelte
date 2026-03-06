@@ -21,10 +21,8 @@
         `${getInitial(user?.firstName ?? "")}${getInitial(user?.lastName ?? "")}`,
     );
 
-    // The size of the user avatar is hardcoded and should never be changed
-    // svelte-ignore state_referenced_locally
-    const style =
-        size === "default"
+    function getStyle() {
+        return size === "default"
             ? {
                   iconSize: 16,
                   avatarSize: "size-10",
@@ -37,6 +35,9 @@
                   textSize: "text-[.8rem]",
                   reviewIndicatorClass: "review-decision-icon-bg-small",
               };
+    }
+
+    const style = getStyle();
 </script>
 
 <!--

@@ -47,16 +47,19 @@
     );
 
     // Check whether the stage was just created and no decisions can be shown
-    // svelte-ignore state_referenced_locally
-    if (totalNumberOfDecisions === 0) {
-        segments = [
-            {
-                decision: "No decision",
-                value: 1,
-            },
-        ];
-        colorScale = d3.scaleOrdinal<string>().domain("No decision").range(["text-gray-200"]);
+    function initializeSegmentsAndColorScale() {
+        if (totalNumberOfDecisions === 0) {
+            segments = [
+                {
+                    decision: "No decision",
+                    value: 1,
+                },
+            ];
+            colorScale = d3.scaleOrdinal<string>().domain("No decision").range(["text-gray-200"]);
+        }
     }
+
+    initializeSegmentsAndColorScale();
 </script>
 
 <svg data-testid="stage-progress-chart" height={SIZE} width={SIZE}>
