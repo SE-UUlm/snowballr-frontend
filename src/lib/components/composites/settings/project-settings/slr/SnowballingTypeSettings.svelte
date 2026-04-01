@@ -2,7 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import * as RadioGroup from "$lib/components/primitives/radio-group/index";
-    import { Project, Project_Settings, SnowballingType } from "$lib/model/api/project";
+    import { Project, Project_Settings, SnowballingType } from "$api/project";
     import { onMount } from "svelte";
     import { backendService } from "$lib/grpc-api";
     import { createActionError, type ActionError } from "$lib/model/action-error";

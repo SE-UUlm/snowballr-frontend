@@ -5,7 +5,7 @@ import { loading, createPaper, createProjectPaper } from "../../../../model-buil
 import { mockIsProjectArchivedContext, waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { type ISnowballRClient } from "$lib/model/api/main.client";
+import { type ISnowballRClient } from "$api/main.client";
 
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {

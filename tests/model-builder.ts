@@ -1,11 +1,11 @@
-import type { User } from "$lib/model/api/user";
-import type { Author, Paper } from "$lib/model/api/paper";
+import type { User } from "$api/user";
+import type { Author, Paper } from "$api/paper";
 import {
     SnowballingType,
     type Project,
     type Project_Paper,
     type Project_Settings,
-} from "$lib/model/api/project";
+} from "$api/project";
 import { Authors, Criteria, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
 import type {
     IndependentPaperViewProps,
@@ -13,9 +13,9 @@ import type {
     PaperViewProps,
     ProjectSpecificPaperViewProps,
 } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-import type { Review } from "$lib/model/api/review";
+import type { Review } from "$api/review";
 import type { CriterionWithReviews, StringifiedPaper } from "$lib/model/general";
-import type { Criterion } from "$lib/model/api/criterion";
+import type { Criterion } from "$api/criterion";
 import type { ProjectPaperViewProps } from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
 import type { ButtonBarProps } from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";

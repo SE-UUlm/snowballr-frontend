@@ -3,7 +3,7 @@
     import Input from "$lib/components/composites/input/Input.svelte";
     import { backendService } from "$lib/grpc-api";
     import { onMount } from "svelte";
-    import { Project } from "$lib/model/api/project";
+    import { Project } from "$api/project";
     import { Schema } from "$lib/schemas";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";

@@ -1,8 +1,8 @@
-import { type User } from "$lib/model/api/user";
+import { type User } from "$api/user";
 import { backendService, setFetch } from "$lib/grpc-api";
 import type { LayoutLoad } from "./$types";
-import { Nothing } from "$lib/model/api/base";
-import { AuthenticationStatus } from "$lib/model/api/authentication";
+import { Nothing } from "$api/base";
+import { AuthenticationStatus } from "$api/authentication";
 import { goto } from "$app/navigation";
 import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";

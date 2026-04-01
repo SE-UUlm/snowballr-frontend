@@ -4,7 +4,7 @@
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
-    import type { Paper } from "$lib/model/api/paper";
+    import type { Paper } from "$api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
 
     interface ReadingListEntryProps {

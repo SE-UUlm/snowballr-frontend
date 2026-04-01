@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { Papers, ProjectPapers } from "$tests/example-data";
 import { filterPapers, filterProjectPapers } from "$lib/utils/filters";
-import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import { PaperDecision, type Project_Paper } from "$api/project";
 import { createPaper, createProjectPaper, createReview } from "$tests/model-builder";
 
 describe("Filter papers", () => {

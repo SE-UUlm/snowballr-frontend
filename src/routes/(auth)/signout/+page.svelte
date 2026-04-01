@@ -2,7 +2,7 @@
     import { backendService } from "$lib/grpc-api";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { Nothing } from "$lib/model/api/base";
+    import { Nothing } from "$api/base";
 
     onMount(async () => {
         try {

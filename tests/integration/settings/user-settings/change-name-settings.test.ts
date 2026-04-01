@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
 import { backendService } from "$lib/grpc-api";
 import userEvent from "@testing-library/user-event";
-import type { User } from "$lib/model/api/user";
+import type { User } from "$api/user";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "$tests/integration/test-helper";
 import { Users } from "$tests/example-data";

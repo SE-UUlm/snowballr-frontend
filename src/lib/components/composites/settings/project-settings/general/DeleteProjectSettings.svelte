@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from "$lib/model/api/project";
+    import type { Project } from "$api/project";
     import DeleteProjectSettingsDialog from "./DeleteProjectSettingsDialog.svelte";
 
     interface Props {

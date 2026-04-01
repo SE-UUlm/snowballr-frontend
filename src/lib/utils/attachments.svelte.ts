@@ -1,5 +1,5 @@
 import type { Attachment } from "svelte/attachments";
-import { ProjectStatus } from "$lib/model/api/project";
+import { ProjectStatus } from "$api/project";
 
 /**
  * Attaches two event listeners that call the passed function when the user clicks outside the element

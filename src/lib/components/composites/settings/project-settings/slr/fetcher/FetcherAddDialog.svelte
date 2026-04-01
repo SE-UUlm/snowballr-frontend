@@ -3,7 +3,7 @@
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import * as Select from "$lib/components/primitives/select";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { Project, Project_Settings } from "$lib/model/api/project";
+    import { Project, Project_Settings } from "$api/project";
     import { pluralize } from "$lib/utils/common-helper";
     import { updateFetchers } from "./update-fetchers";
 

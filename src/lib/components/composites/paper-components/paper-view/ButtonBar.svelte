@@ -1,9 +1,9 @@
 <script lang="ts">
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
-    import type { Project, Project_Paper } from "$lib/model/api/project";
+    import type { Project, Project_Paper } from "$api/project";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
-    import { type Review, ReviewDecision } from "$lib/model/api/review";
+    import { type Review, ReviewDecision } from "$api/review";
     import type { PaperDecisionButtonVariant } from "./decision-button-variants";
 
     export type ButtonBarProps = {

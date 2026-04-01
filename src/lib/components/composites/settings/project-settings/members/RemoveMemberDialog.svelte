@@ -3,7 +3,7 @@
     import { getNameOrEmail, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import Trash from "@lucide/svelte/icons/trash";
-    import { MemberRole, type Project_Member } from "$lib/model/api/project";
+    import { MemberRole, type Project_Member } from "$api/project";
     import { backendService } from "$lib/grpc-api";
 
     interface Props {

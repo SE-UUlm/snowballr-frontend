@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { Projects, Users } from "../../example-data";
-import { MemberRole } from "$lib/model/api/project";
+import { MemberRole } from "$api/project";
 
 describe("ProjectListEntryComponent", () => {
     test("When all required props except an onClick handler are provided, then the project list entry is completely shown.", () => {

@@ -3,7 +3,7 @@
     import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
     import ProjectMemberListEntrySkeleton from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
-    import { Project_Member } from "$lib/model/api/project.js";
+    import { Project_Member } from "$api/project.js";
     import { getName, getNameOrEmail, pluralize } from "$lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";

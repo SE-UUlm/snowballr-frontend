@@ -1,5 +1,5 @@
 import { invalidate } from "$app/navigation";
-import type { User } from "$lib/model/api/user";
+import type { User } from "$api/user";
 
 export const USER_DEPENDENCY_KEY = "data:getCurrentUser";
 

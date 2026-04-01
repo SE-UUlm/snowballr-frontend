@@ -1,6 +1,6 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import type { Project } from "$lib/model/api/project";
+    import type { Project } from "$api/project";
     import DeleteProjectSettings from "./DeleteProjectSettings.svelte";
 
     interface Props {

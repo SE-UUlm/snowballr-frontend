@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ProjectStatus } from "$lib/model/api/project";
+    import { ProjectStatus } from "$api/project";
     import { setIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { resource } from "$lib/resource.svelte";
 

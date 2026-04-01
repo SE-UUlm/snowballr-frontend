@@ -1,6 +1,6 @@
 <script lang="ts">
     import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import { PaperDecision } from "$lib/model/api/project";
+    import { PaperDecision } from "$api/project";
     import type { SelectOption } from "$lib/model/select-option";
     import { getStatusText } from "$lib/utils/common-helper";
 

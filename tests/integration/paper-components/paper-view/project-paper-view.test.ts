@@ -21,7 +21,7 @@ import {
 import { Criteria, Reviews } from "$tests/example-data";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import type { UserContext } from "$lib/custom-context/user-context";
-import { PaperDecision } from "$lib/model/api/project";
+import { PaperDecision } from "$api/project";
 
 describe("ProjectPaperView", () => {
     test("When the user already reviewed this paper but is in review mode, then the decision is shown", async () => {

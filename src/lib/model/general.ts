@@ -1,7 +1,7 @@
-import { Project_Paper } from "$lib/model/api/project";
-import type { Criterion } from "./api/criterion";
-import type { Paper } from "./api/paper";
-import type { Review } from "./api/review";
+import { Project_Paper } from "$api/project";
+import type { Criterion } from "$api/criterion";
+import type { Paper } from "$api/paper";
+import type { Review } from "$api/review";
 
 /**
  * Contains general types that are used in several components or pages but cannot be categorized anywhere else.

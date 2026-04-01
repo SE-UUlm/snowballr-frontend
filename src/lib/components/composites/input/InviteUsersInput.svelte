@@ -1,6 +1,6 @@
 <script lang="ts">
     import ChipsInput from "./ChipsInput.svelte";
-    import type { User } from "$lib/model/api/user";
+    import type { User } from "$api/user";
     import { getName } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import { Schema } from "$lib/schemas";

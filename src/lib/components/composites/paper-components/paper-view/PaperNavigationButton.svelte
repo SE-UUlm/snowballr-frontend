@@ -2,7 +2,7 @@
     import ArrowLeft from "@lucide/svelte/icons/arrow-left";
     import ArrowRight from "@lucide/svelte/icons/arrow-right";
     import Tooltip from "../../utils/Tooltip.svelte";
-    import type { Project, Project_Paper } from "$lib/model/api/project";
+    import type { Project, Project_Paper } from "$api/project";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { backendService } from "$lib/grpc-api";
     import { navigatePaper } from "$lib/utils/paper-navigation";

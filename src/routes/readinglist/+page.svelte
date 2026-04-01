@@ -5,7 +5,7 @@
     import ReadingListEntrySkeleton from "$lib/components/composites/paper-components/ReadingListEntrySkeleton.svelte";
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
     import { filterPapers } from "$lib/utils/filters";
-    import type { Paper } from "$lib/model/api/paper";
+    import type { Paper } from "$api/paper";
     import { loadReadingList } from "./helper.js";
     import {
         getSearchTextFromURL,

@@ -1,8 +1,8 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
 import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { Project, SnowballingType } from "$lib/model/api/project";
+import { Project, SnowballingType } from "$api/project";
 import { Criteria, Reviews } from "$tests/example-data";
-import type { Paper } from "$lib/model/api/paper";
+import type { Paper } from "$api/paper";
 import { createPaper } from "$tests/model-builder";
 import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
 import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";

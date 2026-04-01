@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation";
-import type { Project, Project_Paper } from "$lib/model/api/project";
+import type { Project, Project_Paper } from "$api/project";
 
 /**
  * Handles the navigation of the navigation button depending on the direction.

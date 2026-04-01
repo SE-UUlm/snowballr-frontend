@@ -1,4 +1,4 @@
-import { PaperDecision, type Project_Paper } from "$lib/model/api/project";
+import { PaperDecision, type Project_Paper } from "$api/project";
 import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-criteria";
 import { comparePaperId, exhaustiveCheck } from "$lib/utils/common-helper";
 

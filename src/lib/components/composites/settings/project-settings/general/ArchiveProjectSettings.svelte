@@ -1,7 +1,7 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Project, ProjectStatus } from "$lib/model/api/project";
+    import { Project, ProjectStatus } from "$api/project";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";

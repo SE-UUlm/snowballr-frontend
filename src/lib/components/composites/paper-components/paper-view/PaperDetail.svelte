@@ -4,7 +4,7 @@
     import type { WithElementRef } from "bits-ui";
     import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
-    import type { Paper } from "$lib/model/api/paper";
+    import type { Paper } from "$api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
     import CircleHelp from "@lucide/svelte/icons/circle-help";

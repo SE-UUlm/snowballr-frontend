@@ -3,7 +3,7 @@
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
-    import type { Paper } from "$lib/model/api/paper";
+    import type { Paper } from "$api/paper";
     import { filterPapers } from "$lib/utils/filters";
 
     interface Props {

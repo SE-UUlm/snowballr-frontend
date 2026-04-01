@@ -1,5 +1,5 @@
-import { Project_Paper } from "$lib/model/api/project";
-import type { Author, Paper } from "$lib/model/api/paper";
+import { Project_Paper } from "$api/project";
+import type { Author, Paper } from "$api/paper";
 import { getNames } from "./common-helper";
 import type { StringifiedPaper } from "$lib/model/general";
 

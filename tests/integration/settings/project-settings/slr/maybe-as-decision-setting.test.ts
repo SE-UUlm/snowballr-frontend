@@ -1,6 +1,6 @@
 import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
-import { ProjectStatus } from "$lib/model/api/project";
+import { ProjectStatus } from "$api/project";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen, waitFor } from "@testing-library/svelte";

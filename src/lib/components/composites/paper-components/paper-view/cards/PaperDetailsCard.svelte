@@ -1,7 +1,7 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import { Paper } from "$lib/model/api/paper";
+    import { Paper } from "$api/paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Save from "@lucide/svelte/icons/save";
@@ -15,7 +15,7 @@
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { goto } from "$app/navigation";
-    import type { Project_Paper } from "$lib/model/api/project";
+    import type { Project_Paper } from "$api/project";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
     interface Props {

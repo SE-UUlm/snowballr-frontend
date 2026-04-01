@@ -1,4 +1,4 @@
-import { Project, Project_Settings } from "$lib/model/api/project";
+import { Project, Project_Settings } from "$api/project";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
