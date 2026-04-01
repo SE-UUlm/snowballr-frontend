@@ -12,8 +12,8 @@ const config = {
         alias: {
             $tests: "./tests",
             "$tests/*": "./tests/*",
-            $api: "node_modules/snowballr-api/dist",
-            "$api/*": "node_modules/snowballr-api/dist/*",
+            $api: "./src/lib/model/api",
+            "$api/*": "./src/lib/model/api/*",
         },
     },
 };
