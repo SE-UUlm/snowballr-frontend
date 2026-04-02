@@ -7,10 +7,10 @@
         Project_Information,
         Project_Member_List,
         ProjectStatus,
-    } from "$lib/model/api/project";
+    } from "$api/project";
     import { goto } from "$app/navigation";
     import { env } from "$env/dynamic/public";
-    import type { User } from "$lib/model/api/user";
+    import type { User } from "$api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";

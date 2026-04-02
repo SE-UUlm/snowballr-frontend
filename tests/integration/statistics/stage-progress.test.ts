@@ -5,7 +5,7 @@ import { loading } from "../../model-builder";
 import StageProgress, {
     type StageProgressInterface,
 } from "$lib/components/composites/statistics/StageProgress.svelte";
-import { PaperDecision } from "$lib/model/api/project";
+import { PaperDecision } from "$api/project";
 
 describe("StageProgress", () => {
     test("When all required props are provided, then the stage progress component is completely shown.", async () => {

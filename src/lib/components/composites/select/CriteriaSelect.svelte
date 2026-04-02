@@ -1,6 +1,6 @@
 <script lang="ts">
     import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import { Criterion } from "$lib/model/api/criterion";
+    import { Criterion } from "$api/criterion";
     import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
 

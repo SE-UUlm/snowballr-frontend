@@ -3,7 +3,7 @@ import ProjectNavigationBar from "$lib/components/composites/navigation-bar/Proj
 import { render, screen } from "@testing-library/svelte";
 import { createProject, loading } from "../../model-builder";
 import { mockUserContext, waitForComponentLoading } from "../test-helper";
-import { ProjectStatus } from "$lib/model/api/project";
+import { ProjectStatus } from "$api/project";
 
 describe("ProjectNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {

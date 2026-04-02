@@ -12,7 +12,7 @@
     import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
     import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
     import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
-    import type { Project_Paper } from "$lib/model/api/project";
+    import type { Project_Paper } from "$api/project";
     import Trash from "@lucide/svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
@@ -42,7 +42,7 @@
     import { sortProjectPaper } from "$lib/utils/sorters";
     import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
     import { updateSortParams } from "$lib/utils/search-parameters.js";
-    import { Paper } from "$lib/model/api/paper.js";
+    import { Paper } from "$api/paper.js";
     import { stringifyPaper } from "$lib/utils/model-helper.js";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
 

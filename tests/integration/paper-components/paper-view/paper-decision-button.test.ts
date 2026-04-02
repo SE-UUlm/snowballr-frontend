@@ -4,7 +4,7 @@ import PaperDecisionButton from "$lib/components/composites/paper-components/pap
 import userEvent from "@testing-library/user-event";
 import { createReview } from "$tests/model-builder";
 import { backendService } from "$lib/grpc-api";
-import { Review, ReviewDecision } from "$lib/model/api/review";
+import { Review, ReviewDecision } from "$api/review";
 import { getReturnValue } from "$tests/setupTest";
 import {
     type IsProjectArchivedContext,

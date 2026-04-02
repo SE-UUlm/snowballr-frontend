@@ -3,7 +3,7 @@
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherSettings.svelte";
-    import { ProjectStatus } from "$lib/model/api/project.js";
+    import { ProjectStatus } from "$api/project.js";
     import { resource } from "$lib/resource.svelte";
     import { isCurrentUserProjectAdmin } from "../helper";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";

@@ -1,5 +1,5 @@
 import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
-import { MemberRole } from "$lib/model/api/project";
+import { MemberRole } from "$api/project";
 import { Members } from "$tests/example-data";
 import { render, screen } from "@testing-library/svelte";
 import { describe, test, expect, assert } from "vitest";

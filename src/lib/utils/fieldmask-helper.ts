@@ -1,4 +1,4 @@
-import type { FieldMask } from "$lib/model/api/google/protobuf/field_mask";
+import type { FieldMask } from "$api/google/protobuf/field_mask";
 import { generateFieldMask } from "protobuf-fieldmask";
 
 /**

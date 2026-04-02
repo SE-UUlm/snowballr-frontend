@@ -1,5 +1,5 @@
 import { backendService } from "$lib/grpc-api";
-import { Project_Paper } from "$lib/model/api/project";
+import { Project_Paper } from "$api/project";
 import { type Stage } from "$lib/model/general";
 import { comparePaperId } from "$lib/utils/common-helper";
 import type { PageLoad } from "./$types";

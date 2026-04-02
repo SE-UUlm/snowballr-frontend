@@ -1,7 +1,7 @@
 import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
-import type { Paper } from "../model/api/paper";
+import type { Paper } from "$api/paper";
 import { getNames } from "./common-helper";
-import type { Project_Paper } from "$lib/model/api/project";
+import type { Project_Paper } from "$api/project";
 import type { ProjectPaperFilter } from "$lib/model/general";
 
 /**

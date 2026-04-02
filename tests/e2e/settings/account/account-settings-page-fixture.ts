@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { AccountSettingsPageModel } from "./account-settings-page-model";
 import { test as base } from "../../utils/fixtures/shared-fixture";
-import { Nothing } from "$lib/model/api/base";
+import { Nothing } from "$api/base";
 import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
 import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
 import { ShortcutsSettingsPageModel } from "$tests/e2e/settings/shortcuts/shortcuts-settings-page-model";

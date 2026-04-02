@@ -1,6 +1,6 @@
 <script lang="ts">
     import { backendService } from "$lib/grpc-api";
-    import { User } from "$lib/model/api/user";
+    import { User } from "$api/user";
     import { Schema } from "$lib/schemas";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";

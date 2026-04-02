@@ -1,6 +1,6 @@
 import { test } from "./project-paper-view-page-fixtures";
 import { expect } from "@playwright/test";
-import { ReviewDecision } from "$lib/model/api/review";
+import { ReviewDecision } from "$api/review";
 
 test.describe("Project Paper View Navigation", () => {
     test("When navigating to the project paper view, then the page is displayed", async ({

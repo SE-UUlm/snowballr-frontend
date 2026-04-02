@@ -1,5 +1,5 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
-import { SnowballRClient } from "./model/api/main.client";
+import { SnowballRClient } from "$api/main.client";
 import { env } from "$env/dynamic/public";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
 import { IS_IN_DEV_MODE } from "./constants";

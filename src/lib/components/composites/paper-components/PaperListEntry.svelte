@@ -3,7 +3,7 @@
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
     import { backendService } from "$lib/grpc-api";
-    import type { User } from "$lib/model/api/user";
+    import type { User } from "$api/user";
     import {
         getDisplayPaperId,
         getStatusColor,
@@ -12,8 +12,8 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import type { Paper } from "$lib/model/api/paper";
-    import type { Project_Paper } from "$lib/model/api/project";
+    import type { Paper } from "$api/paper";
+    import type { Project_Paper } from "$api/project";
     import ExternalLink from "@lucide/svelte/icons/external-link";
 
     /**

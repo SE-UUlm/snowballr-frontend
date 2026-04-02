@@ -1,6 +1,6 @@
 import { backendService } from "$lib/grpc-api";
-import { MemberRole, type Project_Member } from "$lib/model/api/project";
-import type { User } from "$lib/model/api/user";
+import { MemberRole, type Project_Member } from "$api/project";
+import type { User } from "$api/user";
 import { resource } from "$lib/resource.svelte";
 import { getUserContext } from "$lib/custom-context/user-context";
 

@@ -2,7 +2,7 @@
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
-    import type { Project_Member } from "$lib/model/api/project";
+    import type { Project_Member } from "$api/project";
     import { backendService } from "$lib/grpc-api";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";

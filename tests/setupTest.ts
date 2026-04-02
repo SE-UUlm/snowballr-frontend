@@ -12,10 +12,10 @@ import {
     createUser,
 } from "./model-builder";
 import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
-import type { ISnowballRClient } from "$lib/model/api/main.client";
+import type { ISnowballRClient } from "$api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
-import { PaperDecision } from "$lib/model/api/project";
-import { AuthenticationStatus } from "$lib/model/api/authentication";
+import { PaperDecision } from "$api/project";
+import { AuthenticationStatus } from "$api/authentication";
 import { backendService } from "$lib/grpc-api";
 import ResizeObserver from "resize-observer-polyfill";
 

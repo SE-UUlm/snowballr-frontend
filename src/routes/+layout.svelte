@@ -5,7 +5,7 @@
     import type { LayoutData } from "./$types";
     import { type Snippet } from "svelte";
     import { setUserContext } from "$lib/custom-context/user-context";
-    import type { User } from "$lib/model/api/user";
+    import type { User } from "$api/user";
     import { IS_IN_DEV_MODE } from "$lib/constants";
 
     let { data, children } = $props<{

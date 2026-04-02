@@ -3,7 +3,7 @@
     import Button from "$lib/components/primitives/button/button.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Project, Project_Settings } from "$lib/model/api/project";
+    import { Project, Project_Settings } from "$api/project";
     import { onMount } from "svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
     import SquarePen from "@lucide/svelte/icons/square-pen";

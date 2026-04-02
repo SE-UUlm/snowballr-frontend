@@ -5,7 +5,7 @@
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Project_Settings, Project } from "$lib/model/api/project";
+    import { Project_Settings, Project } from "$api/project";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
     import { createActionError, type ActionError } from "$lib/model/action-error";

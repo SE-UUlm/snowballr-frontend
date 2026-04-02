@@ -4,8 +4,8 @@ import {
     PaperDecision,
     type Project,
     type Project_Information_DecisionStatistics,
-} from "$lib/model/api/project";
-import type { Timestamp } from "$lib/model/api/google/protobuf/timestamp";
+} from "$api/project";
+import type { Timestamp } from "$api/google/protobuf/timestamp";
 import type { ProjectInformationInterface } from "$lib/components/composites/statistics/ProjectInformation.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import type { StageProgressInterface } from "$lib/components/composites/statistics/StageProgress.svelte";

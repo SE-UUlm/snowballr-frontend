@@ -2,8 +2,8 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Nothing } from "$lib/model/api/base";
-    import { ExportRequest } from "$lib/model/api/export";
+    import { Nothing } from "$api/base";
+    import { ExportRequest } from "$api/export";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { downloadBlob } from "$lib/utils/download-file";
     import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";

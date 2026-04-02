@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "$lib/model/api/user";
+import { User, UserRole, UserStatus } from "$api/user";
 import {
     MemberRole,
     PaperDecision,
@@ -6,11 +6,11 @@ import {
     Project_Member,
     Project_Paper,
     ProjectStatus,
-} from "$lib/model/api/project";
-import { Review, ReviewDecision } from "$lib/model/api/review";
-import { Criterion, CriterionCategory } from "$lib/model/api/criterion";
+} from "$api/project";
+import { Review, ReviewDecision } from "$api/review";
+import { Criterion, CriterionCategory } from "$api/criterion";
 import { createProjectSettings } from "./model-builder";
-import type { Author, Paper } from "$lib/model/api/paper";
+import type { Author, Paper } from "$api/paper";
 
 const johnDoeUser: User = {
     id: "0",

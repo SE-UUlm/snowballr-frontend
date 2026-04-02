@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { ReviewDecision } from "$lib/model/api/review";
+import { ReviewDecision } from "$api/review";
 import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
 import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";
 import { HomePageModel } from "$tests/e2e/homepage/home-page-model";

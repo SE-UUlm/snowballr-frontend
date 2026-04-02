@@ -7,9 +7,9 @@ import {
 } from "$tests/e2e/readinglist/reading-list-page-model";
 import { HomePageModel } from "../homepage/home-page-model";
 import { expect } from "@playwright/test";
-import { Nothing } from "$lib/model/api/base";
-import type { Project } from "$lib/model/api/project";
-import type { Paper } from "$lib/model/api/paper";
+import { Nothing } from "$api/base";
+import type { Project } from "$api/project";
+import type { Paper } from "$api/paper";
 import { createPaper } from "$tests/model-builder";
 import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
 import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";

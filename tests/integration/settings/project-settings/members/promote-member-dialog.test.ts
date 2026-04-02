@@ -1,4 +1,4 @@
-import { MemberRole, Project_Member } from "$lib/model/api/project";
+import { MemberRole, Project_Member } from "$api/project";
 import { Members } from "$tests/example-data";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { afterEach, assert, beforeEach, describe, expect, test, vi } from "vitest";

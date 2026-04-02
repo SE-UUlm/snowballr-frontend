@@ -5,9 +5,9 @@ import {
     ProjectPapersPageModel,
 } from "$tests/e2e/project/papers/project-papers-page-model";
 import { expect } from "@playwright/test";
-import { Author, type Paper } from "$lib/model/api/paper";
+import { Author, type Paper } from "$api/paper";
 import { createPaper } from "$tests/model-builder";
-import type { Project_Paper } from "$lib/model/api/project";
+import type { Project_Paper } from "$api/project";
 import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
 import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
 import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";

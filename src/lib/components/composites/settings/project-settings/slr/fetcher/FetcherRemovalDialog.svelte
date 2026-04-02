@@ -2,7 +2,7 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
-    import { Project, Project_Settings } from "$lib/model/api/project";
+    import { Project, Project_Settings } from "$api/project";
     import { updateFetchers } from "./update-fetchers";
 
     interface Props {

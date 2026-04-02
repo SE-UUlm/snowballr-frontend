@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { PaperDecision, Project_Paper } from "$lib/model/api/project";
-    import type { User } from "$lib/model/api/user";
+    import { PaperDecision, Project_Paper } from "$api/project";
+    import type { User } from "$api/user";
     import { resource } from "$lib/resource.svelte";
     import { cn } from "$lib/utils/shadcn-helper";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
