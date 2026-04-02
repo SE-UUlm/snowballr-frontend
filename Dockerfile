@@ -13,9 +13,6 @@ WORKDIR /usr/src/app
 # Create a stage for installing production dependencies.
 FROM base AS build
 
-# Install Git - it is used by tiged to fetch the API
-RUN apk add git
-
 # Create the directory for the generated API code
 RUN mkdir -p src/lib/model/api/
 
