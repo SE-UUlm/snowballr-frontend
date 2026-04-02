@@ -80,7 +80,7 @@
         "prettier-plugin-tailwindcss": "^0.7.2",
         "protobuf-fieldmask": "^2.0.0",
         "resize-observer-polyfill": "1.5.1",
-        "snowballr-api": "^0.13.1",
+        "snowballr-api": "^0.13.2",
         "svelte": "^5.53.5",
         "svelte-check": "^4.3.1",
         "svelte-sonner": "^1.0.7",
