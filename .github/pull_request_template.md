@@ -12,7 +12,7 @@ Either tick or cross out the items that do not apply (using \~\~example text\~\~
 ### Author
 
 - [ ] I have updated the documentation accordingly and commented my code
-- [ ] I manually tested the changes
+- [ ] I have manually tested my changes
 - [ ] I have added tests that prove my fix is effective or that my feature works
   - [ ] unit tests
   - [ ] integration tests
@@ -20,7 +20,7 @@ Either tick or cross out the items that do not apply (using \~\~example text\~\~
 
 ### Reviewer
 
-- [ ] I have checked the implementation against the requirements
+- [ ] I have checked the changes against the requirements
 - [ ] I have checked that the E2E tests were performed and that they were not flaky.
 
 <!-- Uncomment if the whole E2E test suite should run -->
