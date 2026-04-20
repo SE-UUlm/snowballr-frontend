@@ -71,7 +71,7 @@
         "fzf": "^0.5.2",
         "globals": "^17.4.0",
         "highlight-words": "^2.0.0",
-        "jsdom": "^27.2.0",
+        "jsdom": "^29.0.2",
         "license-checker": "^25.0.1",
         "markdownlint-cli": "^0.45.0",
         "mode-watcher": "^1.1.0",
