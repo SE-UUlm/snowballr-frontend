@@ -20,6 +20,7 @@ jobs:
               uses: SE-UUlm/snowballr-ci/src/lint-md@v1
               with:
                   node-version: 22
+                  markdownlint-config-path: markdownlint.json
                   source-branch: develop
                   ignore-links: "https://dl.acm.org/doi/*"
                   ignore-paths: "src/,tests/"
