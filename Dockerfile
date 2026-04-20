@@ -42,7 +42,7 @@ FROM base AS final
 ENV NODE_ENV=production
 
 # Default to including credentials with every request
-ENV PUBLIC_CREDENTIAL_MODE=include
+ENV PUBLIC_CREDENTIAL_POLICY=include
 
 # Copy env variables to file so that it can be read by svelte
 RUN printenv | sed -n '/^PUBLIC_API_BASE_URL=/p;' > .env
