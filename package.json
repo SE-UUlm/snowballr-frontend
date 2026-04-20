@@ -24,7 +24,7 @@
         "format": "prettier --write .",
         "lint": "prettier --check . && eslint .",
         "lint:fix": "eslint --fix .",
-        "lint-md": "markdownlint --config .github/markdownlint.json **/*.md",
+        "lint-md": "markdownlint --config markdownlint.json **/*.md",
         "test": "npm run test:no-e2e && npm run test:e2e",
         "show-coverage": "open coverage/index.html",
         "test:unit": "vitest --project unit",
