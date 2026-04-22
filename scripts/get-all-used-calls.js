@@ -19,6 +19,8 @@ const removeComments = (content) => {
     content = content.replace(/\/\/.*/g, "");
     // Remove multi-line comments
     content = content.replace(/\/\*[\s\S]*?\*\//g, "");
+    // Remove HTML comments
+    content = content.replace(/<!--[\s\S]*?-->/g, "");
     return content;
 };
 
