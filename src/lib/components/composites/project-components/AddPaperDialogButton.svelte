@@ -1,7 +1,10 @@
 <script lang="ts">
     import * as Dialog from "$lib/components/primitives/dialog/index.js";
     import { Button, buttonVariants } from "$lib/components/primitives/button";
-    import { CheckIcon, CirclePlus, TrashIcon, XIcon } from "lucide-svelte";
+    import Check from "@lucide/svelte/icons/check";
+    import CirclePlus from "@lucide/svelte/icons/circle-plus";
+    import Trash from "@lucide/svelte/icons/trash";
+    import XIcon from "@lucide/svelte/icons/x";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { cn } from "$lib/utils/shadcn-helper";
     import SearchBar from "../search-bar/SearchBar.svelte";
@@ -12,7 +15,7 @@
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
     import { toast } from "svelte-sonner";
-    import type { ApiError } from "$lib/model/general";
+    import type { ActionError } from "$lib/model/action-error";
 
     interface Props {
         projectId: string;
@@ -30,7 +33,7 @@
         includeFetchers = $bindable(true),
     }: Props = $props();
 
-    let error: ApiError | undefined = $state();
+    let error: ActionError = $state();
     let searchedPapers: Promise<Paper[]> = $state(Promise.resolve([]));
     let selectedPapers: Paper[] = $state([]);
     let loading = $state(false);
@@ -38,6 +41,7 @@
     async function searchPapers(query: string): Promise<Paper[]> {
         const onError = (errorDetails: string, searchType: string) => {
             error = {
+                variant: "error",
                 errorTitle: `Error when searching for ${searchType} papers`,
                 errorDetails: errorDetails,
             };
@@ -76,6 +80,7 @@
         loading = true;
 
         try {
+            // TODO: Papers from fetcher don't exist in DB
             await Promise.all(
                 selectedPapers.map((paper) =>
                     backendService.addPaperToProject({
@@ -88,14 +93,14 @@
         } catch {
             toast.error("There was an error when adding the papers to the project.");
             return;
+        } finally {
+            loading = false;
+            open = false;
         }
 
         toast.success(
             `Successfully added ${selectedPapers.length} ${pluralize(selectedPapers.length, "paper", "papers")} to the project.`,
         );
-
-        loading = false;
-        open = false;
     }
 
     $effect(() => {
@@ -124,7 +129,7 @@
         variant={selected ? "default" : "outline"}
     >
         {#if selected}
-            <CheckIcon />
+            <Check />
         {:else}
             <XIcon />
         {/if}
@@ -156,7 +161,7 @@
             {#if icon === "plus"}
                 <CirclePlus />
             {:else}
-                <TrashIcon class="text-red-400" />
+                <Trash class="text-red-400" />
             {/if}
         </Button>
     </div>
