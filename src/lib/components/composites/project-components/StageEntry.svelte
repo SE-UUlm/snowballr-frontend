@@ -81,7 +81,7 @@ Usage:
 
             {#if !isProjectArchived}
                 <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
-                    <CirclePlus strokeWidth="2.5" /> Add Paper
+                    <CirclePlus strokeWidth="2.5" /> Add New Paper
                 </Button>
                 <AddPaperDialogButton {projectId} stage={stage.stageIndex} />
             {/if}

@@ -11,11 +11,13 @@
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
     import type { Paper } from "$lib/model/api/paper";
-    import { pluralize } from "$lib/utils/common-helper";
+    import { isGrpcError, pluralize } from "$lib/utils/common-helper";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
     import { toast } from "svelte-sonner";
     import type { ActionError } from "$lib/model/action-error";
+    import type { RpcError } from "@protobuf-ts/runtime-rpc";
+    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 
     interface Props {
         projectId: string;
@@ -58,31 +60,82 @@
                   .searchLocalPapers({ query })
                   .response.then((it) => it.papers)
                   .catch((it) => onError(it, "local"))
-            : Promise.resolve([]);
+            : Promise.resolve<Paper[]>([]);
 
+        // Fetcher papers that don't exist in the snowballR DB get their index assigned as ID
         const fetcherPapers = includeFetchers
             ? backendService
                   .searchFetcherPapers({ query, projectId })
-                  .response.then((it) => it.papers)
+                  .response.then((it) =>
+                      it.papers.map((paper, i) => ({
+                          ...paper,
+                          id: `${paper.id === "" ? i : paper.id}`,
+                      })),
+                  )
                   .catch((it) => onError(it, "fetcher"))
-            : Promise.resolve([]);
+            : Promise.resolve<Paper[]>([]);
 
-        const papers = Promise.all([localPapers, fetcherPapers]).then(([local, fetchers]) => [
-            ...local,
-            // Avoid duplicate key when rendering
-            ...fetchers.filter((it) => !local.some((l) => it.id === l.id)),
-        ]);
+        function isSamePaper(a: Paper, b: Paper) {
+            const doBothHaveId = a.id !== "" && b.id !== "";
+
+            if (doBothHaveId && a.id === b.id) return true;
+
+            const doBothHaveExternalId = a.externalId !== "" && b.externalId !== "";
+
+            return doBothHaveExternalId && a.externalId === b.externalId;
+        }
+
+        const papers = Promise.all([localPapers, fetcherPapers])
+            .then(([local, fetchers]) => [
+                ...local,
+                // Avoid duplicate key when rendering
+                ...fetchers.filter((it) => !local.some((l) => isSamePaper(it, l))),
+            ])
+            .then((papers) => {
+                if (papers.length === 0) {
+                    toast.info(
+                        "The search did not return any papers. Either the query didn't match any papers or all papers" +
+                            " that match the query already exist in this project",
+                    );
+                }
+
+                return papers;
+            });
 
         return papers;
+    }
+
+    async function createPapers() {
+        const existingPapers = [];
+
+        for (const paper of selectedPapers) {
+            if (Number.isNaN(Number(paper.id))) {
+                existingPapers.push(paper);
+            }
+
+            await backendService
+                .createPaper(paper)
+                .response.then((paper) => existingPapers.push(paper))
+                .catch((error: RpcError) => {
+                    if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
+                        return paper;
+                    } else {
+                        throw error;
+                    }
+                });
+        }
+
+        return existingPapers;
     }
 
     async function addPapers() {
         loading = true;
 
         try {
-            // TODO: Papers from fetcher don't exist in DB
+            const papersToAdd = await createPapers();
+
             await Promise.all(
-                selectedPapers.map((paper) =>
+                papersToAdd.map((paper) =>
                     backendService.addPaperToProject({
                         paperId: paper.id,
                         projectId,
@@ -90,17 +143,18 @@
                     }),
                 ),
             );
-        } catch {
+
+            toast.success(
+                `Successfully added ${papersToAdd.length} ${pluralize(papersToAdd.length, "paper", "papers")} to the project.`,
+            );
+        } catch (e) {
             toast.error("There was an error when adding the papers to the project.");
+            console.log(e);
             return;
         } finally {
             loading = false;
             open = false;
         }
-
-        toast.success(
-            `Successfully added ${selectedPapers.length} ${pluralize(selectedPapers.length, "paper", "papers")} to the project.`,
-        );
     }
 
     $effect(() => {
@@ -171,7 +225,7 @@
     <Dialog.Trigger data-testid="dialog-trigger">
         <Button class="w-full">
             <CirclePlus strokeWidth="2.5" />
-            Add Paper
+            Search & Add
         </Button>
     </Dialog.Trigger>
 
@@ -200,6 +254,7 @@
 
                 <SearchBar
                     liveSearch={false}
+                    maxLength={50}
                     onSearch={(query) => (searchedPapers = searchPapers(query))}
                     placeholderText="Search Query"
                 />

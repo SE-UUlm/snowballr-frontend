@@ -9,6 +9,7 @@
         onSearch: (searchText: string) => void;
         timeoutInMs?: number;
         liveSearch?: boolean;
+        maxLength?: number;
     }
 
     const {
@@ -16,6 +17,7 @@
         onSearch,
         timeoutInMs = 500,
         liveSearch = true,
+        maxLength = undefined,
     }: Props = $props();
 
     let searchInput: string = $state(getSearchTextFromURL());
@@ -68,6 +70,7 @@ Usage:
     <Input
         class="pr-10"
         data-testid="search-bar-input"
+        maxlength={maxLength}
         oninput={handleNewInput}
         onkeyup={handleSpecialButtons}
         placeholder={placeholderText}
