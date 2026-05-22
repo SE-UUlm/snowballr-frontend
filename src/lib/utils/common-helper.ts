@@ -432,6 +432,29 @@ function stringToAuthor(text: string): Author {
     return { firstName, lastName };
 }
 
+/**
+ * Sums up an array of numbers.
+ *
+ * @param array - The array of numbers to sum up.
+ * @returns The sum of the numbers in the array.
+ */
+function sum(array: number[]): number {
+    return array.reduce(function (a, b) {
+        return a + b;
+    }, 0);
+}
+
+/**
+ * Sums up the values of an array of items based on a value selector function.
+ *
+ * @param array - The array of items to sum up.
+ * @param valueSelector - A function that takes an item and returns the number value to be summed.
+ * @returns The sum of the values obtained by applying the value selector to each item in the array.
+ */
+function sumBy<T>(array: T[], valueSelector: (item: T) => number): number {
+    return sum(array.map(valueSelector));
+}
+
 export {
     getName,
     getNameOrEmail,
@@ -453,4 +476,6 @@ export {
     callDebounced,
     isStringEqual,
     stringToAuthors,
+    sum,
+    sumBy,
 };

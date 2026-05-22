@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
+    import { getStatusColor, getStatusText, sumBy } from "$lib/utils/common-helper";
     import type { PaperStatus } from "$lib/model/general";
     import * as d3 from "d3";
     import type { StageProgressInterface } from "./StageProgress.svelte";
@@ -12,7 +12,7 @@
     const { stage, decisions }: StageProgressInterface = $props();
 
     const totalNumberOfDecisions = $derived(
-        Object.values(decisions.statistics).reduce((acc, cur) => acc + Number(cur.count), 0),
+        sumBy(Object.values(decisions.statistics), (statistic) => Number(statistic.count)),
     );
     let segments: Segment[] = $derived(
         Object.values(decisions.statistics).map(({ decision, count }) => ({

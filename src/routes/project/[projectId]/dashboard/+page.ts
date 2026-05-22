@@ -9,6 +9,7 @@ import type { Timestamp } from "$api/google/protobuf/timestamp";
 import type { ProjectInformationInterface } from "$lib/components/composites/statistics/ProjectInformation.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import type { StageProgressInterface } from "$lib/components/composites/statistics/StageProgress.svelte";
+import { sumBy } from "$lib/utils/common-helper";
 
 /**
  * Parses a Timestamp object into a date object.
@@ -43,16 +44,14 @@ async function requestProjectInformation(
         Math.abs(Date.now() - startDateForStage.getTime()) / MILLIS_OF_ONE_DAY,
     );
 
-    const numberOfReviewedPapers = decisionStatistics.statistics.reduce(
-        (acc, currentValue) =>
-            [PaperDecision.ACCEPTED, PaperDecision.DECLINED].includes(currentValue.decision)
-                ? acc + Number(currentValue.count)
-                : acc,
-        0,
+    const numberOfReviewedPapers = sumBy(decisionStatistics.statistics, (statistic) =>
+        [PaperDecision.ACCEPTED, PaperDecision.DECLINED].includes(statistic.decision)
+            ? Number(statistic.count)
+            : 0,
     );
-    const numberOfPapers = decisionStatistics.statistics.reduce(
-        (acc, currentValue) => acc + Number(currentValue.count),
-        0,
+
+    const numberOfPapers = sumBy(decisionStatistics.statistics, (statistic) =>
+        Number(statistic.count),
     );
 
     return {
