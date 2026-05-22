@@ -45,7 +45,7 @@ async function requestProjectInformation(
 
     const numberOfReviewedPapers = decisionStatistics.statistics.reduce(
         (acc, currentValue) =>
-            [PaperDecision.IN_REVIEW, PaperDecision.UNREVIEWED].includes(currentValue.decision)
+            [PaperDecision.ACCEPTED, PaperDecision.DECLINED].includes(currentValue.decision)
                 ? acc + Number(currentValue.count)
                 : acc,
         0,
