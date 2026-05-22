@@ -78,11 +78,19 @@ export const load: PageLoad = async ({ params, parent }) => {
             id: params.projectId,
         })
         .response.then((allUndecidedPapers) =>
-            allUndecidedPapers.projectPapers.map((projectPaper) => ({
-                projectId: params.projectId,
-                paper: projectPaper,
-                showReviewStatus: true,
-            })),
+            allUndecidedPapers.projectPapers
+                .map((projectPaper) => ({
+                    projectId: params.projectId,
+                    paper: projectPaper,
+                    showReviewStatus: true,
+                }))
+                .sort((a, b) => {
+                    const stageComparison = Number(a.paper.stage - b.paper.stage);
+                    if (stageComparison !== 0) return stageComparison;
+
+                    const localIdComparison = a.paper.localId.localeCompare(b.paper.localId);
+                    return localIdComparison;
+                }),
         )
         .catch(() => {
             throw new Error("Couldn't load open reviews.");
