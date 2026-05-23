@@ -11,8 +11,8 @@ describe("AddPaperDialogButton", () => {
     const user = userEvent.setup();
 
     beforeEach(() => {
-        mockApiCall("searchLocalPapers", Paper_List.create());
-        mockApiCall("searchFetcherPapers", Paper_List.create());
+        mockApiCall("searchLocalProjectPaperCandidates", Paper_List.create());
+        mockApiCall("searchFetcherProjectPaperCandidates", Paper_List.create());
         mockApiCall("addPaperToProject", Project_Paper.create());
     });
 
@@ -39,7 +39,7 @@ describe("AddPaperDialogButton", () => {
     }
 
     test("When local papers could not be fetched, then an error is displayed", async () => {
-        mockFailedApiCall("searchLocalPapers", "foobar");
+        mockFailedApiCall("searchLocalProjectPaperCandidates", "foobar");
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -62,7 +62,7 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When fetcher papers could not be fetched, then an error is displayed", async () => {
-        mockFailedApiCall("searchFetcherPapers", "foobar");
+        mockFailedApiCall("searchFetcherProjectPaperCandidates", "foobar");
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -86,7 +86,7 @@ describe("AddPaperDialogButton", () => {
 
     test("When local papers are successfully fetched, then they are displayed", async () => {
         mockApiCall(
-            "searchLocalPapers",
+            "searchLocalProjectPaperCandidates",
             Paper_List.create({
                 papers: [
                     {
@@ -122,7 +122,7 @@ describe("AddPaperDialogButton", () => {
 
     test("When fetcher papers are successfully fetched, then they are displayed", async () => {
         mockApiCall(
-            "searchFetcherPapers",
+            "searchFetcherProjectPaperCandidates",
             Paper_List.create({
                 papers: [
                     {
@@ -157,11 +157,11 @@ describe("AddPaperDialogButton", () => {
 
     test("When local and fetcher papers are successfully fetched, then they are displayed", async () => {
         mockApiCall(
-            "searchLocalPapers",
+            "searchLocalProjectPaperCandidates",
             Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }),
         );
         mockApiCall(
-            "searchFetcherPapers",
+            "searchFetcherProjectPaperCandidates",
             Paper_List.create({ papers: [{ id: "2", title: "Bar" }] }),
         );
 
@@ -185,11 +185,11 @@ describe("AddPaperDialogButton", () => {
 
     test("When local and fetcher papers return a paper with the same id, then only the local one is shown", async () => {
         mockApiCall(
-            "searchLocalPapers",
+            "searchLocalProjectPaperCandidates",
             Paper_List.create({ papers: [{ id: "1", title: "Foo" }] }),
         );
         mockApiCall(
-            "searchFetcherPapers",
+            "searchFetcherProjectPaperCandidates",
             Paper_List.create({ papers: [{ id: "1", title: "Bar" }] }),
         );
 
@@ -213,7 +213,7 @@ describe("AddPaperDialogButton", () => {
 
     test("When a paper with undefined authors is encountered, then 'Unknown Authors' is displayed", async () => {
         mockApiCall(
-            "searchLocalPapers",
+            "searchLocalProjectPaperCandidates",
             Paper_List.create({ papers: [{ title: "Foo", authors: undefined }] }),
         );
 
@@ -236,7 +236,10 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When a paper is selected, then it moves to the selected list", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ title: "Foo" }] }));
+        mockApiCall(
+            "searchLocalProjectPaperCandidates",
+            Paper_List.create({ papers: [{ title: "Foo" }] }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -262,7 +265,10 @@ describe("AddPaperDialogButton", () => {
     });
 
     test("When a paper is deselected, then it is removed", async () => {
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [{ title: "Foo" }] }));
+        mockApiCall(
+            "searchLocalProjectPaperCandidates",
+            Paper_List.create({ papers: [{ title: "Foo" }] }),
+        );
 
         render(AddPaperDialogButton, {
             target: document.body,
@@ -278,7 +284,7 @@ describe("AddPaperDialogButton", () => {
 
         await search("test");
         await selectPaper(0);
-        mockApiCall("searchLocalPapers", Paper_List.create({ papers: [] }));
+        mockApiCall("searchLocalProjectPaperCandidates", Paper_List.create({ papers: [] }));
         await search("test");
 
         expect(await screen.findByText("Foo", { exact: false })).toBeVisible();

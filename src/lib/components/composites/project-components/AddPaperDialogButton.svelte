@@ -57,7 +57,7 @@
 
         const localPapers = includeLocal
             ? backendService
-                  .searchLocalPapers({ query })
+                  .searchLocalProjectPaperCandidates({ query, projectId })
                   .response.then((it) => it.papers)
                   .catch((it) => onError(it, "local"))
             : Promise.resolve<Paper[]>([]);
@@ -65,7 +65,7 @@
         // Fetcher papers that don't exist in the snowballR DB get their index assigned as ID
         const fetcherPapers = includeFetchers
             ? backendService
-                  .searchFetcherPapers({ query, projectId })
+                  .searchFetcherProjectPaperCandidates({ query, projectId })
                   .response.then((it) =>
                       it.papers.map((paper, i) => ({
                           ...paper,
