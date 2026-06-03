@@ -87,8 +87,7 @@ export const load: PageLoad = async ({ params, parent }) => {
                     const stageComparison = Number(a.paper.stage - b.paper.stage);
                     if (stageComparison !== 0) return stageComparison;
 
-                    const localIdComparison = a.paper.localId.localeCompare(b.paper.localId);
-                    return localIdComparison;
+                    return a.paper.localId.localeCompare(b.paper.localId);
                 }),
         )
         .catch(() => {

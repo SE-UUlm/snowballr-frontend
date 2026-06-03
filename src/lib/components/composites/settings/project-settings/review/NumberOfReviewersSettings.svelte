@@ -24,7 +24,8 @@
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    const disabled = $derived(settingsLocked || loading || isProjectArchived);
+    const locked = $derived(settingsLocked || isProjectArchived);
+    const disabled = $derived(locked || loading);
 
     onMount(async () => {
         await loadingProject
@@ -96,7 +97,7 @@ Usage:
 -->
 <SettingsSection
     {loading}
-    locked={settingsLocked}
+    {locked}
     lockedDescription="To ensure consistency, the number of required reviewers can't be changed after a review has been submitted."
     sectionTitle="Number of Required Reviewers"
 >
