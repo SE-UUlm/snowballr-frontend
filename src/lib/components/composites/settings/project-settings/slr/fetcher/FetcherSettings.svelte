@@ -105,7 +105,7 @@
     bind:open={removalDialogOpen}
 />
 
-<SettingsSection {loading} sectionTitle="Fetcher Settings">
+<SettingsSection {loading} locked={slrSettingsLocked} sectionTitle="Fetcher Settings">
     <ActionErrorAlert error={loadAvailableFetchersError} />
     {#if !loading}
         {#if availableFetchers.length === 0}

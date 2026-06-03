@@ -2,6 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { Slider } from "$lib/components/primitives/slider";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { backendService } from "$lib/grpc-api";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { Project, Project_Settings, ReviewDecisionMatrix } from "$lib/model/api/project";
@@ -10,17 +11,20 @@
 
     interface Props {
         projectId: string;
+        settingsLocked?: boolean;
         loadingProject: Promise<Project>;
     }
 
-    const { projectId, loadingProject }: Props = $props();
+    const { projectId, settingsLocked = false, loadingProject }: Props = $props();
 
     let value = $state(-1);
     let storedValue = $state(-1);
     let loading = $state(true);
     let updateSLRSettingsError: ActionError = $state(undefined);
 
-    // TODO: lock when active locked
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
+
+    const disabled = $derived(settingsLocked || loading || isProjectArchived);
 
     onMount(async () => {
         await loadingProject
@@ -40,15 +44,15 @@
             });
     });
 
-    async function onValueChanged(value: number) {
-        if (value === storedValue) return;
+    async function onValueChanged(newValue: number) {
+        if (newValue === storedValue) return;
 
         loading = true;
         const projectData: Partial<Project> = {
             id: projectId,
             settings: Project_Settings.create({
                 decisionMatrix: ReviewDecisionMatrix.create({
-                    numberOfReviewers: value,
+                    numberOfReviewers: newValue,
                 }),
             }),
         };
@@ -59,7 +63,7 @@
                 mask: { paths: ["project.settings.decision_matrix.number_of_reviewers"] },
             })
             .response.then(() => {
-                storedValue = value;
+                storedValue = newValue;
                 toast.success("Successfully updated the project settings.");
             })
             .catch((error) => {
@@ -76,7 +80,26 @@
     }
 </script>
 
-<SettingsSection {loading} sectionTitle="Number of Required Reviewers">
+<!--
+@component
+This component renders a section within the Review project settings. It allows project admins to set the number of
+required reviewers.
+When a project papers has a number of reviews that is equal to this setting, it is considered to be fully reviewed and
+receives a final decision.
+
+The `settingsLocked` prop can be used to disable this setting.
+
+Usage:
+```svelte
+    <NumberOfReviewersSettings {loadingProject} {projectId} />
+```
+-->
+<SettingsSection
+    {loading}
+    locked={settingsLocked}
+    lockedDescription="To ensure consistency, the number of required reviewers can't be changed after a review has been submitted."
+    sectionTitle="Number of Required Reviewers"
+>
     <p>
         Set the number of required reviewers per paper. When this number is reached and the final
         decision is either 'Accept' or 'Decline', the paper is considered reviewed. If the decision
@@ -85,7 +108,7 @@
     <div class="group/slider pb-10">
         <Slider
             class="max-w-2xl"
-            disabled={loading}
+            {disabled}
             max={10}
             min={1}
             onValueCommit={onValueChanged}

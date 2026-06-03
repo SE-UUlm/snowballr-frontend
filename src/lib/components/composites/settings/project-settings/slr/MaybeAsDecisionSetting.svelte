@@ -20,8 +20,7 @@
 
     const { projectId, slrSettingsLocked = false, loadingProject }: Props = $props();
 
-    // `isUpdatingMaybeAsDecisionSettingStatus` is initially set to `true` to disable the switch
-    let isUpdatingMaybeAsDecisionSettingStatus = $state(true);
+    let loading = $state(true);
     let checked = $derived(maybeAsDecision.isActivated);
 
     let isConfirmDialogOpen = $state(false);
@@ -31,9 +30,7 @@
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    const disabled = $derived(
-        slrSettingsLocked || isUpdatingMaybeAsDecisionSettingStatus || isProjectArchived,
-    );
+    const disabled = $derived(slrSettingsLocked || loading || isProjectArchived);
 
     let updateSLRSettingsError: ActionError = $state(undefined);
 
@@ -44,7 +41,7 @@
      * @param targetCheckedState - The desired state to set for the 'Maybe' as decision setting.
      */
     async function toggleIsMaybeAsDecisionSettingStatus(targetCheckedState: boolean) {
-        isUpdatingMaybeAsDecisionSettingStatus = true;
+        loading = true;
 
         const projectData: Partial<Project> = {
             id: projectId,
@@ -70,7 +67,7 @@
                 );
             })
             .finally(() => {
-                isUpdatingMaybeAsDecisionSettingStatus = false;
+                loading = false;
             });
     }
 
@@ -78,7 +75,7 @@
         event.preventDefault();
         updateSLRSettingsError = undefined;
 
-        if (isUpdatingMaybeAsDecisionSettingStatus) {
+        if (loading) {
             return;
         }
 
@@ -126,7 +123,7 @@
                 maybeAsDecision.isActivated = false;
             })
             .finally(() => {
-                isUpdatingMaybeAsDecisionSettingStatus = false;
+                loading = false;
             });
     });
 </script>
@@ -148,7 +145,7 @@ Usage:
   <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} {loadingProject} />
 ```
 -->
-<SettingsSection sectionTitle="Maybe as Decision">
+<SettingsSection {loading} locked={slrSettingsLocked} sectionTitle="Maybe as Decision">
     <div class="items-top flex flex-row space-x-2">
         <Switch id="maybe-decision-switch" {checked} {disabled} onclick={handleSwitchClick} />
         <div class="grid gap-1.5 pt-1 leading-none">
@@ -176,7 +173,7 @@ Usage:
         }}
         {title}
         bind:open={isConfirmDialogOpen}
-        bind:loading={isUpdatingMaybeAsDecisionSettingStatus}
+        bind:loading
     >
         {#snippet description()}
             {dialogDescription}

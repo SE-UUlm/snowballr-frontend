@@ -19,6 +19,8 @@
         children: Snippet;
         loading?: boolean;
         variant?: SettingsSectionVariant;
+        locked?: boolean;
+        lockedDescription?: string;
     }
 </script>
 
@@ -28,12 +30,15 @@
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { tv, type VariantProps } from "tailwind-variants";
     import { cn } from "$lib/utils/shadcn-helper";
+    import Lock from "@lucide/svelte/icons/lock";
 
     const {
         sectionTitle,
         children,
         loading = false,
         variant = "default",
+        locked = false,
+        lockedDescription = "This settings section is locked.",
     }: SettingsSectionProps = $props();
 
     // The variant is hardcoded and should never be changed at runtime.
@@ -63,6 +68,9 @@ Usage:
 >
     <div class="flex flex-row items-center gap-3">
         <h2 class:text-error={variant !== "default"}>{sectionTitle}</h2>
+        {#if locked}
+            <span title={lockedDescription}><Lock /></span>
+        {/if}
         {#if loading}
             <LoaderCircle class="animate-spin" />
         {/if}

@@ -24,6 +24,7 @@
         tickLabels = "none",
         thumbLabelVisibility = "invisible",
         class: className,
+        disabled,
         ...restProps
     }: Props = $props();
 </script>
@@ -38,6 +39,7 @@ get along, so we shut typescript up by casting `value` to `never`.
         className,
     )}
     data-slot="slider"
+    {disabled}
     {orientation}
     bind:ref
     bind:value={value as never}
@@ -46,7 +48,8 @@ get along, so we shut typescript up by casting `value` to `never`.
     {#snippet children({ tickItems, thumbItems })}
         <span
             class={cn(
-                "bg-muted relative grow overflow-hidden rounded-full hover:cursor-pointer data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+                "bg-muted relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+                disabled ? "hover:cursor-not-allowed" : "hover:cursor-pointer",
             )}
             data-orientation={orientation}
             data-slot="slider-track"
@@ -60,17 +63,21 @@ get along, so we shut typescript up by casting `value` to `never`.
         </span>
         {#each thumbItems as thumb (thumb)}
             <SliderPrimitive.Thumb
-                class="border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:cursor-pointer hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                class={cn(
+                    "border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50",
+                    disabled ? "hover:cursor-not-allowed" : "hover:cursor-pointer",
+                )}
                 data-slot="slider-thumb"
                 index={thumb.index}
             />
             {#if thumbLabelVisibility !== "invisible"}
                 <SliderPrimitive.ThumbLabel
                     class={cn(
-                        "bg-muted text-foreground mt-1.5 rounded-md px-2 py-1 text-nowrap hover:cursor-pointer",
+                        "bg-muted text-foreground mt-1.5 rounded-md px-2 py-1 text-nowrap",
                         thumbLabelVisibility === "on-slide"
                             ? "hidden group-hover/slider:block"
                             : "",
+                        disabled ? "hover:cursor-not-allowed" : "hover:cursor-pointer",
                     )}
                     index={thumb.index}
                     position="bottom"
@@ -85,10 +92,11 @@ get along, so we shut typescript up by casting `value` to `never`.
                     <SliderPrimitive.Tick {index} />
                     <SliderPrimitive.TickLabel
                         class={cn(
-                            "top-4! hover:cursor-pointer",
+                            "top-4!",
                             thumbItems.map((t) => t.value).includes(value)
                                 ? "group-hover/slider:hidden"
                                 : "",
+                            disabled ? "hover:cursor-not-allowed" : "hover:cursor-pointer",
                         )}
                         {index}
                         position="bottom"

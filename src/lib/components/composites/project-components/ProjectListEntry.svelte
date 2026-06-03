@@ -67,9 +67,12 @@ Usage:
     <div class="flex h-fit min-w-0 flex-col">
         <h2 class="flex flex-row gap-2 truncate">
             {project.name}
-            <!-- Show admin badge in dev mode when current user is admin of project -->
-            {#if isDevMode && membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
-                <Badge title="You are an admin of this project" variant="outline">admin</Badge>
+            {#if isDevMode}
+                <!-- Show admin badge in dev mode when current user is admin of project -->
+                {#if membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
+                    <Badge title="You are an admin of this project" variant="outline">admin</Badge>
+                {/if}
+                <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
             {/if}
             {#if onClick}
                 <a
