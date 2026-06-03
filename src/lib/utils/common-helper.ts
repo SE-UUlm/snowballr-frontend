@@ -439,9 +439,7 @@ function stringToAuthor(text: string): Author {
  * @returns The sum of the numbers in the array.
  */
 function sum(array: number[]): number {
-    return array.reduce(function (a, b) {
-        return a + b;
-    }, 0);
+    return array.reduce((a, b) => a + b, 0);
 }
 
 /**
