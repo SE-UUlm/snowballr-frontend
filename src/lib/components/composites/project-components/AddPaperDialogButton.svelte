@@ -1,11 +1,9 @@
 <script lang="ts">
     import * as Dialog from "$lib/components/primitives/dialog/index.js";
     import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import Check from "@lucide/svelte/icons/check";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Search from "@lucide/svelte/icons/search";
     import Trash from "@lucide/svelte/icons/trash";
-    import XIcon from "@lucide/svelte/icons/x";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { cn } from "$lib/utils/shadcn-helper";
     import SearchBar from "../search-bar/SearchBar.svelte";
@@ -20,6 +18,7 @@
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { DialogTriggerProps } from "bits-ui";
+    import ToggleButton from "../button/ToggleButton.svelte";
 
     type Props = DialogTriggerProps & {
         projectId: string;
@@ -180,23 +179,6 @@
     }
 </script>
 
-{#snippet toggleButton(name: string, selected: boolean, toggle: () => void)}
-    <Button
-        class={cn("w-full flex-1", selected ? "border border-transparent" : "")}
-        disabled={loading}
-        onclick={toggle}
-        variant={selected ? "default" : "outline"}
-    >
-        {#if selected}
-            <Check />
-        {:else}
-            <XIcon />
-        {/if}
-        {selected ? "Include" : "Exclude"}
-        {name} Database
-    </Button>
-{/snippet}
-
 {#snippet paperView(
     paper: Paper,
     testid: string,
@@ -249,16 +231,18 @@
         <div class="flex size-full flex-1 flex-row gap-4">
             <div class="flex flex-1 flex-col gap-2">
                 <div class="flex flex-col place-content-center gap-2 xl:flex-row">
-                    {@render toggleButton(
-                        "Local",
-                        includeLocal,
-                        () => (includeLocal = !includeLocal),
-                    )}
-                    {@render toggleButton(
-                        "Fetchers",
-                        includeFetchers,
-                        () => (includeFetchers = !includeFetchers),
-                    )}
+                    <ToggleButton
+                        class="w-full"
+                        selectedLabel="Include Local Database"
+                        unselectedLabel="Exclude Local Database"
+                        bind:selected={includeLocal}
+                    />
+                    <ToggleButton
+                        class="w-full"
+                        selectedLabel="Include Fetcher Database"
+                        unselectedLabel="Exclude Fetcher Database"
+                        bind:selected={includeFetchers}
+                    />
                 </div>
 
                 <SearchBar
