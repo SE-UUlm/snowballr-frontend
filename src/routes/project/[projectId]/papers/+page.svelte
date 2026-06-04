@@ -186,6 +186,7 @@
                     {#each stages as { stageIndex, papers } (stageIndex)}
                         <StageEntry
                             filter={papersFilters}
+                            {loadingProject}
                             {projectId}
                             {searchText}
                             stage={{

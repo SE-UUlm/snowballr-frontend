@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Dialog from "$lib/components/primitives/dialog/index.js";
-    import { Button, buttonVariants } from "$lib/components/primitives/button";
+    import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import Check from "@lucide/svelte/icons/check";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Trash from "@lucide/svelte/icons/trash";
@@ -10,7 +10,7 @@
     import SearchBar from "../search-bar/SearchBar.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
-    import type { Paper } from "$lib/model/api/paper";
+    import { type Paper } from "$lib/model/api/paper";
     import { isGrpcError, pluralize } from "$lib/utils/common-helper";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
@@ -18,14 +18,16 @@
     import type { ActionError } from "$lib/model/action-error";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import type { DialogTriggerProps } from "bits-ui";
 
-    interface Props {
+    type Props = DialogTriggerProps & {
         projectId: string;
         stage: bigint;
         open?: boolean;
         includeLocal?: boolean;
         includeFetchers?: boolean;
-    }
+        disabledTrigger?: boolean;
+    };
 
     let {
         projectId,
@@ -33,6 +35,8 @@
         open = $bindable(false),
         includeLocal = $bindable(false),
         includeFetchers = $bindable(true),
+        disabledTrigger = $bindable(false),
+        class: className,
     }: Props = $props();
 
     let error: ActionError = $state();
@@ -222,11 +226,13 @@
 {/snippet}
 
 <Dialog.Root bind:open={getOpen, setOpen}>
-    <Dialog.Trigger data-testid="dialog-trigger">
-        <Button class="w-full">
-            <CirclePlus strokeWidth="2.5" />
-            Search & Add
-        </Button>
+    <Dialog.Trigger
+        class={cn(buttonVariants({ variant: "default" }), className)}
+        data-testid="dialog-trigger"
+        disabled={disabledTrigger}
+    >
+        <CirclePlus strokeWidth="2.5" />
+        Search & Add
     </Dialog.Trigger>
 
     <Dialog.Content class="flex min-h-[80svh] min-w-[80svw] flex-col" data-testid="dialog-content">
