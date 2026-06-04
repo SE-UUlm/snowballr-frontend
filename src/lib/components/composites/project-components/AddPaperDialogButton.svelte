@@ -3,6 +3,7 @@
     import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import Check from "@lucide/svelte/icons/check";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
+    import Search from "@lucide/svelte/icons/search";
     import Trash from "@lucide/svelte/icons/trash";
     import XIcon from "@lucide/svelte/icons/x";
     import LoadingButton from "../button/LoadingButton.svelte";
@@ -213,7 +214,9 @@
             <div class="text-muted-foreground text-xs">
                 {authorString === "" ? "Unknown Authors" : authorString}
             </div>
-            <div class="text-muted-foreground text-xs">{paper.year} - {paper.publicationName}</div>
+            <div class="text-muted-foreground text-xs">
+                {paper.year}{paper.publicationName ? ` - ${paper.publicationName}` : ""}
+            </div>
         </div>
         <Button data-testid={buttonTestid} onclick={onClick} size="icon" variant="outline">
             {#if icon === "plus"}
@@ -231,7 +234,7 @@
         data-testid="dialog-trigger"
         disabled={disabledTrigger}
     >
-        <CirclePlus strokeWidth="2.5" />
+        <Search strokeWidth="2.5" />
         Search & Add
     </Dialog.Trigger>
 
