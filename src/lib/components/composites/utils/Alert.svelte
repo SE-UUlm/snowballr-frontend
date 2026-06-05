@@ -33,7 +33,8 @@
         <CircleAlert class={iconClass} role="img" />
     {/if}
     <Alert.Title class={cn(inline ? "m-0 pl-2! whitespace-nowrap" : "")}>
-        {title}{inline ? ": " : ""}
+        {console.log(details)}
+        {title}{inline && details ? ": " : ""}
     </Alert.Title>
     {#if details}
         <Alert.Description class={inline ? "pl-2! whitespace-nowrap" : ""}>

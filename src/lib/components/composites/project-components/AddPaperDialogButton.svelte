@@ -14,7 +14,7 @@
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
     import { toast } from "svelte-sonner";
-    import type { ActionError } from "$lib/model/action-error";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { DialogTriggerProps } from "bits-ui";
@@ -39,25 +39,29 @@
         class: className,
     }: Props = $props();
 
-    let error: ActionError = $state();
+    let searchError: ActionError = $state();
     let searchedPapers: Promise<Paper[]> = $state(Promise.resolve([]));
     let selectedPapers: Paper[] = $state([]);
     let loading = $state(false);
 
-    async function searchPapers(query: string): Promise<Paper[]> {
-        const onError = (errorDetails: string, searchType: string) => {
-            error = {
-                variant: "error",
-                errorTitle: `Error when searching for ${searchType} papers`,
-                errorDetails: errorDetails,
-            };
+    type ErrorResult = { type: "error"; message: string };
+    type CreatePaperResult = { type: "success"; paper: Paper } | ErrorResult;
+    type AddPaperResult = { type: "success" } | ErrorResult;
 
-            toast.error(error.errorTitle, { description: `${error.errorDetails}` });
+    async function searchPapers(query: string): Promise<Paper[]> {
+        const onError = (error: Error, searchType: string) => {
+            searchError = createActionError(
+                `Failed to search for ${searchType} papers`,
+                {
+                    action: `searching for ${searchType} papers`,
+                },
+                error,
+            );
 
             return [];
         };
 
-        error = undefined;
+        searchError = undefined;
 
         const localPapers = includeLocal
             ? backendService
@@ -109,56 +113,66 @@
         return papers;
     }
 
-    async function createPapers() {
-        const existingPapers = [];
-
-        for (const paper of selectedPapers) {
-            if (Number.isNaN(Number(paper.id))) {
-                existingPapers.push(paper);
-            }
-
-            await backendService
-                .createPaper(paper)
-                .response.then((paper) => existingPapers.push(paper))
-                .catch((error: RpcError) => {
-                    if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
-                        return paper;
-                    } else {
-                        throw error;
-                    }
-                });
+    async function tryCreatePaper(paper: Paper): Promise<CreatePaperResult> {
+        // Paper already exists if id is UUID
+        if (Number.isNaN(Number(paper.id))) {
+            return { type: "success", paper };
         }
 
-        return existingPapers;
+        return await backendService
+            .createPaper(paper)
+            .response.then((paper) => ({ type: "success", paper }) satisfies CreatePaperResult)
+            .catch((error: RpcError) => {
+                if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
+                    return { type: "success", paper } satisfies CreatePaperResult;
+                } else {
+                    return { type: "error", message: error.message } satisfies CreatePaperResult;
+                }
+            });
+    }
+
+    async function tryAddPaper(paper: Paper): Promise<AddPaperResult> {
+        return await backendService
+            .addPaperToProject({
+                paperId: paper.id,
+                projectId,
+                stage: BigInt(stage),
+            })
+            .then(() => ({ type: "success" }) satisfies AddPaperResult)
+            .catch((error: RpcError) => {
+                return { type: "error", message: error.message };
+            });
     }
 
     async function addPapers() {
         loading = true;
 
-        try {
-            const papersToAdd = await createPapers();
+        let addedPapers = 0;
+        for (const paper of selectedPapers) {
+            const createResult = await tryCreatePaper(paper);
 
-            await Promise.all(
-                papersToAdd.map((paper) =>
-                    backendService.addPaperToProject({
-                        paperId: paper.id,
-                        projectId,
-                        stage: BigInt(stage),
-                    }),
-                ),
-            );
+            if (createResult.type === "error") {
+                toast.error(`Paper '${paper.title}' could not be created.`);
+                continue;
+            }
 
-            toast.success(
-                `Successfully added ${papersToAdd.length} ${pluralize(papersToAdd.length, "paper", "papers")} to the project.`,
-            );
-        } catch (e) {
-            toast.error("There was an error when adding the papers to the project.");
-            console.log(e);
-            return;
-        } finally {
-            loading = false;
-            open = false;
+            const addResult = await tryAddPaper(paper);
+
+            if (addResult.type === "error") {
+                toast.error(`Paper '${paper.title}' could not be added.`);
+                continue;
+            }
+
+            addedPapers++;
         }
+
+        if (addedPapers > 0) {
+            toast.success(
+                `Successfully added ${addedPapers} ${pluralize(addedPapers, "paper", "papers")} to the project.`,
+            );
+        }
+        loading = false;
+        open = false;
     }
 
     $effect(() => {
@@ -305,11 +319,11 @@
         <Dialog.Footer class="gap-2">
             <div class="relative flex-1">
                 <div class="absolute w-full">
-                    {#if error !== undefined}
+                    {#if searchError !== undefined}
                         <Alert
-                            details={error.errorDetails}
+                            details={searchError.errorDetails}
                             inline
-                            title={error.errorTitle}
+                            title={searchError.errorTitle}
                             variant="error"
                         />
                     {/if}
