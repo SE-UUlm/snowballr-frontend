@@ -9,7 +9,6 @@
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import AddPaperDialogButton from "./AddPaperDialogButton.svelte";
-    import { onMount } from "svelte";
 
     interface Props {
         projectId: string;
@@ -34,20 +33,6 @@
     let totalPaperCount = $derived(stage.papers?.length ?? 0);
 
     let { isProjectArchived } = $derived(getIsProjectArchivedContext());
-
-    let loadingProjectFetchers = $state(true);
-    let disabledAddFetcherPapersTrigger = $state(true);
-
-    onMount(() => {
-        loadingProject
-            .then((project) => {
-                const projectFetchers = Object.keys(project.settings?.fetchers ?? {});
-                disabledAddFetcherPapersTrigger = projectFetchers.length == 0;
-            })
-            .finally(() => {
-                loadingProjectFetchers = false;
-            });
-    });
 </script>
 
 <!--
@@ -104,18 +89,12 @@ Usage:
                     >
                         <CirclePlus strokeWidth="2.5" /> Add New Paper
                     </Button>
-                    <span
+                    <AddPaperDialogButton
                         class="w-full"
-                        title={disabledAddFetcherPapersTrigger ? "No fetchers configured" : ""}
-                    >
-                        <AddPaperDialogButton
-                            class="w-full"
-                            disabledTrigger={loadingProjectFetchers ||
-                                disabledAddFetcherPapersTrigger}
-                            {projectId}
-                            stage={stage.stageIndex}
-                        />
-                    </span>
+                        {loadingProject}
+                        {projectId}
+                        stage={stage.stageIndex}
+                    />
                 </div>
             {/if}
         </div>

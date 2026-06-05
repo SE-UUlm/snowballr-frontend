@@ -6,6 +6,7 @@ import { render, screen } from "@testing-library/svelte";
 import { expect, test, describe, beforeEach, afterEach, vi, assert } from "vitest";
 import { mockUserContext } from "../test-helper";
 import userEvent from "@testing-library/user-event";
+import { createProject, loading } from "$tests/model-builder";
 
 describe("AddPaperDialogButton", () => {
     const user = userEvent.setup();
@@ -50,6 +51,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -73,6 +75,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -108,6 +111,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -144,6 +148,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -174,6 +179,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -202,6 +208,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -226,6 +233,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -250,6 +258,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
+                loadingProject: loading(createProject()),
             },
         });
 
@@ -279,6 +288,7 @@ describe("AddPaperDialogButton", () => {
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: false,
+                loadingProject: loading(createProject()),
             },
         });
 

@@ -19,6 +19,8 @@
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { DialogTriggerProps } from "bits-ui";
     import ToggleButton from "../button/ToggleButton.svelte";
+    import type { Project } from "$api/project";
+    import { onMount } from "svelte";
 
     type Props = DialogTriggerProps & {
         projectId: string;
@@ -26,7 +28,7 @@
         open?: boolean;
         includeLocal?: boolean;
         includeFetchers?: boolean;
-        disabledTrigger?: boolean;
+        loadingProject: Promise<Project>;
     };
 
     let {
@@ -35,7 +37,7 @@
         open = $bindable(false),
         includeLocal = $bindable(false),
         includeFetchers = $bindable(true),
-        disabledTrigger = $bindable(false),
+        loadingProject,
         class: className,
     }: Props = $props();
 
@@ -43,10 +45,22 @@
     let searchedPapers: Promise<Paper[]> = $state(Promise.resolve([]));
     let selectedPapers: Paper[] = $state([]);
     let loading = $state(false);
+    let disableFetcherSearching = $state(true);
 
     type ErrorResult = { type: "error"; message: string };
     type CreatePaperResult = { type: "success"; paper: Paper } | ErrorResult;
     type AddPaperResult = { type: "success" } | ErrorResult;
+
+    onMount(() => {
+        loadingProject.then((project) => {
+            const projectFetchers = Object.keys(project.settings?.fetchers ?? {});
+            disableFetcherSearching = projectFetchers.length == 0;
+            if (disableFetcherSearching) {
+                includeLocal = true;
+                includeFetchers = false;
+            }
+        });
+    });
 
     async function searchPapers(query: string): Promise<Paper[]> {
         const onError = (error: Error, searchType: string) => {
@@ -71,17 +85,18 @@
             : Promise.resolve<Paper[]>([]);
 
         // Fetcher papers that don't exist in the snowballR DB get their index assigned as ID
-        const fetcherPapers = includeFetchers
-            ? backendService
-                  .searchFetcherProjectPaperCandidates({ query, projectId })
-                  .response.then((it) =>
-                      it.papers.map((paper, i) => ({
-                          ...paper,
-                          id: `${paper.id === "" ? i : paper.id}`,
-                      })),
-                  )
-                  .catch((it) => onError(it, "fetcher"))
-            : Promise.resolve<Paper[]>([]);
+        const fetcherPapers =
+            includeFetchers && !disableFetcherSearching
+                ? backendService
+                      .searchFetcherProjectPaperCandidates({ query, projectId })
+                      .response.then((it) =>
+                          it.papers.map((paper, i) => ({
+                              ...paper,
+                              id: `${paper.id === "" ? i : paper.id}`,
+                          })),
+                      )
+                      .catch((it) => onError(it, "fetcher"))
+                : Promise.resolve<Paper[]>([]);
 
         function isSamePaper(a: Paper, b: Paper) {
             const doBothHaveId = a.id !== "" && b.id !== "";
@@ -228,7 +243,6 @@
     <Dialog.Trigger
         class={cn(buttonVariants({ variant: "default" }), className)}
         data-testid="dialog-trigger"
-        disabled={disabledTrigger}
     >
         <Search strokeWidth="2.5" />
         Search & Add
@@ -251,12 +265,18 @@
                         unselectedLabel="Exclude Local Database"
                         bind:selected={includeLocal}
                     />
-                    <ToggleButton
+                    <span
                         class="w-full"
-                        selectedLabel="Include Fetcher Database"
-                        unselectedLabel="Exclude Fetcher Database"
-                        bind:selected={includeFetchers}
-                    />
+                        title={disableFetcherSearching ? "No fetchers configured" : ""}
+                    >
+                        <ToggleButton
+                            class="w-full"
+                            disabled={disableFetcherSearching}
+                            selectedLabel="Include Fetcher Database"
+                            unselectedLabel="Exclude Fetcher Database"
+                            bind:selected={includeFetchers}
+                        />
+                    </span>
                 </div>
 
                 <SearchBar
