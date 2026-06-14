@@ -30,7 +30,7 @@
     onMount(async () => {
         await loadingProject
             .then((project) => {
-                value = project.settings?.decisionMatrix?.numberOfReviewers ?? 1;
+                value = project.settings?.decisionMatrix?.numberOfReviewers ?? 2;
                 storedValue = value;
             })
             .catch((error) => {

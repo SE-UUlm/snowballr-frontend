@@ -59,7 +59,7 @@ describe("NumberOfReviewersSettings", () => {
         });
     });
 
-    test("When the project has no numberOfReviewers set, then the slider defaults to 1", async () => {
+    test("When the project has no numberOfReviewers set, then the slider defaults to 2", async () => {
         const projectWithoutReviewers = createProject({
             settings: createProjectSettings(),
         });
@@ -76,8 +76,8 @@ describe("NumberOfReviewersSettings", () => {
 
         await waitFor(() => {
             const slider = screen.getByRole("slider");
-            expect(slider).toHaveAttribute("aria-valuenow", "1");
-            expect(slider).toHaveAttribute("data-value", "1");
+            expect(slider).toHaveAttribute("aria-valuenow", "2");
+            expect(slider).toHaveAttribute("data-value", "2");
         });
     });
 

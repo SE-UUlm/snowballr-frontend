@@ -1,6 +1,7 @@
 import type { User } from "$api/user";
 import type { Author, Paper } from "$api/paper";
 import {
+    ReviewDecisionMatrix,
     SnowballingType,
     type Project,
     type Project_Paper,
@@ -123,6 +124,7 @@ export function createProjectSettings(props: Partial<Project_Settings> = {}): Pr
         similarityThreshold: 0.5,
         fetchers: {},
         snowballingType: SnowballingType.BOTH,
+        decisionMatrix: ReviewDecisionMatrix.create({ numberOfReviewers: 2 }),
         ...props,
     };
 }

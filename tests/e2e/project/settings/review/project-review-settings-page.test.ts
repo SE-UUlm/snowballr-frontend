@@ -60,10 +60,10 @@ test.describe("Number of Reviewers Settings Tests", () => {
         projectReviewSettingsPage,
         page,
     }) => {
-        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(1);
+        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(2);
 
         // We only change the value by one, because we can only do one step at a time
-        await projectReviewSettingsPage.setNumberOfReviewers(2);
+        await projectReviewSettingsPage.setNumberOfReviewers(3);
 
         await expect(page.getByText("Successfully updated the project settings.")).toBeVisible();
     });
@@ -72,16 +72,16 @@ test.describe("Number of Reviewers Settings Tests", () => {
         page,
         projectReviewSettingsPage,
     }) => {
-        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(1);
+        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(2);
 
         // We only change the value by one, because we can only do one step at a time
-        await projectReviewSettingsPage.setNumberOfReviewers(2);
+        await projectReviewSettingsPage.setNumberOfReviewers(3);
 
         await reloadWait(page, projectReviewSettingsPage.numberOfReviewersHeading);
 
         await expect(projectReviewSettingsPage.numberOfReviewersSlider).toHaveAttribute(
             "aria-valuenow",
-            "2",
+            "3",
         );
     });
 
