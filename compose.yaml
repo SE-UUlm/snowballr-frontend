@@ -1,5 +1,4 @@
 services:
-    # standalone frontend
     frontend:
         build:
             context: .
@@ -10,49 +9,3 @@ services:
             PUBLIC_CREDENTIAL_POLICY: include
         ports:
             - ${PORT:-4173}:${PORT:-4173}
-        profiles: [""]
-
-    # frontend together with local mock-backend
-    frontend-mock-local:
-        build:
-            context: .
-        environment:
-            NODE_ENV: production
-            PORT: ${PORT:-4173}
-            PUBLIC_API_BASE_URL: http://localhost:${GRPC_WEB_PORT:-3001}
-            PUBLIC_CREDENTIAL_POLICY: include
-        ports:
-            - ${PORT:-4173}:${PORT:-4173}
-        depends_on:
-            - mock-backend
-        profiles:
-            - mock-local
-
-    mock-backend:
-        image: ghcr.io/se-uulm/snowballr-mock-backend:main
-        environment:
-            NODE_ENV: production
-            ENABLE_DUMMY_ADMIN: true
-            GRPC_PORT: ${GRPC_PORT:-3000}
-            GRPC_WEB_PORT: ${GRPC_WEB_PORT:-3001}
-            EXAMPLE_DATA_FILE: "standardData.ts"
-            RANDOMNESS_SEED: ${RANDOMNESS_SEED:-}
-        ports:
-            - ${GRPC_PORT:-3000}:${GRPC_PORT:-3000}
-            - ${GRPC_WEB_PORT:-3001}:${GRPC_WEB_PORT:-3001}
-        profiles:
-            - mock-local
-
-    # frontend with public mock-backend
-    frontend-mock-public:
-        build:
-            context: .
-        environment:
-            NODE_ENV: production
-            PORT: ${PORT:-4173}
-            PUBLIC_API_BASE_URL: http://snowballr.informatik.uni-ulm.de:3001
-            PUBLIC_CREDENTIAL_POLICY: include
-        ports:
-            - ${PORT:-4173}:${PORT:-4173}
-        profiles:
-            - mock-public

@@ -21,7 +21,7 @@ and point to the canonical page.
 
 ### Canonical documentation and what each covers
 
-- README.md — quick start (Docker), env vars, compose profiles, source-build pointer
+- README.md — quick start (Docker), env vars, source-build pointer
 - wiki/Home.md — wiki entry page
 - wiki/Getting-Started.md — Docker quick start, env vars, building from source, dev server, production preview
 - wiki/Contributing.md — project layout; component conventions (composites vs primitives, shadcn/ui); skeletons;
@@ -57,7 +57,7 @@ and point to the canonical page.
 ├── scripts/                        # CI/dev helpers (run-playwright.js, ...)
 ├── wiki/                           # canonical documentation
 ├── .github/workflows/              # build, code_quality_checks, docker, e2e_tests, git_conventions, wiki
-├── compose.yaml                    # standalone + mock-local + mock-public profiles
+├── compose.yaml                    # standalone frontend
 ├── Dockerfile                      # production image
 ├── svelte.config.js, vite.config.ts, vitest-setup.ts, playwright.config.ts
 ├── tsconfig.json, eslint.config.js, postcss.config.js, tailwind.config.js
@@ -72,7 +72,7 @@ and point to the canonical page.
 | Task                                  | Location                                                                      | Notes                                                                                              |
 | ------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Project overview                      | README.md                                                                     | High-level pointers, env-var table.                                                                |
-| Local setup / Docker / profiles       | wiki/Getting-Started.md                                                       | `mock-local`, `mock-public` compose profiles.                                                      |
+| Local setup / Docker                  | wiki/Getting-Started.md                                                       |                                                                                                    |
 | Project layout                        | wiki/Contributing.md#project-layout                                           | Source of truth.                                                                                   |
 | New component conventions             | wiki/Contributing.md#creating-a-new-component                                 | composites vs primitives, PascalCase, props, docs.                                                 |
 | Loading / skeletons / loading buttons | wiki/Contributing.md#skeletons, wiki/Contributing.md#loading-state-on-actions | Use `Skeleton`, `LoadingButton`.                                                                   |
@@ -88,7 +88,6 @@ and point to the canonical page.
 | E2E isolated fixture                  | tests/e2e/utils/fixtures/isolated-fixture.ts                                  | One mock backend per test.                                                                         |
 | Example POM                           | tests/e2e/homepage/create-project-dialog-model.ts                             | Reference for `*-dialog-model.ts` style.                                                           |
 | Test data helpers                     | tests/example-data.ts, tests/model-builder.ts                                 | Prefer the model builder; example data may change.                                                 |
-| Compose profiles                      | compose.yaml                                                                  | Standalone (default), `mock-local`, `mock-public`.                                                 |
 | Docker image                          | Dockerfile                                                                    | Production image (published to ghcr.io).                                                           |
 | CI workflows                          | .github/workflows                                                             | build, code_quality_checks, docker, e2e_tests, git_conventions, wiki.                              |
 | E2E sharding                          | .github/workflows/e2e_tests.yml                                               | Uses `vars.TESTS_PER_SHARD` to shard the matrix.                                                   |
@@ -117,7 +116,7 @@ and point to the canonical page.
 - Always do: prefer wiki references for process guidance; keep changes focused to the requested scope; follow
   the component / testing conventions in wiki/Contributing.md and wiki/Testing.md.
 - Ask first: bumping the `snowballr-api` dependency (changes the generated client); changes to gRPC transport
-  config (`grpc-api.ts`); changes to the root layout's auth/user-fetch logic; changes to compose profiles,
+  config (`grpc-api.ts`); changes to the root layout's auth/user-fetch logic; changes to `compose.yaml`,
   Dockerfile, or e2e sharding strategy; changes to the license-check allowlist in `package.json` (`license-check`).
 - Never do: commit secrets / real API base URLs to `.env`; edit files under `src/lib/model/api/` by hand
   (regenerate from `snowballr-api` via `npm run copy-api-client-code` instead); commit `build/`, `node_modules/`,
