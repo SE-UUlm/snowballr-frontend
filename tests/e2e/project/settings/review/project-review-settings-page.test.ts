@@ -46,3 +46,44 @@ test.describe("Keyword Settings Tests", () => {
         await expect(await projectReviewSettingsPage.getTag("New Tag 2")).toBeVisible();
     });
 });
+
+test.describe("Number of Reviewers Settings Tests", () => {
+    test("When navigating to the review settings as a project admin, then the number of reviewers section is visible", async ({
+        projectReviewSettingsPage,
+    }) => {
+        await expect(projectReviewSettingsPage.numberOfReviewersHeading).toBeVisible();
+        await expect(projectReviewSettingsPage.numberOfReviewersSlider).toBeVisible();
+        await expect(projectReviewSettingsPage.numberOfReviewersSlider).toBeEnabled();
+    });
+
+    test("When the user changes the number of reviewers using the slider, then a success notification is shown", async ({
+        projectReviewSettingsPage,
+        page,
+    }) => {
+        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(2);
+
+        // We only change the value by one, because we can only do one step at a time
+        await projectReviewSettingsPage.setNumberOfReviewers(3);
+
+        await expect(page.getByText("Successfully updated the project settings.")).toBeVisible();
+    });
+
+    test("When the user changes the number of reviewers and reloads the page, then the new value is persisted", async ({
+        page,
+        projectReviewSettingsPage,
+    }) => {
+        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(2);
+
+        // We only change the value by one, because we can only do one step at a time
+        await projectReviewSettingsPage.setNumberOfReviewers(3);
+
+        await reloadWait(page, projectReviewSettingsPage.numberOfReviewersHeading);
+
+        await expect(projectReviewSettingsPage.numberOfReviewersSlider).toHaveAttribute(
+            "aria-valuenow",
+            "3",
+        );
+    });
+
+    test.fixme("When the project status is 'ACTIVE_LOCKED', then the number of reviewers slider is disabled", async () => {});
+});

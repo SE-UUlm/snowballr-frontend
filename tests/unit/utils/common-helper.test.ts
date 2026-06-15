@@ -12,6 +12,8 @@ import {
     isStringEqual,
     pluralize,
     stringToAuthors,
+    sum,
+    sumBy,
     wrapLongWords,
 } from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
@@ -440,5 +442,27 @@ describe("Extract authors from string", () => {
             { firstName: "John, Jr.", lastName: "Doe" },
             { firstName: "Jane", lastName: "Smith" },
         ]);
+    });
+});
+
+describe("Sum up numbers in an array", () => {
+    test("When the array is empty, then the sum is 0", () => {
+        expect(sum([])).toBe(0);
+    });
+
+    test("When the array contains numbers, then the sum of these numbers is returned", () => {
+        expect(sum([1, 2, 3])).toBe(6);
+        expect(sum([-1, 1, -2, 2])).toBe(0);
+    });
+});
+
+describe("Sum up values of items in an array based on a value selector function", () => {
+    test("When the array is empty, then the sum is 0", () => {
+        expect(sumBy([], (i) => i["value"])).toBe(0);
+    });
+
+    test("When the array contains items and a value selector function is provided, then the sum of the values obtained by applying the value selector to each item in the array is returned", () => {
+        const items = [{ value: 1 }, { value: 2 }, { value: 3 }];
+        expect(sumBy(items, (i) => i.value)).toBe(6);
     });
 });

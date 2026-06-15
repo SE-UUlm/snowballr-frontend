@@ -1,6 +1,7 @@
 <script lang="ts">
     import * as Tabs from "$lib/components/primitives/tabs/index.js";
     import type { Tab } from "$lib/model/tabs";
+    import { sumBy } from "$lib/utils/common-helper";
     import type { Snippet } from "svelte";
 
     interface Props {
@@ -10,9 +11,7 @@
 
     const { tabs, buttonList }: Props = $props();
 
-    const totalTabLabelLength = $derived(
-        tabs.map((t) => t.label.length).reduce((a, c) => a + c, 0),
-    );
+    const totalTabLabelLength = $derived(sumBy(tabs, (tab) => tab.label.length));
     const partialTabSpaces = $derived(
         tabs.map((t) => (t.label.length / totalTabLabelLength) * 100),
     );

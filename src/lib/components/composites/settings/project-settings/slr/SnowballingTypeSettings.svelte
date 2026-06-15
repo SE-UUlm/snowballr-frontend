@@ -115,7 +115,7 @@ Usage:
   <SnowballingTypeSettings {projectId} {slrSettingsLocked} {loadingProject} />
 ```
 -->
-<SettingsSection sectionTitle="Snowballing Type">
+<SettingsSection locked={slrSettingsLocked} sectionTitle="Snowballing Type">
     <p>
         The type of Snowballing defines which references (forward and/or backward) are fetched when
         a paper is accepted. A backward reference is defined as a paper that is cited by the paper
