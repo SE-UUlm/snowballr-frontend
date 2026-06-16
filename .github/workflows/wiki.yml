@@ -23,7 +23,7 @@ jobs:
                   markdownlint-config-path: markdownlint.json
                   source-branch: develop
                   ignore-links: "https://dl.acm.org/doi/*"
-                  ignore-paths: "src/,tests/"
+                  ignore-paths: "src/,tests/,AGENTS.md,CLAUDE.md"
 
     publish-wiki:
         name: Publish Wiki
