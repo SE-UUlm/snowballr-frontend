@@ -8,7 +8,6 @@ import { createPaper, createProjectPaper } from "$tests/model-builder";
 const test = baseTest.extend<{
     papers: Project_Paper[];
 }>({
-    // eslint-disable-next-line no-empty-pattern
     papers: async ({}, use) => {
         await use([
             ProjectPapers.demoProjectPaper1,

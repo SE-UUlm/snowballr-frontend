@@ -10,6 +10,7 @@ import {
 } from "$lib/model/sort-criteria";
 import { callDebounced, stringToEnumValue } from "$lib/utils/common-helper";
 import { goto } from "$app/navigation";
+import type { ResolvedPathname } from "$app/types";
 
 function getUrlSearchParam(key: string): string | null {
     return page.url.searchParams.get(key);
@@ -173,7 +174,7 @@ function getRedirectParam(): string | null {
  * @param value - The value to return if the 'redirect' parameter does not exist.
  * @returns The redirect URL from the query parameter or the provided value.
  */
-export function getRedirectUrlOrValue(value: string) {
+export function getRedirectUrlOrValue(value: ResolvedPathname) {
     return getRedirectParam() ?? value;
 }
 

@@ -6,6 +6,8 @@
     import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
     import type { Paper } from "$api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
+    import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     interface ReadingListEntryProps {
         paper: Paper;
@@ -20,7 +22,7 @@
     }: ReadingListEntryProps = $props();
 
     const { id: paperId, ...paperWithoutId } = $derived(paper);
-    const href = $derived(`/paper/${paperId}`);
+    const href = $derived(resolve(`/paper/${paperId}`));
 </script>
 
 <!--
@@ -58,14 +60,14 @@ Usage:
     >
         <PaperInfo class="gap-1" loadingPaper={Promise.resolve(paperWithoutId)} />
         {#if onClick}
-            <a
+            <Link
                 class="text-muted-foreground self-start"
                 {href}
                 onclick={(e) => e.stopPropagation()}
                 title="Open Paper"
             >
                 <ExternalLink class="mt-1.5 size-4" />
-            </a>
+            </Link>
         {/if}
     </svelte:element>
     <div class="flex flex-row items-center gap-4">

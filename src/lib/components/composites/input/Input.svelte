@@ -11,6 +11,8 @@
     } from "svelte/elements";
     import { z } from "zod";
     import InputValidationCriterion from "./InputValidationCriterion.svelte";
+    import type { ResolvedPathname } from "$app/types";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     export type InputProps = WithElementRef<HTMLInputAttributes> & {
         inputId: string;
@@ -18,7 +20,7 @@
         placeholder?: string;
         required: boolean;
         type: HTMLInputTypeAttribute;
-        link?: { href: string; text: string };
+        link?: { href: ResolvedPathname; text: string };
         inputClass?: string;
         schema?: z.ZodType;
         onButtonClick?: () => void;
@@ -211,9 +213,9 @@ Usage:
                 <Label for={inputId}>{label}</Label>
             {/if}
             {#if link}
-                <a class="text-sm underline" href={link.href}>
+                <Link class="text-sm underline" href={link.href}>
                     {link.text}
-                </a>
+                </Link>
             {/if}
         </div>
     {/if}

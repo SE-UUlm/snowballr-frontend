@@ -2,9 +2,10 @@
     import NavigationBar from "./NavigationBar.svelte";
     import PaperInfo from "../paper-components/PaperInfo.svelte";
     import type { Paper } from "$api/paper";
+    import type { ResolvedPathname } from "$app/types";
 
     interface Props {
-        backRef?: string | undefined;
+        backRef?: ResolvedPathname | undefined;
         loadingPaper: Promise<Omit<Paper, "id">>;
         loadingPaperId?: Promise<string>;
     }

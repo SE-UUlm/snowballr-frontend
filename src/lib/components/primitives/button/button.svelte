@@ -37,14 +37,16 @@
     export type ButtonSize = VariantProps<typeof buttonVariants>["size"];
 
     export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
-        WithElementRef<HTMLAnchorAttributes> & {
+        Omit<WithElementRef<HTMLAnchorAttributes>, "href"> & {
             variant?: ButtonVariant;
             size?: ButtonSize;
+            href?: ResolvedPathname;
         };
 </script>
 
 <script lang="ts">
     import { cn } from "$lib/utils/shadcn-helper.js";
+    import type { ResolvedPathname } from "$app/types";
 
     let {
         class: className,
@@ -59,12 +61,15 @@
 </script>
 
 {#if href}
+    <!-- see https://github.com/sveltejs/eslint-plugin-svelte/issues/1319 -->
+    <!-- eslint-disable svelte/no-navigation-without-resolve -->
     <a
         bind:this={ref}
         class={cn(buttonVariants({ variant, size }), className)}
         {href}
         {...restProps}
     >
+        <!-- eslint-enable svelte/no-navigation-without-resolve -->
         {@render children?.()}
     </a>
 {:else}

@@ -53,7 +53,7 @@ describe("PasswordInput", () => {
             target: document.body,
             props: {
                 link: {
-                    href: "/test",
+                    href: "/signin",
                     text: "test",
                 },
             },
@@ -63,7 +63,7 @@ describe("PasswordInput", () => {
         const link = document.getElementsByTagName("a")[0];
         expect(link).toBeInTheDocument();
         expect(link).toHaveTextContent("test");
-        expect(link).toHaveAttribute("href", "/test");
+        expect(link).toHaveAttribute("href", "/signin");
     });
 
     test("When valid password is inserted, then validation criteria are met", async () => {

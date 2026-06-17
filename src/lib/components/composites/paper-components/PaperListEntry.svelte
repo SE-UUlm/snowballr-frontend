@@ -15,6 +15,8 @@
     import type { Paper } from "$api/paper";
     import type { Project_Paper } from "$api/project";
     import ExternalLink from "@lucide/svelte/icons/external-link";
+    import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     /**
      * Interface for the paper list entries.
@@ -38,7 +40,9 @@
     const { paper, projectId, onClick }: PaperListEntryProps = $props();
     const paperId = $derived(getDisplayPaperId(paper));
     const href = $derived(
-        isProjectPaper(paper) ? `/project/${projectId}/paper/${paperId}` : `/paper/${paperId}`,
+        isProjectPaper(paper)
+            ? resolve(`/project/${projectId}/paper/${paperId}`)
+            : resolve(`/paper/${paperId}`),
     );
 
     async function getReviewUserById(id: string): Promise<User | undefined> {
@@ -94,14 +98,14 @@ Usage:
             loadingPaperId={Promise.resolve(paperId)}
         />
         {#if onClick}
-            <a
+            <Link
                 class="text-muted-foreground self-start"
                 {href}
                 onclick={(e) => e.stopPropagation()}
                 title="Open Paper"
             >
                 <ExternalLink class="mt-1.5 size-4" />
-            </a>
+            </Link>
         {/if}
     </div>
     {#if !reviewMode.isActivated && isProjectPaper(paper)}

@@ -14,6 +14,8 @@
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";
+    import { resolve } from "$app/paths";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
@@ -33,7 +35,7 @@
 
     const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
 
-    const href = $derived(`/project/${project.id}/dashboard`);
+    const href = $derived(resolve(`/project/${project.id}/dashboard`));
 </script>
 
 <!--
@@ -75,14 +77,14 @@ Usage:
                 <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
             {/if}
             {#if onClick}
-                <a
+                <Link
                     class="text-muted-foreground self-start"
                     {href}
                     onclick={(e) => e.stopPropagation()}
                     title="Open Project"
                 >
                     <ExternalLink class="mt-1.5 size-4" />
-                </a>
+                </Link>
             {/if}
         </h2>
 

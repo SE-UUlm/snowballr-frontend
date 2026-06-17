@@ -105,6 +105,7 @@
         </form>
         <div class="mt-4 text-center text-sm">
             You don't have an account yet?
+            <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
             <a class="underline" href={addRedirectUrlIfExists("/signup")}> Sign Up </a>
         </div>
     </Card.Content>

@@ -1,3 +1,4 @@
+import type { ResolvedPathname } from "$app/types";
 import type { Icon } from "@lucide/svelte";
 
 interface Tab {
@@ -5,7 +6,7 @@ interface Tab {
     label: string;
 }
 
-type LinkTab = Tab & { href: string };
+type LinkTab = Tab & { href: ResolvedPathname };
 
 type IconLinkTab = LinkTab & {
     icon: typeof Icon;

@@ -5,9 +5,11 @@
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
     import type { LinkTab } from "$lib/model/tabs";
+    import type { ResolvedPathname } from "$app/types";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     interface Props {
-        backRef?: string | undefined;
+        backRef?: ResolvedPathname | undefined;
         tabs?: LinkTab[] | undefined;
         defaultTabValue?: (typeof tabs)[number]["value"] | undefined;
         children?: Snippet | undefined;
@@ -37,9 +39,9 @@ Usage:
         <nav class="grid h-18 grid-flow-col items-center gap-3 px-4 py-2">
             <UserMenu />
             {#if backRef !== undefined}
-                <a aria-label={`Back to ${backRef}`} href={backRef}>
+                <Link aria-label={`Back to ${backRef}`} href={backRef}>
                     <ArrowLeft class="size-6" />
-                </a>
+                </Link>
             {/if}
             <!-- Children can be e.g. a title element -->
             {@render children?.()}

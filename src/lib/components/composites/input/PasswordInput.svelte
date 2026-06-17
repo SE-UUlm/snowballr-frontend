@@ -3,10 +3,11 @@
     import EyeClosed from "@lucide/svelte/icons/eye-closed";
     import { Schema } from "$lib/schemas";
     import Input, { type InputProps } from "./Input.svelte";
+    import type { ResolvedPathname } from "$app/types";
 
     type Props = Omit<InputProps, "inputId" | "label" | "required" | "type"> & {
         validate?: boolean;
-        link?: { href: string; text: string };
+        link?: { href: ResolvedPathname; text: string };
     };
 
     let {

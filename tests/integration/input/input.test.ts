@@ -15,7 +15,7 @@ describe("Input", () => {
                 required: true,
                 type: "text",
                 link: {
-                    href: "https://example.com",
+                    href: "/signin",
                     text: "Example Link",
                 },
                 schema: z.string().min(1).max(10),
@@ -32,7 +32,7 @@ describe("Input", () => {
         const link = screen.getByRole("link");
         expect(link).toBeInTheDocument();
         expect(link).toHaveTextContent("Example Link");
-        expect(link).toHaveAttribute("href", "https://example.com");
+        expect(link).toHaveAttribute("href", "/signin");
 
         // Input exists
         const inputElement = document.getElementById("input");
@@ -63,7 +63,7 @@ describe("Input", () => {
                 required: true,
                 type: "text",
                 link: {
-                    href: "https://example.com",
+                    href: "/signin",
                     text: "Example Link",
                 },
                 schema: z.string().min(10).max(20),

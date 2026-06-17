@@ -4,6 +4,7 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import type { Snippet } from "svelte";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import Link from "$lib/components/composites/link/Link.svelte";
 
     interface Props {
         tabs: IconLinkTab[];
@@ -56,7 +57,7 @@ Usage:
 <div class="flex h-full w-full flex-row gap-4 overflow-hidden px-0 py-2.5 md:px-7 lg:px-15">
     <nav class="flex h-full w-full max-w-[20%] min-w-36 flex-col gap-2.5 px-1.5 py-2.5">
         {#each tabs as tab, i (i)}
-            <a
+            <Link
                 class={cn(
                     "flex h-12 w-full flex-row items-center gap-3 px-3",
                     tab.value === selectedTab ? "rounded-lg bg-slate-200" : "",
@@ -66,7 +67,7 @@ Usage:
             >
                 <tab.icon class="size-4" />
                 <span>{tab.label}</span>
-            </a>
+            </Link>
         {/each}
     </nav>
     <Separator orientation="vertical" />

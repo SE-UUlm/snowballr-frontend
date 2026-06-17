@@ -9,6 +9,7 @@
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
+    import { resolve } from "$app/paths";
 
     interface Props {
         projectId: string;
@@ -55,7 +56,7 @@
             .softDeleteProject({ id: projectId })
             .response.then(async () => {
                 toast.success(`Successfully deleted '${projectName}'.`);
-                await goto("/");
+                await goto(resolve("/"));
             })
             .catch((error) => {
                 deleteProjectError = error;

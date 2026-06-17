@@ -4,6 +4,7 @@ import { AuthenticationStatus } from "$api/authentication";
 import { Nothing } from "$api/base";
 import type { PageLoad } from "./$types";
 import { createActionError } from "$lib/model/action-error";
+import { resolve } from "$app/paths";
 
 export const load: PageLoad = async ({ url }) => {
     // Check if the user is already authenticated (only verify if user is not authenticated)
@@ -11,7 +12,7 @@ export const load: PageLoad = async ({ url }) => {
         const authStatus = (await backendService.getAuthenticationStatus(Nothing).response)
             .authenticationStatus;
         if (authStatus === AuthenticationStatus.AUTHENTICATED) {
-            await goto("/");
+            await goto(resolve("/"));
         }
     } catch (error) {
         console.error("There was an error acquiring the authentication status:", error);
