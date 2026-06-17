@@ -31,8 +31,8 @@ describe("NumberOfReviewersSettings", () => {
             context: mockIsProjectArchivedContext(),
         });
 
+        await waitFor(() => expect(screen.getByRole("slider")).toBeEnabled());
         const slider = screen.getByRole("slider");
-        await waitFor(() => expect(slider).toBeEnabled());
 
         expect(screen.getByText("Number of Required Reviewers")).toBeInTheDocument();
         expect(

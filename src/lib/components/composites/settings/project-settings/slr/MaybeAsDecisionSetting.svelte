@@ -91,7 +91,6 @@
 
         pendingActionConfirmCallback = async () => {
             await toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
-            isConfirmDialogOpen = false;
         };
 
         isConfirmDialogOpen = true;
