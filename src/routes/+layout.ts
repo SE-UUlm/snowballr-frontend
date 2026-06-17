@@ -99,10 +99,6 @@ async function redirectToSignIn(url: URL) {
     setCachedUser(null);
     const redirectUrl = encodeURIComponent(addRedirectUrlIfExists(url.pathname + url.search));
     const path = resolve("/signin");
-    // query params are not yet supported by resolve
-    // was fixed in https://github.com/sveltejs/kit/pull/15458
-    // waiting for new release (>2.53.4)
-    // eslint-disable-next-line svelte/no-navigation-without-resolve
     await goto(`${path}?redirect=${redirectUrl}`);
     return { user: null };
 }

@@ -62,7 +62,6 @@
                     description:
                         "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
                 });
-                // eslint-disable-next-line svelte/no-navigation-without-resolve
                 await goto(getRedirectUrlOrValue("/signin"));
             })
             .catch((error: RpcError) => {

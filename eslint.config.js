@@ -86,6 +86,7 @@ export default defineConfig(
             "svelte/html-quotes": "error",
             "svelte/sort-attributes": "error",
             "svelte/no-ignored-unsubscribe": "error",
+            "svelte/no-navigation-without-resolve": "off",
         },
     },
 );

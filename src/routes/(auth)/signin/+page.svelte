@@ -36,7 +36,6 @@
 
         await backendService
             .login(userData)
-            // eslint-disable-next-line svelte/no-navigation-without-resolve
             .then(async () => await goto(getRedirectUrlOrValue("/")))
             .catch((error: RpcError) => {
                 if (isGrpcError(error.code, GrpcStatusCode.UNAUTHENTICATED)) {

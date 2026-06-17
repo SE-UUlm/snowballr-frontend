@@ -151,7 +151,6 @@ export function updateUrlParams(searchParameters: SvelteURLSearchParams): void {
     if (searchParameters.toString() !== globalThis.location.search.slice(1)) {
         callDebounced(
             () =>
-                // eslint-disable-next-line svelte/no-navigation-without-resolve
                 goto(`?${searchParameters.toString()}`, {
                     replaceState: true,
                     keepFocus: true,
