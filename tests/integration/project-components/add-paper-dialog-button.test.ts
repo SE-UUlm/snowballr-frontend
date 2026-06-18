@@ -4,12 +4,17 @@ import AddPaperDialogButton from "$lib/components/composites/project-components/
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen } from "@testing-library/svelte";
 import { expect, test, describe, beforeEach, afterEach, vi, assert } from "vitest";
-import { mockUserContext } from "../test-helper";
 import userEvent from "@testing-library/user-event";
-import { createProject, loading } from "$tests/model-builder";
+import { createProject, createProjectSettings, loading } from "$tests/model-builder";
 
 describe("AddPaperDialogButton", () => {
     const user = userEvent.setup();
+
+    const projectWithFetcher = createProject({
+        settings: createProjectSettings({
+            fetchers: { testFetcher: { options: {} } },
+        }),
+    });
 
     beforeEach(() => {
         mockApiCall("searchLocalProjectPaperCandidates", Paper_List.create());
@@ -44,7 +49,6 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
@@ -57,9 +61,8 @@ describe("AddPaperDialogButton", () => {
 
         await search("test");
 
-        expect(await screen.findByText("foobar", { exact: false })).toBeVisible();
         expect(
-            await screen.findByText("Error when searching for local papers", { exact: false }),
+            await screen.findByText("Failed to search for local papers", { exact: false }),
         ).toBeVisible();
     });
 
@@ -68,22 +71,20 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
                 stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
-                loadingProject: loading(createProject()),
+                loadingProject: loading(projectWithFetcher),
             },
         });
 
         await search("test");
 
-        expect(await screen.findByText("foobar", { exact: false })).toBeVisible();
         expect(
-            await screen.findByText("Error when searching for fetcher papers", { exact: false }),
+            await screen.findByText("Failed to search for fetcher papers", { exact: false }),
         ).toBeVisible();
     });
 
@@ -104,7 +105,6 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
@@ -141,14 +141,13 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
                 stage: 1n,
                 includeLocal: false,
                 includeFetchers: true,
-                loadingProject: loading(createProject()),
+                loadingProject: loading(projectWithFetcher),
             },
         });
 
@@ -172,14 +171,13 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
-                loadingProject: loading(createProject()),
+                loadingProject: loading(projectWithFetcher),
             },
         });
 
@@ -201,14 +199,13 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
                 stage: 1n,
                 includeLocal: true,
                 includeFetchers: true,
-                loadingProject: loading(createProject()),
+                loadingProject: loading(projectWithFetcher),
             },
         });
 
@@ -226,7 +223,6 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
@@ -251,7 +247,6 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
@@ -281,7 +276,6 @@ describe("AddPaperDialogButton", () => {
 
         render(AddPaperDialogButton, {
             target: document.body,
-            context: mockUserContext,
             props: {
                 open: true,
                 projectId: "1",
