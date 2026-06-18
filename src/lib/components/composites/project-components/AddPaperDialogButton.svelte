@@ -21,6 +21,7 @@
     import ToggleButton from "../button/ToggleButton.svelte";
     import type { Project } from "$api/project";
     import { onMount } from "svelte";
+    import { invalidate } from "$app/navigation";
 
     type Props = DialogTriggerProps & {
         projectId: string;
@@ -171,7 +172,7 @@
                 continue;
             }
 
-            const addResult = await tryAddPaper(paper);
+            const addResult = await tryAddPaper(createResult.paper);
 
             if (addResult.type === "error") {
                 toast.error(`Paper '${paper.title}' could not be added.`);
@@ -185,6 +186,9 @@
             toast.success(
                 `Successfully added ${addedPapers} ${pluralize(addedPapers, "paper", "papers")} to the project.`,
             );
+
+            // trigger reload of the page
+            invalidate("data:getAllProjectPapersForProject");
         }
         loading = false;
         open = false;
