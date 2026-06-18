@@ -154,7 +154,7 @@
                 projectId,
                 stage: BigInt(stage),
             })
-            .then(() => ({ type: "success" }) satisfies AddPaperResult)
+            .response.then(() => ({ type: "success" }) satisfies AddPaperResult)
             .catch((error: RpcError) => {
                 return { type: "error", message: error.message };
             });
@@ -272,7 +272,7 @@ Usage:
 
                 <div class="relative size-full overflow-scroll">
                     <div
-                        class="overlfow-visible absolute top-0 left-0 flex size-full flex-col gap-2"
+                        class="absolute top-0 left-0 flex size-full flex-col gap-2 overflow-visible"
                     >
                         {#await searchedPapers}
                             <Skeleton class="h-16 w-full" />
@@ -302,7 +302,7 @@ Usage:
             <div class="flex flex-1 flex-col gap-2">
                 <div class="relative size-full overflow-scroll">
                     <div
-                        class="overlfow-visible absolute top-0 left-0 flex size-full flex-col gap-2"
+                        class="absolute top-0 left-0 flex size-full flex-col gap-2 overflow-visible"
                     >
                         {#each selectedPapers as paper (paper.id)}
                             <ProjectPaperCandidate
