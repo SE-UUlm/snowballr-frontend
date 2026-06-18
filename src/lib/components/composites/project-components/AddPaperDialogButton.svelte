@@ -1,9 +1,8 @@
 <script lang="ts">
     import * as Dialog from "$lib/components/primitives/dialog/index.js";
-    import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
+    import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Search from "@lucide/svelte/icons/search";
-    import Trash from "@lucide/svelte/icons/trash";
     import LoadingButton from "../button/LoadingButton.svelte";
     import { cn } from "$lib/utils/shadcn-helper";
     import SearchBar from "../search-bar/SearchBar.svelte";
@@ -22,6 +21,7 @@
     import type { Project } from "$api/project";
     import { onMount } from "svelte";
     import { invalidate } from "$app/navigation";
+    import ProjectPaperCandidate from "./ProjectPaperCandidate.svelte";
 
     type Props = DialogTriggerProps & {
         projectId: string;
@@ -212,37 +212,17 @@
     }
 </script>
 
-{#snippet paperView(
-    paper: Paper,
-    testid: string,
-    buttonTestid: string,
-    icon: "plus" | "trash",
-    onClick: () => void,
-)}
-    {@const authorString = paper.authors.map((it) => `${it.firstName} ${it.lastName}`).join(", ")}
-    <div
-        class="border-muted hover:bg-muted/50 flex flex-row items-center gap-2 rounded-md border p-2"
-        data-testid={testid}
-    >
-        <div class="flex-1">
-            <div class="text-sm font-semibold">{paper.title}</div>
-            <div class="text-muted-foreground text-xs">
-                {authorString === "" ? "Unknown Authors" : authorString}
-            </div>
-            <div class="text-muted-foreground text-xs">
-                {paper.year}{paper.publicationName ? ` - ${paper.publicationName}` : ""}
-            </div>
-        </div>
-        <Button data-testid={buttonTestid} onclick={onClick} size="icon" variant="outline">
-            {#if icon === "plus"}
-                <CirclePlus />
-            {:else}
-                <Trash class="text-red-400" />
-            {/if}
-        </Button>
-    </div>
-{/snippet}
+<!--
+@component
+Button that opens GUI to search for papers in either the local DB or the fetchers.
 
+The user can toggle both sources to either include or exclude them.
+
+Usage:
+```svelte
+    <AddPaperDialogButton {loadingProject} {projectId} {stage} />
+```
+-->
 <Dialog.Root bind:open={getOpen, setOpen}>
     <Dialog.Trigger
         class={cn(buttonVariants({ variant: "default" }), className)}
@@ -302,13 +282,14 @@
                         {:then searchedPapers}
                             {#each searchedPapers as paper (paper.id)}
                                 {#if selectedPapers.every((it) => it.id != paper.id)}
-                                    {@render paperView(
-                                        paper,
-                                        "paper-available-to-be-added",
-                                        "add-paper-to-selected",
-                                        "plus",
-                                        () => (selectedPapers = [...selectedPapers, paper]),
-                                    )}
+                                    <ProjectPaperCandidate
+                                        action="add"
+                                        buttonTestId="add-paper-to-selected"
+                                        onClick={() =>
+                                            (selectedPapers = [...selectedPapers, paper])}
+                                        {paper}
+                                        testId="paper-available-to-be-added"
+                                    />
                                 {/if}
                             {/each}
                         {/await}
@@ -324,16 +305,16 @@
                         class="overlfow-visible absolute top-0 left-0 flex size-full flex-col gap-2"
                     >
                         {#each selectedPapers as paper (paper.id)}
-                            {@render paperView(
-                                paper,
-                                "paper-to-be-added",
-                                "remove-paper-from-selected",
-                                "trash",
-                                () =>
+                            <ProjectPaperCandidate
+                                action="remove"
+                                buttonTestId="remove-paper-from-selected"
+                                onClick={() =>
                                     (selectedPapers = selectedPapers.filter(
                                         (it) => it.id != paper.id,
-                                    )),
-                            )}
+                                    ))}
+                                {paper}
+                                testId="paper-to-be-added"
+                            />
                         {/each}
                     </div>
                 </div>
