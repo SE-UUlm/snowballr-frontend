@@ -2,42 +2,42 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
-    import { Project, Project_Settings } from "$api/project";
+    import { Project } from "$api/project";
     import { updateFetchers } from "./update-fetchers";
+    import Trash from "@lucide/svelte/icons/trash";
+    import { cn } from "$lib/utils/shadcn-helper";
+    import { buttonVariants } from "$lib/components/primitives/button";
+    import type { FetcherInformation } from "$api/fetcher";
 
     interface Props {
-        projectId: string;
-        projectSettings?: Project_Settings;
-        fetcher: string;
+        project: Project;
+        fetcher: FetcherInformation;
         onProjectChanged: (project: Project) => void;
-        open: boolean;
+        disabled: boolean;
     }
 
-    let {
-        projectId,
-        projectSettings,
-        onProjectChanged,
-        fetcher,
-        open = $bindable(),
-    }: Props = $props();
+    let { project, fetcher, onProjectChanged, disabled }: Props = $props();
 
     let removeFetcherError: ActionError = $state(undefined);
+    let open = $state(false);
     let loading = $state(false);
 
-    // remove the fetcher (fetcher) from the project (projectId)
     async function removeFetcher() {
         loading = true;
-        const updatedFetcherApis = projectSettings?.fetchers ?? {};
-        delete updatedFetcherApis[fetcher];
+
+        const updatedFetchers = project.settings?.fetchers ?? {};
+        delete updatedFetchers[fetcher.id];
+
         await updateFetchers(
-            projectId,
-            updatedFetcherApis,
+            project.id,
+            updatedFetchers,
             (project) => {
-                onProjectChanged(project);
                 open = false;
+                onProjectChanged(project);
             },
             (it) => (removeFetcherError = it),
         );
+
         loading = false;
     }
 </script>
@@ -55,9 +55,19 @@
         disabled: loading,
     }}
     {loading}
-    title={`Remove "${fetcher}" Fetcher`}
+    title={`Remove ${fetcher.name} Fetcher`}
+    triggerProps={{
+        class: cn(
+            buttonVariants({ variant: "destructiveSubtle" }),
+            "border-none bg-white hover:bg-red-400/10",
+        ),
+        disabled: disabled,
+    }}
     bind:open
 >
+    {#snippet trigger()}
+        <Trash />
+    {/snippet}
     {#snippet description()}
         <p>
             Removing the fetcher also irreversibly removes the values of the options you may have

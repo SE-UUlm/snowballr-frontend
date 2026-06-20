@@ -3,7 +3,7 @@ import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherOptionRow from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherOptionRow.svelte";
 import userEvent from "@testing-library/user-event";
 
-describe("Fetcher Option Row", () => {
+describe("FetcherOptionRow", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
 
@@ -11,44 +11,20 @@ describe("Fetcher Option Row", () => {
         render(FetcherOptionRow, {
             target: document.body,
             props: {
-                name: "NAME",
-                value: "",
-                defaultValue: "DEFAULT_VALUE",
+                option: {
+                    name: "NAME",
+                    description: "DESCRIPTION",
+                    required: false,
+                    isSecret: false,
+                    value: "",
+                },
+                onValueChanged: () => {},
             },
         });
 
         expect(screen.getByText("NAME", { exact: true })).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("DEFAULT_VALUE")).toBeInTheDocument();
-        expect(screen.getByRole("checkbox")).toBeInTheDocument();
-        expect(screen.getByRole("button")).toBeInTheDocument();
-    });
-
-    test("When you enter nothing, then the value is not overridden", async () => {
-        render(FetcherOptionRow, {
-            target: document.body,
-            props: {
-                name: "NAME",
-                value: "",
-                defaultValue: "DEFAULT_VALUE",
-            },
-        });
-
-        const checkBox = screen.getByRole("checkbox");
-        expect(checkBox).not.toBeChecked();
-    });
-
-    test("When you enter something, then the value is overridden", async () => {
-        render(FetcherOptionRow, {
-            target: document.body,
-            props: {
-                name: "NAME",
-                value: "test",
-                defaultValue: "DEFAULT_VALUE",
-            },
-        });
-
-        const checkBox = screen.getByRole("checkbox");
-        expect(checkBox).toBeChecked();
+        expect(screen.getByPlaceholderText("DESCRIPTION")).toBeInTheDocument();
+        expect(screen.getByTestId("NAME-set-default-btn")).toBeInTheDocument();
     });
 
     test("When you press the insert button, then the default value is inserted", async () => {
@@ -56,16 +32,21 @@ describe("Fetcher Option Row", () => {
         render(FetcherOptionRow, {
             target: document.body,
             props: {
-                name: "NAME",
-                value: "",
-                defaultValue: "DEFAULT_VALUE",
+                option: {
+                    name: "NAME",
+                    description: "DESCRIPTION",
+                    required: false,
+                    isSecret: false,
+                    value: "",
+                    defaultValue: "DEFAULT_VALUE",
+                },
                 onValueChanged: (value: string) => (newValue = value),
             },
         });
 
-        const inputBox = screen.getByPlaceholderText("DEFAULT_VALUE") as HTMLInputElement;
+        const inputBox = screen.getByPlaceholderText("DESCRIPTION") as HTMLInputElement;
         expect(inputBox.value).toEqual("");
-        await userEvent.click(screen.getByRole("button"));
+        await userEvent.click(screen.getByTestId("NAME-set-default-btn"));
         expect(inputBox.value).toEqual("DEFAULT_VALUE");
         expect(newValue).toEqual("DEFAULT_VALUE");
     });

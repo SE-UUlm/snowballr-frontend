@@ -68,5 +68,5 @@
         {projectId}
         slrSettingsLocked={slrSettingsLocked.value}
     />
-    <FetcherSettings {loadingProject} {projectId} slrSettingsLocked={slrSettingsLocked.value} />
+    <FetcherSettings {loadingProject} slrSettingsLocked={slrSettingsLocked.value} />
 </ProjectSettingsLayout>
