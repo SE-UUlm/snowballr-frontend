@@ -12,7 +12,8 @@ describe("FetcherOptionRow", () => {
             target: document.body,
             props: {
                 option: {
-                    name: "NAME",
+                    id: "NAME",
+                    name: "Name",
                     description: "DESCRIPTION",
                     required: false,
                     isSecret: false,
@@ -22,7 +23,7 @@ describe("FetcherOptionRow", () => {
             },
         });
 
-        expect(screen.getByText("NAME", { exact: true })).toBeInTheDocument();
+        expect(screen.getByText("Name", { exact: true })).toBeInTheDocument();
         expect(screen.getByPlaceholderText("DESCRIPTION")).toBeInTheDocument();
         expect(screen.getByTestId("NAME-set-default-btn")).toBeInTheDocument();
     });
@@ -33,7 +34,8 @@ describe("FetcherOptionRow", () => {
             target: document.body,
             props: {
                 option: {
-                    name: "NAME",
+                    id: "NAME",
+                    name: "Name",
                     description: "DESCRIPTION",
                     required: false,
                     isSecret: false,

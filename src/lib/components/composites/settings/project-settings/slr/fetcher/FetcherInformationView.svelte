@@ -22,9 +22,9 @@
 
     onMount(() => {
         const projectFetcherOptions = project.settings?.fetchers[fetcher.id];
-        options = Object.entries(fetcher.optionsSchema).map(([name, schema]) => ({
-            name,
-            value: projectFetcherOptions?.options[name] ?? "",
+        options = Object.entries(fetcher.optionsSchema).map(([id, schema]) => ({
+            id,
+            value: projectFetcherOptions?.options[id] ?? "",
             ...schema,
         }));
     });
@@ -51,7 +51,7 @@
             <span class="text-muted-foreground text-sm" title={description}>{name}</span>
         {/each}
 
-        {#each options as option (option.name)}
+        {#each options as option (option.id)}
             <FetcherOptionRow
                 {disabled}
                 onValueChanged={(value) => (option.value = value)}

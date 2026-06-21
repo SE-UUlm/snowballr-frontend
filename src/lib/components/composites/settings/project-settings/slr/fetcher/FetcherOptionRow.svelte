@@ -8,7 +8,7 @@
     import EyeClosed from "@lucide/svelte/icons/eye-closed";
 
     export type FetcherOption = FetcherOptionSchema & {
-        name: string;
+        id: string;
         value: string;
     };
 
@@ -27,12 +27,12 @@
 </script>
 
 <Label style="scrollbar-width: none;" class="w-full overflow-x-scroll overflow-y-hidden">
-    <code>{option.name}</code><span class="text-red-500">{option.required ? "*" : ""}</span>
+    <span>{option.name}</span><span class="text-red-500">{option.required ? "*" : ""}</span>
 </Label>
 <Input
     defaultValue={option.defaultValue}
     {disabled}
-    inputId={option.name}
+    inputId={option.id}
     label=""
     onButtonClick={() => (isPasswordVisible = !isPasswordVisible)}
     placeholder={option.description}
@@ -51,7 +51,7 @@
     {/snippet}
 </Input>
 <Button
-    data-testid={`${option.name}-set-default-btn`}
+    data-testid={`${option.id}-set-default-btn`}
     disabled={defaultDisabled}
     onclick={() => (value = option.defaultValue ?? "")}
     variant="ghost"

@@ -49,7 +49,7 @@
         const updatedFetchers = project.settings?.fetchers ?? {};
         const newOptions: { [key: string]: string } = {};
         for (const option of options) {
-            newOptions[option.name] = option.value;
+            newOptions[option.id] = option.value;
         }
         updatedFetchers[fetcher.id] = { options: newOptions };
 

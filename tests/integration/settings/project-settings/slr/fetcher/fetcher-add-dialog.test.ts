@@ -18,6 +18,7 @@ describe("FetcherAddDialog", () => {
         links: [],
         optionsSchema: {
             FOO: {
+                name: "Foo",
                 description: "This is the FOO option",
                 required: false,
                 isSecret: false,
