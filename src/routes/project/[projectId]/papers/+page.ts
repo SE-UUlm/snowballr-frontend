@@ -5,7 +5,9 @@ import { comparePaperId } from "$lib/utils/common-helper";
 import type { PageLoad } from "./$types";
 import { asPaper } from "$lib/utils/model-helper";
 
-export const load: PageLoad = ({ params }) => {
+export const load: PageLoad = ({ depends, params }) => {
+    depends("data:getAllProjectPapersForProject");
+
     const projectId = { id: params.projectId };
 
     const loadingCriteria = backendService

@@ -272,8 +272,8 @@ vi.mock("$lib/grpc-api", () => {
             getPreviousPaper: mock(({ id }) => createProjectPaper({ id })),
             getInviteCandidates: vi.fn(),
             getAvailableExportFormats: mock({ formats: ["JSON", "XML", "CSV"] }),
-            searchLocalPapers: vi.fn(),
-            searchFetcherPapers: vi.fn(),
+            searchLocalProjectPaperCandidates: vi.fn(),
+            searchFetcherProjectPaperCandidates: vi.fn(),
         },
     };
     return mockBackend;

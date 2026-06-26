@@ -2,12 +2,13 @@
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import * as Accordion from "$lib/components/primitives/accordion";
     import Button from "$lib/components/primitives/button/button.svelte";
-    import type { Project_Paper } from "$api/project";
+    import type { Project, Project_Paper } from "$api/project";
     import type { ProjectPaperFilter, Stage } from "$lib/model/general";
     import { pluralize } from "$lib/utils/common-helper";
     import { filterProjectPapers } from "$lib/utils/filters";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import AddPaperDialogButton from "./AddPaperDialogButton.svelte";
 
     interface Props {
         projectId: string;
@@ -15,6 +16,7 @@
         selectedPaper?: Project_Paper;
         filter?: ProjectPaperFilter;
         searchText?: string;
+        loadingProject: Promise<Project>;
     }
 
     let {
@@ -23,6 +25,7 @@
         selectedPaper = $bindable(undefined),
         filter = undefined,
         searchText = undefined,
+        loadingProject,
     }: Props = $props();
 
     let filteredPapers = $derived(filterProjectPapers(stage.papers ?? [], filter, searchText));
@@ -79,9 +82,20 @@ Usage:
             {/if}
 
             {#if !isProjectArchived}
-                <Button href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}>
-                    <CirclePlus strokeWidth="2.5" /> Add Paper
-                </Button>
+                <div class="flex w-full flex-row gap-2">
+                    <Button
+                        class="w-full"
+                        href={`/project/${projectId}/paper/new?stage=${stage.stageIndex}`}
+                    >
+                        <CirclePlus strokeWidth="2.5" /> Add New Paper
+                    </Button>
+                    <AddPaperDialogButton
+                        class="w-full"
+                        {loadingProject}
+                        {projectId}
+                        stage={stage.stageIndex}
+                    />
+                </div>
             {/if}
         </div>
     </Accordion.Content>

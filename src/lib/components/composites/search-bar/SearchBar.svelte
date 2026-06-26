@@ -8,13 +8,23 @@
         placeholderText?: string;
         onSearch: (searchText: string) => void;
         timeoutInMs?: number;
+        liveSearch?: boolean;
+        maxLength?: number;
     }
 
-    const { placeholderText = "Search", onSearch, timeoutInMs = 500 }: Props = $props();
+    const {
+        placeholderText = "Search",
+        onSearch,
+        timeoutInMs = 500,
+        liveSearch = true,
+        maxLength = undefined,
+    }: Props = $props();
 
     let searchInput: string = $state(getSearchTextFromURL());
 
-    const handleNewInput = $derived(debounce(() => onSearch(searchInput), timeoutInMs));
+    const handleNewInput = $derived(
+        liveSearch ? debounce(() => onSearch(searchInput), timeoutInMs) : () => {},
+    );
 
     const handleSpecialButtons = (event: KeyboardEvent) => {
         if (event.key === "Escape") {
@@ -60,6 +70,7 @@ Usage:
     <Input
         class="pr-10"
         data-testid="search-bar-input"
+        maxlength={maxLength}
         oninput={handleNewInput}
         onkeyup={handleSpecialButtons}
         placeholder={placeholderText}

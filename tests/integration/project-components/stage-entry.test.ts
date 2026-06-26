@@ -61,8 +61,11 @@ describe("StageEntry", () => {
         const paper3 = screen.getByText(ProjectPapers.demoProjectPaper3.paper!.title);
         expect(paper3).toBeInTheDocument();
 
-        const button = screen.getByText("Add Paper");
-        expect(button).toBeInTheDocument();
+        const addNewPaperButton = screen.getByText("Add New Paper");
+        expect(addNewPaperButton).toBeInTheDocument();
+
+        const searchAndAddButton = screen.getByText("Search & Add");
+        expect(searchAndAddButton).toBeInTheDocument();
     });
 
     test("When the project is archived, then the 'Add Paper' button is not shown", async () => {

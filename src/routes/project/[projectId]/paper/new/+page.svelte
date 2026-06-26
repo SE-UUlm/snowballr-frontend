@@ -21,7 +21,7 @@
 </svelte:head>
 <PaperView
     allowEditModeToggle
-    backRef={`/project/${projectId}/dashboard`}
+    backRef={`/project/${projectId}/papers`}
     backwardReferencedPapers={Promise.resolve([])}
     criteriaWithReviews={undefined}
     forwardReferencedPapers={Promise.resolve([])}
