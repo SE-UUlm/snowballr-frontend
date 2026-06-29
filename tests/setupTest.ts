@@ -181,12 +181,7 @@ vi.mock("$lib/grpc-api", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
             getAvailableFetchers: mock({
-                fetcherNames: ["Google Scholar", "IEEE Xplore", "SpringerLink"],
-            }),
-            getAvailableFetcherOptions: mock({
-                options: {
-                    TEST: "FOOBAR",
-                },
+                fetchers: [],
             }),
             register: vi.fn(),
             verifyEmail: vi.fn(),

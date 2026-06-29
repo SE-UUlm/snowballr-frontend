@@ -5,53 +5,96 @@ import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherOptionsDialog from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherOptionsDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "$tests/setupTest";
-import { mockUserContext, waitForComponentLoading } from "$tests/integration/test-helper";
+import type { FetcherInformation } from "$api/fetcher";
 
-describe("Fetcher Options Dialog", () => {
+describe("FetcherOptionsDialog", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
 
-    test("When the component is shown, then it is rendered correctly", async () => {
-        const projectData = createProject();
-
-        mockApiCall("getAvailableFetcherOptions", {
-            options: {
-                FOO: "BAR",
+    const fetcher: FetcherInformation = {
+        id: "test",
+        name: "Test Fetcher",
+        description: "This is a test fetcher",
+        links: [],
+        optionsSchema: {
+            FOO: {
+                name: "Foo",
+                description: "This is the FOO option",
+                required: false,
+                isSecret: false,
             },
-        });
+        },
+    };
 
+    test("When all props are provided, then it renders correctly", async () => {
         render(FetcherOptionsDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: createProject(),
                 onProjectChanged: () => {},
-                fetcher: "foobar",
-                open: true,
+                fetcher: fetcher,
+                disabled: false,
             },
         });
 
-        await waitForComponentLoading();
-        expect(screen.getByText("FOO")).toBeVisible();
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        expect(trigger).toBeInTheDocument();
+    });
+
+    test("When the trigger is clicked, then the dialog is opened", async () => {
+        const user = userEvent.setup();
+        render(FetcherOptionsDialog, {
+            target: document.body,
+            props: {
+                project: createProject(),
+                onProjectChanged: () => {},
+                fetcher: fetcher,
+                disabled: false,
+            },
+        });
+
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
+
+        expect(screen.getByText("Edit Test Fetcher Fetcher Options")).toBeVisible();
         expect(screen.getByRole("button", { name: "Save Options" })).toBeVisible();
         expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
     });
 
+    test("When changes are disabled, then the dialog still can be opened, but changes are not allowed", async () => {
+        const user = userEvent.setup();
+        render(FetcherOptionsDialog, {
+            target: document.body,
+            props: {
+                project: createProject(),
+                onProjectChanged: () => {},
+                fetcher: fetcher,
+                disabled: true,
+            },
+        });
+
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
+
+        expect(screen.getByText("Edit Test Fetcher Fetcher Options")).toBeVisible();
+        const saveButton = screen.getByRole("button", { name: "Save Options" });
+        expect(saveButton).toBeVisible();
+        expect(saveButton).toBeDisabled();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
+        expect(screen.getByPlaceholderText("This is the FOO option")).toBeDisabled();
+    });
+
     test("When you modify a fetcher, then the settings are adjusted accordingly", async () => {
+        const user = userEvent.setup();
+
         const projectData = createProject();
         let newProject: Project | undefined;
 
-        const mockOptionsCall = mockApiCall("getAvailableFetcherOptions", {
-            options: {
-                FOO: "BAR",
-            },
-        });
         const mockUpdateCall = mockApiCall("updateProject", {
             ...projectData,
             settings: createProjectSettings({
                 fetchers: {
-                    foobar: {
+                    test: {
                         options: {
                             FOO: "TEST",
                         },
@@ -62,30 +105,24 @@ describe("Fetcher Options Dialog", () => {
 
         render(FetcherOptionsDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: projectData,
                 onProjectChanged: (it: Project) => (newProject = it),
-                fetcher: "foobar",
-                open: true,
+                fetcher: fetcher,
+                disabled: false,
             },
         });
 
-        await waitForComponentLoading();
-        await userEvent.type(screen.getByPlaceholderText("BAR"), "TEST");
-        expect(screen.getByRole("checkbox")).toBeChecked();
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
+
+        await userEvent.type(screen.getByPlaceholderText("This is the FOO option"), "TEST");
         await userEvent.click(screen.getByRole("button", { name: "Save Options" }));
         await waitFor(() => expect(newProject).toBeDefined());
 
-        const fetcherOptions = Object.entries(
-            newProject?.settings?.fetchers?.foobar?.options ?? {},
-        );
+        const fetcherOptions = Object.entries(newProject?.settings?.fetchers?.test?.options ?? {});
         expect(fetcherOptions).toEqual([["FOO", "TEST"]]);
 
-        expect(mockOptionsCall).toHaveBeenCalledExactlyOnceWith({
-            fetcherName: "foobar",
-        });
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
                 paths: ["project.settings.fetchers"],
@@ -94,7 +131,7 @@ describe("Fetcher Options Dialog", () => {
                 id: projectData.id,
                 settings: Project_Settings.create({
                     fetchers: {
-                        foobar: {
+                        test: {
                             options: {
                                 FOO: "TEST",
                             },

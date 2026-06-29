@@ -5,148 +5,123 @@ import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherAddDialog from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherAddDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "$tests/setupTest";
-import { mockUserContext } from "$tests/integration/test-helper";
+import type { FetcherInformation } from "$api/fetcher";
 
-describe("Fetcher Add Dialog", () => {
+describe("FetcherAddDialog", () => {
     beforeEach(() => vi.clearAllMocks());
     afterAll(() => vi.restoreAllMocks());
 
-    test("When the component is created, then all buttons are there and no fetcher is selected", async () => {
-        const projectData = createProject();
-        const unusedFetchers = ["FetcherFoo", "FetcherBar", "FetcherTest"];
+    const fetcher: FetcherInformation = {
+        id: "test",
+        name: "Test Fetcher",
+        description: "This is a test fetcher",
+        links: [],
+        optionsSchema: {
+            FOO: {
+                name: "Foo",
+                description: "This is the FOO option",
+                required: false,
+                isSecret: false,
+            },
+        },
+    };
 
+    test("When all props are provided, then it renders correctly", async () => {
         render(FetcherAddDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: createProject(),
                 onProjectChanged: () => {},
-                unusedFetchers,
-                open: true,
+                fetcher: fetcher,
+                disabled: false,
             },
         });
 
-        expect(
-            screen.getByRole("button", {
-                name: "Select a fetcher",
-            }),
-        ).toBeVisible();
-        expect(
-            screen.getByRole("button", {
-                name: "Add Fetchers",
-            }),
-        ).toBeVisible();
-        expect(
-            screen.getByRole("button", {
-                name: "Cancel",
-            }),
-        ).toBeVisible();
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        expect(trigger).toBeInTheDocument();
     });
 
-    test("When the select box is opened, then the unused fetchers are shown", async () => {
-        const projectData = createProject();
-        const unusedFetchers = ["FetcherFoo", "FetcherBar", "FetcherTest"];
-
+    test("When the trigger is clicked, then the dialog is opened", async () => {
+        const user = userEvent.setup();
         render(FetcherAddDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: createProject(),
                 onProjectChanged: () => {},
-                unusedFetchers,
-                open: true,
+                fetcher: fetcher,
+                disabled: false,
             },
         });
 
-        const selectBox = screen.getByRole("button", {
-            name: "Select a fetcher",
-        }) as HTMLInputElement;
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
 
-        await userEvent.click(selectBox);
-
-        for (const fetcher of unusedFetchers) {
-            expect(screen.getByRole("option", { name: fetcher })).toBeVisible();
-        }
+        expect(screen.getByText("Add Test Fetcher Fetcher")).toBeVisible();
+        expect(screen.getByRole("button", { name: "Add Fetcher" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
     });
 
-    test("When multiple fetchers are clicked, then multiple fetchers are selected", async () => {
-        const projectData = createProject();
-        const unusedFetchers = ["FetcherFoo", "FetcherBar", "FetcherTest"];
-
+    test("When changes are disabled, then the dialog still can be opened, but changes are not allowed", async () => {
+        const user = userEvent.setup();
         render(FetcherAddDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: createProject(),
                 onProjectChanged: () => {},
-                unusedFetchers,
-                open: true,
+                fetcher: fetcher,
+                disabled: true,
             },
         });
 
-        const selectBox = screen.getByRole("button", {
-            name: "Select a fetcher",
-        }) as HTMLInputElement;
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
 
-        await userEvent.click(selectBox);
-        await userEvent.click(screen.getByRole("option", { name: unusedFetchers[0] }));
-        await userEvent.click(screen.getByRole("option", { name: unusedFetchers[1] }));
-
-        expect(screen.getByRole("option", { name: unusedFetchers[0] })).toHaveAttribute(
-            "aria-selected",
-            "true",
-        );
-        expect(screen.getByRole("option", { name: unusedFetchers[1] })).toHaveAttribute(
-            "aria-selected",
-            "true",
-        );
-        expect(selectBox.textContent?.trim()).toBe("2 fetchers selected");
+        expect(screen.getByText("Add Test Fetcher Fetcher")).toBeVisible();
+        const addButton = screen.getByRole("button", { name: "Add Fetcher" });
+        expect(addButton).toBeVisible();
+        expect(addButton).toBeDisabled();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeVisible();
+        expect(screen.getByPlaceholderText("This is the FOO option")).toBeDisabled();
     });
 
-    test("When you add fetchers, then the settings are adjusted accordingly", async () => {
-        const projectData = createProject();
+    test("When you modify a fetcher, then the settings are adjusted accordingly", async () => {
+        const user = userEvent.setup();
 
-        const unusedFetchers = ["FetcherFoo", "FetcherBar", "FetcherTest"];
+        const projectData = createProject();
         let newProject: Project | undefined;
 
         const mockUpdateCall = mockApiCall("updateProject", {
             ...projectData,
             settings: createProjectSettings({
                 fetchers: {
-                    FetcherFoo: { options: {} },
-                    FetcherBar: { options: {} },
+                    test: {
+                        options: {
+                            FOO: "TEST",
+                        },
+                    },
                 },
             }),
         });
 
         render(FetcherAddDialog, {
             target: document.body,
-            context: mockUserContext,
             props: {
-                projectId: projectData.id,
-                projectSettings: projectData.settings,
+                project: projectData,
                 onProjectChanged: (it: Project) => (newProject = it),
-                unusedFetchers,
-                open: true,
+                fetcher: fetcher,
+                disabled: false,
             },
         });
 
-        const selectBox = screen.getByRole("button", {
-            name: "Select a fetcher",
-        }) as HTMLInputElement;
+        const trigger = screen.getByTestId("alert-dialog-trigger");
+        await waitFor(async () => user.click(trigger));
 
-        await userEvent.click(selectBox);
-        await userEvent.click(screen.getByRole("option", { name: unusedFetchers[0] }));
-        await userEvent.click(screen.getByRole("option", { name: unusedFetchers[1] }));
-        await userEvent.click(selectBox);
-        await userEvent.click(screen.getByRole("button", { name: "Add Fetchers" }));
+        await userEvent.type(screen.getByPlaceholderText("This is the FOO option"), "TEST");
+        await userEvent.click(screen.getByRole("button", { name: "Add Fetcher" }));
         await waitFor(() => expect(newProject).toBeDefined());
 
-        const fetchers = Object.keys(newProject?.settings?.fetchers ?? {});
-        expect(fetchers.toSorted()).toEqual(unusedFetchers.slice(0, 2).toSorted());
+        const fetcherOptions = Object.entries(newProject?.settings?.fetchers?.test?.options ?? {});
+        expect(fetcherOptions).toEqual([["FOO", "TEST"]]);
 
         expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
             mask: {
@@ -156,11 +131,10 @@ describe("Fetcher Add Dialog", () => {
                 id: projectData.id,
                 settings: Project_Settings.create({
                     fetchers: {
-                        FetcherFoo: {
-                            options: {},
-                        },
-                        FetcherBar: {
-                            options: {},
+                        test: {
+                            options: {
+                                FOO: "TEST",
+                            },
                         },
                     },
                 }),

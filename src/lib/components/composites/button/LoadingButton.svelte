@@ -49,7 +49,7 @@ Usage 1:
         type="submit"
         label="Process data"
         loadingLabel="Processing data"
-        bind:loading
+        {loading}
     />
 ```
 
