@@ -41,7 +41,7 @@
     },
     "devDependencies": {
         "@internationalized/date": "^3.12.2",
-        "@lucide/svelte": "^1.7.0",
+        "@lucide/svelte": "^1.23.0",
         "@playwright/test": "^1.57.0",
         "@protobuf-ts/grpcweb-transport": "^2.11.1",
         "@protobuf-ts/runtime-rpc": "^2.11.1",
