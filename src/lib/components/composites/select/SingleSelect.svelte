@@ -38,7 +38,7 @@ Usage:
     <Select.Trigger class="w-42">
         <span class="flex w-full flex-row justify-center">{label}</span>
     </Select.Trigger>
-    <Select.Content class="max-h-[300px]">
+    <Select.Content class="max-h-75">
         {#if options.length === 0}
             <Select.Item disabled value="no-options">
                 {`No ${categoryLabel} available`}
