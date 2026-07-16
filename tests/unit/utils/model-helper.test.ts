@@ -42,11 +42,13 @@ describe("Stringify a paper", () => {
 
     test("When the paper has external ids, then they are kept as a list of type/value pairs", () => {
         const paper = createPaper({
-            externalIds: [{ type: "DOI", value: "10.1234/abc" }],
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
         });
 
         const stringifiedPaper = stringifyPaper(paper);
 
-        expect(stringifiedPaper.externalIds).toEqual([{ type: "DOI", value: "10.1234/abc" }]);
+        expect(stringifiedPaper.externalIds).toEqual([
+            { type: "DOI", displayType: "DOI", value: "10.1234/abc" },
+        ]);
     });
 });

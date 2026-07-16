@@ -48,7 +48,10 @@
     }
 
     function addExternalId() {
-        paper = { ...paper, externalIds: [...paper.externalIds, { type: "", value: "" }] };
+        paper = {
+            ...paper,
+            externalIds: [...paper.externalIds, { type: "", displayType: "", value: "" }],
+        };
     }
 
     function removeExternalId(index: number) {

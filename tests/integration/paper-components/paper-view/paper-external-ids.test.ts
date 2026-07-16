@@ -29,8 +29,8 @@ describe.sequential("PaperExternalIds", () => {
     test("When the paper has external ids, then a badge is shown for each of them", async () => {
         const paper = createPaper({
             externalIds: [
-                { type: "DOI", value: "10.1234/abc" },
-                { type: "URL", value: "https://example.com" },
+                { type: "DOI", displayType: "DOI", value: "10.1234/abc" },
+                { type: "URL", displayType: "URL", value: "https://example.com" },
             ],
         });
 
@@ -56,7 +56,9 @@ describe.sequential("PaperExternalIds", () => {
 
     test("When a badge is hovered, then its value is shown", async () => {
         const user = userEvent.setup();
-        const paper = createPaper({ externalIds: [{ type: "DOI", value: "10.1234/abc" }] });
+        const paper = createPaper({
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
+        });
 
         render(PaperExternalIds, {
             target: document.body,
@@ -78,7 +80,9 @@ describe.sequential("PaperExternalIds", () => {
 
     test("When a badge is clicked, then its value is shown", async () => {
         const user = userEvent.setup();
-        const paper = createPaper({ externalIds: [{ type: "DOI", value: "10.1234/abc" }] });
+        const paper = createPaper({
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
+        });
 
         render(PaperExternalIds, {
             target: document.body,
@@ -169,7 +173,9 @@ describe.sequential("PaperExternalIds", () => {
 
     test("When the edit button is clicked, then the edit dialog is opened", async () => {
         const user = userEvent.setup();
-        const paper = createPaper({ externalIds: [{ type: "DOI", value: "10.1234/abc" }] });
+        const paper = createPaper({
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
+        });
 
         render(PaperExternalIds, {
             target: document.body,
@@ -235,8 +241,8 @@ describe.sequential("PaperExternalIds", () => {
         const user = userEvent.setup();
         const paper = createPaper({
             externalIds: [
-                { type: "DOI", value: "10.1234/abc" },
-                { type: "URL", value: "https://example.com" },
+                { type: "DOI", displayType: "DOI", value: "10.1234/abc" },
+                { type: "URL", displayType: "URL", value: "https://example.com" },
             ],
         });
 
@@ -274,8 +280,8 @@ describe.sequential("PaperExternalIds", () => {
         const user = userEvent.setup();
         const paper = createPaper({
             externalIds: [
-                { type: "", value: "" },
-                { type: "", value: "" },
+                { type: "", displayType: "", value: "" },
+                { type: "", displayType: "", value: "" },
             ],
         });
 
@@ -316,6 +322,7 @@ describe.sequential("PaperExternalIds", () => {
         const paper = createPaper({
             externalIds: EXTERNAL_ID_TYPE_OPTIONS.map((option) => ({
                 type: option.value,
+                displayType: option.label,
                 value: "some-value",
             })),
         });
@@ -343,7 +350,9 @@ describe.sequential("PaperExternalIds", () => {
 
     test("When the dialog is closed, then the badges reflect the changes made", async () => {
         const user = userEvent.setup();
-        const paper = createPaper({ externalIds: [{ type: "DOI", value: "10.1234/abc" }] });
+        const paper = createPaper({
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
+        });
 
         render(PaperExternalIds, {
             target: document.body,
