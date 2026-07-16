@@ -10,7 +10,7 @@ export class PaperViewPageModel {
     readonly generalInformationLabel: Locator;
     readonly publicationTypeLabel: Locator;
     readonly publicationNameLabel: Locator;
-    readonly externalIdLabel: Locator;
+    readonly externalIdsLabel: Locator;
 
     readonly projectName: string;
     readonly paperNames: string[];
@@ -31,7 +31,7 @@ export class PaperViewPageModel {
         this.generalInformationLabel = page.getByText("General Information");
         this.publicationTypeLabel = page.getByText("Publication Type");
         this.publicationNameLabel = page.getByText("Publication Name");
-        this.externalIdLabel = page.getByText("External ID");
+        this.externalIdsLabel = page.getByText("External IDs");
 
         this.projectName = "Project 1";
         this.paperNames = ["Paper View - Paper 0", "Paper View - Paper 1"];
