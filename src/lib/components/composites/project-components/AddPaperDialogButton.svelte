@@ -104,9 +104,13 @@
 
             if (doBothHaveId && a.id === b.id) return true;
 
-            const doBothHaveExternalId = a.externalId !== "" && b.externalId !== "";
-
-            return doBothHaveExternalId && a.externalId === b.externalId;
+            return a.externalIds.some((externalIdA) =>
+                b.externalIds.some(
+                    (externalIdB) =>
+                        externalIdA.type === externalIdB.type &&
+                        externalIdA.value === externalIdB.value,
+                ),
+            );
         }
 
         const papers = Promise.all([localPapers, fetcherPapers])

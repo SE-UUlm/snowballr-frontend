@@ -1,6 +1,6 @@
 import { Project_Paper } from "$api/project";
 import type { Criterion } from "$api/criterion";
-import type { Paper } from "$api/paper";
+import type { Paper, Paper_ExternalId } from "$api/paper";
 import type { Review } from "$api/review";
 
 /**
@@ -45,8 +45,12 @@ type PersonWithEmail = Person & {
     email: string;
 };
 
-type StringifiedPaper = {
-    [K in keyof Paper]: string;
+/**
+ * Version of `Paper` where every field is turned into a string for editing purposes, except for
+ * `externalIds`, which is kept as-is since it is a list of type/value pairs rather than a single value.
+ */
+type StringifiedPaper = Omit<{ [K in keyof Paper]: string }, "externalIds"> & {
+    externalIds: Paper_ExternalId[];
 };
 
 export type {

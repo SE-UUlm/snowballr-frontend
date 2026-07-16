@@ -94,7 +94,7 @@ export const Projects = {
 
 const demoPaper1: Paper = {
     id: "0",
-    externalId: "EXT12345",
+    externalIds: [{ type: "DOI", value: "EXT12345" }],
     title: "An Analysis of TypeScript Performance",
     abstrakt:
         "This paper examines the performance characteristics of TypeScript in large-scale applications.",
@@ -110,7 +110,7 @@ const demoPaper1: Paper = {
 
 const demoPaper2: Paper = {
     id: "1",
-    externalId: "EXT67890",
+    externalIds: [{ type: "DOI", value: "EXT67890" }],
     title: "The Evolution of JavaScript Frameworks",
     abstrakt:
         "A historical overview and future trends of JavaScript frameworks in web development.",
@@ -126,7 +126,7 @@ const demoPaper2: Paper = {
 
 const demoPaper3: Paper = {
     id: "2",
-    externalId: "EXT24680",
+    externalIds: [{ type: "DOI", value: "EXT24680" }],
     title: "Machine Learning in Frontend Development",
     abstrakt:
         "Exploring the integration of machine learning techniques in modern frontend frameworks.",
