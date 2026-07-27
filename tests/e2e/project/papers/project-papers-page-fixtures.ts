@@ -84,7 +84,7 @@ export const test = base.extend<ProjectPapersPageFixtures>({
             await use(projectPapersPage);
         } finally {
             // Remove the project papers and soft delete the project after all tests.
-            // TODO: Delete all papers from the mock backend (Currently not supported).
+            // TODO: Delete all papers from the backend (currently not supported).
             projectPapersPage.projectPaperIds.forEach((id) =>
                 apiClient.removePaperFromProject({ id: id }),
             );

@@ -1,4 +1,4 @@
-import type { User } from "./mock-backend";
+import type { User } from "./backend-setup";
 
 export const alice: User = {
     firstName: "Alice",

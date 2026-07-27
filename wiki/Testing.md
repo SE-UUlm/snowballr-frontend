@@ -131,10 +131,10 @@ end-to-end tests and getting feedback on them more quickly.
 
 ### Requirements
 
-The E2E tests require a mock backend to be running for each supported browser (Chromium, Firefox, and WebKit).
-These mock backends simulate the backend responses.
+The E2E tests require a backend to be running for each supported browser (Chromium, Firefox, and WebKit).
+These backends use the pinned real backend image.
 
-The E2E tests will automatically create these mock backends using docker,
+The E2E tests will automatically create these backends using docker,
 requiring it to be installed and running.
 
 ### Best Practices
@@ -143,11 +143,11 @@ requiring it to be installed and running.
    Instead of importing the `test` fixture directly from "@playwright/test",
    use the `test` variable exported from one of the following:
    - [`utils/fixtures/shared-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/shared-fixture.ts)
-     (a new mock backend is started for each worker)
+     (a new backend is started for each worker)
    - [`utils/fixtures/isolated-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/fixtures/isolated-fixture.ts)
-     (a new mock backend is started for each test)
+     (a new backend is started for each test)
 
-   This ensures that the API calls to the mock backend are automatically redirected to the correct mock backend
+   This ensures that the API calls are automatically redirected to the correct backend
    instance based on the browser the test is running in.
 
    In general, it makes sense to create an own fixture for each test class to set up the tests and to use an object in

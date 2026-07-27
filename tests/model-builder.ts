@@ -165,7 +165,7 @@ export function createProjectPaperViewProps(
     };
 }
 
-export function createBUttonBarProps(
+export function createButtonBarProps(
     props: Partial<{
         userReview?: Review;
         loadingProjectPaper: Promise<Project_Paper | undefined>;
