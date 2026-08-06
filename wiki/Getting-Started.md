@@ -29,11 +29,17 @@ The environment variables are as follows:
 
 ## Building from Source
 
+Building from source requires Node.js 22.12 or newer, or any Node.js 24 release. The version used by CI and the
+production image is pinned in [`.nvmrc`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/.nvmrc), so if
+you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use`. Other versions are rejected by npm with
+an `EBADDEVENGINES` error.
+
 To build the project from source, run the following commands:
 
 ```bash
 git clone git@github.com:SE-UUlm/snowballr-frontend.git
 cd snowballr-frontend
+nvm use
 npm install
 ```
 
