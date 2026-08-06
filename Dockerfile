@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=22.12.0
+# Keep in sync with .nvmrc
+ARG NODE_VERSION=24
 
 ################################################################################
 # Use node image for base image for all stages.

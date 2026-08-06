@@ -7,26 +7,23 @@ execSync(`docker pull ${MOCK_BACKEND_IMAGE}`, {
 });
 
 /*
-Since with Node 23 type stripping no longer has to be explicitly activated,
-but is standard and must be explicitly deactivated,
-this script checks whether node is running in version 23 and if so,
-type stripping is deactivated, since the generated GRPC client does not work with type stripping.
+Node strips types from .ts files by default since v22.18 and v23.6, so the flag below is needed on
+every runtime we support. Stripping is only erasure, and the generated gRPC client contains enums,
+which it cannot erase - deactivating it lets Playwright transform those files instead.
  */
 
-const isNode23 = process.version.startsWith("v23");
 const NO_TYPE_STRIPPING_FLAG = "--no-experimental-strip-types";
 
 // At the moment, this workaround only needs to be applied when running playwright.
 const BASE_COMMAND = "node_modules/playwright/cli.js";
 
 /**
- * Runs playwright with "--no-experimental-strip-types" flag if the node version is 23.x.x
+ * Runs playwright with the "--no-experimental-strip-types" flag.
  *
  * @param args (optional) additional arguments for playwright, e.g. "test"
  */
 function runPlaywright(args = []) {
-    const nodeArgs = isNode23 ? [NO_TYPE_STRIPPING_FLAG] : [];
-    const result = spawnSync("node", [...nodeArgs, BASE_COMMAND, ...args], {
+    const result = spawnSync("node", [NO_TYPE_STRIPPING_FLAG, BASE_COMMAND, ...args], {
         shell: true,
         stdio: "inherit",
     });
