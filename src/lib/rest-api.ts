@@ -1,4 +1,18 @@
-import { Configuration, ProjectsControllerApi } from "@se-uulm/snowballr-api-client";
+import {
+    AuthControllerApi,
+    Configuration,
+    CriterionControllerApi,
+    ExportControllerApi,
+    FetcherControllerApi,
+    InvitationControllerApi,
+    PaperControllerApi,
+    ProjectMemberControllerApi,
+    ProjectPaperControllerApi,
+    ProjectsControllerApi,
+    ReadingListControllerApi,
+    ReviewControllerApi,
+    UsersControllerApi,
+} from "@se-uulm/snowballr-api-client";
 import { env } from "$env/dynamic/public";
 
 // If no PUBLIC_API_BASE_URL is defined, log an error and exit.
@@ -16,7 +30,20 @@ const configuration = new Configuration({
     credentials: credentials,
 });
 
-export const restService = flattenApis([new ProjectsControllerApi(configuration)]);
+export const restService = flattenApis([
+    new AuthControllerApi(configuration),
+    new CriterionControllerApi(configuration),
+    new ExportControllerApi(configuration),
+    new FetcherControllerApi(configuration),
+    new InvitationControllerApi(configuration),
+    new PaperControllerApi(configuration),
+    new ProjectMemberControllerApi(configuration),
+    new ProjectPaperControllerApi(configuration),
+    new ProjectsControllerApi(configuration),
+    new ReadingListControllerApi(configuration),
+    new ReviewControllerApi(configuration),
+    new UsersControllerApi(configuration),
+]);
 
 /**
  * Converts a union type to an intersection type.
