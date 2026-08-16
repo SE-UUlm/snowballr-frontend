@@ -85,7 +85,6 @@
             publicationName: paper.publicationName,
             publicationType: paper.publicationType,
             authors: stringToAuthors(paper.authors),
-            backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
         let promise;
