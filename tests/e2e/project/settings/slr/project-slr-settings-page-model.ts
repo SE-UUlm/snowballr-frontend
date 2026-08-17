@@ -79,14 +79,34 @@ export class ProjectSLRSettingsPageModel {
     }
 
     async addFetcher(fetcherName: string) {
-        await this.page.getByText("Add Fetcher(s)").click();
-        await this.page.getByRole("button", { name: "Select a fetcher" }).click();
-        await this.page.getByRole("option", { name: fetcherName, exact: true }).click();
-        await this.page.getByRole("button", { name: "1 fetcher selected" }).click();
-        await expect(
-            this.page.getByRole("option", { name: fetcherName, exact: true }),
-        ).not.toBeVisible();
-        await this.page.getByRole("button", { name: "Add Fetcher", exact: true }).click();
+        const fetcherRow = this.getFetcherRow(fetcherName).first();
+        await fetcherRow.getByRole("button").click();
+        await this.page.getByTestId("alert-dialog-action").click();
+    }
+
+    async ensureFetcherAdded(fetcherName: string) {
+        const fetcherRow = this.getFetcherRow(fetcherName).first();
+        await expect(fetcherRow.getByRole("button")).toHaveCount(2);
+    }
+
+    async ensureFetcherRemoved(fetcherName: string) {
+        const fetcherRow = this.getFetcherRow(fetcherName).first();
+        await expect(fetcherRow.getByRole("button")).toHaveCount(1);
+    }
+
+    async getResetButton(fetcherName: string) {
+        return this.page
+            .getByRole("alertdialog", { name: `Edit ${fetcherName} Fetcher Options` })
+            .getByTestId("key-set-default-btn");
+    }
+
+    async ensureResetButtonState(fetcherName: string, shouldBeEnabled: boolean) {
+        const resetButton = await this.getResetButton(fetcherName);
+        if (shouldBeEnabled) {
+            await expect(resetButton).toBeEnabled();
+        } else {
+            await expect(resetButton).toBeDisabled();
+        }
     }
 
     async selectSnowballingType(type: "Forward" | "Backward" | "Both") {

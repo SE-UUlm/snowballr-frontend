@@ -25,6 +25,7 @@
         options = Object.entries(fetcher.optionsSchema).map(([id, schema]) => ({
             id,
             value: projectFetcherOptions?.options[id] ?? "",
+            defaultValue: schema.defaultValue ?? "",
             ...schema,
         }));
     });
