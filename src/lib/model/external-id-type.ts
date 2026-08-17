@@ -16,7 +16,6 @@ const EXTERNAL_ID_TYPE_OPTIONS: SelectOption[] = [
     { value: "PUB_MED_CENTRAL", label: "PubMed Central" },
     { value: "DBLP", label: "DBLP" },
     { value: "SEMANTIC_SCHOLAR", label: "Semantic Scholar" },
-    { value: "URL", label: "URL" },
 ];
 
 export { EXTERNAL_ID_TYPE_OPTIONS };
