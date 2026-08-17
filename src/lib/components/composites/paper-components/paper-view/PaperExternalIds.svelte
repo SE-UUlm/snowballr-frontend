@@ -28,22 +28,40 @@
     const areAllTypesUsed = $derived(
         EXTERNAL_ID_TYPE_OPTIONS.every((option) => usedTypes.includes(option.value)),
     );
+    // A row without a type chosen yet would collide with any other blank row, so only one is
+    // allowed to exist at a time.
+    const hasEmptyTypeRow = $derived(
+        paper.externalIds.some((externalId) => externalId.type === ""),
+    );
+    const isAddDisabled = $derived(areAllTypesUsed || hasEmptyTypeRow);
 
     // Types already used by other rows must not be selectable again, to ensure every external ID
-    // has a unique type. The type of the row itself is kept in its options so it remains selected.
+    // has a unique type. The type of the row itself is kept in its options so it remains selected,
+    // even if it is not (or no longer) part of EXTERNAL_ID_TYPE_OPTIONS.
     function availableTypeOptions(index: number) {
-        const currentType = paper.externalIds[index].type;
-        return EXTERNAL_ID_TYPE_OPTIONS.filter(
+        const { type: currentType, displayType: currentDisplayType } = paper.externalIds[index];
+        const options = EXTERNAL_ID_TYPE_OPTIONS.filter(
             (option) => option.value === currentType || !usedTypes.includes(option.value),
         );
+        if (currentType !== "" && !options.some((option) => option.value === currentType)) {
+            options.unshift({ value: currentType, label: currentDisplayType || currentType });
+        }
+        return options;
     }
 
     function updateExternalId(index: number, field: "type" | "value", value: string) {
         paper = {
             ...paper,
-            externalIds: paper.externalIds.map((externalId, i) =>
-                i === index ? { ...externalId, [field]: value } : externalId,
-            ),
+            externalIds: paper.externalIds.map((externalId, i) => {
+                if (i !== index) return externalId;
+                if (field === "type") {
+                    const displayType =
+                        EXTERNAL_ID_TYPE_OPTIONS.find((option) => option.value === value)?.label ??
+                        value;
+                    return { ...externalId, type: value, displayType };
+                }
+                return { ...externalId, value };
+            }),
         };
     }
 
@@ -95,7 +113,7 @@ Usage:
                         triggerVariant="none"
                     >
                         {#snippet trigger()}
-                            <Badge variant="outline">{externalId.type || "Unknown"}</Badge>
+                            <Badge variant="outline">{externalId.displayType || "Unknown"}</Badge>
                         {/snippet}
                         {#snippet content()}
                             {externalId.value || "No value"}
@@ -159,11 +177,17 @@ Usage:
                     </Button>
                 </div>
             {/each}
-            <span title={areAllTypesUsed ? "All available types are already used" : ""}>
+            <span
+                title={hasEmptyTypeRow
+                    ? "Select a type for the new row before adding another"
+                    : areAllTypesUsed
+                      ? "All available types are already used"
+                      : ""}
+            >
                 <Button
                     class="w-fit"
                     data-testid="add-external-id-btn"
-                    disabled={areAllTypesUsed}
+                    disabled={isAddDisabled}
                     onclick={addExternalId}
                     variant="outline"
                 >

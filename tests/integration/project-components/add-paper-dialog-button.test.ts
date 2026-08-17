@@ -215,6 +215,87 @@ describe("AddPaperDialogButton", () => {
         expect(screen.queryByText("Bar", { exact: false })).not.toBeInTheDocument();
     });
 
+    test("When local and fetcher papers share the same non-empty external id, then only the local one is shown", async () => {
+        mockApiCall(
+            "searchLocalProjectPaperCandidates",
+            Paper_List.create({
+                papers: [
+                    {
+                        id: "1",
+                        title: "Foo",
+                        externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1/abc" }],
+                    },
+                ],
+            }),
+        );
+        mockApiCall(
+            "searchFetcherProjectPaperCandidates",
+            Paper_List.create({
+                papers: [
+                    {
+                        title: "Bar",
+                        externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1/abc" }],
+                    },
+                ],
+            }),
+        );
+
+        render(AddPaperDialogButton, {
+            target: document.body,
+            props: {
+                open: true,
+                projectId: "1",
+                stage: 1n,
+                includeLocal: true,
+                includeFetchers: true,
+                loadingProject: loading(projectWithFetcher),
+            },
+        });
+
+        await search("test");
+
+        expect(await screen.findByText("Foo", { exact: false })).toBeVisible();
+        expect(screen.queryByText("Bar", { exact: false })).not.toBeInTheDocument();
+    });
+
+    test("When local and fetcher papers each only have a blank external id, then both are shown", async () => {
+        mockApiCall(
+            "searchLocalProjectPaperCandidates",
+            Paper_List.create({
+                papers: [
+                    {
+                        id: "1",
+                        title: "Foo",
+                        externalIds: [{ type: "", displayType: "", value: "" }],
+                    },
+                ],
+            }),
+        );
+        mockApiCall(
+            "searchFetcherProjectPaperCandidates",
+            Paper_List.create({
+                papers: [{ title: "Bar", externalIds: [{ type: "", displayType: "", value: "" }] }],
+            }),
+        );
+
+        render(AddPaperDialogButton, {
+            target: document.body,
+            props: {
+                open: true,
+                projectId: "1",
+                stage: 1n,
+                includeLocal: true,
+                includeFetchers: true,
+                loadingProject: loading(projectWithFetcher),
+            },
+        });
+
+        await search("test");
+
+        expect(await screen.findByText("Foo", { exact: false })).toBeVisible();
+        expect(await screen.findByText("Bar", { exact: false })).toBeVisible();
+    });
+
     test("When a paper with undefined authors is encountered, then 'Unknown Authors' is displayed", async () => {
         mockApiCall(
             "searchLocalProjectPaperCandidates",

@@ -317,6 +317,98 @@ describe.sequential("PaperExternalIds", () => {
         await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
     });
 
+    test("When a row's type is changed, then the badge reflects the new displayType", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper({
+            externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
+        });
+
+        render(PaperExternalIds, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                paper: stringifyPaper(paper),
+                isInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const editButton = screen.getByTestId("edit-external-ids-btn");
+        await waitUntilClickable(editButton);
+        await user.click(editButton);
+        const dialog = screen.getByTestId("external-ids-dialog");
+
+        const row0 = within(dialog).getByTestId("external-id-row-0");
+        await user.click(within(row0).getByText("DOI"));
+        await user.click(screen.getByRole("option", { name: "ArXiv" }));
+
+        await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
+
+        expect(screen.getByText("ArXiv")).toBeInTheDocument();
+        expect(screen.queryByText("DOI")).not.toBeInTheDocument();
+    });
+
+    test("When an external id has a type unknown to the local option list, then it remains visible and selected", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper({
+            externalIds: [{ type: "SCOPUS", displayType: "Scopus", value: "12345" }],
+        });
+
+        render(PaperExternalIds, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                paper: stringifyPaper(paper),
+                isInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const editButton = screen.getByTestId("edit-external-ids-btn");
+        await waitUntilClickable(editButton);
+        await user.click(editButton);
+        const dialog = screen.getByTestId("external-ids-dialog");
+
+        const row0 = within(dialog).getByTestId("external-id-row-0");
+        expect(within(row0).getByText("Scopus")).toBeInTheDocument();
+
+        await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
+    });
+
+    test("When a row has no type selected, then the add button is disabled until a type is chosen", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper({ externalIds: [] });
+
+        render(PaperExternalIds, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                paper: stringifyPaper(paper),
+                isInEditMode: true,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const editButton = screen.getByTestId("edit-external-ids-btn");
+        await waitUntilClickable(editButton);
+        await user.click(editButton);
+        const dialog = screen.getByTestId("external-ids-dialog");
+
+        await user.click(within(dialog).getByTestId("add-external-id-btn"));
+        expect(within(dialog).getByTestId("add-external-id-btn")).toBeDisabled();
+
+        const row0 = within(dialog).getByTestId("external-id-row-0");
+        await user.click(within(row0).getByText("No type selected"));
+        await user.click(screen.getByRole("option", { name: "DOI" }));
+
+        expect(within(dialog).getByTestId("add-external-id-btn")).not.toBeDisabled();
+
+        await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
+    });
+
     test("When all available types are used, then the add button is disabled", async () => {
         const user = userEvent.setup();
         const paper = createPaper({
