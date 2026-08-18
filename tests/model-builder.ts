@@ -1,4 +1,5 @@
 import type { User } from "$api/user";
+import type { UserSettings } from "$api/user_settings";
 import type { Author, Paper } from "$api/paper";
 import {
     ReviewDecisionMatrix,
@@ -125,6 +126,15 @@ export function createProjectSettings(props: Partial<Project_Settings> = {}): Pr
         fetchers: {},
         snowballingType: SnowballingType.BOTH,
         decisionMatrix: ReviewDecisionMatrix.create({ numberOfReviewers: 2 }),
+        ...props,
+    };
+}
+
+export function createUserSettings(props: Partial<UserSettings> = {}): UserSettings {
+    return {
+        showHotkeys: false,
+        reviewMode: false,
+        defaultProjectSettings: createProjectSettings(),
         ...props,
     };
 }
