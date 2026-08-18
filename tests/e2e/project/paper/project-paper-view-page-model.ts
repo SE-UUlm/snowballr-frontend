@@ -18,6 +18,7 @@ export class ProjectPaperViewPageModel {
     readonly previousPaperButton: Locator;
     readonly toggleEditModeButton: Locator;
     readonly savePaperChangesButton: Locator;
+    readonly undoPaperChangesButton: Locator;
 
     readonly submittedReviewToast: Locator;
     readonly noMorePapersToReviewToast: Locator;
@@ -46,6 +47,7 @@ export class ProjectPaperViewPageModel {
         this.previousPaperButton = page.locator("button[aria-label='Previous Paper']");
         this.toggleEditModeButton = page.getByTestId("toggle-edit-paper-mode-btn");
         this.savePaperChangesButton = page.getByTestId("save-paper-changes-btn");
+        this.undoPaperChangesButton = page.getByTestId("undo-paper-changes-btn");
 
         this.submittedReviewToast = page.getByText("Successfully submitted a review.");
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");

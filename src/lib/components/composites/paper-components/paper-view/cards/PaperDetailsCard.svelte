@@ -5,6 +5,7 @@
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Save from "@lucide/svelte/icons/save";
+    import Undo2 from "@lucide/svelte/icons/undo-2";
     import { cn } from "$lib/utils/shadcn-helper";
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
@@ -165,6 +166,10 @@
         });
     }
 
+    function undoPaperModifications() {
+        if (originalPaper) paper = originalPaper;
+    }
+
     beforeNavigate(({ cancel }) => {
         if (!isPaperModified) return;
         const isConfirmed = confirm(
@@ -206,6 +211,15 @@ Usage:
                     {#if isMakingApiCall}
                         <LoaderCircle class="animate-spin" />
                     {:else}
+                        {#if isPaperModified}
+                            <Undo2
+                                class="select-none hover:cursor-pointer"
+                                aria-label="Undo Paper Changes"
+                                data-testid="undo-paper-changes-btn"
+                                onclick={undoPaperModifications}
+                                size={24}
+                            />
+                        {/if}
                         <Save
                             class={cn(
                                 "select-none",

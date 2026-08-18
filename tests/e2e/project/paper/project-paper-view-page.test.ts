@@ -256,6 +256,32 @@ test.describe("Update Paper Tests", () => {
         // Expect no changes were saved
         await expect(yearInput).toHaveText(previousYear);
     });
+
+    test("When the user edits a field, then the undo button appears and reverts the change when clicked", async ({
+        projectPaperViewPage,
+    }) => {
+        await projectPaperViewPage.openProjectPaperView(
+            projectPaperViewPage.projectId,
+            projectPaperViewPage.localProjectPaperIds[0],
+        );
+
+        // Enter edit mode
+        await projectPaperViewPage.toggleEditModeButton.click();
+        await expect(projectPaperViewPage.undoPaperChangesButton).not.toBeVisible();
+
+        // Change title
+        const titleInput = projectPaperViewPage.getToggleableInput("title");
+        const originalTitle = await titleInput.inputValue();
+        await titleInput.fill("Title That Will Be Undone");
+        await expect(projectPaperViewPage.undoPaperChangesButton).toBeVisible();
+
+        // Undo the change
+        await projectPaperViewPage.undoPaperChangesButton.click();
+
+        // Expect the original title to be restored and the undo button to be hidden again
+        await expect(titleInput).toHaveValue(originalTitle);
+        await expect(projectPaperViewPage.undoPaperChangesButton).not.toBeVisible();
+    });
 });
 
 test.describe("Create Paper Tests", () => {
