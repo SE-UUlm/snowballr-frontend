@@ -134,3 +134,27 @@ test.describe("Delete Project Tests", () => {
         ).not.toBeVisible();
     });
 });
+
+test.describe("Leave Project Tests", () => {
+    /**
+     * The fixture only sets up a project with a single admin (the current user), since there is no
+     * way to add a second, already accepted member without going through the invitation email flow.
+     * This means only the "last admin" case can be exercised here; opening the dialog and leaving as
+     * a non-last admin are `test.fixme`d below for the same reason.
+     */
+
+    test("When the current user is the last admin of the project, then the leave project button is disabled with an explanation.", async ({
+        projectSettingsPage,
+    }) => {
+        await expect(projectSettingsPage.leaveButton).toBeVisible();
+        await expect(projectSettingsPage.leaveButton).toBeDisabled();
+        await expect(projectSettingsPage.leaveButton).toHaveAttribute(
+            "title",
+            "You are the last admin of this project. Promote another member to admin before leaving.",
+        );
+    });
+
+    test.fixme("When the leave project dialog is opened and cancelled, then the user is not removed.", async () => {});
+
+    test.fixme("When the current user is not the last admin and leaves the project, then they are removed and redirected to the home page.", async () => {});
+});
