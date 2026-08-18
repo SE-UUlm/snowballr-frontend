@@ -29,4 +29,17 @@ test.describe("Default Fetcher Settings", () => {
         );
         await projectSetupSettingsPage.ensureFetcherAdded(fetcherName);
     });
+
+    test("When the user removes a default fetcher, then it is not visible anymore after a reload", async ({
+        projectSetupSettingsPage,
+    }) => {
+        await projectSetupSettingsPage.addFetcher(fetcherName);
+        await reloadWait(
+            projectSetupSettingsPage.page,
+            projectSetupSettingsPage.page.getByRole("heading", { name: fetcherName, exact: true }),
+        );
+        await projectSetupSettingsPage.deleteFetcher(fetcherName);
+        await reloadWait(projectSetupSettingsPage.page, projectSetupSettingsPage.heading);
+        await projectSetupSettingsPage.ensureFetcherRemoved(fetcherName);
+    });
 });
