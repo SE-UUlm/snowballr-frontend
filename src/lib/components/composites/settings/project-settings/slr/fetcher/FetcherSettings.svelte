@@ -1,16 +1,13 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, Project_Settings } from "$api/project";
     import { onMount } from "svelte";
-    import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import FetcherAddDialog from "./FetcherAddDialog.svelte";
-    import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { FetcherInformation } from "$api/fetcher";
+    import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
+    import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+    import { updateFetchers } from "./update-fetchers";
 
     interface Props {
         slrSettingsLocked?: boolean;
@@ -23,6 +20,8 @@
 
     let loadAvailableFetchersError: ActionError = $state(undefined);
     let loading = $state(true);
+    let initialized = $state(false);
+    let projectId: string | undefined = $state();
     let projectSettings: Project_Settings | undefined = $state();
     let disabled = $derived(slrSettingsLocked || loading || isProjectArchived);
 
@@ -34,6 +33,7 @@
 
     async function loadProject(project: Project) {
         loading = true;
+        projectId = project.id;
         projectSettings = project.settings;
         availableFetchers = await backendService
             .getAvailableFetchers({})
@@ -52,6 +52,7 @@
             (it) => Object.keys(projectSettings?.fetchers || {}).indexOf(it.id) !== -1,
         );
         loading = false;
+        initialized = true;
     }
 
     onMount(async () => {
@@ -70,56 +71,32 @@
 
         loading = false;
     });
+
+    const saveFetchers: SaveFetchers = async (fetchers, onSuccess, onError) => {
+        if (projectId === undefined) return;
+
+        await updateFetchers(
+            projectId,
+            fetchers,
+            (updatedProject) => {
+                onSuccess();
+                loadProject(updatedProject);
+            },
+            onError,
+        );
+    };
 </script>
 
-<SettingsSection {loading} locked={slrSettingsLocked} sectionTitle="Fetcher Settings">
-    <ActionErrorAlert error={loadAvailableFetchersError} />
-    {#await loadingProject}
-        <Skeleton class="h-8 w-24" />
-        <Skeleton class="h-8 w-32" />
-        <Skeleton class="h-8 w-48" />
-        <Skeleton class="h-8 w-38" />
-    {:then project}
-        {#if availableFetchers.length === 0}
-            <span class="text-hint italic">
-                This SnowballR instance has no registered fetchers yet.
-            </span>
-        {/if}
-
-        <ul class="flex flex-col gap-2">
-            {#each usedFetchers as fetcher (fetcher.id)}
-                <li class="flex flex-row items-center justify-between">
-                    <h4>{fetcher.name}</h4>
-                    <div>
-                        <FetcherOptionsDialog
-                            {disabled}
-                            {fetcher}
-                            onProjectChanged={loadProject}
-                            {project}
-                        />
-                        <FetcherRemovalDialog
-                            {disabled}
-                            {fetcher}
-                            onProjectChanged={loadProject}
-                            {project}
-                        />
-                    </div>
-                </li>
-            {/each}
-        </ul>
-
-        <ul class="flex flex-col gap-2">
-            {#each unusedFetchers as fetcher (fetcher.id)}
-                <li class="flex flex-row items-center justify-between">
-                    <h4>{fetcher.name}</h4>
-                    <FetcherAddDialog
-                        {disabled}
-                        {fetcher}
-                        onProjectChanged={loadProject}
-                        {project}
-                    />
-                </li>
-            {/each}
-        </ul>
-    {/await}
-</SettingsSection>
+<FetcherSettingsList
+    {availableFetchers}
+    {disabled}
+    fetchers={projectSettings?.fetchers ?? {}}
+    {initialized}
+    loadFetchersError={loadAvailableFetchersError}
+    {loading}
+    locked={slrSettingsLocked}
+    onSave={saveFetchers}
+    sectionTitle="Fetcher Settings"
+    {unusedFetchers}
+    {usedFetchers}
+/>

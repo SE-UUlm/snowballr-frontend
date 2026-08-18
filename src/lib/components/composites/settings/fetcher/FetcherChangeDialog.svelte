@@ -1,16 +1,15 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { Project } from "$api/project";
-    import { updateFetchers } from "./update-fetchers";
     import { type FetcherOption } from "./FetcherOptionRow.svelte";
     import Lock from "@lucide/svelte/icons/lock";
     import { type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import FetcherInformationView from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherInformationView.svelte";
+    import FetcherInformationView from "./FetcherInformationView.svelte";
     import { FetcherInformation } from "$api/fetcher";
     import { cn } from "$lib/utils/shadcn-helper";
     import { buttonVariants, type ButtonVariant } from "$lib/components/primitives/button";
     import type { Snippet } from "svelte";
+    import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {
         label: string;
@@ -19,9 +18,9 @@
         triggerVariant: ButtonVariant;
         className: string;
         trigger: Snippet;
-        project: Project;
+        fetchers: Fetchers;
         fetcher: FetcherInformation;
-        onProjectChanged: (project: Project) => void;
+        onSave: SaveFetchers;
         disabled: boolean;
     }
 
@@ -32,9 +31,9 @@
         triggerVariant,
         className,
         trigger,
-        project,
+        fetchers,
         fetcher,
-        onProjectChanged,
+        onSave,
         disabled,
     }: Props = $props();
 
@@ -46,20 +45,16 @@
     async function updateFetcherOptions() {
         loading = true;
 
-        const updatedFetchers = project.settings?.fetchers ?? {};
+        const updatedFetchers = { ...fetchers };
         const newOptions: { [key: string]: string } = {};
         for (const option of options) {
             newOptions[option.id] = option.value;
         }
         updatedFetchers[fetcher.id] = { options: newOptions };
 
-        await updateFetchers(
-            project.id,
+        await onSave(
             updatedFetchers,
-            (it) => {
-                open = false;
-                onProjectChanged(it);
-            },
+            () => (open = false),
             (it) => (error = it),
         );
 
@@ -94,7 +89,7 @@
             <FetcherInformationView
                 disabled={disabled || loading}
                 {fetcher}
-                {project}
+                {fetchers}
                 bind:options
             />
             <ActionErrorAlert {error} />

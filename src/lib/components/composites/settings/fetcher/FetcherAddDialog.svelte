@@ -1,27 +1,27 @@
 <script lang="ts">
-    import { Project } from "$api/project";
     import type { FetcherInformation } from "$api/fetcher";
     import Plus from "@lucide/svelte/icons/plus";
     import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
+    import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {
-        project: Project;
+        fetchers: Fetchers;
         fetcher: FetcherInformation;
-        onProjectChanged: (project: Project) => void;
+        onSave: SaveFetchers;
         disabled: boolean;
     }
 
-    let { project, fetcher, onProjectChanged, disabled }: Props = $props();
+    let { fetchers, fetcher, onSave, disabled }: Props = $props();
 </script>
 
 <FetcherChangeDialog
     className="w-full sm:w-40"
     {disabled}
     {fetcher}
+    {fetchers}
     label="Add Fetcher"
     loadingLabel="Adding Fetcher"
-    {onProjectChanged}
-    {project}
+    {onSave}
     title={`Add ${fetcher.name} Fetcher`}
     triggerVariant="default"
 >
