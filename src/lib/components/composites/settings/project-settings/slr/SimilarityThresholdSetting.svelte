@@ -102,6 +102,9 @@ Usage:
         Set the similarity threshold used to consider two papers as equal. A higher threshold
         requires papers to be more similar before they are treated as duplicates.
     </p>
+    <p class="text-description">
+        Note: Setting a low similarity threshold may cause two unique papers to be considered equal.
+    </p>
     <div class="group/slider pb-10">
         <Slider
             class="max-w-2xl"

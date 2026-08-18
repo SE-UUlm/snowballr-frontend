@@ -35,6 +35,9 @@ describe("SimilarityThresholdSetting", () => {
         expect(
             screen.getByText(/Set the similarity threshold used to consider two papers as equal/),
         ).toBeInTheDocument();
+        expect(
+            screen.getByText(/may cause two unique papers to be considered equal/),
+        ).toBeInTheDocument();
         expect(slider).toBeInTheDocument();
     });
 
