@@ -64,7 +64,7 @@ Usage:
 -->
 <section
     class="flex h-fit w-full flex-col gap-3"
-    data-testid={`settings-section-${sectionTitle.toLowerCase().replace(" ", "-")}`}
+    data-testid={`settings-section-${sectionTitle.toLowerCase().replace(/ /g, "-")}`}
 >
     <div class="flex flex-row items-center gap-3">
         <h2 class:text-error={variant !== "default"}>{sectionTitle}</h2>
