@@ -6,6 +6,7 @@
     import PaperDetail, {
         type PaperDetailProp,
     } from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
+    import PaperExternalIds from "$lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
     import type { Paper } from "$api/paper";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
@@ -29,7 +30,6 @@
     const additionalInfoProps: PaperDetailProp[] = [
         { key: "publicationType", label: "Publication Type" },
         { key: "publicationName", label: "Publication Name" },
-        { key: "externalId", label: "External ID" },
     ];
 
     let showAdditionalInfos = $state(false);
@@ -69,6 +69,7 @@ Usage:
             {#each additionalInfoProps as prop, index (prop.key)}
                 <PaperDetail {index} {isInEditMode} {loadingPaper} {prop} bind:paper />
             {/each}
+            <PaperExternalIds {isInEditMode} {loadingPaper} bind:paper />
         {/if}
     </div>
     <div class="flex justify-center pt-2">

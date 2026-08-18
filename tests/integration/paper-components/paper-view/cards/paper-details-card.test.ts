@@ -76,7 +76,7 @@ describe("PaperDetailsCard", () => {
 
         await waitFor(() => {
             const paperDetails = screen.queryAllByTestId("paper-detail");
-            expect(paperDetails).toHaveLength(7);
+            expect(paperDetails).toHaveLength(6);
         });
 
         expect(showMoreButton).toHaveTextContent("Show less information");

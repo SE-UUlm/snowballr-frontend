@@ -77,7 +77,7 @@
         // Convert stringifiedPaper back to Paper, ensuring correct types
         const paperData: Partial<Paper> = {
             id: paper.id,
-            externalId: paper.externalId,
+            externalIds: paper.externalIds,
             title: paper.title,
             abstrakt: paper.abstrakt,
             year,
@@ -85,7 +85,6 @@
             publicationName: paper.publicationName,
             publicationType: paper.publicationType,
             authors: stringToAuthors(paper.authors),
-            backwardReferencedIds: paper.backwardReferencedIds.split(/,\s*/g),
         };
 
         let promise;

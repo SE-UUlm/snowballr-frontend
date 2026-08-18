@@ -99,22 +99,40 @@
                       .catch((it) => onError(it, "fetcher"))
                 : Promise.resolve<Paper[]>([]);
 
-        function isSamePaper(a: Paper, b: Paper) {
-            const doBothHaveId = a.id !== "" && b.id !== "";
-
-            if (doBothHaveId && a.id === b.id) return true;
-
-            const doBothHaveExternalId = a.externalId !== "" && b.externalId !== "";
-
-            return doBothHaveExternalId && a.externalId === b.externalId;
+        function externalIdKey(externalId: { type: string; value: string }) {
+            return JSON.stringify([externalId.type, externalId.value]);
         }
 
         const papers = Promise.all([localPapers, fetcherPapers])
-            .then(([local, fetchers]) => [
-                ...local,
-                // Avoid duplicate key when rendering
-                ...fetchers.filter((it) => !local.some((l) => isSamePaper(it, l))),
-            ])
+            .then(([local, fetchers]) => {
+                const localIds = new Set(local.filter((it) => it.id !== "").map((it) => it.id));
+                const localExternalIdKeys = new Set(
+                    local.flatMap((it) =>
+                        it.externalIds
+                            .filter(
+                                (externalId) => externalId.type !== "" && externalId.value !== "",
+                            )
+                            .map(externalIdKey),
+                    ),
+                );
+
+                function isSamePaper(paper: Paper) {
+                    if (paper.id !== "" && localIds.has(paper.id)) return true;
+
+                    return paper.externalIds.some(
+                        (externalId) =>
+                            externalId.type !== "" &&
+                            externalId.value !== "" &&
+                            localExternalIdKeys.has(externalIdKey(externalId)),
+                    );
+                }
+
+                return [
+                    ...local,
+                    // Avoid duplicate key when rendering
+                    ...fetchers.filter((it) => !isSamePaper(it)),
+                ];
+            })
             .then((papers) => {
                 if (papers.length === 0) {
                     toast.info(

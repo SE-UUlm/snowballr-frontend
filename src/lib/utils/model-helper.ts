@@ -18,13 +18,16 @@ function asProjectPaper(paper: Project_Paper | Paper): Project_Paper | undefined
 function stringifyPaper(paper: Paper): StringifiedPaper {
     const stringifiedPaper = {} as StringifiedPaper;
     for (const key of Object.keys(paper)) {
-        const paperKey = key as keyof Paper;
+        if (key === "externalIds") continue;
+
+        const paperKey = key as keyof Omit<Paper, "externalIds">;
         if (key === "authors") {
             stringifiedPaper[paperKey] = getNames(paper[paperKey] as unknown as Author[], "; ");
         } else {
             stringifiedPaper[paperKey] = paper[paperKey].toString();
         }
     }
+    stringifiedPaper.externalIds = paper.externalIds.map((externalId) => ({ ...externalId }));
 
     return stringifiedPaper;
 }

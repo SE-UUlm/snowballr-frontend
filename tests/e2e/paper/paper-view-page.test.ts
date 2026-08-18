@@ -39,18 +39,18 @@ test.describe("Paper View Tests", () => {
         await paperViewPage.documentButton.click();
     });
 
-    test("When the user clicks on the show more information button, then the publication type, publication name and the external id is displayed", async ({
+    test("When the user clicks on the show more information button, then the publication type, publication name and the external ids are displayed", async ({
         paperViewPage,
     }) => {
         await paperViewPage.showMoreInformationButton.click();
         await expect(paperViewPage.publicationTypeLabel).toBeVisible();
         await expect(paperViewPage.publicationNameLabel).toBeVisible();
-        await expect(paperViewPage.externalIdLabel).toBeVisible();
+        await expect(paperViewPage.externalIdsLabel).toBeVisible();
 
         await paperViewPage.showLessInformationButton.click();
         await expect(paperViewPage.publicationTypeLabel).not.toBeVisible();
         await expect(paperViewPage.publicationNameLabel).not.toBeVisible();
-        await expect(paperViewPage.externalIdLabel).not.toBeVisible();
+        await expect(paperViewPage.externalIdsLabel).not.toBeVisible();
     });
 
     test("When the user clicks on a referenced paper in the paper view, then the paper view of the referenced paper is displayed", async ({

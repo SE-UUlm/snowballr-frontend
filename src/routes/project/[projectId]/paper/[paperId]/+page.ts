@@ -21,10 +21,8 @@ export const load: PageLoad = ({ params }) => {
 
     const criteriaWithReviews: Promise<CriterionWithReviews[]> = Promise.all([
         backendService.getAllCriteriaForProject({ id: params.projectId }).response,
-        loadingProjectPaper.then(
-            (paper) => backendService.getAllReviewsForProjectPaper({ id: paper.id }).response,
-        ),
-    ]).then(async ([{ criteria }, { reviews }]) => createCriteriaWithReviews(criteria, reviews));
+        loadingProjectPaper.then((paper) => paper.reviews),
+    ]).then(async ([{ criteria }, reviews]) => createCriteriaWithReviews(criteria, reviews));
 
     const reviewers: Promise<User[]> = criteriaWithReviews.then(async (criteria) => {
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
