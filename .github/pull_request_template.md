@@ -23,5 +23,6 @@ Either tick or cross out the items that do not apply (using \~\~example text\~\~
 - [ ] I have checked the changes against the requirements
 - [ ] I have checked that the E2E tests were performed and that they were not flaky.
 
-<!-- Uncomment if the whole E2E test suite should run -->
-<!-- #e2e-run-all -->
+<!-- Remove if only the fast-failing E2E test suite should run -->
+
+#e2e-run-all

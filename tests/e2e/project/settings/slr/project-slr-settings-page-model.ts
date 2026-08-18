@@ -8,6 +8,7 @@ export class ProjectSLRSettingsPageModel {
 
     readonly heading: Locator;
     readonly maybeAsDecisionSwitch: Locator;
+    readonly similarityThresholdSlider: Locator;
     readonly snowballingTypeForwardRadio: Locator;
     readonly snowballingTypeBackwardRadio: Locator;
     readonly snowballingTypeBothRadio: Locator;
@@ -30,6 +31,7 @@ export class ProjectSLRSettingsPageModel {
         this.maybeAsDecisionSwitch = page.getByRole("switch", {
             name: "Allow 'Maybe' as decision on a Paper",
         });
+        this.similarityThresholdSlider = page.getByRole("slider");
         this.snowballingTypeForwardRadio = page.getByRole("radio", { name: "Forward" });
         this.snowballingTypeBackwardRadio = page.getByRole("radio", { name: "Backward" });
         this.snowballingTypeBothRadio = page.getByRole("radio", { name: "Both" });
@@ -54,6 +56,38 @@ export class ProjectSLRSettingsPageModel {
         } else {
             await expect(this.maybeAsDecisionSwitch).not.toBeChecked();
         }
+    }
+
+    /**
+     * Returns the current value of the similarity threshold slider.
+     */
+    async getSimilarityThreshold(): Promise<number> {
+        await expect(this.similarityThresholdSlider).toHaveAttribute("aria-valuenow");
+        const value = await this.similarityThresholdSlider.getAttribute("aria-valuenow");
+        return parseFloat(value ?? "-1");
+    }
+
+    /**
+     * Moves the similarity threshold slider to the given target value using keyboard navigation.
+     *
+     * @param targetValue - The desired similarity threshold (0.2–1, in steps of 0.05)
+     */
+    async setSimilarityThreshold(targetValue: number) {
+        await expect(this.similarityThresholdSlider).toBeEnabled();
+        const currentValue = await this.getSimilarityThreshold();
+        const step = 0.05;
+        const steps = Math.round((targetValue - currentValue) / step);
+        if (steps === 0) return;
+
+        const key = steps > 0 ? "ArrowRight" : "ArrowLeft";
+        for (let i = 0; i < Math.abs(steps); i++) {
+            await this.similarityThresholdSlider.focus();
+            await this.page.keyboard.press(key);
+        }
+        await expect(this.similarityThresholdSlider).toHaveAttribute(
+            "aria-valuenow",
+            String(targetValue),
+        );
     }
 
     getFetcherRow(fetcherName: string) {
