@@ -1,10 +1,8 @@
 import { backendService } from "$lib/grpc-api";
 import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { FetcherOptions } from "$api/fetcher";
+import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
 import { Project, Project_Settings } from "$api/project";
 import { toast } from "svelte-sonner";
-
-export type Fetchers = { [key: string]: FetcherOptions };
 
 export async function updateFetchers(
     projectId: string,

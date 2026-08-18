@@ -2,17 +2,17 @@
     import type { FetcherInformation } from "$api/fetcher";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import FetcherOptionRow, { type FetcherOption } from "./FetcherOptionRow.svelte";
-    import type { Project } from "$api/project";
+    import type { Fetchers } from "./fetcher";
     import { onMount } from "svelte";
 
     interface Props {
-        project: Project;
+        fetchers: Fetchers;
         fetcher: FetcherInformation;
         options: FetcherOption[];
         disabled: boolean;
     }
 
-    let { project, fetcher, options = $bindable([]), disabled }: Props = $props();
+    let { fetchers, fetcher, options = $bindable([]), disabled }: Props = $props();
 
     const headers: [string, string][] = [
         ["Name", "The name of the option."],
@@ -21,10 +21,10 @@
     ];
 
     onMount(() => {
-        const projectFetcherOptions = project.settings?.fetchers[fetcher.id];
+        const currentFetcherOptions = fetchers[fetcher.id];
         options = Object.entries(fetcher.optionsSchema).map(([id, schema]) => ({
             id,
-            value: projectFetcherOptions?.options[id] ?? "",
+            value: currentFetcherOptions?.options[id] ?? "",
             defaultValue: schema.defaultValue ?? "",
             ...schema,
         }));

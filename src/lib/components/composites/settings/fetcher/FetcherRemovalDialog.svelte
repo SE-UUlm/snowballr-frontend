@@ -2,21 +2,20 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
-    import { Project } from "$api/project";
-    import { updateFetchers } from "./update-fetchers";
     import Trash from "@lucide/svelte/icons/trash";
     import { cn } from "$lib/utils/shadcn-helper";
     import { buttonVariants } from "$lib/components/primitives/button";
     import type { FetcherInformation } from "$api/fetcher";
+    import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {
-        project: Project;
+        fetchers: Fetchers;
         fetcher: FetcherInformation;
-        onProjectChanged: (project: Project) => void;
+        onSave: SaveFetchers;
         disabled: boolean;
     }
 
-    let { project, fetcher, onProjectChanged, disabled }: Props = $props();
+    let { fetchers, fetcher, onSave, disabled }: Props = $props();
 
     let removeFetcherError: ActionError = $state(undefined);
     let open = $state(false);
@@ -25,16 +24,12 @@
     async function removeFetcher() {
         loading = true;
 
-        const updatedFetchers = project.settings?.fetchers ?? {};
+        const updatedFetchers = { ...fetchers };
         delete updatedFetchers[fetcher.id];
 
-        await updateFetchers(
-            project.id,
+        await onSave(
             updatedFetchers,
-            (project) => {
-                open = false;
-                onProjectChanged(project);
-            },
+            () => (open = false),
             (it) => (removeFetcherError = it),
         );
 

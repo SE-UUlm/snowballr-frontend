@@ -1,11 +1,9 @@
-import { Project, Project_Settings } from "$api/project";
-import { createProject, createProjectSettings } from "$tests/model-builder";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import FetcherAddDialog from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherAddDialog.svelte";
+import FetcherAddDialog from "$lib/components/composites/settings/fetcher/FetcherAddDialog.svelte";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall } from "$tests/setupTest";
 import type { FetcherInformation } from "$api/fetcher";
+import type { Fetchers, SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
 
 describe("FetcherAddDialog", () => {
     beforeEach(() => vi.clearAllMocks());
@@ -30,8 +28,8 @@ describe("FetcherAddDialog", () => {
         render(FetcherAddDialog, {
             target: document.body,
             props: {
-                project: createProject(),
-                onProjectChanged: () => {},
+                fetchers: {},
+                onSave: async () => {},
                 fetcher: fetcher,
                 disabled: false,
             },
@@ -46,8 +44,8 @@ describe("FetcherAddDialog", () => {
         render(FetcherAddDialog, {
             target: document.body,
             props: {
-                project: createProject(),
-                onProjectChanged: () => {},
+                fetchers: {},
+                onSave: async () => {},
                 fetcher: fetcher,
                 disabled: false,
             },
@@ -66,8 +64,8 @@ describe("FetcherAddDialog", () => {
         render(FetcherAddDialog, {
             target: document.body,
             props: {
-                project: createProject(),
-                onProjectChanged: () => {},
+                fetchers: {},
+                onSave: async () => {},
                 fetcher: fetcher,
                 disabled: true,
             },
@@ -84,30 +82,20 @@ describe("FetcherAddDialog", () => {
         expect(screen.getByPlaceholderText("This is the FOO option")).toBeDisabled();
     });
 
-    test("When you modify a fetcher, then the settings are adjusted accordingly", async () => {
+    test("When you modify a fetcher, then the fetcher is saved with the updated options", async () => {
         const user = userEvent.setup();
 
-        const projectData = createProject();
-        let newProject: Project | undefined;
-
-        const mockUpdateCall = mockApiCall("updateProject", {
-            ...projectData,
-            settings: createProjectSettings({
-                fetchers: {
-                    test: {
-                        options: {
-                            FOO: "TEST",
-                        },
-                    },
-                },
-            }),
+        let savedFetchers: Fetchers | undefined;
+        const onSave: SaveFetchers = vi.fn(async (fetchers, onSuccess) => {
+            savedFetchers = fetchers;
+            onSuccess();
         });
 
         render(FetcherAddDialog, {
             target: document.body,
             props: {
-                project: projectData,
-                onProjectChanged: (it: Project) => (newProject = it),
+                fetchers: {},
+                onSave,
                 fetcher: fetcher,
                 disabled: false,
             },
@@ -118,27 +106,18 @@ describe("FetcherAddDialog", () => {
 
         await userEvent.type(screen.getByPlaceholderText("This is the FOO option"), "TEST");
         await userEvent.click(screen.getByRole("button", { name: "Add Fetcher" }));
-        await waitFor(() => expect(newProject).toBeDefined());
+        await waitFor(() => expect(savedFetchers).toBeDefined());
 
-        const fetcherOptions = Object.entries(newProject?.settings?.fetchers?.test?.options ?? {});
-        expect(fetcherOptions).toEqual([["FOO", "TEST"]]);
-
-        expect(mockUpdateCall).toHaveBeenCalledExactlyOnceWith({
-            mask: {
-                paths: ["project.settings.fetchers"],
-            },
-            project: Project.create({
-                id: projectData.id,
-                settings: Project_Settings.create({
-                    fetchers: {
-                        test: {
-                            options: {
-                                FOO: "TEST",
-                            },
-                        },
+        expect(onSave).toHaveBeenCalledExactlyOnceWith(
+            {
+                test: {
+                    options: {
+                        FOO: "TEST",
                     },
-                }),
-            }),
-        });
+                },
+            },
+            expect.any(Function),
+            expect.any(Function),
+        );
     });
 });
