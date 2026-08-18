@@ -65,3 +65,28 @@ test.describe("SLR Settings Tests - Maybe as Decision", () => {
     test.fixme("When the project is set to 'ACTIVE_LOCKED', then a warning is shown, that the SLR settings cannot be changed", async () => {});
     test.fixme("When the current user is not a project admin, then the user gets redirected to the general settings tab", async () => {});
 });
+
+test.describe("SLR Settings Tests - Similarity Threshold", () => {
+    test("When the similarity threshold slider is changed, then the new value is saved", async ({
+        page,
+        projectSLRSettingsPage,
+    }) => {
+        await expect(projectSLRSettingsPage.similarityThresholdSlider).toBeEnabled();
+
+        // We only change the value by one step, because we can only do one step at a time
+        await projectSLRSettingsPage.setSimilarityThreshold(0.55);
+
+        await expect(page.getByText("Successfully updated the project settings.")).toBeVisible();
+    });
+
+    test("When the user reloads the page, then the similarity threshold setting is persisted", async ({
+        page,
+        projectSLRSettingsPage,
+    }) => {
+        // We only change the value by one step, because we can only do one step at a time
+        await projectSLRSettingsPage.setSimilarityThreshold(0.55);
+        await reloadWait(page, projectSLRSettingsPage.heading);
+
+        expect(await projectSLRSettingsPage.getSimilarityThreshold()).toBe(0.55);
+    });
+});
