@@ -114,6 +114,65 @@ describe("SimilarityThresholdSetting", () => {
         });
     });
 
+    // test("When the slider value is committed, then updateProject is called with the new value", async () => {
+    //     const user = userEvent.setup();
+    //     const mockUpdateCall = mockApiCall("updateProject", projectData);
+
+    //     render(SimilarityThresholdSetting, {
+    //         target: document.body,
+    //         props: {
+    //             projectId: projectData.id,
+    //             slrSettingsLocked: false,
+    //             loadingProject: Promise.resolve(projectData),
+    //         },
+    //         context: mockIsProjectArchivedContext(),
+    //     });
+
+    //     const slider = screen.getByRole("slider");
+    //     await waitFor(() => expect(slider).toBeEnabled());
+
+    //     await user.click(slider);
+    //     await user.keyboard("{ArrowRight}");
+
+    //     await waitFor(() => {
+    //         const slider = screen.getByRole("slider");
+    //         expect(slider).toHaveAttribute("aria-valuenow", "0.65");
+    //         expect(slider).toHaveAttribute("data-value", "0.65");
+    //     });
+
+    //     await waitFor(() => expect(mockUpdateCall).toHaveBeenCalledTimes(1));
+    //     await waitFor(() => expect(slider).toBeEnabled());
+    // });
+
+    // test("When the API call fails, then an error is displayed and the value reverts", async () => {
+    //     const user = userEvent.setup();
+    //     mockFailedApiCall("updateProject");
+
+    //     render(SimilarityThresholdSetting, {
+    //         target: document.body,
+    //         props: {
+    //             projectId: projectData.id,
+    //             slrSettingsLocked: false,
+    //             loadingProject: Promise.resolve(projectData),
+    //         },
+    //         context: mockIsProjectArchivedContext(),
+    //     });
+
+    //     const slider = screen.getByRole("slider");
+    //     await waitFor(() => expect(slider).toBeEnabled());
+
+    //     await user.click(slider);
+    //     await user.keyboard("{ArrowRight}");
+
+    //     await waitFor(() => {
+    //         expect(
+    //             screen.getByRole("alert", { name: "Failed to Update Project Settings" }),
+    //         ).toBeInTheDocument();
+    //     });
+    //     await waitFor(() => expect(slider).toBeEnabled());
+    //     expect(slider).toHaveAttribute("aria-valuenow", "0.6");
+    // });
+
     test("When loadingProject rejects, then a load error is displayed", async () => {
         render(SimilarityThresholdSetting, {
             target: document.body,
