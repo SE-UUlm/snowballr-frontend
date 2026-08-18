@@ -13,6 +13,10 @@ export class ProjectGeneralSettingsPageModel {
     readonly deleteProjectDialog: Locator;
     readonly deleteProjectInput: Locator;
     readonly deleteProjectConfirmButton: Locator;
+    readonly leaveButton: Locator;
+    readonly leaveProjectDialog: Locator;
+    readonly leaveProjectConfirmButton: Locator;
+    readonly leaveProjectCancelButton: Locator;
 
     projectId: string;
     projectName: string;
@@ -34,6 +38,14 @@ export class ProjectGeneralSettingsPageModel {
         this.deleteProjectInput = this.deleteProjectDialog.getByRole("textbox");
         this.deleteProjectConfirmButton = this.deleteProjectDialog.getByRole("button", {
             name: "Delete This Project",
+        });
+        this.leaveButton = page.getByRole("button", { name: "Leave this project" });
+        this.leaveProjectDialog = page.getByRole("alertdialog", { name: "Leave This Project?" });
+        this.leaveProjectConfirmButton = this.leaveProjectDialog.getByRole("button", {
+            name: "Leave This Project",
+        });
+        this.leaveProjectCancelButton = this.leaveProjectDialog.getByRole("button", {
+            name: "Cancel",
         });
     }
 
@@ -57,5 +69,10 @@ export class ProjectGeneralSettingsPageModel {
 
         await this.deleteProjectInput.fill(this.projectName);
         await this.deleteProjectConfirmButton.click();
+    }
+
+    async openLeaveProjectDialog() {
+        await this.leaveButton.click();
+        await expect(this.leaveProjectDialog).toBeVisible();
     }
 }

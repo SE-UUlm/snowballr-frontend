@@ -7,6 +7,8 @@
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getUserContext } from "$lib/custom-context/user-context";
     import Link from "$lib/components/composites/link/Link.svelte";
+    import { UserRole } from "$api/user";
+    import { Badge } from "$lib/components/primitives/badge/index.js";
 
     const user = $derived(getUserContext());
 
@@ -36,6 +38,9 @@
         <DropdownMenu.Group>
             <DropdownMenu.GroupHeading>
                 {`${user.firstName} ${user.lastName}`}
+                {#if user.role === UserRole.ADMIN}
+                    <Badge title="You are a server admin" variant="outline">Server Admin</Badge>
+                {/if}
             </DropdownMenu.GroupHeading>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>

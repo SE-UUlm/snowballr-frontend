@@ -59,3 +59,24 @@ export function isCurrentUserProjectAdmin(loadingMembers: Promise<MemberInfo[]>)
         resourceName: "isCurrentUserAdmin",
     });
 }
+
+/**
+ * Checks if the current user is the last admin of the project, i.e. leaving or being demoted would
+ * leave the project without an admin.
+ *
+ * @param loadingMembers - Promise that resolves to the list of members
+ * @returns An object with a boolean value indicating if the user is the last admin of the project
+ */
+export function isCurrentUserLastAdmin(loadingMembers: Promise<MemberInfo[]>) {
+    const user = getUserContext();
+    const loadingIsCurrentUserLastAdmin = loadingMembers.then((members) => {
+        const admins = members.filter((member) => member.role === MemberRole.ADMIN);
+        return admins.length === 1 && admins[0].user!.id === user.id;
+    });
+
+    return resource(loadingIsCurrentUserLastAdmin, {
+        initialValue: undefined,
+        onErrorValue: false,
+        resourceName: "isCurrentUserLastAdmin",
+    });
+}
