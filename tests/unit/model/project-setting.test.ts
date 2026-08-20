@@ -10,6 +10,10 @@ import {
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
+import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
+import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
+import { maybeAsDecisionSetting } from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn(), promise: vi.fn() },
@@ -192,5 +196,74 @@ describe("commitProjectSetting", () => {
                 mask: { paths: ["project.settings.snowballing_type"] },
             }),
         );
+    });
+});
+
+describe("Descriptors", () => {
+    // The descriptors above are fixtures that mirror the real ones. These tests use the descriptors
+    // the settings sections actually ship, and pin for each of them: which mask path it sends, that
+    // `read` and `toPatch` agree on the same field (by reading the value back out of the message
+    // that would go on the wire), and what it falls back to when the project defines nothing.
+
+    test("When the similarity threshold is committed, then it targets similarity_threshold", () => {
+        const { project, mask } = buildProjectSettingUpdate(
+            similarityThresholdSetting,
+            0.8,
+            PROJECT_ID,
+        );
+
+        expect(mask.paths).toEqual(["project.settings.similarity_threshold"]);
+        expect(similarityThresholdSetting.read(project)).toBe(0.8);
+    });
+
+    test("When a project defines no similarity threshold, then it falls back to 0.5", () => {
+        expect(similarityThresholdSetting.read(Project.create())).toBe(0.5);
+    });
+
+    test("When the number of reviewers is committed, then it targets number_of_reviewers", () => {
+        const { project, mask } = buildProjectSettingUpdate(
+            numberOfReviewersSetting,
+            4,
+            PROJECT_ID,
+        );
+
+        expect(mask.paths).toEqual(["project.settings.decision_matrix.number_of_reviewers"]);
+        expect(numberOfReviewersSetting.read(project)).toBe(4);
+    });
+
+    test("When a project defines no number of reviewers, then it falls back to 2", () => {
+        expect(numberOfReviewersSetting.read(Project.create())).toBe(2);
+    });
+
+    test("When the snowballing type is committed, then it targets snowballing_type", () => {
+        const { project, mask } = buildProjectSettingUpdate(
+            snowballingTypeSetting,
+            String(SnowballingType.FORWARD),
+            PROJECT_ID,
+        );
+
+        expect(mask.paths).toEqual(["project.settings.snowballing_type"]);
+        expect(snowballingTypeSetting.read(project)).toBe(String(SnowballingType.FORWARD));
+    });
+
+    test("When a project defines no snowballing type, then it falls back to unspecified", () => {
+        expect(snowballingTypeSetting.read(Project.create())).toBe(
+            String(SnowballingType.UNSPECIFIED),
+        );
+    });
+
+    test("When maybe as decision is committed, then it targets review_maybe_allowed", () => {
+        const { project, mask } = buildProjectSettingUpdate(
+            maybeAsDecisionSetting,
+            true,
+            PROJECT_ID,
+        );
+
+        expect(mask.paths).toEqual(["project.settings.review_maybe_allowed"]);
+        expect(maybeAsDecisionSetting.read(project)).toBe(true);
+    });
+
+    test("When a project defines no maybe as decision, then it falls back to false", () => {
+        expect(maybeAsDecisionSetting.read(Project.create())).toBe(false);
     });
 });
