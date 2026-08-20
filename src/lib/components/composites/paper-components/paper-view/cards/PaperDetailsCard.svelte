@@ -73,10 +73,7 @@
         isPaperModified = !isStringEqual(originalPaper, paper);
     });
 
-    const tabs = [
-        { value: "1", label: "Information" },
-        { value: "2", label: "Document" },
-    ];
+    const tabs = [{ value: "1", label: "Information" }];
 
     async function savePaperModifications() {
         const year = Number(paper.year);
@@ -196,15 +193,6 @@ Usage:
 <PaperCard data-testid="paper-details-card" {tabs}>
     <PaperCardContent value="1">
         <PaperDetailsCardContent {isInEditMode} {loadingPaper} bind:paper />
-    </PaperCardContent>
-    <PaperCardContent value="2">
-        <span>
-            Will be implemented in
-            <a class="text-blue-400" href="https://github.com/SE-UUlm/snowballr-frontend/issues/98">
-                #98
-            </a>
-            .
-        </span>
     </PaperCardContent>
     {#snippet tabListButtonList()}
         {#if allowEditModeToggle && !isProjectArchived}
