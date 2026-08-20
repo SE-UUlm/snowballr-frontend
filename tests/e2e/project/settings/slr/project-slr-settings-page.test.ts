@@ -90,3 +90,21 @@ test.describe("SLR Settings Tests - Similarity Threshold", () => {
         expect(await projectSLRSettingsPage.getSimilarityThreshold()).toBe(0.55);
     });
 });
+
+test.describe("SLR Settings Tests - Snowballing Type", () => {
+    test("When the snowballing type is changed, then the new value is saved", async ({
+        projectSLRSettingsPage,
+    }) => {
+        await projectSLRSettingsPage.selectSnowballingType("Backward");
+    });
+
+    test("When the user reloads the page, then the snowballing type setting is persisted", async ({
+        page,
+        projectSLRSettingsPage,
+    }) => {
+        await projectSLRSettingsPage.selectSnowballingType("Backward");
+        await reloadWait(page, projectSLRSettingsPage.heading);
+
+        await expect(projectSLRSettingsPage.snowballingTypeBackwardRadio).toBeChecked();
+    });
+});
