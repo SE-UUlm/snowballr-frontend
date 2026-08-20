@@ -25,11 +25,11 @@
             label: "Papers",
             href: `/project/${projectId}/papers`,
         },
-        {
-            value: "statistics",
-            label: "Statistics",
-            href: `/project/${projectId}/statistics`,
-        },
+        // {
+        //     value: "statistics",
+        //     label: "Statistics",
+        //     href: `/project/${projectId}/statistics`,
+        // },
         {
             value: "settings",
             label: "Settings",
