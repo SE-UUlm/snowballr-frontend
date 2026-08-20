@@ -40,7 +40,7 @@
     let isConfirmDialogOpen = $state(false);
     let title = $state("");
     let dialogDescription = $state("");
-    let pendingActionConfirmCallback: (() => void) | null = $state(null);
+    let pendingActionConfirmCallback: (() => Promise<void>) | null = $state(null);
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -94,18 +94,22 @@
             dialogDescription = "Are you sure you want to disable 'Maybe' as decision?";
         }
 
-        pendingActionConfirmCallback = async () => {
-            await toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
-        };
+        pendingActionConfirmCallback = () =>
+            toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
 
         isConfirmDialogOpen = true;
     }
 
-    function handleActionClick() {
-        if (pendingActionConfirmCallback) {
-            pendingActionConfirmCallback();
-        }
+    async function handleActionClick() {
+        const confirmedAction = pendingActionConfirmCallback;
         pendingActionConfirmCallback = null;
+
+        await confirmedAction?.();
+
+        // `AlertDialog` leaves `open` to the consumer, so the dialog has to be closed here. This
+        // also happens when the update fails, because the error alert is rendered in the settings
+        // section, which sits behind the dialog's overlay while it is open.
+        isConfirmDialogOpen = false;
     }
 
     function handleCancelClick() {
