@@ -5,6 +5,7 @@ import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import userEvent from "@testing-library/user-event";
+import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 
 describe("SnowballingTypeSettings", () => {
     const projectData = createProject({
@@ -22,6 +23,7 @@ describe("SnowballingTypeSettings", () => {
                 slrSettingsLocked: false,
                 loadingProject: Promise.resolve(projectData),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitFor(() => {
@@ -51,6 +53,7 @@ describe("SnowballingTypeSettings", () => {
                 slrSettingsLocked: true,
                 loadingProject: Promise.resolve(projectData),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitFor(() => expect(screen.getByRole("radio", { name: "Forward" })).toBeChecked());
@@ -72,6 +75,7 @@ describe("SnowballingTypeSettings", () => {
                 slrSettingsLocked: false,
                 loadingProject: Promise.resolve(projectData),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitFor(() => expect(screen.getByRole("radio", { name: "Backward" })).toBeChecked());
@@ -96,6 +100,7 @@ describe("SnowballingTypeSettings", () => {
                 slrSettingsLocked: false,
                 loadingProject: Promise.resolve(projectData),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         await waitFor(() => expect(screen.getByRole("radio", { name: "Forward" })).toBeChecked());
@@ -124,10 +129,30 @@ describe("SnowballingTypeSettings", () => {
                 slrSettingsLocked: false,
                 loadingProject: Promise.reject(new Error("Failed to load project")),
             },
+            context: mockIsProjectArchivedContext(),
         });
 
         const alert = await screen.findByRole("alert");
         expect(alert).toBeInTheDocument();
         expect(alert).toHaveTextContent("Failed to Load Project Settings");
+    });
+
+    test("When the project is archived, then the radio buttons are disabled", async () => {
+        projectData.settings!.snowballingType = SnowballingType.FORWARD;
+        render(SnowballingTypeSettings, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
+            },
+            context: mockIsProjectArchivedContext(true),
+        });
+
+        await waitFor(() => expect(screen.getByRole("radio", { name: "Forward" })).toBeChecked());
+
+        expect(screen.getByRole("radio", { name: "Forward" })).toBeDisabled();
+        expect(screen.getByRole("radio", { name: "Backward" })).toBeDisabled();
+        expect(screen.getByRole("radio", { name: "Both" })).toBeDisabled();
     });
 });
