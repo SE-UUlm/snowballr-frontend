@@ -1,13 +1,25 @@
+<script lang="ts" module>
+    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+
+    /**
+     * The similarity threshold above which two papers are considered to be the same paper.
+     *
+     * Defaults to 0.5 if the project does not define one.
+     */
+    export const similarityThresholdSetting: ProjectSettingDescriptor<number> = {
+        read: (project) => project.settings?.similarityThreshold ?? 0.5,
+        toPatch: (value) => ({ settings: { similarityThreshold: value } }),
+        action: "updating the similarity threshold",
+    };
+</script>
+
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { Slider } from "$lib/components/primitives/slider";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { backendService } from "$lib/grpc-api";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { Project, Project_Settings } from "$api/project";
-    import { onMount } from "svelte";
-    import { toast } from "svelte-sonner";
+    import { projectSetting } from "$lib/model/project-setting.svelte";
+    import type { Project } from "$api/project";
 
     interface Props {
         projectId: string;
@@ -17,66 +29,17 @@
 
     const { projectId, slrSettingsLocked = false, loadingProject }: Props = $props();
 
-    let value = $state(-1);
-    let storedValue = $state(-1);
-    let loading = $state(true);
-    let updateSLRSettingsError: ActionError = $state(undefined);
-
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    const locked = $derived(slrSettingsLocked || isProjectArchived);
-    const disabled = $derived(locked || loading);
-
-    onMount(async () => {
-        await loadingProject
-            .then((project) => {
-                value = project.settings?.similarityThreshold ?? 0.5;
-                storedValue = value;
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Load Project Settings",
-                    { action: "loading the project settings" },
-                    error,
-                );
-            })
-            .finally(() => {
-                loading = false;
-            });
+    // A settings section belongs to exactly one project for as long as it is mounted, so these props
+    // are read once. This mirrors the previous `onMount` behaviour.
+    // svelte-ignore state_referenced_locally
+    const setting = projectSetting(similarityThresholdSetting, {
+        projectId,
+        loadingProject,
+        settingsLocked: () => slrSettingsLocked,
+        isArchived: () => isProjectArchived,
     });
-
-    async function onValueChanged(newValue: number) {
-        if (newValue === storedValue) return;
-
-        loading = true;
-        const projectData: Partial<Project> = {
-            id: projectId,
-            settings: Project_Settings.create({
-                similarityThreshold: newValue,
-            }),
-        };
-
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: { paths: ["project.settings.similarity_threshold"] },
-            })
-            .response.then(() => {
-                storedValue = newValue;
-                toast.success("Successfully updated the project settings.");
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Update Project Settings",
-                    { action: "updating the similarity threshold" },
-                    error,
-                );
-                value = storedValue;
-            })
-            .finally(() => {
-                loading = false;
-            });
-    }
 </script>
 
 <!--
@@ -93,8 +56,8 @@ Usage:
 ```
 -->
 <SettingsSection
-    {loading}
-    {locked}
+    loading={setting.loading}
+    locked={setting.locked}
     lockedDescription="To ensure consistency, the similarity threshold can't be changed after a review has been submitted."
     sectionTitle="Similarity Threshold"
 >
@@ -108,16 +71,16 @@ Usage:
     <div class="group/slider pb-10">
         <Slider
             class="max-w-2xl"
-            {disabled}
+            disabled={setting.disabled}
             max={1}
             min={0.2}
-            onValueCommit={onValueChanged}
+            onValueCommit={(value) => void setting.commit(value)}
             step={0.05}
             thumbLabelVisibility="visible"
             tickLabels="min-max"
             type="single"
-            bind:value
+            bind:value={setting.value}
         />
     </div>
-    <ActionErrorAlert error={updateSLRSettingsError} />
+    <ActionErrorAlert error={setting.error} />
 </SettingsSection>
