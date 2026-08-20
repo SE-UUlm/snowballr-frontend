@@ -71,16 +71,7 @@ Usage:
         {#if reviewers !== undefined}
             <ReviewCriteriaList {criteriaWithReviews} {reviewers} />
             {#if reviewMode.isActivated}
-                <span>
-                    Will be implemented in
-                    <a
-                        class="text-blue-400"
-                        href="https://github.com/SE-UUlm/snowballr-frontend/issues/55"
-                    >
-                        #53
-                    </a>
-                    .
-                </span>
+                <!-- TODO: https://github.com/SE-UUlm/snowballr-frontend/issues/55 -->
             {:else}
                 <Separator />
                 <div class="md:px-8 lg:px-15">
