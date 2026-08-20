@@ -151,7 +151,9 @@ describe("projectSetting", () => {
             (backendService.updateProject as unknown as Mock)
                 .mockClear()
                 .mockImplementation(() => ({
-                    response: new Promise<Project>((resolve) => (resolveUpdate = resolve)),
+                    response: new Promise<Project>((resolve) => {
+                        resolveUpdate = resolve;
+                    }),
                 }));
             const setting = await loadedSetting();
 

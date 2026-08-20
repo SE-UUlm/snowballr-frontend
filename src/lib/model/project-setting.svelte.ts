@@ -83,7 +83,7 @@ export function projectSetting<T>(
     let loading = $state(true);
     let error = $state<ActionError>(undefined);
 
-    void loadProjectSetting(descriptor, loadingProject).then((result) => {
+    loadProjectSetting(descriptor, loadingProject).then((result) => {
         if (result.loaded) {
             value = result.value;
             storedValue = result.value;
