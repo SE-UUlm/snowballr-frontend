@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
 import { Paper } from "$api/paper";
+import { Project_Paper } from "$api/project";
 import {
     addPaperCandidates,
     mergePaperCandidates,
@@ -57,7 +58,7 @@ beforeEach(() => {
     mockApiCall("searchLocalProjectPaperCandidates", { papers: [] });
     mockApiCall("searchFetcherProjectPaperCandidates", { papers: [] });
     mockApiCall("createPaper", Paper.create({ id: "created-1" }));
-    mockApiCall("addPaperToProject", {});
+    mockApiCall("addPaperToProject", Project_Paper.create());
 });
 
 describe("toKnownCandidates", () => {
