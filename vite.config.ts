@@ -20,7 +20,8 @@ export default defineConfig({
                 "src/routes/**/+*.{svelte,ts}",
                 "src/lib/components/primitives/**",
                 "**/*.d.ts",
-                "src/lib/model/**",
+                // Generated from snowballr-api, see `npm run copy-api-client-code`
+                "src/lib/model/api/**",
             ],
             provider: "v8",
             enabled: true,
