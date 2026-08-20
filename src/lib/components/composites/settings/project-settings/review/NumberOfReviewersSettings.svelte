@@ -1,13 +1,25 @@
+<script lang="ts" module>
+    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+
+    /**
+     * The number of reviews a project paper needs before it receives a final decision.
+     *
+     * Defaults to 2 if the project does not define one.
+     */
+    export const numberOfReviewersSetting: ProjectSettingDescriptor<number> = {
+        read: (project) => project.settings?.decisionMatrix?.numberOfReviewers ?? 2,
+        toPatch: (value) => ({ settings: { decisionMatrix: { numberOfReviewers: value } } }),
+        action: "updating the number of required reviewers",
+    };
+</script>
+
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { Slider } from "$lib/components/primitives/slider";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { backendService } from "$lib/grpc-api";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { Project, Project_Settings, ReviewDecisionMatrix } from "$lib/model/api/project";
-    import { onMount } from "svelte";
-    import { toast } from "svelte-sonner";
+    import { projectSetting } from "$lib/model/project-setting.svelte";
+    import type { Project } from "$lib/model/api/project";
 
     interface Props {
         projectId: string;
@@ -17,68 +29,17 @@
 
     const { projectId, settingsLocked = false, loadingProject }: Props = $props();
 
-    let value = $state(-1);
-    let storedValue = $state(-1);
-    let loading = $state(true);
-    let updateSLRSettingsError: ActionError = $state(undefined);
-
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    const locked = $derived(settingsLocked || isProjectArchived);
-    const disabled = $derived(locked || loading);
-
-    onMount(async () => {
-        await loadingProject
-            .then((project) => {
-                value = project.settings?.decisionMatrix?.numberOfReviewers ?? 2;
-                storedValue = value;
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Load Project Settings",
-                    { action: "loading the project settings" },
-                    error,
-                );
-            })
-            .finally(() => {
-                loading = false;
-            });
+    // A settings section belongs to exactly one project for as long as it is mounted, so these props
+    // are read once.
+    // svelte-ignore state_referenced_locally
+    const setting = projectSetting(numberOfReviewersSetting, {
+        projectId,
+        loadingProject,
+        settingsLocked: () => settingsLocked,
+        isArchived: () => isProjectArchived,
     });
-
-    async function onValueChanged(newValue: number) {
-        if (newValue === storedValue) return;
-
-        loading = true;
-        const projectData: Partial<Project> = {
-            id: projectId,
-            settings: Project_Settings.create({
-                decisionMatrix: ReviewDecisionMatrix.create({
-                    numberOfReviewers: newValue,
-                }),
-            }),
-        };
-
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: { paths: ["project.settings.decision_matrix.number_of_reviewers"] },
-            })
-            .response.then(() => {
-                storedValue = newValue;
-                toast.success("Successfully updated the project settings.");
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Update Project Settings",
-                    { action: "updating the number of required reviewers" },
-                    error,
-                );
-                value = storedValue;
-            })
-            .finally(() => {
-                loading = false;
-            });
-    }
 </script>
 
 <!--
@@ -96,8 +57,8 @@ Usage:
 ```
 -->
 <SettingsSection
-    {loading}
-    {locked}
+    loading={setting.loading}
+    locked={setting.locked}
     lockedDescription="To ensure consistency, the number of required reviewers can't be changed after a review has been submitted."
     sectionTitle="Number of Required Reviewers"
 >
@@ -109,16 +70,16 @@ Usage:
     <div class="group/slider pb-10">
         <Slider
             class="max-w-2xl"
-            {disabled}
+            disabled={setting.disabled}
             max={10}
             min={1}
-            onValueCommit={onValueChanged}
+            onValueCommit={(value) => void setting.commit(value)}
             step={1}
             thumbLabelVisibility="visible"
             tickLabels="min-max"
             type="single"
-            bind:value
+            bind:value={setting.value}
         />
     </div>
-    <ActionErrorAlert error={updateSLRSettingsError} />
+    <ActionErrorAlert error={setting.error} />
 </SettingsSection>

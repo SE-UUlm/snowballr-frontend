@@ -231,4 +231,69 @@ describe("Maybe As Decision Project Setting", () => {
             ),
         ).toBeInTheDocument();
     });
+
+    test("When the project is archived, then the section is locked and the switch is disabled", async () => {
+        render(MaybeAsDecisionSetting, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
+            },
+            context: mockIsProjectArchivedContext(true),
+        });
+
+        await waitFor(() => expect(screen.getByRole("switch")).toBeDisabled());
+        expect(screen.getByTitle("This settings section is locked.")).toBeInTheDocument();
+    });
+
+    test("When the change is confirmed, then the confirmation dialog closes", async () => {
+        mockApiCall("updateProject", projectData);
+
+        render(MaybeAsDecisionSetting, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        const maybeSwitch = screen.getByRole("switch");
+        await waitFor(() => expect(maybeSwitch).toBeEnabled());
+        maybeSwitch.click();
+
+        await waitFor(() => expect(screen.getByRole("alertdialog")).toBeInTheDocument());
+        screen.getByRole("button", { name: "Confirm" }).click();
+
+        await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
+        expect(maybeSwitch).toBeChecked();
+    });
+
+    test("When the update fails, then the confirmation dialog still closes so the error is visible", async () => {
+        mockFailedApiCall("updateProject");
+
+        render(MaybeAsDecisionSetting, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        const maybeSwitch = screen.getByRole("switch");
+        await waitFor(() => expect(maybeSwitch).toBeEnabled());
+        maybeSwitch.click();
+
+        await waitFor(() => expect(screen.getByRole("alertdialog")).toBeInTheDocument());
+        screen.getByRole("button", { name: "Confirm" }).click();
+
+        await waitFor(() => expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument());
+        expect(
+            screen.getByRole("alert", { name: "Failed to Update Project Settings" }),
+        ).toBeInTheDocument();
+    });
 });

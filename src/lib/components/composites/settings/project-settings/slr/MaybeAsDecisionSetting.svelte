@@ -1,16 +1,30 @@
+<script lang="ts" module>
+    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+
+    /**
+     * Whether reviewers may pick 'Maybe' as a decision, next to 'Accept' and 'Decline'.
+     *
+     * Defaults to `false` if the project does not define it.
+     */
+    export const maybeAsDecisionSetting: ProjectSettingDescriptor<boolean> = {
+        read: (project) => project.settings?.reviewMaybeAllowed ?? false,
+        toPatch: (value) => ({ settings: { reviewMaybeAllowed: value } }),
+        action: "updating the project settings",
+    };
+</script>
+
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { Project_Settings, Project } from "$api/project";
+    import type { Project } from "$api/project";
     import { onMount } from "svelte";
-    import { toast } from "svelte-sonner";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
+    import type { ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { commitProjectSetting, loadProjectSetting } from "$lib/model/project-setting";
 
     interface Props {
         projectId: string;
@@ -26,11 +40,15 @@
     let isConfirmDialogOpen = $state(false);
     let title = $state("");
     let dialogDescription = $state("");
-    let pendingActionConfirmCallback: (() => void) | null = $state(null);
+    let pendingActionConfirmCallback: (() => Promise<void>) | null = $state(null);
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    const disabled = $derived(slrSettingsLocked || loading || isProjectArchived);
+    // Unlike the other project settings, this one only changes after the backend confirms and is
+    // gated by a confirmation dialog, so it uses the project setting core directly instead of the
+    // optimistic `projectSetting()` state.
+    const locked = $derived(slrSettingsLocked || isProjectArchived);
+    const disabled = $derived(locked || loading);
 
     let updateSLRSettingsError: ActionError = $state(undefined);
 
@@ -43,32 +61,19 @@
     async function toggleIsMaybeAsDecisionSettingStatus(targetCheckedState: boolean) {
         loading = true;
 
-        const projectData: Partial<Project> = {
-            id: projectId,
-            settings: Project_Settings.create({
-                reviewMaybeAllowed: targetCheckedState,
-            }),
-        };
+        const error = await commitProjectSetting(
+            maybeAsDecisionSetting,
+            targetCheckedState,
+            projectId,
+        );
 
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: { paths: ["project.settings.review_maybe_allowed"] },
-            })
-            .response.then(() => {
-                maybeAsDecision.isActivated = targetCheckedState;
-                toast.success("Successfully updated the project settings.");
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Update Project Settings",
-                    { action: "updating the project settings" },
-                    error,
-                );
-            })
-            .finally(() => {
-                loading = false;
-            });
+        if (error === undefined) {
+            maybeAsDecision.isActivated = targetCheckedState;
+        } else {
+            updateSLRSettingsError = error;
+        }
+
+        loading = false;
     }
 
     function handleSwitchClick(event: MouseEvent) {
@@ -89,18 +94,22 @@
             dialogDescription = "Are you sure you want to disable 'Maybe' as decision?";
         }
 
-        pendingActionConfirmCallback = async () => {
-            await toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
-        };
+        pendingActionConfirmCallback = () =>
+            toggleIsMaybeAsDecisionSettingStatus(targetCheckedState);
 
         isConfirmDialogOpen = true;
     }
 
-    function handleActionClick() {
-        if (pendingActionConfirmCallback) {
-            pendingActionConfirmCallback();
-        }
+    async function handleActionClick() {
+        const confirmedAction = pendingActionConfirmCallback;
         pendingActionConfirmCallback = null;
+
+        await confirmedAction?.();
+
+        // `AlertDialog` leaves `open` to the consumer, so the dialog has to be closed here. This
+        // also happens when the update fails, because the error alert is rendered in the settings
+        // section, which sits behind the dialog's overlay while it is open.
+        isConfirmDialogOpen = false;
     }
 
     function handleCancelClick() {
@@ -108,22 +117,16 @@
     }
 
     onMount(async () => {
-        await loadingProject
-            .then((response) => {
-                maybeAsDecision.isActivated = response.settings?.reviewMaybeAllowed ?? false;
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Load Project Settings",
-                    { action: "loading the project settings" },
-                    error,
-                );
+        const result = await loadProjectSetting(maybeAsDecisionSetting, loadingProject);
 
-                maybeAsDecision.isActivated = false;
-            })
-            .finally(() => {
-                loading = false;
-            });
+        if (result.loaded) {
+            maybeAsDecision.isActivated = result.value;
+        } else {
+            updateSLRSettingsError = result.error;
+            maybeAsDecision.isActivated = false;
+        }
+
+        loading = false;
     });
 </script>
 
@@ -144,7 +147,7 @@ Usage:
   <MaybeAsDecisionSetting {projectId} {slrSettingsLocked} {loadingProject} />
 ```
 -->
-<SettingsSection {loading} locked={slrSettingsLocked} sectionTitle="Maybe as Decision">
+<SettingsSection {loading} {locked} sectionTitle="Maybe as Decision">
     <div class="items-top flex flex-row space-x-2">
         <Switch id="maybe-decision-switch" {checked} {disabled} onclick={handleSwitchClick} />
         <div class="grid gap-1.5 pt-1 leading-none">

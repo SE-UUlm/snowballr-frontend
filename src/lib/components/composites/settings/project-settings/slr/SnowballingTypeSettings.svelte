@@ -1,14 +1,29 @@
+<script lang="ts" module>
+    import { SnowballingType } from "$api/project";
+    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+
+    /**
+     * Which references are fetched when a paper is accepted.
+     *
+     * Held as a string because that is what the radio group binds to. Defaults to
+     * {@link SnowballingType.UNSPECIFIED} if the project does not define one.
+     */
+    export const snowballingTypeSetting: ProjectSettingDescriptor<string> = {
+        read: (project) => String(project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED),
+        toPatch: (value) => ({ settings: { snowballingType: Number(value) as SnowballingType } }),
+        action: "updating the Snowballing Type",
+    };
+</script>
+
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import * as RadioGroup from "$lib/components/primitives/radio-group/index";
-    import { Project, Project_Settings, SnowballingType } from "$api/project";
-    import { onMount } from "svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { toast } from "svelte-sonner";
+    import type { Project } from "$api/project";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { projectSetting } from "$lib/model/project-setting.svelte";
 
     interface Props {
         projectId: string;
@@ -17,8 +32,6 @@
     }
 
     const { projectId, loadingProject, slrSettingsLocked = false }: Props = $props();
-    let loading: boolean = $state(true);
-    let disabled = $derived(loading || slrSettingsLocked);
 
     interface RadioItemProp {
         id: string;
@@ -42,64 +55,18 @@
             description: "Both forward and backward references are fetched",
         },
     ];
-    let selectedType: string = $state(String(SnowballingType.UNSPECIFIED));
-    let initialType: string = $state(String(SnowballingType.UNSPECIFIED));
-    let updateSLRSettingsError: ActionError = $state(undefined);
 
-    onMount(() => {
-        loadingProject
-            .then((project) => {
-                selectedType = String(
-                    project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED,
-                );
-                initialType = selectedType;
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Load Project Settings",
-                    { action: "loading the project settings" },
-                    error,
-                );
-            })
-            .finally(() => {
-                loading = false;
-            });
+    const { isProjectArchived } = $derived(getIsProjectArchivedContext());
+
+    // A settings section belongs to exactly one project for as long as it is mounted, so these props
+    // are read once.
+    // svelte-ignore state_referenced_locally
+    const setting = projectSetting(snowballingTypeSetting, {
+        projectId,
+        loadingProject,
+        settingsLocked: () => slrSettingsLocked,
+        isArchived: () => isProjectArchived,
     });
-
-    async function onTypeSelected() {
-        if (initialType === selectedType || selectedType === String(SnowballingType.UNSPECIFIED))
-            return;
-
-        loading = true;
-        updateSLRSettingsError = undefined;
-        const projectData: Partial<Project> = {
-            id: projectId,
-            settings: Project_Settings.create({
-                snowballingType: Number(selectedType),
-            }),
-        };
-
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: { paths: ["project.settings.snowballing_type"] },
-            })
-            .response.then(() => {
-                initialType = selectedType;
-                toast.success("Successfully updated the project settings.");
-            })
-            .catch((error) => {
-                updateSLRSettingsError = createActionError(
-                    "Failed to Update Project Settings",
-                    { action: "updating the Snowballing Type" },
-                    error,
-                );
-                selectedType = initialType;
-            })
-            .finally(() => {
-                loading = false;
-            });
-    }
 </script>
 
 <!--
@@ -115,7 +82,7 @@ Usage:
   <SnowballingTypeSettings {projectId} {slrSettingsLocked} {loadingProject} />
 ```
 -->
-<SettingsSection locked={slrSettingsLocked} sectionTitle="Snowballing Type">
+<SettingsSection locked={setting.locked} sectionTitle="Snowballing Type">
     <p>
         The type of Snowballing defines which references (forward and/or backward) are fetched when
         a paper is accepted. A backward reference is defined as a paper that is cited by the paper
@@ -127,17 +94,17 @@ Usage:
             Wohlin et. al 2014
         </a>)
     </p>
-    <RadioGroup.Root bind:value={selectedType}>
+    <RadioGroup.Root bind:value={setting.value}>
         {#each options as option (option.id)}
             <div class="flex items-center space-x-2">
-                {#if loading && selectedType === option.id}
+                {#if setting.loading && setting.value === option.id}
                     <LoaderCircle class="size-4 animate-spin" />
                 {:else}
                     <RadioGroup.Item
                         id={option.id}
                         class="hover:cursor-pointer"
-                        {disabled}
-                        onclick={onTypeSelected}
+                        disabled={setting.disabled}
+                        onclick={() => void setting.commit(option.id)}
                         value={option.id}
                     />
                 {/if}
@@ -146,5 +113,5 @@ Usage:
             </div>
         {/each}
     </RadioGroup.Root>
-    <ActionErrorAlert error={updateSLRSettingsError} />
+    <ActionErrorAlert error={setting.error} />
 </SettingsSection>
