@@ -32,7 +32,7 @@
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
     // A settings section belongs to exactly one project for as long as it is mounted, so these props
-    // are read once. This mirrors the previous `onMount` behaviour.
+    // are read once.
     // svelte-ignore state_referenced_locally
     const setting = projectSetting(similarityThresholdSetting, {
         projectId,
