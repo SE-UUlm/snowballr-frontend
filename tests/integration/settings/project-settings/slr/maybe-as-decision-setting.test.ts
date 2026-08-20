@@ -231,4 +231,19 @@ describe("Maybe As Decision Project Setting", () => {
             ),
         ).toBeInTheDocument();
     });
+
+    test("When the project is archived, then the section is locked and the switch is disabled", async () => {
+        render(MaybeAsDecisionSetting, {
+            target: document.body,
+            props: {
+                projectId: projectData.id,
+                slrSettingsLocked: false,
+                loadingProject: Promise.resolve(projectData),
+            },
+            context: mockIsProjectArchivedContext(true),
+        });
+
+        await waitFor(() => expect(screen.getByRole("switch")).toBeDisabled());
+        expect(screen.getByTitle("This settings section is locked.")).toBeInTheDocument();
+    });
 });
