@@ -7,6 +7,9 @@ import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { type ISnowballRClient } from "$api/main.client";
 
+/** The project stage a created paper should land in, as the route would supply it. */
+const CREATION_TARGET = { projectId: "1", stage: 3n };
+
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {
         const paper = createPaper();
@@ -14,7 +17,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -58,7 +60,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -98,7 +99,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -159,7 +159,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: false,
                 startInEditMode: false,
@@ -182,7 +181,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper, 1000),
                 allowEditModeToggle: true,
                 startInEditMode: false,
@@ -195,16 +193,9 @@ describe("PaperDetailsCard", () => {
     });
 
     describe.each([
-        { isInCreationMode: false, apiMethod: "updatePaper" as keyof ISnowballRClient },
-        { isInCreationMode: true, apiMethod: "createPaper" as keyof ISnowballRClient },
-    ])("Save paper changes using $apiMethod API call", ({ isInCreationMode, apiMethod }) => {
-        Object.defineProperty(window, "location", {
-            value: {
-                ...window.location,
-                pathname: isInCreationMode ? "/project/1/paper/new" : "/project/1/paper/2",
-            },
-        });
-
+        { creationTarget: undefined, apiMethod: "updatePaper" as keyof ISnowballRClient },
+        { creationTarget: CREATION_TARGET, apiMethod: "createPaper" as keyof ISnowballRClient },
+    ])("Save paper changes using $apiMethod API call", ({ creationTarget, apiMethod }) => {
         test("When paper is changed, then the API call is invoked", async () => {
             const user = userEvent.setup();
             const paper = createPaper();
@@ -214,7 +205,7 @@ describe("PaperDetailsCard", () => {
             render(PaperDetailsCard, {
                 target: document.body,
                 props: {
-                    isInCreationMode,
+                    creationTarget,
                     loadingPaper: loading(paper),
                     allowEditModeToggle: true,
                     startInEditMode: true,
@@ -238,7 +229,7 @@ describe("PaperDetailsCard", () => {
             await user.click(savePaperChangesButtons[0]);
 
             expect(mockCall).toHaveBeenCalledTimes(1);
-            if (isInCreationMode) {
+            if (creationTarget !== undefined) {
                 expect(mockSecondCall).toHaveBeenCalledTimes(1);
             }
         });
@@ -252,7 +243,7 @@ describe("PaperDetailsCard", () => {
             render(PaperDetailsCard, {
                 target: document.body,
                 props: {
-                    isInCreationMode,
+                    creationTarget,
                     loadingPaper: loading(paper),
                     allowEditModeToggle: true,
                     startInEditMode: true,
@@ -268,7 +259,7 @@ describe("PaperDetailsCard", () => {
             await user.click(savePaperChangesButtons[0]);
 
             expect(mockCall).toHaveBeenCalledTimes(0);
-            if (isInCreationMode) {
+            if (creationTarget !== undefined) {
                 expect(mockSecondCall).toHaveBeenCalledTimes(0);
             }
         });
@@ -282,7 +273,7 @@ describe("PaperDetailsCard", () => {
             render(PaperDetailsCard, {
                 target: document.body,
                 props: {
-                    isInCreationMode,
+                    creationTarget,
                     loadingPaper: loading(paper),
                     allowEditModeToggle: true,
                     startInEditMode: true,
@@ -303,7 +294,7 @@ describe("PaperDetailsCard", () => {
             await user.click(savePaperChangesButtons[0]);
 
             expect(mockCall).toHaveBeenCalledTimes(0);
-            if (isInCreationMode) {
+            if (creationTarget !== undefined) {
                 expect(mockSecondCall).toHaveBeenCalledTimes(0);
             }
         });
@@ -316,7 +307,7 @@ describe("PaperDetailsCard", () => {
             render(PaperDetailsCard, {
                 target: document.body,
                 props: {
-                    isInCreationMode,
+                    creationTarget,
                     loadingPaper: loading(paper),
                     allowEditModeToggle: true,
                     startInEditMode: true,
@@ -343,6 +334,36 @@ describe("PaperDetailsCard", () => {
         });
     });
 
+    test("When a paper is created, then it is added to the stage the card was given", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        mockApiCall("createPaper", paper);
+        const addPaperToProject = mockApiCall("addPaperToProject", createProjectPaper());
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                creationTarget: CREATION_TARGET,
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        await waitForComponentLoading();
+
+        await user.type(screen.getByTestId("toggleable-input-title"), " - Changed");
+        await user.click(screen.getByTestId("save-paper-changes-btn"));
+
+        await waitFor(() => expect(addPaperToProject).toHaveBeenCalledTimes(1));
+        expect(addPaperToProject).toHaveBeenCalledWith({
+            paperId: paper.id,
+            projectId: CREATION_TARGET.projectId,
+            stage: CREATION_TARGET.stage,
+        });
+    });
+
     test("When the addPaperToProject API call fails in creation mode, then the save button is not disabled", async () => {
         const user = userEvent.setup();
         const paper = createPaper();
@@ -352,7 +373,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: true,
+                creationTarget: CREATION_TARGET,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,
@@ -385,7 +406,7 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: true,
+                creationTarget: CREATION_TARGET,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: true,
@@ -402,7 +423,6 @@ describe("PaperDetailsCard", () => {
         render(PaperDetailsCard, {
             target: document.body,
             props: {
-                isInCreationMode: false,
                 loadingPaper: loading(paper),
                 allowEditModeToggle: true,
                 startInEditMode: false,
