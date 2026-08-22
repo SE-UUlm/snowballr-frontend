@@ -48,8 +48,9 @@ describe("ProjectInformation", () => {
                     projectStart: new Date("2020-01-01"),
                     projectStage: 1n,
                     daysInStage: 3,
-                    // No decided paper means no review rate, so the projection divides by zero
-                    estimatedRemainingDays: (3 * 4) / 0 - 3,
+                    // What `(daysInStage * totalPapers) / reviewedPapers - daysInStage` yields
+                    // when nothing has been decided: no review rate, so no finite projection
+                    estimatedRemainingDays: Infinity,
                     totalPapersInStage: 4,
                     reviewedPapersInStage: 0,
                 }),
