@@ -24,6 +24,7 @@ export class ProjectPaperViewPageModel {
     readonly noMorePapersToReviewToast: Locator;
     readonly updatedPaperSuccessToast: Locator;
     readonly createdPaperSuccessToast: Locator;
+    readonly addedPaperToProjectSuccessToast: Locator;
     readonly yearValidationErrorToast: Locator;
 
     readonly projectName: string;
@@ -53,6 +54,9 @@ export class ProjectPaperViewPageModel {
         this.noMorePapersToReviewToast = page.getByText("No more papers to review.");
         this.updatedPaperSuccessToast = page.getByText("Successfully updated the paper.");
         this.createdPaperSuccessToast = page.getByText("Successfully created the paper");
+        this.addedPaperToProjectSuccessToast = page.getByText(
+            "Successfully added the paper to the project.",
+        );
         this.yearValidationErrorToast = page.getByText("The year has to be a numerical value.");
 
         this.projectName = "Project 1";
@@ -91,6 +95,31 @@ export class ProjectPaperViewPageModel {
     async openCreateProjectPaperView(projectId: string, stage: string) {
         await this.page.goto(`/project/${projectId}/paper/new?stage=${stage}`);
         await expect(this.savePaperChangesButton).toBeVisible();
+    }
+
+    /**
+     * Navigates to the create project paper view with a raw query string, without waiting for the
+     * view to appear.
+     *
+     * @remarks
+     * Used for query strings that name no stage, where the view is not supposed to appear at all.
+     *
+     * @param projectId - The id of the project
+     * @param query - The query string to append, including the leading `?` if it is not empty
+     */
+    async openCreateProjectPaperViewWithQuery(projectId: string, query: string) {
+        await this.page.goto(`/project/${projectId}/paper/new${query}`);
+    }
+
+    /**
+     * Fills in the create paper form.
+     *
+     * @param title - The title to give the new paper
+     */
+    async fillCreatePaperForm(title: string) {
+        await this.getToggleableInput("title").fill(title);
+        await this.getToggleableInput("authors").fill("John Doe; Jane Smith");
+        await this.getToggleableInput("year").fill("2024");
     }
 
     /**
