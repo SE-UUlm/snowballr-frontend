@@ -296,6 +296,49 @@ describe("AddPaperDialogButton", () => {
         expect(await screen.findByText("Bar", { exact: false })).toBeVisible();
     });
 
+    // Regression guard for #699. Fetcher papers that SnowballR does not know yet arrive without an
+    // id, and used to be given their index in the response as one. Local ids are small numbers too,
+    // so those synthetic ids collided and the new papers were silently dropped.
+    test("When new fetcher papers sit at the indices of local paper ids, then they are still shown", async () => {
+        mockApiCall(
+            "searchLocalProjectPaperCandidates",
+            Paper_List.create({
+                papers: [
+                    { id: "0", title: "Local Zero" },
+                    { id: "1", title: "Local One" },
+                ],
+            }),
+        );
+        mockApiCall(
+            "searchFetcherProjectPaperCandidates",
+            Paper_List.create({
+                papers: [
+                    { id: "", title: "Fresh Alpha" },
+                    { id: "", title: "Fresh Beta" },
+                ],
+            }),
+        );
+
+        render(AddPaperDialogButton, {
+            target: document.body,
+            props: {
+                open: true,
+                projectId: "1",
+                stage: 1n,
+                includeLocal: true,
+                includeFetchers: true,
+                loadingProject: loading(projectWithFetcher),
+            },
+        });
+
+        await search("test");
+
+        expect(await screen.findByText("Local Zero", { exact: false })).toBeVisible();
+        expect(await screen.findByText("Local One", { exact: false })).toBeVisible();
+        expect(await screen.findByText("Fresh Alpha", { exact: false })).toBeVisible();
+        expect(await screen.findByText("Fresh Beta", { exact: false })).toBeVisible();
+    });
+
     test("When a paper with undefined authors is encountered, then 'Unknown Authors' is displayed", async () => {
         mockApiCall(
             "searchLocalProjectPaperCandidates",

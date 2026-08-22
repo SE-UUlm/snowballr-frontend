@@ -7,15 +7,15 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import SearchBar from "../search-bar/SearchBar.svelte";
     import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { type Paper } from "$lib/model/api/paper";
-    import { isGrpcError, pluralize } from "$lib/utils/common-helper";
+    import { pluralize } from "$lib/utils/common-helper";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
-    import { toast } from "svelte-sonner";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import type { ActionError } from "$lib/model/action-error";
+    import {
+        addPaperCandidates,
+        searchPaperCandidates,
+        type PaperCandidate,
+    } from "$lib/model/paper-candidate";
     import type { DialogTriggerProps } from "bits-ui";
     import ToggleButton from "../button/ToggleButton.svelte";
     import type { Project } from "$api/project";
@@ -43,14 +43,10 @@
     }: Props = $props();
 
     let searchError: ActionError = $state();
-    let searchedPapers: Promise<Paper[]> = $state(Promise.resolve([]));
-    let selectedPapers: Paper[] = $state([]);
+    let searchedCandidates: Promise<PaperCandidate[]> = $state(Promise.resolve([]));
+    let selectedCandidates: PaperCandidate[] = $state([]);
     let loading = $state(false);
     let disableFetcherSearching = $state(true);
-
-    type ErrorResult = { type: "error"; message: string };
-    type CreatePaperResult = { type: "success"; paper: Paper } | ErrorResult;
-    type AddPaperResult = { type: "success" } | ErrorResult;
 
     onMount(() => {
         loadingProject.then((project) => {
@@ -63,159 +59,37 @@
         });
     });
 
-    async function searchPapers(query: string): Promise<Paper[]> {
-        const onError = (error: Error, searchType: string) => {
-            searchError = createActionError(
-                `Failed to search for ${searchType} papers`,
-                {
-                    action: `searching for ${searchType} papers`,
-                },
-                error,
-            );
-
-            return [];
-        };
-
+    async function search(query: string): Promise<PaperCandidate[]> {
         searchError = undefined;
 
-        const localPapers = includeLocal
-            ? backendService
-                  .searchLocalProjectPaperCandidates({ query, projectId })
-                  .response.then((it) => it.papers)
-                  .catch((it) => onError(it, "local"))
-            : Promise.resolve<Paper[]>([]);
+        const result = await searchPaperCandidates(query, projectId, {
+            includeLocal,
+            includeFetchers: includeFetchers && !disableFetcherSearching,
+        });
 
-        // Fetcher papers that don't exist in the snowballR DB get their index assigned as ID
-        const fetcherPapers =
-            includeFetchers && !disableFetcherSearching
-                ? backendService
-                      .searchFetcherProjectPaperCandidates({ query, projectId })
-                      .response.then((it) =>
-                          it.papers.map((paper, i) => ({
-                              ...paper,
-                              id: `${paper.id === "" ? i : paper.id}`,
-                          })),
-                      )
-                      .catch((it) => onError(it, "fetcher"))
-                : Promise.resolve<Paper[]>([]);
+        searchError = result.error;
 
-        function externalIdKey(externalId: { type: string; value: string }) {
-            return JSON.stringify([externalId.type, externalId.value]);
-        }
-
-        const papers = Promise.all([localPapers, fetcherPapers])
-            .then(([local, fetchers]) => {
-                const localIds = new Set(local.filter((it) => it.id !== "").map((it) => it.id));
-                const localExternalIdKeys = new Set(
-                    local.flatMap((it) =>
-                        it.externalIds
-                            .filter(
-                                (externalId) => externalId.type !== "" && externalId.value !== "",
-                            )
-                            .map(externalIdKey),
-                    ),
-                );
-
-                function isSamePaper(paper: Paper) {
-                    if (paper.id !== "" && localIds.has(paper.id)) return true;
-
-                    return paper.externalIds.some(
-                        (externalId) =>
-                            externalId.type !== "" &&
-                            externalId.value !== "" &&
-                            localExternalIdKeys.has(externalIdKey(externalId)),
-                    );
-                }
-
-                return [
-                    ...local,
-                    // Avoid duplicate key when rendering
-                    ...fetchers.filter((it) => !isSamePaper(it)),
-                ];
-            })
-            .then((papers) => {
-                if (papers.length === 0) {
-                    toast.info(
-                        "The search did not return any papers. Either the query didn't match any papers or all papers" +
-                            " that match the query already exist in this project",
-                    );
-                }
-
-                return papers;
-            });
-
-        return papers;
-    }
-
-    async function tryCreatePaper(paper: Paper): Promise<CreatePaperResult> {
-        // Paper already exists if id is UUID
-        if (Number.isNaN(Number(paper.id))) {
-            return { type: "success", paper };
-        }
-
-        return await backendService
-            .createPaper(paper)
-            .response.then((paper) => ({ type: "success", paper }) satisfies CreatePaperResult)
-            .catch((error: RpcError) => {
-                if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
-                    return { type: "success", paper } satisfies CreatePaperResult;
-                } else {
-                    return { type: "error", message: error.message } satisfies CreatePaperResult;
-                }
-            });
-    }
-
-    async function tryAddPaper(paper: Paper): Promise<AddPaperResult> {
-        return await backendService
-            .addPaperToProject({
-                paperId: paper.id,
-                projectId,
-                stage: BigInt(stage),
-            })
-            .response.then(() => ({ type: "success" }) satisfies AddPaperResult)
-            .catch((error: RpcError) => {
-                return { type: "error", message: error.message };
-            });
+        return result.candidates;
     }
 
     async function addPapers() {
         loading = true;
 
-        let addedPapers = 0;
-        for (const paper of selectedPapers) {
-            const createResult = await tryCreatePaper(paper);
+        const summary = await addPaperCandidates(selectedCandidates, { projectId, stage });
 
-            if (createResult.type === "error") {
-                toast.error(`Paper '${paper.title}' could not be created.`);
-                continue;
-            }
-
-            const addResult = await tryAddPaper(createResult.paper);
-
-            if (addResult.type === "error") {
-                toast.error(`Paper '${paper.title}' could not be added.`);
-                continue;
-            }
-
-            addedPapers++;
-        }
-
-        if (addedPapers > 0) {
-            toast.success(
-                `Successfully added ${addedPapers} ${pluralize(addedPapers, "paper", "papers")} to the project.`,
-            );
-
+        if (summary.added > 0) {
             // trigger reload of the page
             invalidate("data:getAllProjectPapersForProject");
         }
+
         loading = false;
         open = false;
     }
 
     $effect(() => {
         if (open || !open) {
-            selectedPapers = [];
-            searchedPapers = Promise.resolve([]);
+            selectedCandidates = [];
+            searchedCandidates = Promise.resolve([]);
         }
     });
 
@@ -284,7 +158,7 @@ Usage:
                 <SearchBar
                     liveSearch={false}
                     maxLength={50}
-                    onSearch={(query) => (searchedPapers = searchPapers(query))}
+                    onSearch={(query) => (searchedCandidates = search(query))}
                     placeholderText="Search Query"
                 />
 
@@ -292,20 +166,23 @@ Usage:
                     <div
                         class="absolute top-0 left-0 flex size-full flex-col gap-2 overflow-visible"
                     >
-                        {#await searchedPapers}
+                        {#await searchedCandidates}
                             <Skeleton class="h-16 w-full" />
                             <Skeleton class="h-16 w-full" />
                             <Skeleton class="h-16 w-full" />
                             <Skeleton class="h-16 w-full" />
-                        {:then searchedPapers}
-                            {#each searchedPapers as paper (paper.id)}
-                                {#if selectedPapers.every((it) => it.id != paper.id)}
+                        {:then candidates}
+                            {#each candidates as candidate (candidate.key)}
+                                {#if selectedCandidates.every((it) => it.key != candidate.key)}
                                     <ProjectPaperCandidate
                                         action="add"
                                         buttonTestId="add-paper-to-selected"
                                         onClick={() =>
-                                            (selectedPapers = [...selectedPapers, paper])}
-                                        {paper}
+                                            (selectedCandidates = [
+                                                ...selectedCandidates,
+                                                candidate,
+                                            ])}
+                                        paper={candidate.paper}
                                         testId="paper-available-to-be-added"
                                     />
                                 {/if}
@@ -322,15 +199,15 @@ Usage:
                     <div
                         class="absolute top-0 left-0 flex size-full flex-col gap-2 overflow-visible"
                     >
-                        {#each selectedPapers as paper (paper.id)}
+                        {#each selectedCandidates as candidate (candidate.key)}
                             <ProjectPaperCandidate
                                 action="remove"
                                 buttonTestId="remove-paper-from-selected"
                                 onClick={() =>
-                                    (selectedPapers = selectedPapers.filter(
-                                        (it) => it.id != paper.id,
+                                    (selectedCandidates = selectedCandidates.filter(
+                                        (it) => it.key != candidate.key,
                                     ))}
-                                {paper}
+                                paper={candidate.paper}
                                 testId="paper-to-be-added"
                             />
                         {/each}
@@ -356,10 +233,10 @@ Usage:
                 Cancel
             </Dialog.Close>
             <LoadingButton
-                disabled={selectedPapers.length === 0}
-                label={`Add ${selectedPapers.length} ${pluralize(selectedPapers.length, "Paper", "Papers")}`}
+                disabled={selectedCandidates.length === 0}
+                label={`Add ${selectedCandidates.length} ${pluralize(selectedCandidates.length, "Paper", "Papers")}`}
                 {loading}
-                loadingLabel={`Add ${selectedPapers.length} ${pluralize(selectedPapers.length, "Paper", "Papers")}`}
+                loadingLabel={`Add ${selectedCandidates.length} ${pluralize(selectedCandidates.length, "Paper", "Papers")}`}
                 onclick={() => addPapers()}
             >
                 {#snippet icon()}
