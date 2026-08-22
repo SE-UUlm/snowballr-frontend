@@ -6,7 +6,7 @@
         type ProjectResearchContextCardProps,
         type ForwardAndBackwardReferencesCardContentProps,
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { CriterionWithReviews } from "$lib/model/general";
+    import type { CriterionWithReviews, PaperCreationTarget } from "$lib/model/general";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
     import type { User } from "$api/user";
     import { Paper } from "$api/paper";
@@ -33,7 +33,11 @@
         backRef: ResolvedPathname;
         allowEditModeToggle?: boolean;
         startInEditMode?: boolean;
-        isInCreationMode?: boolean;
+        /**
+         * Where a paper created here should be filed. Supplying it is what puts the view into
+         * creation mode: a paper can only be created if it is known where it goes.
+         */
+        creationTarget?: PaperCreationTarget;
         bottomBar?: Snippet;
     };
 
@@ -46,12 +50,14 @@
         backRef,
         allowEditModeToggle = false,
         startInEditMode = false,
-        isInCreationMode = false,
+        creationTarget = undefined,
         loadingPaper: loadingPaperWrapper,
         reviewers,
         criteriaWithReviews,
         bottomBar = undefined,
     }: PaperViewProps = $props();
+
+    const isInCreationMode = $derived(creationTarget !== undefined);
 
     const loadingPaper = $derived.by(() => loadingPaperWrapper.then(asPaper));
     const loadingPaperId = $derived.by(() => loadingPaper.then((paper) => paper.id));
@@ -119,12 +125,7 @@ Usage:
 </div>
 <main class="flex h-full w-full flex-col gap-5 px-5 pb-2">
     <div class="flex h-full w-full flex-row gap-10">
-        <PaperDetailsCard
-            {allowEditModeToggle}
-            {isInCreationMode}
-            {loadingPaper}
-            {startInEditMode}
-        />
+        <PaperDetailsCard {allowEditModeToggle} {creationTarget} {loadingPaper} {startInEditMode} />
         <PaperResearchContextCard
             {backwardReferencedPapers}
             {forwardReferencedPapers}

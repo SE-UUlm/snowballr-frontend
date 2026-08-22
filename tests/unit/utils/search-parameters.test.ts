@@ -3,6 +3,7 @@ import {
     getFilterFromURL,
     getSearchTextFromURL,
     getSortOptionFromURL,
+    getStageFromSearchParams,
     updateFiltersParam,
     updateSearchTextParam,
     updateSortParams,
@@ -150,4 +151,31 @@ describe("Helper sort URL query parameter", () => {
             ).toStrictEqual(new SvelteURLSearchParams("sort=Year&order=asc"));
         },
     );
+});
+
+describe("Helper stage URL query parameter", () => {
+    test("When the query parameter for the stage names a stage, then it is returned as a stage index.", () => {
+        expect(getStageFromSearchParams(new URLSearchParams("stage=3"))).toBe(3n);
+    });
+
+    test("When the query parameter for the stage names the first stage, then it is returned as such.", () => {
+        expect(getStageFromSearchParams(new URLSearchParams("stage=0"))).toBe(0n);
+    });
+
+    test.each([
+        { search: "", label: "no stage parameter at all" },
+        { search: "stage=", label: "an empty stage parameter" },
+        { search: "stage=abc", label: "a stage parameter that is not a number" },
+        { search: "stage=2.5", label: "a fractional stage parameter" },
+        { search: "stage=-1", label: "a negative stage parameter" },
+        { search: "stage=%2B1", label: "a signed stage parameter" },
+        { search: "stage=%203", label: "a padded stage parameter" },
+    ])("When the query parameters carry $label, then no stage is returned.", ({ search }) => {
+        expect(getStageFromSearchParams(new URLSearchParams(search))).toBeUndefined();
+    });
+
+    test("When the query parameters carry no stage, then the first stage is not silently stood in for it.", () => {
+        // `BigInt("")` is `0n`, which would be indistinguishable from having asked for stage 0.
+        expect(getStageFromSearchParams(new URLSearchParams(""))).not.toBe(0n);
+    });
 });

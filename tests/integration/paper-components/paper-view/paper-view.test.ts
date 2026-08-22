@@ -17,7 +17,7 @@ describe("PaperView", () => {
 
     test("When the paper view is opened in the creation mode, then the paper bookmark button is not shown", () => {
         render(PaperView, {
-            props: createPaperViewProps({ isInCreationMode: true }),
+            props: createPaperViewProps({ creationTarget: { projectId: "1", stage: 0n } }),
             context: mockUserContext,
         });
 

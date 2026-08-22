@@ -310,6 +310,56 @@ test.describe("Create Paper Tests", () => {
         await expect(projectPaperViewPage.getHeading("New Paper Title")).toBeVisible();
     });
 
+    test("When the user creates a paper in a stage, then the paper is added to that stage", async ({
+        page,
+        projectPaperViewPage,
+        projectPapersPage,
+    }) => {
+        await projectPaperViewPage.openCreateProjectPaperView(projectPaperViewPage.projectId, "1");
+
+        await projectPaperViewPage.fillCreatePaperForm("Paper For Stage One");
+        await projectPaperViewPage.savePaperChangesButton.click();
+
+        await expect(projectPaperViewPage.addedPaperToProjectSuccessToast).toBeVisible();
+
+        // Which stage a paper landed in is only visible on the papers page, not on the paper itself
+        await page.goto(`/project/${projectPaperViewPage.projectId}/papers`);
+
+        const createdPaper = projectPapersPage.getPaperByTitle("Paper For Stage One");
+        const stageOneTrigger = projectPapersPage.getStageTrigger(1);
+        await expect(stageOneTrigger).toBeVisible();
+        if (!(await createdPaper.isVisible())) {
+            await stageOneTrigger.click();
+        }
+
+        await expect(createdPaper).toBeVisible();
+    });
+
+    // A URL that names no stage cannot say where a created paper would go, so the form is never
+    // offered in the first place - `BigInt("")` used to make these all mean stage 0.
+    const queriesNamingNoStage = [
+        { query: "", description: "no stage query parameter" },
+        { query: "?stage=", description: "an empty stage query parameter" },
+        { query: "?stage=abc", description: "a stage query parameter that is not a number" },
+    ];
+
+    for (const { query, description } of queriesNamingNoStage) {
+        test(`When the create paper view is opened with ${description}, then the user is sent to the papers page`, async ({
+            page,
+            projectPaperViewPage,
+            projectPapersPage,
+        }) => {
+            await projectPaperViewPage.openCreateProjectPaperViewWithQuery(
+                projectPaperViewPage.projectId,
+                query,
+            );
+
+            await expect(page).toHaveURL(`/project/${projectPaperViewPage.projectId}/papers`);
+            await expect(projectPapersPage.getStageTrigger(0)).toBeVisible();
+            await expect(projectPaperViewPage.savePaperChangesButton).toBeHidden();
+        });
+    }
+
     test("When the user enters an invalid year and saves, then an error toast is shown", async ({
         projectPaperViewPage,
     }) => {

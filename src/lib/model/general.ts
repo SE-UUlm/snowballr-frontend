@@ -27,6 +27,19 @@ interface Stage {
     papers: Project_Paper[];
 }
 
+/**
+ * Where a newly created paper should be filed.
+ *
+ * Creating a paper takes two steps - create the paper, then add it to a project stage - and only
+ * the route knows the destination of the second one. Passing it down as a prop keeps that knowledge
+ * with the caller that already has it, rather than having the component recover it from the address
+ * bar (see #704).
+ */
+interface PaperCreationTarget {
+    projectId: string;
+    stage: bigint;
+}
+
 interface ProjectPaperFilter {
     stages: string[];
     reviewers: string[];
@@ -58,6 +71,7 @@ export type {
     CriterionWithReviews,
     CriteriaList,
     Stage,
+    PaperCreationTarget,
     PaperStatus,
     ProjectPaperFilter,
     Person,
