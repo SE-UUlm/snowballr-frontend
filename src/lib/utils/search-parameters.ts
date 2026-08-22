@@ -189,3 +189,24 @@ export function addRedirectUrlIfExists(url: string) {
     const redirectUrl = getRedirectParam();
     return url + (redirectUrl ? `?redirect=${encodeURIComponent(redirectUrl)}` : "");
 }
+
+/**
+ * Reads the 'stage' query parameter as a stage index.
+ *
+ * A stage index is a whole, non-negative number. Anything else - a missing parameter, an empty one,
+ * `"abc"`, `"-1"`, `"2.5"` - names no stage, and yields `undefined` instead of a stand-in. Passing
+ * such a value to `BigInt` does not report the problem: `BigInt("")` is `0n`, which is
+ * indistinguishable from having asked for the first stage (see #705).
+ *
+ * @remarks
+ * Unlike the readers above this takes the parameters to read rather than taking them from the
+ * current page, so that it can be used while loading a route, before there is a page to read.
+ *
+ * @param searchParams - The query parameters to read the stage from
+ * @returns The stage index, or `undefined` if the parameters do not name one
+ */
+export function getStageFromSearchParams(searchParams: URLSearchParams): bigint | undefined {
+    const stage = searchParams.get("stage");
+
+    return stage !== null && /^\d+$/.test(stage) ? BigInt(stage) : undefined;
+}
