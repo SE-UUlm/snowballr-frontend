@@ -8,6 +8,14 @@
         projectStart: Date;
         projectStage: bigint;
         daysInStage: number;
+        /**
+         * Projected days left in this stage, extrapolated from the review rate so far.
+         *
+         * That rate does not exist until something has been decided, and dividing by it anyway
+         * does not fail: with no decided papers the projection is `Infinity`, and with no papers
+         * at all it is `NaN`. Both mean "no estimate yet" rather than a duration, so only a
+         * finite value is shown.
+         */
         estimatedRemainingDays: number;
         totalPapersInStage: number;
         reviewedPapersInStage: number;
@@ -53,7 +61,7 @@ Usage:
         /
         <span class="text-emphasized">{information.totalPapersInStage}</span>
         {pluralize(information.totalPapersInStage, "paper", "papers")} so far.
-        {#if information.estimatedRemainingDays > 0}
+        {#if Number.isFinite(information.estimatedRemainingDays) && information.estimatedRemainingDays > 0}
             Based on your progress, your estimated remaining time will be
             <span class="text-emphasized">
                 {Math.round(information.estimatedRemainingDays * 10) / 10}

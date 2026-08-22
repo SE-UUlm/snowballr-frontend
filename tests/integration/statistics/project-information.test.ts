@@ -40,6 +40,33 @@ describe("ProjectInformation", () => {
         );
     });
 
+    test("When no paper has been decided yet, then the project information component does not show information about the estimated remaining time.", async () => {
+        render(ProjectInformation, {
+            props: {
+                projectInformation: loading({
+                    projectName: "Demo",
+                    projectStart: new Date("2020-01-01"),
+                    projectStage: 1n,
+                    daysInStage: 3,
+                    // What `(daysInStage * totalPapers) / reviewedPapers - daysInStage` yields
+                    // when nothing has been decided: no review rate, so no finite projection
+                    estimatedRemainingDays: Infinity,
+                    totalPapersInStage: 4,
+                    reviewedPapersInStage: 0,
+                }),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByTestId("project-information")).toHaveTextContent("0 / 4");
+
+        expect(screen.getByTestId("project-information")).not.toHaveTextContent(
+            "your estimated remaining time will be",
+        );
+        expect(screen.getByTestId("project-information")).not.toHaveTextContent("Infinity");
+    });
+
     test("When the project was just created, then the project information component does not show information about the estimated remaining time.", async () => {
         render(ProjectInformation, {
             props: {
