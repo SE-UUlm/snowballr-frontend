@@ -3,7 +3,7 @@
     import { Paper } from "$api/paper.js";
 
     const { data } = $props();
-    const { projectId, loadingProject } = $derived(data);
+    const { projectId, loadingProject, creationTarget } = $derived(data);
 
     const paper: Paper = Paper.create({
         year: "" as unknown as number,
@@ -23,9 +23,9 @@
     allowEditModeToggle
     backRef={`/project/${projectId}/papers`}
     backwardReferencedPapers={Promise.resolve([])}
+    {creationTarget}
     criteriaWithReviews={undefined}
     forwardReferencedPapers={Promise.resolve([])}
-    isInCreationMode
     loadingPaper={Promise.resolve(paper)}
     reviewers={undefined}
     startInEditMode

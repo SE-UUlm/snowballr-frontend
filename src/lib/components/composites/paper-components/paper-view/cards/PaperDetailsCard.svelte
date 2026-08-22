@@ -9,14 +9,13 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
-    import type { StringifiedPaper } from "$lib/model/general";
-    import { asPaper, isProjectPaper, stringifyPaper } from "$lib/utils/model-helper";
+    import type { PaperCreationTarget, StringifiedPaper } from "$lib/model/general";
+    import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { goto } from "$app/navigation";
-    import type { Project_Paper } from "$api/project";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { resolve } from "$app/paths";
 
@@ -24,10 +23,23 @@
         loadingPaper: Promise<Paper>;
         allowEditModeToggle: boolean;
         startInEditMode: boolean;
-        isInCreationMode: boolean;
+        /**
+         * Where a paper created here should be filed.
+         *
+         * Supplying it is what puts the card into creation mode, so that creating a paper and
+         * knowing where it goes cannot disagree.
+         */
+        creationTarget?: PaperCreationTarget;
     }
 
-    let { loadingPaper, allowEditModeToggle, startInEditMode, isInCreationMode }: Props = $props();
+    let {
+        loadingPaper,
+        allowEditModeToggle,
+        startInEditMode,
+        creationTarget = undefined,
+    }: Props = $props();
+
+    const isInCreationMode = $derived(creationTarget !== undefined);
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -88,12 +100,10 @@
             authors: stringToAuthors(paper.authors),
         };
 
-        let promise;
-        if (isInCreationMode) {
-            promise = createPaper(Paper.create(paperData));
-        } else {
-            promise = updatePaper(paperData);
-        }
+        const promise =
+            creationTarget !== undefined
+                ? createPaper(Paper.create(paperData), creationTarget)
+                : updatePaper(paperData);
 
         // Add noop-catch so that promise rejection is not uncaught in tests
         // noop-catch cannot be added before toast.promise because error case wouldn't be handled
@@ -120,50 +130,38 @@
         return updateCall;
     }
 
-    async function createPaper(paperObject: Paper) {
-        const projectIdRegex = /\/project\/(.+?)\/.*/;
-        const matches = projectIdRegex.exec(window.location.pathname);
-        const projectId = matches !== null ? matches[1] : undefined;
-        const stage = new URLSearchParams(window.location.search).get("stage");
+    async function createPaper(paperObject: Paper, target: PaperCreationTarget) {
+        const creating = backendService.createPaper(paperObject).response.then((createdPaper) => {
+            originalPaper = stringifyPaper(createdPaper);
+            paper = originalPaper;
 
-        let promise: Promise<Paper | Project_Paper> = backendService
-            .createPaper(paperObject)
-            .response.then(async (createdPaper) => {
-                originalPaper = stringifyPaper(createdPaper);
-                paper = originalPaper;
+            return createdPaper;
+        });
 
-                return createdPaper;
-            });
-
-        toast.promise(promise, {
+        toast.promise(creating, {
             loading: "Creating paper...",
-            success: (paper) => `Successfully created the paper '${asPaper(paper).title}'.`,
+            success: (createdPaper) => `Successfully created the paper '${createdPaper.title}'.`,
             error: "Failed to create the paper.",
         });
 
-        if (projectId) {
-            promise = promise.then(async (createdPaper) => {
-                return await backendService.addPaperToProject({
+        const adding = creating.then(
+            (createdPaper) =>
+                backendService.addPaperToProject({
                     paperId: createdPaper.id,
-                    projectId: projectId,
-                    stage: BigInt(stage ?? ""),
-                }).response;
-            });
+                    projectId: target.projectId,
+                    stage: target.stage,
+                }).response,
+        );
 
-            toast.promise(promise, {
-                loading: "Adding paper to project...",
-                success: () => "Successfully added the paper to the project.",
-                error: "Failed to add the paper to the project.",
-            });
-        }
-
-        return promise.then(async (paper) => {
-            if (isProjectPaper(paper)) {
-                await goto(resolve(`/project/${projectId}/paper/${paper.localId}`));
-            } else {
-                await goto(resolve(`/paper/${paper.id}`));
-            }
+        toast.promise(adding, {
+            loading: "Adding paper to project...",
+            success: () => "Successfully added the paper to the project.",
+            error: "Failed to add the paper to the project.",
         });
+
+        return adding.then((projectPaper) =>
+            goto(resolve(`/project/${target.projectId}/paper/${projectPaper.localId}`)),
+        );
     }
 
     function undoPaperModifications() {
@@ -186,9 +184,13 @@
 `PaperCard` for displaying the details of a paper in the `PaperView` component.
 It also provides the functionality to update the paper details.
 
+Passing a `creationTarget` switches the card from updating an existing paper to creating a new one
+and filing it in that project stage.
+
 Usage:
 ```svelte
     <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} />
+    <PaperDetailsCard {loadingPaper} {allowEditModeToggle} {startInEditMode} {creationTarget} />
 ```
 -->
 <PaperCard data-testid="paper-details-card" {tabs}>
