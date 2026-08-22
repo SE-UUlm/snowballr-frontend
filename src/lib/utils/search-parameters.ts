@@ -190,6 +190,9 @@ export function addRedirectUrlIfExists(url: string) {
     return url + (redirectUrl ? `?redirect=${encodeURIComponent(redirectUrl)}` : "");
 }
 
+/** A stage index as it appears in a URL: a whole, non-negative number and nothing else. */
+const stageRegex = /^\d+$/;
+
 /**
  * Reads the 'stage' query parameter as a stage index.
  *
@@ -208,5 +211,5 @@ export function addRedirectUrlIfExists(url: string) {
 export function getStageFromSearchParams(searchParams: URLSearchParams): bigint | undefined {
     const stage = searchParams.get("stage");
 
-    return stage !== null && /^\d+$/.test(stage) ? BigInt(stage) : undefined;
+    return stage !== null && stageRegex.test(stage) ? BigInt(stage) : undefined;
 }
