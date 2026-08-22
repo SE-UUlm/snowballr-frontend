@@ -6,7 +6,7 @@ import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import type { RpcError } from "@protobuf-ts/runtime-rpc";
 import { toast } from "svelte-sonner";
 
-/** Shown when a search completed but produced nothing to offer. */
+/** Shown when every requested source answered and none of them had anything to offer. */
 export const NO_CANDIDATES_MESSAGE =
     "The search did not return any papers. Either the query didn't match any papers or all papers" +
     " that match the query already exist in this project";
@@ -172,8 +172,12 @@ async function searchSource(
  *
  * The sources are searched concurrently and independently: if one fails it contributes nothing and
  * its failure is reported, while the other's results are still offered. A source that was not
- * requested is simply not searched. When the merged result is empty a toast explains why, since an
- * empty list on its own does not distinguish "nothing matched" from "everything already added".
+ * requested is simply not searched.
+ *
+ * An empty result gets a toast explaining it, since an empty list on its own does not distinguish
+ * "nothing matched" from "everything already added". That explanation is only offered when every
+ * requested source answered, because a failing source empties the result for an entirely different
+ * reason and the caller already reports that one (see #702).
  *
  * @param query - The user's search query
  * @param projectId - The project the papers would be added to
@@ -211,11 +215,13 @@ export async function searchPaperCandidates(
         toFetcherCandidates(fetcherResult.papers),
     );
 
-    if (candidates.length === 0) {
+    const error = localResult.error ?? fetcherResult.error;
+
+    if (candidates.length === 0 && error === undefined) {
         toast.info(NO_CANDIDATES_MESSAGE);
     }
 
-    return { candidates, error: localResult.error ?? fetcherResult.error };
+    return { candidates, error };
 }
 
 /**

@@ -236,6 +236,32 @@ describe("searchPaperCandidates", () => {
         expect(result.error).toBeDefined();
     });
 
+    test("When both sources fail, then the empty list is not blamed on the query", async () => {
+        mockFailedApiCall("searchLocalProjectPaperCandidates", "boom");
+        mockFailedApiCall("searchFetcherProjectPaperCandidates", "boom");
+
+        await searchPaperCandidates("query", PROJECT_ID, {
+            includeLocal: true,
+            includeFetchers: true,
+        });
+
+        expect(toast.info).not.toHaveBeenCalled();
+    });
+
+    test("When one source fails and the other finds nothing, then the empty list is not explained", async () => {
+        mockApiCall("searchLocalProjectPaperCandidates", { papers: [] });
+        mockFailedApiCall("searchFetcherProjectPaperCandidates", "boom");
+
+        const result = await searchPaperCandidates("query", PROJECT_ID, {
+            includeLocal: true,
+            includeFetchers: true,
+        });
+
+        expect(result.candidates).toEqual([]);
+        expect(result.error?.errorTitle).toBe("Failed to search for fetcher papers");
+        expect(toast.info).not.toHaveBeenCalled();
+    });
+
     test("When the search returns nothing, then the user is told why the list is empty", async () => {
         await searchPaperCandidates("query", PROJECT_ID, {
             includeLocal: true,
