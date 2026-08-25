@@ -23,7 +23,6 @@ describe("ReadingListEntryComponent", () => {
         expect(
             screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
         expect(screen.queryByRole("link", { name: "Open Paper" })).not.toBeInTheDocument();
     });
 
@@ -45,7 +44,6 @@ describe("ReadingListEntryComponent", () => {
         expect(
             screen.getByRole("button", { name: "Remove from reading list" }),
         ).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Download this paper" })).toBeInTheDocument();
         expect(screen.getByRole("link", { name: "Open Paper" })).toBeInTheDocument();
     });
 

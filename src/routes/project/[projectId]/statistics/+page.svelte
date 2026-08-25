@@ -15,3 +15,7 @@
     {/await}
 </svelte:head>
 <ProjectNavigationBar defaultTabValue="statistics" {loadingProject} {projectId} />
+
+<div class="flex h-full w-full items-center justify-center">
+    🚧 This page is under construction. 🚧
+</div>

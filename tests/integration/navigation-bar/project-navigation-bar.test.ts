@@ -18,7 +18,7 @@ describe("ProjectNavigationBar", () => {
                         status: ProjectStatus.ACTIVE,
                     }),
                 ),
-                defaultTabValue: "statistics",
+                defaultTabValue: "settings",
             },
             context: mockUserContext,
         });
@@ -26,7 +26,7 @@ describe("ProjectNavigationBar", () => {
         await waitForComponentLoading();
 
         const linkTags = screen.getAllByRole("tab");
-        expect(linkTags).toHaveLength(4);
+        expect(linkTags).toHaveLength(3);
 
         const dashboardLinks = linkTags.filter(
             (link) => link.getAttribute("href") === "/project/123/dashboard",
@@ -44,15 +44,15 @@ describe("ProjectNavigationBar", () => {
         expect(paperLink).toBeInTheDocument();
         expect(paperLink).toHaveTextContent("Papers");
 
-        const statisticsLinks = linkTags.filter(
-            (link) => link.getAttribute("href") === "/project/123/statistics",
-        );
-        expect(statisticsLinks).toHaveLength(1);
-        const statisticsLink = statisticsLinks[0];
-        expect(statisticsLink).toBeInTheDocument();
-        expect(statisticsLink).toHaveTextContent("Statistics");
-        expect(statisticsLink).toHaveAttribute("data-state", "active");
-        expect(statisticsLink).toHaveAttribute("aria-selected", "true");
+        // const statisticsLinks = linkTags.filter(
+        //     (link) => link.getAttribute("href") === "/project/123/statistics",
+        // );
+        // expect(statisticsLinks).toHaveLength(1);
+        // const statisticsLink = statisticsLinks[0];
+        // expect(statisticsLink).toBeInTheDocument();
+        // expect(statisticsLink).toHaveTextContent("Statistics");
+        // expect(statisticsLink).toHaveAttribute("data-state", "active");
+        // expect(statisticsLink).toHaveAttribute("aria-selected", "true");
 
         const settingsLinks = linkTags.filter(
             (link) => link.getAttribute("href") === "/project/123/settings/general",
@@ -83,7 +83,7 @@ describe("ProjectNavigationBar", () => {
                         status: ProjectStatus.ARCHIVED,
                     }),
                 ),
-                defaultTabValue: "statistics",
+                defaultTabValue: "settings",
             },
             context: mockUserContext,
         });

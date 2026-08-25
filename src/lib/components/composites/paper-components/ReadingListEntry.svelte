@@ -3,7 +3,6 @@
     import { handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
-    import DownloadButton from "$lib/components/composites/button/DownloadButton.svelte";
     import type { Paper } from "$api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
@@ -72,6 +71,5 @@ Usage:
     </svelte:element>
     <div class="flex flex-row items-center gap-4">
         <PaperBookmarkButton isBookmarkedDefault={true} {onPaperChangedBookmarkStatus} {paperId} />
-        <DownloadButton loadingPaperId={Promise.resolve(paperId)} />
     </div>
 </div>
