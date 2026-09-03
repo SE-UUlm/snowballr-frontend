@@ -25,15 +25,32 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
+              with:
+                  # Full history so a fast-failing run can diff against the PR base ref.
+                  fetch-depth: 0
 
             - name: Setup
               uses: ./.github/workflows/setup/
 
             - name: Create Shard Matrix
               id: create-matrix
+              env:
+                  # Mirror the condition guarding the ff-e2e-test job below.
+                  IS_FAST_FAILING: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#e2e-run-all') }}
+                  BASE_REF: ${{ github.base_ref }}
               run: |
-                  # Get total count of E2E tests
-                  test_count="$(npx playwright test --list --reporter list | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
+                  # A fast-failing run only executes tests for changed code, so the shard
+                  # count must be derived from that subset rather than the whole suite.
+                  only_changed=()
+                  if [[ "$IS_FAST_FAILING" == "true" ]]; then
+                    only_changed=(--only-changed="origin/${BASE_REF}")
+                    echo "Fast-failing run: counting only tests affected by changes vs origin/${BASE_REF}"
+                  else
+                    echo "Complete run: counting all E2E tests"
+                  fi
+
+                  # Get count of E2E tests that will actually run
+                  test_count="$(npx playwright test --list --reporter list "${only_changed[@]}" | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
                   if ! [[ "$test_count" =~ ^[0-9]+$ ]]; then
                     echo "Error: Failed to extract a valid test count. Got: '$test_count'"
                     exit 1
