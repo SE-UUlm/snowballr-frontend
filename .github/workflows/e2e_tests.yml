@@ -15,6 +15,10 @@ concurrency:
 env:
     PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
     TESTS_PER_SHARD: ${{ vars.TESTS_PER_SHARD }}
+    # Fast-failing: a PR run that has not opted into the full suite via "#e2e-run-all".
+    IS_FAST_FAILING: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#e2e-run-all') }}
+    # Complete: a push, or a PR that opted in via "#e2e-run-all" (not on workflow_dispatch).
+    IS_COMPLETE_RUN: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.body, '#e2e-run-all')) }}
 
 jobs:
     determine-shards:
@@ -22,18 +26,39 @@ jobs:
         runs-on: ubuntu-latest
         outputs:
             matrix: ${{ steps.create-matrix.outputs.matrix }}
+            is-fast-failing: ${{ steps.create-matrix.outputs.is-fast-failing }}
+            is-complete-run: ${{ steps.create-matrix.outputs.is-complete-run }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7
+              with:
+                  # Full history so a fast-failing run can diff against the PR base ref.
+                  fetch-depth: 0
 
             - name: Setup
               uses: ./.github/workflows/setup/
 
             - name: Create Shard Matrix
               id: create-matrix
+              env:
+                  BASE_REF: ${{ github.base_ref }}
               run: |
-                  # Get total count of E2E tests
-                  test_count="$(npx playwright test --list --reporter list | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
+                  # Re-export the workflow-level flags so the test jobs can use them in `if:`.
+                  echo "is-fast-failing=$IS_FAST_FAILING" >> "$GITHUB_OUTPUT"
+                  echo "is-complete-run=$IS_COMPLETE_RUN" >> "$GITHUB_OUTPUT"
+
+                  # A fast-failing run only executes tests for changed code, so the shard
+                  # count must be derived from that subset rather than the whole suite.
+                  only_changed=()
+                  if [[ "$IS_FAST_FAILING" == "true" ]]; then
+                    only_changed=(--only-changed="origin/${BASE_REF}")
+                    echo "Fast-failing run: counting only tests affected by changes vs origin/${BASE_REF}"
+                  else
+                    echo "Complete run: counting all E2E tests"
+                  fi
+
+                  # Get count of E2E tests that will actually run
+                  test_count="$(npx playwright test --list --reporter list "${only_changed[@]}" | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
                   if ! [[ "$test_count" =~ ^[0-9]+$ ]]; then
                     echo "Error: Failed to extract a valid test count. Got: '$test_count'"
                     exit 1
@@ -51,8 +76,7 @@ jobs:
 
     ff-e2e-test:
         name: Fast-Failing End-to-End Testing with Playwright
-        # Only run in PRs
-        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#e2e-run-all') }}
+        if: ${{ needs.determine-shards.outputs.is-fast-failing == 'true' }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: determine-shards
@@ -82,7 +106,7 @@ jobs:
 
     e2e-test:
         name: Complete End-to-End Testing with Playwright
-        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && contains(github.event.pull_request.body, '#e2e-run-all')) }}
+        if: ${{ needs.determine-shards.outputs.is-complete-run == 'true' }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         needs: determine-shards
