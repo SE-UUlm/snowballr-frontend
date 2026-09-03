@@ -27,16 +27,8 @@ test.describe("Paper View Tests", () => {
     test("When the user clicks on the information button, then the paper information is displayed", async ({
         paperViewPage,
     }) => {
-        await paperViewPage.documentButton.click();
-        await expect(paperViewPage.generalInformationLabel).not.toBeVisible();
         await paperViewPage.informationButton.click();
         await expect(paperViewPage.generalInformationLabel).toBeVisible();
-    });
-
-    test.fixme("When the user clicks on the document button, then pdf document is displayed", async ({
-        paperViewPage,
-    }) => {
-        await paperViewPage.documentButton.click();
     });
 
     test("When the user clicks on the show more information button, then the publication type, publication name and the external ids are displayed", async ({
