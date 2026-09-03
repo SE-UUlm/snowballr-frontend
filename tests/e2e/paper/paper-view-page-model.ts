@@ -3,7 +3,6 @@ import { type Locator, type Page } from "@playwright/test";
 export class PaperViewPageModel {
     readonly page: Page;
     readonly informationButton: Locator;
-    readonly documentButton: Locator;
     readonly showMoreInformationButton: Locator;
     readonly showLessInformationButton: Locator;
     readonly allListEntries: Locator;
@@ -18,7 +17,6 @@ export class PaperViewPageModel {
     constructor(page: Page) {
         this.page = page;
         this.informationButton = page.getByRole("tab", { name: "Information", exact: true });
-        this.documentButton = page.getByRole("tab", { name: "Document", exact: true });
         this.showMoreInformationButton = page.getByRole("button", {
             name: "Show more information",
             exact: true,
