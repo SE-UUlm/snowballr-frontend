@@ -1,27 +1,27 @@
 <script lang="ts">
-    import { Project } from "$api/project";
     import SquarePen from "@lucide/svelte/icons/square-pen";
     import type { FetcherInformation } from "$api/fetcher";
     import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
+    import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {
-        project: Project;
+        fetchers: Fetchers;
         fetcher: FetcherInformation;
-        onProjectChanged: (project: Project) => void;
+        onSave: SaveFetchers;
         disabled: boolean;
     }
 
-    let { project, fetcher, onProjectChanged, disabled }: Props = $props();
+    let { fetchers, fetcher, onSave, disabled }: Props = $props();
 </script>
 
 <FetcherChangeDialog
     className="w-full sm:w-38"
     {disabled}
     {fetcher}
+    {fetchers}
     label="Save Options"
     loadingLabel="Saving Options"
-    {onProjectChanged}
-    {project}
+    {onSave}
     title={`Edit ${fetcher.name} Fetcher Options`}
     triggerVariant="ghost"
 >
