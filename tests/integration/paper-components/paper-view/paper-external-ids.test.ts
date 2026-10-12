@@ -16,7 +16,7 @@ async function waitUntilClickable(element: HTMLElement) {
     });
 }
 
-describe.sequential("PaperExternalIds", () => {
+describe("PaperExternalIds", () => {
     beforeEach(() => {
         // Apparently, these methods are not implemented in jsdom but used by the Select/Dialog components
         // See https://github.com/testing-library/user-event/discussions/1087

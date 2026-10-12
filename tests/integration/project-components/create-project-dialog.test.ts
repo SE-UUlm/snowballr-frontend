@@ -7,7 +7,7 @@ import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import { createProject as createDemoProject } from "$tests/model-builder";
 
-describe.sequential("CreateProjectDialog", () => {
+describe("CreateProjectDialog", () => {
     beforeEach(() => {
         mockApiCall("createProject", createDemoProject());
         mockApiCall("inviteUserToProject", {});

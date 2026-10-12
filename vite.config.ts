@@ -42,7 +42,7 @@ export default defineConfig({
                     name: "integration",
                     include: ["tests/integration/**/*.{test,spec}.ts"],
                     environment: "jsdom",
-                    setupFiles: ["./vitest-setup.ts"],
+                    setupFiles: ["./vitest-setup.ts", "@testing-library/svelte/vitest"],
                 },
             },
         ],
