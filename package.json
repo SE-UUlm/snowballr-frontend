@@ -83,7 +83,7 @@
         "snowballr-api": "^0.16.0",
         "svelte": "^5.55.7",
         "svelte-check": "^4.3.1",
-        "svelte-sonner": "^1.0.7",
+        "svelte-sonner": "^1.2.1",
         "tailwind-merge": "^3.5.0",
         "tailwind-variants": "^1.0.0",
         "tailwindcss": "^4.1.16",
