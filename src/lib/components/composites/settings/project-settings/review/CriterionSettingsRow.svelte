@@ -162,17 +162,24 @@ Usage:
                 </div>
             </div>
             <div class="flex flex-col gap-1.5">
-                <Label for={`${fieldId}-description`}>
-                    Description <span class="text-muted-foreground font-normal">(optional)</span>
-                </Label>
+                <Label for={`${fieldId}-description`}>Description</Label>
                 <textarea
                     id={`${fieldId}-description`}
                     class="border-input-border-slate bg-background text-default placeholder:text-placeholder min-h-16 w-full rounded-md border px-3 py-2 focus-visible:outline-hidden"
+                    aria-describedby={showErrors && errors.description
+                        ? `${fieldId}-description-error`
+                        : undefined}
+                    aria-invalid={showErrors && errors.description !== undefined}
                     onkeydown={cancelOnEscape}
                     placeholder="When does this criterion apply to a paper?"
                     rows="2"
                     bind:value={fields.description}
                 ></textarea>
+                {#if showErrors && errors.description}
+                    <p id={`${fieldId}-description-error`} class="text-error text-sm">
+                        {errors.description}
+                    </p>
+                {/if}
             </div>
             <div class="flex flex-row justify-end gap-2">
                 <Button onclick={onCancel} size="sm" type="button" variant="ghost">Cancel</Button>

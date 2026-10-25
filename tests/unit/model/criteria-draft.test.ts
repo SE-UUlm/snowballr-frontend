@@ -55,26 +55,32 @@ describe("getDraftStatus", () => {
 });
 
 describe("validateDraft", () => {
-    test("When tag and name are blank, then both are reported", () => {
+    test("When tag, name and description are blank, then all three are reported", () => {
         const errors = validateDraft({ tag: " ", name: "", description: "" }, "new", []);
-        expect(errors).toEqual({ tag: "Enter a tag.", name: "Enter a name." });
+        expect(errors).toEqual({
+            tag: "Enter a tag.",
+            name: "Enter a name.",
+            description: "Enter a description.",
+        });
     });
 
     test("When the tag is used by another criterion, regardless of case, then it is reported", () => {
-        const errors = validateDraft({ tag: "e1", name: "Name", description: "" }, "new", [
-            exclusion("0", "E1"),
-        ]);
+        const errors = validateDraft(
+            { tag: "e1", name: "Name", description: "Description" },
+            "new",
+            [exclusion("0", "E1")],
+        );
         expect(errors.tag).toBe("e1 is already used.");
     });
 
     test("When the tag is only used by the criterion itself or a removed one, then it is valid", () => {
         const drafts = [exclusion("0", "E1"), { ...exclusion("1", "E2"), removed: true }];
-        expect(validateDraft({ tag: "E1", name: "Name", description: "" }, "0", drafts)).toEqual(
-            {},
-        );
-        expect(validateDraft({ tag: "E2", name: "Name", description: "" }, "new", drafts)).toEqual(
-            {},
-        );
+        expect(
+            validateDraft({ tag: "E1", name: "Name", description: "Description" }, "0", drafts),
+        ).toEqual({});
+        expect(
+            validateDraft({ tag: "E2", name: "Name", description: "Description" }, "new", drafts),
+        ).toEqual({});
     });
 });
 
