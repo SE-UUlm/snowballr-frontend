@@ -19,7 +19,9 @@
         type CriterionDraft,
         type CriterionFields,
     } from "$lib/model/criteria-draft";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import { isGrpcError, loadingWrapper } from "$lib/utils/common-helper";
+    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+    import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import Plus from "@lucide/svelte/icons/plus";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
@@ -151,11 +153,14 @@
      * from one criterion to another in a single save.
      *
      * Drafts whose request fails stay unsaved, so the admin can retry without entering them again.
+     * If the backend rejects a change because of a failed precondition, its message is shown, since it
+     * explains what the admin has to change.
      */
     async function saveChanges() {
         const total = numberOfChanges;
         const results: Record<string, CriterionDraft | null> = {};
         let failures = 0;
+        const reasons: string[] = [];
 
         async function run(
             status: "removed" | "edited" | "added",
@@ -166,7 +171,15 @@
                 affected.map((draft) =>
                     request(draft)
                         .then((result) => (results[draft.key] = result))
-                        .catch(() => failures++),
+                        .catch((error: RpcError) => {
+                            failures++;
+                            if (
+                                isGrpcError(error.code, GrpcStatusCode.FAILED_PRECONDITION) &&
+                                error.message
+                            ) {
+                                reasons.push(`${draft.tag.trim()}: ${withFullStop(error.message)}`);
+                            }
+                        }),
                 ),
             );
         }
@@ -189,12 +202,20 @@
 
         if (failures > 0) {
             saveError = createActionError("Failed to Save All Criteria", {
-                customDetails: `${failures} of ${total} changes couldn't be saved. They are still marked below, so you can save them again.`,
+                customDetails: [
+                    `${failures} of ${total} changes couldn't be saved.`,
+                    ...reasons,
+                    "They are still marked below, so you can save them again.",
+                ].join(" "),
             });
         } else {
             toast.success("Successfully saved review criteria.");
             confirmOpen = false;
         }
+    }
+
+    function withFullStop(message: string): string {
+        return /[.!?]$/.test(message.trim()) ? message.trim() : `${message.trim()}.`;
     }
 
     const CHANGE_VERBS = { added: "Add", edited: "Change", removed: "Remove", unchanged: "" };
