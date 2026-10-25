@@ -60,21 +60,19 @@ export class ProjectReviewSettingsPageModel {
      *
      * @param category - The title of the category, e.g. "Inclusion"
      * @param name - The name of the new criterion
-     * @param description - The optional description of the new criterion
+     * @param description - The description of the new criterion
      */
     async addCriterion(
         category: "Hard Exclusion" | "Soft Exclusion" | "Inclusion",
         name: string,
-        description = "",
+        description: string,
     ) {
         await this.criteriaSection
             .getByRole("button", { name: `Add criterion to ${category}` })
             .click();
         const form = this.criteriaSection.getByRole("form");
         await form.getByLabel("Name").fill(name);
-        if (description) {
-            await form.getByLabel("Description").fill(description);
-        }
+        await form.getByLabel("Description").fill(description);
         await form.getByRole("button", { name: "Done" }).click();
     }
 
