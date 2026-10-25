@@ -38,7 +38,7 @@ describe("CriteriaSettings", () => {
         expect(screen.queryByRole("button", { name: "Save criteria" })).not.toBeInTheDocument();
     });
 
-    test("When a new criterion has no name, then it is not applied", async () => {
+    test("When a new criterion has no name and description, then it is not applied", async () => {
         mockApiCall("getAllCriteriaForProject", { criteria: [] });
         renderSettings();
         await waitForComponentLoading();
@@ -48,6 +48,7 @@ describe("CriteriaSettings", () => {
         await userEvent.click(screen.getByRole("button", { name: "Done" }));
 
         expect(screen.getByText("Enter a name.")).toBeInTheDocument();
+        expect(screen.getByText("Enter a description.")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Save criteria" })).toBeDisabled();
     });
 
@@ -62,6 +63,10 @@ describe("CriteriaSettings", () => {
 
         await userEvent.click(screen.getByRole("button", { name: "Add criterion to Inclusion" }));
         await userEvent.type(screen.getByLabelText("Name"), "Peer reviewed");
+        await userEvent.type(
+            screen.getByLabelText("Description"),
+            "The paper was published in a peer reviewed venue.",
+        );
         await userEvent.click(screen.getByRole("button", { name: "Done" }));
         await userEvent.click(screen.getByRole("button", { name: "Save criteria" }));
 

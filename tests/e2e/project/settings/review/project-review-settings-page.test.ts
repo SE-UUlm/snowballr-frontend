@@ -78,15 +78,15 @@ test.describe("Review Criteria Settings Tests", () => {
         apiClient,
         projectReviewSettingsPage,
     }) => {
-        for (const [tag, name] of [
-            ["E1", "Not in English"],
-            ["E2", "Duplicate"],
+        for (const [tag, name, description] of [
+            ["E1", "Not in English", "The paper is written in another language."],
+            ["E2", "Duplicate", "Another version of the paper is already in the project."],
         ]) {
             await apiClient.createCriterion({
                 projectId: projectReviewSettingsPage.projectId,
                 tag,
                 name,
-                description: "",
+                description,
                 category: CriterionCategory.EXCLUSION,
             }).response;
         }
@@ -110,7 +110,11 @@ test.describe("Review Criteria Settings Tests", () => {
     test("When the admin discards their changes, then the stored criteria are shown again", async ({
         projectReviewSettingsPage,
     }) => {
-        await projectReviewSettingsPage.addCriterion("Hard Exclusion", "Not a paper");
+        await projectReviewSettingsPage.addCriterion(
+            "Hard Exclusion",
+            "Not a paper",
+            "Blog posts, slides and other grey literature.",
+        );
         await expect(projectReviewSettingsPage.getCriterionRow("HE1")).toBeVisible();
 
         await projectReviewSettingsPage.discardCriteriaChangesButton.click();
@@ -130,7 +134,11 @@ test.describe("Review Criteria Settings Tests", () => {
         }).response;
         await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
 
-        await projectReviewSettingsPage.addCriterion("Soft Exclusion", "Too short");
+        await projectReviewSettingsPage.addCriterion(
+            "Soft Exclusion",
+            "Too short",
+            "The paper has fewer than four pages.",
+        );
         await projectReviewSettingsPage.saveCriteriaButton.click();
 
         const dialog = projectReviewSettingsPage.confirmDialog;

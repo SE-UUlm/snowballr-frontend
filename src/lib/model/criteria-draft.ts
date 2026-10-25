@@ -132,6 +132,9 @@ export function validateDraft(
     if (fields.name.trim().length === 0) {
         errors.name = "Enter a name.";
     }
+    if (fields.description.trim().length === 0) {
+        errors.description = "Enter a description.";
+    }
     return errors;
 }
 
