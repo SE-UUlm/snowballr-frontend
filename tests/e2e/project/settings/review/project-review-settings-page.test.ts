@@ -158,6 +158,34 @@ test.describe("Review Criteria Settings Tests", () => {
         await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
         await expect(projectReviewSettingsPage.getCriterionRow("E1")).toContainText("Too short");
     });
+    test("When saving fails, then the error is shown next to the save button", async ({
+        page,
+        projectReviewSettingsPage,
+    }) => {
+        await page.route(/\/CreateCriterion$/, (route) =>
+            route.fulfill({
+                status: 200,
+                headers: {
+                    "content-type": "application/grpc-web+proto",
+                    "grpc-status": "13",
+                    "grpc-message": "internal error",
+                },
+            }),
+        );
+        await projectReviewSettingsPage.addCriterion(
+            "Inclusion",
+            "Peer reviewed",
+            "The paper was published in a peer reviewed venue.",
+        );
+
+        await projectReviewSettingsPage.saveCriteriaButton.click();
+
+        const error = projectReviewSettingsPage.criteriaSection.getByText(
+            "Failed to Save All Criteria",
+        );
+        await expect(error).toBeInViewport();
+        await expect(projectReviewSettingsPage.getCriterionRow("I1")).toContainText("New");
+    });
 });
 
 test.describe("Number of Reviewers Settings Tests", () => {
