@@ -284,37 +284,40 @@ Usage:
     </div>
 
     {#if numberOfChanges > 0 || saveError}
+        <!-- The error is part of the sticky bar, so it is visible right where "Save criteria" was clicked. -->
         <div
-            class="bg-background sticky bottom-0 flex max-w-2xl flex-row flex-wrap items-center gap-3 rounded-md border p-3"
+            class="bg-background sticky bottom-0 flex max-w-2xl flex-col gap-3 rounded-md border p-3"
             data-testid="criteria-save-bar"
         >
-            <p class="flex-1 basis-48 text-sm" aria-live="polite">
-                {#if editingKey !== undefined}
-                    Finish editing the open criterion to save your changes.
-                {:else if numberOfChanges > 0}
-                    {summarizeChanges()}
-                {/if}
-            </p>
-            <div class="flex flex-row flex-wrap gap-2">
-                <Button
-                    disabled={saving.value || numberOfChanges === 0}
-                    onclick={discardChanges}
-                    variant="ghost"
-                >
-                    Discard changes
-                </Button>
-                <LoadingButton
-                    class="w-40 max-w-full"
-                    disabled={disabled || editingKey !== undefined || numberOfChanges === 0}
-                    label="Save criteria"
-                    loading={saving.value && !confirmOpen}
-                    loadingLabel="Saving"
-                    onclick={requestSave}
-                />
+            <ActionErrorAlert error={saveError} />
+            <div class="flex flex-row flex-wrap items-center gap-3">
+                <p class="flex-1 basis-48 text-sm" aria-live="polite">
+                    {#if editingKey !== undefined}
+                        Finish editing the open criterion to save your changes.
+                    {:else if numberOfChanges > 0}
+                        {summarizeChanges()}
+                    {/if}
+                </p>
+                <div class="flex flex-row flex-wrap gap-2">
+                    <Button
+                        disabled={saving.value || numberOfChanges === 0}
+                        onclick={discardChanges}
+                        variant="ghost"
+                    >
+                        Discard changes
+                    </Button>
+                    <LoadingButton
+                        class="w-40 max-w-full"
+                        disabled={disabled || editingKey !== undefined || numberOfChanges === 0}
+                        label="Save criteria"
+                        loading={saving.value && !confirmOpen}
+                        loadingLabel="Saving"
+                        onclick={requestSave}
+                    />
+                </div>
             </div>
         </div>
     {/if}
-    <ActionErrorAlert class="max-w-2xl" error={saveError} />
 </SettingsSection>
 
 <AlertDialog
