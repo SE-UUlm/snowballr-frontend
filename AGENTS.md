@@ -75,6 +75,7 @@ and point to the canonical page.
 | Project overview                      | README.md                                                                     | High-level pointers, env-var table.                                                                |
 | Local setup / Docker                  | wiki/Getting-Started.md                                                       |                                                                                                    |
 | Project layout                        | wiki/Contributing.md#project-layout                                           | Source of truth.                                                                                   |
+| Supported screen sizes                | wiki/Contributing.md#supported-screen-sizes                                   | `md` (768px) and up only.                                                                          |
 | New component conventions             | wiki/Contributing.md#creating-a-new-component                                 | composites vs primitives, PascalCase, props, docs.                                                 |
 | Loading / skeletons / loading buttons | wiki/Contributing.md#skeletons, wiki/Contributing.md#loading-state-on-actions | Use `Skeleton`, `LoadingButton`.                                                                   |
 | User context                          | wiki/Contributing.md#user-context                                             | `getUserContext`, `triggerCurrentUserRefresh`, root `+layout.ts`/`+layout.svelte`.                 |
@@ -109,6 +110,8 @@ and point to the canonical page.
 - **HTML attribute passthrough:** Use `WithElementRef<HTMLButtonAttributes>` (or the appropriate
   `HTMLAttributes<...>`) on the `Props` type, then spread `...restProps` onto the root element and merge
   classes with `cn(...)` (wiki/Contributing.md).
+- **Screen sizes:** Only screens from the `md` breakpoint (768px) upwards are supported; don't design or test for
+  smaller ones (wiki/Contributing.md#supported-screen-sizes).
 - **Loading UX:** Use the shadcn `Skeleton` for async data with `{#await}`; use `LoadingButton` for actions
   (disable while loading, show spinner, fixed width, success/error toast).
 
