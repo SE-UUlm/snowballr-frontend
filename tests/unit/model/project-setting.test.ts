@@ -11,6 +11,7 @@ import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
 import { invalidate } from "$app/navigation";
+import { takePrimedProject } from "$lib/model/project-cache";
 import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
@@ -192,6 +193,18 @@ describe("commitProjectSetting", () => {
         await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
 
         expect(invalidate).toHaveBeenCalledWith("data:getProjectById");
+    });
+
+    test("When a setting is committed successfully, then the updated project is handed to the project layout", async () => {
+        const updatedProject = createProject({
+            id: PROJECT_ID,
+            settings: createProjectSettings({ similarityThreshold: 0.65 }),
+        });
+        mockApiCall("updateProject", updatedProject);
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(takePrimedProject(PROJECT_ID)).toEqual(updatedProject);
     });
 
     test("When the update fails, then the loaded project is not invalidated", async () => {
