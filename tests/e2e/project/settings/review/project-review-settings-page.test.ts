@@ -85,5 +85,27 @@ test.describe("Number of Reviewers Settings Tests", () => {
         );
     });
 
+    test("When the user changes the number of reviewers and navigates to another settings tab and back, then the new value is shown", async ({
+        page,
+        projectReviewSettingsPage,
+        projectSettingsSideBar,
+    }) => {
+        await expect(projectReviewSettingsPage.getNumberOfReviewers()).resolves.toBe(2);
+
+        // We only change the value by one, because we can only do one step at a time
+        await projectReviewSettingsPage.setNumberOfReviewers(3);
+        await expect(page.getByText("Successfully updated the project settings.")).toBeVisible();
+
+        await projectSettingsSideBar.general.click();
+        await expect(page).toHaveURL(/\/settings\/general$/);
+        await projectSettingsSideBar.review.click();
+        await expect(page).toHaveURL(/\/settings\/review$/);
+
+        await expect(projectReviewSettingsPage.numberOfReviewersSlider).toHaveAttribute(
+            "aria-valuenow",
+            "3",
+        );
+    });
+
     test.fixme("When the project status is 'ACTIVE_LOCKED', then the number of reviewers slider is disabled", async () => {});
 });
