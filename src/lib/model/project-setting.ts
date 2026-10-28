@@ -5,6 +5,7 @@ import { backendService } from "$lib/grpc-api";
 import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import { toast } from "svelte-sonner";
+import { invalidate } from "$app/navigation";
 
 /** The success message shown after a project setting was updated, unless the descriptor overrides it. */
 export const PROJECT_SETTING_SUCCESS_MESSAGE = "Successfully updated the project settings.";
@@ -107,7 +108,8 @@ export async function loadProjectSetting<T>(
 /**
  * Persists a new value for a single project setting.
  *
- * On success a toast is shown (unless disabled via `options.toastSuccess`). Failures are *returned*
+ * On success the loaded project is invalidated and a toast is shown (unless disabled via
+ * `options.toastSuccess`). Failures are *returned*
  * as an {@link ActionError} rather than toasted, so that the caller can render them with
  * `ActionErrorAlert`.
  *
@@ -135,6 +137,10 @@ export async function commitProjectSetting<T>(
             error as Error,
         );
     }
+
+    // The project is loaded once by the project layout and is not reloaded when navigating between
+    // settings tabs, so it has to be invalidated for remounted sections to read the new value.
+    await invalidate("data:getProjectById");
 
     if (toastSuccess) {
         toast.success(descriptor.successMessage ?? PROJECT_SETTING_SUCCESS_MESSAGE);
