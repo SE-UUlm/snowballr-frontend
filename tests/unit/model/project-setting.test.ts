@@ -10,6 +10,7 @@ import {
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
+import { invalidate } from "$app/navigation";
 import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
@@ -17,6 +18,10 @@ import { maybeAsDecisionSetting } from "$lib/components/composites/settings/proj
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn(), promise: vi.fn() },
+}));
+
+vi.mock("$app/navigation", () => ({
+    invalidate: vi.fn(() => Promise.resolve()),
 }));
 
 /** A setting stored directly on the project settings. */
@@ -179,6 +184,22 @@ describe("commitProjectSetting", () => {
         await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
 
         expect(toast.success).not.toHaveBeenCalled();
+    });
+
+    test("When a setting is committed successfully, then the loaded project is invalidated", async () => {
+        mockApiCall("updateProject", createProject());
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(invalidate).toHaveBeenCalledWith("data:getProjectById");
+    });
+
+    test("When the update fails, then the loaded project is not invalidated", async () => {
+        mockFailedApiCall("updateProject");
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(invalidate).not.toHaveBeenCalled();
     });
 
     test("When an enum setting is committed, then it is sent as its numeric value", async () => {
