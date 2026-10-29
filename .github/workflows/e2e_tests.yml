@@ -77,7 +77,7 @@ jobs:
     ff-e2e-test:
         name: Fast-Failing End-to-End Testing with Playwright
         if: ${{ needs.determine-shards.outputs.is-fast-failing == 'true' }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 30
         needs: determine-shards
         strategy:
@@ -107,7 +107,7 @@ jobs:
     e2e-test:
         name: Complete End-to-End Testing with Playwright
         if: ${{ needs.determine-shards.outputs.is-complete-run == 'true' }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         timeout-minutes: 30
         needs: determine-shards
         strategy:
