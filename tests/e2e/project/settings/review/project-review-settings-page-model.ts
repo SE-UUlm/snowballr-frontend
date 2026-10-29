@@ -6,6 +6,12 @@ export class ProjectReviewSettingsPageModel {
     readonly tagInputField: Locator;
     readonly numberOfReviewersSlider: Locator;
     readonly numberOfReviewersHeading: Locator;
+    readonly criteriaHeading: Locator;
+    readonly criteriaSection: Locator;
+    readonly criterionRows: Locator;
+    readonly saveCriteriaButton: Locator;
+    readonly discardCriteriaChangesButton: Locator;
+    readonly confirmDialog: Locator;
 
     readonly projectName: string;
 
@@ -24,7 +30,76 @@ export class ProjectReviewSettingsPageModel {
             name: "Number of Required Reviewers",
         });
 
+        this.criteriaHeading = page.getByRole("heading", { name: "Review Criteria" });
+        this.criteriaSection = page.getByTestId("settings-section-review-criteria");
+        this.criterionRows = this.criteriaSection.getByTestId("criterion-settings-row");
+        this.saveCriteriaButton = this.criteriaSection.getByRole("button", {
+            name: "Save criteria",
+        });
+        this.discardCriteriaChangesButton = this.criteriaSection.getByRole("button", {
+            name: "Discard changes",
+        });
+        this.confirmDialog = page.getByRole("alertdialog");
+
         this.projectId = "";
+    }
+
+    /**
+     * Returns the row of the criterion with the given tag.
+     *
+     * @param tag - The tag of the criterion
+     */
+    getCriterionRow(tag: string): Locator {
+        return this.criterionRows.filter({
+            has: this.page.getByText(tag, { exact: true }),
+        });
+    }
+
+    /**
+     * Adds a criterion to the given category and applies it to the draft, without saving.
+     *
+     * @param category - The title of the category, e.g. "Inclusion"
+     * @param name - The name of the new criterion
+     * @param description - The description of the new criterion
+     */
+    async addCriterion(
+        category: "Hard Exclusion" | "Soft Exclusion" | "Inclusion",
+        name: string,
+        description: string,
+    ) {
+        await this.criteriaSection
+            .getByRole("button", { name: `Add criterion to ${category}` })
+            .click();
+        const form = this.criteriaSection.getByRole("form");
+        await form.getByLabel("Name").fill(name);
+        await form.getByLabel("Description").fill(description);
+        await form.getByRole("button", { name: "Done" }).click();
+    }
+
+    /**
+     * Renames the criterion with the given tag and applies it to the draft, without saving.
+     *
+     * @param tag - The tag of the criterion
+     * @param name - The new name of the criterion
+     */
+    async renameCriterion(tag: string, name: string) {
+        await this.criteriaSection
+            .getByRole("button", { name: `Edit criterion ${tag}`, exact: true })
+            .click();
+        const form = this.criteriaSection.getByRole("form");
+        await form.getByLabel("Name").fill(name);
+        await form.getByRole("button", { name: "Done" }).click();
+    }
+
+    /**
+     * Marks the criterion with the given tag as removed, without saving.
+     *
+     * @param tag - The tag of the criterion
+     */
+    async removeCriterion(tag: string) {
+        await this.criteriaSection
+            .getByRole("button", { name: `Remove criterion ${tag}`, exact: true })
+            .click();
     }
 
     /**

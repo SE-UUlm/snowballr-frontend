@@ -35,6 +35,11 @@ To set up the development environment, follow the steps in
 └── wiki/                   (this wiki)
 ```
 
+## Supported Screen Sizes
+
+SnowballR supports screens from the `md` breakpoint (768px wide) upwards. Layouts have to work at 768px and above;
+smaller screens, such as phones, are not supported, so there is no need to design or test for them.
+
 ## Creating a New Component
 
 When creating a new component, please follow these guidelines:
