@@ -41,8 +41,8 @@
     const paperId = $derived(getDisplayPaperId(paper));
     const href = $derived(
         isProjectPaper(paper)
-            ? resolve(`/project/${projectId}/paper/${paperId}`)
-            : resolve(`/paper/${paperId}`),
+            ? resolve(`project/${projectId}/paper/${paperId}`)
+            : resolve(`paper/${paperId}`),
     );
 
     async function getReviewUserById(id: string): Promise<User | undefined> {

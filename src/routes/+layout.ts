@@ -98,7 +98,7 @@ function isPublicPath(path: string) {
 async function redirectToSignIn(url: URL) {
     setCachedUser(null);
     const redirectUrl = encodeURIComponent(addRedirectUrlIfExists(url.pathname + url.search));
-    const path = resolve("/signin");
+    const path = resolve("signin");
     await goto(`${path}?redirect=${redirectUrl}`);
     return { user: null };
 }

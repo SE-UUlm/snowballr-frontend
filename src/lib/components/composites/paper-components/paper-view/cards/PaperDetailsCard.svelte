@@ -157,7 +157,7 @@
         });
 
         return adding.then((projectPaper) =>
-            goto(resolve(`/project/${target.projectId}/paper/${projectPaper.localId}`)),
+            goto(resolve(`project/${target.projectId}/paper/${projectPaper.localId}`)),
         );
     }
 

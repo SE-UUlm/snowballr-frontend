@@ -25,10 +25,10 @@ export const navigatePaper = async function (
     if (direction === "right" && nextProjectPaper) {
         const paper = await loadingProjectPaper;
         if (paper) paperQueue.push(paper);
-        await goto(resolve(`/project/${project.id}/paper/${nextProjectPaper.localId}`));
+        await goto(resolve(`project/${project.id}/paper/${nextProjectPaper.localId}`));
     }
     if (direction === "left" && previousProjectPaper) {
         paperQueue.pop();
-        await goto(resolve(`/project/${project.id}/paper/${previousProjectPaper.localId}`));
+        await goto(resolve(`project/${project.id}/paper/${previousProjectPaper.localId}`));
     }
 };

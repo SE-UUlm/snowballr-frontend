@@ -21,7 +21,7 @@
     }: ReadingListEntryProps = $props();
 
     const { id: paperId, ...paperWithoutId } = $derived(paper);
-    const href = $derived(resolve(`/paper/${paperId}`));
+    const href = $derived(resolve(`paper/${paperId}`));
 </script>
 
 <!--
