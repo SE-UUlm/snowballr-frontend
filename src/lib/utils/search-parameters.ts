@@ -152,8 +152,8 @@ export function updateUrlParams(searchParameters: SvelteURLSearchParams): void {
         callDebounced(
             () =>
                 goto(`?${searchParameters.toString()}`, {
-                    replaceState: true,
-                    keepFocus: true,
+                    replace: true,
+                    reset: false,
                 }),
             250,
         );

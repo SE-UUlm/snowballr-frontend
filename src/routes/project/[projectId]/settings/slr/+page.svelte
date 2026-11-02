@@ -31,7 +31,7 @@
     // Redirect to general settings if the user is not an admin
     $effect(() => {
         if (isCurrentUserAdmin.value !== undefined && !isCurrentUserAdmin.value) {
-            goto(resolve(`project/${projectId}/settings/general`), { replaceState: true });
+            goto(resolve(`project/${projectId}/settings/general`), { replace: true });
         }
     });
 </script>
