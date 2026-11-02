@@ -5,6 +5,7 @@ import { Nothing } from "snowballr-api/base";
 import { setFetch } from "$lib/api/fetch";
 import { call } from "$lib/api/grpc";
 import type * as ClientModule from "$lib/api/client";
+import type * as PublicEnv from "$app/env/public";
 
 // setupTest.ts mocks the client for all other tests. These tests send real calls through the
 // grpc-web transport and only replace `fetch`.
@@ -12,10 +13,21 @@ vi.unmock("$lib/api/client");
 
 let api: typeof ClientModule;
 
+/**
+ * Replaces the public env that client.ts reads when it is loaded. setupTest.ts mocks it as empty.
+ *
+ * @param baseUrl - The value of PUBLIC_API_BASE_URL
+ */
+function mockPublicEnv(baseUrl: string) {
+    vi.doMock("$app/env/public", (): typeof PublicEnv => ({
+        PUBLIC_IS_DEV_MODE: undefined,
+        PUBLIC_API_BASE_URL: baseUrl,
+        PUBLIC_CREDENTIAL_POLICY: undefined,
+    }));
+}
+
 beforeAll(async () => {
-    // client.ts reads the base URL when it is loaded, and setupTest.ts mocks the env as empty.
-    const { env } = await import("$env/dynamic/public");
-    env.PUBLIC_API_BASE_URL = "http://backend.test";
+    mockPublicEnv("http://backend.test");
     api = await import("$lib/api/client");
 });
 
@@ -103,9 +115,8 @@ describe("client", () => {
 
     test("When PUBLIC_API_BASE_URL is not set, then loading the client fails with a clear error", async () => {
         vi.resetModules();
-        const { env } = await import("$env/dynamic/public");
         // What compose.yaml passes when the variable is unset
-        env.PUBLIC_API_BASE_URL = "";
+        mockPublicEnv("");
 
         await expect(import("$lib/api/client")).rejects.toThrow(
             "PUBLIC_API_BASE_URL is not defined",
