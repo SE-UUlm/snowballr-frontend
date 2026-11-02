@@ -2,7 +2,6 @@
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { expect, type Mock, type MockInstance, vi } from "vitest";
 import * as environment from "$app/env";
-import * as publicEnv from "$app/env/public";
 import * as navigation from "$app/navigation";
 import {
     createCriterion,
@@ -19,6 +18,8 @@ import { PaperDecision } from "$api/project";
 import { AuthenticationStatus } from "$api/authentication";
 import { backendService } from "#lib/grpc-api.js";
 import ResizeObserver from "resize-observer-polyfill";
+
+type PublicEnvironment = typeof import("$app/env/public");
 
 // Add custom jest matchers
 expect.extend(matchers);
@@ -61,11 +62,14 @@ vi.mock("$app/state", async () => {
 });
 
 // Mock SvelteKit runtime module $app/env/public, which reads the variables declared in src/env.ts
-vi.mock("$app/env/public", (): typeof publicEnv => ({
-    PUBLIC_IS_DEV_MODE: undefined,
-    PUBLIC_API_BASE_URL: "",
-    PUBLIC_CREDENTIAL_POLICY: undefined,
-}));
+vi.mock(
+    "$app/env/public",
+    (): PublicEnvironment => ({
+        PUBLIC_IS_DEV_MODE: undefined,
+        PUBLIC_API_BASE_URL: "",
+        PUBLIC_CREDENTIAL_POLICY: undefined,
+    }),
+);
 
 // Mock browser APIs (for integration tests)
 if (typeof window !== "undefined") {
