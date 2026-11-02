@@ -9,7 +9,7 @@
         ProjectStatus,
     } from "$api/project";
     import { goto } from "$app/navigation";
-    import { env } from "$env/dynamic/public";
+    import { PUBLIC_IS_DEV_MODE } from "$app/env/public";
     import type { User } from "$api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
@@ -17,7 +17,7 @@
     import { resolve } from "$app/paths";
     import Link from "$lib/components/composites/link/Link.svelte";
 
-    const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
+    const isDevMode = PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;
     if (isDevMode) {
         user = getUserContext();

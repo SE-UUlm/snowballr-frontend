@@ -1,10 +1,10 @@
-import { env } from "$env/dynamic/public";
+import { PUBLIC_IS_DEV_MODE } from "$app/env/public";
 
 /**
  * Indicates whether the application is running in development mode.
  * Set by the PUBLIC_IS_DEV_MODE environment variable.
  */
-export const IS_IN_DEV_MODE = env.PUBLIC_IS_DEV_MODE === "true";
+export const IS_IN_DEV_MODE = PUBLIC_IS_DEV_MODE === "true";
 
 /**
  * Indicates whether the application is running in test mode (e.g., during automated tests).
