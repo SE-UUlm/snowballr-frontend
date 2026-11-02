@@ -10,7 +10,7 @@
         } catch (e) {
             console.error("There was an error logging out: ", e);
         } finally {
-            await goto(resolve("/signin"));
+            await goto(resolve("signin"));
         }
     });
 </script>
