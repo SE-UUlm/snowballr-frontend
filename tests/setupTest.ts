@@ -42,9 +42,10 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     onNavigate: () => {},
     preloadCode: () => Promise.resolve(),
     preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
-    pushState: () => {},
+    pushState: () => Promise.resolve(),
     refreshAll: () => Promise.resolve(),
-    replaceState: () => {},
+    replaceState: () => Promise.resolve(),
+    snapshot: () => {},
 }));
 
 // Mock SvelteKit runtime module $app/state, inspired by https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
