@@ -74,7 +74,11 @@ jobs:
 
     coverage-report:
         name: Code Coverage Report
-        runs-on: ubuntu-latest
+        # Pinned to Ubuntu 24.04, as it ships lcov 2.0. Ubuntu 26.04 (the current `ubuntu-latest`) ships lcov 2.4,
+        # which rejects our Vitest coverage reports as inconsistent: function names may refer to several lines of
+        # the same file (e.g. two `description` snippets, or anonymous function indices that differ between the unit
+        # and the integration report). See https://github.com/SE-UUlm/snowballr-frontend/issues/743
+        runs-on: ubuntu-24.04
         needs: [unit-test, integration-test]
         permissions:
             pull-requests: write
