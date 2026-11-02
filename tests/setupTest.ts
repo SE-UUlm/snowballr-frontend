@@ -43,9 +43,10 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     onNavigate: () => {},
     preloadCode: () => Promise.resolve(),
     preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
-    pushState: () => {},
+    pushState: () => Promise.resolve(),
     refreshAll: () => Promise.resolve(),
-    replaceState: () => {},
+    replaceState: () => Promise.resolve(),
+    snapshot: () => {},
 }));
 
 // `goto` is one mock for the whole test file and test order is shuffled, so forget the calls and the
