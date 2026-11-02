@@ -1,4 +1,4 @@
-import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
+import ToggleableInput from "#lib/components/composites/input/ToggleableInput.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { keyboard } from "@testing-library/user-event/dist/cjs/setup/directApi.js";

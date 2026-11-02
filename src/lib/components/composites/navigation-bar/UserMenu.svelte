@@ -1,14 +1,14 @@
 <script lang="ts">
-    import * as DropdownMenu from "$lib/components/primitives/dropdown-menu/index.js";
+    import * as DropdownMenu from "#lib/components/primitives/dropdown-menu/index.js";
     import BookOpen from "@lucide/svelte/icons/book-open";
     import Settings from "@lucide/svelte/icons/settings";
     import LogOut from "@lucide/svelte/icons/log-out";
-    import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
-    import type { UserMenuTab } from "$lib/model/tabs";
-    import { getUserContext } from "$lib/custom-context/user-context";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
+    import type { UserMenuTab } from "#lib/model/tabs.js";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
+    import Link from "#lib/components/composites/link/Link.svelte";
     import { UserRole } from "$api/user";
-    import { Badge } from "$lib/components/primitives/badge/index.js";
+    import { Badge } from "#lib/components/primitives/badge/index.js";
 
     const user = $derived(getUserContext());
 

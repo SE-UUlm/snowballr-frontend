@@ -1,9 +1,9 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { Project_Paper } from "$api/project";
-import { type Stage } from "$lib/model/general";
-import { comparePaperId } from "$lib/utils/common-helper";
+import { type Stage } from "#lib/model/general.js";
+import { comparePaperId } from "#lib/utils/common-helper.js";
 import type { PageLoad } from "./$types";
-import { asPaper } from "$lib/utils/model-helper";
+import { asPaper } from "#lib/utils/model-helper.js";
 
 export const load: PageLoad = ({ depends, params }) => {
     depends("data:getAllProjectPapersForProject");

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import NamedList from "$lib/components/composites/list/NamedList.svelte";
-    import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-    import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
+    import NamedList from "#lib/components/composites/list/NamedList.svelte";
+    import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
+    import PaperListEntry from "#lib/components/composites/paper-components/PaperListEntry.svelte";
+    import PaperListEntrySkeleton from "#lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import type { Paper } from "$api/paper";
-    import { filterPapers } from "$lib/utils/filters";
+    import { filterPapers } from "#lib/utils/filters.js";
 
     interface Props {
         loadingReferencedPapers: Promise<Paper[]>;

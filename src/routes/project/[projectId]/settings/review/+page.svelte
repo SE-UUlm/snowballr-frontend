@@ -1,9 +1,9 @@
 <script lang="ts">
     import { ProjectStatus } from "$api/project";
-    import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
-    import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
-    import NumberOfReviewersSettings from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
-    import { resource } from "$lib/resource.svelte";
+    import ProjectSettingsLayout from "#lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+    import KeywordSettings from "#lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
+    import NumberOfReviewersSettings from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+    import { resource } from "#lib/resource.svelte.js";
     import { isCurrentUserProjectAdmin } from "../helper";
 
     let { data } = $props();

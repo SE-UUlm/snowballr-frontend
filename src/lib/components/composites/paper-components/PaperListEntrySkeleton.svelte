@@ -1,6 +1,6 @@
 <script lang="ts">
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
-    import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
+    import PaperInfoSkeleton from "#lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
 
     // IMPORTANT: overwrite this property only for testing purpose
     const { isSkeletonWithReview = Math.random() < 0.25 } = $props();

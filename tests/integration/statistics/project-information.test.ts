@@ -1,6 +1,6 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import ProjectInformation from "$lib/components/composites/statistics/ProjectInformation.svelte";
+import ProjectInformation from "#lib/components/composites/statistics/ProjectInformation.svelte";
 import { waitForComponentLoading } from "../test-helper";
 import { loading } from "../../model-builder";
 

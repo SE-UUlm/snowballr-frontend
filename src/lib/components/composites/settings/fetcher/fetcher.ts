@@ -1,5 +1,5 @@
 import type { FetcherOptions } from "$api/fetcher";
-import type { ActionError } from "$lib/model/action-error";
+import type { ActionError } from "#lib/model/action-error.js";
 
 export type Fetchers = { [key: string]: FetcherOptions };
 

@@ -1,12 +1,12 @@
 import { waitFor, screen } from "@testing-library/svelte";
 import { expect } from "vitest";
-import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "$lib/custom-context/was-paper-reviewed-context";
-import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/custom-context/selected-review-criteria-context";
+import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "#lib/custom-context/was-paper-reviewed-context.js";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "#lib/custom-context/selected-review-criteria-context.js";
 import type { User } from "$api/user";
-import { USER_KEY, type UserContext } from "$lib/custom-context/user-context";
+import { USER_KEY, type UserContext } from "#lib/custom-context/user-context.js";
 import { createUser } from "$tests/model-builder";
 import { Users } from "$tests/example-data";
-import { IS_PROJECT_ARCHIVED_KEY } from "$lib/custom-context/is-project-archived-context";
+import { IS_PROJECT_ARCHIVED_KEY } from "#lib/custom-context/is-project-archived-context.js";
 
 /**
  * Awaits until all skeletons are removed from the screen.

@@ -9,9 +9,9 @@ import {
     toFetcherCandidates,
     toKnownCandidates,
     type PaperCandidate,
-} from "$lib/model/paper-candidate";
+} from "#lib/model/paper-candidate.js";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { ISnowballRClient } from "$api/main.client";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { toast } from "svelte-sonner";

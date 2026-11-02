@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Project } from "$api/project";
-import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
-import { projectSetting } from "$lib/model/project-setting.svelte";
+import type { ProjectSettingDescriptor } from "#lib/model/project-setting.js";
+import { projectSetting } from "#lib/model/project-setting.svelte.js";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { Mock } from "vitest";
 
 vi.mock("svelte-sonner", () => ({

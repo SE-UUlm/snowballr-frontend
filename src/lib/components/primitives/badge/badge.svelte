@@ -24,7 +24,7 @@
 
 <script lang="ts">
     import type { HTMLAnchorAttributes } from "svelte/elements";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { WithElementRef } from "bits-ui";
 
     let {

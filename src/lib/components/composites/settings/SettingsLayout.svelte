@@ -1,10 +1,10 @@
 <script lang="ts">
     import Separator from "../../primitives/separator/separator.svelte";
-    import type { IconLinkTab } from "$lib/model/tabs";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import type { IconLinkTab } from "#lib/model/tabs.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { Snippet } from "svelte";
-    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import ScrollArea from "#lib/components/primitives/scroll-area/scroll-area.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     interface Props {
         tabs: IconLinkTab[];

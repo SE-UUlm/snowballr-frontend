@@ -1,5 +1,5 @@
 import { assert, describe, expect, test } from "vitest";
-import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
+import ProjectNavigationBar from "#lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { createProject, loading } from "../../model-builder";
 import { mockUserContext, waitForComponentLoading } from "../test-helper";

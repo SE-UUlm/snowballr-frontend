@@ -2,10 +2,10 @@
     import Bookmark from "@lucide/svelte/icons/bookmark";
     import BookmarkPlus from "@lucide/svelte/icons/bookmark-plus";
     import BookmarkMinus from "@lucide/svelte/icons/bookmark-minus";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
-    import { resource } from "$lib/resource.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
+    import { resource } from "#lib/resource.svelte.js";
+    import { backendService } from "#lib/grpc-api.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
     interface Props {

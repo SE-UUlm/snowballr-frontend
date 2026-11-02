@@ -143,7 +143,7 @@ Here's an example of how to implement skeletons in a component:
 
 ```svelte
 <script lang="ts">
-  import { Skeleton } from "$lib/components/primitives/skeleton";
+  import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
 
   interface Props {
     loadingData: Promise<ExampleData>;
@@ -243,7 +243,7 @@ context changes.
 
 ```svelte
 <script lang="ts">
-  import { getUserContext } from "$lib/custom-context/user-context";
+  import { getUserContext } from "#lib/custom-context/user-context.js";
 
   const user = $derived(getUserContext());
 
@@ -263,19 +263,19 @@ trigger a refresh of the user context to ensure all parts of the application hav
 1. Import the refresh function:
 
    ```svelte
-   import {triggerCurrentUserRefresh} from "$lib/current-user/userCache";
+   import {triggerCurrentUserRefresh} from "#lib/current-user/userCache.js";
    ```
 
 2. Call the function after an update:
 
    ```svelte
    <script lang="ts">
-     import { backendService } from "$lib/grpc-api";
-     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
+     import { backendService } from "#lib/grpc-api.js";
+     import { triggerCurrentUserRefresh } from "#lib/current-user/userCache.js";
      import { toast } from "svelte-sonner";
-     import { StatusCodes } from "$lib/model/error-codes";
+     import { StatusCodes } from "#lib/model/error-codes.js";
      import { getContext } from "svelte";
-     import { getUserContext } from "$lib/custom-context/user-context";
+     import { getUserContext } from "#lib/custom-context/user-context.js";
 
      const user = $derived(getUserContext());
 

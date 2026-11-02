@@ -1,18 +1,18 @@
 <script lang="ts">
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
-    import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
-    import Button, { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import { Badge } from "$lib/components/primitives/badge/index.js";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
-    import * as Dialog from "$lib/components/primitives/dialog/index.js";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
+    import ToggleableInput from "#lib/components/composites/input/ToggleableInput.svelte";
+    import SingleSelect from "#lib/components/composites/select/SingleSelect.svelte";
+    import Button, { buttonVariants } from "#lib/components/primitives/button/button.svelte";
+    import { Badge } from "#lib/components/primitives/badge/index.js";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
+    import * as Dialog from "#lib/components/primitives/dialog/index.js";
     import Plus from "@lucide/svelte/icons/plus";
     import X from "@lucide/svelte/icons/x";
     import Pencil from "@lucide/svelte/icons/pencil";
     import type { Paper } from "$api/paper";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import type { StringifiedPaper } from "$lib/model/general";
-    import { EXTERNAL_ID_TYPE_OPTIONS } from "$lib/model/external-id-type";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
+    import type { StringifiedPaper } from "#lib/model/general.js";
+    import { EXTERNAL_ID_TYPE_OPTIONS } from "#lib/model/external-id-type.js";
 
     interface Props {
         loadingPaper: Promise<Paper>;

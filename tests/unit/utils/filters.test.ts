@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { Papers, ProjectPapers } from "$tests/example-data";
-import { filterPapers, filterProjectPapers } from "$lib/utils/filters";
+import { filterPapers, filterProjectPapers } from "#lib/utils/filters.js";
 import { PaperDecision, type Project_Paper } from "$api/project";
 import { createPaper, createProjectPaper, createReview } from "$tests/model-builder";
 

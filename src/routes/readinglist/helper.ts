@@ -1,4 +1,4 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { Nothing } from "$api/base";
 import type { Paper } from "$api/paper";
 

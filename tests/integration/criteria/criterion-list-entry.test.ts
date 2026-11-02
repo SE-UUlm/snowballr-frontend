@@ -1,10 +1,10 @@
-import CriterionListEntry from "$lib/components/composites/criteria/CriterionListEntry.svelte";
+import CriterionListEntry from "#lib/components/composites/criteria/CriterionListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createReviewedCriterion } from "../../model-builder";
 import { Criteria, Reviews, Users } from "../../example-data";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import { SELECTED_REVIEW_CRITERIA_KEY } from "$lib/custom-context/selected-review-criteria-context";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+import { SELECTED_REVIEW_CRITERIA_KEY } from "#lib/custom-context/selected-review-criteria-context.js";
 import userEvent from "@testing-library/user-event";
 import { mockSelectedCriteriaContext } from "$tests/integration/test-helper";
 

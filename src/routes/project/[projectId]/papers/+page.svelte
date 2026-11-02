@@ -1,31 +1,31 @@
 <script lang="ts">
-    import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
-    import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import Button from "$lib/components/primitives/button/button.svelte";
+    import ProjectNavigationBar from "#lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
+    import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
+    import Button from "#lib/components/primitives/button/button.svelte";
     import ChevronDown from "@lucide/svelte/icons/chevron-down";
     import ChevronUp from "@lucide/svelte/icons/chevron-up";
-    import * as Accordion from "$lib/components/primitives/accordion/index.js";
-    import * as Card from "$lib/components/primitives/card/index.js";
-    import StagesSelect from "$lib/components/composites/select/StagesSelect.svelte";
-    import ReviewersSelect from "$lib/components/composites/select/ReviewersSelect.svelte";
-    import PublishersSelect from "$lib/components/composites/select/PublishersSelect.svelte";
-    import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
-    import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
-    import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
+    import * as Accordion from "#lib/components/primitives/accordion/index.js";
+    import * as Card from "#lib/components/primitives/card/index.js";
+    import StagesSelect from "#lib/components/composites/select/StagesSelect.svelte";
+    import ReviewersSelect from "#lib/components/composites/select/ReviewersSelect.svelte";
+    import PublishersSelect from "#lib/components/composites/select/PublishersSelect.svelte";
+    import YearsSelect from "#lib/components/composites/select/YearsSelect.svelte";
+    import DecisionsSelect from "#lib/components/composites/select/DecisionsSelect.svelte";
+    import CriteriaSelect from "#lib/components/composites/select/CriteriaSelect.svelte";
     import type { Project_Paper } from "$api/project";
     import Trash from "@lucide/svelte/icons/trash-2";
-    import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
-    import { pluralize } from "$lib/utils/common-helper.js";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    import StageEntry from "#lib/components/composites/project-components/StageEntry.svelte";
+    import { pluralize } from "#lib/utils/common-helper.js";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
+    import PaperDetailsCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import Funnel from "@lucide/svelte/icons/funnel";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
+    import PaperBookmarkButton from "#lib/components/composites/button/PaperBookmarkButton.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
     import { fly } from "svelte/transition";
-    import { clickOutsideOrEscape } from "$lib/utils/attachments.svelte";
-    import type { ProjectPaperFilter } from "$lib/model/general";
+    import { clickOutsideOrEscape } from "#lib/utils/attachments.svelte.js";
+    import type { ProjectPaperFilter } from "#lib/model/general.js";
     import {
         getFilterFromURL,
         getSearchTextFromURL,
@@ -33,18 +33,18 @@
         updateFiltersParam,
         updateSearchTextParam,
         updateUrlParams,
-    } from "$lib/utils/search-parameters";
+    } from "#lib/utils/search-parameters.js";
     import { SvelteURLSearchParams } from "svelte/reactivity";
     import { page } from "$app/state";
     import { onMount } from "svelte";
-    import type { SortOptionLabel } from "$lib/model/sort-criteria";
-    import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
-    import { sortProjectPaper } from "$lib/utils/sorters";
-    import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
-    import { updateSortParams } from "$lib/utils/search-parameters.js";
+    import type { SortOptionLabel } from "#lib/model/sort-criteria.js";
+    import SortOptionsSelect from "#lib/components/composites/select/SortOptionsSelect.svelte";
+    import { sortProjectPaper } from "#lib/utils/sorters.js";
+    import { ALLOWED_SORT_OPTIONS } from "#lib/model/sort-criteria.js";
+    import { updateSortParams } from "#lib/utils/search-parameters.js";
     import { Paper } from "$api/paper.js";
-    import { stringifyPaper } from "$lib/utils/model-helper.js";
-    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import { stringifyPaper } from "#lib/utils/model-helper.js";
+    import ScrollArea from "#lib/components/primitives/scroll-area/scroll-area.svelte";
     import { resolve } from "$app/paths";
 
     let { data } = $props();

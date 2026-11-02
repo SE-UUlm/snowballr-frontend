@@ -1,5 +1,5 @@
 import { expect, test, describe, assert } from "vitest";
-import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+import PaperNavigationBar from "#lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { loading, createPaper } from "../../model-builder";
 import { mockUserContext, waitForComponentLoading } from "../test-helper";

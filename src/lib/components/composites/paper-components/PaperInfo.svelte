@@ -1,13 +1,13 @@
 <script lang="ts">
     import type { Paper } from "$api/paper";
-    import { getNames } from "$lib/utils/common-helper";
+    import { getNames } from "#lib/utils/common-helper.js";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
     import type { WithElementRef } from "bits-ui";
     import type { HTMLAttributes } from "svelte/elements";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import PaperInfoSkeleton from "#lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
     import highlightWords from "highlight-words";
-    import { getSearchTextFromURL } from "$lib/utils/search-parameters";
+    import { getSearchTextFromURL } from "#lib/utils/search-parameters.js";
 
     type Props = WithElementRef<HTMLAttributes<HTMLDivElement>> & {
         loadingPaper: Promise<Omit<Paper, "id">>;

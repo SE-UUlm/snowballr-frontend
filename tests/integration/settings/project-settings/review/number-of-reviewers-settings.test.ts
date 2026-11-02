@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import NumberOfReviewersSettings from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+import NumberOfReviewersSettings from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { ReviewDecisionMatrix } from "$api/project";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";

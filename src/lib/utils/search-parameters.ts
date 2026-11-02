@@ -1,5 +1,5 @@
 import { page } from "$app/state";
-import type { ProjectPaperFilter } from "$lib/model/general";
+import type { ProjectPaperFilter } from "#lib/model/general.js";
 import type { SvelteURLSearchParams } from "svelte/reactivity";
 import {
     ALLOWED_SORT_OPTIONS,
@@ -7,8 +7,8 @@ import {
     SortDirection,
     type SortOption,
     type SortOptionLabel,
-} from "$lib/model/sort-criteria";
-import { callDebounced, stringToEnumValue } from "$lib/utils/common-helper";
+} from "#lib/model/sort-criteria.js";
+import { callDebounced, stringToEnumValue } from "#lib/utils/common-helper.js";
 import { goto } from "$app/navigation";
 import type { ResolvedPathname } from "$app/types";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ReviewModeSettings from "$lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
-    import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+    import ReviewModeSettings from "#lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
+    import UserSettingsLayout from "#lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
 </script>
 
 <svelte:head>

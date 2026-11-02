@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import SimilarityThresholdSetting from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
+import SimilarityThresholdSetting from "#lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 

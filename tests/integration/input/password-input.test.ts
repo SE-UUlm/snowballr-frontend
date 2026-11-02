@@ -1,4 +1,4 @@
-import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
+import PasswordInput from "#lib/components/composites/input/PasswordInput.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { assert, describe, expect, test } from "vitest";
 

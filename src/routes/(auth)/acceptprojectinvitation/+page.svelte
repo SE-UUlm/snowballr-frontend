@@ -1,10 +1,10 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { Button } from "$lib/components/primitives/button";
+    import { Button } from "#lib/components/primitives/button/index.js";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import { getGrpcStatusCode } from "$lib/utils/common-helper";
-    import { createActionError, isActionError, type ActionError } from "$lib/model/action-error.js";
+    import { getGrpcStatusCode } from "#lib/utils/common-helper.js";
+    import { createActionError, isActionError, type ActionError } from "#lib/model/action-error.js";
     import { resolve } from "$app/paths";
 
     let { data } = $props();

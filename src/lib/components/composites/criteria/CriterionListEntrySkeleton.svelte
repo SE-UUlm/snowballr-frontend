@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
     interface Props {
         numberOfReviews?: number;

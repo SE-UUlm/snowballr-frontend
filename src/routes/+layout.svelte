@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import "../app.css";
     import { Toaster } from "svelte-sonner";
     import type { LayoutData } from "./$types";
     import { type Snippet } from "svelte";
-    import { setUserContext } from "$lib/custom-context/user-context";
+    import { setUserContext } from "#lib/custom-context/user-context.js";
     import type { User } from "$api/user";
-    import { IS_IN_DEV_MODE } from "$lib/constants";
+    import { IS_IN_DEV_MODE } from "#lib/constants.js";
 
     let { data, children } = $props<{
         data: LayoutData;

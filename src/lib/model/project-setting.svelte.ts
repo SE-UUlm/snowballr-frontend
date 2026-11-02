@@ -1,10 +1,10 @@
 import { Project } from "$api/project";
-import type { ActionError } from "$lib/model/action-error";
+import type { ActionError } from "#lib/model/action-error.js";
 import {
     commitProjectSetting,
     loadProjectSetting,
     type ProjectSettingDescriptor,
-} from "$lib/model/project-setting";
+} from "#lib/model/project-setting.js";
 
 /** Options for creating a {@link projectSetting} state. */
 export interface ProjectSettingOptions {
@@ -49,7 +49,7 @@ export interface ProjectSettingState<T> {
  * reports itself as disabled and further commits are dropped.
  *
  * Settings that only change *after* the backend confirms (e.g. behind a confirmation dialog) should
- * use `commitProjectSetting` from `$lib/model/project-setting` directly instead.
+ * use `commitProjectSetting` from `#lib/model/project-setting.js` directly instead.
  *
  * Usage:
  * ```ts

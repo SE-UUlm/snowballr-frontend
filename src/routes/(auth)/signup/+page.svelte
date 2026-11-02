@@ -1,21 +1,21 @@
 <script lang="ts">
-    import Input from "$lib/components/composites/input/Input.svelte";
-    import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
-    import * as Card from "$lib/components/primitives/card/index.js";
-    import { backendService } from "$lib/grpc-api";
-    import { Schema } from "$lib/schemas";
+    import Input from "#lib/components/composites/input/Input.svelte";
+    import PasswordInput from "#lib/components/composites/input/PasswordInput.svelte";
+    import * as Card from "#lib/components/primitives/card/index.js";
+    import { backendService } from "#lib/grpc-api.js";
+    import { Schema } from "#lib/schemas.js";
     import { goto } from "$app/navigation";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
     import { toast } from "svelte-sonner";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
-    import { isGrpcError } from "$lib/utils/common-helper.js";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import logo from "$lib/assets/snowballr-logo_512.png";
-    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "$lib/utils/search-parameters";
+    import { isGrpcError } from "#lib/utils/common-helper.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import logo from "#lib/assets/snowballr-logo_512.png";
+    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "#lib/utils/search-parameters.js";
 
     let firstNameInput: Input;
     let lastNameInput: Input;

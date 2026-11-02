@@ -1,8 +1,8 @@
 <script lang="ts">
-    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
+    import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
     import { Criterion } from "$api/criterion";
-    import type { SelectOption } from "$lib/model/select-option";
-    import { resource } from "$lib/resource.svelte";
+    import type { SelectOption } from "#lib/model/select-option.js";
+    import { resource } from "#lib/resource.svelte.js";
 
     interface Props {
         loadingCriteria: Promise<Criterion[]>;

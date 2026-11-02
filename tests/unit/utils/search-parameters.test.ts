@@ -7,10 +7,10 @@ import {
     updateFiltersParam,
     updateSearchTextParam,
     updateSortParams,
-} from "$lib/utils/search-parameters";
+} from "#lib/utils/search-parameters.js";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
-import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
+import { SortCriteria, SortDirection } from "#lib/model/sort-criteria.js";
 
 describe("Helper search text URL query parameter", () => {
     test("When the query parameter for the search text is present, then it will be successfully read and returned.", async () => {

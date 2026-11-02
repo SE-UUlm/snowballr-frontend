@@ -1,12 +1,12 @@
 <script lang="ts">
     import ArrowLeft from "@lucide/svelte/icons/arrow-left";
-    import * as Card from "$lib/components/primitives/card/index.js";
-    import * as Tabs from "$lib/components/primitives/tabs/index.js";
+    import * as Card from "#lib/components/primitives/card/index.js";
+    import * as Tabs from "#lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
     import UserMenu from "./UserMenu.svelte";
-    import type { LinkTab } from "$lib/model/tabs";
+    import type { LinkTab } from "#lib/model/tabs.js";
     import type { ResolvedPathname } from "$app/types";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     interface Props {
         backRef?: ResolvedPathname | undefined;

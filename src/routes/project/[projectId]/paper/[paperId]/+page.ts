@@ -1,8 +1,8 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { Criterion } from "$api/criterion";
 import { Review } from "$api/review";
 import type { User } from "$api/user";
-import type { CriterionWithReviews } from "$lib/model/general";
+import type { CriterionWithReviews } from "#lib/model/general.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {

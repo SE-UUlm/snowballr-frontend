@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
+import ProjectListEntry from "#lib/components/composites/project-components/ProjectListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { Projects, Users } from "../../example-data";
 import { MemberRole } from "$api/project";

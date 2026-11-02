@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import Alert from "#lib/components/composites/utils/Alert.svelte";
 
     interface Props {
         title: string;

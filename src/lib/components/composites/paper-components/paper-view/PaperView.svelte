@@ -1,18 +1,18 @@
 <script lang="ts">
-    import PaperNavigationBar from "$lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
-    import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
+    import PaperNavigationBar from "#lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
+    import PaperDetailsCard from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
     import PaperResearchContextCard, {
         type NonProjectResearchContextCardProps,
         type ProjectResearchContextCardProps,
         type ForwardAndBackwardReferencesCardContentProps,
-    } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { CriterionWithReviews, PaperCreationTarget } from "$lib/model/general";
-    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
+    } from "#lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
+    import type { CriterionWithReviews, PaperCreationTarget } from "#lib/model/general.js";
+    import PaperBookmarkButton from "#lib/components/composites/button/PaperBookmarkButton.svelte";
     import type { User } from "$api/user";
     import { Paper } from "$api/paper";
     import type { Project_Paper } from "$api/project";
-    import { asPaper } from "$lib/utils/model-helper";
-    import { getDisplayPaperId } from "$lib/utils/common-helper";
+    import { asPaper } from "#lib/utils/model-helper.js";
+    import { getDisplayPaperId } from "#lib/utils/common-helper.js";
     import { type Snippet } from "svelte";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import type { ResolvedPathname } from "$app/types";

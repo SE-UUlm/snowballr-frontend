@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Switch as SwitchPrimitive, type WithoutChildrenOrChild } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),

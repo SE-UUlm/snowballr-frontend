@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { backendService } from "#lib/grpc-api.js";
     import { User } from "$api/user";
-    import { Schema } from "$lib/schemas";
+    import { Schema } from "#lib/schemas.js";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
-    import { getUserContext } from "$lib/custom-context/user-context";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { triggerCurrentUserRefresh } from "#lib/current-user/userCache.js";
+    import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
     import {
         createActionError,
         createActionWarning,
         type ActionError,
-    } from "$lib/model/action-error";
+    } from "#lib/model/action-error.js";
     import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
 
     const user = $derived(getUserContext());

@@ -1,5 +1,5 @@
 import { assert, expect, test, describe } from "vitest";
-import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
+import NavigationBar from "#lib/components/composites/navigation-bar/NavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import {
     mockUserContext,

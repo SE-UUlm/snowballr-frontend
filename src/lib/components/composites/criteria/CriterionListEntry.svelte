@@ -1,13 +1,13 @@
 <script lang="ts">
-    import Checkbox from "$lib/components/primitives/checkbox/checkbox.svelte";
+    import Checkbox from "#lib/components/primitives/checkbox/checkbox.svelte";
     import CircleHelp from "@lucide/svelte/icons/circle-help";
     import Tooltip from "../utils/Tooltip.svelte";
-    import type { CriterionWithReviews } from "$lib/model/general";
+    import type { CriterionWithReviews } from "#lib/model/general.js";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
     import type { User } from "$api/user";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { getAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
-    import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+    import { getAlreadyReviewedContext } from "#lib/custom-context/was-paper-reviewed-context.js";
+    import { getSelectedReviewCriteriaContext } from "#lib/custom-context/selected-review-criteria-context.js";
 
     interface Props {
         reviewers: User[];

@@ -6,14 +6,14 @@ import {
     loadProjectSetting,
     PROJECT_SETTING_SUCCESS_MESSAGE,
     type ProjectSettingDescriptor,
-} from "$lib/model/project-setting";
+} from "#lib/model/project-setting.js";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
-import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
-import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
-import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
-import { maybeAsDecisionSetting } from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
+import { similarityThresholdSetting } from "#lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
+import { numberOfReviewersSetting } from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+import { snowballingTypeSetting } from "#lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
+import { maybeAsDecisionSetting } from "#lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn(), promise: vi.fn() },

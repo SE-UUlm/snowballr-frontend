@@ -17,7 +17,7 @@ import type { ISnowballRClient } from "$api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$api/project";
 import { AuthenticationStatus } from "$api/authentication";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import ResizeObserver from "resize-observer-polyfill";
 
 // Add custom jest matchers
@@ -181,7 +181,7 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 // For example, you can mock the backend API to return an error or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
-vi.mock("$lib/grpc-api", () => {
+vi.mock("#lib/grpc-api.js", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
             getAvailableFetchers: mock({

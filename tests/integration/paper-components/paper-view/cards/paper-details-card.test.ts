@@ -1,4 +1,4 @@
-import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
+import PaperDetailsCard from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { loading, createPaper, createProjectPaper } from "../../../../model-builder";

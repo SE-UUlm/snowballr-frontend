@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
-import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
-import { backendService } from "$lib/grpc-api";
+import ChangeNameSettings from "#lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
+import { backendService } from "#lib/grpc-api.js";
 import userEvent from "@testing-library/user-event";
 import type { User } from "$api/user";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";

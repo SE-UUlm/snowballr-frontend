@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import ProjectPaperView from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
+import ProjectPaperView from "#lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 import {
     createProject,
     createProjectPaper,
@@ -19,8 +19,8 @@ import {
     type IsProjectArchivedContext,
 } from "$tests/integration/test-helper";
 import { Criteria, Reviews } from "$tests/example-data";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import type { UserContext } from "$lib/custom-context/user-context";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+import type { UserContext } from "#lib/custom-context/user-context.js";
 import { PaperDecision } from "$api/project";
 
 describe("ProjectPaperView", () => {

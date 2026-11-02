@@ -1,4 +1,4 @@
-import type { CriteriaList } from "$lib/model/general";
+import type { CriteriaList } from "#lib/model/general.js";
 import { getContext, setContext } from "svelte";
 
 /**

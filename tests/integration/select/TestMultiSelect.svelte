@@ -1,5 +1,5 @@
 <script lang="ts">
-    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
+    import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
 
     let { options, selectedValues } = $props();
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+    import type { ProjectSettingDescriptor } from "#lib/model/project-setting.js";
 
     /**
      * Whether reviewers may pick 'Maybe' as a decision, next to 'Accept' and 'Decline'.
@@ -14,17 +14,17 @@
 </script>
 
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import { Label } from "$lib/components/primitives/label";
-    import { Switch } from "$lib/components/primitives/switch";
-    import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import { Label } from "#lib/components/primitives/label/index.js";
+    import { Switch } from "#lib/components/primitives/switch/index.js";
+    import { maybeAsDecision } from "#lib/global-state/maybe-as-decision-state.svelte.js";
     import type { Project } from "$api/project";
     import { onMount } from "svelte";
-    import type { ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { commitProjectSetting, loadProjectSetting } from "$lib/model/project-setting";
+    import type { ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { commitProjectSetting, loadProjectSetting } from "#lib/model/project-setting.js";
 
     interface Props {
         projectId: string;

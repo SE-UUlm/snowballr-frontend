@@ -1,11 +1,11 @@
-import PaperExternalIds from "$lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
+import PaperExternalIds from "#lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { loading, createPaper } from "../../../model-builder";
 import { waitForComponentLoading } from "../../test-helper";
-import { stringifyPaper } from "$lib/utils/model-helper";
+import { stringifyPaper } from "#lib/utils/model-helper.js";
 import userEvent from "@testing-library/user-event";
-import { EXTERNAL_ID_TYPE_OPTIONS } from "$lib/model/external-id-type";
+import { EXTERNAL_ID_TYPE_OPTIONS } from "#lib/model/external-id-type.js";
 
 // Dialogs/tooltips disable pointer events on the body while their close animation is in progress.
 // Since tests run in random order (see `sequence.shuffle` in vite.config.ts), a trigger element from

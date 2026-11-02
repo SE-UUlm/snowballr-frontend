@@ -1,6 +1,6 @@
 import { PaperDecision, type Project_Paper } from "$api/project";
-import type { PaperStatus, Person, PersonWithEmail } from "$lib/model/general";
-import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+import type { PaperStatus, Person, PersonWithEmail } from "#lib/model/general.js";
+import { asPaper, asProjectPaper, isProjectPaper } from "#lib/utils/model-helper.js";
 import type { Author, Paper } from "$api/paper";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 

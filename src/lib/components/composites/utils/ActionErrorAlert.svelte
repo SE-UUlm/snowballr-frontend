@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { ActionError, ActionErrorBase } from "$lib/model/action-error";
-    import Alert from "$lib/components/composites/utils/Alert.svelte";
+    import type { ActionError, ActionErrorBase } from "#lib/model/action-error.js";
+    import Alert from "#lib/components/composites/utils/Alert.svelte";
     import type { WithElementRef } from "bits-ui";
     import type { HTMLAttributes } from "svelte/elements";
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { Input } from "$lib/components/primitives/input/index.js";
-    import { Label } from "$lib/components/primitives/label/index.js";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { Input } from "#lib/components/primitives/input/index.js";
+    import { Label } from "#lib/components/primitives/label/index.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { WithElementRef } from "bits-ui";
     import { onMount, type Snippet } from "svelte";
     import type {
@@ -12,7 +12,7 @@
     import { z } from "zod";
     import InputValidationCriterion from "./InputValidationCriterion.svelte";
     import type { ResolvedPathname } from "$app/types";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     export type InputProps = WithElementRef<HTMLInputAttributes> & {
         inputId: string;

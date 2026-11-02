@@ -1,6 +1,6 @@
 import { User } from "$api/user";
 import { getContext, setContext } from "svelte";
-import { getCachedUser } from "$lib/current-user/userCache";
+import { getCachedUser } from "#lib/current-user/userCache.js";
 
 export type UserContext = () => User | null;
 /**

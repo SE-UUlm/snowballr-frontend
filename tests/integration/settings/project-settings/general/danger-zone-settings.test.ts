@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/svelte";
 import { Projects } from "$tests/example-data";
 import { loading } from "$tests/model-builder";
 import { mockUserContext } from "../../../test-helper";
-import DangerZoneSettings from "$lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
+import DangerZoneSettings from "#lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
 
 describe("DangerZoneSettings", () => {
     test("When a project is provided, then it renders correctly", async () => {

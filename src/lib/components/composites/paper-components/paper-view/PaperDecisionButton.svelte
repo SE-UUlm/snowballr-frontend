@@ -1,21 +1,21 @@
 <script lang="ts">
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import Tooltip from "../../utils/Tooltip.svelte";
     import {
         type PaperDecisionButtonVariant,
         paperDecisionButtonVariants,
-    } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
-    import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
-    import { backendService } from "$lib/grpc-api";
+    } from "#lib/components/composites/paper-components/paper-view/decision-button-variants.js";
+    import { shortcuts } from "#lib/global-state/shortcuts-visibility-state.svelte.js";
+    import { backendService } from "#lib/grpc-api.js";
     import { type Review, type Review_Create, ReviewDecision } from "$api/review";
-    import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
+    import { getSelectedReviewCriteriaContext } from "#lib/custom-context/selected-review-criteria-context.js";
     import { toast } from "svelte-sonner";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
-    import { navigatePaper } from "$lib/utils/paper-navigation";
+    import { navigatePaper } from "#lib/utils/paper-navigation.js";
     import type { Project, Project_Paper } from "$api/project";
-    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
 
     interface ButtonContent {
         name: string;

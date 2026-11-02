@@ -1,4 +1,4 @@
-import type { SelectOption } from "$lib/model/select-option";
+import type { SelectOption } from "#lib/model/select-option.js";
 
 /**
  * The external ID types a user can pick from when adding an external ID to a paper.

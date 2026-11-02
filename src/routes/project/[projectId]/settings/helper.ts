@@ -1,8 +1,8 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { MemberRole, type Project_Member } from "$api/project";
 import type { User } from "$api/user";
-import { resource } from "$lib/resource.svelte";
-import { getUserContext } from "$lib/custom-context/user-context";
+import { resource } from "#lib/resource.svelte.js";
+import { getUserContext } from "#lib/custom-context/user-context.js";
 
 export type MemberInfo = Project_Member & {
     isInvitationPending: boolean;

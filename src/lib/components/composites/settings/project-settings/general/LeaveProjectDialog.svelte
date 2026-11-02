@@ -1,12 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { resolve } from "$app/paths";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { getUserContext } from "$lib/custom-context/user-context";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { getGrpcStatusCode, loadingWrapper } from "$lib/utils/common-helper";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { backendService } from "#lib/grpc-api.js";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import { getGrpcStatusCode, loadingWrapper } from "#lib/utils/common-helper.js";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { toast } from "svelte-sonner";

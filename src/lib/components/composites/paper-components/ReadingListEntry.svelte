@@ -1,12 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { handleSingleOrDoubleClick } from "$lib/utils/common-helper";
-    import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
+    import { handleSingleOrDoubleClick } from "#lib/utils/common-helper.js";
+    import PaperInfo from "#lib/components/composites/paper-components/PaperInfo.svelte";
+    import PaperBookmarkButton from "#lib/components/composites/button/PaperBookmarkButton.svelte";
     import type { Paper } from "$api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     interface ReadingListEntryProps {
         paper: Paper;

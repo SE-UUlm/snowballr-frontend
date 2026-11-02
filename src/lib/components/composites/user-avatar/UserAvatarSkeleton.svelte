@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     interface Props {
         size?: "default" | "small";

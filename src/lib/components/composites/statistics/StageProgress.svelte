@@ -1,9 +1,9 @@
 <script lang="ts">
     import Circle from "@lucide/svelte/icons/circle";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
-    import StageProgressChart from "$lib/components/composites/statistics/StageProgressChart.svelte";
-    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
+    import { getStatusColor, getStatusText } from "#lib/utils/common-helper.js";
+    import StageProgressChart from "#lib/components/composites/statistics/StageProgressChart.svelte";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
     import type { Project_Information_DecisionStatistics } from "$api/project";
 
     export interface StageProgressInterface {

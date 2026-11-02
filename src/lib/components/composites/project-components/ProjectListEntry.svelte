@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Progress } from "$lib/components/primitives/progress";
-    import { getNames, handleSingleOrDoubleClick } from "$lib/utils/common-helper";
+    import { Progress } from "#lib/components/primitives/progress/index.js";
+    import { getNames, handleSingleOrDoubleClick } from "#lib/utils/common-helper.js";
     import {
         MemberRole,
         Project,
@@ -11,11 +11,11 @@
     import { goto } from "$app/navigation";
     import { PUBLIC_IS_DEV_MODE } from "$app/env/public";
     import type { User } from "$api/user";
-    import { Badge } from "$lib/components/primitives/badge/index.js";
+    import { Badge } from "#lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
-    import { getUserContext } from "$lib/custom-context/user-context";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
     import { resolve } from "$app/paths";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     const isDevMode = PUBLIC_IS_DEV_MODE === "true";
     let user: User | undefined;

@@ -1,14 +1,14 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { backendService } from "#lib/grpc-api.js";
     import { Nothing } from "$api/base";
     import { ExportRequest } from "$api/export";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { downloadBlob } from "$lib/utils/download-file";
-    import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { downloadBlob } from "#lib/utils/download-file.js";
+    import SingleSelect from "#lib/components/composites/select/SingleSelect.svelte";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
     import { onMount } from "svelte";
 
     interface Props {

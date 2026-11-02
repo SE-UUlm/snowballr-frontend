@@ -1,12 +1,12 @@
 <script lang="ts">
     import ChipsInput from "./ChipsInput.svelte";
     import type { User } from "$api/user";
-    import { getName } from "$lib/utils/common-helper";
-    import type { ValidationResult } from "$lib/model/general";
-    import { Schema } from "$lib/schemas";
-    import { backendService } from "$lib/grpc-api.js";
+    import { getName } from "#lib/utils/common-helper.js";
+    import type { ValidationResult } from "#lib/model/general.js";
+    import { Schema } from "#lib/schemas.js";
+    import { backendService } from "#lib/grpc-api.js";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
-    import { createActionError } from "$lib/model/action-error";
+    import { createActionError } from "#lib/model/action-error.js";
 
     interface Props {
         invitees: string[];

@@ -1,4 +1,4 @@
-import Input from "$lib/components/composites/input/Input.svelte";
+import Input from "#lib/components/composites/input/Input.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";

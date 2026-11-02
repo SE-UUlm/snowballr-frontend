@@ -1,8 +1,8 @@
 import { describe, expect, test as baseTest } from "vitest";
 import { ProjectPapers } from "$tests/example-data";
 import { type Project_Paper } from "$api/project";
-import { sortProjectPaper } from "$lib/utils/sorters";
-import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
+import { sortProjectPaper } from "#lib/utils/sorters.js";
+import { SortCriteria, SortDirection } from "#lib/model/sort-criteria.js";
 import { createPaper, createProjectPaper } from "$tests/model-builder";
 
 const test = baseTest.extend<{
