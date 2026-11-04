@@ -3,6 +3,7 @@ import ProjectListEntry from "$lib/components/composites/project-components/Proj
 import { render, screen } from "@testing-library/svelte";
 import { Projects, Users } from "../../example-data";
 import { MemberRole } from "$api/project";
+import { mockUserContext } from "../test-helper";
 
 describe("ProjectListEntryComponent", () => {
     test("When all required props except an onClick handler are provided, then the project list entry is completely shown.", () => {
@@ -17,6 +18,7 @@ describe("ProjectListEntryComponent", () => {
                 },
                 information: { projectProgress: 0.2 },
             },
+            context: mockUserContext,
         });
 
         // Project information are shown directly
@@ -44,6 +46,7 @@ describe("ProjectListEntryComponent", () => {
                 information: { projectProgress: 0.2 },
                 onClick: () => {}, // force link icon to be shown
             },
+            context: mockUserContext,
         });
 
         // Project information are shown directly
@@ -67,6 +70,7 @@ describe("ProjectListEntryComponent", () => {
                 },
                 information: { projectProgress: 20 },
             },
+            context: mockUserContext,
         });
 
         expect(screen.getByText("Demo Project")).toBeInTheDocument();
@@ -84,6 +88,7 @@ describe("ProjectListEntryComponent", () => {
                 },
                 information: { projectProgress: 20 },
             },
+            context: mockUserContext,
         });
 
         expect(screen.getByText("Demo Project (archived)")).toBeInTheDocument();
@@ -103,11 +108,55 @@ describe("ProjectListEntryComponent", () => {
                 information: { projectProgress: 20 },
                 onClick: () => {}, // force link icon to be shown
             },
+            context: mockUserContext,
         });
 
         expect(screen.getByRole("link", { name: "Open Project" })).toHaveAttribute(
             "href",
             "/project/1/dashboard",
         );
+    });
+
+    describe("Admin icon", () => {
+        const ADMIN_HINT = "You are an admin of this project";
+
+        test("When the current user is an admin of the project, then the admin icon is shown", () => {
+            render(ProjectListEntry, {
+                props: {
+                    project: Projects.demoProjectActive,
+                    membersList: {
+                        members: [
+                            { user: Users.johnDoe, role: MemberRole.ADMIN },
+                            { user: Users.janeDoe, role: MemberRole.DEFAULT },
+                        ],
+                    },
+                    information: { projectProgress: 0.2 },
+                },
+                context: mockUserContext,
+            });
+
+            const icon = screen.getByRole("img", { name: ADMIN_HINT });
+            expect(icon).toBeInTheDocument();
+            expect(icon.parentElement).toHaveAttribute("title", ADMIN_HINT);
+            expect(screen.queryByText("admin")).not.toBeInTheDocument();
+        });
+
+        test("When the current user is a default member of the project, then no admin icon is shown", () => {
+            render(ProjectListEntry, {
+                props: {
+                    project: Projects.demoProjectActive,
+                    membersList: {
+                        members: [
+                            { user: Users.johnDoe, role: MemberRole.DEFAULT },
+                            { user: Users.janeDoe, role: MemberRole.ADMIN },
+                        ],
+                    },
+                    information: { projectProgress: 0.2 },
+                },
+                context: mockUserContext,
+            });
+
+            expect(screen.queryByRole("img", { name: ADMIN_HINT })).not.toBeInTheDocument();
+        });
     });
 });

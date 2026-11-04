@@ -13,15 +13,14 @@
     import type { User } from "$api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
+    import Crown from "@lucide/svelte/icons/crown";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { resolve } from "$app/paths";
     import Link from "$lib/components/composites/link/Link.svelte";
 
+    const ADMIN_HINT = "You are an admin of this project";
     const isDevMode = env?.PUBLIC_IS_DEV_MODE === "true";
-    let user: User | undefined;
-    if (isDevMode) {
-        user = getUserContext();
-    }
+    const user: User = $derived(getUserContext());
 
     export interface ProjectListEntryInterface {
         project: Project;
@@ -36,6 +35,11 @@
     const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
 
     const href = $derived(resolve(`/project/${project.id}/dashboard`));
+    const isCurrentUserAdmin = $derived(
+        membersList.members.some(
+            (member) => member.user?.id === user.id && member.role === MemberRole.ADMIN,
+        ),
+    );
 </script>
 
 <!--
@@ -44,6 +48,7 @@ Container displaying important project information.
 
 This component shows the
   - project name
+  - a crown icon, if the current user is an admin of the project
   - members of the project
   - current stage
   - current stage progress (as progress bar, whereas the parameter must be provided as percentage)
@@ -69,11 +74,12 @@ Usage:
     <div class="flex h-fit min-w-0 flex-col">
         <h2 class="flex flex-row gap-2 truncate">
             {project.name}
+            {#if isCurrentUserAdmin}
+                <span class="text-muted-foreground self-start" title={ADMIN_HINT}>
+                    <Crown class="mt-1.5 size-4" aria-label={ADMIN_HINT} role="img" />
+                </span>
+            {/if}
             {#if isDevMode}
-                <!-- Show admin badge in dev mode when current user is admin of project -->
-                {#if membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
-                    <Badge title="You are an admin of this project" variant="outline">admin</Badge>
-                {/if}
                 <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
             {/if}
             {#if onClick}
