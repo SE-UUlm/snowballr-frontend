@@ -23,3 +23,31 @@ export async function settle(page: Page, ready: Locator) {
     await expect(ready).toBeVisible();
     await page.waitForLoadState("networkidle");
 }
+
+/**
+ * Grows the viewport until no scroll area overflows anymore.
+ *
+ * The app's layout fills the screen and scrolls its content inside scroll areas, so `fullPage`
+ * screenshots only contain what fits into the viewport. Growing the viewport by the overflow
+ * makes the complete content visible in a single screenshot.
+ *
+ * @param page - the current page
+ */
+export async function expandViewportToFitScrollAreas(page: Page) {
+    const viewport = page.viewportSize();
+    if (viewport === null) throw new Error("The page has no fixed viewport size.");
+
+    // The layout may reflow after resizing, so repeat until nothing overflows anymore.
+    for (let attempt = 0; attempt < 3; attempt++) {
+        const overflow = await page
+            .locator('[data-slot="scroll-area-viewport"]')
+            .evaluateAll((areas) =>
+                Math.max(0, ...areas.map((area) => area.scrollHeight - area.clientHeight)),
+            );
+        if (overflow === 0) return;
+
+        const { width, height } = page.viewportSize()!;
+        await page.setViewportSize({ width, height: height + overflow });
+    }
+    throw new Error("The scroll areas still overflow after growing the viewport.");
+}
