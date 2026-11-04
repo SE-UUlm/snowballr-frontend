@@ -28,14 +28,12 @@
     {projectId}
     selectedTab="general"
 >
-    <div class="flex flex-col gap-9 p-2.5">
-        <ProjectNameSettings {loadingProject} {projectId} />
-        <ArchiveProjectSettings {projectId} />
-        <ExportProjectSettings {projectId} />
-        <DangerZoneSettings
-            isLastAdmin={isCurrentUserLastAdminOfProject.value ?? false}
-            {loadingProject}
-            {projectId}
-        />
-    </div>
+    <ProjectNameSettings {loadingProject} {projectId} />
+    <ArchiveProjectSettings {projectId} />
+    <ExportProjectSettings {projectId} />
+    <DangerZoneSettings
+        isLastAdmin={isCurrentUserLastAdminOfProject.value ?? false}
+        {loadingProject}
+        {projectId}
+    />
 </ProjectSettingsLayout>
