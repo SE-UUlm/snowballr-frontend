@@ -62,7 +62,6 @@ and point to the canonical page.
 ├── svelte.config.js, vite.config.ts, vitest-setup.ts, playwright.config.ts
 ├── tsconfig.json, eslint.config.js, tailwind.config.js
 ├── components.json                 # shadcn-svelte config
-├── sonar-project.properties
 ├── markdownlint.json
 ├── .nvmrc                          # Node version (single source of truth for CI + Dockerfile)
 └── package.json
