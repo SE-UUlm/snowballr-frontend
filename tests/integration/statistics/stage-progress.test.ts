@@ -4,7 +4,7 @@ import { waitForComponentLoading } from "../test-helper";
 import { loading } from "../../model-builder";
 import StageProgress, {
     type StageProgressInterface,
-} from "$lib/components/composites/statistics/StageProgress.svelte";
+} from "#lib/components/composites/statistics/StageProgress.svelte";
 import { PaperDecision } from "$api/project";
 
 describe("StageProgress", () => {

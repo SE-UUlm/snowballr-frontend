@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Input from "$lib/components/composites/input/Input.svelte";
+    import Input from "#lib/components/composites/input/Input.svelte";
 
     interface Props {
         onClick: () => void;

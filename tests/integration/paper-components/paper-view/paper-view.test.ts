@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+import PaperView from "#lib/components/composites/paper-components/paper-view/PaperView.svelte";
 import { createNonProjectPaperViewProps, createPaperViewProps } from "$tests/model-builder";
 import { mockUserContext } from "$tests/integration/test-helper";
 

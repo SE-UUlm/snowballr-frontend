@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import PaperNavigationButton from "$lib/components/composites/paper-components/paper-view/PaperNavigationButton.svelte";
+import PaperNavigationButton from "#lib/components/composites/paper-components/paper-view/PaperNavigationButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { ProjectPapers } from "$tests/example-data";
 import { mockApiCall } from "$tests/setupTest";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
 
 describe("PaperNavigationButton", () => {
     test("When button has direction 'left', then aria-label and tooltip is 'Previous Paper'", async () => {

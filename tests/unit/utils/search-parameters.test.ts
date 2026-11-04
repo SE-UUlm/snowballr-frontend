@@ -7,20 +7,28 @@ import {
     updateFiltersParam,
     updateSearchTextParam,
     updateSortParams,
-} from "$lib/utils/search-parameters";
+} from "#lib/utils/search-parameters.js";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
-import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
+import { SortCriteria, SortDirection } from "#lib/model/sort-criteria.js";
+
+/**
+ * Sets the search part of the mocked `page.url`.
+ * Since `page.url` is readonly in SvelteKit 3, the URL is replaced instead of mutated.
+ */
+function setPageUrlSearch(search: string) {
+    (page as { url: typeof page.url }).url = new URL(`?${search}`, "http://localhost");
+}
 
 describe("Helper search text URL query parameter", () => {
     test("When the query parameter for the search text is present, then it will be successfully read and returned.", async () => {
-        page.url.search = "searchText=hello+world";
+        setPageUrlSearch("searchText=hello+world");
 
         expect(getSearchTextFromURL()).toBe("hello world");
     });
 
     test("When the query parameter for the search text is not present, then an empty string will be returned.", async () => {
-        page.url.search = "";
+        setPageUrlSearch("");
 
         expect(getSearchTextFromURL()).toBe("");
         expect(getSearchTextFromURL()).not.toBe("hello world");
@@ -51,8 +59,9 @@ describe("Helper search text URL query parameter", () => {
 
 describe("Helper filters URL query parameters", () => {
     test("When the query parameters for the filters are present, then they will be successfully read and returned.", async () => {
-        page.url.search =
-            "decisions=1&stages=0&reviewers=paula.thompson%40example.com&publishers=IEEE%2CCRC+Press&years=2019%2C2020&criteria=15";
+        setPageUrlSearch(
+            "decisions=1&stages=0&reviewers=paula.thompson%40example.com&publishers=IEEE%2CCRC+Press&years=2019%2C2020&criteria=15",
+        );
 
         expect(getFilterFromURL()).toStrictEqual({
             stages: ["0"],
@@ -65,7 +74,7 @@ describe("Helper filters URL query parameters", () => {
     });
 
     test("When a query parameters for a filter is not present, then an empty array will be returned for this filter.", async () => {
-        page.url.search = "decisions=";
+        setPageUrlSearch("decisions=");
 
         expect(getFilterFromURL()).toStrictEqual({
             stages: [],
@@ -118,13 +127,13 @@ describe("Helper filters URL query parameters", () => {
 
 describe("Helper sort URL query parameter", () => {
     test("When the query parameter for the sort option is present, then it will be successfully read and returned.", async () => {
-        page.url.search = "sort=Title&order=desc";
+        setPageUrlSearch("sort=Title&order=desc");
 
         expect(getSortOptionFromURL()).toBe("Title: Z to A");
     });
 
     test("When the query parameter for the sort option is not present, then the default sort option 'Id: Low to High' is returned.", async () => {
-        page.url.search = "";
+        setPageUrlSearch("");
 
         expect(getSortOptionFromURL()).toBe("Id: Low to High");
     });

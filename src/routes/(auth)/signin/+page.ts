@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { AuthenticationStatus } from "$api/authentication";
 import { Nothing } from "$api/base";
 import type { PageLoad } from "./$types";

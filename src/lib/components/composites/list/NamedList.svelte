@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
-    import { groupBy } from "$lib/utils/common-helper";
-    import { Separator } from "$lib/components/primitives/separator";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import { groupBy } from "#lib/utils/common-helper.js";
+    import { Separator } from "#lib/components/primitives/separator/index.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import ScrollArea from "#lib/components/primitives/scroll-area/scroll-area.svelte";
 
     type T = $$Generic;
 

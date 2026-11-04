@@ -1,6 +1,6 @@
-import { backendService } from "$lib/grpc-api";
-import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+import { backendService } from "#lib/grpc-api.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
+import type { Fetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
 import { Project_Settings } from "$api/project";
 import { UserSettings } from "$api/user_settings";
 import { toast } from "svelte-sonner";

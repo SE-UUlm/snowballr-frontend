@@ -1,7 +1,7 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { expect, type Mock, type MockInstance, vi } from "vitest";
-import * as environment from "$app/environment";
+import * as environment from "$app/env";
 import * as navigation from "$app/navigation";
 import {
     createCriterion,
@@ -16,14 +16,16 @@ import type { ISnowballRClient } from "$api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "$api/project";
 import { AuthenticationStatus } from "$api/authentication";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import ResizeObserver from "resize-observer-polyfill";
+
+type PublicEnvironment = typeof import("$app/env/public");
 
 // Add custom jest matchers
 expect.extend(matchers);
 
-// Mock SvelteKit runtime module $app/environment
-vi.mock("$app/environment", (): typeof environment => ({
+// Mock SvelteKit runtime module $app/env
+vi.mock("$app/env", (): typeof environment => ({
     browser: false,
     dev: true,
     building: false,
@@ -41,9 +43,10 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     onNavigate: () => {},
     preloadCode: () => Promise.resolve(),
     preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
-    pushState: () => {},
+    pushState: () => Promise.resolve(),
     refreshAll: () => Promise.resolve(),
-    replaceState: () => {},
+    replaceState: () => Promise.resolve(),
+    snapshot: () => {},
 }));
 
 // Mock SvelteKit runtime module $app/state, inspired by https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
@@ -58,9 +61,15 @@ vi.mock("$app/state", async () => {
     };
 });
 
-// Mock SvelteKit runtime modules $env/static/public and $env/dynamic/public
-vi.mock("$env/static/public", () => ({ env: {} }));
-vi.mock("$env/dynamic/public", () => ({ env: {} }));
+// Mock SvelteKit runtime module $app/env/public, which reads the variables declared in src/env.ts
+vi.mock(
+    "$app/env/public",
+    (): PublicEnvironment => ({
+        PUBLIC_IS_DEV_MODE: undefined,
+        PUBLIC_API_BASE_URL: "",
+        PUBLIC_CREDENTIAL_POLICY: undefined,
+    }),
+);
 
 // Mock browser APIs (for integration tests)
 if (typeof window !== "undefined") {
@@ -177,7 +186,7 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 // For example, you can mock the backend API to return an error or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
-vi.mock("$lib/grpc-api", () => {
+vi.mock("#lib/grpc-api.js", () => {
     const mockBackend: { backendService: MockApi } = {
         backendService: {
             getAvailableFetchers: mock({

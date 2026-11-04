@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
-import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
-import type { ValidationResult } from "$lib/model/general";
+import ChipsInput from "#lib/components/composites/input/ChipsInput.svelte";
+import type { ValidationResult } from "#lib/model/general.js";
 import userEvent from "@testing-library/user-event";
 
 function validateDemo(input: string): ValidationResult {

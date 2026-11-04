@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { backendService } from "#lib/grpc-api.js";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { Nothing } from "$api/base";
@@ -11,7 +11,7 @@
         } catch (e) {
             console.error("There was an error logging out: ", e);
         } finally {
-            await goto(resolve("/signin"));
+            await goto(resolve("signin"));
         }
     });
 </script>

@@ -4,7 +4,7 @@ import { Projects } from "$tests/example-data";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { loading } from "$tests/model-builder";
-import DeleteProjectSettings from "$lib/components/composites/settings/project-settings/general/DeleteProjectSettings.svelte";
+import DeleteProjectSettings from "#lib/components/composites/settings/project-settings/general/DeleteProjectSettings.svelte";
 
 describe("DeleteProjectSettings", () => {
     async function openDialog(user: UserEvent) {

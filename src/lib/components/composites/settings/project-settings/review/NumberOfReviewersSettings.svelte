@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+    import type { ProjectSettingDescriptor } from "#lib/model/project-setting.js";
 
     /**
      * The number of reviews a project paper needs before it receives a final decision.
@@ -14,12 +14,12 @@
 </script>
 
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import { Slider } from "$lib/components/primitives/slider";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { projectSetting } from "$lib/model/project-setting.svelte";
-    import type { Project } from "$lib/model/api/project";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { Slider } from "#lib/components/primitives/slider/index.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { projectSetting } from "#lib/model/project-setting.svelte.js";
+    import type { Project } from "$api/project";
 
     interface Props {
         projectId: string;

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import type { ActionError } from "$lib/model/action-error";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import type { ActionError } from "#lib/model/action-error.js";
     import Trash from "@lucide/svelte/icons/trash";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { buttonVariants } from "$lib/components/primitives/button";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
     import type { FetcherInformation } from "$api/fetcher";
     import type { Fetchers, SaveFetchers } from "./fetcher";
 

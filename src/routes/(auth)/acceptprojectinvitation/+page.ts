@@ -1,5 +1,5 @@
-import { backendService } from "$lib/grpc-api";
-import { createActionError } from "$lib/model/action-error";
+import { backendService } from "#lib/grpc-api.js";
+import { createActionError } from "#lib/model/action-error.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ url }) => {

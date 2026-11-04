@@ -1,13 +1,13 @@
 import { type User } from "$api/user";
-import { backendService, setFetch } from "$lib/grpc-api";
+import { backendService, setFetch } from "#lib/grpc-api.js";
 import type { LayoutLoad } from "./$types";
 import { Nothing } from "$api/base";
 import { AuthenticationStatus } from "$api/authentication";
 import { goto } from "$app/navigation";
-import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
+import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "#lib/current-user/userCache.js";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { isGrpcError } from "$lib/utils/common-helper";
-import { addRedirectUrlIfExists } from "$lib/utils/search-parameters";
+import { isGrpcError } from "#lib/utils/common-helper.js";
+import { addRedirectUrlIfExists } from "#lib/utils/search-parameters.js";
 import { resolve } from "$app/paths";
 
 export const ssr = false;
@@ -98,7 +98,7 @@ function isPublicPath(path: string) {
 async function redirectToSignIn(url: URL) {
     setCachedUser(null);
     const redirectUrl = encodeURIComponent(addRedirectUrlIfExists(url.pathname + url.search));
-    const path = resolve("/signin");
+    const path = resolve("signin");
     await goto(`${path}?redirect=${redirectUrl}`);
     return { user: null };
 }

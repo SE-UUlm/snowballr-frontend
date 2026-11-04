@@ -1,19 +1,16 @@
 <script lang="ts">
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import "../app.css";
     import { Toaster } from "svelte-sonner";
-    import type { LayoutData } from "./$types";
-    import { type Snippet } from "svelte";
-    import { setUserContext } from "$lib/custom-context/user-context";
+    import type { LayoutProps } from "./$types";
+    import { setUserContext } from "#lib/custom-context/user-context.js";
     import type { User } from "$api/user";
-    import { IS_IN_DEV_MODE } from "$lib/constants";
+    import { IS_IN_DEV_MODE } from "#lib/constants.js";
 
-    let { data, children } = $props<{
-        data: LayoutData;
-        children: Snippet;
-    }>();
+    let { data, children }: LayoutProps = $props();
 
-    let userState = $derived<User>(data.user);
+    // `user` is only null on public pages and while redirecting to sign in, see `load` in +layout.ts
+    let userState = $derived<User>(data.user as User);
 
     $effect(() => {
         if (data && data.user) {

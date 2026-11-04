@@ -1,7 +1,7 @@
 import type { Paper } from "$api/paper";
-import { backendService } from "$lib/grpc-api";
-import { createActionError, type ActionError } from "$lib/model/action-error";
-import { isGrpcError, pluralize } from "$lib/utils/common-helper";
+import { backendService } from "#lib/grpc-api.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
+import { isGrpcError, pluralize } from "#lib/utils/common-helper.js";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import type { RpcError } from "@protobuf-ts/runtime-rpc";
 import { toast } from "svelte-sonner";

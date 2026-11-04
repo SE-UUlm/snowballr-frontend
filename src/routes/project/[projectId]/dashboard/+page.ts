@@ -1,4 +1,4 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { PageLoad } from "./$types";
 import {
     PaperDecision,
@@ -6,10 +6,10 @@ import {
     type Project_Information_DecisionStatistics,
 } from "$api/project";
 import type { Timestamp } from "$api/google/protobuf/timestamp";
-import type { ProjectInformationInterface } from "$lib/components/composites/statistics/ProjectInformation.svelte";
-import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-import type { StageProgressInterface } from "$lib/components/composites/statistics/StageProgress.svelte";
-import { sumBy } from "$lib/utils/common-helper";
+import type { ProjectInformationInterface } from "#lib/components/composites/statistics/ProjectInformation.svelte";
+import type { PaperListEntryInterface } from "#lib/components/composites/paper-components/PaperListEntry.svelte";
+import type { StageProgressInterface } from "#lib/components/composites/statistics/StageProgress.svelte";
+import { sumBy } from "#lib/utils/common-helper.js";
 
 /**
  * Parses a Timestamp object into a date object.

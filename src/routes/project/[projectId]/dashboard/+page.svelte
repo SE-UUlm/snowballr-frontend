@@ -1,11 +1,11 @@
 <script lang="ts">
-    import ProjectNavigationBar from "$lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
-    import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
-    import NamedList from "$lib/components/composites/list/NamedList.svelte";
-    import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-    import ProjectInformation from "$lib/components/composites/statistics/ProjectInformation.svelte";
-    import StageProgress from "$lib/components/composites/statistics/StageProgress.svelte";
-    import { Separator } from "$lib/components/primitives/separator";
+    import ProjectNavigationBar from "#lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
+    import PaperListEntrySkeleton from "#lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
+    import NamedList from "#lib/components/composites/list/NamedList.svelte";
+    import PaperListEntry from "#lib/components/composites/paper-components/PaperListEntry.svelte";
+    import ProjectInformation from "#lib/components/composites/statistics/ProjectInformation.svelte";
+    import StageProgress from "#lib/components/composites/statistics/StageProgress.svelte";
+    import { Separator } from "#lib/components/primitives/separator/index.js";
 
     const { data } = $props();
     const { projectId, loadingProject, openReviews, projectInformation, stageProgress } =

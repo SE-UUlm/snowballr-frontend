@@ -1,4 +1,4 @@
-import { getName } from "$lib/utils/common-helper";
+import { getName } from "#lib/utils/common-helper.js";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class RemoveMemberDialogModel {

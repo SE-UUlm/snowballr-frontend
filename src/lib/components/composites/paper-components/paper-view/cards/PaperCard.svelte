@@ -1,9 +1,9 @@
 <script lang="ts">
-    import UnderlineTabsList from "$lib/components/composites/tabs/UnderlineTabsList.svelte";
-    import * as Card from "$lib/components/primitives/card/index.js";
-    import * as Tabs from "$lib/components/primitives/tabs/index.js";
-    import type { Tab } from "$lib/model/tabs";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import UnderlineTabsList from "#lib/components/composites/tabs/UnderlineTabsList.svelte";
+    import * as Card from "#lib/components/primitives/card/index.js";
+    import * as Tabs from "#lib/components/primitives/tabs/index.js";
+    import type { Tab } from "#lib/model/tabs.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { WithElementRef } from "bits-ui";
     import type { Snippet } from "svelte";
     import type { HTMLAttributes } from "svelte/elements";

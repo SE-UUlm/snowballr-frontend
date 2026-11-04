@@ -1,6 +1,6 @@
 <script>
-    import ShortcutsVisibilitySettings from "$lib/components/composites/settings/user-settings/ShortcutsVisibilitySettings.svelte";
-    import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+    import ShortcutsVisibilitySettings from "#lib/components/composites/settings/user-settings/ShortcutsVisibilitySettings.svelte";
+    import UserSettingsLayout from "#lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
 </script>
 
 <svelte:head>

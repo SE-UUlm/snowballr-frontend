@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import * as Dialog from "$lib/components/primitives/dialog/index.js";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import * as Dialog from "#lib/components/primitives/dialog/index.js";
     import type { DialogTriggerProps } from "bits-ui";
     import type { Snippet } from "svelte";
 

@@ -1,8 +1,8 @@
 import type { PageLoad } from "./$types";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { type Project } from "$api/project";
-import type { ProjectListEntryInterface } from "$lib/components/composites/project-components/ProjectListEntry.svelte";
-import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+import type { ProjectListEntryInterface } from "#lib/components/composites/project-components/ProjectListEntry.svelte";
+import type { PaperListEntryInterface } from "#lib/components/composites/paper-components/PaperListEntry.svelte";
 import type { User } from "$api/user";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {

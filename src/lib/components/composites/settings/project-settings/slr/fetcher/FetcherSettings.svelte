@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { backendService } from "#lib/grpc-api.js";
     import { Project, Project_Settings } from "$api/project";
     import { onMount } from "svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import type { FetcherInformation } from "$api/fetcher";
-    import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
-    import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+    import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
     import { updateFetchers } from "./update-fetchers";
 
     interface Props {

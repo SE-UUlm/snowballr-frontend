@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+import PaperEntry from "#lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "../test-helper";
 import { Papers, Reviews } from "../../example-data";
 import { PaperDecision } from "$api/project";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
 describe("PaperListEntryComponent", () => {
     beforeEach(() => {

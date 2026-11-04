@@ -1,10 +1,27 @@
+import adapter from "@sveltejs/adapter-node";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig } from "vitest/config";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelteTesting } from "@testing-library/svelte/vite";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-    plugins: [tailwindcss(), sveltekit(), svelteTesting()],
+    plugins: [
+        tailwindcss(),
+        sveltekit({
+            // Consult https://svelte.dev/docs/kit/integrations
+            // for more information about preprocessors
+            preprocess: vitePreprocess(),
+            adapter: adapter(),
+            alias: {
+                $tests: "./tests",
+                "$tests/*": "./tests/*",
+                $api: "./src/lib/model/api",
+                "$api/*": "./src/lib/model/api/*",
+            },
+        }),
+        svelteTesting(),
+    ],
     // Tell Vitest to use the `browser` entry points in `package.json` files, even though it's running in Node
     resolve: process.env.VITEST ? { conditions: ["browser"] } : undefined,
     test: {

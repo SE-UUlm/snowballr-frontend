@@ -1,18 +1,18 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { SnowballRClient } from "$api/main.client";
-import { env } from "$env/dynamic/public";
+import { PUBLIC_API_BASE_URL, PUBLIC_CREDENTIAL_POLICY } from "$app/env/public";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
 import { IS_IN_DEV_MODE } from "./constants";
 
 // If no PUBLIC_API_BASE_URL is defined, log an error and exit.
 // Without the base URL, we cannot make any API calls.
-if (!env.PUBLIC_API_BASE_URL) {
+if (!PUBLIC_API_BASE_URL) {
     console.error("PUBLIC_API_BASE_URL is not defined");
     process.exit(1);
 }
 
 const credentials: RequestCredentials =
-    (env.PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
+    (PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
 
 let fetch = globalThis.fetch;
 const customFetch = (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response> =>
@@ -23,7 +23,7 @@ export function setFetch(newFetch: typeof fetch) {
 }
 
 const transport = new GrpcWebFetchTransport({
-    baseUrl: env.PUBLIC_API_BASE_URL,
+    baseUrl: PUBLIC_API_BASE_URL,
     fetchInit: {
         credentials,
         // DO NOT SET: mode: "no-cors"

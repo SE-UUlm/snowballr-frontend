@@ -1,10 +1,10 @@
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import { backendService } from "$lib/grpc-api";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import { backendService } from "#lib/grpc-api.js";
     import { MemberRole, type Project_Member } from "$api/project";
-    import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { getName, loadingWrapper, wrapLongWords } from "#lib/utils/common-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/helper";
 
     interface Props {

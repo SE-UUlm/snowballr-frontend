@@ -1,4 +1,4 @@
-import PaperDecisionBanner from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
+import PaperDecisionBanner from "#lib/components/composites/criteria/PaperDecisionBanner.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createProjectPaper, loading } from "../../model-builder";

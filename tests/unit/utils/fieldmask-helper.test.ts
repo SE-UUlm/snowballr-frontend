@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
 
 describe("Build field mask", () => {
     test("When an empty object is provided, then an empty paths array is returned.", () => {

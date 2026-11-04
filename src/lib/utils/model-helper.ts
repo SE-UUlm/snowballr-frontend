@@ -1,7 +1,7 @@
 import { Project_Paper } from "$api/project";
 import type { Author, Paper } from "$api/paper";
 import { getNames } from "./common-helper";
-import type { StringifiedPaper } from "$lib/model/general";
+import type { StringifiedPaper } from "#lib/model/general.js";
 
 function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {
     return "paper" in paper;

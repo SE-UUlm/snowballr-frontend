@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { backendService } from "#lib/grpc-api.js";
     import { UserSettings } from "$api/user_settings";
     import { onMount } from "svelte";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import type { FetcherInformation } from "$api/fetcher";
-    import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
-    import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+    import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
     import { updateDefaultFetchers } from "./update-default-fetchers";
 
     let loadError: ActionError = $state(undefined);

@@ -45,7 +45,7 @@
 </script>
 
 <script lang="ts">
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { ResolvedPathname } from "$app/types";
 
     let {

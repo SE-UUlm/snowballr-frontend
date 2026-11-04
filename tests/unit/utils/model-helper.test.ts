@@ -1,4 +1,4 @@
-import { stringifyPaper } from "$lib/utils/model-helper";
+import { stringifyPaper } from "#lib/utils/model-helper.js";
 import { createPaper } from "$tests/model-builder";
 import { describe, expect, test } from "vitest";
 

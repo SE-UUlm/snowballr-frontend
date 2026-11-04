@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton/index.js";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
 </script>
 
 <div class="grid grid-flow-row gap-1.5">

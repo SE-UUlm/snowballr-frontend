@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import ReadingListEntry from "$lib/components/composites/paper-components/ReadingListEntry.svelte";
+import ReadingListEntry from "#lib/components/composites/paper-components/ReadingListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "../test-helper";

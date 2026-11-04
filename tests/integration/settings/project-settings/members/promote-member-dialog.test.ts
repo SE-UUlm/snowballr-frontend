@@ -2,10 +2,10 @@ import { MemberRole, Project_Member } from "$api/project";
 import { Members } from "$tests/example-data";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { afterEach, assert, beforeEach, describe, expect, test, vi } from "vitest";
-import PromoteMemberDialog from "$lib/components/composites/settings/project-settings/members/PromoteMemberDialog.svelte";
+import PromoteMemberDialog from "#lib/components/composites/settings/project-settings/members/PromoteMemberDialog.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { getName } from "$lib/utils/common-helper";
+import { getName } from "#lib/utils/common-helper.js";
 
 describe("PromoteMemberDialog", () => {
     const adminMember = { ...Members.demoMember1, isInvitationPending: false };

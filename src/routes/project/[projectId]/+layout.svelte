@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ProjectStatus } from "$api/project";
-    import { setIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { resource } from "$lib/resource.svelte";
+    import { setIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { resource } from "#lib/resource.svelte.js";
 
     const { children, data } = $props();
     const { loadingProject } = $derived(data);

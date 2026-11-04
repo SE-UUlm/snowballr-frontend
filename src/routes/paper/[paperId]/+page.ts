@@ -1,4 +1,4 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {

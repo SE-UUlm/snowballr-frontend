@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Tabs from "$lib/components/primitives/tabs/index.js";
+    import * as Tabs from "#lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
 
     interface Props {

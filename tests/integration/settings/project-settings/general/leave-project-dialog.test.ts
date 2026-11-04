@@ -1,11 +1,11 @@
 import { describe, expect, test, type Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
-import LeaveProjectDialog from "$lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
+import LeaveProjectDialog from "#lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "../../../test-helper";
 import { Projects, Users } from "$tests/example-data";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 
 describe("LeaveProjectDialog", () => {
     async function openDialog(user: UserEvent) {

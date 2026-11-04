@@ -1,4 +1,4 @@
-import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
+import CriteriaList from "#lib/components/composites/criteria/CriteriaList.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createReviewedCriterion, loading } from "../../model-builder";

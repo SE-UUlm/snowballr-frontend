@@ -1,4 +1,4 @@
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params, depends }) => {

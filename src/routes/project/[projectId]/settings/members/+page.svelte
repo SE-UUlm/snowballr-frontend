@@ -1,18 +1,18 @@
 <script lang="ts">
-    import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
-    import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
-    import ProjectMemberListEntrySkeleton from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
-    import Separator from "$lib/components/primitives/separator/separator.svelte";
+    import ProjectSettingsLayout from "#lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+    import ProjectMemberListEntry from "#lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
+    import ProjectMemberListEntrySkeleton from "#lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
+    import Separator from "#lib/components/primitives/separator/separator.svelte";
     import { Project_Member } from "$api/project.js";
-    import { getName, getNameOrEmail, pluralize } from "$lib/utils/common-helper.js";
+    import { getName, getNameOrEmail, pluralize } from "#lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
-    import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import InviteUsersDialog from "#lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
     import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import { getUserContext } from "$lib/custom-context/user-context";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import ScrollArea from "#lib/components/primitives/scroll-area/scroll-area.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);

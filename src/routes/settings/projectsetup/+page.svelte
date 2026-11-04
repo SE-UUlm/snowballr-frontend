@@ -1,6 +1,6 @@
 <script lang="ts">
-    import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
-    import DefaultFetcherSettings from "$lib/components/composites/settings/user-settings/fetcher/DefaultFetcherSettings.svelte";
+    import UserSettingsLayout from "#lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+    import DefaultFetcherSettings from "#lib/components/composites/settings/user-settings/fetcher/DefaultFetcherSettings.svelte";
 </script>
 
 <svelte:head>

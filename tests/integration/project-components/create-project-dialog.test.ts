@@ -1,6 +1,6 @@
 import { expect, test, describe, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
+import CreateProjectDialog from "#lib/components/composites/project-components/CreateProjectDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockUserContext } from "../test-helper";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";

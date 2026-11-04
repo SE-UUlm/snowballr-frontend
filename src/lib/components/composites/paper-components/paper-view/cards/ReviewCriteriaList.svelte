@@ -1,8 +1,8 @@
 <script lang="ts">
-    import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
+    import CriteriaList from "#lib/components/composites/criteria/CriteriaList.svelte";
     import { CriterionCategory } from "$api/criterion";
     import { type User } from "$api/user";
-    import type { CriterionWithReviews } from "$lib/model/general";
+    import type { CriterionWithReviews } from "#lib/model/general.js";
 
     export interface ReviewCriteriaListProps {
         reviewers: Promise<User[]>;

@@ -2,7 +2,7 @@ import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
 import type { Paper } from "$api/paper";
 import { getNames } from "./common-helper";
 import type { Project_Paper } from "$api/project";
-import type { ProjectPaperFilter } from "$lib/model/general";
+import type { ProjectPaperFilter } from "#lib/model/general.js";
 
 /**
  * Generic filter function using Fzf.

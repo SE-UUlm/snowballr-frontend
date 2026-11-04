@@ -1,4 +1,4 @@
-import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
+import PaperInfo from "#lib/components/composites/paper-components/PaperInfo.svelte";
 import { createPaper, loading } from "$tests/model-builder";
 import { render, screen } from "@testing-library/svelte";
 import { describe, test } from "vitest";

@@ -11,7 +11,7 @@ import { expect } from "@playwright/test";
 import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
 import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
 import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
-import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
 
 type ProjectPaperViewPageFixtures = {
     projectPaperViewPage: ProjectPaperViewPageModel;

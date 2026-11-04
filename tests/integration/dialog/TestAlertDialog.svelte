@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
 
     interface Props {
         loading?: boolean;

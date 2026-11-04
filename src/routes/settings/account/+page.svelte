@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
-    import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+    import ChangeNameSettings from "#lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
+    import UserSettingsLayout from "#lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
 </script>
 
 <svelte:head>

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
     import { onMount } from "svelte";
-    import ChipsInput from "$lib/components/composites/input/ChipsInput.svelte";
-    import type { ValidationResult } from "$lib/model/general";
+    import ChipsInput from "#lib/components/composites/input/ChipsInput.svelte";
+    import type { ValidationResult } from "#lib/model/general.js";
 
     interface Props {
         projectId: string;

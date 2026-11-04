@@ -3,11 +3,11 @@
     import ArrowRight from "@lucide/svelte/icons/arrow-right";
     import Tooltip from "../../utils/Tooltip.svelte";
     import type { Project, Project_Paper } from "$api/project";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { navigatePaper } from "$lib/utils/paper-navigation";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+    import { backendService } from "#lib/grpc-api.js";
+    import { navigatePaper } from "#lib/utils/paper-navigation.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
 
     interface Props {
         direction: "left" | "right";

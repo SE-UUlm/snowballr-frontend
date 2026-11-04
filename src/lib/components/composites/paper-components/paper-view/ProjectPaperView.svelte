@@ -1,16 +1,16 @@
 <script lang="ts">
     import PaperView, {
         type ProjectSpecificPaperViewProps,
-    } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-    import ButtonBar from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
-    import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
+    } from "#lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import ButtonBar from "#lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
+    import type { ForwardAndBackwardReferencesCardContentProps } from "#lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { Project } from "$api/project";
     import type { Review } from "$api/review.js";
-    import { setAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
-    import { setSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
-    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte.js";
+    import { setAlreadyReviewedContext } from "#lib/custom-context/was-paper-reviewed-context.js";
+    import { setSelectedReviewCriteriaContext } from "#lib/custom-context/selected-review-criteria-context.js";
+    import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
     import { toast } from "svelte-sonner";
-    import { getUserContext } from "$lib/custom-context/user-context";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
 
     export type ProjectPaperViewProps = {
         projectId: string;

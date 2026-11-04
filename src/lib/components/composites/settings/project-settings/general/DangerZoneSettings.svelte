@@ -1,6 +1,6 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Separator from "$lib/components/primitives/separator/separator.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import Separator from "#lib/components/primitives/separator/separator.svelte";
     import type { Project } from "$api/project";
     import DeleteProjectSettings from "./DeleteProjectSettings.svelte";
     import LeaveProjectSettings from "./LeaveProjectSettings.svelte";

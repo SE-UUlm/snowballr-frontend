@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
     testDir: "tests/e2e",
+    tsconfig: "tests/e2e/tsconfig.json",
     forbidOnly: !!process.env.CI,
     retries: 2,
     // decision in team: do not fail on flaky tests in CI during development

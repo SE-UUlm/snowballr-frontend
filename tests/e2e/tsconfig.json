@@ -1,0 +1,17 @@
+{
+    // Used by Playwright for all files it loads (see `tsconfig` in playwright.config.ts).
+    // Playwright runs the tests in Node, which resolves the #lib subpath imports from package.json
+    // without mapping `.js` to `.ts`. Mapping #lib via `paths` lets Playwright resolve it instead.
+    // As `paths` is not merged with the extended config, the aliases from vite.config.ts are repeated.
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "paths": {
+            "#lib": ["../../src/lib/index.ts"],
+            "#lib/*": ["../../src/lib/*"],
+            "$tests": ["../../tests"],
+            "$tests/*": ["../../tests/*"],
+            "$api": ["../../src/lib/model/api"],
+            "$api/*": ["../../src/lib/model/api/*"]
+        }
+    }
+}

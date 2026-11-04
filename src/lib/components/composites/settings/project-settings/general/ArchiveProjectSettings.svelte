@@ -1,13 +1,13 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import { backendService } from "#lib/grpc-api.js";
     import { Project, ProjectStatus } from "$api/project";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
 
     interface Props {
         projectId: string;

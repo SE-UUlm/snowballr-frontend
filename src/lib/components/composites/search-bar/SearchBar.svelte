@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Input } from "$lib/components/primitives/input/index";
+    import { Input } from "#lib/components/primitives/input/index.js";
     import Search from "@lucide/svelte/icons/search";
-    import { getSearchTextFromURL } from "$lib/utils/search-parameters";
-    import { callDebounced, debounce } from "$lib/utils/common-helper";
+    import { getSearchTextFromURL } from "#lib/utils/search-parameters.js";
+    import { callDebounced, debounce } from "#lib/utils/common-helper.js";
 
     interface Props {
         placeholderText?: string;

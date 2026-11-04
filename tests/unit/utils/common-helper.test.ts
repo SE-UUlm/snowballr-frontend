@@ -15,11 +15,11 @@ import {
     sum,
     sumBy,
     wrapLongWords,
-} from "$lib/utils/common-helper";
+} from "#lib/utils/common-helper.js";
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
 import { PaperDecision, type Project_Paper } from "$api/project";
-import type { Person, PersonWithEmail } from "$lib/model/general";
+import type { Person, PersonWithEmail } from "#lib/model/general.js";
 
 describe("Extract name from a person", () => {
     test("When the person has both first and last name, both are returned", () => {

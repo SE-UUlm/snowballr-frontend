@@ -1,9 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import FetcherOptionsDialog from "$lib/components/composites/settings/fetcher/FetcherOptionsDialog.svelte";
+import FetcherOptionsDialog from "#lib/components/composites/settings/fetcher/FetcherOptionsDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import type { FetcherInformation } from "$api/fetcher";
-import type { Fetchers, SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+import type {
+    Fetchers,
+    SaveFetchers,
+} from "#lib/components/composites/settings/fetcher/fetcher.js";
 
 describe("FetcherOptionsDialog", () => {
     beforeEach(() => vi.clearAllMocks());

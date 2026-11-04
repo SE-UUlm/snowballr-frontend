@@ -1,13 +1,13 @@
 <script lang="ts">
-    import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
-    import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
+    import Dialog from "#lib/components/composites/dialog/Dialog.svelte";
+    import { buttonVariants } from "#lib/components/primitives/button/button.svelte";
+    import InviteUsersInput from "#lib/components/composites/input/InviteUsersInput.svelte";
     import type { Project_Member } from "$api/project";
-    import { backendService } from "$lib/grpc-api";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { backendService } from "#lib/grpc-api.js";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         projectId: string;

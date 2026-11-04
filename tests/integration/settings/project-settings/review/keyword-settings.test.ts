@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
+import KeywordSettings from "#lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
 import userEvent from "@testing-library/user-event";
 
 describe("KeywordSettings", () => {

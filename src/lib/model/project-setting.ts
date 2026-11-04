@@ -1,9 +1,9 @@
 import { Project } from "$api/project";
 import type { FieldMask } from "$api/google/protobuf/field_mask";
 import type { PartialMessage } from "@protobuf-ts/runtime";
-import { backendService } from "$lib/grpc-api";
-import { buildFieldMask } from "$lib/utils/fieldmask-helper";
-import { createActionError, type ActionError } from "$lib/model/action-error";
+import { backendService } from "#lib/grpc-api.js";
+import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
 import { toast } from "svelte-sonner";
 
 /** The success message shown after a project setting was updated, unless the descriptor overrides it. */

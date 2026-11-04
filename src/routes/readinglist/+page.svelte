@@ -1,17 +1,17 @@
 <script lang="ts">
-    import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
-    import ReadingListEntry from "$lib/components/composites/paper-components/ReadingListEntry.svelte";
-    import NamedList from "$lib/components/composites/list/NamedList.svelte";
-    import ReadingListEntrySkeleton from "$lib/components/composites/paper-components/ReadingListEntrySkeleton.svelte";
-    import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
-    import { filterPapers } from "$lib/utils/filters";
+    import SimpleNavigationBar from "#lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
+    import ReadingListEntry from "#lib/components/composites/paper-components/ReadingListEntry.svelte";
+    import NamedList from "#lib/components/composites/list/NamedList.svelte";
+    import ReadingListEntrySkeleton from "#lib/components/composites/paper-components/ReadingListEntrySkeleton.svelte";
+    import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
+    import { filterPapers } from "#lib/utils/filters.js";
     import type { Paper } from "$api/paper";
     import { loadReadingList } from "./helper.js";
     import {
         getSearchTextFromURL,
         updateSearchTextParam,
         updateUrlParams,
-    } from "$lib/utils/search-parameters";
+    } from "#lib/utils/search-parameters.js";
     import { SvelteURLSearchParams } from "svelte/reactivity";
     import { page } from "$app/state";
 

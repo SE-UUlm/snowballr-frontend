@@ -1,14 +1,14 @@
 <script lang="ts">
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import type { WithElementRef } from "bits-ui";
-    import ToggleableInput from "$lib/components/composites/input/ToggleableInput.svelte";
+    import ToggleableInput from "#lib/components/composites/input/ToggleableInput.svelte";
     import type { HTMLAttributes } from "svelte/elements";
     import type { Paper } from "$api/paper";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import type { StringifiedPaper } from "$lib/model/general";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
+    import type { StringifiedPaper } from "#lib/model/general.js";
     import CircleHelp from "@lucide/svelte/icons/circle-help";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
 
     export interface PaperDetailProp {
         key: keyof StringifiedPaper;

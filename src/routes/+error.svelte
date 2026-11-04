@@ -2,7 +2,7 @@
     import { goto } from "$app/navigation";
     import { resolve } from "$app/paths";
     import { page } from "$app/state";
-    import { Button } from "$lib/components/primitives/button";
+    import { Button } from "#lib/components/primitives/button/index.js";
 
     const errorDetails = $derived(() => {
         const status = page.status;

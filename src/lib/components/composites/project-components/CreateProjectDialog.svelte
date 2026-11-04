@@ -1,18 +1,18 @@
 <script lang="ts">
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import Input from "$lib/components/composites/input/Input.svelte";
-    import { Schema } from "$lib/schemas";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import Input from "#lib/components/composites/input/Input.svelte";
+    import { Schema } from "#lib/schemas.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import { goto, invalidate } from "$app/navigation";
-    import { backendService } from "$lib/grpc-api";
-    import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
-    import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
+    import { backendService } from "#lib/grpc-api.js";
+    import InviteUsersInput from "#lib/components/composites/input/InviteUsersInput.svelte";
+    import Dialog from "#lib/components/composites/dialog/Dialog.svelte";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
     import LoadingButton from "../button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
-    import { createActionError } from "$lib/model/action-error";
+    import { createActionError } from "#lib/model/action-error.js";
     import { resolve } from "$app/paths";
 
     // at the beginning the dialog should not be open
@@ -36,7 +36,7 @@
         if (projectId === undefined) {
             projectWasCreated = false;
         } else {
-            await goto(resolve(`/project/${projectId}/dashboard`));
+            await goto(resolve(`project/${projectId}/dashboard`));
         }
     }
 

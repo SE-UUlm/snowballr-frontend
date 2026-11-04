@@ -1,5 +1,5 @@
-import type { AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
-import { IS_IN_DEV_MODE, IS_IN_TEST_MODE } from "$lib/constants";
+import type { AlertVariant } from "#lib/components/composites/utils/Alert.svelte";
+import { IS_IN_DEV_MODE, IS_IN_TEST_MODE } from "#lib/constants.js";
 
 /**
  * Standardized error/warning object for action error handling.

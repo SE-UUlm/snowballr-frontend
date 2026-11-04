@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
-import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
+import PaperDecisionButton from "#lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { createReview } from "$tests/model-builder";
-import { backendService } from "$lib/grpc-api";
+import { backendService } from "#lib/grpc-api.js";
 import { Review, ReviewDecision } from "$api/review";
 import { getReturnValue } from "$tests/setupTest";
 import {
@@ -14,7 +14,7 @@ import {
     type WasReviewedContext,
 } from "$tests/integration/test-helper";
 import { ProjectPapers } from "$tests/example-data";
-import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
 
 type CombinedContext = SelectedCriteriaContext | WasReviewedContext | IsProjectArchivedContext;
 

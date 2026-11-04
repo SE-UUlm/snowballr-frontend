@@ -1,7 +1,7 @@
 import { test } from "./project-members-settings-page-fixtures";
 import { expect } from "@playwright/test";
 import { getNameOfCurrentUser } from "$tests/e2e/utils/helper/helper";
-import { getName } from "$lib/utils/common-helper";
+import { getName } from "#lib/utils/common-helper.js";
 
 test.describe("Project Member Settings Navigation", () => {
     test("When navigating to the project member settings, then the page is displayed", async ({

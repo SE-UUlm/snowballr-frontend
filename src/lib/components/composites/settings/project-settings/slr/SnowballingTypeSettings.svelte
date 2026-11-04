@@ -1,6 +1,6 @@
 <script lang="ts" module>
     import { SnowballingType } from "$api/project";
-    import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
+    import type { ProjectSettingDescriptor } from "#lib/model/project-setting.js";
 
     /**
      * Which references are fetched when a paper is accepted.
@@ -16,14 +16,14 @@
 </script>
 
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import { Label } from "$lib/components/primitives/label";
-    import * as RadioGroup from "$lib/components/primitives/radio-group/index";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import { Label } from "#lib/components/primitives/label/index.js";
+    import * as RadioGroup from "#lib/components/primitives/radio-group/index.js";
     import type { Project } from "$api/project";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { projectSetting } from "$lib/model/project-setting.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { projectSetting } from "#lib/model/project-setting.svelte.js";
 
     interface Props {
         projectId: string;

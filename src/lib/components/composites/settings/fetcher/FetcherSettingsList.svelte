@@ -1,11 +1,11 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
     import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
     import FetcherAddDialog from "./FetcherAddDialog.svelte";
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import type { ActionError } from "$lib/model/action-error";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import type { ActionError } from "#lib/model/action-error.js";
     import type { FetcherInformation } from "$api/fetcher";
     import type { Fetchers, SaveFetchers } from "./fetcher";
 

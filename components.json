@@ -5,11 +5,11 @@
         "baseColor": "slate"
     },
     "aliases": {
-        "components": "$lib/components",
-        "utils": "$lib/utils/shadcn-helper",
-        "ui": "$lib/components/primitives",
-        "hooks": "$lib/hooks",
-        "lib": "$lib"
+        "components": "#lib/components",
+        "utils": "#lib/utils/shadcn-helper",
+        "ui": "#lib/components/primitives",
+        "hooks": "#lib/hooks",
+        "lib": "#lib"
     },
     "typescript": true,
     "registry": "https://shadcn-svelte.com/registry"

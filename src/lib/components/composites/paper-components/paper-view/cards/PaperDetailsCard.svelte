@@ -2,21 +2,21 @@
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
     import { Paper } from "$api/paper";
-    import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    import PaperDetailsCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Save from "@lucide/svelte/icons/save";
     import Undo2 from "@lucide/svelte/icons/undo-2";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { backendService } from "$lib/grpc-api";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { backendService } from "#lib/grpc-api.js";
     import { toast } from "svelte-sonner";
-    import type { PaperCreationTarget, StringifiedPaper } from "$lib/model/general";
-    import { stringifyPaper } from "$lib/utils/model-helper";
+    import type { PaperCreationTarget, StringifiedPaper } from "#lib/model/general.js";
+    import { stringifyPaper } from "#lib/utils/model-helper.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
+    import { isStringEqual, stringToAuthors } from "#lib/utils/common-helper.js";
     import { beforeNavigate } from "$app/navigation";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+    import { buildFieldMask } from "#lib/utils/fieldmask-helper.js";
     import { goto } from "$app/navigation";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
     import { resolve } from "$app/paths";
 
     interface Props {
@@ -157,7 +157,7 @@
         });
 
         return adding.then((projectPaper) =>
-            goto(resolve(`/project/${target.projectId}/paper/${projectPaper.localId}`)),
+            goto(resolve(`project/${target.projectId}/paper/${projectPaper.localId}`)),
         );
     }
 

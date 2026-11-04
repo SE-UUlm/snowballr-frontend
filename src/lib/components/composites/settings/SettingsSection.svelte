@@ -26,10 +26,10 @@
 
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import { Separator } from "$lib/components/primitives/separator";
+    import { Separator } from "#lib/components/primitives/separator/index.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { tv, type VariantProps } from "tailwind-variants";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import Lock from "@lucide/svelte/icons/lock";
 
     const {

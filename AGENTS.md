@@ -59,7 +59,7 @@ and point to the canonical page.
 ├── .github/workflows/              # build, code_quality_checks, docker, e2e_tests, git_conventions, wiki
 ├── compose.yaml                    # standalone frontend
 ├── Dockerfile                      # production image
-├── svelte.config.js, vite.config.ts, vitest-setup.ts, playwright.config.ts
+├── vite.config.ts, vitest-setup.ts, playwright.config.ts
 ├── tsconfig.json, eslint.config.js, tailwind.config.js
 ├── components.json                 # shadcn-svelte config
 ├── sonar-project.properties
