@@ -17,6 +17,7 @@ Either tick or cross out the items that do not apply (using \~\~example text\~\~
   - [ ] unit tests
   - [ ] integration tests
   - [ ] end-to-end tests
+  - [ ] visual regression tests (changed baselines are intended and reviewed)
 
 ### Reviewer
 
