@@ -27,6 +27,8 @@ export default defineConfig({
         env: {
             PUBLIC_API_BASE_URL: "http://localhost:3001",
             PUBLIC_CREDENTIAL_POLICY: "include",
+            // Overrides a local `.env`, so dev-only UI (e.g. the breakpoint badge) never shows up in tests.
+            PUBLIC_IS_DEV_MODE: "false",
         },
         reuseExistingServer: !process.env.CI,
     },
