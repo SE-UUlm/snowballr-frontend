@@ -32,6 +32,7 @@ Usage:
 <Select.Root type="single" bind:value={selectedSortOption}>
     <Select.Trigger
         class="bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap"
+        aria-label="SortOptions-Select"
     >
         {`Sort by: ${ALLOWED_SORT_OPTIONS[selectedSortOption].criterion}`}
         {#if ALLOWED_SORT_OPTIONS[selectedSortOption].direction === SortDirection.ASC}
