@@ -86,7 +86,7 @@ and point to the canonical page.
 | shadcn-svelte primitives              | src/lib/components/primitives/                                                | Configured via `components.json`.                                                                  |
 | E2E shared fixture                    | tests/e2e/utils/fixtures/shared-fixture.ts                                    | One mock backend per worker.                                                                       |
 | E2E isolated fixture                  | tests/e2e/utils/fixtures/isolated-fixture.ts                                  | One mock backend per test.                                                                         |
-| Visual regression tests               | wiki/Testing.md#visual-regression-tests                                       | Browser runs in the Playwright Docker image; baselines via update script.                          |
+| Visual regression tests               | wiki/Testing.md#visual-regression-tests                                       | Browser runs in the Playwright Docker image; fixed data; baselines via update script.              |
 | Example POM                           | tests/e2e/homepage/create-project-dialog-model.ts                             | Reference for `*-dialog-model.ts` style.                                                           |
 | Test data helpers                     | tests/example-data.ts, tests/model-builder.ts                                 | Prefer the model builder; example data may change.                                                 |
 | Docker image                          | Dockerfile                                                                    | Production image (published to ghcr.io).                                                           |
@@ -170,8 +170,8 @@ and point to the canonical page.
   - Integration test files mirror the component path under `tests/integration/`.
   - E2E: use `shared-fixture.ts` or `isolated-fixture.ts` (not `@playwright/test`'s `test` directly), use
     POMs (`*-page-model.ts`, `*-dialog-model.ts`, ...), simulate every user click rather than batching.
-  - Visual: use `tests/visual/utils/visual-fixture.ts` (not the model builder); write baselines only via
-    `npm run test:visual:update`, which renders in the same Docker image as CI.
+  - Visual: use `tests/visual/utils/visual-fixture.ts` and its fixed `visualData` (not the model builder); write
+    baselines only via `npm run test:visual:update`, which renders in the same Docker image as CI.
 
 Example integration test naming:
 
