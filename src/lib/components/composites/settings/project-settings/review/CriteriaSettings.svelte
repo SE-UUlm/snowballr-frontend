@@ -30,9 +30,10 @@
     interface Props {
         projectId: string;
         loadingProject: Promise<Project>;
+        settingsLocked?: boolean;
     }
 
-    const { projectId, loadingProject }: Props = $props();
+    const { projectId, loadingProject, settingsLocked = false }: Props = $props();
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -69,7 +70,8 @@
     const changes = $derived(collectChanges(projectId, drafts));
     const numberOfChanges = $derived(countChanges(changes));
     const changedDrafts = $derived(drafts.filter((draft) => getDraftStatus(draft) !== "unchanged"));
-    const disabled = $derived(isProjectArchived || loadingCriteria || saving.value);
+    const locked = $derived(settingsLocked || isProjectArchived);
+    const disabled = $derived(locked || loadingCriteria || saving.value);
 
     onMount(async () => {
         await Promise.all([
@@ -241,15 +243,19 @@ in the review mode.
 Changes are collected first and stored together. Once the project is past stage 0, the admin has to
 confirm the changes, since they can affect the outcome of the literature review.
 
+The `settingsLocked` prop can be used to disable this setting.
+
 Usage:
 ```svelte
-    <CriteriaSettings {loadingProject} {projectId} />
+    <CriteriaSettings {loadingProject} {projectId} settingsLocked={false} />
 ```
 -->
 <SettingsSection
     loading={loadingCriteria || saving.value}
-    locked={isProjectArchived}
-    lockedDescription="The criteria of an archived project can't be changed."
+    {locked}
+    lockedDescription={isProjectArchived
+        ? "The criteria of an archived project can't be changed."
+        : "To ensure consistency, the review criteria can't be changed while the SLR settings are locked."}
     sectionTitle="Review Criteria"
 >
     <p class="max-w-2xl">
