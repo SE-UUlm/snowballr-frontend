@@ -122,6 +122,7 @@
         drafts = drafts
             .filter((draft) => draft.stored)
             .map((draft) => toDraft(draft.stored as Criterion));
+        editingKey = undefined;
         saveError = undefined;
     }
 
