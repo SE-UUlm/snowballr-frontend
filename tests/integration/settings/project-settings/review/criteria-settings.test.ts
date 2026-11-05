@@ -19,11 +19,10 @@ const storedCriterion = createCriterion({
     category: CriterionCategory.EXCLUSION,
 });
 
-function renderSettings({ currentStage = 0n, isArchived = false, settingsLocked = false } = {}) {
-    const project = createProject({ currentStage });
+function renderSettings({ isArchived = false, settingsLocked = false } = {}) {
     render(CriteriaSettings, {
         target: document.body,
-        props: { projectId: project.id, loadingProject: Promise.resolve(project), settingsLocked },
+        props: { projectId: createProject().id, settingsLocked },
         context: mockIsProjectArchivedContext(isArchived),
     });
 }
@@ -54,7 +53,7 @@ describe("CriteriaSettings", () => {
         expect(screen.getByRole("button", { name: "Save criteria" })).toBeDisabled();
     });
 
-    test("When a criterion is added in stage 0 and saved, then it is created without confirmation", async () => {
+    test("When a criterion is added and saved, then it is created", async () => {
         mockApiCall("getAllCriteriaForProject", { criteria: [] });
         const create = mockApiCall(
             "createCriterion",
@@ -74,24 +73,6 @@ describe("CriteriaSettings", () => {
 
         await waitFor(() => expect(create).toHaveBeenCalledOnce());
         expect(create.mock.calls[0][0]).toMatchObject({ tag: "I1", name: "Peer reviewed" });
-        expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
-    });
-
-    test("When the project is past stage 0, then saving asks for confirmation first", async () => {
-        mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
-        const remove = mockApiCall("deleteCriterion", {});
-        renderSettings({ currentStage: 1n });
-        await waitForComponentLoading();
-
-        await userEvent.click(screen.getByRole("button", { name: "Remove criterion E1" }));
-        await userEvent.click(screen.getByRole("button", { name: "Save criteria" }));
-
-        const dialog = await screen.findByRole("alertdialog");
-        expect(within(dialog).getByText("Change Criteria During Stage 1?")).toBeInTheDocument();
-        expect(remove).not.toHaveBeenCalled();
-
-        await userEvent.click(within(dialog).getByRole("button", { name: "Save criteria" }));
-        await waitFor(() => expect(remove).toHaveBeenCalledWith({ id: "7" }));
     });
 
     test("When saving fails, then the change stays pending and an error is shown", async () => {

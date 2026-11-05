@@ -1,8 +1,6 @@
 <script lang="ts">
     import { CriterionCategory, type Criterion } from "$api/criterion";
-    import type { Project } from "$api/project";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { Button } from "$lib/components/primitives/button";
@@ -29,11 +27,10 @@
 
     interface Props {
         projectId: string;
-        loadingProject: Promise<Project>;
         settingsLocked?: boolean;
     }
 
-    const { projectId, loadingProject, settingsLocked = false }: Props = $props();
+    const { projectId, settingsLocked = false }: Props = $props();
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
@@ -63,39 +60,26 @@
     let loadingCriteria = $state(true);
     let loadError: ActionError = $state(undefined);
     let saveError: ActionError = $state(undefined);
-    let currentStage = $state(0n);
-    let confirmOpen = $state(false);
     const saving = $state({ value: false });
 
     const changes = $derived(collectChanges(projectId, drafts));
     const numberOfChanges = $derived(countChanges(changes));
-    const changedDrafts = $derived(drafts.filter((draft) => getDraftStatus(draft) !== "unchanged"));
     const locked = $derived(settingsLocked || isProjectArchived);
     const disabled = $derived(locked || loadingCriteria || saving.value);
 
     onMount(async () => {
-        await Promise.all([
-            backendService
-                .getAllCriteriaForProject({ id: projectId })
-                .response.then(({ criteria }) => {
-                    drafts = criteria.map(toDraft);
-                })
-                .catch((error) => {
-                    loadError = createActionError(
-                        "Failed to Load the Criteria",
-                        { action: "loading the review criteria" },
-                        error,
-                    );
-                }),
-            loadingProject
-                .then((project) => {
-                    currentStage = project.currentStage;
-                })
-                .catch(() => {
-                    // Without a stage, ask for confirmation to be on the safe side.
-                    currentStage = 1n;
-                }),
-        ]);
+        await backendService
+            .getAllCriteriaForProject({ id: projectId })
+            .response.then(({ criteria }) => {
+                drafts = criteria.map(toDraft);
+            })
+            .catch((error) => {
+                loadError = createActionError(
+                    "Failed to Load the Criteria",
+                    { action: "loading the review criteria" },
+                    error,
+                );
+            });
         loadingCriteria = false;
     });
 
@@ -143,11 +127,7 @@
 
     function requestSave() {
         saveError = undefined;
-        if (currentStage > 0n) {
-            confirmOpen = true;
-        } else {
-            void loadingWrapper(saving, saveChanges, undefined);
-        }
+        void loadingWrapper(saving, saveChanges, undefined);
     }
 
     /**
@@ -212,15 +192,12 @@
             });
         } else {
             toast.success("Successfully saved review criteria.");
-            confirmOpen = false;
         }
     }
 
     function withFullStop(message: string): string {
         return /[.!?]$/.test(message.trim()) ? message.trim() : `${message.trim()}.`;
     }
-
-    const CHANGE_VERBS = { added: "Add", edited: "Change", removed: "Remove", unchanged: "" };
 
     function summarizeChanges(): string {
         const parts = [
@@ -240,14 +217,13 @@ This component renders a section within the Review project settings. It allows p
 add, edit and remove the hard exclusion, soft exclusion and inclusion criteria reviewers choose from
 in the review mode.
 
-Changes are collected first and stored together. Once the project is past stage 0, the admin has to
-confirm the changes, since they can affect the outcome of the literature review.
+Changes are collected first and stored together.
 
 The `settingsLocked` prop can be used to disable this setting.
 
 Usage:
 ```svelte
-    <CriteriaSettings {loadingProject} {projectId} settingsLocked={false} />
+    <CriteriaSettings {projectId} settingsLocked={false} />
 ```
 -->
 <SettingsSection
@@ -337,7 +313,7 @@ Usage:
                         class="w-40 max-w-full"
                         disabled={disabled || editingKey !== undefined || numberOfChanges === 0}
                         label="Save criteria"
-                        loading={saving.value && !confirmOpen}
+                        loading={saving.value}
                         loadingLabel="Saving"
                         onclick={requestSave}
                     />
@@ -346,36 +322,3 @@ Usage:
         </div>
     {/if}
 </SettingsSection>
-
-<AlertDialog
-    actionButtonLoadingText="Saving"
-    actionButtonText="Save criteria"
-    actionProps={{
-        class: "w-full sm:w-40",
-        onclick: () => loadingWrapper(saving, saveChanges, undefined),
-    }}
-    cancelButtonText="Keep editing"
-    error={confirmOpen ? saveError : undefined}
-    loading={saving.value}
-    title={`Change Criteria During Stage ${currentStage}?`}
-    bind:open={confirmOpen}
->
-    {#snippet description()}
-        <div class="flex flex-col gap-3">
-            <p>
-                Papers in earlier stages were reviewed against the current criteria. Changing them
-                now means not every paper is judged by the same rules, which can affect the outcome
-                of your literature review.
-            </p>
-            <ul class="text-foreground flex flex-col gap-1" aria-label="Changes to save">
-                {#each changedDrafts as draft (draft.key)}
-                    <li>
-                        {CHANGE_VERBS[getDraftStatus(draft)]}
-                        <span class="font-bold">{draft.tag.trim()}</span>
-                        {draft.name.trim()}
-                    </li>
-                {/each}
-            </ul>
-        </div>
-    {/snippet}
-</AlertDialog>

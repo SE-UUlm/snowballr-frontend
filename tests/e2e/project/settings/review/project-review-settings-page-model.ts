@@ -11,7 +11,6 @@ export class ProjectReviewSettingsPageModel {
     readonly criterionRows: Locator;
     readonly saveCriteriaButton: Locator;
     readonly discardCriteriaChangesButton: Locator;
-    readonly confirmDialog: Locator;
 
     readonly projectName: string;
 
@@ -39,7 +38,6 @@ export class ProjectReviewSettingsPageModel {
         this.discardCriteriaChangesButton = this.criteriaSection.getByRole("button", {
             name: "Discard changes",
         });
-        this.confirmDialog = page.getByRole("alertdialog");
 
         this.projectId = "";
     }

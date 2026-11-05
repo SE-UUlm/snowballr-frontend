@@ -2,7 +2,6 @@ import { test } from "./project-review-settings-page-fixture";
 import { expect } from "@playwright/test";
 import { reloadWait } from "$tests/e2e/utils/helper/helper";
 import { CriterionCategory } from "$api/criterion";
-import { Project } from "$api/project";
 
 test.describe("Project Review Settings Navigation", () => {
     test("When navigating to the project review settings, then the page is displayed", async ({
@@ -50,7 +49,7 @@ test.describe("Keyword Settings Tests", () => {
 });
 
 test.describe("Review Criteria Settings Tests", () => {
-    test("When the admin adds a criterion in stage 0 and saves, then it is stored without asking for confirmation", async ({
+    test("When the admin adds a criterion and saves, then it is stored", async ({
         page,
         projectReviewSettingsPage,
     }) => {
@@ -64,7 +63,6 @@ test.describe("Review Criteria Settings Tests", () => {
         await projectReviewSettingsPage.saveCriteriaButton.click();
 
         await expect(page.getByText("Successfully saved review criteria.")).toBeVisible();
-        await expect(projectReviewSettingsPage.confirmDialog).toBeHidden();
 
         await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
         await expect(projectReviewSettingsPage.getCriterionRow("I1")).toContainText(
@@ -123,41 +121,6 @@ test.describe("Review Criteria Settings Tests", () => {
         await expect(projectReviewSettingsPage.saveCriteriaButton).toBeHidden();
     });
 
-    test("When the project is past stage 0, then saving asks for confirmation before storing the changes", async ({
-        page,
-        apiClient,
-        projectReviewSettingsPage,
-    }) => {
-        await apiClient.updateProject({
-            project: Project.create({ id: projectReviewSettingsPage.projectId, currentStage: 1n }),
-            mask: { paths: ["project.current_stage"] },
-        }).response;
-        await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
-
-        await projectReviewSettingsPage.addCriterion(
-            "Soft Exclusion",
-            "Too short",
-            "The paper has fewer than four pages.",
-        );
-        await projectReviewSettingsPage.saveCriteriaButton.click();
-
-        const dialog = projectReviewSettingsPage.confirmDialog;
-        await expect(dialog).toBeVisible();
-        await expect(dialog).toContainText("Change Criteria During Stage 1?");
-        await expect(dialog).toContainText("Add E1 Too short");
-
-        await dialog.getByRole("button", { name: "Keep editing" }).click();
-        await expect(dialog).toBeHidden();
-        await expect(projectReviewSettingsPage.getCriterionRow("E1")).toContainText("New");
-
-        await projectReviewSettingsPage.saveCriteriaButton.click();
-        await dialog.getByRole("button", { name: "Save criteria" }).click();
-        await expect(page.getByText("Successfully saved review criteria.")).toBeVisible();
-        await expect(dialog).toBeHidden();
-
-        await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
-        await expect(projectReviewSettingsPage.getCriterionRow("E1")).toContainText("Too short");
-    });
     test("When saving fails, then the error is shown next to the save button", async ({
         page,
         projectReviewSettingsPage,

@@ -49,7 +49,7 @@
         {/if}
         <KeywordSettings {projectId} />
         {#if isCurrentUserAdmin.value}
-            <CriteriaSettings {loadingProject} {projectId} settingsLocked={settingsLocked.value} />
+            <CriteriaSettings {projectId} settingsLocked={settingsLocked.value} />
         {/if}
     </div>
 </ProjectSettingsLayout>
