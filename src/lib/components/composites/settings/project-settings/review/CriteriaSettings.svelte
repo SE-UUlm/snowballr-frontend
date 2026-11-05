@@ -156,7 +156,8 @@
                         .catch((error: RpcError) => {
                             failures++;
                             if (
-                                isGrpcError(error.code, GrpcStatusCode.FAILED_PRECONDITION) &&
+                                (isGrpcError(error.code, GrpcStatusCode.FAILED_PRECONDITION) ||
+                                    isGrpcError(error.code, GrpcStatusCode.INVALID_ARGUMENT)) &&
                                 error.message
                             ) {
                                 reasons.push(`${draft.tag.trim()}: ${withFullStop(error.message)}`);
