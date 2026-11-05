@@ -131,7 +131,7 @@ Usage:
                         aria-invalid={showErrors && errors.tag !== undefined}
                         autocomplete="off"
                         data-field="tag"
-                        maxlength={20}
+                        maxlength={10}
                         onkeydown={cancelOnEscape}
                         bind:value={fields.tag}
                     />
@@ -150,6 +150,7 @@ Usage:
                         aria-invalid={showErrors && errors.name !== undefined}
                         autocomplete="off"
                         data-field="name"
+                        maxlength={50}
                         onkeydown={cancelOnEscape}
                         placeholder="e.g. Not peer reviewed"
                         bind:value={fields.name}
@@ -170,6 +171,7 @@ Usage:
                         ? `${fieldId}-description-error`
                         : undefined}
                     aria-invalid={showErrors && errors.description !== undefined}
+                    maxlength={200}
                     onkeydown={cancelOnEscape}
                     placeholder="When does this criterion apply to a paper?"
                     rows="2"
@@ -196,7 +198,7 @@ Usage:
             >
                 <div class="flex min-h-9 flex-row flex-wrap items-center gap-x-2">
                     <span class="strike shrink-0 font-bold">{draft.tag}</span>
-                    <span class="strike min-w-0 break-words sm:truncate" title={draft.name}>
+                    <span class="strike min-w-0 wrap-break-word sm:truncate" title={draft.name}>
                         {draft.name}
                     </span>
                     {#if STATUS_LABELS[status]}
@@ -213,7 +215,7 @@ Usage:
                     {/if}
                 </div>
                 {#if draft.description}
-                    <p class="strike text-muted-foreground max-w-prose text-sm break-words">
+                    <p class="strike text-muted-foreground max-w-prose text-sm wrap-break-word">
                         {draft.description}
                     </p>
                 {/if}
