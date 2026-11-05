@@ -75,6 +75,19 @@ describe("CriteriaSettings", () => {
         expect(create.mock.calls[0][0]).toMatchObject({ tag: "I1", name: "Peer reviewed" });
     });
 
+    test("When the changes are discarded while a new criterion is being edited, then criteria can be added and edited again", async () => {
+        mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
+        renderSettings();
+        await waitForComponentLoading();
+
+        await userEvent.click(screen.getByRole("button", { name: "Add criterion to Inclusion" }));
+        await userEvent.click(screen.getByRole("button", { name: "Discard changes" }));
+
+        expect(screen.queryByRole("form")).not.toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Add criterion to Inclusion" })).toBeEnabled();
+        expect(screen.getByRole("button", { name: "Edit criterion E1" })).toBeEnabled();
+    });
+
     test("When saving fails, then the change stays pending and an error is shown", async () => {
         mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
         mockFailedApiCall("deleteCriterion");
