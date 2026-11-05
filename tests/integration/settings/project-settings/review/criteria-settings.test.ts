@@ -19,11 +19,11 @@ const storedCriterion = createCriterion({
     category: CriterionCategory.EXCLUSION,
 });
 
-function renderSettings({ currentStage = 0n, isArchived = false } = {}) {
+function renderSettings({ currentStage = 0n, isArchived = false, settingsLocked = false } = {}) {
     const project = createProject({ currentStage });
     render(CriteriaSettings, {
         target: document.body,
-        props: { projectId: project.id, loadingProject: Promise.resolve(project) },
+        props: { projectId: project.id, loadingProject: Promise.resolve(project), settingsLocked },
         context: mockIsProjectArchivedContext(isArchived),
     });
 }
@@ -147,5 +147,16 @@ describe("CriteriaSettings", () => {
 
         expect(screen.getByRole("button", { name: "Add criterion to Inclusion" })).toBeDisabled();
         expect(screen.getByRole("button", { name: "Edit criterion E1" })).toBeDisabled();
+    });
+
+    test("When the settings are locked, then no criterion can be added, edited or removed", async () => {
+        mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
+        renderSettings({ settingsLocked: true });
+        await waitForComponentLoading();
+
+        expect(screen.getByRole("button", { name: "Add criterion to Inclusion" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "Edit criterion E1" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "Remove criterion E1" })).toBeDisabled();
+        expect(screen.getByTitle(/review criteria can't be changed/)).toBeInTheDocument();
     });
 });
