@@ -3,6 +3,7 @@ import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
 import { Project, Project_Settings } from "snowballr-api/project";
 import { toast } from "svelte-sonner";
+import { refreshProject } from "$lib/model/project-cache";
 
 export async function updateFetchers(
     projectId: string,
@@ -24,7 +25,10 @@ export async function updateFetchers(
             // map for the fetchers is set.
             mask: { paths: ["project.settings.fetchers"] },
         })
-        .response.then((it) => {
+        .response.then(async (it) => {
+            // The project is loaded once by the project layout and is not reloaded when navigating
+            // between settings tabs, so it has to be refreshed for a remounted section to read it.
+            await refreshProject(it);
             toast.success("Successfully updated project settings.");
             onSuccess(it);
         })
