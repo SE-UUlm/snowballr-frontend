@@ -2,7 +2,7 @@ import { describe, expect, test, type Mock } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import CriteriaSettings from "$lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
-import { CriterionCategory } from "$api/criterion";
+import { CriterionCategory } from "snowballr-api/criterion";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { backendService } from "$lib/grpc-api";
 import { RpcError } from "@protobuf-ts/runtime-rpc";

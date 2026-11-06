@@ -3,7 +3,7 @@ import {
     type Criterion,
     type Criterion_Create,
     type Criterion_Update,
-} from "$api/criterion";
+} from "snowballr-api/criterion";
 
 /** The editable fields of a criterion. */
 export type CriterionFields = Pick<Criterion, "tag" | "name" | "description">;
