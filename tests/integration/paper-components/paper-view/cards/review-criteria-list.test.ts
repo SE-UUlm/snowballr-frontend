@@ -2,7 +2,7 @@ import ReviewCriteriaList from "$lib/components/composites/paper-components/pape
 import { render, screen } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test } from "vitest";
 import { createReviewedCriterion, loading } from "$tests/model-builder";
-import { CriterionCategory } from "$api/criterion";
+import { CriterionCategory } from "snowballr-api/criterion";
 import { mockSelectedCriteriaContext, waitForComponentLoading } from "../../../test-helper";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 

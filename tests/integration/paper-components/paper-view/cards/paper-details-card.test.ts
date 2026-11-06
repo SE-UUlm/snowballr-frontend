@@ -5,7 +5,7 @@ import { loading, createPaper, createProjectPaper } from "../../../../model-buil
 import { mockIsProjectArchivedContext, waitForComponentLoading } from "../../../test-helper";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { type ISnowballRClient } from "$api/main.client";
+import { type ISnowballRClient } from "snowballr-api/main.client";
 
 /** The project stage a created paper should land in, as the route would supply it. */
 const CREATION_TARGET = { projectId: "1", stage: 3n };

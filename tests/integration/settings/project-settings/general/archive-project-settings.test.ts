@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "$tests/setupTest";
 import { createProject } from "$tests/model-builder";
 import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
-import { ProjectStatus } from "$api/project";
+import { ProjectStatus } from "snowballr-api/project";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
 
 describe("ArchiveProjectSettings", () => {

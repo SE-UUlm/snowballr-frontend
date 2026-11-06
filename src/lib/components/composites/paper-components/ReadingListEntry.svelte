@@ -3,7 +3,7 @@
     import { handleSingleOrDoubleClick } from "$lib/utils/common-helper";
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
-    import type { Paper } from "$api/paper";
+    import type { Paper } from "snowballr-api/paper";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
     import Link from "$lib/components/composites/link/Link.svelte";

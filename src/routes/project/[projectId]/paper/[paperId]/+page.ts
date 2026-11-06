@@ -1,7 +1,7 @@
 import { backendService } from "$lib/grpc-api";
-import type { Criterion } from "$api/criterion";
-import { Review } from "$api/review";
-import type { User } from "$api/user";
+import type { Criterion } from "snowballr-api/criterion";
+import { Review } from "snowballr-api/review";
+import type { User } from "snowballr-api/user";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { PageLoad } from "./$types";
 

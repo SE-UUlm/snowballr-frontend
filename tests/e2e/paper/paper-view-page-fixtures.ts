@@ -6,8 +6,8 @@ import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
 import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
 import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
 import { ReadingListPageModel } from "$tests/e2e/readinglist/reading-list-page-model";
-import type { Project } from "$api/project";
-import type { Paper } from "$api/paper";
+import type { Project } from "snowballr-api/project";
+import type { Paper } from "snowballr-api/paper";
 
 type PaperViewPageFixtures = {
     paperViewPage: PaperViewPageModel;

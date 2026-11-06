@@ -62,15 +62,7 @@ export default defineConfig(
         },
     },
     {
-        ignores: [
-            "build/",
-            ".svelte-kit/",
-            "dist/",
-            "coverage/",
-            "e2e-report/",
-            "node_modules/",
-            "src/lib/model/api/",
-        ],
+        ignores: ["build/", ".svelte-kit/", "dist/", "coverage/", "e2e-report/", "node_modules/"],
     },
     {
         rules: {

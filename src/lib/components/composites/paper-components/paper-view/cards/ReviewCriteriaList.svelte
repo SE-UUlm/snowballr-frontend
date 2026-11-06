@@ -1,7 +1,7 @@
 <script lang="ts">
     import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
-    import { CriterionCategory } from "$api/criterion";
-    import { type User } from "$api/user";
+    import { CriterionCategory } from "snowballr-api/criterion";
+    import { type User } from "snowballr-api/user";
     import type { CriterionWithReviews } from "$lib/model/general";
 
     export interface ReviewCriteriaListProps {

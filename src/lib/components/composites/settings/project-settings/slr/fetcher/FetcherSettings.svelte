@@ -1,10 +1,10 @@
 <script lang="ts">
     import { backendService } from "$lib/grpc-api";
-    import { Project, Project_Settings } from "$api/project";
+    import { Project, Project_Settings } from "snowballr-api/project";
     import { onMount } from "svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import type { FetcherInformation } from "$api/fetcher";
+    import type { FetcherInformation } from "snowballr-api/fetcher";
     import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
     import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
     import { updateFetchers } from "./update-fetchers";

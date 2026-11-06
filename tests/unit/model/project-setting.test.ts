@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { Project, SnowballingType } from "$api/project";
+import { Project, SnowballingType } from "snowballr-api/project";
 import {
     buildProjectSettingUpdate,
     commitProjectSetting,

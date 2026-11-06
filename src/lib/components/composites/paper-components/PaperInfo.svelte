@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Paper } from "$api/paper";
+    import type { Paper } from "snowballr-api/paper";
     import { getNames } from "$lib/utils/common-helper";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
     import type { WithElementRef } from "bits-ui";

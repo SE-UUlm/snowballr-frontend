@@ -4,9 +4,9 @@ import DefaultFetcherSettings from "$lib/components/composites/settings/user-set
 import { createUserSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import userEvent from "@testing-library/user-event";
-import { Project_Settings } from "$api/project";
-import { UserSettings } from "$api/user_settings";
-import type { FetcherInformation } from "$api/fetcher";
+import { Project_Settings } from "snowballr-api/project";
+import { UserSettings } from "snowballr-api/user_settings";
+import type { FetcherInformation } from "snowballr-api/fetcher";
 
 describe("DefaultFetcherSettings", () => {
     beforeEach(() => vi.clearAllMocks());

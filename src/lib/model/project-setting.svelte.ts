@@ -1,4 +1,4 @@
-import { Project } from "$api/project";
+import { Project } from "snowballr-api/project";
 import type { ActionError } from "$lib/model/action-error";
 import {
     commitProjectSetting,

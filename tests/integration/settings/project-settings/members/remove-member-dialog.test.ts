@@ -5,7 +5,7 @@ import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { Members } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
 import { getName } from "$lib/utils/common-helper";
-import { MemberRole, Project_Member } from "$api/project";
+import { MemberRole, Project_Member } from "snowballr-api/project";
 
 describe("RemoveMemberDialog", () => {
     const adminMember = Members.demoMember1;

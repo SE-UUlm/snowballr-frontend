@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation";
-import type { Project, Project_Paper } from "$api/project";
+import type { Project, Project_Paper } from "snowballr-api/project";
 import { resolve } from "$app/paths";
 
 /**

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { backendService } from "$lib/grpc-api";
-    import { UserSettings } from "$api/user_settings";
+    import { UserSettings } from "snowballr-api/user_settings";
     import { onMount } from "svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import type { FetcherInformation } from "$api/fetcher";
+    import type { FetcherInformation } from "snowballr-api/fetcher";
     import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
     import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
     import { updateDefaultFetchers } from "./update-default-fetchers";

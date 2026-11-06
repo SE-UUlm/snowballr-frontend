@@ -5,7 +5,7 @@
     import Trash from "@lucide/svelte/icons/trash";
     import { cn } from "$lib/utils/shadcn-helper";
     import { buttonVariants } from "$lib/components/primitives/button";
-    import type { FetcherInformation } from "$api/fetcher";
+    import type { FetcherInformation } from "snowballr-api/fetcher";
     import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {
