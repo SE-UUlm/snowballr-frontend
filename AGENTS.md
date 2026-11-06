@@ -50,6 +50,7 @@ and point to the canonical page.
 │   ├── unit/                       # Vitest unit tests
 │   ├── integration/                # Vitest + @testing-library/svelte (mirrors src/lib/components)
 │   ├── e2e/                        # Playwright (uses utils/fixtures and Page Object Models)
+│   ├── visual/                     # Playwright visual regression tests + PNG baselines
 │   ├── example-data.ts             # static example fixtures
 │   ├── model-builder.ts            # preferred way to build test data
 │   └── setupTest.ts
@@ -58,7 +59,7 @@ and point to the canonical page.
 ├── .github/workflows/              # build, code_quality_checks, docker, e2e_tests, git_conventions, wiki
 ├── compose.yaml                    # standalone frontend
 ├── Dockerfile                      # production image
-├── svelte.config.js, vite.config.ts, vitest-setup.ts, playwright.config.ts
+├── svelte.config.js, vite.config.ts, vitest-setup.ts, playwright.config.ts, playwright.visual.config.ts
 ├── tsconfig.json, eslint.config.js, tailwind.config.js
 ├── components.json                 # shadcn-svelte config
 ├── markdownlint.json
@@ -85,6 +86,7 @@ and point to the canonical page.
 | shadcn-svelte primitives              | src/lib/components/primitives/                                                | Configured via `components.json`.                                                                  |
 | E2E shared fixture                    | tests/e2e/utils/fixtures/shared-fixture.ts                                    | One mock backend per worker.                                                                       |
 | E2E isolated fixture                  | tests/e2e/utils/fixtures/isolated-fixture.ts                                  | One mock backend per test.                                                                         |
+| Visual regression tests               | wiki/Testing.md#visual-regression-tests                                       | Browser runs in the Playwright Docker image; baselines via update script.                          |
 | Example POM                           | tests/e2e/homepage/create-project-dialog-model.ts                             | Reference for `*-dialog-model.ts` style.                                                           |
 | Test data helpers                     | tests/example-data.ts, tests/model-builder.ts                                 | Prefer the model builder; example data may change.                                                 |
 | Docker image                          | Dockerfile                                                                    | Production image (published to ghcr.io).                                                           |
@@ -148,6 +150,8 @@ and point to the canonical page.
 - E2E: `npm run test:e2e`
 - E2E (fast — only changed vs `develop`): `npm run test:e2e:fast`
 - E2E report: `npm run test:e2e:show-report`
+- Visual regression: `npm run test:visual` (update baselines: `npm run test:visual:update`, report:
+  `npm run test:visual:show-report`)
 - Coverage report: `npm run show-coverage` (or `npm run test:and-open-coverage`)
 - Vitest only (no e2e): `npm run test:no-e2e`
 
@@ -166,6 +170,8 @@ and point to the canonical page.
   - Integration test files mirror the component path under `tests/integration/`.
   - E2E: use `shared-fixture.ts` or `isolated-fixture.ts` (not `@playwright/test`'s `test` directly), use
     POMs (`*-page-model.ts`, `*-dialog-model.ts`, ...), simulate every user click rather than batching.
+  - Visual: use `tests/visual/utils/visual-fixture.ts` (not the model builder); write baselines only via
+    `npm run test:visual:update`, which renders in the same Docker image as CI.
 
 Example integration test naming:
 
