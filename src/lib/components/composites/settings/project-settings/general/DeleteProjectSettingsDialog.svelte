@@ -5,7 +5,7 @@
     import Input from "$lib/components/primitives/input/input.svelte";
     import { backendService } from "$lib/grpc-api";
     import { createActionError } from "$lib/model/action-error";
-    import type { Project } from "$api/project";
+    import type { Project } from "snowballr-api/project";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";

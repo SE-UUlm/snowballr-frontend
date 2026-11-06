@@ -1,4 +1,4 @@
-import type { FetcherOptions } from "$api/fetcher";
+import type { FetcherOptions } from "snowballr-api/fetcher";
 import type { ActionError } from "$lib/model/action-error";
 
 export type Fetchers = { [key: string]: FetcherOptions };

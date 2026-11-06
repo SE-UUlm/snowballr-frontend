@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "$api/user";
+import { User, UserRole, UserStatus } from "snowballr-api/user";
 import {
     MemberRole,
     PaperDecision,
@@ -6,11 +6,11 @@ import {
     Project_Member,
     Project_Paper,
     ProjectStatus,
-} from "$api/project";
-import { Review, ReviewDecision } from "$api/review";
-import { Criterion, CriterionCategory } from "$api/criterion";
+} from "snowballr-api/project";
+import { Review, ReviewDecision } from "snowballr-api/review";
+import { Criterion, CriterionCategory } from "snowballr-api/criterion";
 import { createProjectSettings } from "./model-builder";
-import type { Author, Paper } from "$api/paper";
+import type { Author, Paper } from "snowballr-api/paper";
 
 const johnDoeUser: User = {
     id: "0",

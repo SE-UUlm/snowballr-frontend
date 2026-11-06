@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
-import { Paper } from "$api/paper";
-import { Project_Paper } from "$api/project";
+import { Paper } from "snowballr-api/paper";
+import { Project_Paper } from "snowballr-api/project";
 import {
     addPaperCandidates,
     mergePaperCandidates,
@@ -12,7 +12,7 @@ import {
 } from "$lib/model/paper-candidate";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { backendService } from "$lib/grpc-api";
-import type { ISnowballRClient } from "$api/main.client";
+import type { ISnowballRClient } from "snowballr-api/main.client";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { toast } from "svelte-sonner";
 

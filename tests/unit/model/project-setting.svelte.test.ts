@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { Project } from "$api/project";
+import { Project } from "snowballr-api/project";
 import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
 import { projectSetting } from "$lib/model/project-setting.svelte";
 import { createProject, createProjectSettings } from "$tests/model-builder";

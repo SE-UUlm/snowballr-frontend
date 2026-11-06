@@ -1,9 +1,9 @@
 import { expect } from "@playwright/test";
 import { ProjectSetupSettingsPageModel } from "./project-setup-settings-page-model";
 import { test as base } from "../../utils/fixtures/shared-fixture";
-import { Nothing } from "$api/base";
-import { Project_Settings } from "$api/project";
-import { UserSettings } from "$api/user_settings";
+import { Nothing } from "snowballr-api/base";
+import { Project_Settings } from "snowballr-api/project";
+import { UserSettings } from "snowballr-api/user_settings";
 
 type ProjectSetupSettingsPageFixtures = {
     projectSetupSettingsPage: ProjectSetupSettingsPageModel;

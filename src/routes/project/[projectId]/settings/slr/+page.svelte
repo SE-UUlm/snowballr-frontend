@@ -4,7 +4,7 @@
     import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
     import SimilarityThresholdSetting from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
     import FetcherSettings from "$lib/components/composites/settings/project-settings/slr/fetcher/FetcherSettings.svelte";
-    import { ProjectStatus } from "$api/project.js";
+    import { ProjectStatus } from "snowballr-api/project";
     import { resource } from "$lib/resource.svelte";
     import { isCurrentUserProjectAdmin } from "../helper";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";

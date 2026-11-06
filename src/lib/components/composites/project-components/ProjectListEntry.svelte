@@ -7,10 +7,10 @@
         Project_Information,
         Project_Member_List,
         ProjectStatus,
-    } from "$api/project";
+    } from "snowballr-api/project";
     import { goto } from "$app/navigation";
     import { env } from "$env/dynamic/public";
-    import type { User } from "$api/user";
+    import type { User } from "snowballr-api/user";
     import { Badge } from "$lib/components/primitives/badge/index.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { getUserContext } from "$lib/custom-context/user-context";

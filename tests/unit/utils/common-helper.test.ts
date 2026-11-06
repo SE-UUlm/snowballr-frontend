@@ -18,7 +18,7 @@ import {
 } from "$lib/utils/common-helper";
 import { createProjectPaper } from "../../model-builder";
 import { ProjectPapers, Reviews } from "../../example-data";
-import { PaperDecision, type Project_Paper } from "$api/project";
+import { PaperDecision, type Project_Paper } from "snowballr-api/project";
 import type { Person, PersonWithEmail } from "$lib/model/general";
 
 describe("Extract name from a person", () => {

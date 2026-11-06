@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Paper } from "$api/paper";
+    import type { Paper } from "snowballr-api/paper";
     import Button from "$lib/components/primitives/button/button.svelte";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Trash from "@lucide/svelte/icons/trash";

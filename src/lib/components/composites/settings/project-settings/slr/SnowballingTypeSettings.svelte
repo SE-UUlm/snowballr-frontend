@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import { SnowballingType } from "$api/project";
+    import { SnowballingType } from "snowballr-api/project";
     import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
 
     /**
@@ -19,7 +19,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { Label } from "$lib/components/primitives/label";
     import * as RadioGroup from "$lib/components/primitives/radio-group/index";
-    import type { Project } from "$api/project";
+    import type { Project } from "snowballr-api/project";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";

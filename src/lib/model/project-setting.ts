@@ -1,5 +1,5 @@
-import { Project } from "$api/project";
-import type { FieldMask } from "$api/google/protobuf/field_mask";
+import { Project } from "snowballr-api/project";
+import type { FieldMask } from "snowballr-api/google/protobuf/field_mask";
 import type { PartialMessage } from "@protobuf-ts/runtime";
 import { backendService } from "$lib/grpc-api";
 import { buildFieldMask } from "$lib/utils/fieldmask-helper";

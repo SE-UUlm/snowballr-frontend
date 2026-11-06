@@ -18,7 +18,7 @@
     } from "$lib/model/paper-candidate";
     import type { DialogTriggerProps } from "bits-ui";
     import ToggleButton from "../button/ToggleButton.svelte";
-    import type { Project } from "$api/project";
+    import type { Project } from "snowballr-api/project";
     import { onMount } from "svelte";
     import { invalidate } from "$app/navigation";
     import ProjectPaperCandidate from "./ProjectPaperCandidate.svelte";

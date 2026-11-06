@@ -1,6 +1,6 @@
 <script lang="ts">
     import SquarePen from "@lucide/svelte/icons/square-pen";
-    import type { FetcherInformation } from "$api/fetcher";
+    import type { FetcherInformation } from "snowballr-api/fetcher";
     import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
     import type { Fetchers, SaveFetchers } from "./fetcher";
 

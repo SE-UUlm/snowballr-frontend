@@ -1,7 +1,7 @@
-import { Project_Paper } from "$api/project";
-import type { Criterion } from "$api/criterion";
-import type { Paper, Paper_ExternalId } from "$api/paper";
-import type { Review } from "$api/review";
+import { Project_Paper } from "snowballr-api/project";
+import type { Criterion } from "snowballr-api/criterion";
+import type { Paper, Paper_ExternalId } from "snowballr-api/paper";
+import type { Review } from "snowballr-api/review";
 
 /**
  * Contains general types that are used in several components or pages but cannot be categorized anywhere else.

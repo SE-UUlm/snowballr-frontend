@@ -43,8 +43,9 @@ nvm use
 npm install
 ```
 
-The generated API client code is used directly from the installed `snowballr-api` package
-(`node_modules/snowballr-api/dist`) and imported via the `$api` alias.
+The generated API client code comes from the installed
+[`snowballr-api`](https://www.npmjs.com/package/snowballr-api) package and is imported per proto module, e.g.
+`snowballr-api/project`.
 
 Now you're good to go! Start the development server with:
 

@@ -2,7 +2,7 @@
     import { backendService } from "$lib/grpc-api";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { Nothing } from "$api/base";
+    import { Nothing } from "snowballr-api/base";
     import { resolve } from "$app/paths";
 
     onMount(async () => {

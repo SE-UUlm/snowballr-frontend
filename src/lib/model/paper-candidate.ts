@@ -1,4 +1,4 @@
-import type { Paper } from "$api/paper";
+import type { Paper } from "snowballr-api/paper";
 import { backendService } from "$lib/grpc-api";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import { isGrpcError, pluralize } from "$lib/utils/common-helper";
