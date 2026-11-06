@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CriterionCategory, type Criterion } from "$api/criterion";
+    import { CriterionCategory, type Criterion } from "snowballr-api/criterion";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";

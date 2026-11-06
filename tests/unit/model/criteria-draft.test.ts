@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CriterionCategory } from "$api/criterion";
+import { CriterionCategory } from "snowballr-api/criterion";
 import {
     collectChanges,
     getDraftStatus,
