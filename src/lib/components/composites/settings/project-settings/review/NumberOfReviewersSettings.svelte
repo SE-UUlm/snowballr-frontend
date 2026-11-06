@@ -19,7 +19,7 @@
     import { Slider } from "$lib/components/primitives/slider";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { projectSetting } from "$lib/model/project-setting.svelte";
-    import type { Project } from "$lib/model/api/project";
+    import type { Project } from "$api/project";
 
     interface Props {
         projectId: string;

@@ -43,9 +43,8 @@ nvm use
 npm install
 ```
 
-You can find the generated API client code in the
-[`src/lib/model/api`](https://github.com/SE-UUlm/snowballr-frontend/tree/develop/src/lib/model/api)
-directory.
+The generated API client code is used directly from the installed `snowballr-api` package
+(`node_modules/snowballr-api/dist`) and imported via the `$api` alias.
 
 Now you're good to go! Start the development server with:
 

@@ -1,5 +1,5 @@
-import { Paper_List } from "$lib/model/api/paper";
-import { Project_Paper } from "$lib/model/api/project";
+import { Paper_List } from "$api/paper";
+import { Project_Paper } from "$api/project";
 import AddPaperDialogButton from "$lib/components/composites/project-components/AddPaperDialogButton.svelte";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { render, screen } from "@testing-library/svelte";

@@ -14,9 +14,6 @@ WORKDIR /usr/src/app
 # Create a stage for installing production dependencies.
 FROM base AS build
 
-# Create the directory for the generated API code
-RUN mkdir -p src/lib/model/api/
-
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage bind mounts to package.json and package-lock.json to avoid having to copy them

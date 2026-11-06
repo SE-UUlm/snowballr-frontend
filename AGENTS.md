@@ -37,8 +37,7 @@ and point to the canonical page.
 │   │   ├── components/
 │   │   │   ├── composites/         # our components
 │   │   │   └── primitives/         # shadcn/ui (Svelte port) components
-│   │   ├── model/
-│   │   │   └── api/                # auto-generated from snowballr-api (npm postinstall)
+│   │   ├── model/                  # frontend models and helpers around the API types
 │   │   ├── current-user/           # user cache + refresh trigger
 │   │   ├── custom-context/         # user context, etc.
 │   │   ├── grpc-api.ts             # gRPC-Web client wiring
@@ -80,7 +79,7 @@ and point to the canonical page.
 | Testing conventions                   | wiki/Testing.md                                                               | when-then naming; `describe` grouping; `mockApiCall` / `mockFailedApiCall`.                        |
 | End-to-end tests                      | wiki/Testing.md#end-to-end-tests                                              | Playwright; shared/isolated fixtures; Page Object Models (`*-page-model.ts`, `*-dialog-model.ts`). |
 | gRPC client wiring                    | src/lib/grpc-api.ts                                                           | Backend service used in components.                                                                |
-| Generated API types/client            | src/lib/model/api/                                                            | Mirror of `snowballr-api` npm dist. Refresh via `npm run copy-api-client-code`.                    |
+| Generated API types/client            | node_modules/snowballr-api/dist/                                              | Imported via the `$api` alias (svelte.config.js), never via `$lib/model/api`.                      |
 | Routes                                | src/routes/                                                                   | SvelteKit page/layout files.                                                                       |
 | Components (ours)                     | src/lib/components/composites/                                                | PascalCase Svelte files.                                                                           |
 | shadcn-svelte primitives              | src/lib/components/primitives/                                                | Configured via `components.json`.                                                                  |
@@ -118,8 +117,8 @@ and point to the canonical page.
 - Ask first: bumping the `snowballr-api` dependency (changes the generated client); changes to gRPC transport
   config (`grpc-api.ts`); changes to the root layout's auth/user-fetch logic; changes to `compose.yaml`,
   Dockerfile, or e2e sharding strategy; changes to the license-check allowlist in `package.json` (`license-check`).
-- Never do: commit secrets / real API base URLs to `.env`; edit files under `src/lib/model/api/` by hand
-  (regenerate from `snowballr-api` via `npm run copy-api-client-code` instead); commit `build/`, `node_modules/`,
+- Never do: commit secrets / real API base URLs to `.env`; copy or vendor the generated API client into `src/`
+  (import it from `snowballr-api` via the `$api` alias instead); commit `build/`, `node_modules/`,
   `e2e-report/`, `test-results/`, or `coverage/`; introduce `null`/`undefined` user checks downstream of the
   root layout (the context invariant guarantees a valid user — wiki/Contributing.md).
 
@@ -127,7 +126,7 @@ and point to the canonical page.
 
 ### Install / dev / build
 
-- Install: `npm install` (runs `postinstall` → `copy-api-client-code`, which syncs `src/lib/model/api/`)
+- Install: `npm install`
 - Dev server: `npm run dev` (opens browser via `--open`)
 - Build: `npm run build`
 - Production preview: `npm run preview` (or `npm run prod` = build + preview)
