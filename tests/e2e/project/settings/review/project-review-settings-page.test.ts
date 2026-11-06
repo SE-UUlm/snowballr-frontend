@@ -1,6 +1,7 @@
 import { test } from "./project-review-settings-page-fixture";
 import { expect } from "@playwright/test";
 import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { CriterionCategory } from "snowballr-api/criterion";
 
 test.describe("Project Review Settings Navigation", () => {
     test("When navigating to the project review settings, then the page is displayed", async ({
@@ -44,6 +45,109 @@ test.describe("Keyword Settings Tests", () => {
 
         await expect(await projectReviewSettingsPage.getTag("New Tag 1")).toBeVisible();
         await expect(await projectReviewSettingsPage.getTag("New Tag 2")).toBeVisible();
+    });
+});
+
+test.describe("Review Criteria Settings Tests", () => {
+    test("When the admin adds a criterion and saves, then it is stored", async ({
+        page,
+        projectReviewSettingsPage,
+    }) => {
+        await projectReviewSettingsPage.addCriterion(
+            "Inclusion",
+            "Peer reviewed",
+            "The paper was published in a peer reviewed venue.",
+        );
+        await expect(projectReviewSettingsPage.getCriterionRow("I1")).toContainText("New");
+
+        await projectReviewSettingsPage.saveCriteriaButton.click();
+
+        await expect(page.getByText("Successfully saved review criteria.")).toBeVisible();
+
+        await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
+        await expect(projectReviewSettingsPage.getCriterionRow("I1")).toContainText(
+            "Peer reviewed",
+        );
+        await expect(projectReviewSettingsPage.getCriterionRow("I1")).not.toContainText("New");
+    });
+
+    test("When the admin renames and removes criteria and saves, then both changes are stored", async ({
+        page,
+        apiClient,
+        projectReviewSettingsPage,
+    }) => {
+        for (const [tag, name, description] of [
+            ["E1", "Not in English", "The paper is written in another language."],
+            ["E2", "Duplicate", "Another version of the paper is already in the project."],
+        ]) {
+            await apiClient.createCriterion({
+                projectId: projectReviewSettingsPage.projectId,
+                tag,
+                name,
+                description,
+                category: CriterionCategory.EXCLUSION,
+            }).response;
+        }
+        await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
+
+        await projectReviewSettingsPage.renameCriterion("E1", "Not written in English");
+        await projectReviewSettingsPage.removeCriterion("E2");
+        await expect(projectReviewSettingsPage.criteriaSection).toContainText(
+            "Not saved yet: 1 edited, 1 removed.",
+        );
+        await projectReviewSettingsPage.saveCriteriaButton.click();
+        await expect(page.getByText("Successfully saved review criteria.")).toBeVisible();
+
+        await reloadWait(page, projectReviewSettingsPage.criteriaHeading);
+        await expect(projectReviewSettingsPage.getCriterionRow("E1")).toContainText(
+            "Not written in English",
+        );
+        await expect(projectReviewSettingsPage.getCriterionRow("E2")).toHaveCount(0);
+    });
+
+    test("When the admin discards their changes, then the stored criteria are shown again", async ({
+        projectReviewSettingsPage,
+    }) => {
+        await projectReviewSettingsPage.addCriterion(
+            "Hard Exclusion",
+            "Not a paper",
+            "Blog posts, slides and other grey literature.",
+        );
+        await expect(projectReviewSettingsPage.getCriterionRow("HE1")).toBeVisible();
+
+        await projectReviewSettingsPage.discardCriteriaChangesButton.click();
+
+        await expect(projectReviewSettingsPage.criterionRows).toHaveCount(0);
+        await expect(projectReviewSettingsPage.saveCriteriaButton).toBeHidden();
+    });
+
+    test("When saving fails, then the error is shown next to the save button", async ({
+        page,
+        projectReviewSettingsPage,
+    }) => {
+        await page.route(/\/CreateCriterion$/, (route) =>
+            route.fulfill({
+                status: 200,
+                headers: {
+                    "content-type": "application/grpc-web+proto",
+                    "grpc-status": "13",
+                    "grpc-message": "internal error",
+                },
+            }),
+        );
+        await projectReviewSettingsPage.addCriterion(
+            "Inclusion",
+            "Peer reviewed",
+            "The paper was published in a peer reviewed venue.",
+        );
+
+        await projectReviewSettingsPage.saveCriteriaButton.click();
+
+        const error = projectReviewSettingsPage.criteriaSection.getByText(
+            "Failed to Save All Criteria",
+        );
+        await expect(error).toBeInViewport();
+        await expect(projectReviewSettingsPage.getCriterionRow("I1")).toContainText("New");
     });
 });
 
