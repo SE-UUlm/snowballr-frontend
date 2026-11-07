@@ -104,8 +104,10 @@ Usage:
 ```
 -->
 <Select.Root onValueChange={selectOrUnselectAllOptions} type="multiple" bind:value={selectedValues}>
-    <Select.Trigger class="w-fit">{label}</Select.Trigger>
-    <Select.Content class="max-h-[300px]">
+    <Select.Trigger class="w-fit" aria-label={`Filter by ${categoryLabel.toLowerCase()}`}>
+        {label}
+    </Select.Trigger>
+    <Select.Content class="max-h-75">
         {#if options.length === 0}
             <Select.Item disabled value="no-options">
                 {`No ${categoryLabel.toLowerCase()} available`}

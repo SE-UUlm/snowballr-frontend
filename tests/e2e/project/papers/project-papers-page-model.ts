@@ -32,12 +32,12 @@ export class ProjectPapersPageModel {
         this.searchBarInput = page.getByPlaceholder("Search paper");
         this.clearFiltersButton = page.getByRole("button", { name: "Reset" });
         this.showFiltersButton = page.getByRole("button", { name: "Filter", exact: false });
-        this.stageFilterButton = page.getByRole("button", { name: "Stages", exact: false });
-        this.reviewerFilterButton = page.getByRole("button", { name: "All Reviewers" });
-        this.publisherFilterButton = page.getByRole("button", { name: "All Publishers" });
-        this.yearFilterButton = page.getByRole("button", { name: "Years", exact: false });
-        this.decisionFilterButton = page.getByRole("button", { name: "All Decisions" });
-        this.criteriaFilterButton = page.getByRole("button", { name: "All Criteria" });
+        this.stageFilterButton = page.getByRole("combobox", { name: "Filter by stages" });
+        this.reviewerFilterButton = page.getByRole("combobox", { name: "Filter by reviewers" });
+        this.publisherFilterButton = page.getByRole("combobox", { name: "Filter by publishers" });
+        this.yearFilterButton = page.getByRole("combobox", { name: "Filter by years" });
+        this.decisionFilterButton = page.getByRole("combobox", { name: "Filter by decisions" });
+        this.criteriaFilterButton = page.getByRole("combobox", { name: "Filter by criteria" });
         this.allFilterButtons = [
             this.stageFilterButton,
             this.reviewerFilterButton,
@@ -46,7 +46,7 @@ export class ProjectPapersPageModel {
             this.decisionFilterButton,
             this.criteriaFilterButton,
         ];
-        this.sortOptionSelect = page.getByRole("button", { name: "Sort by", exact: false });
+        this.sortOptionSelect = page.getByRole("combobox", { name: "Sort papers" });
 
         this.projectName = "Project 1";
         this.projectPaperNames = [];
