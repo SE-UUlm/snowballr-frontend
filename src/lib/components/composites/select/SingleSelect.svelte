@@ -35,7 +35,7 @@ Usage:
 ```
 -->
 <Select.Root {disabled} type="single" bind:value={selectedValue}>
-    <Select.Trigger class="w-42">
+    <Select.Trigger class="w-42" aria-label={`${categoryLabel}-Select`}>
         <span class="flex w-full flex-row justify-center">{label}</span>
     </Select.Trigger>
     <Select.Content class="max-h-75">

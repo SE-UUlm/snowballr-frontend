@@ -1,5 +1,5 @@
 import type { ResolvedPathname } from "$app/types";
-import type { Icon } from "@lucide/svelte";
+import type { LucideIcon } from "@lucide/svelte";
 
 interface Tab {
     value: string;
@@ -9,7 +9,7 @@ interface Tab {
 type LinkTab = Tab & { href: ResolvedPathname };
 
 type IconLinkTab = LinkTab & {
-    icon: typeof Icon;
+    icon: LucideIcon;
 };
 
 type UserMenuTab = IconLinkTab & {

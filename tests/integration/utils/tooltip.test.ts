@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/svelte";
+import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import TestToolTip from "./TestToolTip.svelte";
 import userEvent from "@testing-library/user-event";
@@ -68,8 +68,8 @@ describe("Tooltip", () => {
         const trigger = screen.getByText("Click me");
         await user.click(trigger);
 
-        await expect(async () => {
-            await screen.findByText("Hello, world!");
-        }).rejects.toThrowError();
+        // Clicking hovers the trigger first, which opens the tooltip without delay. The click then
+        // closes it again, but the content stays mounted until its exit animation is checked.
+        await waitFor(() => expect(screen.queryByText("Hello, world!")).not.toBeInTheDocument());
     });
 });
