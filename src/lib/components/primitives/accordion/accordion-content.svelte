@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Accordion as AccordionPrimitive, type WithoutChild } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { Accordion as AccordionPrimitive } from "bits-ui";
+    import { cn, type WithoutChild } from "$lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),
@@ -11,14 +11,17 @@
 </script>
 
 <AccordionPrimitive.Content
-    class={cn(
-        "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm transition-all",
-        className,
-    )}
+    class="data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden text-sm"
+    data-slot="accordion-content"
     bind:ref
     {...restProps}
 >
-    <div class="pt-0 pb-4">
+    <div
+        class={cn(
+            "[&_a]:hover:text-foreground pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_p:not(:last-child)]:mb-4",
+            className,
+        )}
+    >
         {@render children?.()}
     </div>
 </AccordionPrimitive.Content>
