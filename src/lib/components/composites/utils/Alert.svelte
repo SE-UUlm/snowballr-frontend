@@ -5,8 +5,8 @@
     import Info from "@lucide/svelte/icons/info";
     import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
     import { cn } from "#lib/utils/shadcn-helper.js";
+    import type { AlertVariant } from "#lib/components/primitives/alert/index.js";
 
-    export type AlertVariant = "default" | "success" | "info" | "warning" | "error";
     type Props = {
         title: string;
         details?: string;
