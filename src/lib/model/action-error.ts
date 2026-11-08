@@ -1,4 +1,4 @@
-import type { AlertVariant } from "$lib/components/composites/utils/Alert.svelte";
+import type { AlertVariant } from "$lib/components/primitives/alert";
 import { IS_IN_DEV_MODE, IS_IN_TEST_MODE } from "$lib/constants";
 
 /**
