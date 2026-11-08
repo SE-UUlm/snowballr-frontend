@@ -18,14 +18,13 @@
 <AccordionPrimitive.Header class="flex" {level}>
     <AccordionPrimitive.Trigger
         class={cn(
-            "focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4",
+            "focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-center justify-between gap-2 rounded-lg border border-transparent py-4 text-left font-medium transition-all outline-none hover:underline focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-5",
             className,
         )}
         data-slot="accordion-trigger"
         bind:ref
         {...restProps}
     >
-        {@render children?.()}
         <ChevronDownIcon
             class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
             data-slot="accordion-trigger-icon"
@@ -34,5 +33,6 @@
             class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
             data-slot="accordion-trigger-icon"
         />
+        {@render children?.()}
     </AccordionPrimitive.Trigger>
 </AccordionPrimitive.Header>
