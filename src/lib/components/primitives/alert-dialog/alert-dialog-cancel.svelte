@@ -7,16 +7,18 @@
     } from "$lib/components/primitives/button/index.js";
     import { cn } from "$lib/utils/shadcn-helper.js";
 
+    export type AlertDialogCancelProps = AlertDialogPrimitive.CancelProps & {
+        variant?: ButtonVariant;
+        size?: ButtonSize;
+    };
+
     let {
         ref = $bindable(null),
         class: className,
         variant = "outline",
         size = "default",
         ...restProps
-    }: AlertDialogPrimitive.CancelProps & {
-        variant?: ButtonVariant;
-        size?: ButtonSize;
-    } = $props();
+    }: AlertDialogCancelProps = $props();
 </script>
 
 <AlertDialogPrimitive.Cancel
