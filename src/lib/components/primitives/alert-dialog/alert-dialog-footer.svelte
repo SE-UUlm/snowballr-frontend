@@ -1,7 +1,6 @@
 <script lang="ts">
-    import type { WithElementRef } from "bits-ui";
+    import { cn, type WithElementRef } from "$lib/utils/shadcn-helper.js";
     import type { HTMLAttributes } from "svelte/elements";
-    import { cn } from "$lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),
@@ -13,7 +12,11 @@
 
 <div
     bind:this={ref}
-    class={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    class={cn(
+        "bg-muted/50 -mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
+        className,
+    )}
+    data-slot="alert-dialog-footer"
     {...restProps}
 >
     {@render children?.()}
