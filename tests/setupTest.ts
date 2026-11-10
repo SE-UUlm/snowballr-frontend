@@ -16,7 +16,7 @@ import type { ISnowballRClient } from "snowballr-api/main.client";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import { PaperDecision } from "snowballr-api/project";
 import { AuthenticationStatus } from "snowballr-api/authentication";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import ResizeObserver from "resize-observer-polyfill";
 
 // Add custom jest matchers
@@ -177,9 +177,11 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 // For example, you can mock the backend API to return an error or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
-vi.mock("$lib/grpc-api", () => {
-    const mockBackend: { backendService: MockApi } = {
-        backendService: {
+// The mock replaces the generated client underneath the API layer, so the domain functions in
+// `$lib/api/` run for real in tests.
+vi.mock("$lib/api/client", () => {
+    const mockBackend: { client: MockApi } = {
+        client: {
             getAvailableFetchers: mock({
                 fetchers: [],
             }),
@@ -285,7 +287,7 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
     methodName: T,
     value: R,
 ): MockInstance<ISnowballRClient[T]> {
-    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+    const apiCallToMock = (client[methodName] as Mock).mockClear();
 
     return apiCallToMock.mockImplementation(function () {
         return { response: Promise.resolve(value) };
@@ -303,7 +305,7 @@ export function mockFailedApiCall<T extends keyof ISnowballRClient>(
     methodName: T,
     errorMessage = "",
 ): MockInstance<ISnowballRClient[T]> {
-    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+    const apiCallToMock = (client[methodName] as Mock).mockClear();
 
     return apiCallToMock.mockImplementation(function () {
         return { response: Promise.reject(new Error(errorMessage)) };
