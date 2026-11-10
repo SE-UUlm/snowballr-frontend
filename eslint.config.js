@@ -81,4 +81,36 @@ export default defineConfig(
             "svelte/no-navigation-without-resolve": "off",
         },
     },
+    {
+        // Backend access goes through the domain modules in src/lib/api/, see wiki/Contributing.md#backend-access.
+        // Set to "warn" while the call sites migrate, so the warnings count the remaining work.
+        files: ["src/**/*.ts", "src/**/*.svelte"],
+        ignores: ["src/lib/api/**", "src/lib/grpc-api.ts", "src/lib/utils/fieldmask-helper.ts"],
+        rules: {
+            "no-restricted-imports": [
+                "warn",
+                {
+                    patterns: [
+                        {
+                            group: ["snowballr-api", "snowballr-api/**", "@protobuf-ts/**"],
+                            message:
+                                "Generated API code is only used inside src/lib/api/. Use the functions and types from $lib/api/ instead.",
+                        },
+                        {
+                            // The trailing * also catches imports with an extension, e.g. "$lib/grpc-api.js".
+                            group: [
+                                "$lib/grpc-api*",
+                                "$lib/api/client*",
+                                "$lib/api/grpc*",
+                                "$lib/api/fieldmask*",
+                                "$lib/utils/fieldmask-helper*",
+                            ],
+                            message:
+                                "The client, call() and FieldMasks are internal to src/lib/api/. Call the domain functions in $lib/api/ instead.",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
 );
