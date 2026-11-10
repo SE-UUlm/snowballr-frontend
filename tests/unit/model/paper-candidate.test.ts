@@ -12,8 +12,6 @@ import {
 } from "$lib/model/paper-candidate";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { backendService } from "$lib/grpc-api";
-import type { ISnowballRClient } from "snowballr-api/main.client";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { toast } from "svelte-sonner";
 
 vi.mock("svelte-sonner", () => ({
@@ -35,22 +33,6 @@ function newPaper(title: string, overrides: Partial<Paper> = {}): Paper {
 
 function doi(value: string) {
     return { type: "DOI", displayType: "DOI", value };
-}
-
-/**
- * Mocks an API call to reject with a specific error object.
- *
- * `mockFailedApiCall` rejects with a plain `Error`, which carries no gRPC status code, so it cannot
- * express an `ALREADY_EXISTS` response.
- */
-function mockRejectedApiCall<T extends keyof ISnowballRClient>(methodName: T, error: unknown) {
-    return (backendService[methodName] as Mock)
-        .mockClear()
-        .mockImplementation(() => ({ response: Promise.reject(error) }));
-}
-
-function rpcError(code: string, message = "rpc failed") {
-    return Object.assign(new Error(message), { code });
 }
 
 beforeEach(() => {
@@ -322,7 +304,7 @@ describe("addPaperCandidates", () => {
     // Another user may create the same paper between the search and the add, so a paper that already
     // exists is what we wanted, not a failure.
     test("When creating a paper reports that it already exists, then it counts as success", async () => {
-        mockRejectedApiCall("createPaper", rpcError(GrpcStatusCode[GrpcStatusCode.ALREADY_EXISTS]));
+        mockFailedApiCall("createPaper", "rpc failed", "ALREADY_EXISTS");
 
         const summary = await addPaperCandidates([fresh], TARGET);
 
@@ -331,7 +313,7 @@ describe("addPaperCandidates", () => {
     });
 
     test("When creating a paper fails for another reason, then it is reported as a create failure", async () => {
-        mockRejectedApiCall("createPaper", rpcError(GrpcStatusCode[GrpcStatusCode.INTERNAL]));
+        mockFailedApiCall("createPaper", "rpc failed", "INTERNAL");
 
         const summary = await addPaperCandidates([fresh], TARGET);
 

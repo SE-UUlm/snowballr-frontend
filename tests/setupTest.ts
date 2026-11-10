@@ -13,7 +13,8 @@ import {
 } from "./model-builder";
 import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
 import type { ISnowballRClient } from "snowballr-api/main.client";
-import type { RpcStatus, UnaryCall } from "@protobuf-ts/runtime-rpc";
+import { RpcError, type RpcStatus, type UnaryCall } from "@protobuf-ts/runtime-rpc";
+import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { PaperDecision } from "snowballr-api/project";
 import { AuthenticationStatus } from "snowballr-api/authentication";
 import { client } from "$lib/api/client";
@@ -309,17 +310,28 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
 /**
  * Mocks an API call to return an error.
  *
+ * @example
+ * ```ts
+ * // Fails like the backend does when the email address is taken
+ * mockFailedApiCall("register", "email already in use", "ALREADY_EXISTS");
+ * ```
+ *
  * @param methodName - The name of the method to mock
  * @param errorMessage - The error message to return
+ * @param code - The gRPC status code to fail with, by name. Without it, the call rejects with a plain
+ * `Error`, which the API layer reports as kind `"unknown"`.
  * @returns A mock instance of the failed API call
  */
 export function mockFailedApiCall<T extends keyof ISnowballRClient>(
     methodName: T,
     errorMessage = "",
+    code?: keyof typeof GrpcStatusCode,
 ): MockInstance<ISnowballRClient[T]> {
     const apiCallToMock = (client[methodName] as Mock).mockClear();
 
     return apiCallToMock.mockImplementation(function () {
-        return mockUnaryCall(Promise.reject(new Error(errorMessage)));
+        const error =
+            code === undefined ? new Error(errorMessage) : new RpcError(errorMessage, code);
+        return mockUnaryCall(Promise.reject(error));
     });
 }
