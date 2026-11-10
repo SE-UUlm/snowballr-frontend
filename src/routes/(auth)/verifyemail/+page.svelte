@@ -1,52 +1,48 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { Button } from "$lib/components/primitives/button";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import { toGrpcStatus } from "$lib/api/grpc";
+    import { isApiError, type ApiError } from "$lib/api/errors";
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
 
     let { data } = $props();
     const { verificationPromise } = $derived(data);
 
-    type EmailVerificationError = ActionError | RpcError;
+    type EmailVerificationError = ActionError | ApiError;
 
     function getErrorDetails(error: EmailVerificationError): ActionError {
         if (isActionError(error)) {
             return error;
         }
 
-        const statusCodeValue = toGrpcStatus(error.code);
-        switch (statusCodeValue) {
-            case GrpcStatusCode.INVALID_ARGUMENT:
-                return createActionError(
-                    "Email Verification Failed",
-                    {
-                        customDetails:
-                            "This verification link is invalid. Please try signing up again to receive a new link.",
-                    },
-                    error,
-                );
-            case GrpcStatusCode.NOT_FOUND:
-                return createActionError(
-                    "Email Verification Failed",
-                    {
-                        customDetails:
-                            "The verification link has probably expired. Please try signing up again to receive a new link.",
-                    },
-                    error,
-                );
-            default:
-                return createActionError(
-                    "Server Error",
-                    {
-                        customDetails:
-                            "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
-                    },
-                    error,
-                );
+        if (isApiError(error, "invalid-argument")) {
+            return createActionError(
+                "Email Verification Failed",
+                {
+                    customDetails:
+                        "This verification link is invalid. Please try signing up again to receive a new link.",
+                },
+                error,
+            );
         }
+        if (isApiError(error, "not-found")) {
+            return createActionError(
+                "Email Verification Failed",
+                {
+                    customDetails:
+                        "The verification link has probably expired. Please try signing up again to receive a new link.",
+                },
+                error,
+            );
+        }
+        return createActionError(
+            "Server Error",
+            {
+                customDetails:
+                    "We couldn't connect to our servers to verify your email. Please check your internet connection and try again.",
+            },
+            error,
+        );
     }
 
     // svelte-ignore state_referenced_locally

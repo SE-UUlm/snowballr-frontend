@@ -1,10 +1,10 @@
-import { type User, Nothing, AuthenticationStatus } from "$lib/api/types";
-import { backendService, setFetch } from "$lib/grpc-api";
+import { type User, AuthenticationStatus } from "$lib/api/types";
+import { getAuthenticationStatus, renewSession } from "$lib/api/auth";
+import { getCurrentUser } from "$lib/api/user";
+import { setFetch } from "$lib/grpc-api";
 import type { LayoutLoad } from "./$types";
 import { goto } from "$app/navigation";
 import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { isGrpcError } from "$lib/utils/common-helper";
 import { addRedirectUrlIfExists } from "$lib/utils/search-parameters";
 import { resolve } from "$app/paths";
 
@@ -28,35 +28,17 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         return { user: null };
     }
 
-    const authStatusCall = await backendService.getAuthenticationStatus(Nothing).then(
-        (x) => x,
-        () => undefined,
-    );
+    const authStatus = await getAuthenticationStatus().catch(() => undefined);
 
-    // Redirect on gRPC/network failure
-    if (authStatusCall === undefined) {
+    // Redirect on a network or backend failure, which includes every non-OK status
+    if (authStatus === undefined) {
         console.error("Authentication status could not be determined. Redirecting to sign-in.");
         return await redirectToSignIn(url);
     }
 
-    // Redirect on backend business logic failure
-    if (!isGrpcError(authStatusCall.status.code, GrpcStatusCode.OK)) {
-        console.error(
-            `Authentication status call failed with status: ${authStatusCall.status.code}. Redirecting to sign-in.`,
-        );
-        return await redirectToSignIn(url);
-    }
-
-    const authStatus = authStatusCall.response.authenticationStatus;
-
     if (authStatus === AuthenticationStatus.ACCESS_TOKEN_EXPIRED) {
         try {
-            const renewResponse = await backendService.renewSession(Nothing);
-
-            if (!isGrpcError(renewResponse.status.code, GrpcStatusCode.OK)) {
-                console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
-                return await redirectToSignIn(url);
-            }
+            await renewSession();
             // Renewal successful, proceed to fetch current user
         } catch (error) {
             console.error(`Session renewal failed: ${error}`);
@@ -71,7 +53,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
     if (cachedUser) return { user: cachedUser };
 
     try {
-        const user: User = await backendService.getCurrentUser(Nothing).response;
+        const user: User = await getCurrentUser();
         setCachedUser(user);
         return { user };
     } catch (error) {
