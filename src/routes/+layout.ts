@@ -55,7 +55,7 @@ export const load: LayoutLoad = async ({ depends, url, fetch }) => {
         try {
             const renewResponse = await backendService.renewSession(Nothing);
 
-            if (!isGrpcError(authStatusCall.status.code, GrpcStatusCode.OK)) {
+            if (!isGrpcError(renewResponse.status.code, GrpcStatusCode.OK)) {
                 console.error(`Session renewal failed with status: ${renewResponse.status.code}`);
                 return await redirectToSignIn(url);
             }
