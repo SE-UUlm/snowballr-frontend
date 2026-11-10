@@ -5,11 +5,10 @@ import { env } from "$env/dynamic/public";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
 import { IS_IN_DEV_MODE } from "$lib/constants";
 
-// If no PUBLIC_API_BASE_URL is defined, log an error and exit.
-// Without the base URL, we cannot make any API calls.
+// Without the base URL, we cannot make any API calls. This module runs in the browser and during the
+// build, so it throws instead of calling `process.exit`, which does not exist in the browser.
 if (!env.PUBLIC_API_BASE_URL) {
-    console.error("PUBLIC_API_BASE_URL is not defined");
-    process.exit(1);
+    throw new Error("PUBLIC_API_BASE_URL is not defined. Set it to the URL of the backend API.");
 }
 
 const credentials: RequestCredentials =

@@ -101,4 +101,15 @@ describe("client", () => {
 
         await expect(result).rejects.toMatchObject({ kind: "cancelled" });
     });
+
+    test("When PUBLIC_API_BASE_URL is not set, then loading the client fails with a clear error", async () => {
+        vi.resetModules();
+        const { env } = await import("$env/dynamic/public");
+        // What compose.yaml passes when the variable is unset
+        env.PUBLIC_API_BASE_URL = "";
+
+        await expect(import("$lib/api/client")).rejects.toThrow(
+            "PUBLIC_API_BASE_URL is not defined",
+        );
+    });
 });
