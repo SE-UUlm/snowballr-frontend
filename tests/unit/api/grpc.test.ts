@@ -3,6 +3,9 @@ import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { ApiError, type ApiErrorKind } from "$lib/api/errors";
 import { call, toApiError } from "$lib/api/grpc";
+import { client } from "$lib/api/client";
+import { Nothing } from "snowballr-api/base";
+import { mockFailedApiCall } from "$tests/setupTest";
 
 function codedError(code: unknown, message = "rpc failed") {
     return Object.assign(new Error(message), { code });
@@ -96,5 +99,16 @@ describe("call", () => {
 
         await expect(result).rejects.toBeInstanceOf(ApiError);
         await expect(result).rejects.toMatchObject({ kind: "permission-denied", cause: rpcError });
+    });
+
+    test("When a call mocked with mockFailedApiCall fails with a code, then the kind matches it", async () => {
+        mockFailedApiCall("getAllUsers", "no access", "PERMISSION_DENIED");
+
+        const result = call(client.getAllUsers(Nothing));
+
+        await expect(result).rejects.toMatchObject({
+            kind: "permission-denied",
+            message: "no access",
+        });
     });
 });

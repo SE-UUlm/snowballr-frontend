@@ -112,6 +112,13 @@ For example, to mock a failed API call to the `getAllUsers` endpoint, you can us
 mockFailedApiCall("getAllUsers");
 ```
 
+Without a code, the call rejects with a plain `Error`, which the API layer reports as kind `"unknown"`. To test how a
+specific failure is handled, pass the gRPC status code by name as the third argument:
+
+```ts
+mockFailedApiCall("register", "email already in use", "ALREADY_EXISTS");
+```
+
 ## End-to-End Tests
 
 End-to-End (E2E) tests verify the full functionality of the application in a realistic browser environment.
