@@ -21,6 +21,22 @@ export function waitForComponentLoading(): Promise<void> {
     });
 }
 
+/**
+ * Awaits until an open dialog or alert dialog has moved the focus into itself.
+ *
+ * The dialog focuses itself one animation frame after it opens. Keystrokes typed into one of its
+ * inputs before that frame are lost once the focus jumps, so call this after opening the dialog and
+ * before interacting with it.
+ */
+export function waitForDialogFocus(): Promise<void> {
+    return waitFor(() => {
+        const focusedDialog = document.activeElement?.closest(
+            '[role="dialog"], [role="alertdialog"]',
+        );
+        expect(focusedDialog, "The focus is not inside a dialog").toBeTruthy();
+    });
+}
+
 export interface SelectedCriteriaContext {
     criteria: string[];
 }
