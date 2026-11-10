@@ -314,10 +314,12 @@ src/lib/api/
 ├── errors.ts       (ApiError, isApiError)
 ├── grpc.ts         (call, mapping from gRPC status codes to ApiError)
 ├── fieldmask.ts    (buildFieldMask)
+├── types.ts        (generated types and enums for use outside the layer)
 └── <domain>.ts     (one module per backend domain, e.g. project.ts, reading-list.ts)
 ```
 
-Outside the layer, only the domain modules and `errors.ts` are imported.
+Outside the layer, only the domain modules, `errors.ts` and `types.ts` are imported. If code outside the layer needs a
+generated type that `types.ts` doesn't export yet, add it there.
 
 The domain modules follow these rules:
 
