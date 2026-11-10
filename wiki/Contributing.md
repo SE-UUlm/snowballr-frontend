@@ -319,7 +319,8 @@ src/lib/api/
 ```
 
 Outside the layer, only the domain modules, `errors.ts` and `types.ts` are imported. If code outside the layer needs a
-generated type that `types.ts` doesn't export yet, add it there.
+generated type that `types.ts` doesn't export yet, add it there. Tests are exempt and may import `snowballr-api` and
+the client directly.
 
 The domain modules follow these rules:
 
