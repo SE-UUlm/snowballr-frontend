@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { FetcherInformation } from "snowballr-api/fetcher";
+    import type { FetcherInformation } from "$lib/api/types";
     import Plus from "@lucide/svelte/icons/plus";
     import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
     import type { Fetchers, SaveFetchers } from "./fetcher";

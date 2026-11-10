@@ -1,6 +1,6 @@
 <script lang="ts">
     import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import type { User } from "snowballr-api/user";
+    import type { User } from "$lib/api/types";
     import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
     import { getName } from "$lib/utils/common-helper";

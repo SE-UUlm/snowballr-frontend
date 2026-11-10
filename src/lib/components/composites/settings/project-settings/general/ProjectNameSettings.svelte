@@ -3,7 +3,7 @@
     import Input from "$lib/components/composites/input/Input.svelte";
     import { backendService } from "$lib/grpc-api";
     import { onMount } from "svelte";
-    import { Project } from "snowballr-api/project";
+    import { Project } from "$lib/api/types";
     import { Schema } from "$lib/schemas";
     import { refreshProject } from "$lib/model/cache/project-cache";
     import { toast } from "svelte-sonner";

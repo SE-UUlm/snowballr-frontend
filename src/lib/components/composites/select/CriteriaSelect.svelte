@@ -1,6 +1,6 @@
 <script lang="ts">
     import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import { Criterion } from "snowballr-api/criterion";
+    import { Criterion } from "$lib/api/types";
     import type { SelectOption } from "$lib/model/select-option";
     import { resource } from "$lib/resource.svelte";
 

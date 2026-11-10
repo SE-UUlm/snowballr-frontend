@@ -1,9 +1,8 @@
 import type { PageLoad } from "./$types";
 import { backendService } from "$lib/grpc-api";
-import { type Project } from "snowballr-api/project";
+import type { Project, User } from "$lib/api/types";
 import type { ProjectListEntryInterface } from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-import type { User } from "snowballr-api/user";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
     const members = await backendService.getProjectMembers({ id: project.id }).response;

@@ -1,9 +1,8 @@
 <script lang="ts">
     import PaperNavigationButton from "./PaperNavigationButton.svelte";
-    import type { Project, Project_Paper } from "snowballr-api/project";
+    import { type Project, type Project_Paper, type Review, ReviewDecision } from "$lib/api/types";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
-    import { type Review, ReviewDecision } from "snowballr-api/review";
     import type { PaperDecisionButtonVariant } from "./decision-button-variants";
 
     export type ButtonBarProps = {

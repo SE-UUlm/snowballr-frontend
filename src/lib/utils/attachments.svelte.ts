@@ -1,5 +1,5 @@
 import type { Attachment } from "svelte/attachments";
-import { ProjectStatus } from "snowballr-api/project";
+import { ProjectStatus } from "$lib/api/types";
 
 /**
  * Attaches two event listeners that call the passed function when the user clicks outside the element

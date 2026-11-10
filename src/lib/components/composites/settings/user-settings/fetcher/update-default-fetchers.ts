@@ -1,8 +1,7 @@
 import { backendService } from "$lib/grpc-api";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
-import { Project_Settings } from "snowballr-api/project";
-import { UserSettings } from "snowballr-api/user_settings";
+import { Project_Settings, UserSettings } from "$lib/api/types";
 import { toast } from "svelte-sonner";
 
 export async function updateDefaultFetchers(
