@@ -1,4 +1,5 @@
-import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { SnowballRClient } from "snowballr-api/main.client";
 import { env } from "$env/dynamic/public";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
@@ -15,8 +16,22 @@ const credentials: RequestCredentials =
     (env.PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
 
 let fetch = globalThis.fetch;
+
+/**
+ * Calls the current `fetch` and reports a request that could not be sent as gRPC `UNAVAILABLE`.
+ *
+ * `fetch` rejects with a `TypeError` when it cannot send the request at all, e.g. when offline, when
+ * the proxy is down or when CORS blocks it. The transport would turn that into `INTERNAL`, which it
+ * also uses for server errors, but it passes an `RpcError` through as it is. Other rejections stay
+ * unchanged, so the transport still reports an `AbortError` as `CANCELLED`.
+ */
 const customFetch = (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response> =>
-    fetch(input, init);
+    fetch(input, init).catch((error: unknown) => {
+        if (error instanceof TypeError) {
+            throw new RpcError(error.message, GrpcStatusCode[GrpcStatusCode.UNAVAILABLE]);
+        }
+        throw error;
+    });
 
 export function setFetch(newFetch: typeof fetch) {
     fetch = newFetch;
