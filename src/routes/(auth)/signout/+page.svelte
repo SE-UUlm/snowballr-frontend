@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { logout } from "$lib/api/auth";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { Nothing } from "$lib/api/types";
     import { resolve } from "$app/paths";
 
     onMount(async () => {
         try {
-            await backendService.logout(Nothing);
+            await logout();
         } catch (e) {
             console.error("There was an error logging out: ", e);
         } finally {
