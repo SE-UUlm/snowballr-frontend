@@ -4,7 +4,7 @@
     import Tooltip from "../utils/Tooltip.svelte";
     import type { CriterionWithReviews } from "$lib/model/general";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
-    import type { User } from "snowballr-api/user";
+    import type { User } from "$lib/api/types";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
     import { getAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
     import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";

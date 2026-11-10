@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ProjectStatus } from "snowballr-api/project";
+    import { ProjectStatus } from "$lib/api/types";
     import { setIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { resource } from "$lib/resource.svelte";
 

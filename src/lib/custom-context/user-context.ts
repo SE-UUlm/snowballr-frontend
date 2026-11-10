@@ -1,4 +1,4 @@
-import { User } from "snowballr-api/user";
+import { User } from "$lib/api/types";
 import { getContext, setContext } from "svelte";
 import { getCachedUser } from "$lib/current-user/userCache";
 

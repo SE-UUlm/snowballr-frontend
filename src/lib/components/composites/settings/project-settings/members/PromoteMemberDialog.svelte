@@ -2,7 +2,7 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button";
     import { backendService } from "$lib/grpc-api";
-    import { MemberRole, type Project_Member } from "snowballr-api/project";
+    import { MemberRole, type Project_Member } from "$lib/api/types";
     import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
     import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/helper";

@@ -1,6 +1,5 @@
 import { backendService } from "$lib/grpc-api";
-import { Nothing } from "snowballr-api/base";
-import type { Paper } from "snowballr-api/paper";
+import { Nothing, type Paper } from "$lib/api/types";
 
 export async function loadReadingList(): Promise<Paper[]> {
     const loadingReadingList: Promise<Paper[]> = backendService

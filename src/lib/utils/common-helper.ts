@@ -1,7 +1,6 @@
-import { PaperDecision, type Project_Paper } from "snowballr-api/project";
+import { PaperDecision, type Project_Paper, type Author, type Paper } from "$lib/api/types";
 import type { PaperStatus, Person, PersonWithEmail } from "$lib/model/general";
 import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
-import type { Author, Paper } from "snowballr-api/paper";
 import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { toGrpcStatus } from "$lib/api/grpc";
 

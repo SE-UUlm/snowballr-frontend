@@ -3,7 +3,7 @@
     import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
     import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
     import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
-    import type { Paper } from "snowballr-api/paper";
+    import type { Paper } from "$lib/api/types";
     import { filterPapers } from "$lib/utils/filters";
 
     interface Props {

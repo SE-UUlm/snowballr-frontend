@@ -1,7 +1,6 @@
 import { goto } from "$app/navigation";
 import { backendService } from "$lib/grpc-api";
-import { AuthenticationStatus } from "snowballr-api/authentication";
-import { Nothing } from "snowballr-api/base";
+import { AuthenticationStatus, Nothing } from "$lib/api/types";
 import type { PageLoad } from "./$types";
 import { resolve } from "$app/paths";
 

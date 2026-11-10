@@ -4,8 +4,8 @@ import {
     PaperDecision,
     type Project,
     type Project_Information_DecisionStatistics,
-} from "snowballr-api/project";
-import type { Timestamp } from "snowballr-api/google/protobuf/timestamp";
+    type Timestamp,
+} from "$lib/api/types";
 import type { ProjectInformationInterface } from "$lib/components/composites/statistics/ProjectInformation.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 import type { StageProgressInterface } from "$lib/components/composites/statistics/StageProgress.svelte";

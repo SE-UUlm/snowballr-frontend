@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from "snowballr-api/project";
+    import type { Project } from "$lib/api/types";
     import DeleteProjectSettingsDialog from "./DeleteProjectSettingsDialog.svelte";
 
     interface Props {
