@@ -1,4 +1,6 @@
-import { backendService } from "$lib/grpc-api";
+import { listCriteria } from "$lib/api/criterion";
+import { getProjectMembers } from "$lib/api/project-member";
+import { listProjectPapers } from "$lib/api/project-paper";
 import { Project_Paper } from "$lib/api/types";
 import { type Stage } from "$lib/model/general";
 import { comparePaperId } from "$lib/utils/common-helper";
@@ -8,15 +10,9 @@ import { asPaper } from "$lib/utils/model-helper";
 export const load: PageLoad = ({ depends, params }) => {
     depends("data:getAllProjectPapersForProject");
 
-    const projectId = { id: params.projectId };
+    const loadingCriteria = listCriteria(params.projectId);
 
-    const loadingCriteria = backendService
-        .getAllCriteriaForProject(projectId)
-        .response.then(({ criteria }) => criteria);
-
-    const loadingPapers = backendService
-        .getAllProjectPapersForProject(projectId)
-        .response.then(({ projectPapers }) => projectPapers);
+    const loadingPapers = listProjectPapers(params.projectId);
 
     const loadingStages = loadingPapers.then(organizePapersByStage);
 
@@ -32,9 +28,9 @@ export const load: PageLoad = ({ depends, params }) => {
         return Array.from(uniquePublishers);
     });
 
-    const loadingReviewers = backendService
-        .getProjectMembers({ id: params.projectId })
-        .response.then(({ members }) => members.flatMap((member) => member.user!));
+    const loadingReviewers = getProjectMembers(params.projectId).then((members) =>
+        members.flatMap((member) => member.user!),
+    );
 
     return {
         loadingCriteria,
