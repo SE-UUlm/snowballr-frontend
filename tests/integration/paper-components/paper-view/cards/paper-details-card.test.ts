@@ -6,9 +6,25 @@ import { mockIsProjectArchivedContext, waitForComponentLoading } from "../../../
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { type ISnowballRClient } from "snowballr-api/main.client";
+import { Paper } from "snowballr-api/paper";
 
 /** The project stage a created paper should land in, as the route would supply it. */
 const CREATION_TARGET = { projectId: "1", stage: 3n };
+
+/** The fields the card sends for `paper` once " - Changed" was typed into its title. */
+function changedDetails(paper: Paper) {
+    return {
+        id: paper.id,
+        externalIds: paper.externalIds,
+        title: `${paper.title} - Changed`,
+        abstrakt: paper.abstrakt,
+        year: paper.year,
+        publisher: paper.publisher,
+        publicationName: paper.publicationName,
+        publicationType: paper.publicationType,
+        authors: paper.authors,
+    };
+}
 
 describe("PaperDetailsCard", () => {
     test("When props are provided, then component is shown", async () => {
@@ -362,6 +378,70 @@ describe("PaperDetailsCard", () => {
             projectId: CREATION_TARGET.projectId,
             stage: CREATION_TARGET.stage,
         });
+    });
+
+    test("When the details of a paper are saved, then they are sent with a mask that names each of them", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const updatePaperCall = mockApiCall("updatePaper", paper);
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        await waitForComponentLoading();
+
+        await user.type(screen.getByTestId("toggleable-input-title"), " - Changed");
+        await user.click(screen.getByTestId("save-paper-changes-btn"));
+
+        await waitFor(() => expect(updatePaperCall).toHaveBeenCalledTimes(1));
+        expect(updatePaperCall).toHaveBeenCalledWith({
+            paper: Paper.create(changedDetails(paper)),
+            mask: {
+                paths: [
+                    "paper.external_ids",
+                    "paper.title",
+                    "paper.abstrakt",
+                    "paper.year",
+                    "paper.publisher",
+                    "paper.publication_name",
+                    "paper.publication_type",
+                    "paper.authors",
+                ],
+            },
+        });
+    });
+
+    test("When a paper is created, then its details are sent", async () => {
+        const user = userEvent.setup();
+        const paper = createPaper();
+        const createPaperCall = mockApiCall("createPaper", paper);
+        mockApiCall("addPaperToProject", createProjectPaper());
+
+        render(PaperDetailsCard, {
+            target: document.body,
+            props: {
+                creationTarget: CREATION_TARGET,
+                loadingPaper: loading(paper),
+                allowEditModeToggle: true,
+                startInEditMode: true,
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        await waitForComponentLoading();
+
+        await user.type(screen.getByTestId("toggleable-input-title"), " - Changed");
+        await user.click(screen.getByTestId("save-paper-changes-btn"));
+
+        await waitFor(() => expect(createPaperCall).toHaveBeenCalledTimes(1));
+        expect(createPaperCall).toHaveBeenCalledWith(Paper.create(changedDetails(paper)));
     });
 
     test("When the addPaperToProject API call fails in creation mode, then the save button is not disabled", async () => {

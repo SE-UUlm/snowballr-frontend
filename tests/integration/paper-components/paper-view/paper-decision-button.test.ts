@@ -45,7 +45,11 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(acceptButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.ACCEPTED,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.ACCEPTED, selectedCriteriaIds: ["1"] }),
@@ -78,7 +82,11 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(declineButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.DECLINED,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.DECLINED, selectedCriteriaIds: ["1"] }),
@@ -111,7 +119,11 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(maybeButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.MAYBE,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.MAYBE, selectedCriteriaIds: ["1"] }),
