@@ -1,7 +1,11 @@
 import { describe, expect, test } from "vitest";
 import { ApiError } from "$lib/api/errors";
 import {
+    addPaperToProject,
+    getNextPaper,
+    getNextPaperToReview,
     getPapersToReview,
+    getPreviousPaper,
     getProjectPaperByLocalId,
     listProjectPapers,
 } from "$lib/api/project-paper";
@@ -33,6 +37,40 @@ describe("getProjectPaperByLocalId", () => {
     });
 });
 
+describe.each([
+    ["getNextPaper", "getNextPaper", getNextPaper],
+    ["getPreviousPaper", "getPreviousPaper", getPreviousPaper],
+    ["getNextPaperToReview", "getNextPaperToReview", getNextPaperToReview],
+] as const)("%s", (_, method, navigate) => {
+    test("When a neighboring paper is loaded, then the current project paper ID is sent", async () => {
+        const neighbor = createProjectPaper({ id: "pp-2" });
+        const navigationCall = mockApiCall(method, neighbor);
+
+        await expect(navigate("pp-1")).resolves.toEqual(neighbor);
+        expect(navigationCall).toHaveBeenCalledExactlyOnceWith({ id: "pp-1" });
+    });
+
+    test("When there is no neighboring paper, then it rejects with a failed-precondition error", async () => {
+        mockFailedApiCall(method, "no paper left", "FAILED_PRECONDITION");
+
+        await expect(navigate("pp-1")).rejects.toMatchObject({ kind: "failed-precondition" });
+    });
+});
+
+describe("addPaperToProject", () => {
+    test("When a paper is added to a project, then the project, the paper and the stage are sent", async () => {
+        const projectPaper = createProjectPaper({ id: "pp-1", stage: 2n });
+        const addPaperCall = mockApiCall("addPaperToProject", projectPaper);
+
+        await expect(addPaperToProject(PROJECT_ID, "paper-1", 2n)).resolves.toEqual(projectPaper);
+        expect(addPaperCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: PROJECT_ID,
+            paperId: "paper-1",
+            stage: 2n,
+        });
+    });
+});
+
 describe("getPapersToReview", () => {
     test("When the papers to review are loaded, then they are requested by project ID and returned", async () => {
         const projectPapers = [createProjectPaper({ id: "1" }), createProjectPaper({ id: "2" })];
@@ -52,6 +90,11 @@ describe("project paper calls", () => {
             () => getProjectPaperByLocalId(PROJECT_ID, "7"),
         ],
         ["getPapersToReview", "getPapersToReviewForProject", () => getPapersToReview(PROJECT_ID)],
+        [
+            "addPaperToProject",
+            "addPaperToProject",
+            () => addPaperToProject(PROJECT_ID, "paper-1", 0n),
+        ],
     ] as const)("When %s fails, then it rejects with an ApiError", async (_, method, run) => {
         mockFailedApiCall(method, "backend down");
 
