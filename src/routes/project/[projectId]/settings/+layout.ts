@@ -1,4 +1,4 @@
-import { MEMBERS_DEPENDENCY_KEY, takePrimedMembers } from "$lib/model/project-members-cache";
+import { MEMBERS_DEPENDENCY_KEY, takePrimedMembers } from "$lib/model/cache/project-members-cache";
 import type { LayoutLoad } from "./$types";
 import { loadMembers } from "./helper";
 

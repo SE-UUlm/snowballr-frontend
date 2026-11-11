@@ -1,5 +1,5 @@
 import { backendService } from "$lib/grpc-api";
-import { PROJECT_DEPENDENCY_KEY, takePrimedProject } from "$lib/model/project-cache";
+import { PROJECT_DEPENDENCY_KEY, takePrimedProject } from "$lib/model/cache/project-cache";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params, depends }) => {

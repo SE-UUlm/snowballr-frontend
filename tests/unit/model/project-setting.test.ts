@@ -11,7 +11,7 @@ import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
 import { invalidate } from "$app/navigation";
-import { takePrimedProject } from "$lib/model/project-cache";
+import { takePrimedProject } from "$lib/model/cache/project-cache";
 import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";

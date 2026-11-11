@@ -2,7 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, ProjectStatus } from "snowballr-api/project";
-    import { refreshProject } from "$lib/model/project-cache";
+    import { refreshProject } from "$lib/model/cache/project-cache";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";

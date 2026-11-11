@@ -6,9 +6,9 @@ import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { createProject, loading } from "$tests/model-builder";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
-import { refreshProject } from "$lib/model/project-cache";
+import { refreshProject } from "$lib/model/cache/project-cache";
 
-vi.mock("$lib/model/project-cache", () => ({
+vi.mock("$lib/model/cache/project-cache", () => ({
     refreshProject: vi.fn(() => Promise.resolve()),
 }));
 

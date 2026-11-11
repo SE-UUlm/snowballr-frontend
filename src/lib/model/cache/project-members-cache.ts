@@ -1,5 +1,5 @@
 import { invalidate } from "$app/navigation";
-import type { MemberInfo } from "../../routes/project/[projectId]/settings/helper";
+import type { MemberInfo } from "../../../routes/project/[projectId]/settings/helper";
 
 export const MEMBERS_DEPENDENCY_KEY = "data:getProjectMembers";
 

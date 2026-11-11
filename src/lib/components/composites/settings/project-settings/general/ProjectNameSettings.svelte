@@ -5,7 +5,7 @@
     import { onMount } from "svelte";
     import { Project } from "snowballr-api/project";
     import { Schema } from "$lib/schemas";
-    import { refreshProject } from "$lib/model/project-cache";
+    import { refreshProject } from "$lib/model/cache/project-cache";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
