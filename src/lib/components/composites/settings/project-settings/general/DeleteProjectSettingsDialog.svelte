@@ -3,7 +3,7 @@
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button";
     import Input from "$lib/components/primitives/input/input.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import { deleteProject as deleteProjectById } from "$lib/api/project";
     import { createActionError } from "$lib/model/action-error";
     import type { Project } from "$lib/api/types";
     import { loadingWrapper } from "$lib/utils/common-helper";
@@ -52,9 +52,8 @@
     async function deleteProject() {
         deleteProjectError = undefined;
 
-        await backendService
-            .softDeleteProject({ id: projectId })
-            .response.then(async () => {
+        await deleteProjectById(projectId)
+            .then(async () => {
                 toast.success(`Successfully deleted '${projectName}'.`);
                 await goto(resolve("/"));
             })

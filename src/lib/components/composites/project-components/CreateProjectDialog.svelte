@@ -5,7 +5,8 @@
     import { Schema } from "$lib/schemas";
     import { cn } from "$lib/utils/shadcn-helper";
     import { goto, invalidate } from "$app/navigation";
-    import { backendService } from "$lib/grpc-api";
+    import { createProject } from "$lib/api/project";
+    import { inviteUserToProject } from "$lib/api/invitation";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
@@ -53,11 +54,8 @@
             return;
         }
 
-        await backendService
-            .createProject({
-                name: projectNameInput.getValue(),
-            })
-            .response.then(async (project) => {
+        await createProject(projectNameInput.getValue())
+            .then(async (project) => {
                 projectId = project.id;
             })
             .catch((error) => {
@@ -66,11 +64,7 @@
             });
 
         if (projectId !== undefined) {
-            const invitations = invitees.map(
-                (email) =>
-                    backendService.inviteUserToProject({ projectId: projectId!, userEmail: email })
-                        .response,
-            );
+            const invitations = invitees.map((email) => inviteUserToProject(projectId!, email));
             await Promise.all(invitations)
                 .then(() => {
                     projectWasCreated = true;
