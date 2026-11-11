@@ -2,10 +2,10 @@
     import { type VariantProps, tv } from "tailwind-variants";
 
     export const alertVariants = tv({
-        base: "[&>svg]:text-foreground relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg~*]:pl-7",
+        base: "grid gap-0.5 rounded-lg border p-4 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 group/alert relative w-full",
         variants: {
             variant: {
-                default: "bg-background text-foreground",
+                default: "bg-card text-card-foreground",
                 success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
                 info: "border-info/50 text-info dark:border-info [&>svg]:text-info",
                 warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
@@ -21,9 +21,8 @@
 </script>
 
 <script lang="ts">
+    import { cn, type WithElementRef } from "$lib/utils/shadcn-helper.js";
     import type { HTMLAttributes } from "svelte/elements";
-    import type { WithElementRef } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),
@@ -36,6 +35,12 @@
     } = $props();
 </script>
 
-<div bind:this={ref} class={cn(alertVariants({ variant }), className)} {...restProps} role="alert">
+<div
+    bind:this={ref}
+    class={cn(alertVariants({ variant }), className)}
+    data-slot="alert"
+    role="alert"
+    {...restProps}
+>
     {@render children?.()}
 </div>

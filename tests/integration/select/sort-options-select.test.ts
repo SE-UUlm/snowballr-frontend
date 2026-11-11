@@ -16,8 +16,9 @@ describe("SortOptionsSelect", () => {
     test("When no initial selected value is provided, then the default selected option is 'Id: Low to High'.", async () => {
         render(SortOptionsSelect);
 
-        const trigger = screen.getByRole("button", { name: "Sort by: Id" });
+        const trigger = screen.getByRole("combobox", { name: "SortOptions-Select" });
         expect(trigger).toBeInTheDocument();
+        expect(trigger).toHaveTextContent("Sort by: Id");
     });
 
     test("When a initial selected value is provided, then this initial value is selected and shown in the select trigger.", async () => {
@@ -27,15 +28,16 @@ describe("SortOptionsSelect", () => {
             },
         });
 
-        const trigger = screen.getByRole("button", { name: "Sort by: Title" });
+        const trigger = screen.getByRole("combobox", { name: "SortOptions-Select" });
         expect(trigger).toBeInTheDocument();
+        expect(trigger).toHaveTextContent("Sort by: Title");
     });
 
     test("When the user clicks the select trigger, all possible sort options are shown and one can be selected (exclusive).", async () => {
         const user = userEvent.setup();
         render(SortOptionsSelect);
 
-        const trigger = screen.getByRole("button", { name: "Sort by: Id" });
+        const trigger = screen.getByRole("combobox", { name: "SortOptions-Select" });
 
         await user.click(trigger);
 

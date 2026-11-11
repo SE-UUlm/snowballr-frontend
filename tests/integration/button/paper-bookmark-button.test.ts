@@ -51,7 +51,7 @@ describe("PaperBookmarkButton", () => {
         await user.hover(button);
 
         await waitFor(() => {
-            expect(button).toHaveAttribute("data-state", "delayed-open");
+            expect(button).toHaveAttribute("data-state", "instant-open");
         });
 
         const tooltip = screen.getByText("Add to reading list");
@@ -74,7 +74,7 @@ describe("PaperBookmarkButton", () => {
         await user.hover(button);
 
         await waitFor(() => {
-            expect(button).toHaveAttribute("data-state", "delayed-open");
+            expect(button).toHaveAttribute("data-state", "instant-open");
         });
 
         const tooltip = screen.getByText("Remove from reading list");

@@ -24,7 +24,7 @@ describe("PaperNavigationButton", () => {
         await userEvent.hover(button);
 
         await waitFor(() => {
-            expect(button).toHaveAttribute("data-state", "delayed-open");
+            expect(button).toHaveAttribute("data-state", "instant-open");
         });
 
         const tooltip = screen.getByText("Previous Paper");
@@ -65,7 +65,7 @@ describe("PaperNavigationButton", () => {
         await userEvent.hover(button);
 
         await waitFor(() => {
-            expect(button).toHaveAttribute("data-state", "delayed-open");
+            expect(button).toHaveAttribute("data-state", "instant-open");
         });
 
         const tooltip = screen.getByText("Next Paper");

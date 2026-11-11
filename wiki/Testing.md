@@ -21,6 +21,11 @@ On this page, we will cover the following topics:
 - [End-to-End Tests](#end-to-end-tests)
   - [Requirements](#requirements)
   - [Best Practices](#best-practices)
+- [Visual Regression Tests](#visual-regression-tests)
+  - [How It Works](#how-it-works)
+  - [Writing a Visual Test](#writing-a-visual-test)
+  - [Updating Baselines](#updating-baselines)
+  - [Bumping Playwright or the Mock Backend](#bumping-playwright-or-the-mock-backend)
 
 ## Test Data
 
@@ -31,6 +36,9 @@ In general, it makes sense to use the model builder to create test data, as it i
 
 > **Note**: Do not expect that the example data never changes, so it is better to use the model builder and overwrite
 > the values you need.
+
+The [visual regression tests](#visual-regression-tests) are an exception: they use their own fixed data, because every
+change to the data changes the screenshots.
 
 ## Conventions
 
@@ -186,3 +194,114 @@ requiring it to be installed and running.
    tested in its own `describe` block.
 
 For more advanced usage and documentation, refer to the official [Playwright documentation](https://playwright.dev/).
+
+## Visual Regression Tests
+
+Visual regression tests detect unintended changes to the appearance of the app, e.g. after bumping a UI library like
+`bits-ui`. They take screenshots of pages and components and compare them pixel by pixel to committed baselines.
+They are a separate Playwright suite located in the
+[tests/visual](https://github.com/SE-UUlm/snowballr-frontend/tree/develop/tests/visual) directory, configured in
+[`playwright.visual.config.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/playwright.visual.config.ts),
+and are not part of `npm run test:e2e`. Run them with:
+
+```bash
+npm run test:visual
+```
+
+If a screenshot differs, the test fails and the report shows the expected, actual and diff images:
+
+```bash
+npm run test:visual:show-report
+```
+
+In CI, the job _Visual Regression Testing with Playwright_ always runs the complete suite, never only the tests related
+to changes, since e.g. a dependency bump changes the appearance without touching any test. Like the E2E tests, it is
+sharded by `TESTS_PER_SHARD`. It fails on any difference and uploads the report of each shard as a `visual-report-<n>`
+artifact.
+
+### How It Works
+
+Screenshots only match if they are always rendered by the same browser build with the same fonts. The app uses the
+system font stack, so a screenshot taken on your machine would differ from one taken in CI. Therefore, the browser does
+not run on your machine, but in the official
+[Playwright Docker image](https://playwright.dev/docs/docker) (`playwright run-server`), both locally and in CI:
+
+- [`scripts/run-visual-tests.js`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/scripts/run-visual-tests.js)
+  starts the container, runs Playwright against it and stops the container again. The image tag is taken from the
+  installed `@playwright/test` version in `package-lock.json`, as client and server versions must match exactly.
+- The tests themselves, the preview server of the frontend and the mock backends still run on your machine.
+  `exposeNetwork: "<loopback>"` lets the browser in the container reach them via `localhost`, so the regular E2E
+  fixtures and POMs can be reused.
+- Only Firefox with the `Desktop Firefox` viewport (1280×720), the `en-US` locale and the `UTC` timezone is used. The
+  comparison is strict (no differing pixels allowed) and failed tests are not retried, as a visual difference is
+  deterministic.
+
+Like the E2E tests, the visual tests require Docker to be installed and running. Without it, the scripts fail
+immediately.
+
+### Writing a Visual Test
+
+Visual tests are named `custom-name.visual.ts` and follow the same [conventions](#conventions) as the other tests.
+Reuse the POMs of the E2E tests to locate elements. A test should:
+
+1. **Use the visual fixture**: Import `test` from
+   [`tests/visual/utils/visual-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/visual-fixture.ts).
+   It extends the isolated fixture (one fresh mock backend per test) and
+   - freezes the browser clock, so dates and relative times never change, and
+   - replaces the project dates that the mock backend sets from its own clock with fixed ones.
+
+   Request the `visualData` fixture to seed the
+   [fixed visual test data](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/visual-data.ts)
+   and to get the ids of the created objects. Tests that don't request it start with an empty account, e.g. to cover
+   empty states.
+
+2. **Wait until the page has settled**: Use `gotoAndSettle(page, url, ready)` or `settle(page, ready)` from
+   [`tests/visual/utils/helper.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/helper.ts)
+   with an element that is only visible once the data has loaded, so no skeletons end up in the screenshot.
+
+3. **Take the screenshot**:
+   - Pages: `await expect(page).toHaveScreenshot("name.png", { fullPage: true });`
+   - Overlays that are positioned relative to their trigger (menus, dropdowns, tooltips): a page screenshot, so the
+     placement is covered as well.
+   - Dialogs: an element screenshot, e.g. `await expect(dialog).toHaveScreenshot("name-dialog.png");`
+
+   The content of most pages scrolls inside a scroll area, so `fullPage` only contains what fits into the viewport. Call
+   `expandViewportToFitScrollAreas(page)` before the screenshot to include the content below it.
+
+Keep the screenshots deterministic:
+
+- Only use the fixed visual test data, never the example data or the model builder. Create additional data through the
+  API **one after another** (not with `Promise.all`), as the mock backend assigns ids sequentially.
+- Animations are disabled and the text cursor is hidden for all screenshots (see the config).
+- If a value can't be pinned, hide it with the
+  [`mask`](https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-1-option-mask)
+  option. Keep in mind that a masked value whose width changes still shifts the content around it.
+
+Finally, run the new test a few times to make sure it is stable:
+
+```bash
+npm run test:visual -- tests/visual/path/to/new.visual.ts --repeat-each=5
+```
+
+### Updating Baselines
+
+The baselines are stored next to the tests in `*.visual.ts-snapshots/` directories and committed as regular files (no
+Git LFS). When you change the appearance on purpose or add a new test, create or update the baselines with:
+
+```bash
+npm run test:visual:update
+```
+
+This rewrites only the baselines that differ or are missing, and afterwards compresses them losslessly with
+[oxipng](https://github.com/shssoichiro/oxipng). Then check the changed PNGs in the diff of your commit, and only commit
+them if every change is intended. As the browser runs in the same Docker image everywhere, baselines created on your
+machine are valid in CI.
+
+### Bumping Playwright or the Mock Backend
+
+- **Playwright**: A new version comes with a new browser build, which may render some pixels differently, so a bump
+  (e.g. by Dependabot) may fail the visual tests. The scripts pick up the new Docker image automatically. Check out the
+  branch, run `npm run test:visual:update`, review the changed baselines and commit them to that branch.
+- **Mock backend**: The visual test data is created through the API of the mock backend
+  ([`mock-backend-version.js`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/helper/mock-backend-version.js)),
+  so a changed behavior can change the screenshots as well. Proceed in the same way.

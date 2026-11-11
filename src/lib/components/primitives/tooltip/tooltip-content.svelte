@@ -1,21 +1,48 @@
 <script lang="ts">
     import { Tooltip as TooltipPrimitive } from "bits-ui";
     import { cn } from "$lib/utils/shadcn-helper.js";
+    import type { WithoutChildrenOrChild } from "$lib/utils/shadcn-helper.js";
+    import TooltipPortal from "./tooltip-portal.svelte";
+    import type { ComponentProps } from "svelte";
 
     let {
         ref = $bindable(null),
         class: className,
-        sideOffset = 4,
+        sideOffset = 0,
+        side = "top",
+        children,
+        arrowClasses,
+        portalProps,
         ...restProps
-    }: TooltipPrimitive.ContentProps = $props();
+    }: TooltipPrimitive.ContentProps & {
+        arrowClasses?: string;
+        portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
+    } = $props();
 </script>
 
-<TooltipPrimitive.Content
-    class={cn(
-        "bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 overflow-hidden rounded-md border px-3 py-1.5 text-sm shadow-md",
-        className,
-    )}
-    {sideOffset}
-    bind:ref
-    {...restProps}
-/>
+<TooltipPortal {...portalProps}>
+    <TooltipPrimitive.Content
+        class={cn(
+            "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-foreground text-background z-50 inline-flex w-fit max-w-xs origin-(--bits-tooltip-content-transform-origin) items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
+            className,
+        )}
+        data-slot="tooltip-content"
+        {side}
+        {sideOffset}
+        bind:ref
+        {...restProps}
+    >
+        {@render children?.()}
+        <TooltipPrimitive.Arrow>
+            {#snippet child({ props })}
+                <div
+                    class={cn(
+                        "bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=bottom]:-translate-x-1/2 data-[side=bottom]:-translate-y-[calc(-50%_+_1px)] data-[side=left]:-translate-y-[calc(50%_-_3px)] data-[side=right]:translate-x-[calc(50%_+_2px)] data-[side=right]:translate-y-1/2 data-[side=top]:translate-x-1/2 data-[side=top]:translate-y-[calc(-50%_+_2px)]",
+                        arrowClasses,
+                    )}
+                    {...props}
+                ></div>
+            {/snippet}
+        </TooltipPrimitive.Arrow>
+    </TooltipPrimitive.Content>
+</TooltipPortal>
