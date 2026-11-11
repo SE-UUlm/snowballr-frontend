@@ -119,6 +119,34 @@ test.describe("Invite User Tests", () => {
         });
     });
 
+    test("When a user is invited and the user navigates to another settings tab and back, then the invited user is still listed", async ({
+        page,
+        projectMembersSettingsPage,
+        projectSettingsSideBar,
+    }) => {
+        await projectMembersSettingsPage.openInviteUsersDialog();
+
+        await projectMembersSettingsPage.inviteUsersDialog.fillUserInvite("jane.doe@example.com");
+        await projectMembersSettingsPage.inviteUsersDialog.confirmInviteUsersButton.click();
+        await expect(
+            projectMembersSettingsPage.getUserSuccessFullyInvitedToast("jane.doe@example.com"),
+        ).toBeVisible();
+
+        await projectSettingsSideBar.general.click();
+        await expect(page).toHaveURL(/\/settings\/general$/);
+        await projectSettingsSideBar.members.click();
+        await expect(page).toHaveURL(/\/settings\/members$/);
+
+        await projectMembersSettingsPage.checkForUser("jane.doe@example.com", "email");
+        await projectMembersSettingsPage.assertNumberOfProjectMembers({
+            all: 2,
+            admins: 1,
+            members: 1,
+            invitees: 1,
+            invitedMembers: 1,
+        });
+    });
+
     test("When the user is invited, but the email address is invalid, then an error message is shown.", async ({
         projectMembersSettingsPage,
     }) => {
