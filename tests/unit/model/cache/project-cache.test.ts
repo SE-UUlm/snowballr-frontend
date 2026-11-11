@@ -4,7 +4,7 @@ import {
     PROJECT_DEPENDENCY_KEY,
     refreshProject,
     takePrimedProject,
-} from "$lib/model/project-cache";
+} from "$lib/model/cache/project-cache";
 import { createProject } from "$tests/model-builder";
 
 vi.mock("$app/navigation", () => ({

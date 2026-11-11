@@ -7,9 +7,9 @@ import { createProject } from "$tests/model-builder";
 import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
 import { ProjectStatus } from "snowballr-api/project";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
-import { refreshProject } from "$lib/model/project-cache";
+import { refreshProject } from "$lib/model/cache/project-cache";
 
-vi.mock("$lib/model/project-cache", () => ({
+vi.mock("$lib/model/cache/project-cache", () => ({
     refreshProject: vi.fn(() => Promise.resolve()),
 }));
 

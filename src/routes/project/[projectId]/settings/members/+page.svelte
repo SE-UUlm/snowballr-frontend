@@ -9,7 +9,7 @@
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import { isCurrentUserProjectAdmin, loadMembers } from "../helper";
-    import { refreshMembers } from "$lib/model/project-members-cache";
+    import { refreshMembers } from "$lib/model/cache/project-members-cache";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";

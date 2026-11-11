@@ -5,7 +5,7 @@ import { backendService } from "$lib/grpc-api";
 import { buildFieldMask } from "$lib/utils/fieldmask-helper";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import { toast } from "svelte-sonner";
-import { refreshProject } from "$lib/model/project-cache";
+import { refreshProject } from "$lib/model/cache/project-cache";
 
 /** The success message shown after a project setting was updated, unless the descriptor overrides it. */
 export const PROJECT_SETTING_SUCCESS_MESSAGE = "Successfully updated the project settings.";

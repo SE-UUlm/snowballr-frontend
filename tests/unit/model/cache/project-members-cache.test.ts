@@ -4,9 +4,9 @@ import {
     MEMBERS_DEPENDENCY_KEY,
     refreshMembers,
     takePrimedMembers,
-} from "$lib/model/project-members-cache";
+} from "$lib/model/cache/project-members-cache";
 import { Members } from "$tests/example-data";
-import type { MemberInfo } from "../../../src/routes/project/[projectId]/settings/helper";
+import type { MemberInfo } from "../../../../src/routes/project/[projectId]/settings/helper";
 
 vi.mock("$app/navigation", () => ({
     invalidate: vi.fn(() => Promise.resolve()),

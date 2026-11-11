@@ -3,7 +3,7 @@ import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
 import { Project, Project_Settings } from "snowballr-api/project";
 import { toast } from "svelte-sonner";
-import { refreshProject } from "$lib/model/project-cache";
+import { refreshProject } from "$lib/model/cache/project-cache";
 
 export async function updateFetchers(
     projectId: string,
