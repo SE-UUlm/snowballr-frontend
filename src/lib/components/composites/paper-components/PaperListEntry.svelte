@@ -2,7 +2,7 @@
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
-    import { backendService } from "$lib/grpc-api";
+    import { getUserById } from "$lib/api/user";
     import type { User, Paper, Project_Paper } from "$lib/api/types";
     import {
         getDisplayPaperId,
@@ -46,7 +46,7 @@
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
         try {
-            reviewingUser = await backendService.getUserById({ id: id }).response;
+            reviewingUser = await getUserById(id);
         } catch (error) {
             console.error(`Couldn't load review user with: ${id} (error: ${error})`);
         }
