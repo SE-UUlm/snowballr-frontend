@@ -2,6 +2,7 @@ import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { AuthenticationStatus, AuthenticationStatusResponse } from "snowballr-api/authentication";
 import { Nothing } from "snowballr-api/base";
+import { setFetch } from "$lib/api/fetch";
 import { call } from "$lib/api/grpc";
 import type * as ClientModule from "$lib/api/client";
 
@@ -19,7 +20,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-    api.setFetch(globalThis.fetch);
+    setFetch(globalThis.fetch);
 });
 
 const DATA_FRAME = 0x00;
@@ -59,7 +60,7 @@ describe("client", () => {
     const authenticated = { authenticationStatus: AuthenticationStatus.AUTHENTICATED };
 
     test("When the server sends a message and status OK, then the call returns the message", async () => {
-        api.setFetch(() => Promise.resolve(messageThenStatus(authenticated, GrpcStatusCode.OK)));
+        setFetch(() => Promise.resolve(messageThenStatus(authenticated, GrpcStatusCode.OK)));
 
         const result = call(api.client.getAuthenticationStatus(Nothing));
 
@@ -67,7 +68,7 @@ describe("client", () => {
     });
 
     test("When the server sends a message and then a failing status, then the call rejects with that status", async () => {
-        api.setFetch(() =>
+        setFetch(() =>
             Promise.resolve(
                 messageThenStatus(authenticated, GrpcStatusCode.PERMISSION_DENIED, "denied"),
             ),
@@ -82,7 +83,7 @@ describe("client", () => {
     });
 
     test("When the request cannot be sent, then the call rejects as unavailable", async () => {
-        api.setFetch(() => Promise.reject(new TypeError("Failed to fetch")));
+        setFetch(() => Promise.reject(new TypeError("Failed to fetch")));
 
         const result = call(api.client.getAuthenticationStatus(Nothing));
 
@@ -93,9 +94,7 @@ describe("client", () => {
     });
 
     test("When the request is aborted, then the call rejects as cancelled", async () => {
-        api.setFetch(() =>
-            Promise.reject(new DOMException("The request was aborted", "AbortError")),
-        );
+        setFetch(() => Promise.reject(new DOMException("The request was aborted", "AbortError")));
 
         const result = call(api.client.getAuthenticationStatus(Nothing));
 

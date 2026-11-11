@@ -2,6 +2,7 @@ import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-tran
 import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { SnowballRClient } from "snowballr-api/main.client";
 import { env } from "$env/dynamic/public";
+import { getFetch } from "./fetch";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
 import { IS_IN_DEV_MODE } from "$lib/constants";
 
@@ -14,8 +15,6 @@ if (!env.PUBLIC_API_BASE_URL) {
 const credentials: RequestCredentials =
     (env.PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
 
-let fetch = globalThis.fetch;
-
 /**
  * Calls the current `fetch` and reports a request that could not be sent as gRPC `UNAVAILABLE`.
  *
@@ -25,16 +24,12 @@ let fetch = globalThis.fetch;
  * unchanged, so the transport still reports an `AbortError` as `CANCELLED`.
  */
 const customFetch = (input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response> =>
-    fetch(input, init).catch((error: unknown) => {
+    getFetch()(input, init).catch((error: unknown) => {
         if (error instanceof TypeError) {
             throw new RpcError(error.message, GrpcStatusCode[GrpcStatusCode.UNAVAILABLE]);
         }
         throw error;
     });
-
-export function setFetch(newFetch: typeof fetch) {
-    fetch = newFetch;
-}
 
 const transport = new GrpcWebFetchTransport({
     baseUrl: env.PUBLIC_API_BASE_URL,
