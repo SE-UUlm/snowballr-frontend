@@ -11,7 +11,7 @@ import {
     type PaperCandidate,
 } from "$lib/model/paper-candidate";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import { toast } from "svelte-sonner";
 
 vi.mock("svelte-sonner", () => ({
@@ -149,11 +149,11 @@ describe("searchPaperCandidates", () => {
             includeFetchers: false,
         });
 
-        expect(backendService.searchLocalProjectPaperCandidates).toHaveBeenCalledWith({
+        expect(client.searchLocalProjectPaperCandidates).toHaveBeenCalledWith({
             query: "query",
             projectId: PROJECT_ID,
         });
-        expect(backendService.searchFetcherProjectPaperCandidates).not.toHaveBeenCalled();
+        expect(client.searchFetcherProjectPaperCandidates).not.toHaveBeenCalled();
     });
 
     test("When only the fetcher source is requested, then the local database is not searched", async () => {
@@ -162,8 +162,8 @@ describe("searchPaperCandidates", () => {
             includeFetchers: true,
         });
 
-        expect(backendService.searchFetcherProjectPaperCandidates).toHaveBeenCalled();
-        expect(backendService.searchLocalProjectPaperCandidates).not.toHaveBeenCalled();
+        expect(client.searchFetcherProjectPaperCandidates).toHaveBeenCalled();
+        expect(client.searchLocalProjectPaperCandidates).not.toHaveBeenCalled();
     });
 
     test("When both sources return papers, then they are merged", async () => {
@@ -273,14 +273,14 @@ describe("addPaperCandidates", () => {
     test("When a candidate is already in the database, then it is not created again", async () => {
         const summary = await addPaperCandidates([known], TARGET);
 
-        expect(backendService.createPaper).not.toHaveBeenCalled();
+        expect(client.createPaper).not.toHaveBeenCalled();
         expect(summary).toEqual({ added: 1, failed: [] });
     });
 
     test("When a candidate is added, then it lands in the requested project and stage", async () => {
         await addPaperCandidates([known], TARGET);
 
-        expect(backendService.addPaperToProject).toHaveBeenCalledWith({
+        expect(client.addPaperToProject).toHaveBeenCalledWith({
             paperId: "42",
             projectId: PROJECT_ID,
             stage: 3n,
@@ -292,8 +292,8 @@ describe("addPaperCandidates", () => {
 
         const summary = await addPaperCandidates([fresh], TARGET);
 
-        expect(backendService.createPaper).toHaveBeenCalledWith(fresh.paper);
-        expect(backendService.addPaperToProject).toHaveBeenCalledWith({
+        expect(client.createPaper).toHaveBeenCalledWith(fresh.paper);
+        expect(client.addPaperToProject).toHaveBeenCalledWith({
             paperId: "created-1",
             projectId: PROJECT_ID,
             stage: 3n,
@@ -309,7 +309,7 @@ describe("addPaperCandidates", () => {
         const summary = await addPaperCandidates([fresh], TARGET);
 
         expect(summary).toEqual({ added: 1, failed: [] });
-        expect(backendService.addPaperToProject).toHaveBeenCalled();
+        expect(client.addPaperToProject).toHaveBeenCalled();
     });
 
     test("When creating a paper fails for another reason, then it is reported as a create failure", async () => {
@@ -318,7 +318,7 @@ describe("addPaperCandidates", () => {
         const summary = await addPaperCandidates([fresh], TARGET);
 
         expect(summary).toEqual({ added: 0, failed: [{ candidate: fresh, step: "create" }] });
-        expect(backendService.addPaperToProject).not.toHaveBeenCalled();
+        expect(client.addPaperToProject).not.toHaveBeenCalled();
         expect(toast.error).toHaveBeenCalledWith("Paper 'Fresh' could not be created.");
     });
 
@@ -335,7 +335,7 @@ describe("addPaperCandidates", () => {
         const first: PaperCandidate = { paper: localPaper("1"), key: "1", isNew: false };
         const second: PaperCandidate = { paper: localPaper("2"), key: "2", isNew: false };
         const third: PaperCandidate = { paper: localPaper("3"), key: "3", isNew: false };
-        (backendService.addPaperToProject as Mock)
+        (client.addPaperToProject as Mock)
             .mockClear()
             .mockImplementation(({ paperId }) =>
                 paperId === "2"
@@ -352,7 +352,7 @@ describe("addPaperCandidates", () => {
     test("When only some candidates land, then the success message counts those", async () => {
         const first: PaperCandidate = { paper: localPaper("1"), key: "1", isNew: false };
         const second: PaperCandidate = { paper: localPaper("2"), key: "2", isNew: false };
-        (backendService.addPaperToProject as Mock)
+        (client.addPaperToProject as Mock)
             .mockClear()
             .mockImplementation(({ paperId }) =>
                 paperId === "2"
@@ -386,7 +386,7 @@ describe("addPaperCandidates", () => {
         const summary = await addPaperCandidates([], TARGET);
 
         expect(summary).toEqual({ added: 0, failed: [] });
-        expect(backendService.addPaperToProject).not.toHaveBeenCalled();
+        expect(client.addPaperToProject).not.toHaveBeenCalled();
         expect(toast.success).not.toHaveBeenCalled();
     });
 });

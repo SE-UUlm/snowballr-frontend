@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { createReview } from "$tests/model-builder";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import { Review, ReviewDecision } from "snowballr-api/review";
 import { getReturnValue } from "$tests/setupTest";
 import {
@@ -20,7 +20,7 @@ type CombinedContext = SelectedCriteriaContext | WasReviewedContext | IsProjectA
 
 describe("PaperDecisionButton", () => {
     test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -57,7 +57,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'decline', then button is visualized and acts as the decline button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -94,7 +94,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
