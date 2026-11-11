@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { Users } from "$tests/example-data";
-import { render, screen } from "@testing-library/svelte";
+import { render, screen, waitFor } from "@testing-library/svelte";
 import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
 import userEvent from "@testing-library/user-event";
 import { getName } from "$lib/utils/common-helper";
@@ -60,6 +60,36 @@ describe("InviteUsersInput", () => {
 
         const suggestion = await screen.findByText(getName(newUser), { exact: false });
         expect(suggestion).toBeInTheDocument();
+    });
+
+    test("When a name is typed, then the candidates for the project are searched by that name", async () => {
+        const getCandidatesCall = mockApiCall("getInviteCandidates", { users: [Users.janeDoe] });
+        const user = userEvent.setup();
+        render(InviteUsersInput, {
+            target: document.body,
+            props: { invitees: [], projectId: "1" },
+        });
+
+        await user.type(screen.getByRole("textbox"), "Jane");
+
+        await waitFor(() => {
+            expect(getCandidatesCall).toHaveBeenLastCalledWith({ query: "Jane", projectId: "1" });
+        });
+    });
+
+    test("When a name is typed without a project, then the candidates are searched without a project ID", async () => {
+        const getCandidatesCall = mockApiCall("getInviteCandidates", { users: [Users.janeDoe] });
+        const user = userEvent.setup();
+        render(InviteUsersInput, {
+            target: document.body,
+            props: { invitees: [] },
+        });
+
+        await user.type(screen.getByRole("textbox"), "Jane");
+
+        await waitFor(() => {
+            expect(getCandidatesCall).toHaveBeenLastCalledWith({ query: "Jane", projectId: "" });
+        });
     });
 
     test("When name of a user that is already in the invitee chips list is typed, then it is not displayed as suggestion", async () => {

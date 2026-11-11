@@ -6,8 +6,12 @@ import { MemberRole } from "snowballr-api/project";
 
 describe("LoadMembers", () => {
     test("When member is invitee, then isInvitationPending is true", async () => {
-        mockApiCall("getProjectMembers", { members: [Members.demoMember1, Members.demoMember2] });
-        mockApiCall("getPendingInvitationsForProject", { users: [Users.henryMoore] });
+        const getMembersCall = mockApiCall("getProjectMembers", {
+            members: [Members.demoMember1, Members.demoMember2],
+        });
+        const getInvitationsCall = mockApiCall("getPendingInvitationsForProject", {
+            users: [Users.henryMoore],
+        });
 
         const result = await loadMembers({ id: "1" });
 
@@ -16,5 +20,7 @@ describe("LoadMembers", () => {
             { ...Members.demoMember2, isInvitationPending: false },
             { ...Members.demoMember1, isInvitationPending: false },
         ]);
+        expect(getMembersCall).toHaveBeenCalledExactlyOnceWith({ id: "1" });
+        expect(getInvitationsCall).toHaveBeenCalledExactlyOnceWith({ id: "1" });
     });
 });
