@@ -2,7 +2,7 @@
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { backendService } from "$lib/grpc-api";
     import { Project, ProjectStatus } from "snowballr-api/project";
-    import { invalidate } from "$app/navigation";
+    import { refreshProject } from "$lib/model/project-cache";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { buildFieldMask } from "$lib/utils/fieldmask-helper";
@@ -43,11 +43,11 @@
                 project: Project.create(projectData),
                 mask: buildFieldMask(projectData, "project"),
             })
-            .response.then(async () => {
+            .response.then(async (updatedProject) => {
                 toast.success(
                     `Successfully ${isProjectArchived ? "activated" : "archived"} the project.`,
                 );
-                await invalidate("data:getProjectById");
+                await refreshProject(updatedProject);
             })
             .catch(() => {
                 toast.error(`Could not ${isProjectArchived ? "activate" : "archive"} the project.`);

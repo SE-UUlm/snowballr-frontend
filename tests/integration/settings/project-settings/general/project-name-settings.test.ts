@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
 import { Projects } from "$tests/example-data";
@@ -6,8 +6,17 @@ import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { createProject, loading } from "$tests/model-builder";
 import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
+import { refreshProject } from "$lib/model/project-cache";
+
+vi.mock("$lib/model/project-cache", () => ({
+    refreshProject: vi.fn(() => Promise.resolve()),
+}));
 
 describe("ProjectNameSettings", () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     test("When all props are provided, then it renders correctly, with two labels, one input field and a button", async () => {
         render(ProjectNameSettings, {
             target: document.body,
@@ -102,6 +111,35 @@ describe("ProjectNameSettings", () => {
         expect(mockCall).toHaveBeenCalled();
     });
 
+    test("When the project is renamed, then the project is refreshed with the updated project", async () => {
+        const updatedProject = createProject({
+            id: Projects.demoProjectActive.id,
+            name: "New Project Name",
+        });
+        mockApiCall("updateProject", updatedProject);
+        render(ProjectNameSettings, {
+            props: {
+                projectId: Projects.demoProjectActive.id,
+                loadingProject: Promise.resolve(Projects.demoProjectActive),
+            },
+            context: mockIsProjectArchivedContext(),
+        });
+
+        const projectRenameInput = screen.getByLabelText("Project Name");
+        const renameButton = screen.getByRole("button", { name: "Rename" });
+        await waitFor(() => {
+            expect(renameButton).toBeEnabled();
+            expect(projectRenameInput).toBeEnabled();
+        });
+        await userEvent.clear(projectRenameInput);
+        await userEvent.type(projectRenameInput, "New Project Name");
+        await userEvent.click(renameButton);
+
+        await waitFor(() => {
+            expect(refreshProject).toHaveBeenCalledWith(updatedProject);
+        });
+    });
+
     test("When the loading project fails to resolve, then an error message should be shown", async () => {
         const failedPromise = Promise.reject(new Error("Error while loading project"));
         render(ProjectNameSettings, {
@@ -154,6 +192,7 @@ describe("ProjectNameSettings", () => {
                 "Something went wrong while updating the project name. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
+        expect(refreshProject).not.toHaveBeenCalled();
     });
 
     test("When the project is loading, then the input placeholder is 'Loading'", async () => {
