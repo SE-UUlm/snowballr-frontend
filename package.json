@@ -17,7 +17,7 @@
         "#tests/*": "./tests/*"
     },
     "license": "GPL-3.0-or-later",
-    "packageManager": "npm@11.3.0",
+    "packageManager": "npm@12.0.0",
     "scripts": {
         "dev": "vite dev --open",
         "build": "vite build",
@@ -53,6 +53,7 @@
         "@protobuf-ts/grpcweb-transport": "^2.11.1",
         "@protobuf-ts/runtime": "^2.11.1",
         "@protobuf-ts/runtime-rpc": "^2.11.1",
+        "@se-uulm/snowballr-grpc-client": "0.2.1-beta.2b3ade1",
         "@svelte-put/shortcut": "^4.2.0",
         "@sveltejs/adapter-node": "^6.0.5",
         "@sveltejs/kit": "^3.4.0",
@@ -87,7 +88,6 @@
         "prettier-plugin-tailwindcss": "^0.7.2",
         "protobuf-fieldmask": "^2.0.0",
         "resize-observer-polyfill": "1.5.1",
-        "snowballr-api": "^0.17.0",
         "svelte": "^5.57.2",
         "svelte-check": "^4.7.5",
         "svelte-sonner": "^1.2.1",
