@@ -1,7 +1,5 @@
-import { Project, type FieldMask } from "$lib/api/types";
-import type { PartialMessage } from "@protobuf-ts/runtime";
-import { backendService } from "$lib/grpc-api";
-import { buildFieldMask } from "$lib/utils/fieldmask-helper";
+import { updateProjectSettings, type ProjectSettingsPatch } from "$lib/api/project";
+import type { Project } from "$lib/api/types";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import { toast } from "svelte-sonner";
 
@@ -12,14 +10,8 @@ export const PROJECT_SETTING_SUCCESS_MESSAGE = "Successfully updated the project
  * Describes a single project setting, i.e. one field of a project's configuration.
  *
  * A descriptor says how to read the setting off a {@link Project} and how to turn a new value into a
- * patch. Everything else - deriving the field mask, building the request message, persisting,
- * toasting and error mapping - is owned by this module.
- *
- * **The patch returned by {@link ProjectSettingDescriptor.toPatch} must be a plain, sparse object.**
- * Do not call `Project_Settings.create()` (or any other generated `create()`) inside it: those
- * constructors eagerly initialize *every* non-optional field, so the derived mask would cover all
- * sibling settings and reset them to their defaults. The `create()` call belongs at the wire edge
- * and is done by {@link buildProjectSettingUpdate}.
+ * patch of the project settings. `updateProjectSettings` from `$lib/api/project` sends the patch;
+ * toasting and error mapping are owned by this module.
  */
 export interface ProjectSettingDescriptor<T> {
     /**
@@ -29,18 +21,12 @@ export interface ProjectSettingDescriptor<T> {
      * determine the value shown while the real project is still loading.
      */
     read: (project: Project) => T;
-    /** Turns a new value into a sparse patch of the project. Must not use generated `create()` functions. */
-    toPatch: (value: T) => PartialMessage<Project>;
+    /** Turns a new value into a plain, sparse patch of the project settings, see {@link ProjectSettingsPatch}. */
+    toPatch: (value: T) => ProjectSettingsPatch;
     /** Description of the action, used in the error details, e.g. "updating the similarity threshold". */
     action: string;
     /** Overrides {@link PROJECT_SETTING_SUCCESS_MESSAGE} for this setting. */
     successMessage?: string;
-}
-
-/** A masked update request for a single project setting. */
-export interface ProjectSettingUpdate {
-    project: Project;
-    mask: FieldMask;
 }
 
 /**
@@ -52,31 +38,6 @@ export interface ProjectSettingUpdate {
 export type ProjectSettingLoad<T> =
     | { loaded: true; value: T }
     | { loaded: false; error: ActionError };
-
-/**
- * Builds the masked update request for a single project setting.
- *
- * The patch is assembled as a plain object so that the field mask derived from it names exactly the
- * field being changed. Only afterwards is it converted into a `Project` message. The project id is
- * added here and is kept out of the mask by {@link buildFieldMask}'s default exclusions.
- *
- * @param descriptor - The setting to update
- * @param value - The new value of the setting
- * @param projectId - The id of the project whose setting is updated
- * @returns The project message to send and the field mask naming the changed field
- */
-export function buildProjectSettingUpdate<T>(
-    descriptor: ProjectSettingDescriptor<T>,
-    value: T,
-    projectId: string,
-): ProjectSettingUpdate {
-    const patch: PartialMessage<Project> = { id: projectId, ...descriptor.toPatch(value) };
-
-    return {
-        project: Project.create(patch),
-        mask: buildFieldMask(patch, "project"),
-    };
-}
 
 /**
  * Reads the current value of a setting once the project has loaded.
@@ -123,10 +84,10 @@ export async function commitProjectSetting<T>(
     options: { toastSuccess?: boolean } = {},
 ): Promise<ActionError> {
     const { toastSuccess = true } = options;
-    const { project, mask } = buildProjectSettingUpdate(descriptor, value, projectId);
+    const patch = descriptor.toPatch(value);
 
     try {
-        await backendService.updateProject({ project, mask }).response;
+        await updateProjectSettings(projectId, patch);
     } catch (error) {
         return createActionError(
             "Failed to Update Project Settings",

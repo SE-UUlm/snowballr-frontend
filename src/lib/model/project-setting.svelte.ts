@@ -1,4 +1,5 @@
-import { Project } from "$lib/api/types";
+import { emptyProject } from "$lib/api/project";
+import type { Project } from "$lib/api/types";
 import type { ActionError } from "$lib/model/action-error";
 import {
     commitProjectSetting,
@@ -76,7 +77,7 @@ export function projectSetting<T>(
         isArchived = () => false,
     } = options;
 
-    const defaultValue = descriptor.read(Project.create());
+    const defaultValue = descriptor.read(emptyProject());
 
     let value = $state<T>(defaultValue);
     let storedValue = $state<T>(defaultValue);

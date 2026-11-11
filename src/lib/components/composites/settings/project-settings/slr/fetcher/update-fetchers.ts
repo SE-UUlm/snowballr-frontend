@@ -1,7 +1,7 @@
-import { backendService } from "$lib/grpc-api";
+import { setProjectFetchers } from "$lib/api/project";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { Fetchers } from "$lib/api/fetcher";
-import { Project, Project_Settings } from "$lib/api/types";
+import { Project } from "$lib/api/types";
 import { toast } from "svelte-sonner";
 
 export async function updateFetchers(
@@ -10,13 +10,6 @@ export async function updateFetchers(
     onSuccess: (updatedProject: Project) => void = () => {},
     onError: (error: ActionError) => void = () => {},
 ) {
-    const projectData: Partial<Project> = {
-        id: projectId,
-        settings: Project_Settings.create({
-            fetchers: fetchers,
-        }),
-    };
-
     function onFulfilled(project: Project) {
         toast.success("Successfully updated project settings.");
         onSuccess(project);
@@ -37,12 +30,5 @@ export async function updateFetchers(
         );
     }
 
-    await backendService
-        .updateProject({
-            project: Project.create(projectData),
-            // Manually set the path list because the generated field mask does not detect that the
-            // map for the fetchers is set.
-            mask: { paths: ["project.settings.fetchers"] },
-        })
-        .response.then(onFulfilled, onRejected);
+    await setProjectFetchers(projectId, fetchers).then(onFulfilled, onRejected);
 }

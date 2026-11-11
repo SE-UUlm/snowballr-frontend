@@ -13,7 +13,7 @@ vi.mock("svelte-sonner", () => ({
 
 const similarityThreshold: ProjectSettingDescriptor<number> = {
     read: (project) => project.settings?.similarityThreshold ?? 0.5,
-    toPatch: (value) => ({ settings: { similarityThreshold: value } }),
+    toPatch: (value) => ({ similarityThreshold: value }),
     action: "updating the similarity threshold",
 };
 

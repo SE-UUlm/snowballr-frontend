@@ -1,11 +1,10 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { Project, ProjectStatus } from "$lib/api/types";
+    import { setProjectStatus } from "$lib/api/project";
+    import { ProjectStatus } from "$lib/api/types";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
@@ -33,17 +32,10 @@
     async function handleSubmit(event: Event) {
         event.preventDefault();
 
-        const projectData: Partial<Project> = {
-            id: projectId,
-            status: isProjectArchived ? ProjectStatus.ACTIVE : ProjectStatus.ARCHIVED,
-        };
+        const status = isProjectArchived ? ProjectStatus.ACTIVE : ProjectStatus.ARCHIVED;
 
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: buildFieldMask(projectData, "project"),
-            })
-            .response.then(async () => {
+        await setProjectStatus(projectId, status)
+            .then(async () => {
                 toast.success(
                     `Successfully ${isProjectArchived ? "activated" : "archived"} the project.`,
                 );
