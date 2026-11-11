@@ -4,7 +4,7 @@
     import Tooltip from "../../utils/Tooltip.svelte";
     import type { Project, Project_Paper } from "$lib/api/types";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import { getNextPaper, getNextPaperToReview, getPreviousPaper } from "$lib/api/project-paper";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
@@ -41,9 +41,8 @@
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
     async function getNextProjectPaperToReview(paper: Project_Paper) {
-        await backendService
-            .getNextPaperToReview({ id: paper.id })
-            .response.then((nextPaper) => {
+        await getNextPaperToReview(paper.id)
+            .then((nextPaper) => {
                 nextProjectPaper = nextPaper;
             })
             .catch(() => {
@@ -52,9 +51,8 @@
     }
 
     async function getNextProjectPaper(paper: Project_Paper) {
-        await backendService
-            .getNextPaper({ id: paper.id })
-            .response.then((nextPaper) => {
+        await getNextPaper(paper.id)
+            .then((nextPaper) => {
                 nextProjectPaper = nextPaper;
             })
             .catch(() => {
@@ -63,9 +61,8 @@
     }
 
     async function getPreviousProjectPaper(paper: Project_Paper) {
-        await backendService
-            .getPreviousPaper({ id: paper.id })
-            .response.then((previousPaper) => {
+        await getPreviousPaper(paper.id)
+            .then((previousPaper) => {
                 previousProjectPaper = previousPaper;
             })
             .catch(() => {

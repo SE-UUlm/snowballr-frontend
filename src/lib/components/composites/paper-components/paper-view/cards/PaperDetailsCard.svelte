@@ -1,20 +1,25 @@
 <script lang="ts">
     import PaperCard from "./PaperCard.svelte";
     import PaperCardContent from "./PaperCardContent.svelte";
-    import { Paper } from "$lib/api/types";
+    import type { Paper } from "$lib/api/types";
+    import {
+        createPaper,
+        emptyPaper,
+        type PaperDetailsPatch,
+        updatePaperDetails,
+    } from "$lib/api/paper";
+    import { addPaperToProject } from "$lib/api/project-paper";
     import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Save from "@lucide/svelte/icons/save";
     import Undo2 from "@lucide/svelte/icons/undo-2";
     import { cn } from "$lib/utils/shadcn-helper";
-    import { backendService } from "$lib/grpc-api";
     import { toast } from "svelte-sonner";
     import type { PaperCreationTarget, StringifiedPaper } from "$lib/model/general";
     import { stringifyPaper } from "$lib/utils/model-helper";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
     import { beforeNavigate } from "$app/navigation";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { goto } from "$app/navigation";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { resolve } from "$app/paths";
@@ -43,7 +48,7 @@
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    let paper: StringifiedPaper = $state(stringifyPaper(Paper.create()));
+    let paper: StringifiedPaper = $state(stringifyPaper(emptyPaper()));
 
     let originalPaper: StringifiedPaper | undefined = $state(undefined);
     let isInEditMode = $derived(startInEditMode);
@@ -84,9 +89,8 @@
 
         isMakingApiCall = true;
 
-        // Convert stringifiedPaper back to Paper, ensuring correct types
-        const paperData: Partial<Paper> = {
-            id: paper.id,
+        // Convert the stringified details back, ensuring correct types
+        const details = {
             externalIds: paper.externalIds,
             title: paper.title,
             abstrakt: paper.abstrakt,
@@ -99,24 +103,19 @@
 
         const promise =
             creationTarget !== undefined
-                ? createPaper(Paper.create(paperData), creationTarget)
-                : updatePaper(paperData);
+                ? createAndAddPaper({ id: paper.id, ...details }, creationTarget)
+                : updatePaper(paper.id, details);
 
         // Add noop-catch so that promise rejection is not uncaught in tests
         // noop-catch cannot be added before toast.promise because error case wouldn't be handled
         await promise.catch(() => {}).finally(() => (isMakingApiCall = false));
     }
 
-    async function updatePaper(paperData: Partial<Paper>) {
-        const updateCall = backendService
-            .updatePaper({
-                paper: Paper.create(paperData),
-                mask: buildFieldMask(paperData, "paper"),
-            })
-            .response.then((updatedPaper) => {
-                originalPaper = stringifyPaper(updatedPaper);
-                paper = originalPaper;
-            });
+    async function updatePaper(paperId: string, details: PaperDetailsPatch) {
+        const updateCall = updatePaperDetails(paperId, details).then((updatedPaper) => {
+            originalPaper = stringifyPaper(updatedPaper);
+            paper = originalPaper;
+        });
 
         toast.promise(updateCall, {
             loading: "Updating paper...",
@@ -127,8 +126,8 @@
         return updateCall;
     }
 
-    async function createPaper(paperObject: Paper, target: PaperCreationTarget) {
-        const creating = backendService.createPaper(paperObject).response.then((createdPaper) => {
+    async function createAndAddPaper(newPaper: Partial<Paper>, target: PaperCreationTarget) {
+        const creating = createPaper(newPaper).then((createdPaper) => {
             originalPaper = stringifyPaper(createdPaper);
             paper = originalPaper;
 
@@ -141,13 +140,8 @@
             error: "Failed to create the paper.",
         });
 
-        const adding = creating.then(
-            (createdPaper) =>
-                backendService.addPaperToProject({
-                    paperId: createdPaper.id,
-                    projectId: target.projectId,
-                    stage: target.stage,
-                }).response,
+        const adding = creating.then((createdPaper) =>
+            addPaperToProject(target.projectId, createdPaper.id, target.stage),
         );
 
         toast.promise(adding, {

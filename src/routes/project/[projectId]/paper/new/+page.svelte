@@ -1,13 +1,14 @@
 <script lang="ts">
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-    import { Paper } from "$lib/api/types";
+    import { emptyPaper } from "$lib/api/paper";
+    import type { Paper } from "$lib/api/types";
 
     const { data } = $props();
     const { projectId, loadingProject, creationTarget } = $derived(data);
 
-    const paper: Paper = Paper.create({
-        year: "" as unknown as number,
-    });
+    const paper: Paper = emptyPaper();
+    // Show an empty year field instead of 0.
+    paper.year = "" as unknown as number;
 </script>
 
 <svelte:head>

@@ -6,14 +6,8 @@
         paperDecisionButtonVariants,
     } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import {
-        type Review,
-        type Review_Create,
-        ReviewDecision,
-        type Project,
-        type Project_Paper,
-    } from "$lib/api/types";
+    import { createReview } from "$lib/api/review";
+    import { type Review, ReviewDecision, type Project, type Project_Paper } from "$lib/api/types";
     import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { toast } from "svelte-sonner";
     import { loadingWrapper } from "$lib/utils/common-helper";
@@ -125,15 +119,12 @@
             isSubmittingReview.value = true;
             projectPaperLoading.isLoading = true;
             const paper = await loadingProjectPaper;
-            const review: Review_Create = {
-                projectPaperId: paper!.id,
-                decision: getDecision(),
-                selectedCriteriaIds: selectedReviewCriteriaState.criteria,
-            };
+            // The decision depends on the variant, so it is read before the variant changes.
+            const decision = getDecision();
             variant = "selected_" + variant;
-            await backendService
-                .createReview(review)
-                .response.then((review) => (userReview = review));
+            await createReview(paper!.id, decision, selectedReviewCriteriaState.criteria).then(
+                (review) => (userReview = review),
+            );
             isSubmittingReview.value = false;
             toast.success("Successfully submitted a review.");
             await navigatePaper(
