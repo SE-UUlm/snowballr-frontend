@@ -30,7 +30,7 @@
         reloadingMembers = true;
         // First fetch the members again and only then replace the members of the settings layout, so
         // that no loading state is shown and the change is kept when navigating between settings tabs
-        await loadMembers({ id: projectId })
+        await loadMembers(projectId)
             .then((members) => refreshMembers(projectId, members))
             .catch((error) => {
                 toast.error(errorMessage);

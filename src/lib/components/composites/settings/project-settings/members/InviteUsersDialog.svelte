@@ -3,7 +3,7 @@
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
     import type { Project_Member } from "$lib/api/types";
-    import { backendService } from "$lib/grpc-api";
+    import { inviteUserToProject } from "$lib/api/invitation";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
@@ -38,10 +38,7 @@
             // filter out emails of existing members
             const filteredInvitees = invitees.filter((userEmail) => !members.includes(userEmail));
             await Promise.all(
-                filteredInvitees.map(
-                    (userEmail) =>
-                        backendService.inviteUserToProject({ projectId, userEmail }).response,
-                ),
+                filteredInvitees.map((userEmail) => inviteUserToProject(projectId, userEmail)),
             );
             onUsersInvited?.(invitees);
 

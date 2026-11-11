@@ -3,7 +3,7 @@ import type { LayoutLoad } from "./$types";
 import { loadMembers } from "./helper";
 
 export const load: LayoutLoad = async (event) => {
-    const loadingMembers = loadPrimedMembers(event, (id) => loadMembers({ id }));
+    const loadingMembers = loadPrimedMembers(event, loadMembers);
 
     return { loadingMembers };
 };
