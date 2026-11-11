@@ -8,8 +8,10 @@ import {
     getPreviousPaper,
     getProjectPaperByLocalId,
     listProjectPapers,
+    searchFetcherPaperCandidates,
+    searchLocalPaperCandidates,
 } from "$lib/api/project-paper";
-import { createProjectPaper } from "$tests/model-builder";
+import { createPaper, createProjectPaper } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 
 const PROJECT_ID = "project-1";
@@ -81,6 +83,26 @@ describe("getPapersToReview", () => {
     });
 });
 
+describe.each([
+    ["searchLocalPaperCandidates", "searchLocalProjectPaperCandidates", searchLocalPaperCandidates],
+    [
+        "searchFetcherPaperCandidates",
+        "searchFetcherProjectPaperCandidates",
+        searchFetcherPaperCandidates,
+    ],
+] as const)("%s", (_, method, search) => {
+    test("When candidates are searched, then the query and the project ID are sent", async () => {
+        const papers = [createPaper({ id: "1" }), createPaper({ id: "" })];
+        const searchCall = mockApiCall(method, { papers });
+
+        await expect(search("snowballing", PROJECT_ID)).resolves.toEqual(papers);
+        expect(searchCall).toHaveBeenCalledExactlyOnceWith({
+            query: "snowballing",
+            projectId: PROJECT_ID,
+        });
+    });
+});
+
 describe("project paper calls", () => {
     test.each([
         ["listProjectPapers", "getAllProjectPapersForProject", () => listProjectPapers(PROJECT_ID)],
@@ -94,6 +116,16 @@ describe("project paper calls", () => {
             "addPaperToProject",
             "addPaperToProject",
             () => addPaperToProject(PROJECT_ID, "paper-1", 0n),
+        ],
+        [
+            "searchLocalPaperCandidates",
+            "searchLocalProjectPaperCandidates",
+            () => searchLocalPaperCandidates("snowballing", PROJECT_ID),
+        ],
+        [
+            "searchFetcherPaperCandidates",
+            "searchFetcherProjectPaperCandidates",
+            () => searchFetcherPaperCandidates("snowballing", PROJECT_ID),
         ],
     ] as const)("When %s fails, then it rejects with an ApiError", async (_, method, run) => {
         mockFailedApiCall(method, "backend down");

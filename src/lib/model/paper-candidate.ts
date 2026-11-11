@@ -1,9 +1,13 @@
+import { isApiError } from "$lib/api/errors";
+import { createPaper } from "$lib/api/paper";
+import {
+    addPaperToProject,
+    searchFetcherPaperCandidates,
+    searchLocalPaperCandidates,
+} from "$lib/api/project-paper";
 import type { Paper } from "$lib/api/types";
-import { backendService } from "$lib/grpc-api";
 import { createActionError, type ActionError } from "$lib/model/action-error";
-import { isGrpcError, pluralize } from "$lib/utils/common-helper";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import type { RpcError } from "@protobuf-ts/runtime-rpc";
+import { pluralize } from "$lib/utils/common-helper";
 import { toast } from "svelte-sonner";
 
 /** Shown when every requested source answered and none of them had anything to offer. */
@@ -191,22 +195,10 @@ export async function searchPaperCandidates(
 ): Promise<PaperCandidateSearchResult> {
     const [localResult, fetcherResult] = await Promise.all([
         sources.includeLocal
-            ? searchSource(
-                  () =>
-                      backendService
-                          .searchLocalProjectPaperCandidates({ query, projectId })
-                          .response.then((it) => it.papers),
-                  "local",
-              )
+            ? searchSource(() => searchLocalPaperCandidates(query, projectId), "local")
             : { papers: [], error: undefined },
         sources.includeFetchers
-            ? searchSource(
-                  () =>
-                      backendService
-                          .searchFetcherProjectPaperCandidates({ query, projectId })
-                          .response.then((it) => it.papers),
-                  "fetcher",
-              )
+            ? searchSource(() => searchFetcherPaperCandidates(query, projectId), "fetcher")
             : { papers: [], error: undefined },
     ]);
 
@@ -240,9 +232,9 @@ async function resolvePaper(candidate: PaperCandidate): Promise<Paper | undefine
     }
 
     try {
-        return await backendService.createPaper(candidate.paper).response;
+        return await createPaper(candidate.paper);
     } catch (error) {
-        if (isGrpcError((error as RpcError).code, GrpcStatusCode.ALREADY_EXISTS)) {
+        if (isApiError(error, "already-exists")) {
             return candidate.paper;
         }
 
@@ -277,11 +269,7 @@ export async function addPaperCandidates(
         }
 
         try {
-            await backendService.addPaperToProject({
-                paperId: paper.id,
-                projectId: target.projectId,
-                stage: target.stage,
-            }).response;
+            await addPaperToProject(target.projectId, paper.id, target.stage);
         } catch {
             toast.error(`Paper '${candidate.paper.title}' could not be added.`);
             summary.failed.push({ candidate, step: "add" });
