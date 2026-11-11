@@ -1,8 +1,6 @@
 import { PaperDecision, type Project_Paper, type Author, type Paper } from "$lib/api/types";
 import type { PaperStatus, Person, PersonWithEmail } from "$lib/model/general";
 import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
-import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { toGrpcStatus } from "$lib/api/grpc";
 
 /**
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation
@@ -351,17 +349,6 @@ function callDebounced(fn: (...args: unknown[]) => void, delay = 500, args?: unk
     } else {
         debouncedFunction();
     }
-}
-
-/**
- * Checks if a given error code matches the specified GrpcStatusCode.
- *
- * @param code - The error code from RpcError, by name or by number.
- * @param status - The GrpcStatusCode to compare against.
- * @returns True if the error code matches the status, false otherwise.
- */
-export function isGrpcError(code: number | string, status: GrpcStatusCode): boolean {
-    return toGrpcStatus(code) === status;
 }
 
 /**

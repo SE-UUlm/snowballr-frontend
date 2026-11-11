@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import {
     callDebounced,
     comparePaperId,
@@ -9,7 +8,6 @@ import {
     getNameOrEmail,
     getNames,
     groupBy,
-    isGrpcError,
     isPaperUndecided,
     isStringEqual,
     pluralize,
@@ -466,21 +464,5 @@ describe("Sum up values of items in an array based on a value selector function"
     test("When the array contains items and a value selector function is provided, then the sum of the values obtained by applying the value selector to each item in the array is returned", () => {
         const items = [{ value: 1 }, { value: 2 }, { value: 3 }];
         expect(sumBy(items, (i) => i.value)).toBe(6);
-    });
-});
-
-describe("Check a gRPC error code", () => {
-    test("When the code is the name of the status, then it matches", () => {
-        expect(isGrpcError("ALREADY_EXISTS", GrpcStatusCode.ALREADY_EXISTS)).toBe(true);
-    });
-
-    test("When the code is the number of the status, then it matches", () => {
-        expect(isGrpcError(GrpcStatusCode.ALREADY_EXISTS, GrpcStatusCode.ALREADY_EXISTS)).toBe(
-            true,
-        );
-    });
-
-    test("When the code is another status, then it does not match", () => {
-        expect(isGrpcError("NOT_FOUND", GrpcStatusCode.ALREADY_EXISTS)).toBe(false);
     });
 });
