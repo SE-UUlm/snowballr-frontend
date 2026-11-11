@@ -1,59 +1,56 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { Button } from "$lib/components/primitives/button";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import { toGrpcStatus } from "$lib/api/grpc";
+    import { isApiError, type ApiError } from "$lib/api/errors";
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error.js";
     import { resolve } from "$app/paths";
 
     let { data } = $props();
     const { acceptancePromise } = $derived(data);
 
-    type InvitationAcceptanceError = ActionError | RpcError;
+    type InvitationAcceptanceError = ActionError | ApiError;
 
     function getErrorDetails(error: InvitationAcceptanceError): ActionError {
         if (isActionError(error)) {
             return error;
         }
 
-        const statusCodeValue = toGrpcStatus(error.code);
-        switch (statusCodeValue) {
-            case GrpcStatusCode.INVALID_ARGUMENT:
-                return createActionError(
-                    "Accepting the Project Invitation Failed",
-                    {
-                        customDetails:
-                            "This acceptance link is invalid. Please check the link and try again.",
-                    },
-                    error,
-                );
-            case GrpcStatusCode.NOT_FOUND:
-                return createActionError(
-                    "Accepting the Project Invitation Failed",
-                    {
-                        customDetails:
-                            "The acceptance link has probably expired. Please contact the project admin to send a new invitation." +
-                            " The project may also have been deleted in the meantime.",
-                    },
-                    error,
-                );
-            case GrpcStatusCode.FAILED_PRECONDITION:
-                return createActionError(
-                    "Accepting the Project Invitation Failed",
-                    { customDetails: "Please register before accepting the invitation." },
-                    error,
-                );
-            default:
-                return createActionError(
-                    "Server Error",
-                    {
-                        customDetails:
-                            "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
-                    },
-                    error,
-                );
+        if (isApiError(error, "invalid-argument")) {
+            return createActionError(
+                "Accepting the Project Invitation Failed",
+                {
+                    customDetails:
+                        "This acceptance link is invalid. Please check the link and try again.",
+                },
+                error,
+            );
         }
+        if (isApiError(error, "not-found")) {
+            return createActionError(
+                "Accepting the Project Invitation Failed",
+                {
+                    customDetails:
+                        "The acceptance link has probably expired. Please contact the project admin to send a new invitation." +
+                        " The project may also have been deleted in the meantime.",
+                },
+                error,
+            );
+        }
+        if (isApiError(error, "failed-precondition")) {
+            return createActionError(
+                "Accepting the Project Invitation Failed",
+                { customDetails: "Please register before accepting the invitation." },
+                error,
+            );
+        }
+        return createActionError(
+            "Server Error",
+            {
+                customDetails:
+                    "We couldn't connect to our servers to accept you invitation. Please check your internet connection and try again.",
+            },
+            error,
+        );
     }
 
     // svelte-ignore state_referenced_locally

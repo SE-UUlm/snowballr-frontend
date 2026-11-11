@@ -13,7 +13,7 @@ describe("LoadMembers", () => {
             users: [Users.henryMoore],
         });
 
-        const result = await loadMembers({ id: "1" });
+        const result = await loadMembers("1");
 
         expect(result).toEqual([
             { ...{ user: Users.henryMoore, role: MemberRole.DEFAULT }, isInvitationPending: true },

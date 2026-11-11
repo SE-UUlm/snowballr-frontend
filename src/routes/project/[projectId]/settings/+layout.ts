@@ -3,7 +3,7 @@ import { loadMembers } from "./helper";
 
 export const load: LayoutLoad = async ({ params, depends }) => {
     depends("data:getProjectById");
-    const loadingMembers = loadMembers({ id: params.projectId });
+    const loadingMembers = loadMembers(params.projectId);
 
     return { loadingMembers };
 };
