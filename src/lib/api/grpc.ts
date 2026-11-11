@@ -20,13 +20,10 @@ const KIND_BY_GRPC_STATUS: Partial<Record<GrpcStatusCode, ApiErrorKind>> = {
 /**
  * Resolves a gRPC status code given by name (as `RpcError.code` does) or by number.
  *
- * Exported for the call sites outside the API layer that still read gRPC codes themselves. They
- * check the error kind instead once they call the domain functions.
- *
  * @param code - The code to resolve
  * @returns The status code, or `undefined` if the value is not a known gRPC status code
  */
-export function toGrpcStatus(code: unknown): GrpcStatusCode | undefined {
+function toGrpcStatus(code: unknown): GrpcStatusCode | undefined {
     if (typeof code === "number") {
         return code in GrpcStatusCode ? code : undefined;
     }
