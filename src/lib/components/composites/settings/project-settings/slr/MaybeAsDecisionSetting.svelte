@@ -8,7 +8,7 @@
      */
     export const maybeAsDecisionSetting: ProjectSettingDescriptor<boolean> = {
         read: (project) => project.settings?.reviewMaybeAllowed ?? false,
-        toPatch: (value) => ({ settings: { reviewMaybeAllowed: value } }),
+        toPatch: (value) => ({ reviewMaybeAllowed: value }),
         action: "updating the project settings",
     };
 </script>
