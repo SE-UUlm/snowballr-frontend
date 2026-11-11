@@ -1,16 +1,16 @@
-import { backendService } from "$lib/grpc-api";
+import { getBackwardReferencedPapers, getForwardReferencedPapers, getPaper } from "$lib/api/paper";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {
-    const loadingPaper = backendService.getPaperById({ id: params.paperId }).response;
+    const loadingPaper = getPaper(params.paperId);
 
-    const backwardReferencedPapers = loadingPaper
-        .then((paper) => backendService.getBackwardReferencedPapers({ id: paper.id }).response)
-        .then((paperList) => paperList.papers);
+    const backwardReferencedPapers = loadingPaper.then((paper) =>
+        getBackwardReferencedPapers(paper.id),
+    );
 
-    const forwardReferencedPapers = loadingPaper
-        .then((paper) => backendService.getForwardReferencedPapers({ id: paper.id }).response)
-        .then((paperList) => paperList.papers);
+    const forwardReferencedPapers = loadingPaper.then((paper) =>
+        getForwardReferencedPapers(paper.id),
+    );
 
     return {
         loadingPaper,
