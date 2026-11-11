@@ -100,7 +100,7 @@ and point to the canonical page.
   forwards to the backend (proxy is provided by the umbrella `snowballr` repo).
 - **Backend access:** Routes and components call the domain functions in `$lib/api/*`, which reject with
   `ApiError` (check with `isApiError`). Only `src/lib/api/` imports `snowballr-api`, `@protobuf-ts/*` or the client;
-  a missing function goes into its domain module. Rules and migration status: wiki/Contributing.md#backend-access.
+  a missing function goes into its domain module. Rules: wiki/Contributing.md#backend-access.
 - **User context flow:** root `+layout.ts` resolves the current user (cached → fetched → redirect on
   unauthenticated), injects it via `+layout.svelte` into context. Components consume with
   `getUserContext()` wrapped in `$derived`. After mutating user data, call `triggerCurrentUserRefresh()`.
