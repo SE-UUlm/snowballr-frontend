@@ -1,17 +1,17 @@
 /**
  * Script to find all used API calls in the codebase.
  *
- * A list of all API calls made through `backendService` is written to a markdown file.
+ * Only the domain modules in `src/lib/api/` call the generated client. A list of all its methods
+ * that they call is written to a markdown file.
  *
- * Usage: node get-all-used-calls.js
+ * Usage: node scripts/get-all-used-calls.js
  */
 
 import fs from "fs";
 import path from "path";
-import { sync as globSync } from "glob";
 
-// Regular expression to match backendService calls
-const apiCallRegex = /backendService\s*\.\s*(\w+)/g;
+// Regular expression to match calls of the generated client
+const apiCallRegex = /\bclient\s*\.\s*(\w+)\s*\(/g;
 
 // Function to remove comments from code
 const removeComments = (content) => {
@@ -35,9 +35,15 @@ const findApiCalls = (filePath) => {
     }));
 };
 
-// Search all files in src directory
-const srcPath = path.join(path.dirname(new URL(import.meta.url).pathname), "..", "src");
-const files = globSync(path.join(srcPath, "**/*.{js,ts,svelte}"));
+// Search the API layer, the only place that calls the client
+const apiPath = path.join(
+    path.dirname(new URL(import.meta.url).pathname),
+    "..",
+    "src",
+    "lib",
+    "api",
+);
+const files = fs.globSync(path.join(apiPath, "**/*.ts"));
 
 // Collect all API calls
 const allCalls = files.flatMap(findApiCalls);

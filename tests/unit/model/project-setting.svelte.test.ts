@@ -4,7 +4,7 @@ import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
 import { projectSetting } from "$lib/model/project-setting.svelte";
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import type { Mock } from "vitest";
 
 vi.mock("svelte-sonner", () => ({
@@ -148,19 +148,17 @@ describe("projectSetting", () => {
 
         test("When a commit arrives while another is in flight, then it is dropped", async () => {
             let resolveUpdate: (project: Project) => void = () => {};
-            (backendService.updateProject as unknown as Mock)
-                .mockClear()
-                .mockImplementation(() => ({
-                    response: new Promise<Project>((resolve) => {
-                        resolveUpdate = resolve;
-                    }),
-                }));
+            (client.updateProject as unknown as Mock).mockClear().mockImplementation(() => ({
+                response: new Promise<Project>((resolve) => {
+                    resolveUpdate = resolve;
+                }),
+            }));
             const setting = await loadedSetting();
 
             const firstCommit = setting.commit(0.65);
             await setting.commit(0.7);
 
-            expect(backendService.updateProject).toHaveBeenCalledTimes(1);
+            expect(client.updateProject).toHaveBeenCalledTimes(1);
 
             resolveUpdate(createProject());
             await firstCommit;

@@ -25,7 +25,7 @@ interface ResourceOptions<TPromise, TValue> {
  *
  * Usage:
  * ```ts
- * const loadingResource = backendService.getSomeData();
+ * const loadingResource = getSomeData(); // a domain function from $lib/api/
  *
  * const state = resource(loadingResource, {
  *    initialValue: [],
