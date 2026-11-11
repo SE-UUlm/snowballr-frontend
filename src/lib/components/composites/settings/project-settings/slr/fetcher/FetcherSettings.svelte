@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
+    import { getAvailableFetchers } from "$lib/api/fetcher";
     import { Project, Project_Settings, type FetcherInformation } from "$lib/api/types";
     import { onMount } from "svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
@@ -34,19 +34,16 @@
         loading = true;
         projectId = project.id;
         projectSettings = project.settings;
-        availableFetchers = await backendService
-            .getAvailableFetchers({})
-            .response.then((it) => it.fetchers)
-            .catch((error) => {
-                loadAvailableFetchersError = createActionError(
-                    "Failed to Retrieve available Fetchers",
-                    {
-                        action: "retrieving the available fetchers",
-                    },
-                    error,
-                );
-                return [];
-            });
+        availableFetchers = await getAvailableFetchers().catch((error) => {
+            loadAvailableFetchersError = createActionError(
+                "Failed to Retrieve available Fetchers",
+                {
+                    action: "retrieving the available fetchers",
+                },
+                error,
+            );
+            return [];
+        });
         usedFetchers = availableFetchers.filter(
             (it) => Object.keys(projectSettings?.fetchers || {}).indexOf(it.id) !== -1,
         );

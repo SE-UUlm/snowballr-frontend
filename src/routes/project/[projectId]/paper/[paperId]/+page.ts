@@ -2,6 +2,7 @@ import { backendService } from "$lib/grpc-api";
 import { type Criterion, Review, type User } from "$lib/api/types";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { PageLoad } from "./$types";
+import { getUserById } from "$lib/api/user";
 
 export const load: PageLoad = ({ params }) => {
     const loadingProjectPaper = backendService.getProjectPaperByRelativeId({
@@ -27,7 +28,7 @@ export const load: PageLoad = ({ params }) => {
         const userIds: Set<string> = new Set(reviews.map((review) => review.userId));
         const users: User[] = await Promise.all(
             Array.from(userIds)
-                .map((id) => backendService.getUserById({ id }).response.catch(() => undefined))
+                .map((id) => getUserById(id).catch(() => undefined))
                 .filter((user) => user !== undefined) as Promise<User>[],
         );
         return users;

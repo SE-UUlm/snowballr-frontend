@@ -1,7 +1,7 @@
-import { backendService } from "$lib/grpc-api";
+import { setDefaultFetchers } from "$lib/api/user";
 import { createActionError, type ActionError } from "$lib/model/action-error";
 import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
-import { Project_Settings, UserSettings } from "$lib/api/types";
+import type { UserSettings } from "$lib/api/types";
 import { toast } from "svelte-sonner";
 
 export async function updateDefaultFetchers(
@@ -9,18 +9,8 @@ export async function updateDefaultFetchers(
     onSuccess: (updatedUserSettings: UserSettings) => void = () => {},
     onError: (error: ActionError) => void = () => {},
 ) {
-    await backendService
-        .updateUserSettings({
-            userSettings: UserSettings.create({
-                defaultProjectSettings: Project_Settings.create({
-                    fetchers: fetchers,
-                }),
-            }),
-            // Manually set the path list because the generated field mask does not detect that the
-            // map for the fetchers is set.
-            mask: { paths: ["user_settings.default_project_settings.fetchers"] },
-        })
-        .response.then((it) => {
+    await setDefaultFetchers(fetchers)
+        .then((it) => {
             toast.success("Successfully updated your default fetcher settings.");
             onSuccess(it);
         })
