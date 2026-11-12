@@ -19,7 +19,7 @@
     import { Label } from "$lib/components/primitives/label";
     import { Switch } from "$lib/components/primitives/switch";
     import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
-    import type { Project } from "snowballr-api/project";
+    import type { Project } from "$lib/api/types";
     import { onMount } from "svelte";
     import type { ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";

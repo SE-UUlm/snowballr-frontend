@@ -1,8 +1,6 @@
-import { type User } from "snowballr-api/user";
+import { type User, Nothing, AuthenticationStatus } from "$lib/api/types";
 import { backendService, setFetch } from "$lib/grpc-api";
 import type { LayoutLoad } from "./$types";
-import { Nothing } from "snowballr-api/base";
-import { AuthenticationStatus } from "snowballr-api/authentication";
 import { goto } from "$app/navigation";
 import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";

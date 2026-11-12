@@ -4,7 +4,7 @@
     import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
     import StageProgressChart from "$lib/components/composites/statistics/StageProgressChart.svelte";
     import { Skeleton } from "$lib/components/primitives/skeleton";
-    import type { Project_Information_DecisionStatistics } from "snowballr-api/project";
+    import type { Project_Information_DecisionStatistics } from "$lib/api/types";
 
     export interface StageProgressInterface {
         stage: bigint;

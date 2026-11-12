@@ -7,13 +7,18 @@
     } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { type Review, type Review_Create, ReviewDecision } from "snowballr-api/review";
+    import {
+        type Review,
+        type Review_Create,
+        ReviewDecision,
+        type Project,
+        type Project_Paper,
+    } from "$lib/api/types";
     import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { toast } from "svelte-sonner";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
     import { navigatePaper } from "$lib/utils/paper-navigation";
-    import type { Project, Project_Paper } from "snowballr-api/project";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 

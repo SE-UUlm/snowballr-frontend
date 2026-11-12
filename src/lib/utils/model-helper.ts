@@ -1,5 +1,4 @@
-import { Project_Paper } from "snowballr-api/project";
-import type { Author, Paper } from "snowballr-api/paper";
+import { Project_Paper, type Author, type Paper } from "$lib/api/types";
 import { getNames } from "./common-helper";
 import type { StringifiedPaper } from "$lib/model/general";
 

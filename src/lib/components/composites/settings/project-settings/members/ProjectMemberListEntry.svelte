@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { type Project_Member } from "snowballr-api/project";
+    import type { Project_Member } from "$lib/api/types";
     import { getName } from "$lib/utils/common-helper";
     import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/helper";
     import PromoteMemberDialog from "./PromoteMemberDialog.svelte";

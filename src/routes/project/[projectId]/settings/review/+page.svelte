@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ProjectStatus } from "snowballr-api/project";
+    import { ProjectStatus } from "$lib/api/types";
     import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
     import CriteriaSettings from "$lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
     import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";

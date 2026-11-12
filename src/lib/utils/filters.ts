@@ -1,7 +1,6 @@
 import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
-import type { Paper } from "snowballr-api/paper";
+import type { Paper, Project_Paper } from "$lib/api/types";
 import { getNames } from "./common-helper";
-import type { Project_Paper } from "snowballr-api/project";
 import type { ProjectPaperFilter } from "$lib/model/general";
 
 /**

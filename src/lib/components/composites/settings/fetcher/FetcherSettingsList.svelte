@@ -6,7 +6,7 @@
     import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
-    import type { FetcherInformation } from "snowballr-api/fetcher";
+    import type { FetcherInformation } from "$lib/api/types";
     import type { Fetchers, SaveFetchers } from "./fetcher";
 
     interface Props {

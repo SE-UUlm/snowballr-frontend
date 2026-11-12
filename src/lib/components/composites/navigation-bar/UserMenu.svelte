@@ -7,7 +7,7 @@
     import type { UserMenuTab } from "$lib/model/tabs";
     import { getUserContext } from "$lib/custom-context/user-context";
     import Link from "$lib/components/composites/link/Link.svelte";
-    import { UserRole } from "snowballr-api/user";
+    import { UserRole } from "$lib/api/types";
     import { Badge } from "$lib/components/primitives/badge/index.js";
 
     const user = $derived(getUserContext());
