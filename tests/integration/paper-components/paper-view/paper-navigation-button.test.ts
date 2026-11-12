@@ -47,6 +47,9 @@ describe("PaperNavigationButton", () => {
         await waitFor(() => {
             expect(mockCallPreviousPaper).toHaveBeenCalledTimes(1);
         });
+        expect(mockCallPreviousPaper).toHaveBeenCalledWith({
+            id: ProjectPapers.demoProjectPaper1.id,
+        });
     });
 
     test("When button has direction 'right', then aria-label and tooltip is 'Next Paper'", async () => {
@@ -88,6 +91,7 @@ describe("PaperNavigationButton", () => {
         await waitFor(() => {
             expect(mockCallNextPaper).toHaveBeenCalledTimes(1);
         });
+        expect(mockCallNextPaper).toHaveBeenCalledWith({ id: ProjectPapers.demoProjectPaper1.id });
     });
 
     test("When button with direction 'right' is clicked, the button should navigate to the next paper to review", async () => {
@@ -105,6 +109,9 @@ describe("PaperNavigationButton", () => {
         projectPaperLoading.isLoading = false;
         await waitFor(() => {
             expect(mockCallNextPaperToReview).toHaveBeenCalledTimes(1);
+        });
+        expect(mockCallNextPaperToReview).toHaveBeenCalledWith({
+            id: ProjectPapers.demoProjectPaper1.id,
         });
     });
 });

@@ -1,27 +1,27 @@
-import { backendService } from "$lib/grpc-api";
+import { listCriteria } from "$lib/api/criterion";
+import { getBackwardReferencedPapers, getForwardReferencedPapers } from "$lib/api/paper";
+import { getProjectPaperByLocalId } from "$lib/api/project-paper";
+import { getUserById } from "$lib/api/user";
 import { type Criterion, Review, type User } from "$lib/api/types";
 import type { CriterionWithReviews } from "$lib/model/general";
 import type { PageLoad } from "./$types";
 import { getUserById } from "$lib/api/user";
 
 export const load: PageLoad = ({ params }) => {
-    const loadingProjectPaper = backendService.getProjectPaperByRelativeId({
-        projectId: params.projectId,
-        relativeProjectPaperId: params.paperId,
-    }).response;
+    const loadingProjectPaper = getProjectPaperByLocalId(params.projectId, params.paperId);
 
-    const backwardReferencedPapers = loadingProjectPaper
-        .then(({ paper }) => backendService.getBackwardReferencedPapers({ id: paper!.id }).response)
-        .then((paperList) => paperList.papers);
+    const backwardReferencedPapers = loadingProjectPaper.then(({ paper }) =>
+        getBackwardReferencedPapers(paper!.id),
+    );
 
-    const forwardReferencedPapers = loadingProjectPaper
-        .then(({ paper }) => backendService.getForwardReferencedPapers({ id: paper!.id }).response)
-        .then((paperList) => paperList.papers);
+    const forwardReferencedPapers = loadingProjectPaper.then(({ paper }) =>
+        getForwardReferencedPapers(paper!.id),
+    );
 
     const criteriaWithReviews: Promise<CriterionWithReviews[]> = Promise.all([
-        backendService.getAllCriteriaForProject({ id: params.projectId }).response,
+        listCriteria(params.projectId),
         loadingProjectPaper.then((paper) => paper.reviews),
-    ]).then(async ([{ criteria }, reviews]) => createCriteriaWithReviews(criteria, reviews));
+    ]).then(async ([criteria, reviews]) => createCriteriaWithReviews(criteria, reviews));
 
     const reviewers: Promise<User[]> = criteriaWithReviews.then(async (criteria) => {
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
