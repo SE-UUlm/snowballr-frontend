@@ -25,14 +25,6 @@
     let disabled = $derived(slrSettingsLocked || loading || isProjectArchived);
 
     let availableFetchers: FetcherInformation[] = $state([]);
-    let usedFetchers = $derived(
-        availableFetchers.filter(
-            (it) => Object.keys(projectSettings?.fetchers || {}).indexOf(it.id) !== -1,
-        ),
-    );
-    let unusedFetchers = $derived(
-        availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
-    );
 
     onMount(async () => {
         loading = true;
@@ -84,6 +76,4 @@
     locked={slrSettingsLocked}
     onSave={saveFetchers}
     sectionTitle="Fetcher Settings"
-    {unusedFetchers}
-    {usedFetchers}
 />
