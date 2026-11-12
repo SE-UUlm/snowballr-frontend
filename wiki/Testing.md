@@ -91,6 +91,9 @@ In many components, we use skeletons to show loading states. To test these compo
 use `await waitForComponentLoading();`. Prefer using `screen` to query elements in the DOM and test IDs or roles
 instead of classes or text content.
 
+After opening a dialog or an alert dialog, `await waitForDialogFocus();` before typing into it. The dialog moves the
+focus into itself one animation frame after it opens, and keystrokes typed before that frame are lost.
+
 Sometimes, it is necessary to test the interaction with the backend. For this, we mock API calls. The mocks replace
 the generated client in `$lib/api/client`, so the functions of the API layer (see
 [Backend Access](https://github.com/SE-UUlm/snowballr-frontend/wiki/Contributing#backend-access)) run unchanged in

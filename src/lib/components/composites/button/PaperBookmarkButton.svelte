@@ -4,7 +4,11 @@
     import BookmarkMinus from "@lucide/svelte/icons/bookmark-minus";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
     import { resource } from "$lib/resource.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import {
+        addPaperToReadingList,
+        isPaperOnReadingList,
+        removePaperFromReadingList,
+    } from "$lib/api/reading-list";
     import { cn } from "$lib/utils/shadcn-helper";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
@@ -41,9 +45,7 @@
     const onMouseLeave = () => (isHovered = false);
 
     async function checkInitialBookmarkStatus(id: string) {
-        return await backendService
-            .isPaperOnReadingList({ id })
-            .response.then((response) => response.value)
+        return await isPaperOnReadingList(id)
             .catch((error) => {
                 console.error(`Failed to fetch bookmark status for ${id}:`, error);
                 return false;
@@ -60,9 +62,8 @@
         isUpdatingBookmarkStatus = true;
 
         if (isBookmarked.value) {
-            await backendService
-                .removePaperFromReadingList({ id: paperId })
-                .response.then(() => {
+            await removePaperFromReadingList(paperId)
+                .then(() => {
                     isBookmarked.value = false;
                     onPaperChangedBookmarkStatus?.();
                 })
@@ -70,9 +71,8 @@
                     console.error("Error removing paper from reading list:", error);
                 });
         } else {
-            await backendService
-                .addPaperToReadingList({ id: paperId })
-                .response.then(() => {
+            await addPaperToReadingList(paperId)
+                .then(() => {
                     isBookmarked.value = true;
                     onPaperChangedBookmarkStatus?.();
                 })
