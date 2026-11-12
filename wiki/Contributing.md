@@ -31,7 +31,8 @@ To set up the development environment, follow the steps in
 ├── tests/
 │   ├── e2e/
 │   ├── integration/
-│   └── unit/
+│   ├── unit/
+│   └── visual/             (visual regression tests and their baselines)
 └── wiki/                   (this wiki)
 ```
 
