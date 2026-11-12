@@ -7,7 +7,8 @@
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
     import type { FetcherInformation } from "$lib/api/types";
-    import type { Fetchers, SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
 
     interface Props {
         sectionTitle: string;

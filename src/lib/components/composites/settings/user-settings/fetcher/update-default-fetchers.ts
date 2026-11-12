@@ -1,6 +1,6 @@
 import { setDefaultFetchers } from "$lib/api/user";
 import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+import type { Fetchers } from "$lib/api/fetcher";
 import type { UserSettings } from "$lib/api/types";
 import { toast } from "svelte-sonner";
 

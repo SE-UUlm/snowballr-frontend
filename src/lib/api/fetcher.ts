@@ -1,7 +1,9 @@
 import { Nothing } from "snowballr-api/base";
-import type { FetcherInformation } from "snowballr-api/fetcher";
+import type { FetcherInformation, FetcherOptions } from "snowballr-api/fetcher";
 import { client } from "./client";
 import { call } from "./grpc";
+
+export type Fetchers = { [key: string]: FetcherOptions };
 
 /**
  * Loads the fetchers that the backend offers for finding papers.
