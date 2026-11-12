@@ -14,16 +14,6 @@
     let userSettings: UserSettings | undefined = $state();
 
     let availableFetchers: FetcherInformation[] = $state([]);
-    let usedFetchers = $derived(
-        availableFetchers.filter(
-            (it) =>
-                Object.keys(userSettings?.defaultProjectSettings?.fetchers || {}).indexOf(it.id) !==
-                -1,
-        ),
-    );
-    let unusedFetchers = $derived(
-        availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
-    );
 
     onMount(async () => {
         loading = true;
@@ -79,6 +69,4 @@ Usage:
     {loading}
     onSave={saveFetchers}
     sectionTitle="Default Fetcher Settings"
-    {unusedFetchers}
-    {usedFetchers}
 />
