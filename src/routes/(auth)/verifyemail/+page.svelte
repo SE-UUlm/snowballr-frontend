@@ -3,7 +3,7 @@
     import { Button } from "$lib/components/primitives/button";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import { getGrpcStatusCode } from "$lib/utils/common-helper";
+    import { toGrpcStatus } from "$lib/api/grpc";
     import { createActionError, isActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
 
@@ -17,7 +17,7 @@
             return error;
         }
 
-        const statusCodeValue = getGrpcStatusCode(error.code);
+        const statusCodeValue = toGrpcStatus(error.code);
         switch (statusCodeValue) {
             case GrpcStatusCode.INVALID_ARGUMENT:
                 return createActionError(

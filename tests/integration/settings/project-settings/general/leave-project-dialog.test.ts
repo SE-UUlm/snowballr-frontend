@@ -1,11 +1,10 @@
-import { describe, expect, test, type Mock } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import LeaveProjectDialog from "$lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "../../../test-helper";
 import { Projects, Users } from "$tests/example-data";
-import { backendService } from "$lib/grpc-api";
 
 describe("LeaveProjectDialog", () => {
     async function openDialog(user: UserEvent) {
@@ -104,9 +103,7 @@ describe("LeaveProjectDialog", () => {
 
     test("When leaving fails because the current user is the last admin, then a specific error message is shown", async () => {
         const user = userEvent.setup();
-        (backendService.removeProjectMember as Mock).mockImplementation(() => ({
-            response: Promise.reject({ code: "FAILED_PRECONDITION" }),
-        }));
+        mockFailedApiCall("removeProjectMember", "", "FAILED_PRECONDITION");
 
         render(LeaveProjectDialog, {
             target: document.body,

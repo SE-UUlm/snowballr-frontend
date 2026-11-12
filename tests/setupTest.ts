@@ -13,10 +13,11 @@ import {
 } from "./model-builder";
 import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
 import type { ISnowballRClient } from "snowballr-api/main.client";
-import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
+import { RpcError, type RpcStatus, type UnaryCall } from "@protobuf-ts/runtime-rpc";
+import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { PaperDecision } from "snowballr-api/project";
 import { AuthenticationStatus } from "snowballr-api/authentication";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import ResizeObserver from "resize-observer-polyfill";
 
 // Add custom jest matchers
@@ -98,10 +99,26 @@ global.ResizeObserver = ResizeObserver;
 /**
  * Mock of the {@link UnaryCall}.
  *
- * Only mocks the `response` property and ignores other properties of the `UnaryCall`.
+ * Only mocks the `response` and `status` properties and ignores other properties of the
+ * `UnaryCall`. `call` from `$lib/api/grpc` awaits both. Build it with {@link mockUnaryCall}.
  */
 interface MockUnaryCall<T> {
     response: Promise<T>;
+    status: Promise<RpcStatus>;
+}
+
+/**
+ * Builds a {@link MockUnaryCall} whose status settles like the transport's: `OK` once the response
+ * resolves, and with the same error if it rejects.
+ *
+ * @param response - The response the call resolves or rejects with
+ * @returns The mocked call
+ */
+function mockUnaryCall<T>(response: Promise<T>): MockUnaryCall<T> {
+    const status = response.then((): RpcStatus => ({ code: "OK", detail: "OK" }));
+    // Like the transport, a status nobody awaits must not cause an unhandled rejection.
+    status.catch(() => {});
+    return { response, status };
 }
 
 /**
@@ -149,13 +166,9 @@ type InferApiCallReturnType<T extends keyof ISnowballRClient> = InferPromiseType
 function mock<T, R>(fn: ((arg: T) => R) | R): Mock<(input: T) => MockUnaryCall<R>> {
     return vi.fn((input: T) => {
         if (typeof fn === "function") {
-            return {
-                response: Promise.resolve((fn as (arg: T) => R)(input)),
-            };
+            return mockUnaryCall(Promise.resolve((fn as (arg: T) => R)(input)));
         } else {
-            return {
-                response: Promise.resolve(fn),
-            };
+            return mockUnaryCall(Promise.resolve(fn));
         }
     });
 }
@@ -177,9 +190,11 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 // For example, you can mock the backend API to return an error or to return a specific response.
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
-vi.mock("$lib/grpc-api", () => {
-    const mockBackend: { backendService: MockApi } = {
-        backendService: {
+// The mock replaces the generated client underneath the API layer, so the domain functions in
+// `$lib/api/` run for real in tests.
+vi.mock("$lib/api/client", () => {
+    const mockBackend: { client: MockApi } = {
+        client: {
             getAvailableFetchers: mock({
                 fetchers: [],
             }),
@@ -285,27 +300,38 @@ export function mockApiCall<T extends keyof ISnowballRClient, R extends InferApi
     methodName: T,
     value: R,
 ): MockInstance<ISnowballRClient[T]> {
-    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+    const apiCallToMock = (client[methodName] as Mock).mockClear();
 
     return apiCallToMock.mockImplementation(function () {
-        return { response: Promise.resolve(value) };
+        return mockUnaryCall(Promise.resolve(value));
     });
 }
 
 /**
  * Mocks an API call to return an error.
  *
+ * @example
+ * ```ts
+ * // Fails like the backend does when the email address is taken
+ * mockFailedApiCall("register", "email already in use", "ALREADY_EXISTS");
+ * ```
+ *
  * @param methodName - The name of the method to mock
  * @param errorMessage - The error message to return
+ * @param code - The gRPC status code to fail with, by name. Without it, the call rejects with a plain
+ * `Error`, which the API layer reports as kind `"unknown"`.
  * @returns A mock instance of the failed API call
  */
 export function mockFailedApiCall<T extends keyof ISnowballRClient>(
     methodName: T,
     errorMessage = "",
+    code?: keyof typeof GrpcStatusCode,
 ): MockInstance<ISnowballRClient[T]> {
-    const apiCallToMock = (backendService[methodName] as Mock).mockClear();
+    const apiCallToMock = (client[methodName] as Mock).mockClear();
 
     return apiCallToMock.mockImplementation(function () {
-        return { response: Promise.reject(new Error(errorMessage)) };
+        const error =
+            code === undefined ? new Error(errorMessage) : new RpcError(errorMessage, code);
+        return mockUnaryCall(Promise.reject(error));
     });
 }

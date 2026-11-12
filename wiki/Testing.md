@@ -91,7 +91,10 @@ In many components, we use skeletons to show loading states. To test these compo
 use `await waitForComponentLoading();`. Prefer using `screen` to query elements in the DOM and test IDs or roles
 instead of classes or text content.
 
-Sometimes, it is necessary to test the interaction with the backend. For this, we mock API calls.
+Sometimes, it is necessary to test the interaction with the backend. For this, we mock API calls. The mocks replace
+the generated client in `$lib/api/client`, so the functions of the API layer (see
+[Backend Access](https://github.com/SE-UUlm/snowballr-frontend/wiki/Contributing#backend-access)) run unchanged in
+tests.
 
 For successful API calls, we can use the `mockApiCall` function to mock the API call and return a successful response.
 For example, to mock a successful API call to the `getAllUsers` endpoint, you can use the following code:
@@ -107,6 +110,13 @@ For example, to mock a failed API call to the `getAllUsers` endpoint, you can us
 
 ```ts
 mockFailedApiCall("getAllUsers");
+```
+
+Without a code, the call rejects with a plain `Error`, which the API layer reports as kind `"unknown"`. To test how a
+specific failure is handled, pass the gRPC status code by name as the third argument:
+
+```ts
+mockFailedApiCall("register", "email already in use", "ALREADY_EXISTS");
 ```
 
 ## End-to-End Tests
