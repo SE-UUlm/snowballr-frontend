@@ -31,10 +31,18 @@ export class ApiError extends Error {
 /**
  * Checks whether a value is an {@link ApiError}, optionally of a specific kind.
  *
+ * With a kind, a failed check leaves the value typed as a possible {@link ApiError}, so that the
+ * next kind can be checked after it.
+ *
  * @param error - The value to check, typically a caught error
  * @param kind - The kind the error must have. If omitted, any kind matches.
  * @returns True if `error` is an {@link ApiError} of the given kind
  */
-export function isApiError(error: unknown, kind?: ApiErrorKind): error is ApiError {
+export function isApiError(error: unknown): error is ApiError;
+export function isApiError<K extends ApiErrorKind>(
+    error: unknown,
+    kind: K,
+): error is ApiError & { readonly kind: K };
+export function isApiError(error: unknown, kind?: ApiErrorKind): boolean {
     return error instanceof ApiError && (kind === undefined || error.kind === kind);
 }
