@@ -2,7 +2,8 @@
     import SquarePen from "@lucide/svelte/icons/square-pen";
     import type { FetcherInformation } from "$lib/api/types";
     import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
-    import type { Fetchers, SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
 
     interface Props {
         fetchers: Fetchers;

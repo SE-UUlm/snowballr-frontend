@@ -2,7 +2,7 @@
     import type { FetcherInformation } from "$lib/api/types";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import FetcherOptionRow, { type FetcherOption } from "./FetcherOptionRow.svelte";
-    import type { Fetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
     import { onMount } from "svelte";
 
     interface Props {

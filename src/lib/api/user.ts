@@ -1,11 +1,11 @@
 import { Nothing } from "snowballr-api/base";
-import type { FetcherOptions } from "snowballr-api/fetcher";
 import { Project_Settings } from "snowballr-api/project";
 import { User } from "snowballr-api/user";
 import { UserSettings } from "snowballr-api/user_settings";
 import { client } from "./client";
 import { buildFieldMask } from "./fieldmask";
 import { call } from "./grpc";
+import type { Fetchers } from "./fetcher";
 
 /**
  * Loads the user that the session belongs to.
@@ -61,9 +61,7 @@ export async function getUserSettings(): Promise<UserSettings> {
  * @param fetchers - The options of each default fetcher, keyed by fetcher ID
  * @returns The updated user settings
  */
-export async function setDefaultFetchers(
-    fetchers: Record<string, FetcherOptions>,
-): Promise<UserSettings> {
+export async function setDefaultFetchers(fetchers: Fetchers): Promise<UserSettings> {
     return call(
         client.updateUserSettings({
             userSettings: UserSettings.create({
