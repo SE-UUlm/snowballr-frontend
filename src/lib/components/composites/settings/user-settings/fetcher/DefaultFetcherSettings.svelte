@@ -14,40 +14,28 @@
     let userSettings: UserSettings | undefined = $state();
 
     let availableFetchers: FetcherInformation[] = $state([]);
-    let usedFetchers: FetcherInformation[] = $state([]);
-    let unusedFetchers = $derived(
-        availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
-    );
-
-    async function loadDefaultFetcherSettings(loadedUserSettings: UserSettings) {
-        loading = true;
-        userSettings = loadedUserSettings;
-        availableFetchers = await getAvailableFetchers().catch((error) => {
-            loadError = createActionError(
-                "Failed to Retrieve available Fetchers",
-                {
-                    action: "retrieving the available fetchers",
-                },
-                error,
-            );
-            return [];
-        });
-        usedFetchers = availableFetchers.filter(
+    let usedFetchers = $derived(
+        availableFetchers.filter(
             (it) =>
                 Object.keys(userSettings?.defaultProjectSettings?.fetchers || {}).indexOf(it.id) !==
                 -1,
-        );
-        loading = false;
-        initialized = true;
-    }
+        ),
+    );
+    let unusedFetchers = $derived(
+        availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
+    );
 
     onMount(async () => {
         loading = true;
 
         loadError = undefined;
-        await getUserSettings()
-            .then(loadDefaultFetcherSettings)
-            .catch((error) => {
+        await Promise.all([getUserSettings(), getAvailableFetchers()]).then(
+            ([loadedUserSettings, loadedFetchers]) => {
+                userSettings = loadedUserSettings;
+                availableFetchers = loadedFetchers;
+                initialized = true;
+            },
+            (error) => {
                 loadError = createActionError(
                     "Failed to Load your Default Fetcher Settings",
                     {
@@ -55,7 +43,8 @@
                     },
                     error,
                 );
-            });
+            },
+        );
 
         loading = false;
     });
@@ -65,7 +54,7 @@
             fetchers,
             (updatedUserSettings) => {
                 onSuccess();
-                loadDefaultFetcherSettings(updatedUserSettings);
+                userSettings = updatedUserSettings;
             },
             onError,
         );

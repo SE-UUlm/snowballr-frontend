@@ -17,7 +17,7 @@
 
     const { isProjectArchived } = $derived(getIsProjectArchivedContext());
 
-    let loadAvailableFetchersError: ActionError = $state(undefined);
+    let loadError: ActionError = $state(undefined);
     let loading = $state(true);
     let initialized = $state(false);
     let projectId: string | undefined = $state();
@@ -25,45 +25,36 @@
     let disabled = $derived(slrSettingsLocked || loading || isProjectArchived);
 
     let availableFetchers: FetcherInformation[] = $state([]);
-    let usedFetchers: FetcherInformation[] = $state([]);
+    let usedFetchers = $derived(
+        availableFetchers.filter(
+            (it) => Object.keys(projectSettings?.fetchers || {}).indexOf(it.id) !== -1,
+        ),
+    );
     let unusedFetchers = $derived(
         availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
     );
 
-    async function loadProject(project: Project) {
-        loading = true;
-        projectId = project.id;
-        projectSettings = project.settings;
-        availableFetchers = await getAvailableFetchers().catch((error) => {
-            loadAvailableFetchersError = createActionError(
-                "Failed to Retrieve available Fetchers",
-                {
-                    action: "retrieving the available fetchers",
-                },
-                error,
-            );
-            return [];
-        });
-        usedFetchers = availableFetchers.filter(
-            (it) => Object.keys(projectSettings?.fetchers || {}).indexOf(it.id) !== -1,
-        );
-        loading = false;
-        initialized = true;
-    }
-
     onMount(async () => {
         loading = true;
 
-        loadAvailableFetchersError = undefined;
-        await loadingProject.then(loadProject).catch((error) => {
-            loadAvailableFetchersError = createActionError(
-                "Failed to Load the Project Settings",
-                {
-                    action: "loading the project settings",
-                },
-                error,
-            );
-        });
+        loadError = undefined;
+        await Promise.all([loadingProject, getAvailableFetchers()]).then(
+            ([project, loadedFetchers]) => {
+                projectId = project.id;
+                projectSettings = project.settings;
+                availableFetchers = loadedFetchers;
+                initialized = true;
+            },
+            (error) => {
+                loadError = createActionError(
+                    "Failed to Load the Project Settings",
+                    {
+                        action: "loading the project settings",
+                    },
+                    error,
+                );
+            },
+        );
 
         loading = false;
     });
@@ -76,7 +67,7 @@
             fetchers,
             (updatedProject) => {
                 onSuccess();
-                loadProject(updatedProject);
+                projectSettings = updatedProject.settings;
             },
             onError,
         );
@@ -88,7 +79,7 @@
     {disabled}
     fetchers={projectSettings?.fetchers ?? {}}
     {initialized}
-    loadFetchersError={loadAvailableFetchersError}
+    loadFetchersError={loadError}
     {loading}
     locked={slrSettingsLocked}
     onSave={saveFetchers}
