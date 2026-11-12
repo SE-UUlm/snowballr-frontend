@@ -1,7 +1,7 @@
 import { type User, AuthenticationStatus } from "$lib/api/types";
 import { getAuthenticationStatus, renewSession } from "$lib/api/auth";
 import { getCurrentUser } from "$lib/api/user";
-import { setFetch } from "$lib/grpc-api";
+import { setFetch } from "$lib/api/fetch";
 import type { LayoutLoad } from "./$types";
 import { goto } from "$app/navigation";
 import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";

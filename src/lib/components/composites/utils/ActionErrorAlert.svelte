@@ -22,7 +22,7 @@ Usage:
 
         let updateExampleError: ActionError = $state(undefined);
 
-        await backendService.updateExample().response
+        await updateExample()
             .then(() => console.log("Hurray!"))
             .catch((error) => {
                 updateExampleError = createActionError(

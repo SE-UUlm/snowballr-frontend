@@ -275,25 +275,16 @@ trigger a refresh of the user context to ensure all parts of the application hav
 
    ```svelte
    <script lang="ts">
-     import { backendService } from "$lib/grpc-api";
+     import { updateUserName } from "$lib/api/user";
      import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
-     import { toast } from "svelte-sonner";
-     import { StatusCodes } from "$lib/model/error-codes";
-     import { getContext } from "svelte";
      import { getUserContext } from "$lib/custom-context/user-context";
+     import { toast } from "svelte-sonner";
 
      const user = $derived(getUserContext());
 
-     async function handleNameUpdate(newName: string) {
+     async function handleNameUpdate(firstName: string, lastName: string) {
        try {
-         const response = await backendService.updateUser({
-           user: { id: user.id, firstName: newName /* other fields */ },
-           mask: { paths: ["first_name"] }, // Example field mask
-         }).response;
-
-         // Assuming your backendService call doesn't throw on non-OK gRPC status
-         // and returns a structure with a status code. Adjust as per your actual API.
-         // Or, if it throws, catch the error.
+         await updateUserName(user.id, { firstName, lastName });
 
          triggerCurrentUserRefresh();
          toast.success("User details updated successfully!");
@@ -316,6 +307,7 @@ of every call site.
 ```plaintext
 src/lib/api/
 ├── client.ts       (gRPC-Web client wiring)
+├── fetch.ts        (setFetch, the fetch that backend calls go through)
 ├── errors.ts       (ApiError, isApiError)
 ├── grpc.ts         (call, mapping from gRPC status codes to ApiError)
 ├── fieldmask.ts    (buildFieldMask)
@@ -323,9 +315,11 @@ src/lib/api/
 └── <domain>.ts     (one module per backend domain, e.g. project.ts, reading-list.ts)
 ```
 
-Outside the layer, only the domain modules, `errors.ts` and `types.ts` are imported. If code outside the layer needs a
-generated type that `types.ts` doesn't export yet, add it there. Tests are exempt and may import `snowballr-api` and
-the client directly.
+Outside the layer, only the domain modules, `errors.ts`, `types.ts` and `fetch.ts` are imported. `fetch.ts` is for the
+root layout, which passes the `fetch` of its load function to `setFetch`. If code outside the layer needs a generated
+type that `types.ts` doesn't export yet, add it there. ESLint fails on any other import of the layer's modules,
+`snowballr-api` or `@protobuf-ts/*` outside `src/lib/api/` (`no-restricted-imports` in `eslint.config.js`). Tests are
+exempt and may import `snowballr-api` and the client directly.
 
 The domain modules follow these rules:
 
@@ -354,9 +348,9 @@ export async function getProject(projectId: string): Promise<Project> {
   return call(client.getProjectById({ id: projectId }));
 }
 
-export async function renameProject(projectId: string, name: string): Promise<void> {
+export async function renameProject(projectId: string, name: string): Promise<Project> {
   const patch = { id: projectId, name };
-  await call(
+  return call(
     client.updateProject({
       project: Project.create(patch),
       mask: buildFieldMask(patch, "project"),
@@ -366,10 +360,6 @@ export async function renameProject(projectId: string, name: string): Promise<vo
 ```
 
 When a route or component needs a backend call that has no function yet, add the function to its domain module.
-
-The migration to this layer is tracked in [#771](https://github.com/SE-UUlm/snowballr-frontend/issues/771). Until it is
-done, `$lib/grpc-api` re-exports the client for the files that still call it directly, and ESLint only warns about
-imports that bypass the layer (`no-restricted-imports` in `eslint.config.js`).
 
 ## Testing
 

@@ -2,9 +2,7 @@
 // Only src/lib/api/ imports snowballr-api directly, so add a type here when a route or component needs
 // one. Names like Project_Paper change with the REST client, see #771.
 export { AuthenticationStatus } from "snowballr-api/authentication";
-export { Nothing } from "snowballr-api/base";
 export { Criterion, CriterionCategory } from "snowballr-api/criterion";
-export { ExportRequest } from "snowballr-api/export";
 export { FetcherInformation, FetcherOptionSchema, FetcherOptions } from "snowballr-api/fetcher";
 export { Author, Paper, Paper_ExternalId } from "snowballr-api/paper";
 export {
@@ -20,7 +18,7 @@ export {
     Project_Settings,
     SnowballingType,
 } from "snowballr-api/project";
-export { Review, ReviewDecision, Review_Create } from "snowballr-api/review";
+export { Review, ReviewDecision } from "snowballr-api/review";
 export { User, UserRole } from "snowballr-api/user";
 export { UserSettings } from "snowballr-api/user_settings";
 export { Timestamp } from "snowballr-api/google/protobuf/timestamp";
