@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import { Nothing } from "snowballr-api/base";
-import { Project_Settings } from "snowballr-api/project";
 import { User } from "snowballr-api/user";
 import { UserSettings } from "snowballr-api/user_settings";
 import { ApiError } from "$lib/api/errors";
@@ -63,14 +62,14 @@ describe("setDefaultFetchers", () => {
     test("When the default fetchers are set, then only the fetchers map is masked", async () => {
         const fetchers = { test: { options: {} } };
         const updatedSettings = UserSettings.create({
-            defaultProjectSettings: Project_Settings.create({ fetchers }),
+            defaultProjectSettings: { fetchers },
         });
         const updateUserSettingsCall = mockApiCall("updateUserSettings", updatedSettings);
 
         await expect(setDefaultFetchers(fetchers)).resolves.toEqual(updatedSettings);
         expect(updateUserSettingsCall).toHaveBeenCalledExactlyOnceWith({
             userSettings: UserSettings.create({
-                defaultProjectSettings: Project_Settings.create({ fetchers }),
+                defaultProjectSettings: { fetchers },
             }),
             mask: { paths: ["user_settings.default_project_settings.fetchers"] },
         });
