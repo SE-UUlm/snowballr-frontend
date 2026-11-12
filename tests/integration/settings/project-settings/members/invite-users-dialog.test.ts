@@ -93,6 +93,7 @@ describe("InviteUsersDialog", () => {
     });
 
     test("When a user is invited successfully, then a success message is displayed", async () => {
+        const inviteCall = mockApiCall("inviteUserToProject", {});
         const user = userEvent.setup();
         let invitedUsers: string[] = [];
         render(InviteUsersDialog, {
@@ -119,6 +120,10 @@ describe("InviteUsersDialog", () => {
         await user.click(inviteButton);
 
         expect(invitedUsers).toEqual([Members.demoMember1.user!.email]);
+        expect(inviteCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: "1",
+            userEmail: Members.demoMember1.user!.email,
+        });
     });
 
     test("When inviting a user fails, then an error message is displayed", async () => {

@@ -29,7 +29,7 @@
     async function reloadMembers(errorMessage: string) {
         reloadingMembers = true;
         // First fetch the members again and only then replace them, so that no loading state is shown
-        await loadMembers({ id: projectId })
+        await loadMembers(projectId)
             .then((members) => {
                 loadingMembersLocal = Promise.resolve(members);
             })
