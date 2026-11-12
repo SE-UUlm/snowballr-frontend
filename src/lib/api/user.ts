@@ -1,5 +1,4 @@
 import { Nothing } from "snowballr-api/base";
-import { Project_Settings } from "snowballr-api/project";
 import { User } from "snowballr-api/user";
 import { UserSettings } from "snowballr-api/user_settings";
 import { client } from "./client";
@@ -65,7 +64,7 @@ export async function setDefaultFetchers(fetchers: Fetchers): Promise<UserSettin
     return call(
         client.updateUserSettings({
             userSettings: UserSettings.create({
-                defaultProjectSettings: Project_Settings.create({ fetchers }),
+                defaultProjectSettings: { fetchers },
             }),
             // buildFieldMask doesn't detect that the fetchers map is set, so the path is written
             // by hand.
