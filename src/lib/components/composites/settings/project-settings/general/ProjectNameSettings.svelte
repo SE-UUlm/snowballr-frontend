@@ -1,15 +1,14 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import Input from "$lib/components/composites/input/Input.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import { renameProject } from "$lib/api/project";
     import { onMount } from "svelte";
-    import { Project } from "$lib/api/types";
+    import type { Project } from "$lib/api/types";
     import { Schema } from "$lib/schemas";
     import { invalidate } from "$app/navigation";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import {
         createActionError,
         createActionWarning,
@@ -69,12 +68,9 @@
 
         if (!projectNameInput.validate()) return;
 
-        const projectData: Partial<Project> = {
-            id: projectId,
-            name: projectNameInput.getValue(),
-        };
+        const newName = projectNameInput.getValue();
 
-        if (projectName === projectData.name) {
+        if (projectName === newName) {
             updateProjectError = createActionWarning("No Changes Detected", {
                 customDetails:
                     "To successfully change the project's name, you must provide a new one that is different from the current one.",
@@ -82,15 +78,11 @@
             return;
         }
 
-        await backendService
-            .updateProject({
-                project: Project.create(projectData),
-                mask: buildFieldMask(projectData, "project"),
-            })
-            .response.then(async () => {
+        await renameProject(projectId, newName)
+            .then(async () => {
                 await invalidate("data:getProjectById");
                 toast.success("Successfully updated project name.");
-                projectName = projectData.name!;
+                projectName = newName;
 
                 // Make sure that the input field is not focused after submitting
                 (document.activeElement as HTMLElement)?.blur();

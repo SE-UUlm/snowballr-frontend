@@ -1,8 +1,10 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { Nothing, ExportRequest } from "$lib/api/types";
+    import {
+        exportProject as exportProjectInFormat,
+        getAvailableExportFormats,
+    } from "$lib/api/export";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { downloadBlob } from "$lib/utils/download-file";
     import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
@@ -23,10 +25,9 @@
     let exportProjectError: ActionError = $state(undefined);
 
     onMount(() => {
-        backendService
-            .getAvailableExportFormats(Nothing)
-            .response.then((availableFormats) => {
-                formats = availableFormats.formats;
+        getAvailableExportFormats()
+            .then((availableFormats) => {
+                formats = availableFormats;
             })
             .catch((error) => {
                 exportProjectError = createActionError(
@@ -50,14 +51,8 @@
         loadingExport.value = true;
         exportProjectError = undefined;
 
-        const request: ExportRequest = {
-            id: projectId,
-            format: selectedFormat,
-        };
-
-        await backendService
-            .exportProject(request)
-            .response.then(({ data, fileName }) => {
+        await exportProjectInFormat(projectId, selectedFormat)
+            .then(({ data, fileName }) => {
                 downloadBlob(data, fileName);
             })
             .catch((error) => {

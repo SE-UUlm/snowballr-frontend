@@ -8,7 +8,7 @@
      */
     export const similarityThresholdSetting: ProjectSettingDescriptor<number> = {
         read: (project) => project.settings?.similarityThreshold ?? 0.5,
-        toPatch: (value) => ({ settings: { similarityThreshold: value } }),
+        toPatch: (value) => ({ similarityThreshold: value }),
         action: "updating the similarity threshold",
     };
 </script>
