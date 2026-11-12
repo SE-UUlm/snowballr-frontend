@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import PaperEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-import { render, screen } from "@testing-library/svelte";
+import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "../test-helper";
 import { Papers, Reviews } from "../../example-data";
@@ -138,7 +138,10 @@ describe("PaperListEntryComponent", () => {
         expect(screen.getByText("An Analysis of TypeScript Performance")).toBeInTheDocument();
         expect(screen.getByText("John Doe, Bob Johnson")).toBeInTheDocument();
 
-        expect(screen.getByTestId("paper-list-entry").childElementCount).toBe(2);
+        // The avatar appears only once the reviewer is loaded, which can be after the skeletons are gone.
+        await waitFor(() =>
+            expect(screen.getByTestId("paper-list-entry").childElementCount).toBe(2),
+        );
         expect(screen.getByTestId("paper-list-entry").children[0]).toHaveClass(
             "border-l-4 border-decline-red",
         );

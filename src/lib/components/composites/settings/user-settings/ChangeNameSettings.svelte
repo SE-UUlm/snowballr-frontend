@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
-    import { User } from "$lib/api/types";
+    import { updateUserName } from "$lib/api/user";
     import { Schema } from "$lib/schemas";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
@@ -8,7 +7,6 @@
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
-    import { buildFieldMask } from "$lib/utils/fieldmask-helper";
     import { getUserContext } from "$lib/custom-context/user-context";
     import {
         createActionError,
@@ -33,13 +31,12 @@
         const isLastNameValid = lastNameInput.validate();
         if (!(isFirstNameValid && isLastNameValid)) return;
 
-        const userData: Partial<User> = {
-            id: user.id,
+        const name = {
             firstName: firstNameInput.getValue(),
             lastName: lastNameInput.getValue(),
         };
 
-        if (userData.firstName === user.firstName && userData.lastName === user.lastName) {
+        if (name.firstName === user.firstName && name.lastName === user.lastName) {
             updateUserError = createActionWarning("No Changes Detected", {
                 customDetails:
                     "To successfully change your name, you must provide a new one that is different from your current one.",
@@ -47,12 +44,8 @@
             return;
         }
 
-        await backendService
-            .updateUser({
-                user: User.create(userData),
-                mask: buildFieldMask(userData, "user"),
-            })
-            .response.then(async () => {
+        await updateUserName(user.id, name)
+            .then(async () => {
                 triggerCurrentUserRefresh();
                 toast.success("Successfully updated your name.");
 

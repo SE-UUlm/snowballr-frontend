@@ -9,7 +9,8 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { buttonVariants, type ButtonVariant } from "$lib/components/primitives/button";
     import type { Snippet } from "svelte";
-    import type { Fetchers, SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
 
     interface Props {
         label: string;

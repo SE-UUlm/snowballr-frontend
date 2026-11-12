@@ -7,7 +7,8 @@
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import type { ActionError } from "$lib/model/action-error";
     import type { FetcherInformation } from "$lib/api/types";
-    import type { Fetchers, SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
 
     interface Props {
         sectionTitle: string;
@@ -18,8 +19,7 @@
         disabled: boolean;
         loadFetchersError: ActionError;
         availableFetchers: FetcherInformation[];
-        usedFetchers: FetcherInformation[];
-        unusedFetchers: FetcherInformation[];
+        /** The configured fetchers. Each available fetcher with an entry here counts as used. */
         fetchers: Fetchers;
         onSave: SaveFetchers;
     }
@@ -32,11 +32,14 @@
         disabled,
         loadFetchersError,
         availableFetchers,
-        usedFetchers,
-        unusedFetchers,
         fetchers,
         onSave,
     }: Props = $props();
+
+    let usedFetchers = $derived(availableFetchers.filter((it) => Object.hasOwn(fetchers, it.id)));
+    let unusedFetchers = $derived(
+        availableFetchers.filter((it) => !Object.hasOwn(fetchers, it.id)),
+    );
 </script>
 
 <!--
@@ -56,8 +59,6 @@ Usage:
         {disabled}
         {loadFetchersError}
         {availableFetchers}
-        {usedFetchers}
-        {unusedFetchers}
         {fetchers}
         {onSave}
     />

@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
 import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
-import { backendService } from "$lib/grpc-api";
 import userEvent from "@testing-library/user-event";
 import type { User } from "snowballr-api/user";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "$tests/integration/test-helper";
 import { Users } from "$tests/example-data";
+import { client } from "$lib/api/client";
 
 describe("ChangeNameSettings", () => {
     test("When the component is rendered, some text, two input fields and a button are shown in order to change the name", () => {
@@ -25,7 +25,7 @@ describe("ChangeNameSettings", () => {
     });
 
     test("When one of the input fields is empty, then the button should not change the name", async () => {
-        const mockCall = vi.spyOn(backendService, "updateUser").mockClear();
+        const mockCall = vi.spyOn(client, "updateUser").mockClear();
 
         render(ChangeNameSettings, { context: mockUserContext });
 
