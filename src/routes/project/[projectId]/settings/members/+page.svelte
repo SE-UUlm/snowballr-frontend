@@ -8,7 +8,8 @@
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
-    import { isCurrentUserProjectAdmin, loadMembers, type MemberInfo } from "../helper";
+    import { isCurrentUserProjectAdmin, loadMembers } from "../helper";
+    import { refreshMembers } from "$lib/model/cache/project-members-cache";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
@@ -23,16 +24,14 @@
 
     const numberOfSkeletons = 7;
 
-    let loadingMembersLocal = $derived<Promise<MemberInfo[]>>(loadingMembers);
     let reloadingMembers = $state(false);
 
     async function reloadMembers(errorMessage: string) {
         reloadingMembers = true;
-        // First fetch the members again and only then replace them, so that no loading state is shown
+        // First fetch the members again and only then replace the members of the settings layout, so
+        // that no loading state is shown and the change is kept when navigating between settings tabs
         await loadMembers({ id: projectId })
-            .then((members) => {
-                loadingMembersLocal = Promise.resolve(members);
-            })
+            .then((members) => refreshMembers(projectId, members))
             .catch((error) => {
                 toast.error(errorMessage);
                 console.error(`Couldn't reload members: ${error}`);
@@ -42,7 +41,7 @@
 
     async function onUsersInvited(invitedUsers: string[]) {
         // Filter out users that are already members
-        const memberEmails = (await loadingMembersLocal).map((member) => member.user?.email);
+        const memberEmails = (await loadingMembers).map((member) => member.user?.email);
         const filteredInvitedUsers = invitedUsers.filter((user) => !memberEmails.includes(user));
 
         let toastFunc;
@@ -105,7 +104,7 @@
             {/if}
             <InviteUsersDialog
                 disabled={reloadingMembers || isProjectArchived}
-                loadingMembers={loadingMembersLocal}
+                {loadingMembers}
                 {onUsersInvited}
                 {projectId}
             />
@@ -118,7 +117,7 @@
             class="flex h-fit w-full flex-col gap-3 rounded-md border py-2.5"
             data-testid="project-member-list"
         >
-            {#await loadingMembersLocal}
+            {#await loadingMembers}
                 {#each { length: numberOfSkeletons }, i}
                     <ProjectMemberListEntrySkeleton />
                     {#if i < numberOfSkeletons - 1}

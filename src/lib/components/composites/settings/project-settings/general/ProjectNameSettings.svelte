@@ -5,7 +5,7 @@
     import { onMount } from "svelte";
     import { Project } from "snowballr-api/project";
     import { Schema } from "$lib/schemas";
-    import { invalidate } from "$app/navigation";
+    import { refreshProject } from "$lib/model/cache/project-cache";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
@@ -87,8 +87,8 @@
                 project: Project.create(projectData),
                 mask: buildFieldMask(projectData, "project"),
             })
-            .response.then(async () => {
-                await invalidate("data:getProjectById");
+            .response.then(async (updatedProject) => {
+                await refreshProject(updatedProject);
                 toast.success("Successfully updated project name.");
                 projectName = projectData.name!;
 

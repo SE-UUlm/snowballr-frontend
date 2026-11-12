@@ -1,10 +1,14 @@
 import { backendService } from "$lib/grpc-api";
+import { PROJECT_DEPENDENCY_KEY, takePrimedProject } from "$lib/model/cache/project-cache";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async ({ params, depends }) => {
-    depends("data:getProjectById");
+    depends(PROJECT_DEPENDENCY_KEY);
     const projectId = params.projectId;
-    const loadingProject = backendService.getProjectById({ id: projectId }).response;
+    const primedProject = takePrimedProject(projectId);
+    const loadingProject = primedProject
+        ? Promise.resolve(primedProject)
+        : backendService.getProjectById({ id: projectId }).response;
 
     return {
         projectId,
