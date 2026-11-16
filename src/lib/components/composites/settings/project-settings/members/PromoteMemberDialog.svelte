@@ -5,7 +5,7 @@
     import { MemberRole, type Project_Member } from "snowballr-api/project";
     import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
-    import type { MemberInfo } from "../../../../../../routes/project/[projectId]/settings/helper";
+    import type { MemberInfo } from "$lib/model/member-info";
 
     interface Props {
         projectId: string;

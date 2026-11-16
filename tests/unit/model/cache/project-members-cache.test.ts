@@ -6,7 +6,7 @@ import {
     takePrimedMembers,
 } from "$lib/model/cache/project-members-cache";
 import { Members } from "$tests/example-data";
-import type { MemberInfo } from "../../../../src/routes/project/[projectId]/settings/helper";
+import type { MemberInfo } from "$lib/model/member-info";
 
 vi.mock("$app/navigation", () => ({
     invalidate: vi.fn(() => Promise.resolve()),
