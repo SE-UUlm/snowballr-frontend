@@ -201,10 +201,27 @@ describe("commitProjectSetting", () => {
             settings: createProjectSettings({ similarityThreshold: 0.65 }),
         });
         mockApiCall("updateProject", updatedProject);
+        // Simulate the project layout's load function, which is rerun by the invalidation
+        let takenProject: Project | undefined;
+        vi.mocked(invalidate).mockImplementationOnce(async () => {
+            takenProject = takePrimedProject(PROJECT_ID);
+        });
 
         await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
 
-        expect(takePrimedProject(PROJECT_ID)).toEqual(updatedProject);
+        expect(takenProject).toEqual(updatedProject);
+    });
+
+    test("When refreshing the project fails, then the committed setting is still reported as saved", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        mockApiCall("updateProject", createProject());
+        vi.mocked(invalidate).mockRejectedValueOnce(new Error("Invalidation failed"));
+
+        const error = await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(error).toBeUndefined();
+        expect(toast.success).toHaveBeenCalledWith(PROJECT_SETTING_SUCCESS_MESSAGE);
+        consoleError.mockRestore();
     });
 
     test("When the update fails, then the loaded project is not invalidated", async () => {

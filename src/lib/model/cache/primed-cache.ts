@@ -21,7 +21,15 @@ export interface PrimedCache<T> {
      * Replaces the value loaded by the load function with the given, already up-to-date value.
      *
      * The value is primed and the load function is invalidated, so it picks up the given value
-     * without fetching it again.
+     * without fetching it again. If the load function does not take the value, e.g. because the user
+     * left the page in the meantime, the value is discarded.
+     *
+     * Never rejects: the value comes from a request that already succeeded, so a failed refresh is only
+     * logged and the previously loaded value stays shown.
+     *
+     * Known limitation: if two requests overlap and their responses arrive in a different order than the
+     * server applied them, the value of the last response may be outdated. It is then shown until the
+     * load function fetches the value again, e.g. after a reload.
      *
      * @param projectId - The id of the project the value belongs to
      * @param value - The up-to-date value
@@ -45,8 +53,17 @@ export function createPrimedCache<T>(dependencyKey: string): PrimedCache<T> {
         },
 
         async refresh(projectId, value) {
-            primed = { projectId, value };
-            await invalidate(dependencyKey);
+            const entry = { projectId, value };
+            primed = entry;
+            try {
+                await invalidate(dependencyKey);
+            } catch (error) {
+                console.error(`Couldn't refresh ${dependencyKey}: ${error}`);
+            } finally {
+                // Discard the entry if the load function did not take it, so that it is not handed to a
+                // much later load as up to date. A newer entry primed in the meantime is kept.
+                if (primed === entry) primed = undefined;
+            }
         },
     };
 }
