@@ -38,7 +38,7 @@ and point to the canonical page.
 │   │   │   ├── composites/         # our components
 │   │   │   └── primitives/         # shadcn/ui (Svelte port) components
 │   │   ├── model/                  # frontend models and helpers around the API types
-│   │   ├── current-user/           # user cache + refresh trigger
+│   │   │   └── cache/              # caches for load functions (user + refresh trigger, project, members)
 │   │   ├── custom-context/         # user context, etc.
 │   │   ├── grpc-api.ts             # gRPC-Web client wiring
 │   │   ├── schemas.ts, resource.svelte.ts, ...

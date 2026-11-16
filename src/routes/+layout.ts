@@ -4,7 +4,7 @@ import type { LayoutLoad } from "./$types";
 import { Nothing } from "snowballr-api/base";
 import { AuthenticationStatus } from "snowballr-api/authentication";
 import { goto } from "$app/navigation";
-import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/current-user/userCache";
+import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/model/cache/user-cache";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { isGrpcError } from "$lib/utils/common-helper";
 import { addRedirectUrlIfExists } from "$lib/utils/search-parameters";

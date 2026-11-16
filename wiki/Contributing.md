@@ -227,7 +227,7 @@ graph TD
 
 The initial user loading logic lives in the root
 [layout.ts](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/src/routes/%2Blayout.ts)
-file. It checks whether a user is already cached using the `userCache`. If no cached user is found, it attempts to
+file. It checks whether a user is already cached using the `user-cache`. If no cached user is found, it attempts to
 determine the current authentication status and fetch the user accordingly. If the user is unauthenticated or the
 session is invalid, it tries to renew the session or redirects to the sign-in page if necessary.
 
@@ -268,7 +268,7 @@ trigger a refresh of the user context to ensure all parts of the application hav
 1. Import the refresh function:
 
    ```svelte
-   import {triggerCurrentUserRefresh} from "$lib/current-user/userCache";
+   import {triggerCurrentUserRefresh} from "$lib/model/cache/user-cache";
    ```
 
 2. Call the function after an update:
@@ -276,7 +276,7 @@ trigger a refresh of the user context to ensure all parts of the application hav
    ```svelte
    <script lang="ts">
      import { backendService } from "$lib/grpc-api";
-     import { triggerCurrentUserRefresh } from "$lib/current-user/userCache";
+     import { triggerCurrentUserRefresh } from "$lib/model/cache/user-cache";
      import { toast } from "svelte-sonner";
      import { StatusCodes } from "$lib/model/error-codes";
      import { getContext } from "svelte";
