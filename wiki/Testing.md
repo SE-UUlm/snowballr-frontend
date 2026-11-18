@@ -37,6 +37,9 @@ In general, it makes sense to use the model builder to create test data, as it i
 > **Note**: Do not expect that the example data never changes, so it is better to use the model builder and overwrite
 > the values you need.
 
+The [visual regression tests](#visual-regression-tests) are an exception: they use their own fixed data, because every
+change to the data changes the screenshots.
+
 ## Conventions
 
 - For single test cases, we use the _when-then_ pattern, e.g. `test("When ..., then ...", () => { ... })`. This makes it
@@ -243,8 +246,14 @@ Reuse the POMs of the E2E tests to locate elements. A test should:
 
 1. **Use the visual fixture**: Import `test` from
    [`tests/visual/utils/visual-fixture.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/visual-fixture.ts).
-   It extends the isolated fixture (one fresh mock backend per test) and freezes the browser clock, so dates and
-   relative times never change.
+   It extends the isolated fixture (one fresh mock backend per test) and
+   - freezes the browser clock, so dates and relative times never change, and
+   - replaces the project dates that the mock backend sets from its own clock with fixed ones.
+
+   Request the `visualData` fixture to seed the
+   [fixed visual test data](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/visual-data.ts)
+   and to get the ids of the created objects. Tests that don't request it start with an empty account, e.g. to cover
+   empty states.
 
 2. **Wait until the page has settled**: Use `gotoAndSettle(page, url, ready)` or `settle(page, ready)` from
    [`tests/visual/utils/helper.ts`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/visual/utils/helper.ts)
@@ -256,10 +265,13 @@ Reuse the POMs of the E2E tests to locate elements. A test should:
      placement is covered as well.
    - Dialogs: an element screenshot, e.g. `await expect(dialog).toHaveScreenshot("name-dialog.png");`
 
+   The content of most pages scrolls inside a scroll area, so `fullPage` only contains what fits into the viewport. Call
+   `expandViewportToFitScrollAreas(page)` before the screenshot to include the content below it.
+
 Keep the screenshots deterministic:
 
-- Don't use the example data or the model builder, as every change to them would change the screenshots. Create data
-  through the API **one after another** (not with `Promise.all`), as the mock backend assigns ids sequentially.
+- Only use the fixed visual test data, never the example data or the model builder. Create additional data through the
+  API **one after another** (not with `Promise.all`), as the mock backend assigns ids sequentially.
 - Animations are disabled and the text cursor is hidden for all screenshots (see the config).
 - If a value can't be pinned, hide it with the
   [`mask`](https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-1-option-mask)
@@ -290,6 +302,6 @@ machine are valid in CI.
 - **Playwright**: A new version comes with a new browser build, which may render some pixels differently, so a bump
   (e.g. by Dependabot) may fail the visual tests. The scripts pick up the new Docker image automatically. Check out the
   branch, run `npm run test:visual:update`, review the changed baselines and commit them to that branch.
-- **Mock backend**: The data of the visual tests is created through the API of the mock backend
+- **Mock backend**: The visual test data is created through the API of the mock backend
   ([`mock-backend-version.js`](https://github.com/SE-UUlm/snowballr-frontend/blob/develop/tests/e2e/utils/helper/mock-backend-version.js)),
   so a changed behavior can change the screenshots as well. Proceed in the same way.
