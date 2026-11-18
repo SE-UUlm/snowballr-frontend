@@ -10,6 +10,8 @@ import {
 import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
+import { invalidate } from "$app/navigation";
+import { loadPrimedProject } from "$lib/model/cache/project-cache";
 import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
@@ -17,6 +19,10 @@ import { maybeAsDecisionSetting } from "$lib/components/composites/settings/proj
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn(), promise: vi.fn() },
+}));
+
+vi.mock("$app/navigation", () => ({
+    invalidate: vi.fn(() => Promise.resolve()),
 }));
 
 /** A setting stored directly on the project settings. */
@@ -179,6 +185,56 @@ describe("commitProjectSetting", () => {
         await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
 
         expect(toast.success).not.toHaveBeenCalled();
+    });
+
+    test("When a setting is committed successfully, then the loaded project is invalidated", async () => {
+        mockApiCall("updateProject", createProject());
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(invalidate).toHaveBeenCalledWith("data:getProjectById");
+    });
+
+    test("When a setting is committed successfully, then the updated project is handed to the project layout", async () => {
+        const updatedProject = createProject({
+            id: PROJECT_ID,
+            settings: createProjectSettings({ similarityThreshold: 0.65 }),
+        });
+        mockApiCall("updateProject", updatedProject);
+        // Simulate the project layout's load function, which is rerun by the invalidation
+        const fetchProject = vi.fn();
+        let loadingProject: Promise<Project> | undefined;
+        vi.mocked(invalidate).mockImplementationOnce(async () => {
+            loadingProject = loadPrimedProject(
+                { params: { projectId: PROJECT_ID }, depends: vi.fn() },
+                fetchProject,
+            );
+        });
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(await loadingProject).toEqual(updatedProject);
+        expect(fetchProject).not.toHaveBeenCalled();
+    });
+
+    test("When refreshing the project fails, then the committed setting is still reported as saved", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        mockApiCall("updateProject", createProject());
+        vi.mocked(invalidate).mockRejectedValueOnce(new Error("Invalidation failed"));
+
+        const error = await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(error).toBeUndefined();
+        expect(toast.success).toHaveBeenCalledWith(PROJECT_SETTING_SUCCESS_MESSAGE);
+        consoleError.mockRestore();
+    });
+
+    test("When the update fails, then the loaded project is not invalidated", async () => {
+        mockFailedApiCall("updateProject");
+
+        await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
+
+        expect(invalidate).not.toHaveBeenCalled();
     });
 
     test("When an enum setting is committed, then it is sent as its numeric value", async () => {

@@ -3,10 +3,7 @@ import { MemberRole, type Project_Member } from "snowballr-api/project";
 import type { User } from "snowballr-api/user";
 import { resource } from "$lib/resource.svelte";
 import { getUserContext } from "$lib/custom-context/user-context";
-
-export type MemberInfo = Project_Member & {
-    isInvitationPending: boolean;
-};
+import type { MemberInfo } from "$lib/model/member-info";
 
 export async function loadMembers(projectId: { id: string }): Promise<MemberInfo[]> {
     const loadingMembers = backendService

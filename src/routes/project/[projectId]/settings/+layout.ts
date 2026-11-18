@@ -1,9 +1,9 @@
+import { loadPrimedMembers } from "$lib/model/cache/project-members-cache";
 import type { LayoutLoad } from "./$types";
 import { loadMembers } from "./helper";
 
-export const load: LayoutLoad = async ({ params, depends }) => {
-    depends("data:getProjectById");
-    const loadingMembers = loadMembers({ id: params.projectId });
+export const load: LayoutLoad = async (event) => {
+    const loadingMembers = loadPrimedMembers(event, (id) => loadMembers({ id }));
 
     return { loadingMembers };
 };
