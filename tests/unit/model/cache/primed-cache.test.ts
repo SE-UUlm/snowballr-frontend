@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
 import { invalidate } from "$app/navigation";
 import { createPrimedCache, type PrimedCache } from "$lib/model/cache/primed-cache";
 
@@ -10,31 +10,49 @@ type Value = { name: string };
 
 const DEPENDENCY_KEY = "data:test";
 const PROJECT_ID = "project-1";
+const FETCHED: Value = { name: "fetched" };
 
 describe("primed cache", () => {
     let cache: PrimedCache<Value>;
+    let fetchFromSource: Mock<(projectId: string) => Promise<Value>>;
 
     beforeEach(() => {
         // Also resets the implementations set by `simulateLoad`
         vi.resetAllMocks();
         cache = createPrimedCache(DEPENDENCY_KEY);
+        fetchFromSource = vi.fn(() => Promise.resolve(FETCHED));
     });
 
-    /**
-     * Makes every invalidation rerun a load function of the given project, which takes the primed value.
-     *
-     * @returns The values taken by the load runs, in order
-     */
-    function simulateLoad(projectId = PROJECT_ID): (Value | undefined)[] {
-        const taken: (Value | undefined)[] = [];
-        vi.mocked(invalidate).mockImplementation(async () => {
-            taken.push(cache.take(projectId));
-        });
-        return taken;
+    /** Runs a load function of the given project, which loads the value from the cache. */
+    function load(projectId = PROJECT_ID, depends = vi.fn()): Promise<Value> {
+        return cache.load({ params: { projectId }, depends }, fetchFromSource);
     }
 
-    test("When no value was primed, then no value is taken", () => {
-        expect(cache.take(PROJECT_ID)).toBeUndefined();
+    /**
+     * Makes every invalidation rerun a load function of the given project.
+     *
+     * @returns The values loaded by the load runs, in order
+     */
+    function simulateLoad(projectId = PROJECT_ID): Value[] {
+        const loaded: Value[] = [];
+        vi.mocked(invalidate).mockImplementation(async () => {
+            loaded.push(await load(projectId));
+        });
+        return loaded;
+    }
+
+    test("When no value was primed, then the value is fetched for the loaded project", async () => {
+        expect(await load()).toBe(FETCHED);
+
+        expect(fetchFromSource).toHaveBeenCalledExactlyOnceWith(PROJECT_ID);
+    });
+
+    test("When a value is loaded, then the load function depends on the dependency key", async () => {
+        const depends = vi.fn();
+
+        await load(PROJECT_ID, depends);
+
+        expect(depends).toHaveBeenCalledExactlyOnceWith(DEPENDENCY_KEY);
     });
 
     test("When a value is refreshed, then its dependency key is invalidated", async () => {
@@ -43,37 +61,39 @@ describe("primed cache", () => {
         expect(invalidate).toHaveBeenCalledExactlyOnceWith(DEPENDENCY_KEY);
     });
 
-    test("When a value is refreshed, then it is taken by the next load of that project", async () => {
-        const taken = simulateLoad();
+    test("When a value is refreshed, then the next load of that project gets it without fetching", async () => {
+        const loaded = simulateLoad();
         const value = { name: "value" };
 
         await cache.refresh(PROJECT_ID, value);
 
-        expect(taken).toEqual([value]);
+        expect(loaded).toEqual([value]);
+        expect(fetchFromSource).not.toHaveBeenCalled();
     });
 
-    test("When the primed value was taken, then it is not taken a second time", async () => {
+    test("When the primed value was loaded, then the following load fetches the value", async () => {
         simulateLoad();
 
         await cache.refresh(PROJECT_ID, { name: "value" });
 
-        expect(cache.take(PROJECT_ID)).toBeUndefined();
+        expect(await load()).toBe(FETCHED);
     });
 
-    test("When another project is loaded, then the primed value is not taken and discarded", async () => {
-        const taken = simulateLoad("project-2");
+    test("When another project is loaded, then its value is fetched and the primed value is discarded", async () => {
+        const loaded = simulateLoad("project-2");
 
         await cache.refresh(PROJECT_ID, { name: "value" });
 
-        expect(taken).toEqual([undefined]);
-        expect(cache.take(PROJECT_ID)).toBeUndefined();
+        expect(loaded).toEqual([FETCHED]);
+        expect(fetchFromSource).toHaveBeenCalledExactlyOnceWith("project-2");
+        expect(await load()).toBe(FETCHED);
     });
 
     test("When no load function takes the value, then it is discarded after the invalidation", async () => {
         // The default mock of invalidate does not rerun any load function, like after leaving the page
         await cache.refresh(PROJECT_ID, { name: "value" });
 
-        expect(cache.take(PROJECT_ID)).toBeUndefined();
+        expect(await load()).toBe(FETCHED);
     });
 
     test("When a newer value is primed during an invalidation, then the newer value is not discarded", async () => {
@@ -90,7 +110,7 @@ describe("primed cache", () => {
         await cache.refresh(PROJECT_ID, { name: "older" });
 
         // The load run by the still pending newer invalidation gets the newer value
-        expect(cache.take(PROJECT_ID)).toBe(newer);
+        expect(await load()).toBe(newer);
         newerInvalidation.resolve();
         await newerRefresh;
     });
@@ -102,30 +122,33 @@ describe("primed cache", () => {
         await expect(cache.refresh(PROJECT_ID, { name: "value" })).resolves.toBeUndefined();
 
         expect(consoleError).toHaveBeenCalled();
-        expect(cache.take(PROJECT_ID)).toBeUndefined();
+        expect(await load()).toBe(FETCHED);
         consoleError.mockRestore();
     });
 
-    test("When a value is refreshed twice, then the value of each refresh is taken", async () => {
-        const taken = simulateLoad();
+    test("When a value is refreshed twice, then the value of each refresh is loaded", async () => {
+        const loaded = simulateLoad();
         const first = { name: "first" };
         const second = { name: "second" };
 
         await cache.refresh(PROJECT_ID, first);
         await cache.refresh(PROJECT_ID, second);
 
-        expect(taken).toEqual([first, second]);
+        expect(loaded).toEqual([first, second]);
     });
 
     test("When two caches are created, then they do not share their primed values", async () => {
         const otherCache = createPrimedCache<Value>("data:other");
-        let takenByOther: Value | undefined;
+        let loadingFromOther: Promise<Value> | undefined;
         vi.mocked(invalidate).mockImplementation(async () => {
-            takenByOther = otherCache.take(PROJECT_ID);
+            loadingFromOther = otherCache.load(
+                { params: { projectId: PROJECT_ID }, depends: vi.fn() },
+                fetchFromSource,
+            );
         });
 
         await cache.refresh(PROJECT_ID, { name: "value" });
 
-        expect(takenByOther).toBeUndefined();
+        expect(await loadingFromOther).toBe(FETCHED);
     });
 });

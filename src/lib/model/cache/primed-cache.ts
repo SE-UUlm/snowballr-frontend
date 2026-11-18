@@ -1,4 +1,13 @@
 import { invalidate } from "$app/navigation";
+import type { LoadEvent } from "@sveltejs/kit";
+
+/**
+ * The parts of the event of a load function below `/project/[projectId]` that a {@link PrimedCache} uses.
+ */
+export interface ProjectLoadEvent {
+    params: { projectId: string };
+    depends: LoadEvent["depends"];
+}
 
 /**
  * Hands a value that is already known to be up to date, e.g. because it was just returned by an update
@@ -7,15 +16,18 @@ import { invalidate } from "$app/navigation";
  */
 export interface PrimedCache<T> {
     /**
-     * Takes the primed value, if it belongs to the given project id.
+     * Loads the value for a load function.
      * This is primarily for use by the load function.
      *
+     * Registers the load function's dependency on the cache, so that {@link PrimedCache.refresh} reruns it.
+     * Then takes the primed value, if it belongs to the loaded project, and fetches the value otherwise.
      * The primed value is cleared in any case, so that later loads fetch the value again.
      *
-     * @param projectId - The id of the project that is loaded
-     * @returns The primed value, or undefined if there is none for the given project id
+     * @param event - The event of the load function
+     * @param fetchFromSource - Fetches the value of the given project id, if none is primed for it
+     * @returns The primed or the fetched value
      */
-    take(projectId: string): T | undefined;
+    load(event: ProjectLoadEvent, fetchFromSource: (projectId: string) => Promise<T>): Promise<T>;
 
     /**
      * Replaces the value loaded by the load function with the given, already up-to-date value.
@@ -38,18 +50,21 @@ export interface PrimedCache<T> {
 }
 
 /**
- * Creates a {@link PrimedCache} for the load function that depends on the given key.
+ * Creates a {@link PrimedCache} whose load function depends on the given key.
  *
  * @param dependencyKey - The key the load function depends on via `depends(...)`
  */
-export function createPrimedCache<T>(dependencyKey: string): PrimedCache<T> {
+export function createPrimedCache<T>(dependencyKey: `${string}:${string}`): PrimedCache<T> {
     let primed: { projectId: string; value: T } | undefined = undefined;
 
     return {
-        take(projectId) {
+        load({ params, depends }, fetchFromSource) {
+            depends(dependencyKey);
             const entry = primed;
             primed = undefined;
-            return entry?.projectId === projectId ? entry.value : undefined;
+            return entry?.projectId === params.projectId
+                ? Promise.resolve(entry.value)
+                : fetchFromSource(params.projectId);
         },
 
         async refresh(projectId, value) {

@@ -1,18 +1,21 @@
 import type { Project } from "snowballr-api/project";
-import { createPrimedCache } from "$lib/model/cache/primed-cache";
+import { createPrimedCache, type ProjectLoadEvent } from "$lib/model/cache/primed-cache";
 
-export const PROJECT_DEPENDENCY_KEY = "data:getProjectById";
-
-const projectCache = createPrimedCache<Project>(PROJECT_DEPENDENCY_KEY);
+const projectCache = createPrimedCache<Project>("data:getProjectById");
 
 /**
- * Takes the primed project, if it belongs to the given project id.
- * This is primarily for use by the project layout load function.
+ * Loads the project for the project layout load function: the primed project, if there is one, and
+ * the fetched project otherwise.
  *
- * @see PrimedCache.take
+ * @param event - The event of the project layout load function
+ * @param fetchProject - Fetches the project with the given id, if none is primed for it
+ * @see PrimedCache.load
  */
-export function takePrimedProject(projectId: string): Project | undefined {
-    return projectCache.take(projectId);
+export function loadPrimedProject(
+    event: ProjectLoadEvent,
+    fetchProject: (projectId: string) => Promise<Project>,
+): Promise<Project> {
+    return projectCache.load(event, fetchProject);
 }
 
 /**

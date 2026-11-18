@@ -1,18 +1,21 @@
 import type { MemberInfo } from "$lib/model/member-info";
-import { createPrimedCache } from "$lib/model/cache/primed-cache";
+import { createPrimedCache, type ProjectLoadEvent } from "$lib/model/cache/primed-cache";
 
-export const MEMBERS_DEPENDENCY_KEY = "data:getProjectMembers";
-
-const membersCache = createPrimedCache<MemberInfo[]>(MEMBERS_DEPENDENCY_KEY);
+const membersCache = createPrimedCache<MemberInfo[]>("data:getProjectMembers");
 
 /**
- * Takes the primed members, if they belong to the given project id.
- * This is primarily for use by the settings layout load function.
+ * Loads the members for the settings layout load function: the primed members, if there are any, and
+ * the fetched members otherwise.
  *
- * @see PrimedCache.take
+ * @param event - The event of the settings layout load function
+ * @param fetchMembers - Fetches the members of the project with the given id, if none are primed for it
+ * @see PrimedCache.load
  */
-export function takePrimedMembers(projectId: string): MemberInfo[] | undefined {
-    return membersCache.take(projectId);
+export function loadPrimedMembers(
+    event: ProjectLoadEvent,
+    fetchMembers: (projectId: string) => Promise<MemberInfo[]>,
+): Promise<MemberInfo[]> {
+    return membersCache.load(event, fetchMembers);
 }
 
 /**

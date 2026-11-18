@@ -11,7 +11,7 @@ import { createProject, createProjectSettings } from "$tests/model-builder";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { toast } from "svelte-sonner";
 import { invalidate } from "$app/navigation";
-import { takePrimedProject } from "$lib/model/cache/project-cache";
+import { loadPrimedProject } from "$lib/model/cache/project-cache";
 import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
 import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
 import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
@@ -202,14 +202,19 @@ describe("commitProjectSetting", () => {
         });
         mockApiCall("updateProject", updatedProject);
         // Simulate the project layout's load function, which is rerun by the invalidation
-        let takenProject: Project | undefined;
+        const fetchProject = vi.fn();
+        let loadingProject: Promise<Project> | undefined;
         vi.mocked(invalidate).mockImplementationOnce(async () => {
-            takenProject = takePrimedProject(PROJECT_ID);
+            loadingProject = loadPrimedProject(
+                { params: { projectId: PROJECT_ID }, depends: vi.fn() },
+                fetchProject,
+            );
         });
 
         await commitProjectSetting(similarityThreshold, 0.65, PROJECT_ID);
 
-        expect(takenProject).toEqual(updatedProject);
+        expect(await loadingProject).toEqual(updatedProject);
+        expect(fetchProject).not.toHaveBeenCalled();
     });
 
     test("When refreshing the project fails, then the committed setting is still reported as saved", async () => {
