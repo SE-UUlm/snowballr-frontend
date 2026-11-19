@@ -53,4 +53,18 @@ describe("Dialog", () => {
         await user.click(cancelButton);
         expect(trigger).toHaveAttribute("data-state", "open");
     });
+
+    test("When the cancel button is disabled, then neither Escape nor the close button close the dialog", async () => {
+        const user = userEvent.setup();
+        render(TestDialog, { cancelDisabled: true });
+
+        const trigger = await clickTrigger(user);
+        await waitFor(() => expect(screen.getByTestId("dialog-content")).toHaveFocus());
+
+        await user.keyboard("{Escape}");
+        expect(trigger).toHaveAttribute("data-state", "open");
+
+        await user.click(screen.getByRole("button", { name: "Close" }));
+        expect(trigger).toHaveAttribute("data-state", "open");
+    });
 });
