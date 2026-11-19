@@ -2,16 +2,14 @@
     import Input from "$lib/components/composites/input/Input.svelte";
     import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
     import * as Card from "$lib/components/primitives/card/index.js";
-    import { backendService } from "$lib/grpc-api";
+    import { register } from "$lib/api/auth";
+    import { isApiError } from "$lib/api/errors";
     import { Schema } from "$lib/schemas";
     import { goto } from "$app/navigation";
     import { cn } from "$lib/utils/shadcn-helper";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { toast } from "svelte-sonner";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
-    import { isGrpcError } from "$lib/utils/common-helper.js";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import logo from "$lib/assets/snowballr-logo_512.png";
@@ -55,8 +53,7 @@
             password: passwordInput.getValue(),
         };
 
-        await backendService
-            .register(userData)
+        await register(userData)
             .then(async () => {
                 toast.info("Registration successful!", {
                     description:
@@ -64,8 +61,8 @@
                 });
                 await goto(getRedirectUrlOrValue("/signin"));
             })
-            .catch((error: RpcError) => {
-                if (isGrpcError(error.code, GrpcStatusCode.ALREADY_EXISTS)) {
+            .catch((error: Error) => {
+                if (isApiError(error, "already-exists")) {
                     registrationError = createActionError(
                         "Email already Registered",
                         {
