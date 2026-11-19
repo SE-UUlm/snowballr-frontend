@@ -6,7 +6,8 @@
     import { backendService } from "$lib/grpc-api";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { getGrpcStatusCode, loadingWrapper } from "$lib/utils/common-helper";
+    import { loadingWrapper } from "$lib/utils/common-helper";
+    import { toGrpcStatus } from "$lib/api/grpc";
     import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
     import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { toast } from "svelte-sonner";
@@ -29,7 +30,7 @@
     let open = $state(false);
 
     function getLeaveProjectError(leaveError: RpcError): ActionError {
-        if (getGrpcStatusCode(leaveError.code) === GrpcStatusCode.FAILED_PRECONDITION) {
+        if (toGrpcStatus(leaveError.code) === GrpcStatusCode.FAILED_PRECONDITION) {
             return createActionError(
                 "Couldn't Leave This Project",
                 { customDetails: LAST_ADMIN_MESSAGE },

@@ -22,11 +22,11 @@ To set up the development environment, follow the steps in
 ├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/
+│   │   ├── api/            (backend access, see Backend Access)
 │   │   ├── components/
 │   │   │   ├── composites/ (our components)
 │   │   │   └── primitives/ (shadcn/ui components)
-│   │   └── model/
-│   │       └── api/        (auto-generated API code)
+│   │   └── model/          (frontend models and helpers)
 │   └── routes/             (website layout)
 ├── tests/
 │   ├── e2e/
@@ -304,6 +304,69 @@ trigger a refresh of the user context to ensure all parts of the application hav
      }
    </script>
    ```
+
+## Backend Access
+
+Routes and components reach the backend only through the domain modules in `src/lib/api/`. Only these modules import
+the generated API (`snowballr-api`), the protobuf-ts runtime (`@protobuf-ts/*`) and the client. This keeps transport
+details in one place, so the backend's switch from gRPC to REST
+([snowballr-backend#536](https://github.com/SE-UUlm/snowballr-backend/issues/536)) changes one module per domain instead
+of every call site.
+
+```plaintext
+src/lib/api/
+├── client.ts       (gRPC-Web client wiring)
+├── errors.ts       (ApiError, isApiError)
+├── grpc.ts         (call, mapping from gRPC status codes to ApiError)
+├── fieldmask.ts    (buildFieldMask)
+└── <domain>.ts     (one module per backend domain, e.g. project.ts, reading-list.ts)
+```
+
+Outside the layer, only the domain modules and `errors.ts` are imported.
+
+The domain modules follow these rules:
+
+- **Plain async functions with plain values.** For example `getProject(projectId): Promise<Project>` or
+  `listProjectPapers(projectId): Promise<ProjectPaper[]>`. Callers see neither `.response` nor wrapper messages like
+  `{ projectPapers }`.
+- **Updates are named intents.** For example `renameProject(projectId, name)` instead of
+  `updateProject({ project, mask })`. FieldMasks and generated `create()` calls stay inside `src/lib/api/`. Derive the
+  mask from a sparse patch and call `create()` only when building the request: `create()` fills in every field, so a
+  mask derived from its result resets all sibling fields.
+- **Errors are transport-neutral.** Every function rejects with `ApiError`. Check its kind with
+  `isApiError(error, "already-exists")` instead of comparing gRPC status codes.
+- **No UI.** Toasts, `ActionError`, `invalidate()` and Svelte state stay in the routes and components.
+
+A domain module wraps each client call in `call()` from `grpc.ts`, which returns the response and turns a failure into
+an `ApiError`:
+
+```ts
+// src/lib/api/project.ts
+import { Project } from "snowballr-api/project";
+import { client } from "./client";
+import { call } from "./grpc";
+import { buildFieldMask } from "./fieldmask";
+
+export async function getProject(projectId: string): Promise<Project> {
+  return call(client.getProjectById({ id: projectId }));
+}
+
+export async function renameProject(projectId: string, name: string): Promise<void> {
+  const patch = { id: projectId, name };
+  await call(
+    client.updateProject({
+      project: Project.create(patch),
+      mask: buildFieldMask(patch, "project"),
+    }),
+  );
+}
+```
+
+When a route or component needs a backend call that has no function yet, add the function to its domain module.
+
+The migration to this layer is tracked in [#771](https://github.com/SE-UUlm/snowballr-frontend/issues/771). Until it is
+done, `$lib/grpc-api` re-exports the client for the files that still call it directly, and ESLint only warns about
+imports that bypass the layer (`no-restricted-imports` in `eslint.config.js`).
 
 ## Testing
 
