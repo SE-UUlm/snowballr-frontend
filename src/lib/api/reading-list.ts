@@ -9,7 +9,7 @@ import { call } from "./grpc";
  * @returns The papers on the reading list
  */
 export async function getReadingList(): Promise<Paper[]> {
-    const { papers } = await call(client.getReadingList(Nothing));
+    const { papers } = await call(() => client.getReadingList(Nothing));
     return papers;
 }
 
@@ -20,7 +20,7 @@ export async function getReadingList(): Promise<Paper[]> {
  * @returns True if the paper is on the reading list
  */
 export async function isPaperOnReadingList(paperId: string): Promise<boolean> {
-    const { value } = await call(client.isPaperOnReadingList({ id: paperId }));
+    const { value } = await call(() => client.isPaperOnReadingList({ id: paperId }));
     return value;
 }
 
@@ -30,7 +30,7 @@ export async function isPaperOnReadingList(paperId: string): Promise<boolean> {
  * @param paperId - The ID of the paper
  */
 export async function addPaperToReadingList(paperId: string): Promise<void> {
-    await call(client.addPaperToReadingList({ id: paperId }));
+    await call(() => client.addPaperToReadingList({ id: paperId }));
 }
 
 /**
@@ -39,5 +39,5 @@ export async function addPaperToReadingList(paperId: string): Promise<void> {
  * @param paperId - The ID of the paper
  */
 export async function removePaperFromReadingList(paperId: string): Promise<void> {
-    await call(client.removePaperFromReadingList({ id: paperId }));
+    await call(() => client.removePaperFromReadingList({ id: paperId }));
 }

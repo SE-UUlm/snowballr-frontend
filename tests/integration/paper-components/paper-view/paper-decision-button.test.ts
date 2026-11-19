@@ -2,8 +2,7 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, onTestFinished, test, vi } from "vitest";
 import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
-import { createReview } from "$tests/model-builder";
-import { backendService } from "$lib/grpc-api";
+import { client } from "$lib/api/client";
 import { Review, ReviewDecision } from "snowballr-api/review";
 import { getReturnValue, mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import {
@@ -15,12 +14,19 @@ import {
 } from "$tests/integration/test-helper";
 import { ProjectPapers } from "$tests/example-data";
 import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+import { goto } from "$app/navigation";
+import { toast } from "svelte-sonner";
+import { createProject, createProjectPaper, createReview } from "$tests/model-builder";
+
+vi.mock("svelte-sonner", () => ({
+    toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
+}));
 
 type CombinedContext = SelectedCriteriaContext | WasReviewedContext | IsProjectArchivedContext;
 
 describe("PaperDecisionButton", () => {
     test("When the variant is 'accept', then button is visualized and acts as the accept button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -57,7 +63,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'decline', then button is visualized and acts as the decline button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -94,7 +100,7 @@ describe("PaperDecisionButton", () => {
     });
 
     test("When the variant is 'maybe', then button is visualized and acts as the maybe button ", async () => {
-        const mockCall = vi.spyOn(backendService, "createReview").mockClear();
+        const mockCall = vi.spyOn(client, "createReview").mockClear();
 
         render(PaperDecisionButton, {
             context: new Map<symbol, CombinedContext>([
@@ -132,9 +138,9 @@ describe("PaperDecisionButton", () => {
 
     test("When submitting the review fails, then the button can be used again and a retry sends the same decision", async () => {
         vi.spyOn(console, "error").mockImplementation(() => {});
-        const defaultCreateReview = vi.mocked(backendService.createReview).getMockImplementation()!;
+        const defaultCreateReview = vi.mocked(client.createReview).getMockImplementation()!;
         onTestFinished(() => {
-            vi.mocked(backendService.createReview).mockImplementation(defaultCreateReview);
+            vi.mocked(client.createReview).mockImplementation(defaultCreateReview);
         });
         mockFailedApiCall("createReview", "backend down", "UNAVAILABLE");
         const isSubmittingReview = { value: false };
@@ -206,5 +212,102 @@ describe("PaperDecisionButton", () => {
 
         const decisionButton = screen.getByRole("button", { name: /Accept/ });
         expect(decisionButton).toBeDisabled();
+    });
+    test("When the review is submitted and the next paper opens, then no 'No more papers' toast is shown", async () => {
+        vi.mocked(toast.info).mockClear();
+        const project = createProject();
+        const currentPaper = createProjectPaper({ id: "current", localId: "1" });
+        const nextPaper = createProjectPaper({ id: "next", localId: "2" });
+
+        const { rerender } = render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "accepted",
+                loadingProject: Promise.resolve(project),
+                loadingProjectPaper: Promise.resolve(currentPaper),
+                nextProjectPaper: nextPaper,
+            },
+        });
+        projectPaperLoading.isLoading = false;
+        // Like the navigation button, which forgets the neighbour once the next paper loads
+        vi.mocked(goto).mockImplementationOnce(async () => {
+            await rerender({ nextProjectPaper: undefined });
+        });
+
+        await userEvent.click(screen.getByRole("button", { name: /Accept/ }));
+
+        await waitFor(() =>
+            expect(goto).toHaveBeenCalledWith(`/project/${project.id}/paper/${nextPaper.localId}`),
+        );
+        await waitFor(() => expect(projectPaperLoading.isLoading).toBe(false));
+        expect(toast.info).not.toHaveBeenCalled();
+    });
+    test("When the project is archived, then the shortcut does not submit a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(true),
+            ]),
+            props: {
+                variant: "accepted",
+                loadingProjectPaper: Promise.resolve(createProjectPaper()),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+
+        await userEvent.keyboard("{Control>}a{/Control}");
+
+        expect(createReviewCall).not.toHaveBeenCalled();
+    });
+
+    test("When another review is being submitted, then the shortcut does not submit a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "declined",
+                isSubmittingReview: { value: true },
+                loadingProjectPaper: Promise.resolve(createProjectPaper()),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+
+        await userEvent.keyboard("{Control>}d{/Control}");
+
+        expect(createReviewCall).not.toHaveBeenCalled();
+    });
+
+    test("When the button is enabled, then the shortcut submits a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        const projectPaper = createProjectPaper();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "maybe",
+                loadingProjectPaper: Promise.resolve(projectPaper),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+        await waitFor(() => expect(screen.getByRole("button")).toBeEnabled());
+
+        await userEvent.keyboard("{Control>}s{/Control}");
+
+        await waitFor(() =>
+            expect(createReviewCall).toHaveBeenCalledExactlyOnceWith({
+                projectPaperId: projectPaper.id,
+                decision: ReviewDecision.MAYBE,
+                selectedCriteriaIds: [],
+            }),
+        );
     });
 });

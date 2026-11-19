@@ -14,7 +14,7 @@ export interface ProjectExport {
  * @returns The names of the export formats
  */
 export async function getAvailableExportFormats(): Promise<string[]> {
-    const { formats } = await call(client.getAvailableExportFormats(Nothing));
+    const { formats } = await call(() => client.getAvailableExportFormats(Nothing));
     return formats;
 }
 
@@ -26,6 +26,6 @@ export async function getAvailableExportFormats(): Promise<string[]> {
  * @returns The exported file
  */
 export async function exportProject(projectId: string, format: string): Promise<ProjectExport> {
-    const { data, fileName } = await call(client.exportProject({ id: projectId, format }));
+    const { data, fileName } = await call(() => client.exportProject({ id: projectId, format }));
     return { data, fileName };
 }

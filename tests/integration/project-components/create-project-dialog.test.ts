@@ -2,7 +2,7 @@ import { expect, test, describe, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 import userEvent from "@testing-library/user-event";
-import { mockUserContext } from "../test-helper";
+import { mockUserContext, waitForDialogFocus } from "../test-helper";
 import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
 import { goto } from "$app/navigation";
 import { createProject as createDemoProject, createUser } from "$tests/model-builder";
@@ -47,6 +47,8 @@ describe("CreateProjectDialog", () => {
         await waitFor(() => {
             expect(screen.getByTestId("dialog-content")).toHaveAttribute("data-state", "open");
         });
+        // The dialog moves the focus once it opened, which would swallow the keys typed meanwhile
+        await waitForDialogFocus();
     }
 
     async function closeCreateProjectDialog() {
@@ -172,7 +174,7 @@ describe("CreateProjectDialog", () => {
 
         await createProject();
 
-        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(await screen.findByText("Failed to Create Project")).toBeInTheDocument();
         expect(
             screen.queryByText("Success! Your new project has been created successfully.", {
                 exact: false,
@@ -186,7 +188,7 @@ describe("CreateProjectDialog", () => {
 
         await createProject();
 
-        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
+        expect(await screen.findByText("Failed to Invite Members")).toBeInTheDocument();
         expect(
             screen.queryByText("Success! Your new project has been created successfully.", {
                 exact: false,
@@ -207,7 +209,7 @@ describe("CreateProjectDialog", () => {
         });
 
         await createProject();
-        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
+        expect(await screen.findByText("Failed to Invite Members")).toBeInTheDocument();
 
         const inviteUserCall = mockApiCall("inviteUserToProject", {});
         const user = userEvent.setup();
@@ -235,14 +237,14 @@ describe("CreateProjectDialog", () => {
         });
 
         await createProject();
-        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
+        expect(await screen.findByText("Failed to Invite Members")).toBeInTheDocument();
         await closeCreateProjectDialog();
 
         mockFailedApiCall("createProject");
         const inviteUserCall = mockApiCall("inviteUserToProject", {});
         await createProject();
 
-        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(await screen.findByText("Failed to Create Project")).toBeInTheDocument();
         expect(inviteUserCall).not.toHaveBeenCalled();
         expect(
             screen.queryByText("Success! Your new project has been created successfully.", {

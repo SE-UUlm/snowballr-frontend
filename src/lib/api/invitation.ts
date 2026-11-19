@@ -9,7 +9,7 @@ import { call } from "./grpc";
  * @param email - The email address of the user to invite
  */
 export async function inviteUserToProject(projectId: string, email: string): Promise<void> {
-    await call(client.inviteUserToProject({ projectId, userEmail: email }));
+    await call(() => client.inviteUserToProject({ projectId, userEmail: email }));
 }
 
 /**
@@ -20,7 +20,7 @@ export async function inviteUserToProject(projectId: string, email: string): Pro
  * @returns The invited users
  */
 export async function getPendingInvitations(projectId: string): Promise<User[]> {
-    const { users } = await call(client.getPendingInvitationsForProject({ id: projectId }));
+    const { users } = await call(() => client.getPendingInvitationsForProject({ id: projectId }));
     return users;
 }
 
@@ -34,7 +34,9 @@ export async function getPendingInvitations(projectId: string): Promise<User[]> 
  * @returns The matching users, none if the query is too short
  */
 export async function getInviteCandidates(query: string, projectId?: string): Promise<User[]> {
-    const { users } = await call(client.getInviteCandidates({ query, projectId: projectId ?? "" }));
+    const { users } = await call(() =>
+        client.getInviteCandidates({ query, projectId: projectId ?? "" }),
+    );
     return users;
 }
 
@@ -47,5 +49,5 @@ export async function getInviteCandidates(query: string, projectId?: string): Pr
  * @param token - The token from the invitation link
  */
 export async function acceptProjectInvitation(token: string): Promise<void> {
-    await call(client.acceptProjectInvitation({ token }));
+    await call(() => client.acceptProjectInvitation({ token }));
 }

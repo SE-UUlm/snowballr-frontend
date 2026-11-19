@@ -1,6 +1,6 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
-import { expect, type Mock, type MockInstance, vi } from "vitest";
+import { beforeEach, expect, type Mock, type MockInstance, vi } from "vitest";
 import * as environment from "$app/environment";
 import * as navigation from "$app/navigation";
 import {
@@ -46,6 +46,12 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     refreshAll: () => Promise.resolve(),
     replaceState: () => {},
 }));
+
+// `goto` is one mock for the whole test file and test order is shuffled, so forget the calls and the
+// queued results (e.g. `mockRejectedValueOnce`) of the earlier tests. `vi.restoreAllMocks` doesn't.
+beforeEach(() => {
+    vi.mocked(navigation.goto).mockReset();
+});
 
 // Mock SvelteKit runtime module $app/state, inspired by https://stackoverflow.com/questions/79600853/how-to-mock-page-from-app-state-in-sveltekit-vitest-unit-tests
 vi.mock("$app/state", async () => {

@@ -76,11 +76,12 @@
         }
     }
 
-    // if dialog is closed, then reset the invitee list
+    // if dialog is closed, then reset the invitee list and the error of the last attempt
     $effect(() => {
         if (!open) {
             invitees = [];
             invitedEmails.clear();
+            inviteUsersError = undefined;
         }
     });
 </script>
@@ -105,6 +106,7 @@ Usage:
 ```
 -->
 <Dialog
+    cancelDisabled={loading.value}
     title="Invite Users"
     triggerProps={{
         class: buttonVariants({ variant: "default" }),

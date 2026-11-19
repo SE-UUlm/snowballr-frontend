@@ -25,12 +25,11 @@ export const load: PageLoad = ({ params }) => {
     const reviewers: Promise<User[]> = criteriaWithReviews.then(async (criteria) => {
         const reviews = criteria.flatMap((criterion) => criterion.reviews);
         const userIds: Set<string> = new Set(reviews.map((review) => review.userId));
-        const users: User[] = await Promise.all(
-            Array.from(userIds)
-                .map((id) => getUserById(id).catch(() => undefined))
-                .filter((user) => user !== undefined) as Promise<User>[],
+        const users = await Promise.all(
+            Array.from(userIds, (id) => getUserById(id).catch(() => undefined)),
         );
-        return users;
+        // Leave out the reviewers that could not be loaded
+        return users.filter((user): user is User => user !== undefined);
     });
 
     return {

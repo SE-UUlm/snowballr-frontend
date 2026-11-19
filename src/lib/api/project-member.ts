@@ -9,7 +9,7 @@ import { call } from "./grpc";
  * @returns The members with their roles
  */
 export async function getProjectMembers(projectId: string): Promise<Project_Member[]> {
-    const { members } = await call(client.getProjectMembers({ id: projectId }));
+    const { members } = await call(() => client.getProjectMembers({ id: projectId }));
     return members;
 }
 
@@ -23,7 +23,7 @@ export async function getProjectMembers(projectId: string): Promise<Project_Memb
  * @param email - The email address of the member to remove
  */
 export async function removeProjectMember(projectId: string, email: string): Promise<void> {
-    await call(client.removeProjectMember({ projectId, userEmail: email }));
+    await call(() => client.removeProjectMember({ projectId, userEmail: email }));
 }
 
 /**
@@ -38,5 +38,5 @@ export async function setProjectMemberRole(
     userId: string,
     role: MemberRole,
 ): Promise<void> {
-    await call(client.updateProjectMemberRole({ projectId, userId, newRole: role }));
+    await call(() => client.updateProjectMemberRole({ projectId, userId, newRole: role }));
 }

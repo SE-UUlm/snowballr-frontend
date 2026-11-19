@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { ReviewDecision } from "snowballr-api/review";
 import { client } from "$lib/api/client";
 import { load } from "../../../../src/routes/project/[projectId]/paper/[paperId]/+page";
@@ -125,6 +125,26 @@ describe("Project paper page loader", () => {
         expect(getUserCall).toHaveBeenCalledTimes(2);
         expect(getUserCall).toHaveBeenCalledWith({ id: "u1" });
         expect(getUserCall).toHaveBeenCalledWith({ id: "u2" });
+    });
+
+    test("When loading one reviewer fails, then the other reviewers are still listed", async () => {
+        const getUserCall = vi.mocked(client.getUserById);
+        const defaultGetUser = getUserCall.getMockImplementation()!;
+        onTestFinished(() => {
+            getUserCall.mockImplementation(defaultGetUser);
+        });
+        const failGetUser = mockFailedApiCall(
+            "getUserById",
+            "user deleted",
+            "NOT_FOUND",
+        ).getMockImplementation()!;
+        getUserCall.mockImplementation((input, options) =>
+            input.id === "u1" ? failGetUser(input, options) : defaultGetUser(input, options),
+        );
+
+        const data = loadProjectPaperPage();
+
+        await expect(data.reviewers).resolves.toEqual([createUser({ id: "u2" })]);
     });
 
     test("When loading the criteria fails, then only the criteria and reviewers fail to load", async () => {

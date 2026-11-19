@@ -6,11 +6,11 @@ import { ProjectPapers } from "$tests/example-data";
 import { mockApiCall, mockFailedApiCall, mockUnaryCall } from "$tests/setupTest";
 import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
 import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
-import { backendService } from "$lib/grpc-api";
 import { createProject, createProjectPaper } from "$tests/model-builder";
 import { goto } from "$app/navigation";
 import { toast } from "svelte-sonner";
 import type { Project_Paper } from "snowballr-api/project";
+import { client } from "$lib/api/client";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
@@ -124,8 +124,8 @@ describe("PaperNavigationButton", () => {
         });
     });
 
-    describe("When prefetching the neighbouring paper", () => {
-        const getNextPaperMock = backendService.getNextPaper as unknown as Mock;
+    describe("When prefetching the neighboring paper", () => {
+        const getNextPaperMock = client.getNextPaper as unknown as Mock;
         let defaultGetNextPaper: ReturnType<Mock["getMockImplementation"]>;
 
         beforeEach(() => {
