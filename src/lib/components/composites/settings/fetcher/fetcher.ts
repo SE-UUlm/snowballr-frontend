@@ -1,7 +1,5 @@
-import type { FetcherOptions } from "$lib/api/types";
+import type { Fetchers } from "$lib/api/fetcher";
 import type { ActionError } from "$lib/model/action-error";
-
-export type Fetchers = { [key: string]: FetcherOptions };
 
 /**
  * Persists a new fetchers map for whatever entity (project or user) owns it.
