@@ -16,6 +16,7 @@
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
     import { SvelteSet } from "svelte/reactivity";
+    import { toast } from "svelte-sonner";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -192,8 +193,14 @@ Usage:
     actionProps={{
         onclick: async () => {
             isNavigatingToNewProject = true;
-            await navigateToProject();
-            isNavigatingToNewProject = false;
+            try {
+                await navigateToProject();
+            } catch (navigationError) {
+                toast.error("Could not open the new project.");
+                console.error(`Couldn't navigate to the new project: ${navigationError}`);
+            } finally {
+                isNavigatingToNewProject = false;
+            }
         },
     }}
     cancelProps={{

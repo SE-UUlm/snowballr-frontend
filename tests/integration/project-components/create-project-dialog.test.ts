@@ -324,4 +324,22 @@ describe("CreateProjectDialog", () => {
             userEmail: secondInvitee.email,
         });
     });
+
+    test("When opening the created project fails, then the open button stops loading", async () => {
+        vi.mocked(goto).mockRejectedValueOnce(new Error("navigation failed"));
+        vi.spyOn(console, "error").mockImplementation(() => {});
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+        const user = userEvent.setup();
+        const openButton = await screen.findByRole("button", { name: "Open" });
+        await user.click(openButton);
+
+        await waitFor(() => expect(goto).toHaveBeenCalled());
+        await waitFor(() => expect(screen.getByRole("button", { name: "Open" })).toBeEnabled());
+    });
 });
