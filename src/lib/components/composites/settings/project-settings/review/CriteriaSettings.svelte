@@ -1,12 +1,18 @@
 <script lang="ts">
-    import { CriterionCategory, type Criterion } from "snowballr-api/criterion";
+    import {
+        createCriterion,
+        deleteCriterion,
+        listCriteria,
+        updateCriterion,
+    } from "$lib/api/criterion";
+    import { isApiError } from "$lib/api/errors";
+    import { CriterionCategory, type Criterion } from "$lib/api/types";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import { Button } from "$lib/components/primitives/button";
     import { Skeleton } from "$lib/components/primitives/skeleton";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { backendService } from "$lib/grpc-api";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import {
         collectChanges,
@@ -17,9 +23,7 @@
         type CriterionDraft,
         type CriterionFields,
     } from "$lib/model/criteria-draft";
-    import { isGrpcError, loadingWrapper } from "$lib/utils/common-helper";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
+    import { loadingWrapper } from "$lib/utils/common-helper";
     import Plus from "@lucide/svelte/icons/plus";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
@@ -68,9 +72,8 @@
     const disabled = $derived(locked || loadingCriteria || saving.value);
 
     onMount(async () => {
-        await backendService
-            .getAllCriteriaForProject({ id: projectId })
-            .response.then(({ criteria }) => {
+        await listCriteria(projectId)
+            .then((criteria) => {
                 drafts = criteria.map(toDraft);
             })
             .catch((error) => {
@@ -154,11 +157,11 @@
                 affected.map((draft) =>
                     request(draft)
                         .then((result) => (results[draft.key] = result))
-                        .catch((error: RpcError) => {
+                        .catch((error: unknown) => {
                             failures++;
                             if (
-                                (isGrpcError(error.code, GrpcStatusCode.FAILED_PRECONDITION) ||
-                                    isGrpcError(error.code, GrpcStatusCode.INVALID_ARGUMENT)) &&
+                                (isApiError(error, "failed-precondition") ||
+                                    isApiError(error, "invalid-argument")) &&
                                 error.message
                             ) {
                                 reasons.push(`${draft.tag.trim()}: ${withFullStop(error.message)}`);
@@ -168,16 +171,14 @@
             );
         }
 
-        await run("removed", (draft) =>
-            backendService.deleteCriterion({ id: draft.stored!.id }).response.then(() => null),
-        );
+        await run("removed", (draft) => deleteCriterion(draft.stored!.id).then(() => null));
         await run("edited", (draft) => {
-            const [update] = collectChanges(projectId, [draft]).updates;
-            return backendService.updateCriterion(update).response.then(toDraft);
+            const [{ criterion, changes }] = collectChanges(projectId, [draft]).updates;
+            return updateCriterion(criterion, changes).then(toDraft);
         });
         await run("added", (draft) => {
             const [create] = collectChanges(projectId, [draft]).creates;
-            return backendService.createCriterion(create).response.then(toDraft);
+            return createCriterion(create).then(toDraft);
         });
 
         drafts = drafts

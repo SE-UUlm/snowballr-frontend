@@ -1,4 +1,4 @@
-import type { Project } from "snowballr-api/project";
+import type { Project } from "$lib/api/types";
 import { createPrimedCache, type ProjectLoadEvent } from "$lib/model/cache/primed-cache";
 
 const projectCache = createPrimedCache<Project>("data:getProjectById");
