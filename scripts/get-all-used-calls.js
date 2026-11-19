@@ -13,14 +13,17 @@ import path from "path";
 // Regular expression to match calls of the generated client
 const apiCallRegex = /\bclient\s*\.\s*(\w+)\s*\(/g;
 
+// Blanks out a comment but keeps its newlines, so line numbers in the result match the original file
+const blank = (comment) => comment.replace(/[^\n]/g, "");
+
 // Function to remove comments from code
 const removeComments = (content) => {
     // Remove single line comments
     content = content.replace(/\/\/.*/g, "");
     // Remove multi-line comments
-    content = content.replace(/\/\*[\s\S]*?\*\//g, "");
+    content = content.replace(/\/\*[\s\S]*?\*\//g, blank);
     // Remove HTML comments
-    content = content.replace(/<!--[\s\S]*?-->/g, "");
+    content = content.replace(/<!--[\s\S]*?-->/g, blank);
     return content;
 };
 
