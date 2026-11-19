@@ -15,6 +15,7 @@
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
+    import { SvelteSet } from "svelte/reactivity";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -22,6 +23,8 @@
     const isCreatingProject = $state({ value: false });
     let projectWasCreated = $state(false);
     let projectId = $state<string | undefined>(undefined);
+    // The emails already invited to the created project, so a retry only sends the failed ones
+    const invitedEmails = new SvelteSet<string>();
 
     let submitError: ActionError = $state(undefined);
 
@@ -47,9 +50,9 @@
      * Therefore, send a request to the backend to create a new project with the
      * provided name and optionally invite further members provided in the second input.
      *
-     * If an earlier attempt already created the project and only the invitations failed, the
-     * project is not created again; only the invitations are sent again. Inviting a user twice has
-     * no effect. The project name can't be changed anymore at that point, as it is not sent again.
+     * If an earlier attempt already created the project and only some invitations failed, the
+     * project is not created again; only the failed invitations are sent again. The project name
+     * can't be changed anymore at that point, as it is not sent again.
      */
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -71,17 +74,21 @@
         }
 
         const createdProjectId = projectId;
-        try {
-            await Promise.all(
-                invitees.map((email) => inviteUserToProject(createdProjectId, email)),
-            );
-        } catch (error) {
+        const pendingInvitees = invitees.filter((email) => !invitedEmails.has(email));
+        const results = await Promise.allSettled(
+            pendingInvitees.map(async (email) => {
+                await inviteUserToProject(createdProjectId, email);
+                invitedEmails.add(email);
+            }),
+        );
+        const failure = results.find((result) => result.status === "rejected");
+        if (failure !== undefined) {
             submitError = createActionError("Failed to Invite Members", {
                 customDetails:
                     "The project was created, but not all members could be invited. Try again to " +
                     "resend the invitations, or close this dialog to keep the project without them.",
             });
-            console.error(`Couldn't invite users to project (${error})`);
+            console.error(`Couldn't invite users to project (${failure.reason})`);
             return;
         }
 
@@ -99,6 +106,7 @@
 
             if (!projectWasCreated && projectId !== undefined) {
                 projectId = undefined;
+                invitedEmails.clear();
                 invalidate("data:allProjectsForUser");
             }
         }
@@ -192,6 +200,7 @@ Usage:
         onclick: () => {
             projectWasCreated = false;
             projectId = undefined;
+            invitedEmails.clear();
             invitees = [];
 
             // trigger reload of the homepage, so the created project is shown in the projects list
