@@ -16,6 +16,7 @@
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
     import { SvelteSet } from "svelte/reactivity";
+    import { toast } from "svelte-sonner";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -60,6 +61,7 @@
         if (!projectNameInput.validate()) {
             return;
         }
+        submitError = undefined;
 
         if (projectId === undefined) {
             try {
@@ -124,6 +126,8 @@ Usage:
 ```
 -->
 <div class="px-5">
+    <!-- Cancelling is disabled while submitting, so the close reset below can't forget the
+    project while it is still being created. -->
     <Dialog
         cancelDisabled={isCreatingProject.value}
         title="Create Project"
@@ -134,14 +138,7 @@ Usage:
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             ),
         }}
-        bind:open={
-            () => open,
-            (value) => {
-                // Keep the dialog open while submitting, so the close reset below can't forget the
-                // project while it is still being created.
-                if (!isCreatingProject.value) open = value;
-            }
-        }
+        bind:open
     >
         {#snippet trigger()}
             <div class="flex flex-row items-center justify-center gap-2.5">
@@ -192,8 +189,14 @@ Usage:
     actionProps={{
         onclick: async () => {
             isNavigatingToNewProject = true;
-            await navigateToProject();
-            isNavigatingToNewProject = false;
+            try {
+                await navigateToProject();
+            } catch (navigationError) {
+                toast.error("Could not open the new project.");
+                console.error(`Couldn't navigate to the new project: ${navigationError}`);
+            } finally {
+                isNavigatingToNewProject = false;
+            }
         },
     }}
     cancelProps={{

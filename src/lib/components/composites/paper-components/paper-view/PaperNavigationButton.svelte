@@ -4,10 +4,12 @@
     import Tooltip from "../../utils/Tooltip.svelte";
     import type { Project, Project_Paper } from "$lib/api/types";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import { getNextPaper, getNextPaperToReview, getPreviousPaper } from "$lib/api/project-paper";
     import { navigatePaper } from "$lib/utils/paper-navigation";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+    import { isApiError } from "$lib/api/errors";
+    import { toast } from "svelte-sonner";
 
     interface Props {
         direction: "left" | "right";
@@ -40,38 +42,60 @@
     // svelte-ignore state_referenced_locally
     const tooltipText = direction === "left" ? "Previous Paper" : "Next Paper";
 
-    async function getNextProjectPaperToReview(paper: Project_Paper) {
-        await backendService
-            .getNextPaperToReview({ id: paper.id })
-            .response.then((nextPaper) => {
-                nextProjectPaper = nextPaper;
-            })
-            .catch(() => {
-                nextProjectPaper = undefined;
-            });
+    /**
+     * Fetches the neighbouring paper of the given paper.
+     *
+     * @returns the neighbouring paper, or undefined if there is none or it could not be loaded
+     */
+    async function fetchNeighbour(
+        fetch: (projectPaperId: string) => Promise<Project_Paper>,
+        paper: Project_Paper,
+    ): Promise<Project_Paper | undefined> {
+        try {
+            return await fetch(paper.id);
+        } catch (error) {
+            // The backend signals that there is no such paper with a failed precondition.
+            if (!isApiError(error, "failed-precondition")) {
+                toast.error(
+                    `Could not load the ${direction === "right" ? "next" : "previous"} paper.`,
+                );
+                console.error("Could not load the neighbouring paper:", error);
+            }
+            return undefined;
+        }
     }
 
-    async function getNextProjectPaper(paper: Project_Paper) {
-        await backendService
-            .getNextPaper({ id: paper.id })
-            .response.then((nextPaper) => {
-                nextProjectPaper = nextPaper;
-            })
-            .catch(() => {
-                nextProjectPaper = undefined;
-            });
+    /**
+     * Loads the next or previous paper of the paper that `loadingCurrentPaper` resolves to.
+     *
+     * @returns the neighbouring paper, or undefined if there is none or it could not be loaded
+     */
+    async function loadNeighbour(
+        loadingCurrentPaper: Promise<Project_Paper | undefined>,
+    ): Promise<Project_Paper | undefined> {
+        let paper: Project_Paper | undefined;
+        try {
+            paper = await loadingCurrentPaper;
+        } catch (error) {
+            console.error("Could not load the current paper:", error);
+            return undefined;
+        }
+        if (!paper) return undefined;
+
+        if (direction === "right") {
+            return fetchNeighbour(
+                reviewMode.isActivated ? getNextPaperToReview : getNextPaper,
+                paper,
+            );
+        }
+        if (reviewMode.isActivated) {
+            return paperQueue[paperQueue.length - 1];
+        }
+        return fetchNeighbour(getPreviousPaper, paper);
     }
 
-    async function getPreviousProjectPaper(paper: Project_Paper) {
-        await backendService
-            .getPreviousPaper({ id: paper.id })
-            .response.then((previousPaper) => {
-                previousProjectPaper = previousPaper;
-            })
-            .catch(() => {
-                previousProjectPaper = undefined;
-            });
-    }
+    // Counts the prefetches, so that a late response for an earlier paper is ignored
+    let latestPrefetch = 0;
 
     /**
      * Pre-fetches the next and the previous paper to find out if the according button is enabled or
@@ -79,31 +103,28 @@
      * before. Loads the next or previous paper only if all necessary information is available.
      */
     $effect(() => {
-        (async () => {
-            buttonStillLoading = true;
-            const paper = await loadingProjectPaper;
-            if (!paper) return;
+        const prefetch = ++latestPrefetch;
+        buttonStillLoading = true;
+        // Forget the neighbour of the earlier paper, so nothing navigates to it meanwhile
+        if (direction === "right") {
+            nextProjectPaper = undefined;
+            buttonRightDisabled = true;
+        } else {
+            previousProjectPaper = undefined;
+            buttonLeftDisabled = true;
+        }
+        loadNeighbour(loadingProjectPaper).then((neighbour) => {
+            if (prefetch !== latestPrefetch) return;
 
-            nextProjectPaper = previousProjectPaper = undefined;
-            buttonRightDisabled = buttonLeftDisabled = true;
             if (direction === "right") {
-                if (reviewMode.isActivated) {
-                    await getNextProjectPaperToReview(paper);
-                } else {
-                    await getNextProjectPaper(paper);
-                }
-                buttonRightDisabled = nextProjectPaper === undefined;
-                buttonStillLoading = false;
-            } else if (direction === "left") {
-                if (reviewMode.isActivated) {
-                    previousProjectPaper = paperQueue[paperQueue.length - 1];
-                } else {
-                    await getPreviousProjectPaper(paper);
-                }
-                buttonLeftDisabled = previousProjectPaper === undefined;
-                buttonStillLoading = false;
+                nextProjectPaper = neighbour;
+                buttonRightDisabled = neighbour === undefined;
+            } else {
+                previousProjectPaper = neighbour;
+                buttonLeftDisabled = neighbour === undefined;
             }
-        })();
+            buttonStillLoading = false;
+        });
     });
 
     /**

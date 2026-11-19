@@ -33,6 +33,9 @@
 @component
 Highly customizable Dialog Element.
 
+While `cancelDisabled` is true, the user can't close the dialog: the Cancel button is disabled, and
+Escape, an overlay click and the close button are ignored. Setting `open` from outside still works.
+
 Usage:
 ```svelte
     <Dialog title="This is the title of the dialog">
@@ -51,7 +54,15 @@ Usage:
     </Dialog>
 ```
 -->
-<Dialog.Root bind:open>
+<Dialog.Root
+    bind:open={
+        () => open,
+        (value) => {
+            // While cancelling is disabled, nothing may close the dialog, e.g. Escape or the overlay
+            if (value || !cancelDisabled) open = value;
+        }
+    }
+>
     <Dialog.Trigger {...triggerProps} data-testid="dialog-trigger">
         {@render trigger()}
     </Dialog.Trigger>

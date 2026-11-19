@@ -114,7 +114,7 @@ interface MockUnaryCall<T> {
  * @param response - The response the call resolves or rejects with
  * @returns The mocked call
  */
-function mockUnaryCall<T>(response: Promise<T>): MockUnaryCall<T> {
+export function mockUnaryCall<T>(response: Promise<T>): MockUnaryCall<T> {
     const status = response.then((): RpcStatus => ({ code: "OK", detail: "OK" }));
     // Like the transport, a status nobody awaits must not cause an unhandled rejection.
     status.catch(() => {});

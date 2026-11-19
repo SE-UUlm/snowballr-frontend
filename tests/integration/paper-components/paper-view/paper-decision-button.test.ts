@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, onTestFinished, test, vi } from "vitest";
 import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { createReview } from "$tests/model-builder";
 import { backendService } from "$lib/grpc-api";
 import { Review, ReviewDecision } from "snowballr-api/review";
-import { getReturnValue } from "$tests/setupTest";
+import { getReturnValue, mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import {
     type IsProjectArchivedContext,
     mockIsProjectArchivedContext,
@@ -45,7 +45,11 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(acceptButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.ACCEPTED,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.ACCEPTED, selectedCriteriaIds: ["1"] }),
@@ -78,7 +82,11 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(declineButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.DECLINED,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.DECLINED, selectedCriteriaIds: ["1"] }),
@@ -111,10 +119,57 @@ describe("PaperDecisionButton", () => {
         expect(tooltip).toBeInTheDocument();
 
         await userEvent.click(maybeButton);
-        expect(mockCall).toHaveBeenCalled();
+        expect(mockCall).toHaveBeenCalledExactlyOnceWith({
+            projectPaperId: ProjectPapers.demoProjectPaper1.id,
+            decision: ReviewDecision.MAYBE,
+            selectedCriteriaIds: ["1"],
+        });
         const submittedReview = await getReturnValue<Review>(mockCall);
         expect(submittedReview).toMatchObject(
             createReview({ decision: ReviewDecision.MAYBE, selectedCriteriaIds: ["1"] }),
+        );
+    });
+
+    test("When submitting the review fails, then the button can be used again and a retry sends the same decision", async () => {
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        const defaultCreateReview = vi.mocked(backendService.createReview).getMockImplementation()!;
+        onTestFinished(() => {
+            vi.mocked(backendService.createReview).mockImplementation(defaultCreateReview);
+        });
+        mockFailedApiCall("createReview", "backend down", "UNAVAILABLE");
+        const isSubmittingReview = { value: false };
+
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(["1"]),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "accepted",
+                isSubmittingReview,
+                loadingProjectPaper: Promise.resolve(ProjectPapers.demoProjectPaper1),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+
+        const acceptButton = screen.getByRole("button");
+        await waitFor(() => expect(acceptButton).toBeEnabled());
+        await userEvent.click(acceptButton);
+
+        await waitFor(() => expect(acceptButton).toBeEnabled());
+        expect(acceptButton).toHaveTextContent("Accept");
+        expect(acceptButton).not.toHaveClass("ring-1");
+        expect(isSubmittingReview.value).toBe(false);
+        expect(projectPaperLoading.isLoading).toBe(false);
+
+        const retriedCall = mockApiCall("createReview", createReview());
+        await userEvent.click(acceptButton);
+        await waitFor(() =>
+            expect(retriedCall).toHaveBeenCalledExactlyOnceWith({
+                projectPaperId: ProjectPapers.demoProjectPaper1.id,
+                decision: ReviewDecision.ACCEPTED,
+                selectedCriteriaIds: ["1"],
+            }),
         );
     });
 
