@@ -245,4 +245,69 @@ describe("PaperDecisionButton", () => {
         await waitFor(() => expect(projectPaperLoading.isLoading).toBe(false));
         expect(toast.info).not.toHaveBeenCalled();
     });
+    test("When the project is archived, then the shortcut does not submit a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(true),
+            ]),
+            props: {
+                variant: "accepted",
+                loadingProjectPaper: Promise.resolve(createProjectPaper()),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+
+        await userEvent.keyboard("{Control>}a{/Control}");
+
+        expect(createReviewCall).not.toHaveBeenCalled();
+    });
+
+    test("When another review is being submitted, then the shortcut does not submit a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "declined",
+                isSubmittingReview: { value: true },
+                loadingProjectPaper: Promise.resolve(createProjectPaper()),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+
+        await userEvent.keyboard("{Control>}d{/Control}");
+
+        expect(createReviewCall).not.toHaveBeenCalled();
+    });
+
+    test("When the button is enabled, then the shortcut submits a review", async () => {
+        const createReviewCall = vi.mocked(client.createReview).mockClear();
+        const projectPaper = createProjectPaper();
+        render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "maybe",
+                loadingProjectPaper: Promise.resolve(projectPaper),
+            },
+        });
+        projectPaperLoading.isLoading = false;
+        await waitFor(() => expect(screen.getByRole("button")).toBeEnabled());
+
+        await userEvent.keyboard("{Control>}s{/Control}");
+
+        await waitFor(() =>
+            expect(createReviewCall).toHaveBeenCalledExactlyOnceWith({
+                projectPaperId: projectPaper.id,
+                decision: ReviewDecision.MAYBE,
+                selectedCriteriaIds: [],
+            }),
+        );
+    });
 });

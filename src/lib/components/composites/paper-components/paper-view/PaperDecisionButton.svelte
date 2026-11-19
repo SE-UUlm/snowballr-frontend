@@ -172,7 +172,8 @@
 
                 loadingWrapper(showLoadingSpinner, submitReview, {});
             },
-            enabled: !wasAlreadyReviewed && !showLoadingSpinner.value,
+            // Same conditions as the button, so the shortcut can't submit what a click can't
+            enabled: !isDisabled,
         },
     }}
 />
