@@ -16,7 +16,7 @@ async function requestProjectInformation(project: Project): Promise<ProjectListE
 
     return {
         project: project,
-        membersList: { members },
+        members: members,
         information: projectInformation,
     };
 }

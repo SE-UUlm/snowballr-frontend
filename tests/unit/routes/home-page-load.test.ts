@@ -34,8 +34,8 @@ describe("Home page loader", () => {
         const { projectsMetadata } = await loadHomePage();
 
         await expect(projectsMetadata).resolves.toEqual([
-            { project: activeProject, membersList: { members }, information },
-            { project: archivedProject, membersList: { members }, information },
+            { project: activeProject, members, information },
+            { project: archivedProject, members, information },
         ]);
     });
 

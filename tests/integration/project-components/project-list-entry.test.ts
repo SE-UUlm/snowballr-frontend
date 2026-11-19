@@ -9,12 +9,10 @@ describe("ProjectListEntryComponent", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProjectActive,
-                membersList: {
-                    members: [
-                        { user: Users.johnDoe, role: MemberRole.ADMIN },
-                        { user: Users.janeDoe, role: MemberRole.DEFAULT },
-                    ],
-                },
+                members: [
+                    { user: Users.johnDoe, role: MemberRole.ADMIN },
+                    { user: Users.janeDoe, role: MemberRole.DEFAULT },
+                ],
                 information: { projectProgress: 0.2 },
             },
         });
@@ -35,12 +33,10 @@ describe("ProjectListEntryComponent", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProjectActive,
-                membersList: {
-                    members: [
-                        { user: Users.johnDoe, role: MemberRole.ADMIN },
-                        { user: Users.janeDoe, role: MemberRole.DEFAULT },
-                    ],
-                },
+                members: [
+                    { user: Users.johnDoe, role: MemberRole.ADMIN },
+                    { user: Users.janeDoe, role: MemberRole.DEFAULT },
+                ],
                 information: { projectProgress: 0.2 },
                 onClick: () => {}, // force link icon to be shown
             },
@@ -62,9 +58,7 @@ describe("ProjectListEntryComponent", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProjectActive,
-                membersList: {
-                    members: [],
-                },
+                members: [],
                 information: { projectProgress: 20 },
             },
         });
@@ -79,9 +73,7 @@ describe("ProjectListEntryComponent", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProjectArchived,
-                membersList: {
-                    members: [],
-                },
+                members: [],
                 information: { projectProgress: 20 },
             },
         });
@@ -97,9 +89,7 @@ describe("ProjectListEntryComponent", () => {
         render(ProjectListEntry, {
             props: {
                 project: Projects.demoProjectArchived,
-                membersList: {
-                    members: [],
-                },
+                members: [],
                 information: { projectProgress: 20 },
                 onClick: () => {}, // force link icon to be shown
             },

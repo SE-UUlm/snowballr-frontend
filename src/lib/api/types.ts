@@ -15,7 +15,6 @@ export {
     Project_Information,
     Project_Information_DecisionStatistics,
     Project_Member,
-    Project_Member_List,
     Project_Paper,
     Project_Settings,
     SnowballingType,
