@@ -13,7 +13,7 @@
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
-    import { createActionError } from "$lib/model/action-error";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
 
     // at the beginning the dialog should not be open
@@ -23,7 +23,7 @@
     let projectWasCreated = $state(false);
     let projectId = $state<string | undefined>(undefined);
 
-    let isErrorOnProjectCreation = $state(false);
+    let submitError: ActionError = $state(undefined);
 
     let projectNameInput: Input;
     let invitees: string[] = $state([]);
@@ -49,7 +49,7 @@
      *
      * If an earlier attempt already created the project and only the invitations failed, the
      * project is not created again; only the invitations are sent again. Inviting a user twice has
-     * no effect.
+     * no effect. The project name can't be changed anymore at that point, as it is not sent again.
      */
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -62,7 +62,9 @@
             try {
                 projectId = (await createProject(projectNameInput.getValue())).id;
             } catch (error) {
-                isErrorOnProjectCreation = true;
+                submitError = createActionError("Failed to Create Project", {
+                    action: "creating the project",
+                });
                 console.error(`Couldn't create project (${error})`);
                 return;
             }
@@ -74,7 +76,11 @@
                 invitees.map((email) => inviteUserToProject(createdProjectId, email)),
             );
         } catch (error) {
-            isErrorOnProjectCreation = true;
+            submitError = createActionError("Failed to Invite Members", {
+                customDetails:
+                    "The project was created, but not all members could be invited. Try again to " +
+                    "resend the invitations, or close this dialog to keep the project without them.",
+            });
             console.error(`Couldn't invite users to project (${error})`);
             return;
         }
@@ -89,7 +95,7 @@
     $effect(() => {
         if (!open) {
             invitees = [];
-            isErrorOnProjectCreation = false;
+            submitError = undefined;
 
             if (!projectWasCreated && projectId !== undefined) {
                 projectId = undefined;
@@ -111,6 +117,7 @@ Usage:
 -->
 <div class="px-5">
     <Dialog
+        cancelDisabled={isCreatingProject.value}
         title="Create Project"
         triggerProps={{
             class: cn(
@@ -119,7 +126,14 @@ Usage:
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             ),
         }}
-        bind:open
+        bind:open={
+            () => open,
+            (value) => {
+                // Keep the dialog open while submitting, so the close reset below can't forget the
+                // project while it is still being created.
+                if (!isCreatingProject.value) open = value;
+            }
+        }
     >
         {#snippet trigger()}
             <div class="flex flex-row items-center justify-center gap-2.5">
@@ -140,6 +154,7 @@ Usage:
                     bind:this={projectNameInput}
                     class="w-full"
                     data-testid="project-name-input"
+                    disabled={projectId !== undefined}
                     inputId="project-name-input"
                     label="Name"
                     placeholder="Demo"
@@ -149,13 +164,7 @@ Usage:
                 />
                 <InviteUsersInput bind:invitees />
             </form>
-            <ActionErrorAlert
-                error={isErrorOnProjectCreation
-                    ? createActionError("Failed to Create Project", {
-                          action: "creating the project",
-                      })
-                    : undefined}
-            />
+            <ActionErrorAlert error={submitError} />
         {/snippet}
         {#snippet footer()}
             <LoadingButton

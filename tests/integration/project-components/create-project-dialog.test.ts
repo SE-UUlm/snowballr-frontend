@@ -3,7 +3,8 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockUserContext } from "../test-helper";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
+import { goto } from "$app/navigation";
 import { Members, Users } from "$tests/example-data";
 import { createProject as createDemoProject } from "$tests/model-builder";
 
@@ -175,7 +176,7 @@ describe("CreateProjectDialog", () => {
 
         await createProject();
 
-        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
         expect(
             screen.queryByText("Success! Your new project has been created successfully.", {
                 exact: false,
@@ -196,7 +197,7 @@ describe("CreateProjectDialog", () => {
         });
 
         await createProject();
-        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
 
         const inviteUserCall = mockApiCall("inviteUserToProject", {});
         const user = userEvent.setup();
@@ -224,7 +225,7 @@ describe("CreateProjectDialog", () => {
         });
 
         await createProject();
-        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(screen.getByText("Failed to Invite Members")).toBeInTheDocument();
         await closeCreateProjectDialog();
 
         mockFailedApiCall("createProject");
@@ -238,5 +239,45 @@ describe("CreateProjectDialog", () => {
                 exact: false,
             }),
         ).not.toBeInTheDocument();
+    });
+
+    test("When the invitations failed, then the error says so and the project name can't be changed anymore", async () => {
+        mockFailedApiCall("inviteUserToProject");
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+
+        expect(await screen.findByText("Failed to Invite Members")).toBeInTheDocument();
+        expect(screen.getByText("The project was created", { exact: false })).toBeInTheDocument();
+        expect(screen.queryByText("Failed to Create Project")).not.toBeInTheDocument();
+        expect(screen.getByRole("textbox", { name: "Name" })).toBeDisabled();
+    });
+
+    test("When the dialog is closed while the project is being created, then it stays open and the new project can be opened afterwards", async () => {
+        const createProjectCall = mockPendingApiCall("createProject");
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+        expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
+        await closeCreateProjectDialog();
+
+        expect(screen.getByTestId("dialog-content")).toHaveAttribute("data-state", "open");
+
+        createProjectCall.resolve(createDemoProject({ id: "created-project" }));
+
+        const user = userEvent.setup();
+        await user.click(await screen.findByRole("button", { name: "Open" }));
+
+        expect(goto).toHaveBeenCalledWith(
+            expect.stringContaining("/project/created-project/dashboard"),
+        );
     });
 });
