@@ -5,6 +5,7 @@ import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.
 import userEvent from "@testing-library/user-event";
 import { getName } from "$lib/utils/common-helper";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { createUser } from "$tests/model-builder";
 
 describe("InviteUsersInput", () => {
     beforeEach(() => {
@@ -63,7 +64,9 @@ describe("InviteUsersInput", () => {
     });
 
     test("When a name is typed, then the candidates for the project are searched by that name", async () => {
-        const getCandidatesCall = mockApiCall("getInviteCandidates", { users: [Users.janeDoe] });
+        const getCandidatesCall = mockApiCall("getInviteCandidates", {
+            users: [createUser({ firstName: "Jane" })],
+        });
         const user = userEvent.setup();
         render(InviteUsersInput, {
             target: document.body,
@@ -78,7 +81,9 @@ describe("InviteUsersInput", () => {
     });
 
     test("When a name is typed without a project, then the candidates are searched without a project ID", async () => {
-        const getCandidatesCall = mockApiCall("getInviteCandidates", { users: [Users.janeDoe] });
+        const getCandidatesCall = mockApiCall("getInviteCandidates", {
+            users: [createUser({ firstName: "Jane" })],
+        });
         const user = userEvent.setup();
         render(InviteUsersInput, {
             target: document.body,
