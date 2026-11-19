@@ -126,6 +126,79 @@ describe("InviteUsersDialog", () => {
         });
     });
 
+    describe("When some invitations fail", () => {
+        const succeedingEmail = Members.demoMember1.user!.email;
+        const failingEmail = Members.demoMember2.user!.email;
+
+        /** Fails the invitation of `failingEmail` and lets every other one succeed. */
+        function mockPartiallyFailingInvitations() {
+            const inviteCall = mockApiCall("inviteUserToProject", {});
+            const inviteSucceeds = inviteCall.getMockImplementation()!;
+            const inviteFails = mockFailedApiCall("inviteUserToProject").getMockImplementation()!;
+            return inviteCall.mockImplementation((request, options) =>
+                request.userEmail === failingEmail
+                    ? inviteFails(request, options)
+                    : inviteSucceeds(request, options),
+            );
+        }
+
+        async function inviteBothUsers() {
+            const user = userEvent.setup();
+            const trigger = await screen.findByRole("button", { name: "Invite Users" });
+            await waitFor(async () => user.click(trigger));
+            await waitForDialogFocus();
+
+            const emailInput = screen.getByRole("textbox");
+            for (const email of [succeedingEmail, failingEmail]) {
+                await user.type(emailInput, email);
+                await user.tab();
+                await user.click(emailInput);
+            }
+            await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+            expect(
+                await screen.findByRole("alert", { name: "Invitation Failed" }),
+            ).toBeInTheDocument();
+        }
+
+        test("When the users were invited, then the callback gets the emails that were invited", async () => {
+            mockPartiallyFailingInvitations();
+            const onUsersInvited = vi.fn();
+            render(InviteUsersDialog, {
+                target: document.body,
+                props: { projectId: "1", loadingMembers: Promise.resolve([]), onUsersInvited },
+                context: mockUserContext,
+            });
+
+            await inviteBothUsers();
+
+            expect(onUsersInvited).toHaveBeenCalledExactlyOnceWith([succeedingEmail]);
+        });
+
+        test("When the user tries again, then only the failed invitations are sent again", async () => {
+            mockPartiallyFailingInvitations();
+            const onUsersInvited = vi.fn();
+            render(InviteUsersDialog, {
+                target: document.body,
+                props: { projectId: "1", loadingMembers: Promise.resolve([]), onUsersInvited },
+                context: mockUserContext,
+            });
+            await inviteBothUsers();
+            onUsersInvited.mockClear();
+
+            const retriedInviteCall = mockApiCall("inviteUserToProject", {});
+            const user = userEvent.setup();
+            await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+
+            await waitFor(() =>
+                expect(onUsersInvited).toHaveBeenCalledExactlyOnceWith([failingEmail]),
+            );
+            expect(retriedInviteCall).toHaveBeenCalledExactlyOnceWith({
+                projectId: "1",
+                userEmail: failingEmail,
+            });
+        });
+    });
+
     test("When inviting a user fails, then an error message is displayed", async () => {
         mockFailedApiCall("inviteUserToProject");
 
