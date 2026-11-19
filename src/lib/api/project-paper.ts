@@ -1,3 +1,4 @@
+import type { Paper } from "snowballr-api/paper";
 import type { Project_Paper } from "snowballr-api/project";
 import { client } from "./client";
 import { call } from "./grpc";
@@ -92,4 +93,38 @@ export async function addPaperToProject(
 export async function getPapersToReview(projectId: string): Promise<Project_Paper[]> {
     const { projectPapers } = await call(client.getPapersToReviewForProject({ id: projectId }));
     return projectPapers;
+}
+
+/**
+ * Searches the SnowballR database for papers that could be added to a project. Papers that are
+ * already in the project are left out. The backend decides which fields the query is matched
+ * against.
+ *
+ * @param query - The search query
+ * @param projectId - The ID of the project
+ * @returns The matching papers, possibly none
+ */
+export async function searchLocalPaperCandidates(
+    query: string,
+    projectId: string,
+): Promise<Paper[]> {
+    const { papers } = await call(client.searchLocalProjectPaperCandidates({ query, projectId }));
+    return papers;
+}
+
+/**
+ * Searches the fetchers of a project for papers that could be added to it. Papers that are already
+ * in the project are left out. A paper that the SnowballR database doesn't know yet has an empty ID
+ * and has to be created before it can be added.
+ *
+ * @param query - The search query
+ * @param projectId - The ID of the project
+ * @returns The matching papers, possibly none
+ */
+export async function searchFetcherPaperCandidates(
+    query: string,
+    projectId: string,
+): Promise<Paper[]> {
+    const { papers } = await call(client.searchFetcherProjectPaperCandidates({ query, projectId }));
+    return papers;
 }

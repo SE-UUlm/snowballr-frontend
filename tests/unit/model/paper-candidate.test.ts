@@ -218,6 +218,19 @@ describe("searchPaperCandidates", () => {
         expect(result.error).toBeDefined();
     });
 
+    test("When a search is cancelled, then no error is reported", async () => {
+        mockApiCall("searchLocalProjectPaperCandidates", { papers: [localPaper("1")] });
+        mockFailedApiCall("searchFetcherProjectPaperCandidates", "cancelled", "CANCELLED");
+
+        const result = await searchPaperCandidates("query", PROJECT_ID, {
+            includeLocal: true,
+            includeFetchers: true,
+        });
+
+        expect(result.candidates.map((it) => it.paper.title)).toEqual(["Local 1"]);
+        expect(result.error).toBeUndefined();
+    });
+
     test("When both sources fail, then the empty list is not blamed on the query", async () => {
         mockFailedApiCall("searchLocalProjectPaperCandidates", "boom");
         mockFailedApiCall("searchFetcherProjectPaperCandidates", "boom");
@@ -329,6 +342,16 @@ describe("addPaperCandidates", () => {
 
         expect(summary).toEqual({ added: 0, failed: [{ candidate: known, step: "add" }] });
         expect(toast.error).toHaveBeenCalledWith("Paper 'Local 42' could not be added.");
+    });
+
+    // Another user may add the same paper to the project between the search and the add.
+    test("When the paper is already in the project, then it counts as added", async () => {
+        mockFailedApiCall("addPaperToProject", "rpc failed", "ALREADY_EXISTS");
+
+        const summary = await addPaperCandidates([known], TARGET);
+
+        expect(summary).toEqual({ added: 1, failed: [] });
+        expect(toast.error).not.toHaveBeenCalled();
     });
 
     test("When one candidate fails, then the rest of the batch is still added", async () => {
