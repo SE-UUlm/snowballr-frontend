@@ -160,6 +160,11 @@ async function searchSource(
     try {
         return { papers: await search(), error: undefined };
     } catch (error) {
+        // A cancelled search was abandoned on purpose, so there is nothing to report.
+        if (isApiError(error, "cancelled")) {
+            return { papers: [], error: undefined };
+        }
+
         return {
             papers: [],
             error: createActionError(
@@ -219,7 +224,7 @@ export async function searchPaperCandidates(
 /**
  * Makes sure a candidate's paper exists in the SnowballR database.
  *
- * Known papers are adopted as they are. New ones are created, and an `ALREADY_EXISTS` response
+ * Known papers are adopted as they are. New ones are created, and an `"already-exists"` error
  * counts as success: another user may have created the same paper between the search and this call,
  * and in that case the paper is exactly what we wanted anyway.
  *
@@ -270,7 +275,13 @@ export async function addPaperCandidates(
 
         try {
             await addPaperToProject(target.projectId, paper.id, target.stage);
-        } catch {
+        } catch (error) {
+            // Another user may have added the same paper in the meantime; it is in the project either way.
+            if (isApiError(error, "already-exists")) {
+                summary.added++;
+                continue;
+            }
+
             toast.error(`Paper '${candidate.paper.title}' could not be added.`);
             summary.failed.push({ candidate, step: "add" });
             continue;
