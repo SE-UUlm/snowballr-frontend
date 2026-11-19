@@ -4,7 +4,7 @@ import InviteUsersDialog from "$lib/components/composites/settings/project-setti
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
-import { mockUserContext } from "$tests/integration/test-helper";
+import { mockUserContext, waitForDialogFocus } from "$tests/integration/test-helper";
 
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
@@ -73,6 +73,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const input = screen.getByRole("textbox");
         await user.type(input, Members.demoMember1.user!.email);
@@ -108,6 +109,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user!.email);
@@ -134,6 +136,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user!.email);
