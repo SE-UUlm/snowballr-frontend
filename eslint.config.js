@@ -83,7 +83,7 @@ export default defineConfig(
     },
     {
         // Backend access goes through the domain modules in src/lib/api/, see wiki/Contributing.md#backend-access.
-        files: ["src/**/*.ts", "src/**/*.svelte"],
+        files: ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
         ignores: ["src/lib/api/**"],
         rules: {
             "no-restricted-imports": [
@@ -101,8 +101,9 @@ export default defineConfig(
                                 "The protobuf-ts runtime is only used inside src/lib/api/. Call the domain functions in $lib/api/ and check errors with isApiError from $lib/api/errors instead.",
                         },
                         {
-                            // The trailing * also catches imports with an extension, e.g. "$lib/api/client.js".
-                            group: ["$lib/api/client*", "$lib/api/grpc*", "$lib/api/fieldmask*"],
+                            // The leading **/ catches both "$lib/api/client" and relative imports such as
+                            // "../api/client"; the trailing * also catches extensions, e.g. "$lib/api/client.js".
+                            group: ["**/api/client*", "**/api/grpc*", "**/api/fieldmask*"],
                             message:
                                 "The client, call() and FieldMasks are internal to src/lib/api/. Call the domain functions in $lib/api/ instead.",
                         },
