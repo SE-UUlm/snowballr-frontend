@@ -61,6 +61,7 @@
         if (!projectNameInput.validate()) {
             return;
         }
+        submitError = undefined;
 
         if (projectId === undefined) {
             try {

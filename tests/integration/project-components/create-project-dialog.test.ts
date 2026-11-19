@@ -325,6 +325,27 @@ describe("CreateProjectDialog", () => {
         });
     });
 
+    test("When the invitations failed and the user tries again, then the old error is hidden while the invitations are resent", async () => {
+        mockApiCall("createProject", createDemoProject({ id: "created-project" }));
+        mockFailedApiCall("inviteUserToProject");
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+        expect(await screen.findByText("Failed to Invite Members")).toBeInTheDocument();
+
+        const retriedInviteUserCall = mockPendingApiCall("inviteUserToProject");
+        const user = userEvent.setup();
+        await user.click(screen.getByRole("button", { name: "Create Project" }));
+
+        await waitFor(() => expect(retriedInviteUserCall.call).toHaveBeenCalled());
+        expect(screen.queryByText("Failed to Invite Members")).not.toBeInTheDocument();
+        retriedInviteUserCall.resolve({});
+    });
+
     test("When opening the created project fails, then the open button stops loading", async () => {
         vi.mocked(goto).mockRejectedValueOnce(new Error("navigation failed"));
         vi.spyOn(console, "error").mockImplementation(() => {});
