@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { type Project, ProjectStatus } from "snowballr-api/project";
+    import { type Project, ProjectStatus } from "$lib/api/types";
     import type { LinkTab } from "$lib/model/tabs";
     import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
     import { Badge } from "$lib/components/primitives/badge";

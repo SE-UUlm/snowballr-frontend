@@ -2,8 +2,7 @@
     import * as Avatar from "$lib/components/primitives/avatar/index.js";
     import Check from "@lucide/svelte/icons/check";
     import X from "@lucide/svelte/icons/x";
-    import { ReviewDecision } from "snowballr-api/review";
-    import type { User } from "snowballr-api/user";
+    import { ReviewDecision, type User } from "$lib/api/types";
     import { cn } from "$lib/utils/shadcn-helper";
     import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
 

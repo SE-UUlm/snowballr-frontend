@@ -8,9 +8,7 @@
     } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
     import type { CriterionWithReviews, PaperCreationTarget } from "$lib/model/general";
     import PaperBookmarkButton from "$lib/components/composites/button/PaperBookmarkButton.svelte";
-    import type { User } from "snowballr-api/user";
-    import { Paper } from "snowballr-api/paper";
-    import type { Project_Paper } from "snowballr-api/project";
+    import { type User, Paper, type Project_Paper } from "$lib/api/types";
     import { asPaper } from "$lib/utils/model-helper";
     import { getDisplayPaperId } from "$lib/utils/common-helper";
     import { type Snippet } from "svelte";

@@ -92,9 +92,14 @@ export default defineConfig(
                 {
                     patterns: [
                         {
-                            group: ["snowballr-api", "snowballr-api/**", "@protobuf-ts/**"],
+                            group: ["snowballr-api", "snowballr-api/**"],
                             message:
-                                "Generated API code is only used inside src/lib/api/. Use the functions and types from $lib/api/ instead.",
+                                "Generated API code is only used inside src/lib/api/. Import its types from $lib/api/types and call the domain functions in $lib/api/ instead.",
+                        },
+                        {
+                            group: ["@protobuf-ts/**"],
+                            message:
+                                "The protobuf-ts runtime is only used inside src/lib/api/. Call the domain functions in $lib/api/ and check errors with isApiError from $lib/api/errors instead.",
                         },
                         {
                             // The trailing * also catches imports with an extension, e.g. "$lib/grpc-api.js".

@@ -1,7 +1,7 @@
 <script lang="ts">
     import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
     import { backendService } from "$lib/grpc-api";
-    import { Project, ProjectStatus } from "snowballr-api/project";
+    import { Project, ProjectStatus } from "$lib/api/types";
     import { refreshProject } from "$lib/model/cache/project-cache";
     import { toast } from "svelte-sonner";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";

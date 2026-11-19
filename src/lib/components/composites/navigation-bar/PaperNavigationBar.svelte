@@ -1,7 +1,7 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
     import PaperInfo from "../paper-components/PaperInfo.svelte";
-    import type { Paper } from "snowballr-api/paper";
+    import type { Paper } from "$lib/api/types";
     import type { ResolvedPathname } from "$app/types";
 
     interface Props {

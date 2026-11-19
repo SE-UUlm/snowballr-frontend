@@ -45,7 +45,8 @@ npm install
 
 The generated API client code comes from the installed
 [`snowballr-api`](https://www.npmjs.com/package/snowballr-api) package and is imported per proto module, e.g.
-`snowballr-api/project`.
+`snowballr-api/project`. Only `src/lib/api/` imports it, see
+[Backend Access](https://github.com/SE-UUlm/snowballr-frontend/wiki/Contributing#backend-access).
 
 Now you're good to go! Start the development server with:
 

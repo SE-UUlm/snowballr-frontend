@@ -1,6 +1,6 @@
 <script lang="ts">
     import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-    import { Paper } from "snowballr-api/paper";
+    import { Paper } from "$lib/api/types";
 
     const { data } = $props();
     const { projectId, loadingProject, creationTarget } = $derived(data);
