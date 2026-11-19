@@ -42,7 +42,7 @@ describe("CreateProjectDialog", () => {
 
     async function closeCreateProjectDialog() {
         const user = userEvent.setup();
-        await user.keyboard("{esc}");
+        await user.click(screen.getByRole("button", { name: "Cancel" }));
     }
 
     async function createProject() {
@@ -176,6 +176,63 @@ describe("CreateProjectDialog", () => {
         await createProject();
 
         expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(
+            screen.queryByText("Success! Your new project has been created successfully.", {
+                exact: false,
+            }),
+        ).not.toBeInTheDocument();
+    });
+
+    test("When the invitations failed and the user tries again, then the project is created only once", async () => {
+        const createProjectCall = mockApiCall(
+            "createProject",
+            createDemoProject({ id: "created-project" }),
+        );
+        mockFailedApiCall("inviteUserToProject");
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+
+        const inviteUserCall = mockApiCall("inviteUserToProject", {});
+        const user = userEvent.setup();
+        await user.click(screen.getByRole("button", { name: "Create Project" }));
+
+        expect(
+            await screen.findByText("Success! Your new project has been created successfully.", {
+                exact: false,
+            }),
+        ).toBeInTheDocument();
+        expect(createProjectCall).toHaveBeenCalledOnce();
+        expect(inviteUserCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: "created-project",
+            userEmail: Members.demoMember1.user!.email,
+        });
+    });
+
+    test("When the dialog was closed after the invitations failed and the next project creation fails, then nobody is invited to the earlier project", async () => {
+        mockApiCall("createProject", createDemoProject({ id: "created-project" }));
+        mockFailedApiCall("inviteUserToProject");
+
+        render(CreateProjectDialog, {
+            target: document.body,
+            context: mockUserContext,
+        });
+
+        await createProject();
+        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        await closeCreateProjectDialog();
+
+        mockFailedApiCall("createProject");
+        const inviteUserCall = mockApiCall("inviteUserToProject", {});
+        await createProject();
+
+        expect(screen.getByText("Failed to Create Project")).toBeInTheDocument();
+        expect(inviteUserCall).not.toHaveBeenCalled();
         expect(
             screen.queryByText("Success! Your new project has been created successfully.", {
                 exact: false,

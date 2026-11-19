@@ -46,6 +46,10 @@
      *
      * Therefore, send a request to the backend to create a new project with the
      * provided name and optionally invite further members provided in the second input.
+     *
+     * If an earlier attempt already created the project and only the invitations failed, the
+     * project is not created again; only the invitations are sent again. Inviting a user twice has
+     * no effect.
      */
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -54,34 +58,43 @@
             return;
         }
 
-        await createProject(projectNameInput.getValue())
-            .then(async (project) => {
-                projectId = project.id;
-            })
-            .catch((error) => {
+        if (projectId === undefined) {
+            try {
+                projectId = (await createProject(projectNameInput.getValue())).id;
+            } catch (error) {
                 isErrorOnProjectCreation = true;
                 console.error(`Couldn't create project (${error})`);
-            });
-
-        if (projectId !== undefined) {
-            const invitations = invitees.map((email) => inviteUserToProject(projectId!, email));
-            await Promise.all(invitations)
-                .then(() => {
-                    projectWasCreated = true;
-                    open = false;
-                })
-                .catch((error) => {
-                    isErrorOnProjectCreation = true;
-                    console.error(`Couldn't invite users to project (${error})`);
-                });
+                return;
+            }
         }
+
+        const createdProjectId = projectId;
+        try {
+            await Promise.all(
+                invitees.map((email) => inviteUserToProject(createdProjectId, email)),
+            );
+        } catch (error) {
+            isErrorOnProjectCreation = true;
+            console.error(`Couldn't invite users to project (${error})`);
+            return;
+        }
+
+        projectWasCreated = true;
+        open = false;
     }
 
-    // if dialog is closed, then reset the invitee list
+    // If the dialog is closed, then reset the invitee list. If it is closed after a project was
+    // created but the invitations failed, then forget the project, so the next attempt creates a
+    // new one, and reload the project list to show the created project.
     $effect(() => {
         if (!open) {
             invitees = [];
             isErrorOnProjectCreation = false;
+
+            if (!projectWasCreated && projectId !== undefined) {
+                projectId = undefined;
+                invalidate("data:allProjectsForUser");
+            }
         }
     });
 </script>
