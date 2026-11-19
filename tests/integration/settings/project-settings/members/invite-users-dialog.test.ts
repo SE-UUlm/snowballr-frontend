@@ -1,7 +1,7 @@
 import { describe, test, beforeEach, afterEach, vi, expect } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
 import { mockUserContext, waitForDialogFocus } from "$tests/integration/test-helper";
@@ -229,5 +229,49 @@ describe("InviteUsersDialog", () => {
                 "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
+    });
+    /** Opens the dialog, enters the given email and sends the invitation. */
+    async function inviteUser(email: string) {
+        const user = userEvent.setup();
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
+        await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
+
+        await user.type(screen.getByRole("textbox"), email);
+        await user.tab();
+        await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+        return { user, trigger };
+    }
+
+    test("When the dialog is reopened after a failed invitation, then the old error is not shown", async () => {
+        mockFailedApiCall("inviteUserToProject");
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: { projectId: "1", loadingMembers: Promise.resolve([]) },
+            context: mockUserContext,
+        });
+
+        const { user, trigger } = await inviteUser("invitee@example.com");
+        expect(await screen.findByRole("alert", { name: "Invitation Failed" })).toBeInTheDocument();
+        await user.click(screen.getByRole("button", { name: "Cancel" }));
+        await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
+
+        expect(screen.queryByRole("alert", { name: "Invitation Failed" })).not.toBeInTheDocument();
+    });
+
+    test("When the invitations are being sent, then the dialog can't be cancelled", async () => {
+        const { resolve } = mockPendingApiCall("inviteUserToProject");
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: { projectId: "1", loadingMembers: Promise.resolve([]) },
+            context: mockUserContext,
+        });
+
+        const { trigger } = await inviteUser("invitee@example.com");
+
+        await waitFor(() => expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled());
+        resolve({});
+        await waitFor(() => expect(trigger).toHaveAttribute("data-state", "closed"));
     });
 });
