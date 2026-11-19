@@ -2,7 +2,6 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, onTestFinished, test, vi } from "vitest";
 import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
-import { createReview } from "$tests/model-builder";
 import { client } from "$lib/api/client";
 import { Review, ReviewDecision } from "snowballr-api/review";
 import { getReturnValue, mockApiCall, mockFailedApiCall } from "$tests/setupTest";
@@ -15,6 +14,13 @@ import {
 } from "$tests/integration/test-helper";
 import { ProjectPapers } from "$tests/example-data";
 import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+import { goto } from "$app/navigation";
+import { toast } from "svelte-sonner";
+import { createProject, createProjectPaper, createReview } from "$tests/model-builder";
+
+vi.mock("svelte-sonner", () => ({
+    toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
+}));
 
 type CombinedContext = SelectedCriteriaContext | WasReviewedContext | IsProjectArchivedContext;
 
@@ -206,5 +212,37 @@ describe("PaperDecisionButton", () => {
 
         const decisionButton = screen.getByRole("button", { name: /Accept/ });
         expect(decisionButton).toBeDisabled();
+    });
+    test("When the review is submitted and the next paper opens, then no 'No more papers' toast is shown", async () => {
+        vi.mocked(toast.info).mockClear();
+        const project = createProject();
+        const currentPaper = createProjectPaper({ id: "current", localId: "1" });
+        const nextPaper = createProjectPaper({ id: "next", localId: "2" });
+
+        const { rerender } = render(PaperDecisionButton, {
+            context: new Map<symbol, CombinedContext>([
+                ...mockSelectedCriteriaContextWithInitialData(),
+                ...mockIsProjectArchivedContext(),
+            ]),
+            props: {
+                variant: "accepted",
+                loadingProject: Promise.resolve(project),
+                loadingProjectPaper: Promise.resolve(currentPaper),
+                nextProjectPaper: nextPaper,
+            },
+        });
+        projectPaperLoading.isLoading = false;
+        // Like the navigation button, which forgets the neighbour once the next paper loads
+        vi.mocked(goto).mockImplementationOnce(async () => {
+            await rerender({ nextProjectPaper: undefined });
+        });
+
+        await userEvent.click(screen.getByRole("button", { name: /Accept/ }));
+
+        await waitFor(() =>
+            expect(goto).toHaveBeenCalledWith(`/project/${project.id}/paper/${nextPaper.localId}`),
+        );
+        await waitFor(() => expect(projectPaperLoading.isLoading).toBe(false));
+        expect(toast.info).not.toHaveBeenCalled();
     });
 });

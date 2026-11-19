@@ -142,16 +142,11 @@
         }
 
         toast.success("Successfully submitted a review.");
+        // Read before navigating: the navigation button clears the bound value once the next paper loads
+        const next = nextProjectPaper;
         try {
-            await navigatePaper(
-                "right",
-                loadingProjectPaper,
-                paperQueue,
-                loadingProject,
-                nextProjectPaper,
-                undefined,
-            );
-            if (!nextProjectPaper) {
+            await navigatePaper("right", loadingProjectPaper, paperQueue, loadingProject, next);
+            if (!next) {
                 toast.info("No more papers to review.");
             }
         } catch (err) {
