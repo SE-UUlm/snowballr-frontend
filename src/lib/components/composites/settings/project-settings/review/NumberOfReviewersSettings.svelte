@@ -8,7 +8,7 @@
      */
     export const numberOfReviewersSetting: ProjectSettingDescriptor<number> = {
         read: (project) => project.settings?.decisionMatrix?.numberOfReviewers ?? 2,
-        toPatch: (value) => ({ settings: { decisionMatrix: { numberOfReviewers: value } } }),
+        toPatch: (value) => ({ decisionMatrix: { numberOfReviewers: value } }),
         action: "updating the number of required reviewers",
     };
 </script>

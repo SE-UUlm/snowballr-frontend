@@ -15,7 +15,6 @@ export {
     Project_Information,
     Project_Information_DecisionStatistics,
     Project_Member,
-    Project_Member_List,
     Project_Paper,
     Project_Settings,
     SnowballingType,
@@ -24,5 +23,3 @@ export { Review, ReviewDecision, Review_Create } from "snowballr-api/review";
 export { User, UserRole } from "snowballr-api/user";
 export { UserSettings } from "snowballr-api/user_settings";
 export { Timestamp } from "snowballr-api/google/protobuf/timestamp";
-// Only for the masks in src/lib/model/project-setting.ts, which move into the API layer with #777.
-export { FieldMask } from "snowballr-api/google/protobuf/field_mask";

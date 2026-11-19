@@ -1,4 +1,5 @@
-import { backendService } from "$lib/grpc-api";
+import { getDecisionStatisticsForStage, getProjectInformation } from "$lib/api/project";
+import { getPapersToReview } from "$lib/api/project-paper";
 import type { PageLoad } from "./$types";
 import {
     PaperDecision,
@@ -29,8 +30,7 @@ async function requestProjectInformation(
     project: Project,
     decisionStatistics: Project_Information_DecisionStatistics,
 ): Promise<ProjectInformationInterface> {
-    const projectInformation = await backendService.getProjectInformation({ projectId: project.id })
-        .response;
+    const projectInformation = await getProjectInformation(project.id);
     const startDate = parseTimestamp(
         projectInformation.creationDate,
         "Couldn't load start date of project.",
@@ -72,12 +72,9 @@ async function requestProjectInformation(
 export const load: PageLoad = async ({ params, parent }) => {
     const loadingProject = parent().then((project) => project.loadingProject);
 
-    const openReviews: Promise<PaperListEntryInterface[]> = backendService
-        .getPapersToReviewForProject({
-            id: params.projectId,
-        })
-        .response.then((allUndecidedPapers) =>
-            allUndecidedPapers.projectPapers
+    const openReviews: Promise<PaperListEntryInterface[]> = getPapersToReview(params.projectId)
+        .then((allUndecidedPapers) =>
+            allUndecidedPapers
                 .map((projectPaper) => ({
                     projectId: params.projectId,
                     paper: projectPaper,
@@ -94,12 +91,8 @@ export const load: PageLoad = async ({ params, parent }) => {
             throw new Error("Couldn't load open reviews.");
         });
 
-    const loadingDecisionStatistics = loadingProject.then(
-        (project) =>
-            backendService.getDecisionStatisticsForStage({
-                projectId: project.id,
-                stage: project.currentStage,
-            }).response,
+    const loadingDecisionStatistics = loadingProject.then((project) =>
+        getDecisionStatisticsForStage(project.id, project.currentStage),
     );
 
     const projectInformation: Promise<ProjectInformationInterface> = Promise.all([

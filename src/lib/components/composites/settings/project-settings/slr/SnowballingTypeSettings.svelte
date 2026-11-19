@@ -10,7 +10,7 @@
      */
     export const snowballingTypeSetting: ProjectSettingDescriptor<string> = {
         read: (project) => String(project.settings?.snowballingType ?? SnowballingType.UNSPECIFIED),
-        toPatch: (value) => ({ settings: { snowballingType: Number(value) as SnowballingType } }),
+        toPatch: (value) => ({ snowballingType: Number(value) as SnowballingType }),
         action: "updating the Snowballing Type",
     };
 </script>

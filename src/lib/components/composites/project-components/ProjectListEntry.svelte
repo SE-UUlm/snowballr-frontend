@@ -5,7 +5,7 @@
         MemberRole,
         Project,
         Project_Information,
-        Project_Member_List,
+        Project_Member,
         ProjectStatus,
         type User,
     } from "$lib/api/types";
@@ -25,7 +25,7 @@
 
     export interface ProjectListEntryInterface {
         project: Project;
-        membersList: Project_Member_List;
+        members: Project_Member[];
         information: Project_Information;
     }
 
@@ -33,7 +33,7 @@
         onClick?: () => void;
     };
 
-    const { project, membersList, information, onClick }: ProjectListEntryProps = $props();
+    const { project, members, information, onClick }: ProjectListEntryProps = $props();
 
     const href = $derived(resolve(`/project/${project.id}/dashboard`));
 </script>
@@ -55,7 +55,7 @@ If an onClick event handler is provided, a link icon is shown to open the paper.
 
 Usage:
 ```svelte
-    <ProjectListEntry project={demoProject} membersList={memberUserSpecArray} information={{projectProgress: 0.3}} {onClick} />
+    <ProjectListEntry project={demoProject} members={projectMembers} information={{projectProgress: 0.3}} {onClick} />
 ```
 -->
 <svelte:element
@@ -71,7 +71,7 @@ Usage:
             {project.name}
             {#if isDevMode}
                 <!-- Show admin badge in dev mode when current user is admin of project -->
-                {#if membersList.members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
+                {#if members.some((member) => member.user?.id === user?.id && member.role === MemberRole.ADMIN)}
                     <Badge title="You are an admin of this project" variant="outline">admin</Badge>
                 {/if}
                 <Badge variant="outline">{ProjectStatus[project.status]}</Badge>
@@ -88,12 +88,10 @@ Usage:
             {/if}
         </h2>
 
-        {#if membersList.members.length > 0}
+        {#if members.length > 0}
             <span class="text-hint truncate">
                 {getNames(
-                    membersList.members
-                        .map((member) => member.user)
-                        .filter((user) => user !== undefined),
+                    members.map((member) => member.user).filter((user) => user !== undefined),
                 )}
             </span>
         {:else}
