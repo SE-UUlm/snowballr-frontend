@@ -15,5 +15,5 @@ export async function createReview(
     decision: ReviewDecision,
     selectedCriteriaIds: string[],
 ): Promise<Review> {
-    return call(client.createReview({ projectPaperId, decision, selectedCriteriaIds }));
+    return call(() => client.createReview({ projectPaperId, decision, selectedCriteriaIds }));
 }

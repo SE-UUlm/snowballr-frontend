@@ -62,7 +62,7 @@ describe("client", () => {
     test("When the server sends a message and status OK, then the call returns the message", async () => {
         setFetch(() => Promise.resolve(messageThenStatus(authenticated, GrpcStatusCode.OK)));
 
-        const result = call(api.client.getAuthenticationStatus(Nothing));
+        const result = call(() => api.client.getAuthenticationStatus(Nothing));
 
         await expect(result).resolves.toEqual(authenticated);
     });
@@ -74,7 +74,7 @@ describe("client", () => {
             ),
         );
 
-        const result = call(api.client.getAuthenticationStatus(Nothing));
+        const result = call(() => api.client.getAuthenticationStatus(Nothing));
 
         await expect(result).rejects.toMatchObject({
             kind: "permission-denied",
@@ -85,7 +85,7 @@ describe("client", () => {
     test("When the request cannot be sent, then the call rejects as unavailable", async () => {
         setFetch(() => Promise.reject(new TypeError("Failed to fetch")));
 
-        const result = call(api.client.getAuthenticationStatus(Nothing));
+        const result = call(() => api.client.getAuthenticationStatus(Nothing));
 
         await expect(result).rejects.toMatchObject({
             kind: "unavailable",
@@ -96,7 +96,7 @@ describe("client", () => {
     test("When the request is aborted, then the call rejects as cancelled", async () => {
         setFetch(() => Promise.reject(new DOMException("The request was aborted", "AbortError")));
 
-        const result = call(api.client.getAuthenticationStatus(Nothing));
+        const result = call(() => api.client.getAuthenticationStatus(Nothing));
 
         await expect(result).rejects.toMatchObject({ kind: "cancelled" });
     });

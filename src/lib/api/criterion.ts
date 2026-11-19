@@ -18,7 +18,7 @@ export interface NewCriterion extends CriterionFields {
  * @returns The criteria, possibly none
  */
 export async function listCriteria(projectId: string): Promise<Criterion[]> {
-    const { criteria } = await call(client.getAllCriteriaForProject({ id: projectId }));
+    const { criteria } = await call(() => client.getAllCriteriaForProject({ id: projectId }));
     return criteria;
 }
 
@@ -29,7 +29,7 @@ export async function listCriteria(projectId: string): Promise<Criterion[]> {
  * @returns The created criterion
  */
 export async function createCriterion(criterion: NewCriterion): Promise<Criterion> {
-    return call(client.createCriterion(criterion));
+    return call(() => client.createCriterion(criterion));
 }
 
 /**
@@ -43,7 +43,7 @@ export async function updateCriterion(
     criterion: Criterion,
     changes: Partial<CriterionFields>,
 ): Promise<Criterion> {
-    return call(
+    return call(() =>
         client.updateCriterion({
             criterion: { ...criterion, ...changes },
             // The editable fields are single words, so their names are already in snake_case.
@@ -58,5 +58,5 @@ export async function updateCriterion(
  * @param criterionId - The ID of the criterion
  */
 export async function deleteCriterion(criterionId: string): Promise<void> {
-    await call(client.deleteCriterion({ id: criterionId }));
+    await call(() => client.deleteCriterion({ id: criterionId }));
 }

@@ -13,13 +13,13 @@ import { call } from "./grpc";
  * @returns The authentication status of the current session
  */
 export async function getAuthenticationStatus(): Promise<AuthenticationStatus> {
-    const { authenticationStatus } = await call(client.getAuthenticationStatus(Nothing));
+    const { authenticationStatus } = await call(() => client.getAuthenticationStatus(Nothing));
     return authenticationStatus;
 }
 
 /** Renews the session after its access token expired. */
 export async function renewSession(): Promise<void> {
-    await call(client.renewSession(Nothing));
+    await call(() => client.renewSession(Nothing));
 }
 
 /**
@@ -28,12 +28,12 @@ export async function renewSession(): Promise<void> {
  * @param credentials - The email address and password of the user
  */
 export async function login(credentials: LoginRequest): Promise<void> {
-    await call(client.login(credentials));
+    await call(() => client.login(credentials));
 }
 
 /** Signs the current user out. The backend clears the session cookies. */
 export async function logout(): Promise<void> {
-    await call(client.logout(Nothing));
+    await call(() => client.logout(Nothing));
 }
 
 /**
@@ -42,7 +42,7 @@ export async function logout(): Promise<void> {
  * @param registration - The name, email address and password of the new user
  */
 export async function register(registration: RegisterRequest): Promise<void> {
-    await call(client.register(registration));
+    await call(() => client.register(registration));
 }
 
 /**
@@ -51,5 +51,5 @@ export async function register(registration: RegisterRequest): Promise<void> {
  * @param token - The token from the verification link
  */
 export async function verifyEmail(token: string): Promise<void> {
-    await call(client.verifyEmail({ token }));
+    await call(() => client.verifyEmail({ token }));
 }

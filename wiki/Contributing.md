@@ -335,7 +335,7 @@ The domain modules follow these rules:
 - **No UI.** Toasts, `ActionError`, `invalidate()` and Svelte state stay in the routes and components.
 
 A domain module wraps each client call in `call()` from `grpc.ts`, which returns the response and turns a failure into
-an `ApiError`:
+an `ApiError`. Pass a function that starts the call, so a synchronous throw of the client becomes an `ApiError`, too:
 
 ```ts
 // src/lib/api/project.ts
@@ -345,12 +345,12 @@ import { call } from "./grpc";
 import { buildFieldMask } from "./fieldmask";
 
 export async function getProject(projectId: string): Promise<Project> {
-  return call(client.getProjectById({ id: projectId }));
+  return call(() => client.getProjectById({ id: projectId }));
 }
 
 export async function renameProject(projectId: string, name: string): Promise<Project> {
   const patch = { id: projectId, name };
-  return call(
+  return call(() =>
     client.updateProject({
       project: Project.create(patch),
       mask: buildFieldMask(patch, "project"),

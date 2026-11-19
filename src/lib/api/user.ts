@@ -12,7 +12,7 @@ import type { Fetchers } from "./fetcher";
  * @returns The current user
  */
 export async function getCurrentUser(): Promise<User> {
-    return call(client.getCurrentUser(Nothing));
+    return call(() => client.getCurrentUser(Nothing));
 }
 
 /**
@@ -22,7 +22,7 @@ export async function getCurrentUser(): Promise<User> {
  * @returns The user
  */
 export async function getUserById(userId: string): Promise<User> {
-    return call(client.getUserById({ id: userId }));
+    return call(() => client.getUserById({ id: userId }));
 }
 
 /**
@@ -37,7 +37,7 @@ export async function updateUserName(
     name: { firstName: string; lastName: string },
 ): Promise<User> {
     const patch = { id: userId, firstName: name.firstName, lastName: name.lastName };
-    return call(
+    return call(() =>
         client.updateUser({
             user: User.create(patch),
             mask: buildFieldMask(patch, "user"),
@@ -51,7 +51,7 @@ export async function updateUserName(
  * @returns The user settings
  */
 export async function getUserSettings(): Promise<UserSettings> {
-    return call(client.getUserSettings(Nothing));
+    return call(() => client.getUserSettings(Nothing));
 }
 
 /**
@@ -61,7 +61,7 @@ export async function getUserSettings(): Promise<UserSettings> {
  * @returns The updated user settings
  */
 export async function setDefaultFetchers(fetchers: Fetchers): Promise<UserSettings> {
-    return call(
+    return call(() =>
         client.updateUserSettings({
             userSettings: UserSettings.create({
                 defaultProjectSettings: { fetchers },

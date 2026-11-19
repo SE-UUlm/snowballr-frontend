@@ -69,10 +69,10 @@ describe("call", () => {
     const OK_STATUS = { code: "OK", detail: "OK" };
 
     test("When response and status resolve, then the response is returned", async () => {
-        const result = call({
+        const result = call(() => ({
             response: Promise.resolve({ id: "1" }),
             status: Promise.resolve(OK_STATUS),
-        });
+        }));
 
         await expect(result).resolves.toEqual({ id: "1" });
     });
@@ -80,10 +80,10 @@ describe("call", () => {
     test("When the response rejects, then it rejects with the corresponding ApiError", async () => {
         const rpcError = new RpcError("already there", "ALREADY_EXISTS");
 
-        const result = call({
+        const result = call(() => ({
             response: Promise.reject(rpcError),
             status: Promise.reject(rpcError),
-        });
+        }));
 
         await expect(result).rejects.toBeInstanceOf(ApiError);
         await expect(result).rejects.toMatchObject({ kind: "already-exists", cause: rpcError });
@@ -92,19 +92,33 @@ describe("call", () => {
     test("When the response resolves but the status rejects, then it rejects with the corresponding ApiError", async () => {
         const rpcError = new RpcError("not allowed", "PERMISSION_DENIED");
 
-        const result = call({
+        const result = call(() => ({
             response: Promise.resolve({ id: "1" }),
             status: Promise.reject(rpcError),
-        });
+        }));
 
         await expect(result).rejects.toBeInstanceOf(ApiError);
         await expect(result).rejects.toMatchObject({ kind: "permission-denied", cause: rpcError });
     });
 
+    test("When starting the call throws synchronously, then it rejects with an ApiError", async () => {
+        const serializationError = new Error("invalid int32: string");
+
+        const result = call(() => {
+            throw serializationError;
+        });
+
+        await expect(result).rejects.toBeInstanceOf(ApiError);
+        await expect(result).rejects.toMatchObject({
+            kind: "unknown",
+            cause: serializationError,
+        });
+    });
+
     test("When a call mocked with mockFailedApiCall fails with a code, then the kind matches it", async () => {
         mockFailedApiCall("getAllUsers", "no access", "PERMISSION_DENIED");
 
-        const result = call(client.getAllUsers(Nothing));
+        const result = call(() => client.getAllUsers(Nothing));
 
         await expect(result).rejects.toMatchObject({
             kind: "permission-denied",

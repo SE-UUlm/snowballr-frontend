@@ -31,7 +31,7 @@ export type ProjectSettingsPatch = Omit<PartialMessage<Project_Settings>, "fetch
  * @returns The project
  */
 export async function getProject(projectId: string): Promise<Project> {
-    return call(client.getProjectById({ id: projectId }));
+    return call(() => client.getProjectById({ id: projectId }));
 }
 
 /**
@@ -42,7 +42,7 @@ export async function getProject(projectId: string): Promise<Project> {
  * @returns The active projects of the user
  */
 export async function listProjectsForUser(userId: string): Promise<Project[]> {
-    const { projects } = await call(client.getAllProjectsForUser({ id: userId }));
+    const { projects } = await call(() => client.getAllProjectsForUser({ id: userId }));
     return projects;
 }
 
@@ -53,7 +53,7 @@ export async function listProjectsForUser(userId: string): Promise<Project[]> {
  * @returns The archived projects of the user
  */
 export async function listArchivedProjectsForUser(userId: string): Promise<Project[]> {
-    const { projects } = await call(client.getAllArchivedProjectsForUser({ id: userId }));
+    const { projects } = await call(() => client.getAllArchivedProjectsForUser({ id: userId }));
     return projects;
 }
 
@@ -65,7 +65,7 @@ export async function listArchivedProjectsForUser(userId: string): Promise<Proje
  * @returns The project information
  */
 export async function getProjectInformation(projectId: string): Promise<Project_Information> {
-    return call(client.getProjectInformation({ projectId }));
+    return call(() => client.getProjectInformation({ projectId }));
 }
 
 /**
@@ -79,7 +79,7 @@ export async function getDecisionStatisticsForStage(
     projectId: string,
     stage: bigint,
 ): Promise<Project_Information_DecisionStatistics> {
-    return call(client.getDecisionStatisticsForStage({ projectId, stage }));
+    return call(() => client.getDecisionStatisticsForStage({ projectId, stage }));
 }
 
 /**
@@ -89,7 +89,7 @@ export async function getDecisionStatisticsForStage(
  * @returns The created project
  */
 export async function createProject(name: string): Promise<Project> {
-    return call(client.createProject({ name }));
+    return call(() => client.createProject({ name }));
 }
 
 /**
@@ -98,7 +98,7 @@ export async function createProject(name: string): Promise<Project> {
  * @param projectId - The ID of the project
  */
 export async function deleteProject(projectId: string): Promise<void> {
-    await call(client.softDeleteProject({ id: projectId }));
+    await call(() => client.softDeleteProject({ id: projectId }));
 }
 
 /**
@@ -127,7 +127,7 @@ function buildProjectUpdate(
  * @returns The updated project
  */
 export async function renameProject(projectId: string, name: string): Promise<Project> {
-    return call(client.updateProject(buildProjectUpdate(projectId, { name })));
+    return call(() => client.updateProject(buildProjectUpdate(projectId, { name })));
 }
 
 /**
@@ -138,7 +138,7 @@ export async function renameProject(projectId: string, name: string): Promise<Pr
  * @returns The updated project
  */
 export async function setProjectStatus(projectId: string, status: ProjectStatus): Promise<Project> {
-    return call(client.updateProject(buildProjectUpdate(projectId, { status })));
+    return call(() => client.updateProject(buildProjectUpdate(projectId, { status })));
 }
 
 /**
@@ -149,7 +149,7 @@ export async function setProjectStatus(projectId: string, status: ProjectStatus)
  * @returns The updated project
  */
 export async function setProjectFetchers(projectId: string, fetchers: Fetchers): Promise<Project> {
-    return call(
+    return call(() =>
         client.updateProject({
             project: Project.create({ id: projectId, settings: { fetchers } }),
             // buildFieldMask doesn't detect that the fetchers map is set, so the path is written
@@ -170,7 +170,7 @@ export async function updateProjectSettings(
     projectId: string,
     patch: ProjectSettingsPatch,
 ): Promise<Project> {
-    return call(client.updateProject(buildProjectUpdate(projectId, { settings: patch })));
+    return call(() => client.updateProject(buildProjectUpdate(projectId, { settings: patch })));
 }
 
 /**

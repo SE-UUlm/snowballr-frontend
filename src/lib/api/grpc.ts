@@ -67,21 +67,25 @@ export function toApiError(error: unknown): ApiError {
  * once the call has succeeded. The call object itself is not awaited, because it also waits for
  * headers and trailers, which the test mocks do not provide.
  *
+ * It takes a function that starts the call rather than the call itself, because the generated
+ * client can throw synchronously, e.g. while serializing the request. Starting the call inside
+ * `call` turns that into an {@link ApiError}, too.
+ *
  * @example
  * ```ts
  * export async function getProject(projectId: string): Promise<Project> {
- *     return call(client.getProjectById({ id: projectId }));
+ *     return call(() => client.getProjectById({ id: projectId }));
  * }
  * ```
  *
- * @param unaryCall - The call returned by a method of the generated client
+ * @param startCall - Starts the call by calling a method of the generated client
  * @returns The response message
  */
-export async function call<T>(unaryCall: {
-    response: Promise<T>;
-    status: Promise<unknown>;
-}): Promise<T> {
+export async function call<T>(
+    startCall: () => { response: Promise<T>; status: Promise<unknown> },
+): Promise<T> {
     try {
+        const unaryCall = startCall();
         const [response] = await Promise.all([unaryCall.response, unaryCall.status]);
         return response;
     } catch (error) {

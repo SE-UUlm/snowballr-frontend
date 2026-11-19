@@ -32,7 +32,7 @@ export type PaperDetailsPatch = PartialMessage<
  * @returns The paper
  */
 export async function getPaper(paperId: string): Promise<Paper> {
-    return call(client.getPaperById({ id: paperId }));
+    return call(() => client.getPaperById({ id: paperId }));
 }
 
 /**
@@ -42,7 +42,7 @@ export async function getPaper(paperId: string): Promise<Paper> {
  * @returns The referenced papers, possibly none
  */
 export async function getBackwardReferencedPapers(paperId: string): Promise<Paper[]> {
-    const { papers } = await call(client.getBackwardReferencedPapers({ id: paperId }));
+    const { papers } = await call(() => client.getBackwardReferencedPapers({ id: paperId }));
     return papers;
 }
 
@@ -53,7 +53,7 @@ export async function getBackwardReferencedPapers(paperId: string): Promise<Pape
  * @returns The citing papers, possibly none
  */
 export async function getForwardReferencedPapers(paperId: string): Promise<Paper[]> {
-    const { papers } = await call(client.getForwardReferencedPapers({ id: paperId }));
+    const { papers } = await call(() => client.getForwardReferencedPapers({ id: paperId }));
     return papers;
 }
 
@@ -66,7 +66,7 @@ export async function getForwardReferencedPapers(paperId: string): Promise<Paper
  * @returns The created paper
  */
 export async function createPaper(paper: PartialMessage<Paper>): Promise<Paper> {
-    return call(client.createPaper(Paper.create(paper)));
+    return call(() => client.createPaper(Paper.create(paper)));
 }
 
 /**
@@ -84,7 +84,7 @@ export async function updatePaperDetails(
     // the patch becomes a Paper message, because create() fills in every field. The ID identifies
     // the paper and stays out of the mask.
     const sparsePatch: PartialMessage<Paper> = { id: paperId, ...patch };
-    return call(
+    return call(() =>
         client.updatePaper({
             paper: Paper.create(sparsePatch),
             mask: buildFieldMask(sparsePatch, "paper"),

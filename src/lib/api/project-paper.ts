@@ -10,7 +10,9 @@ import { call } from "./grpc";
  * @returns The papers of the project, possibly none
  */
 export async function listProjectPapers(projectId: string): Promise<Project_Paper[]> {
-    const { projectPapers } = await call(client.getAllProjectPapersForProject({ id: projectId }));
+    const { projectPapers } = await call(() =>
+        client.getAllProjectPapersForProject({ id: projectId }),
+    );
     return projectPapers;
 }
 
@@ -26,7 +28,9 @@ export async function getProjectPaperByLocalId(
     projectId: string,
     localId: string,
 ): Promise<Project_Paper> {
-    return call(client.getProjectPaperByRelativeId({ projectId, relativeProjectPaperId: localId }));
+    return call(() =>
+        client.getProjectPaperByRelativeId({ projectId, relativeProjectPaperId: localId }),
+    );
 }
 
 /**
@@ -38,7 +42,7 @@ export async function getProjectPaperByLocalId(
  * @returns The next project paper
  */
 export async function getNextPaper(projectPaperId: string): Promise<Project_Paper> {
-    return call(client.getNextPaper({ id: projectPaperId }));
+    return call(() => client.getNextPaper({ id: projectPaperId }));
 }
 
 /**
@@ -50,7 +54,7 @@ export async function getNextPaper(projectPaperId: string): Promise<Project_Pape
  * @returns The previous project paper
  */
 export async function getPreviousPaper(projectPaperId: string): Promise<Project_Paper> {
-    return call(client.getPreviousPaper({ id: projectPaperId }));
+    return call(() => client.getPreviousPaper({ id: projectPaperId }));
 }
 
 /**
@@ -63,7 +67,7 @@ export async function getPreviousPaper(projectPaperId: string): Promise<Project_
  * @returns The next project paper to review
  */
 export async function getNextPaperToReview(projectPaperId: string): Promise<Project_Paper> {
-    return call(client.getNextPaperToReview({ id: projectPaperId }));
+    return call(() => client.getNextPaperToReview({ id: projectPaperId }));
 }
 
 /**
@@ -81,7 +85,7 @@ export async function addPaperToProject(
     paperId: string,
     stage: bigint,
 ): Promise<Project_Paper> {
-    return call(client.addPaperToProject({ projectId, paperId, stage }));
+    return call(() => client.addPaperToProject({ projectId, paperId, stage }));
 }
 
 /**
@@ -91,7 +95,9 @@ export async function addPaperToProject(
  * @returns The papers to review, possibly none
  */
 export async function getPapersToReview(projectId: string): Promise<Project_Paper[]> {
-    const { projectPapers } = await call(client.getPapersToReviewForProject({ id: projectId }));
+    const { projectPapers } = await call(() =>
+        client.getPapersToReviewForProject({ id: projectId }),
+    );
     return projectPapers;
 }
 
@@ -108,7 +114,9 @@ export async function searchLocalPaperCandidates(
     query: string,
     projectId: string,
 ): Promise<Paper[]> {
-    const { papers } = await call(client.searchLocalProjectPaperCandidates({ query, projectId }));
+    const { papers } = await call(() =>
+        client.searchLocalProjectPaperCandidates({ query, projectId }),
+    );
     return papers;
 }
 
@@ -125,6 +133,8 @@ export async function searchFetcherPaperCandidates(
     query: string,
     projectId: string,
 ): Promise<Paper[]> {
-    const { papers } = await call(client.searchFetcherProjectPaperCandidates({ query, projectId }));
+    const { papers } = await call(() =>
+        client.searchFetcherProjectPaperCandidates({ query, projectId }),
+    );
     return papers;
 }
