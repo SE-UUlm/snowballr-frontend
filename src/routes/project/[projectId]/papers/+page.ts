@@ -29,7 +29,7 @@ export const load: PageLoad = ({ depends, params }) => {
     });
 
     const loadingReviewers = getProjectMembers(params.projectId).then((members) =>
-        members.flatMap((member) => member.user!),
+        members.map((member) => member.user).filter((user) => user !== undefined),
     );
 
     return {

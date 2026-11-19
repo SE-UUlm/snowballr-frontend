@@ -56,6 +56,19 @@ describe("Papers page loader", () => {
         await expect(data.loadingReviewers).resolves.toEqual([reviewer]);
     });
 
+    test("When a member has no user, then it is left out of the reviewers", async () => {
+        mockApiCall("getProjectMembers", {
+            members: [
+                { user: reviewer, role: MemberRole.ADMIN },
+                { user: undefined, role: MemberRole.DEFAULT },
+            ],
+        });
+
+        const { data } = loadPapersPage();
+
+        await expect(data.loadingReviewers).resolves.toEqual([reviewer]);
+    });
+
     test("When the papers load, then they are grouped by stage and sorted by local ID", async () => {
         const papers = [
             createProjectPaper({ id: "a", stage: 1n, localId: "10" }),
