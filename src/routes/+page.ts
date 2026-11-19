@@ -11,14 +11,12 @@ import type { ProjectListEntryInterface } from "$lib/components/composites/proje
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
-    const members = await getProjectMembers(project.id);
-    const projectInformation = await getProjectInformation(project.id);
+    const [members, information] = await Promise.all([
+        getProjectMembers(project.id),
+        getProjectInformation(project.id),
+    ]);
 
-    return {
-        project: project,
-        members: members,
-        information: projectInformation,
-    };
+    return { project, members, information };
 }
 
 async function requestUndecidedPapers(project: Project): Promise<PaperListEntryInterface[]> {
