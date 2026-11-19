@@ -45,16 +45,20 @@
     async function leaveProject() {
         error = undefined;
 
-        await removeProjectMember(projectId, user.email)
-            .then(async () => {
-                open = false;
-                toast.success("You have left the project.");
-                await goto(resolve("/"));
-            })
-            .catch((leaveError: Error) => {
-                error = getLeaveProjectError(leaveError);
-                console.error(`Couldn't leave project: ${leaveError}`);
-            });
+        try {
+            await removeProjectMember(projectId, user.email);
+        } catch (leaveError) {
+            error = getLeaveProjectError(leaveError as Error);
+            console.error(`Couldn't leave project: ${leaveError}`);
+            return;
+        }
+
+        open = false;
+        toast.success("You have left the project.");
+        // The user has left already, so a failed navigation is not an error of leaving.
+        await goto(resolve("/")).catch((navigationError) => {
+            console.error(`Couldn't navigate home after leaving the project: ${navigationError}`);
+        });
     }
 </script>
 
