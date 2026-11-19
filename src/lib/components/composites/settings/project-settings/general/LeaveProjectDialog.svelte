@@ -3,13 +3,11 @@
     import { resolve } from "$app/paths";
     import { buttonVariants } from "$lib/components/primitives/button";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { backendService } from "$lib/grpc-api";
+    import { isApiError } from "$lib/api/errors";
+    import { removeProjectMember } from "$lib/api/project-member";
     import { getUserContext } from "$lib/custom-context/user-context";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import { loadingWrapper } from "$lib/utils/common-helper";
-    import { toGrpcStatus } from "$lib/api/grpc";
-    import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-    import type { RpcError } from "@protobuf-ts/runtime-rpc";
     import { toast } from "svelte-sonner";
 
     interface Props {
@@ -29,8 +27,8 @@
     let error = $state<unknown>(undefined);
     let open = $state(false);
 
-    function getLeaveProjectError(leaveError: RpcError): ActionError {
-        if (toGrpcStatus(leaveError.code) === GrpcStatusCode.FAILED_PRECONDITION) {
+    function getLeaveProjectError(leaveError: Error): ActionError {
+        if (isApiError(leaveError, "failed-precondition")) {
             return createActionError(
                 "Couldn't Leave This Project",
                 { customDetails: LAST_ADMIN_MESSAGE },
@@ -47,17 +45,20 @@
     async function leaveProject() {
         error = undefined;
 
-        await backendService
-            .removeProjectMember({ projectId, userEmail: user.email })
-            .response.then(async () => {
-                open = false;
-                toast.success("You have left the project.");
-                await goto(resolve("/"));
-            })
-            .catch((leaveError) => {
-                error = getLeaveProjectError(leaveError);
-                console.error(`Couldn't leave project: ${leaveError}`);
-            });
+        try {
+            await removeProjectMember(projectId, user.email);
+        } catch (leaveError) {
+            error = getLeaveProjectError(leaveError as Error);
+            console.error(`Couldn't leave project: ${leaveError}`);
+            return;
+        }
+
+        open = false;
+        toast.success("You have left the project.");
+        // The user has left already, so a failed navigation is not an error of leaving.
+        await goto(resolve("/")).catch((navigationError) => {
+            console.error(`Couldn't navigate home after leaving the project: ${navigationError}`);
+        });
     }
 </script>
 

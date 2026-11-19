@@ -15,7 +15,7 @@ export default defineConfig({
         },
         setupFiles: ["./tests/setupTest.ts"],
         coverage: {
-            include: ["src/**"],
+            include: ["src/**/*.{ts,svelte}"],
             exclude: [
                 "src/routes/**/+*.{svelte,ts}",
                 "src/lib/components/primitives/**",

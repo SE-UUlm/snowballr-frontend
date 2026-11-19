@@ -1,7 +1,7 @@
 <script lang="ts">
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button";
-    import { backendService } from "$lib/grpc-api";
+    import { setProjectMemberRole } from "$lib/api/project-member";
     import { MemberRole, type Project_Member } from "$lib/api/types";
     import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import { cn } from "$lib/utils/shadcn-helper";
@@ -47,13 +47,8 @@
     async function promoteMember() {
         error = undefined;
 
-        await backendService
-            .updateProjectMemberRole({
-                projectId,
-                userId: member.user!.id,
-                newRole: MemberRole.ADMIN,
-            })
-            .response.then(() => {
+        await setProjectMemberRole(projectId, member.user!.id, MemberRole.ADMIN)
+            .then(() => {
                 onMemberPromoted?.(member);
                 open = false;
             })

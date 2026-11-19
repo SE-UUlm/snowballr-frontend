@@ -36,7 +36,7 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     afterNavigate: () => {},
     beforeNavigate: () => {},
     disableScrollHandling: () => {},
-    goto: () => Promise.resolve(),
+    goto: vi.fn(() => Promise.resolve()),
     invalidate: () => Promise.resolve(),
     invalidateAll: () => Promise.resolve(),
     onNavigate: () => {},
@@ -334,4 +334,27 @@ export function mockFailedApiCall<T extends keyof ISnowballRClient>(
             code === undefined ? new Error(errorMessage) : new RpcError(errorMessage, code);
         return mockUnaryCall(Promise.reject(error));
     });
+}
+
+/**
+ * Mocks an API call that stays pending until the returned `resolve` is called, e.g. to act while a
+ * request is still in flight.
+ *
+ * @param methodName - The name of the method to mock
+ * @returns The mock instance and a function that resolves every pending call with the given value
+ */
+export function mockPendingApiCall<
+    T extends keyof ISnowballRClient,
+    R extends InferApiCallReturnType<T>,
+>(methodName: T): { call: MockInstance<ISnowballRClient[T]>; resolve: (value: R) => void } {
+    let resolveResponse: (value: R) => void = () => {};
+    const response = new Promise<R>((resolve) => {
+        resolveResponse = resolve;
+    });
+    const apiCallToMock = (client[methodName] as Mock).mockClear();
+
+    const call = apiCallToMock.mockImplementation(function () {
+        return mockUnaryCall(response);
+    });
+    return { call, resolve: (value) => resolveResponse(value) };
 }

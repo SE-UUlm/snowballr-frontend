@@ -13,6 +13,7 @@
         content?: Snippet;
         footer?: Snippet;
         onCancelClick?: () => void;
+        cancelDisabled?: boolean;
     }
 
     let {
@@ -24,6 +25,7 @@
         content = undefined,
         footer = undefined,
         onCancelClick = undefined,
+        cancelDisabled = false,
     }: Props = $props();
 </script>
 
@@ -62,7 +64,11 @@ Usage:
         </Dialog.Header>
         {@render content?.()}
         <Dialog.Footer class="gap-2">
-            <Dialog.Close class={buttonVariants({ variant: "outline" })} onclick={onCancelClick}>
+            <Dialog.Close
+                class={buttonVariants({ variant: "outline" })}
+                disabled={cancelDisabled}
+                onclick={onCancelClick}
+            >
                 Cancel
             </Dialog.Close>
             {@render footer?.()}

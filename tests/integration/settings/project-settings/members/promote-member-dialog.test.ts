@@ -146,6 +146,7 @@ describe("PromoteMemberDialog", () => {
     });
 
     test("When the promote button is clicked, then the member is promoted to an admin", async () => {
+        const updateRoleCall = mockApiCall("updateProjectMemberRole", {});
         const user = userEvent.setup();
         let promotedMember: Project_Member | null = null;
         render(PromoteMemberDialog, {
@@ -169,6 +170,11 @@ describe("PromoteMemberDialog", () => {
 
         await waitFor(() => {
             expect(promotedMember).toStrictEqual(defaultMember);
+        });
+        expect(updateRoleCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: "1",
+            userId: defaultMember.user!.id,
+            newRole: MemberRole.ADMIN,
         });
     });
 

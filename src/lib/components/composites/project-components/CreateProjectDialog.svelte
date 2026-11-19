@@ -13,8 +13,9 @@
     import LoadingButton from "../button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
-    import { createActionError } from "$lib/model/action-error";
+    import { createActionError, type ActionError } from "$lib/model/action-error";
     import { resolve } from "$app/paths";
+    import { SvelteSet } from "svelte/reactivity";
 
     // at the beginning the dialog should not be open
     let open: boolean = $state(false);
@@ -22,8 +23,10 @@
     const isCreatingProject = $state({ value: false });
     let projectWasCreated = $state(false);
     let projectId = $state<string | undefined>(undefined);
+    // The emails already invited to the created project, so a retry only sends the failed ones
+    const invitedEmails = new SvelteSet<string>();
 
-    let isErrorOnProjectCreation = $state(false);
+    let submitError: ActionError = $state(undefined);
 
     let projectNameInput: Input;
     let invitees: string[] = $state([]);
@@ -47,9 +50,9 @@
      * Therefore, send a request to the backend to create a new project with the
      * provided name and optionally invite further members provided in the second input.
      *
-     * If an earlier attempt already created the project and only the invitations failed, the
-     * project is not created again; only the invitations are sent again. Inviting a user twice has
-     * no effect.
+     * If an earlier attempt already created the project and only some invitations failed, the
+     * project is not created again; only the failed invitations are sent again. The project name
+     * can't be changed anymore at that point, as it is not sent again.
      */
     async function handleSubmit(event: Event) {
         event.preventDefault();
@@ -62,20 +65,30 @@
             try {
                 projectId = (await createProject(projectNameInput.getValue())).id;
             } catch (error) {
-                isErrorOnProjectCreation = true;
+                submitError = createActionError("Failed to Create Project", {
+                    action: "creating the project",
+                });
                 console.error(`Couldn't create project (${error})`);
                 return;
             }
         }
 
         const createdProjectId = projectId;
-        try {
-            await Promise.all(
-                invitees.map((email) => inviteUserToProject(createdProjectId, email)),
-            );
-        } catch (error) {
-            isErrorOnProjectCreation = true;
-            console.error(`Couldn't invite users to project (${error})`);
+        const pendingInvitees = invitees.filter((email) => !invitedEmails.has(email));
+        const results = await Promise.allSettled(
+            pendingInvitees.map(async (email) => {
+                await inviteUserToProject(createdProjectId, email);
+                invitedEmails.add(email);
+            }),
+        );
+        const failure = results.find((result) => result.status === "rejected");
+        if (failure !== undefined) {
+            submitError = createActionError("Failed to Invite Members", {
+                customDetails:
+                    "The project was created, but not all members could be invited. Try again to " +
+                    "resend the invitations, or close this dialog to keep the project without them.",
+            });
+            console.error(`Couldn't invite users to project (${failure.reason})`);
             return;
         }
 
@@ -89,10 +102,11 @@
     $effect(() => {
         if (!open) {
             invitees = [];
-            isErrorOnProjectCreation = false;
+            submitError = undefined;
 
             if (!projectWasCreated && projectId !== undefined) {
                 projectId = undefined;
+                invitedEmails.clear();
                 invalidate("data:allProjectsForUser");
             }
         }
@@ -111,6 +125,7 @@ Usage:
 -->
 <div class="px-5">
     <Dialog
+        cancelDisabled={isCreatingProject.value}
         title="Create Project"
         triggerProps={{
             class: cn(
@@ -119,7 +134,14 @@ Usage:
                 "h-fit w-full py-3 text-xl [&_svg]:size-5",
             ),
         }}
-        bind:open
+        bind:open={
+            () => open,
+            (value) => {
+                // Keep the dialog open while submitting, so the close reset below can't forget the
+                // project while it is still being created.
+                if (!isCreatingProject.value) open = value;
+            }
+        }
     >
         {#snippet trigger()}
             <div class="flex flex-row items-center justify-center gap-2.5">
@@ -140,6 +162,7 @@ Usage:
                     bind:this={projectNameInput}
                     class="w-full"
                     data-testid="project-name-input"
+                    disabled={projectId !== undefined}
                     inputId="project-name-input"
                     label="Name"
                     placeholder="Demo"
@@ -149,13 +172,7 @@ Usage:
                 />
                 <InviteUsersInput bind:invitees />
             </form>
-            <ActionErrorAlert
-                error={isErrorOnProjectCreation
-                    ? createActionError("Failed to Create Project", {
-                          action: "creating the project",
-                      })
-                    : undefined}
-            />
+            <ActionErrorAlert error={submitError} />
         {/snippet}
         {#snippet footer()}
             <LoadingButton
@@ -183,6 +200,7 @@ Usage:
         onclick: () => {
             projectWasCreated = false;
             projectId = undefined;
+            invitedEmails.clear();
             invitees = [];
 
             // trigger reload of the homepage, so the created project is shown in the projects list
