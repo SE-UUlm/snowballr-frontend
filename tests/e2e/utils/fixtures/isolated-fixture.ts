@@ -53,7 +53,11 @@ export const test = base.extend<{
     apiClient: [
         async ({ mockBackend, user }, use) => {
             const client = new AuthSnowballRClient(mockBackend);
-            if (user !== null) await client.register(user);
+
+            if (user) {
+                await client.register(user);
+                await client.login({ email: user.email, password: user.password });
+            }
             await use(client);
         },
         { scope: "test", auto: true },
