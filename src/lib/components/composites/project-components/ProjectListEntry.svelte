@@ -70,8 +70,8 @@ Usage:
     {...!onClick ? { href: href } : { type: "button" }}
 >
     <div class="flex h-fit min-w-0 flex-col">
-        <h2 class="flex flex-row gap-2 truncate">
-            {project.name}
+        <h2 class="flex flex-row gap-2">
+            <span class="flex flex-row truncate">{project.name}</span>
             {#if isCurrentUserAdmin}
                 <span class="text-muted-foreground self-start" title={ADMIN_HINT}>
                     <Crown class="mt-1.5 size-4" aria-label={ADMIN_HINT} role="img" />
