@@ -22,11 +22,11 @@ To set up the development environment, follow the steps in
 ├── scripts/                (helper scripts used in CI/CD or development)
 ├── src/
 │   ├── lib/
+│   │   ├── api/            (backend access, see Backend Access)
 │   │   ├── components/
 │   │   │   ├── composites/ (our components)
 │   │   │   └── primitives/ (shadcn/ui components)
-│   │   └── model/
-│   │       └── api/        (auto-generated API code)
+│   │   └── model/          (frontend models and helpers)
 │   └── routes/             (website layout)
 ├── tests/
 │   ├── e2e/
@@ -275,25 +275,16 @@ trigger a refresh of the user context to ensure all parts of the application hav
 
    ```svelte
    <script lang="ts">
-     import { backendService } from "$lib/grpc-api";
+     import { updateUserName } from "$lib/api/user";
      import { triggerCurrentUserRefresh } from "$lib/model/cache/user-cache";
-     import { toast } from "svelte-sonner";
-     import { StatusCodes } from "$lib/model/error-codes";
-     import { getContext } from "svelte";
      import { getUserContext } from "$lib/custom-context/user-context";
+     import { toast } from "svelte-sonner";
 
      const user = $derived(getUserContext());
 
-     async function handleNameUpdate(newName: string) {
+     async function handleNameUpdate(firstName: string, lastName: string) {
        try {
-         const response = await backendService.updateUser({
-           user: { id: user.id, firstName: newName /* other fields */ },
-           mask: { paths: ["first_name"] }, // Example field mask
-         }).response;
-
-         // Assuming your backendService call doesn't throw on non-OK gRPC status
-         // and returns a structure with a status code. Adjust as per your actual API.
-         // Or, if it throws, catch the error.
+         await updateUserName(user.id, { firstName, lastName });
 
          triggerCurrentUserRefresh();
          toast.success("User details updated successfully!");
@@ -304,6 +295,71 @@ trigger a refresh of the user context to ensure all parts of the application hav
      }
    </script>
    ```
+
+## Backend Access
+
+Routes and components reach the backend only through the domain modules in `src/lib/api/`. Only these modules import
+the generated API (`snowballr-api`), the protobuf-ts runtime (`@protobuf-ts/*`) and the client. This keeps transport
+details in one place, so the backend's switch from gRPC to REST
+([snowballr-backend#536](https://github.com/SE-UUlm/snowballr-backend/issues/536)) changes one module per domain instead
+of every call site.
+
+```plaintext
+src/lib/api/
+├── client.ts       (gRPC-Web client wiring)
+├── fetch.ts        (setFetch, the fetch that backend calls go through)
+├── errors.ts       (ApiError, isApiError)
+├── grpc.ts         (call, mapping from gRPC status codes to ApiError)
+├── fieldmask.ts    (buildFieldMask)
+├── types.ts        (generated types and enums for use outside the layer)
+└── <domain>.ts     (one module per backend domain, e.g. project.ts, reading-list.ts)
+```
+
+Outside the layer, only the domain modules, `errors.ts`, `types.ts` and `fetch.ts` are imported. `fetch.ts` is for the
+root layout, which passes the `fetch` of its load function to `setFetch`. If code outside the layer needs a generated
+type that `types.ts` doesn't export yet, add it there. ESLint fails on any other import of the layer's modules,
+`snowballr-api` or `@protobuf-ts/*` outside `src/lib/api/` (`no-restricted-imports` in `eslint.config.js`). Tests are
+exempt and may import `snowballr-api` and the client directly.
+
+The domain modules follow these rules:
+
+- **Plain async functions with plain values.** For example `getProject(projectId): Promise<Project>` or
+  `listProjectPapers(projectId): Promise<ProjectPaper[]>`. Callers see neither `.response` nor wrapper messages like
+  `{ projectPapers }`.
+- **Updates are named intents.** For example `renameProject(projectId, name)` instead of
+  `updateProject({ project, mask })`. FieldMasks and generated `create()` calls stay inside `src/lib/api/`. Derive the
+  mask from a sparse patch and call `create()` only when building the request: `create()` fills in every field, so a
+  mask derived from its result resets all sibling fields.
+- **Errors are transport-neutral.** Every function rejects with `ApiError`. Check its kind with
+  `isApiError(error, "already-exists")` instead of comparing gRPC status codes.
+- **No UI.** Toasts, `ActionError`, `invalidate()` and Svelte state stay in the routes and components.
+
+A domain module wraps each client call in `call()` from `grpc.ts`, which returns the response and turns a failure into
+an `ApiError`. Pass a function that starts the call, so a synchronous throw of the client becomes an `ApiError`, too:
+
+```ts
+// src/lib/api/project.ts
+import { Project } from "snowballr-api/project";
+import { client } from "./client";
+import { call } from "./grpc";
+import { buildFieldMask } from "./fieldmask";
+
+export async function getProject(projectId: string): Promise<Project> {
+  return call(() => client.getProjectById({ id: projectId }));
+}
+
+export async function renameProject(projectId: string, name: string): Promise<Project> {
+  const patch = { id: projectId, name };
+  return call(() =>
+    client.updateProject({
+      project: Project.create(patch),
+      mask: buildFieldMask(patch, "project"),
+    }),
+  );
+}
+```
+
+When a route or component needs a backend call that has no function yet, add the function to its domain module.
 
 ## Testing
 

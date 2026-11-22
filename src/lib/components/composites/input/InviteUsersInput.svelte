@@ -1,10 +1,10 @@
 <script lang="ts">
     import ChipsInput from "./ChipsInput.svelte";
-    import type { User } from "snowballr-api/user";
+    import type { User } from "$lib/api/types";
     import { getName } from "$lib/utils/common-helper";
     import type { ValidationResult } from "$lib/model/general";
     import { Schema } from "$lib/schemas";
-    import { backendService } from "$lib/grpc-api.js";
+    import { getInviteCandidates } from "$lib/api/invitation";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
     import { createActionError } from "$lib/model/action-error";
 
@@ -13,7 +13,7 @@
         projectId?: string;
     }
 
-    let { invitees = $bindable(), projectId = "" }: Props = $props();
+    let { invitees = $bindable(), projectId }: Props = $props();
 
     let isErrorWhileLoadingCandidates = $state(false);
 
@@ -44,9 +44,8 @@
      * @returns list of "name \<email\>" representations of users that can be invited
      */
     async function loadInviteCandidates(input: string): Promise<string[]> {
-        return backendService
-            .getInviteCandidates({ query: input, projectId })
-            .response.then(({ users }) => {
+        return getInviteCandidates(input, projectId)
+            .then((users) => {
                 isErrorWhileLoadingCandidates = false;
 
                 const newInviteCandidates = users.filter((user) => !invitees.includes(user.email));

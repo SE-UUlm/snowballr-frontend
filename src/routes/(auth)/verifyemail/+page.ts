@@ -1,7 +1,6 @@
 import { goto } from "$app/navigation";
-import { backendService } from "$lib/grpc-api";
-import { AuthenticationStatus } from "snowballr-api/authentication";
-import { Nothing } from "snowballr-api/base";
+import { getAuthenticationStatus, verifyEmail } from "$lib/api/auth";
+import { AuthenticationStatus } from "$lib/api/types";
 import type { PageLoad } from "./$types";
 import { createActionError } from "$lib/model/action-error";
 import { resolve } from "$app/paths";
@@ -9,8 +8,7 @@ import { resolve } from "$app/paths";
 export const load: PageLoad = async ({ url }) => {
     // Check if the user is already authenticated (only verify if user is not authenticated)
     try {
-        const authStatus = (await backendService.getAuthenticationStatus(Nothing).response)
-            .authenticationStatus;
+        const authStatus = await getAuthenticationStatus();
         if (authStatus === AuthenticationStatus.AUTHENTICATED) {
             await goto(resolve("/"));
         }
@@ -32,6 +30,6 @@ export const load: PageLoad = async ({ url }) => {
     }
 
     return {
-        verificationPromise: backendService.verifyEmail({ token }).response,
+        verificationPromise: verifyEmail(token),
     };
 };

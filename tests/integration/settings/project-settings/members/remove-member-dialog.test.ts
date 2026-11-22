@@ -89,6 +89,7 @@ describe("RemoveMemberDialog", () => {
     });
 
     test("When the remove button is clicked, then the member is removed successfully", async () => {
+        const removeMemberCall = mockApiCall("removeProjectMember", {});
         const user = userEvent.setup();
         let removedMember: Project_Member | null = null;
         render(RemoveMemberDialog, {
@@ -111,6 +112,10 @@ describe("RemoveMemberDialog", () => {
 
         await waitFor(() => {
             expect(removedMember).toStrictEqual(defaultMember);
+        });
+        expect(removeMemberCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: "1",
+            userEmail: defaultMember.user!.email,
         });
     });
 

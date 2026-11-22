@@ -1,11 +1,9 @@
-import { describe, expect, test, type Mock } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import CriteriaSettings from "$lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
 import { CriterionCategory } from "snowballr-api/criterion";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
-import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { createCriterion, createProject } from "$tests/model-builder";
 import {
     mockIsProjectArchivedContext,
@@ -103,11 +101,11 @@ describe("CriteriaSettings", () => {
 
     test("When saving fails because of a failed precondition, then the reason is shown", async () => {
         mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
-        (backendService.deleteCriterion as Mock).mockImplementation(() => ({
-            response: Promise.reject(
-                new RpcError("The criterion is used by a review", "FAILED_PRECONDITION"),
-            ),
-        }));
+        mockFailedApiCall(
+            "deleteCriterion",
+            "The criterion is used by a review",
+            "FAILED_PRECONDITION",
+        );
         renderSettings();
         await waitForComponentLoading();
 
@@ -121,9 +119,7 @@ describe("CriteriaSettings", () => {
 
     test("When saving fails for another reason, then the backend message is not shown", async () => {
         mockApiCall("getAllCriteriaForProject", { criteria: [storedCriterion] });
-        (backendService.deleteCriterion as Mock).mockImplementation(() => ({
-            response: Promise.reject(new RpcError("stack trace of the server", "INTERNAL")),
-        }));
+        mockFailedApiCall("deleteCriterion", "stack trace of the server", "INTERNAL");
         renderSettings();
         await waitForComponentLoading();
 

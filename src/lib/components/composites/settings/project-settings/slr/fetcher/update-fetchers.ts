@@ -1,7 +1,7 @@
-import { backendService } from "$lib/grpc-api";
+import { setProjectFetchers } from "$lib/api/project";
 import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { Fetchers } from "$lib/components/composites/settings/fetcher/fetcher";
-import { Project, Project_Settings } from "snowballr-api/project";
+import type { Fetchers } from "$lib/api/fetcher";
+import type { Project } from "$lib/api/types";
 import { toast } from "svelte-sonner";
 import { refreshProject } from "$lib/model/cache/project-cache";
 
@@ -11,39 +11,28 @@ export async function updateFetchers(
     onSuccess: (updatedProject: Project) => void = () => {},
     onError: (error: ActionError) => void = () => {},
 ) {
-    const projectData: Partial<Project> = {
-        id: projectId,
-        settings: Project_Settings.create({
-            fetchers: fetchers,
-        }),
-    };
+    async function onFulfilled(project: Project) {
+        // The project is loaded once by the project layout and is not reloaded when navigating
+        // between settings tabs, so it has to be refreshed for a remounted section to read it.
+        await refreshProject(project);
+        toast.success("Successfully updated project settings.");
+        onSuccess(project);
+    }
 
-    await backendService
-        .updateProject({
-            project: Project.create(projectData),
-            // Manually set the path list because the generated field mask does not detect that the
-            // map for the fetchers is set.
-            mask: { paths: ["project.settings.fetchers"] },
-        })
-        .response.then(async (it) => {
-            // The project is loaded once by the project layout and is not reloaded when navigating
-            // between settings tabs, so it has to be refreshed for a remounted section to read it.
-            await refreshProject(it);
-            toast.success("Successfully updated project settings.");
-            onSuccess(it);
-        })
-        .catch((error) => {
-            toast.error("Error when updating project.", {
-                description: error,
-            });
-            onError(
-                createActionError(
-                    "Project Settings Update Failed",
-                    {
-                        action: "updating the project settings",
-                    },
-                    error,
-                ),
-            );
+    function onRejected(error: Error) {
+        toast.error("Error when updating project.", {
+            description: error.message,
         });
+        onError(
+            createActionError(
+                "Project Settings Update Failed",
+                {
+                    action: "updating the project settings",
+                },
+                error,
+            ),
+        );
+    }
+
+    await setProjectFetchers(projectId, fetchers).then(onFulfilled, onRejected);
 }

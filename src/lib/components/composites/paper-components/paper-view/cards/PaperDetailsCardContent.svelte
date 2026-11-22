@@ -7,7 +7,7 @@
         type PaperDetailProp,
     } from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
     import PaperExternalIds from "$lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
-    import type { Paper } from "snowballr-api/paper";
+    import type { Paper } from "$lib/api/types";
     import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "$lib/model/general";
     import ToggleableTextArea from "$lib/components/composites/input/ToggleableTextArea.svelte";

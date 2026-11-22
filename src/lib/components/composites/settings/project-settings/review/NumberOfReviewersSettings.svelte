@@ -8,7 +8,7 @@
      */
     export const numberOfReviewersSetting: ProjectSettingDescriptor<number> = {
         read: (project) => project.settings?.decisionMatrix?.numberOfReviewers ?? 2,
-        toPatch: (value) => ({ settings: { decisionMatrix: { numberOfReviewers: value } } }),
+        toPatch: (value) => ({ decisionMatrix: { numberOfReviewers: value } }),
         action: "updating the number of required reviewers",
     };
 </script>
@@ -19,7 +19,7 @@
     import { Slider } from "$lib/components/primitives/slider";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { projectSetting } from "$lib/model/project-setting.svelte";
-    import type { Project } from "snowballr-api/project";
+    import type { Project } from "$lib/api/types";
 
     interface Props {
         projectId: string;

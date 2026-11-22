@@ -1,12 +1,7 @@
-import {
-    CriterionCategory,
-    type Criterion,
-    type Criterion_Create,
-    type Criterion_Update,
-} from "snowballr-api/criterion";
+import type { CriterionFields, NewCriterion } from "$lib/api/criterion";
+import { CriterionCategory, type Criterion } from "$lib/api/types";
 
-/** The editable fields of a criterion. */
-export type CriterionFields = Pick<Criterion, "tag" | "name" | "description">;
+export type { CriterionFields };
 
 /**
  * A criterion as it is edited in the review settings, before the changes are saved.
@@ -27,8 +22,9 @@ export type CriterionDraftStatus = "unchanged" | "added" | "edited" | "removed";
 
 /** The requests needed to persist a list of drafts. */
 export interface CriteriaChanges {
-    creates: Criterion_Create[];
-    updates: Criterion_Update[];
+    creates: NewCriterion[];
+    /** The stored criteria to update, each with the fields that changed and their new values. */
+    updates: { criterion: Criterion; changes: Partial<CriterionFields> }[];
     deletes: string[];
 }
 
@@ -157,11 +153,10 @@ export function collectChanges(projectId: string, drafts: CriterionDraft[]): Cri
         } else if (status === "edited") {
             const fields = changedFields(draft);
             changes.updates.push({
-                criterion: {
-                    ...draft.stored!,
-                    ...Object.fromEntries(fields.map((field) => [field, normalize(draft, field)])),
-                },
-                mask: { paths: fields.map((field) => `criterion.${field}`) },
+                criterion: draft.stored!,
+                changes: Object.fromEntries(
+                    fields.map((field) => [field, normalize(draft, field)]),
+                ),
             });
         }
     }

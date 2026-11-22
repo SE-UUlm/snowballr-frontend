@@ -1,28 +1,28 @@
 import type { PageLoad } from "./$types";
-import { backendService } from "$lib/grpc-api";
-import { type Project } from "snowballr-api/project";
+import {
+    getProjectInformation,
+    listArchivedProjectsForUser,
+    listProjectsForUser,
+} from "$lib/api/project";
+import { getProjectMembers } from "$lib/api/project-member";
+import { getPapersToReview } from "$lib/api/project-paper";
+import type { Project, User } from "$lib/api/types";
 import type { ProjectListEntryInterface } from "$lib/components/composites/project-components/ProjectListEntry.svelte";
 import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-import type { User } from "snowballr-api/user";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
-    const members = await backendService.getProjectMembers({ id: project.id }).response;
-    const projectInformation = await backendService.getProjectInformation({
-        projectId: project.id,
-    }).response;
+    const [members, information] = await Promise.all([
+        getProjectMembers(project.id),
+        getProjectInformation(project.id),
+    ]);
 
-    return {
-        project: project,
-        membersList: members,
-        information: projectInformation,
-    };
+    return { project, members, information };
 }
 
 async function requestUndecidedPapers(project: Project): Promise<PaperListEntryInterface[]> {
-    const allUndecidedPapers = await backendService.getPapersToReviewForProject({ id: project.id })
-        .response;
+    const allUndecidedPapers = await getPapersToReview(project.id);
 
-    return allUndecidedPapers.projectPapers.map((projectPaper) => ({
+    return allUndecidedPapers.map((projectPaper) => ({
         paper: projectPaper,
         projectId: project.id,
         showReviewStatus: false,
@@ -56,10 +56,8 @@ export const load: PageLoad = async ({ depends, parent }) => {
 
     const userId = user.id;
 
-    const allActiveUserProjects = backendService.getAllProjectsForUser({ id: userId }).response;
-    const allArchivedUserProjects = backendService.getAllArchivedProjectsForUser({
-        id: userId,
-    }).response;
+    const allActiveUserProjects = listProjectsForUser(userId);
+    const allArchivedUserProjects = listArchivedProjectsForUser(userId);
 
     const projectsMetadata: Promise<ProjectListEntryInterface[]> = Promise.all([
         allActiveUserProjects,
@@ -68,9 +66,7 @@ export const load: PageLoad = async ({ depends, parent }) => {
         .then(async ([active, archived]) => {
             try {
                 return await Promise.all(
-                    active.projects
-                        .concat(archived.projects)
-                        .map((project) => requestProjectInformation(project)),
+                    active.concat(archived).map((project) => requestProjectInformation(project)),
                 );
             } catch {
                 throw new Error("Couldn't load project details.");
@@ -81,10 +77,10 @@ export const load: PageLoad = async ({ depends, parent }) => {
         });
 
     const openReviews: Promise<PaperListEntryInterface[]> = allActiveUserProjects
-        .then(async (projectsResponse) => {
+        .then(async (activeProjects) => {
             try {
                 return await Promise.all(
-                    projectsResponse.projects.map((project) => requestUndecidedPapers(project)),
+                    activeProjects.map((project) => requestUndecidedPapers(project)),
                 );
             } catch {
                 throw new Error("Couldn't load open reviews.");

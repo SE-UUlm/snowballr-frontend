@@ -3,7 +3,7 @@
     import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
     import ProjectMemberListEntrySkeleton from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntrySkeleton.svelte";
     import Separator from "$lib/components/primitives/separator/separator.svelte";
-    import { Project_Member } from "snowballr-api/project";
+    import { Project_Member } from "$lib/api/types";
     import { getName, getNameOrEmail, pluralize } from "$lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
@@ -30,7 +30,7 @@
         reloadingMembers = true;
         // First fetch the members again and only then replace the members of the settings layout, so
         // that no loading state is shown and the change is kept when navigating between settings tabs
-        await loadMembers({ id: projectId })
+        await loadMembers(projectId)
             .then((members) => refreshMembers(projectId, members))
             .catch((error) => {
                 toast.error(errorMessage);

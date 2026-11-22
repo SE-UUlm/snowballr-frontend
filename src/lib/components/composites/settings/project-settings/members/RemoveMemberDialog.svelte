@@ -3,8 +3,8 @@
     import { getNameOrEmail, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
     import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
     import Trash from "@lucide/svelte/icons/trash";
-    import { MemberRole, type Project_Member } from "snowballr-api/project";
-    import { backendService } from "$lib/grpc-api";
+    import { MemberRole, type Project_Member } from "$lib/api/types";
+    import { removeProjectMember } from "$lib/api/project-member";
 
     interface Props {
         projectId: string;
@@ -33,12 +33,8 @@
     async function removeMember() {
         error = undefined;
 
-        await backendService
-            .removeProjectMember({
-                projectId,
-                userEmail: member.user!.email,
-            })
-            .response.then(() => {
+        await removeProjectMember(projectId, member.user!.email)
+            .then(() => {
                 onMemberRemoved?.(member);
                 open = false;
             })

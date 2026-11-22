@@ -1,4 +1,4 @@
-import { backendService } from "$lib/grpc-api";
+import { acceptProjectInvitation } from "$lib/api/invitation";
 import { createActionError } from "$lib/model/action-error";
 import type { PageLoad } from "./$types";
 
@@ -17,6 +17,6 @@ export const load: PageLoad = async ({ url }) => {
     }
 
     return {
-        acceptancePromise: backendService.acceptProjectInvitation({ token }).response,
+        acceptancePromise: acceptProjectInvitation(token),
     };
 };

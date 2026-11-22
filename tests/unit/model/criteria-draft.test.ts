@@ -102,8 +102,8 @@ describe("collectChanges", () => {
             },
         ]);
         expect(changes.updates).toHaveLength(1);
-        expect(changes.updates[0].criterion).toMatchObject({ id: "0", name: "Renamed" });
-        expect(changes.updates[0].mask).toEqual({ paths: ["criterion.name"] });
+        expect(changes.updates[0].criterion).toMatchObject({ id: "0" });
+        expect(changes.updates[0].changes).toEqual({ name: "Renamed" });
         expect(changes.deletes).toEqual(["1"]);
     });
 });

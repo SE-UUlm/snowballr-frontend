@@ -1,9 +1,13 @@
-import type { Paper } from "snowballr-api/paper";
-import { backendService } from "$lib/grpc-api";
+import { isApiError } from "$lib/api/errors";
+import { createPaper } from "$lib/api/paper";
+import {
+    addPaperToProject,
+    searchFetcherPaperCandidates,
+    searchLocalPaperCandidates,
+} from "$lib/api/project-paper";
+import type { Paper } from "$lib/api/types";
 import { createActionError, type ActionError } from "$lib/model/action-error";
-import { isGrpcError, pluralize } from "$lib/utils/common-helper";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import type { RpcError } from "@protobuf-ts/runtime-rpc";
+import { pluralize } from "$lib/utils/common-helper";
 import { toast } from "svelte-sonner";
 
 /** Shown when every requested source answered and none of them had anything to offer. */
@@ -156,6 +160,11 @@ async function searchSource(
     try {
         return { papers: await search(), error: undefined };
     } catch (error) {
+        // A cancelled search was abandoned on purpose, so there is nothing to report.
+        if (isApiError(error, "cancelled")) {
+            return { papers: [], error: undefined };
+        }
+
         return {
             papers: [],
             error: createActionError(
@@ -191,22 +200,10 @@ export async function searchPaperCandidates(
 ): Promise<PaperCandidateSearchResult> {
     const [localResult, fetcherResult] = await Promise.all([
         sources.includeLocal
-            ? searchSource(
-                  () =>
-                      backendService
-                          .searchLocalProjectPaperCandidates({ query, projectId })
-                          .response.then((it) => it.papers),
-                  "local",
-              )
+            ? searchSource(() => searchLocalPaperCandidates(query, projectId), "local")
             : { papers: [], error: undefined },
         sources.includeFetchers
-            ? searchSource(
-                  () =>
-                      backendService
-                          .searchFetcherProjectPaperCandidates({ query, projectId })
-                          .response.then((it) => it.papers),
-                  "fetcher",
-              )
+            ? searchSource(() => searchFetcherPaperCandidates(query, projectId), "fetcher")
             : { papers: [], error: undefined },
     ]);
 
@@ -227,7 +224,7 @@ export async function searchPaperCandidates(
 /**
  * Makes sure a candidate's paper exists in the SnowballR database.
  *
- * Known papers are adopted as they are. New ones are created, and an `ALREADY_EXISTS` response
+ * Known papers are adopted as they are. New ones are created, and an `"already-exists"` error
  * counts as success: another user may have created the same paper between the search and this call,
  * and in that case the paper is exactly what we wanted anyway.
  *
@@ -240,9 +237,9 @@ async function resolvePaper(candidate: PaperCandidate): Promise<Paper | undefine
     }
 
     try {
-        return await backendService.createPaper(candidate.paper).response;
+        return await createPaper(candidate.paper);
     } catch (error) {
-        if (isGrpcError((error as RpcError).code, GrpcStatusCode.ALREADY_EXISTS)) {
+        if (isApiError(error, "already-exists")) {
             return candidate.paper;
         }
 
@@ -277,12 +274,14 @@ export async function addPaperCandidates(
         }
 
         try {
-            await backendService.addPaperToProject({
-                paperId: paper.id,
-                projectId: target.projectId,
-                stage: target.stage,
-            }).response;
-        } catch {
+            await addPaperToProject(target.projectId, paper.id, target.stage);
+        } catch (error) {
+            // Another user may have added the same paper in the meantime; it is in the project either way.
+            if (isApiError(error, "already-exists")) {
+                summary.added++;
+                continue;
+            }
+
             toast.error(`Paper '${candidate.paper.title}' could not be added.`);
             summary.failed.push({ candidate, step: "add" });
             continue;

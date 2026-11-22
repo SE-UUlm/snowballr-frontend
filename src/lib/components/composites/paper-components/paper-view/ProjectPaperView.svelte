@@ -4,8 +4,7 @@
     } from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
     import ButtonBar from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
     import type { ForwardAndBackwardReferencesCardContentProps } from "$lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
-    import type { Project } from "snowballr-api/project";
-    import type { Review } from "snowballr-api/review";
+    import type { Project, Review } from "$lib/api/types";
     import { setAlreadyReviewedContext } from "$lib/custom-context/was-paper-reviewed-context";
     import { setSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte.js";

@@ -12,7 +12,8 @@
     import YearsSelect from "$lib/components/composites/select/YearsSelect.svelte";
     import DecisionsSelect from "$lib/components/composites/select/DecisionsSelect.svelte";
     import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
-    import type { Project_Paper } from "snowballr-api/project";
+    import type { Project_Paper } from "$lib/api/types";
+    import { emptyPaper } from "$lib/api/paper";
     import Trash from "@lucide/svelte/icons/trash-2";
     import StageEntry from "$lib/components/composites/project-components/StageEntry.svelte";
     import { pluralize } from "$lib/utils/common-helper.js";
@@ -42,7 +43,6 @@
     import { sortProjectPaper } from "$lib/utils/sorters";
     import { ALLOWED_SORT_OPTIONS } from "$lib/model/sort-criteria";
     import { updateSortParams } from "$lib/utils/search-parameters.js";
-    import { Paper } from "snowballr-api/paper";
     import { stringifyPaper } from "$lib/utils/model-helper.js";
     import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
     import { resolve } from "$app/paths";
@@ -217,7 +217,7 @@
             >
                 <PaperDetailsCardContent
                     {loadingPaper}
-                    paper={stringifyPaper(selectedPaper.paper ?? Paper.create())}
+                    paper={stringifyPaper(selectedPaper.paper ?? emptyPaper())}
                 />
                 <div class="absolute top-5 right-5 flex flex-row gap-2.5">
                     {#await loadingPaper}

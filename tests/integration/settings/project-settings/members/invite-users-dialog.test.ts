@@ -1,10 +1,10 @@
 import { describe, test, beforeEach, afterEach, vi, expect } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
 import { Members, Users } from "$tests/example-data";
 import userEvent from "@testing-library/user-event";
-import { mockUserContext } from "$tests/integration/test-helper";
+import { mockUserContext, waitForDialogFocus } from "$tests/integration/test-helper";
 
 describe("InviteUsersDialog", () => {
     beforeEach(() => {
@@ -73,6 +73,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const input = screen.getByRole("textbox");
         await user.type(input, Members.demoMember1.user!.email);
@@ -92,6 +93,7 @@ describe("InviteUsersDialog", () => {
     });
 
     test("When a user is invited successfully, then a success message is displayed", async () => {
+        const inviteCall = mockApiCall("inviteUserToProject", {});
         const user = userEvent.setup();
         let invitedUsers: string[] = [];
         render(InviteUsersDialog, {
@@ -108,6 +110,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user!.email);
@@ -117,6 +120,83 @@ describe("InviteUsersDialog", () => {
         await user.click(inviteButton);
 
         expect(invitedUsers).toEqual([Members.demoMember1.user!.email]);
+        expect(inviteCall).toHaveBeenCalledExactlyOnceWith({
+            projectId: "1",
+            userEmail: Members.demoMember1.user!.email,
+        });
+    });
+
+    describe("When some invitations fail", () => {
+        const succeedingEmail = Members.demoMember1.user!.email;
+        const failingEmail = Members.demoMember2.user!.email;
+
+        /** Fails the invitation of `failingEmail` and lets every other one succeed. */
+        function mockPartiallyFailingInvitations() {
+            const inviteCall = mockApiCall("inviteUserToProject", {});
+            const inviteSucceeds = inviteCall.getMockImplementation()!;
+            const inviteFails = mockFailedApiCall("inviteUserToProject").getMockImplementation()!;
+            return inviteCall.mockImplementation((request, options) =>
+                request.userEmail === failingEmail
+                    ? inviteFails(request, options)
+                    : inviteSucceeds(request, options),
+            );
+        }
+
+        async function inviteBothUsers() {
+            const user = userEvent.setup();
+            const trigger = await screen.findByRole("button", { name: "Invite Users" });
+            await waitFor(async () => user.click(trigger));
+            await waitForDialogFocus();
+
+            const emailInput = screen.getByRole("textbox");
+            for (const email of [succeedingEmail, failingEmail]) {
+                await user.type(emailInput, email);
+                await user.tab();
+                await user.click(emailInput);
+            }
+            await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+            expect(
+                await screen.findByRole("alert", { name: "Invitation Failed" }),
+            ).toBeInTheDocument();
+        }
+
+        test("When the users were invited, then the callback gets the emails that were invited", async () => {
+            mockPartiallyFailingInvitations();
+            const onUsersInvited = vi.fn();
+            render(InviteUsersDialog, {
+                target: document.body,
+                props: { projectId: "1", loadingMembers: Promise.resolve([]), onUsersInvited },
+                context: mockUserContext,
+            });
+
+            await inviteBothUsers();
+
+            expect(onUsersInvited).toHaveBeenCalledExactlyOnceWith([succeedingEmail]);
+        });
+
+        test("When the user tries again, then only the failed invitations are sent again", async () => {
+            mockPartiallyFailingInvitations();
+            const onUsersInvited = vi.fn();
+            render(InviteUsersDialog, {
+                target: document.body,
+                props: { projectId: "1", loadingMembers: Promise.resolve([]), onUsersInvited },
+                context: mockUserContext,
+            });
+            await inviteBothUsers();
+            onUsersInvited.mockClear();
+
+            const retriedInviteCall = mockApiCall("inviteUserToProject", {});
+            const user = userEvent.setup();
+            await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+
+            await waitFor(() =>
+                expect(onUsersInvited).toHaveBeenCalledExactlyOnceWith([failingEmail]),
+            );
+            expect(retriedInviteCall).toHaveBeenCalledExactlyOnceWith({
+                projectId: "1",
+                userEmail: failingEmail,
+            });
+        });
     });
 
     test("When inviting a user fails, then an error message is displayed", async () => {
@@ -134,6 +214,7 @@ describe("InviteUsersDialog", () => {
 
         const trigger = await screen.findByRole("button", { name: "Invite Users" });
         await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
 
         const emailInput = screen.getByRole("textbox");
         await user.type(emailInput, Members.demoMember1.user!.email);
@@ -148,5 +229,49 @@ describe("InviteUsersDialog", () => {
                 "Something went wrong while inviting the users. Please make sure your internet connection is stable, then try again.",
             ),
         ).toBeInTheDocument();
+    });
+    /** Opens the dialog, enters the given email and sends the invitation. */
+    async function inviteUser(email: string) {
+        const user = userEvent.setup();
+        const trigger = await screen.findByRole("button", { name: "Invite Users" });
+        await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
+
+        await user.type(screen.getByRole("textbox"), email);
+        await user.tab();
+        await user.click(screen.getByRole("button", { name: "Send Invitations" }));
+        return { user, trigger };
+    }
+
+    test("When the dialog is reopened after a failed invitation, then the old error is not shown", async () => {
+        mockFailedApiCall("inviteUserToProject");
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: { projectId: "1", loadingMembers: Promise.resolve([]) },
+            context: mockUserContext,
+        });
+
+        const { user, trigger } = await inviteUser("invitee@example.com");
+        expect(await screen.findByRole("alert", { name: "Invitation Failed" })).toBeInTheDocument();
+        await user.click(screen.getByRole("button", { name: "Cancel" }));
+        await waitFor(async () => user.click(trigger));
+        await waitForDialogFocus();
+
+        expect(screen.queryByRole("alert", { name: "Invitation Failed" })).not.toBeInTheDocument();
+    });
+
+    test("When the invitations are being sent, then the dialog can't be cancelled", async () => {
+        const { resolve } = mockPendingApiCall("inviteUserToProject");
+        render(InviteUsersDialog, {
+            target: document.body,
+            props: { projectId: "1", loadingMembers: Promise.resolve([]) },
+            context: mockUserContext,
+        });
+
+        const { trigger } = await inviteUser("invitee@example.com");
+
+        await waitFor(() => expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled());
+        resolve({});
+        await waitFor(() => expect(trigger).toHaveAttribute("data-state", "closed"));
     });
 });

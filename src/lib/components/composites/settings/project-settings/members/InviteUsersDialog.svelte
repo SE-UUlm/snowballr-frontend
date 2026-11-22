@@ -2,12 +2,13 @@
     import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
     import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
     import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
-    import type { Project_Member } from "snowballr-api/project";
-    import { backendService } from "$lib/grpc-api";
+    import type { Project_Member } from "$lib/api/types";
+    import { inviteUserToProject } from "$lib/api/invitation";
     import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { createActionError, type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { SvelteSet } from "svelte/reactivity";
 
     interface Props {
         projectId: string;
@@ -28,6 +29,8 @@
     let open = $state(false);
     let invitees: string[] = $state([]);
     let actionButtonDisabled = $derived(loading.value || invitees.length === 0);
+    // The emails already invited since the dialog was opened, so a retry only sends the failed ones
+    const invitedEmails = new SvelteSet<string>();
 
     async function inviteUsers(event: Event) {
         event.preventDefault();
@@ -35,15 +38,30 @@
         inviteUsersError = undefined;
         try {
             const members = (await loadingMembers).map((member) => member.user?.email);
-            // filter out emails of existing members
-            const filteredInvitees = invitees.filter((userEmail) => !members.includes(userEmail));
-            await Promise.all(
-                filteredInvitees.map(
-                    (userEmail) =>
-                        backendService.inviteUserToProject({ projectId, userEmail }).response,
-                ),
+            // Leave out existing members and the users an earlier attempt already invited
+            const pendingInvitees = invitees.filter(
+                (userEmail) => !members.includes(userEmail) && !invitedEmails.has(userEmail),
             );
-            onUsersInvited?.(invitees);
+            const unreportedInvitees = invitees.filter(
+                (userEmail) => !invitedEmails.has(userEmail),
+            );
+            const results = await Promise.allSettled(
+                pendingInvitees.map(async (userEmail) => {
+                    await inviteUserToProject(projectId, userEmail);
+                    invitedEmails.add(userEmail);
+                }),
+            );
+            const failure = results.find((result) => result.status === "rejected");
+            if (failure !== undefined) {
+                const newlyInvited = pendingInvitees.filter((userEmail) =>
+                    invitedEmails.has(userEmail),
+                );
+                if (newlyInvited.length > 0) {
+                    onUsersInvited?.(newlyInvited);
+                }
+                throw failure.reason;
+            }
+            onUsersInvited?.(unreportedInvitees);
 
             invitees = [];
             open = false;
@@ -58,10 +76,12 @@
         }
     }
 
-    // if dialog is closed, then reset the invitee list
+    // if dialog is closed, then reset the invitee list and the error of the last attempt
     $effect(() => {
         if (!open) {
             invitees = [];
+            invitedEmails.clear();
+            inviteUsersError = undefined;
         }
     });
 </script>
@@ -72,8 +92,9 @@ A dialog that lets the user type email addresses and user names that should be i
 similar to the {@link CreateProjectDialog}.
 
 - `loadingMembers` resolve to the already existing members or invitees of the project.
-- `onUsersInvited` is called when the submit button of the dialog is pressed.
-    The passed argument contains the email addresses of all users that should be invited
+- `onUsersInvited` is called after users were invited. It gets the email addresses entered since
+    the last call. If only some invitations failed, it gets the ones that succeeded, and a retry
+    only sends the failed invitations again.
 
 Usage:
 ```svelte
@@ -85,6 +106,7 @@ Usage:
 ```
 -->
 <Dialog
+    cancelDisabled={loading.value}
     title="Invite Users"
     triggerProps={{
         class: buttonVariants({ variant: "default" }),

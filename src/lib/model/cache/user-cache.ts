@@ -1,5 +1,5 @@
 import { invalidate } from "$app/navigation";
-import type { User } from "snowballr-api/user";
+import type { User } from "$lib/api/types";
 
 export const USER_DEPENDENCY_KEY = "data:getCurrentUser";
 

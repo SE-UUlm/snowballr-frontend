@@ -8,7 +8,7 @@
      */
     export const similarityThresholdSetting: ProjectSettingDescriptor<number> = {
         read: (project) => project.settings?.similarityThreshold ?? 0.5,
-        toPatch: (value) => ({ settings: { similarityThreshold: value } }),
+        toPatch: (value) => ({ similarityThreshold: value }),
         action: "updating the similarity threshold",
     };
 </script>
@@ -19,7 +19,7 @@
     import { Slider } from "$lib/components/primitives/slider";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
     import { projectSetting } from "$lib/model/project-setting.svelte";
-    import type { Project } from "snowballr-api/project";
+    import type { Project } from "$lib/api/types";
 
     interface Props {
         projectId: string;

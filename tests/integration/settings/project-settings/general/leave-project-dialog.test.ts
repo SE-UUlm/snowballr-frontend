@@ -1,11 +1,11 @@
-import { describe, expect, test, type Mock } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import LeaveProjectDialog from "$lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
 import { mockUserContext } from "../../../test-helper";
+import { goto } from "$app/navigation";
 import { Projects, Users } from "$tests/example-data";
-import { backendService } from "$lib/grpc-api";
 
 describe("LeaveProjectDialog", () => {
     async function openDialog(user: UserEvent) {
@@ -104,9 +104,7 @@ describe("LeaveProjectDialog", () => {
 
     test("When leaving fails because the current user is the last admin, then a specific error message is shown", async () => {
         const user = userEvent.setup();
-        (backendService.removeProjectMember as Mock).mockImplementation(() => ({
-            response: Promise.reject({ code: "FAILED_PRECONDITION" }),
-        }));
+        mockFailedApiCall("removeProjectMember", "", "FAILED_PRECONDITION");
 
         render(LeaveProjectDialog, {
             target: document.body,
@@ -123,5 +121,25 @@ describe("LeaveProjectDialog", () => {
                 "You are the last admin of this project. Promote another member to admin before leaving.",
             ),
         ).toBeInTheDocument();
+    });
+
+    test("When leaving succeeds but the navigation afterwards fails, then no leave error is reported", async () => {
+        const user = userEvent.setup();
+        mockApiCall("removeProjectMember", {});
+        vi.mocked(goto).mockRejectedValueOnce(new Error("navigation aborted"));
+
+        render(LeaveProjectDialog, {
+            target: document.body,
+            props: { projectId: Projects.demoProjectActive.id },
+            context: mockUserContext,
+        });
+
+        await openDialog(user);
+        await user.click(screen.getByTestId("alert-dialog-action"));
+
+        await waitFor(() => expect(goto).toHaveBeenCalled());
+        // The dialog closes on success, so a wrongly reported error would only show when reopened
+        await openDialog(user);
+        expect(screen.queryByText("Couldn't Leave This Project")).not.toBeInTheDocument();
     });
 });

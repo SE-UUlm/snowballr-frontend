@@ -6,14 +6,13 @@
         paperDecisionButtonVariants,
     } from "$lib/components/composites/paper-components/paper-view/decision-button-variants";
     import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
-    import { backendService } from "$lib/grpc-api";
-    import { type Review, type Review_Create, ReviewDecision } from "snowballr-api/review";
+    import { createReview } from "$lib/api/review";
+    import { type Review, ReviewDecision, type Project, type Project_Paper } from "$lib/api/types";
     import { getSelectedReviewCriteriaContext } from "$lib/custom-context/selected-review-criteria-context";
     import { toast } from "svelte-sonner";
     import { loadingWrapper } from "$lib/utils/common-helper";
     import { shortcut, type ShortcutEventDetail, type ShortcutTrigger } from "@svelte-put/shortcut";
     import { navigatePaper } from "$lib/utils/paper-navigation";
-    import type { Project, Project_Paper } from "snowballr-api/project";
     import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
     import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
 
@@ -114,40 +113,48 @@
      *
      * While the review is submitted, all decision buttons on this paper view page are disabled
      * and a loading spinner is shown. After the review was submitted, a confirmation toast is shown.
+     * If submitting fails, the buttons are enabled again and this button looks as before.
      */
     async function submitReview() {
+        const previousVariant = variant;
+        isSubmittingReview.value = true;
+        projectPaperLoading.isLoading = true;
         try {
-            isSubmittingReview.value = true;
-            projectPaperLoading.isLoading = true;
             const paper = await loadingProjectPaper;
-            const review: Review_Create = {
-                projectPaperId: paper!.id,
-                decision: getDecision(),
-                selectedCriteriaIds: selectedReviewCriteriaState.criteria,
-            };
+            // The decision depends on the variant, so it is read before the variant changes.
+            const decision = getDecision();
             variant = "selected_" + variant;
-            await backendService
-                .createReview(review)
-                .response.then((review) => (userReview = review));
-            isSubmittingReview.value = false;
-            toast.success("Successfully submitted a review.");
-            await navigatePaper(
-                "right",
-                loadingProjectPaper,
-                paperQueue,
-                loadingProject,
-                nextProjectPaper,
-                undefined,
+            userReview = await createReview(
+                paper!.id,
+                decision,
+                selectedReviewCriteriaState.criteria,
             );
-            if (!nextProjectPaper) {
-                toast.info("No more papers to review.");
-            }
-            projectPaperLoading.isLoading = false;
         } catch (err) {
+            variant = previousVariant;
+            projectPaperLoading.isLoading = false;
             toast.error("Could not submit the review!", {
                 description: "Please check your connection to the server.",
             });
             console.error("Could not submit the review:", err);
+            return;
+        } finally {
+            isSubmittingReview.value = false;
+        }
+
+        toast.success("Successfully submitted a review.");
+        // Read before navigating: the navigation button clears the bound value once the next paper loads
+        const next = nextProjectPaper;
+        try {
+            await navigatePaper("right", loadingProjectPaper, paperQueue, loadingProject, next);
+            if (!next) {
+                toast.info("No more papers to review.");
+            }
+        } catch (err) {
+            // The review was submitted already, so only the navigation failed.
+            toast.error("Could not open the next paper.");
+            console.error("Could not navigate to the next paper:", err);
+        } finally {
+            projectPaperLoading.isLoading = false;
         }
     }
 
@@ -165,7 +172,8 @@
 
                 loadingWrapper(showLoadingSpinner, submitReview, {});
             },
-            enabled: !wasAlreadyReviewed && !showLoadingSpinner.value,
+            // Same conditions as the button, so the shortcut can't submit what a click can't
+            enabled: !isDisabled,
         },
     }}
 />

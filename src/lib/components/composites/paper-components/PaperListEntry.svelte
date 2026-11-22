@@ -2,8 +2,8 @@
     import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
     import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
-    import { backendService } from "$lib/grpc-api";
-    import type { User } from "snowballr-api/user";
+    import { getUserById } from "$lib/api/user";
+    import type { User, Paper, Project_Paper } from "$lib/api/types";
     import {
         getDisplayPaperId,
         getStatusColor,
@@ -12,8 +12,6 @@
     import { cn } from "$lib/utils/shadcn-helper";
     import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
     import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import type { Paper } from "snowballr-api/paper";
-    import type { Project_Paper } from "snowballr-api/project";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
     import Link from "$lib/components/composites/link/Link.svelte";
@@ -48,7 +46,7 @@
     async function getReviewUserById(id: string): Promise<User | undefined> {
         let reviewingUser: undefined | User = undefined;
         try {
-            reviewingUser = await backendService.getUserById({ id: id }).response;
+            reviewingUser = await getUserById(id);
         } catch (error) {
             console.error(`Couldn't load review user with: ${id} (error: ${error})`);
         }

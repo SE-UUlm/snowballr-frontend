@@ -3,7 +3,8 @@ import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherAddDialog from "$lib/components/composites/settings/fetcher/FetcherAddDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import type { FetcherInformation } from "snowballr-api/fetcher";
-import type { Fetchers, SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+import type { Fetchers } from "$lib/api/fetcher";
 
 describe("FetcherAddDialog", () => {
     beforeEach(() => vi.clearAllMocks());

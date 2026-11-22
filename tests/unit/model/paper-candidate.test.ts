@@ -11,9 +11,7 @@ import {
     type PaperCandidate,
 } from "$lib/model/paper-candidate";
 import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { backendService } from "$lib/grpc-api";
-import type { ISnowballRClient } from "snowballr-api/main.client";
-import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
+import { client } from "$lib/api/client";
 import { toast } from "svelte-sonner";
 
 vi.mock("svelte-sonner", () => ({
@@ -35,22 +33,6 @@ function newPaper(title: string, overrides: Partial<Paper> = {}): Paper {
 
 function doi(value: string) {
     return { type: "DOI", displayType: "DOI", value };
-}
-
-/**
- * Mocks an API call to reject with a specific error object.
- *
- * `mockFailedApiCall` rejects with a plain `Error`, which carries no gRPC status code, so it cannot
- * express an `ALREADY_EXISTS` response.
- */
-function mockRejectedApiCall<T extends keyof ISnowballRClient>(methodName: T, error: unknown) {
-    return (backendService[methodName] as Mock)
-        .mockClear()
-        .mockImplementation(() => ({ response: Promise.reject(error) }));
-}
-
-function rpcError(code: string, message = "rpc failed") {
-    return Object.assign(new Error(message), { code });
 }
 
 beforeEach(() => {
@@ -167,11 +149,11 @@ describe("searchPaperCandidates", () => {
             includeFetchers: false,
         });
 
-        expect(backendService.searchLocalProjectPaperCandidates).toHaveBeenCalledWith({
+        expect(client.searchLocalProjectPaperCandidates).toHaveBeenCalledWith({
             query: "query",
             projectId: PROJECT_ID,
         });
-        expect(backendService.searchFetcherProjectPaperCandidates).not.toHaveBeenCalled();
+        expect(client.searchFetcherProjectPaperCandidates).not.toHaveBeenCalled();
     });
 
     test("When only the fetcher source is requested, then the local database is not searched", async () => {
@@ -180,8 +162,8 @@ describe("searchPaperCandidates", () => {
             includeFetchers: true,
         });
 
-        expect(backendService.searchFetcherProjectPaperCandidates).toHaveBeenCalled();
-        expect(backendService.searchLocalProjectPaperCandidates).not.toHaveBeenCalled();
+        expect(client.searchFetcherProjectPaperCandidates).toHaveBeenCalled();
+        expect(client.searchLocalProjectPaperCandidates).not.toHaveBeenCalled();
     });
 
     test("When both sources return papers, then they are merged", async () => {
@@ -234,6 +216,19 @@ describe("searchPaperCandidates", () => {
 
         expect(result.candidates).toEqual([]);
         expect(result.error).toBeDefined();
+    });
+
+    test("When a search is cancelled, then no error is reported", async () => {
+        mockApiCall("searchLocalProjectPaperCandidates", { papers: [localPaper("1")] });
+        mockFailedApiCall("searchFetcherProjectPaperCandidates", "cancelled", "CANCELLED");
+
+        const result = await searchPaperCandidates("query", PROJECT_ID, {
+            includeLocal: true,
+            includeFetchers: true,
+        });
+
+        expect(result.candidates.map((it) => it.paper.title)).toEqual(["Local 1"]);
+        expect(result.error).toBeUndefined();
     });
 
     test("When both sources fail, then the empty list is not blamed on the query", async () => {
@@ -291,14 +286,14 @@ describe("addPaperCandidates", () => {
     test("When a candidate is already in the database, then it is not created again", async () => {
         const summary = await addPaperCandidates([known], TARGET);
 
-        expect(backendService.createPaper).not.toHaveBeenCalled();
+        expect(client.createPaper).not.toHaveBeenCalled();
         expect(summary).toEqual({ added: 1, failed: [] });
     });
 
     test("When a candidate is added, then it lands in the requested project and stage", async () => {
         await addPaperCandidates([known], TARGET);
 
-        expect(backendService.addPaperToProject).toHaveBeenCalledWith({
+        expect(client.addPaperToProject).toHaveBeenCalledWith({
             paperId: "42",
             projectId: PROJECT_ID,
             stage: 3n,
@@ -310,8 +305,8 @@ describe("addPaperCandidates", () => {
 
         const summary = await addPaperCandidates([fresh], TARGET);
 
-        expect(backendService.createPaper).toHaveBeenCalledWith(fresh.paper);
-        expect(backendService.addPaperToProject).toHaveBeenCalledWith({
+        expect(client.createPaper).toHaveBeenCalledWith(fresh.paper);
+        expect(client.addPaperToProject).toHaveBeenCalledWith({
             paperId: "created-1",
             projectId: PROJECT_ID,
             stage: 3n,
@@ -322,21 +317,21 @@ describe("addPaperCandidates", () => {
     // Another user may create the same paper between the search and the add, so a paper that already
     // exists is what we wanted, not a failure.
     test("When creating a paper reports that it already exists, then it counts as success", async () => {
-        mockRejectedApiCall("createPaper", rpcError(GrpcStatusCode[GrpcStatusCode.ALREADY_EXISTS]));
+        mockFailedApiCall("createPaper", "rpc failed", "ALREADY_EXISTS");
 
         const summary = await addPaperCandidates([fresh], TARGET);
 
         expect(summary).toEqual({ added: 1, failed: [] });
-        expect(backendService.addPaperToProject).toHaveBeenCalled();
+        expect(client.addPaperToProject).toHaveBeenCalled();
     });
 
     test("When creating a paper fails for another reason, then it is reported as a create failure", async () => {
-        mockRejectedApiCall("createPaper", rpcError(GrpcStatusCode[GrpcStatusCode.INTERNAL]));
+        mockFailedApiCall("createPaper", "rpc failed", "INTERNAL");
 
         const summary = await addPaperCandidates([fresh], TARGET);
 
         expect(summary).toEqual({ added: 0, failed: [{ candidate: fresh, step: "create" }] });
-        expect(backendService.addPaperToProject).not.toHaveBeenCalled();
+        expect(client.addPaperToProject).not.toHaveBeenCalled();
         expect(toast.error).toHaveBeenCalledWith("Paper 'Fresh' could not be created.");
     });
 
@@ -349,11 +344,21 @@ describe("addPaperCandidates", () => {
         expect(toast.error).toHaveBeenCalledWith("Paper 'Local 42' could not be added.");
     });
 
+    // Another user may add the same paper to the project between the search and the add.
+    test("When the paper is already in the project, then it counts as added", async () => {
+        mockFailedApiCall("addPaperToProject", "rpc failed", "ALREADY_EXISTS");
+
+        const summary = await addPaperCandidates([known], TARGET);
+
+        expect(summary).toEqual({ added: 1, failed: [] });
+        expect(toast.error).not.toHaveBeenCalled();
+    });
+
     test("When one candidate fails, then the rest of the batch is still added", async () => {
         const first: PaperCandidate = { paper: localPaper("1"), key: "1", isNew: false };
         const second: PaperCandidate = { paper: localPaper("2"), key: "2", isNew: false };
         const third: PaperCandidate = { paper: localPaper("3"), key: "3", isNew: false };
-        (backendService.addPaperToProject as Mock)
+        (client.addPaperToProject as Mock)
             .mockClear()
             .mockImplementation(({ paperId }) =>
                 paperId === "2"
@@ -370,7 +375,7 @@ describe("addPaperCandidates", () => {
     test("When only some candidates land, then the success message counts those", async () => {
         const first: PaperCandidate = { paper: localPaper("1"), key: "1", isNew: false };
         const second: PaperCandidate = { paper: localPaper("2"), key: "2", isNew: false };
-        (backendService.addPaperToProject as Mock)
+        (client.addPaperToProject as Mock)
             .mockClear()
             .mockImplementation(({ paperId }) =>
                 paperId === "2"
@@ -404,7 +409,7 @@ describe("addPaperCandidates", () => {
         const summary = await addPaperCandidates([], TARGET);
 
         expect(summary).toEqual({ added: 0, failed: [] });
-        expect(backendService.addPaperToProject).not.toHaveBeenCalled();
+        expect(client.addPaperToProject).not.toHaveBeenCalled();
         expect(toast.success).not.toHaveBeenCalled();
     });
 });

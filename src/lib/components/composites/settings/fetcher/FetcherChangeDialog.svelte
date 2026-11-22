@@ -5,11 +5,12 @@
     import { type ActionError } from "$lib/model/action-error";
     import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
     import FetcherInformationView from "./FetcherInformationView.svelte";
-    import { FetcherInformation } from "snowballr-api/fetcher";
+    import { FetcherInformation } from "$lib/api/types";
     import { cn } from "$lib/utils/shadcn-helper";
     import { buttonVariants, type ButtonVariant } from "$lib/components/primitives/button";
     import type { Snippet } from "svelte";
-    import type { Fetchers, SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "./fetcher";
+    import type { Fetchers } from "$lib/api/fetcher";
 
     interface Props {
         label: string;

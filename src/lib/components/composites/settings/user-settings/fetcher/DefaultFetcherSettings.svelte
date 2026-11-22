@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { backendService } from "$lib/grpc-api";
-    import { UserSettings } from "snowballr-api/user_settings";
+    import { getAvailableFetchers } from "$lib/api/fetcher";
+    import { getUserSettings } from "$lib/api/user";
+    import type { FetcherInformation, UserSettings } from "$lib/api/types";
     import { onMount } from "svelte";
     import { createActionError, type ActionError } from "$lib/model/action-error";
-    import type { FetcherInformation } from "snowballr-api/fetcher";
     import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
     import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
     import { updateDefaultFetchers } from "./update-default-fetchers";
@@ -14,44 +14,18 @@
     let userSettings: UserSettings | undefined = $state();
 
     let availableFetchers: FetcherInformation[] = $state([]);
-    let usedFetchers: FetcherInformation[] = $state([]);
-    let unusedFetchers = $derived(
-        availableFetchers.filter((it) => usedFetchers.map((f) => f.id).indexOf(it.id) === -1),
-    );
-
-    async function loadDefaultFetcherSettings(loadedUserSettings: UserSettings) {
-        loading = true;
-        userSettings = loadedUserSettings;
-        availableFetchers = await backendService
-            .getAvailableFetchers({})
-            .response.then((it) => it.fetchers)
-            .catch((error) => {
-                loadError = createActionError(
-                    "Failed to Retrieve available Fetchers",
-                    {
-                        action: "retrieving the available fetchers",
-                    },
-                    error,
-                );
-                return [];
-            });
-        usedFetchers = availableFetchers.filter(
-            (it) =>
-                Object.keys(userSettings?.defaultProjectSettings?.fetchers || {}).indexOf(it.id) !==
-                -1,
-        );
-        loading = false;
-        initialized = true;
-    }
 
     onMount(async () => {
         loading = true;
 
         loadError = undefined;
-        await backendService
-            .getUserSettings({})
-            .response.then(loadDefaultFetcherSettings)
-            .catch((error) => {
+        await Promise.all([getUserSettings(), getAvailableFetchers()]).then(
+            ([loadedUserSettings, loadedFetchers]) => {
+                userSettings = loadedUserSettings;
+                availableFetchers = loadedFetchers;
+                initialized = true;
+            },
+            (error) => {
                 loadError = createActionError(
                     "Failed to Load your Default Fetcher Settings",
                     {
@@ -59,7 +33,8 @@
                     },
                     error,
                 );
-            });
+            },
+        );
 
         loading = false;
     });
@@ -69,7 +44,7 @@
             fetchers,
             (updatedUserSettings) => {
                 onSuccess();
-                loadDefaultFetcherSettings(updatedUserSettings);
+                userSettings = updatedUserSettings;
             },
             onError,
         );
@@ -94,6 +69,4 @@ Usage:
     {loading}
     onSave={saveFetchers}
     sectionTitle="Default Fetcher Settings"
-    {unusedFetchers}
-    {usedFetchers}
 />
