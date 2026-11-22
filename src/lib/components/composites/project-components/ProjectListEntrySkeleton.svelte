@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Progress } from "$lib/components/primitives/progress";
-    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import { Progress } from "#lib/components/primitives/progress/index.js";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
 </script>
 
 <div

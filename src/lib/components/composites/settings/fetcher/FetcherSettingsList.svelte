@@ -1,14 +1,14 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import FetcherOptionsDialog from "./FetcherOptionsDialog.svelte";
-    import FetcherAddDialog from "./FetcherAddDialog.svelte";
-    import FetcherRemovalDialog from "./FetcherRemovalDialog.svelte";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import type { ActionError } from "$lib/model/action-error";
-    import type { FetcherInformation } from "$lib/api/types";
-    import type { SaveFetchers } from "./fetcher";
-    import type { Fetchers } from "$lib/api/fetcher";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
+    import FetcherOptionsDialog from "#lib/components/composites/settings/fetcher/FetcherOptionsDialog.svelte";
+    import FetcherAddDialog from "#lib/components/composites/settings/fetcher/FetcherAddDialog.svelte";
+    import FetcherRemovalDialog from "#lib/components/composites/settings/fetcher/FetcherRemovalDialog.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import type { ActionError } from "#lib/model/action-error.js";
+    import type { FetcherInformation } from "#lib/api/types.js";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
+    import type { Fetchers } from "#lib/api/fetcher.js";
 
     interface Props {
         sectionTitle: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import PaperView from "#lib/components/composites/paper-components/paper-view/PaperView.svelte";
 
     const { data } = $props();
     const { loadingPaper, backwardReferencedPapers, forwardReferencedPapers } = $derived(data);

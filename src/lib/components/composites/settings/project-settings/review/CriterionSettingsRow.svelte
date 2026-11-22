@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { Button } from "$lib/components/primitives/button";
-    import { Input } from "$lib/components/primitives/input";
-    import { Label } from "$lib/components/primitives/label";
+    import { Button } from "#lib/components/primitives/button/index.js";
+    import { Input } from "#lib/components/primitives/input/index.js";
+    import { Label } from "#lib/components/primitives/label/index.js";
     import {
         getDraftStatus,
         validateDraft,
         type CriterionDraft,
         type CriterionFields,
-    } from "$lib/model/criteria-draft";
-    import { cn } from "$lib/utils/shadcn-helper";
+    } from "#lib/model/criteria-draft.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Trash from "@lucide/svelte/icons/trash";
     import Undo2 from "@lucide/svelte/icons/undo-2";

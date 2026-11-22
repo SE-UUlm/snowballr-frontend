@@ -1,11 +1,11 @@
-import { test as base } from "../utils/fixtures/isolated-fixture";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { CreateProjectDialogModel } from "$tests/e2e/homepage/create-project-dialog-model";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { CreateProjectDialogModel } from "#tests/e2e/homepage/create-project-dialog-model.js";
 import { expect } from "@playwright/test";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
-import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { ProjectDashboardPageModel } from "#tests/e2e/project/dashboard/project-dashboard-page-model.js";
+import { ProjectPapersPageModel } from "#tests/e2e/project/papers/project-papers-page-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
 
 type HomePageFixtures = {
     homePage: HomePageModel;

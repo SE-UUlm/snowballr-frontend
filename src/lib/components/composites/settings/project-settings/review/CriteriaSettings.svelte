@@ -4,16 +4,16 @@
         deleteCriterion,
         listCriteria,
         updateCriterion,
-    } from "$lib/api/criterion";
-    import { isApiError } from "$lib/api/errors";
-    import { CriterionCategory, type Criterion } from "$lib/api/types";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import { Button } from "$lib/components/primitives/button";
-    import { Skeleton } from "$lib/components/primitives/skeleton";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
+    } from "#lib/api/criterion.js";
+    import { isApiError } from "#lib/api/errors.js";
+    import { CriterionCategory, type Criterion } from "#lib/api/types.js";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { Button } from "#lib/components/primitives/button/index.js";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import {
         collectChanges,
         countChanges,
@@ -22,12 +22,12 @@
         toDraft,
         type CriterionDraft,
         type CriterionFields,
-    } from "$lib/model/criteria-draft";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    } from "#lib/model/criteria-draft.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import Plus from "@lucide/svelte/icons/plus";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
-    import CriterionSettingsRow from "./CriterionSettingsRow.svelte";
+    import CriterionSettingsRow from "#lib/components/composites/settings/project-settings/review/CriterionSettingsRow.svelte";
 
     interface Props {
         projectId: string;

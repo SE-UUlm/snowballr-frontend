@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LeaveProjectDialog from "./LeaveProjectDialog.svelte";
+    import LeaveProjectDialog from "#lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
 
     interface Props {
         projectId: string;

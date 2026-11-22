@@ -1,9 +1,9 @@
 <script lang="ts">
-    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import type { User } from "$lib/api/types";
-    import type { SelectOption } from "$lib/model/select-option";
-    import { resource } from "$lib/resource.svelte";
-    import { getName } from "$lib/utils/common-helper";
+    import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
+    import type { User } from "#lib/api/types.js";
+    import type { SelectOption } from "#lib/model/select-option.js";
+    import { resource } from "#lib/resource.svelte.js";
+    import { getName } from "#lib/utils/common-helper.js";
 
     interface Props {
         loadingReviewers: Promise<User[]>;

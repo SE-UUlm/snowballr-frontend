@@ -1,9 +1,9 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
-import { VerifyEmailPageModel } from "$tests/e2e/auth/verifyemail/verifyemail-page.model";
-import { AcceptProjectInvitationPageModel } from "$tests/e2e/auth/acceptprojectinvitation/acceptprojectinvitation-page.model";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
+import { VerifyEmailPageModel } from "#tests/e2e/auth/verifyemail/verifyemail-page.model.js";
+import { AcceptProjectInvitationPageModel } from "#tests/e2e/auth/acceptprojectinvitation/acceptprojectinvitation-page.model.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
 
 test.describe("Authentication pages", () => {
     test.use({ user: null });

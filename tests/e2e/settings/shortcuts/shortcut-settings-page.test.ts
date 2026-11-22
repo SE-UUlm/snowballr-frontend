@@ -1,6 +1,6 @@
-import { test } from "./shortcuts-setting-page-fixture";
+import { test } from "#tests/e2e/settings/shortcuts/shortcuts-setting-page-fixture.js";
 import { expect } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 
 test.describe("Shortcuts Settings Navigation", () => {
     test("When navigating to the shortcuts settings, then the page is displayed", async ({

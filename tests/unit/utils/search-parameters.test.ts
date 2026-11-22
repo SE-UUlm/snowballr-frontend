@@ -7,10 +7,10 @@ import {
     updateFiltersParam,
     updateSearchTextParam,
     updateSortParams,
-} from "$lib/utils/search-parameters";
+} from "#lib/utils/search-parameters.js";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
-import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
+import { SortCriteria, SortDirection } from "#lib/model/sort-criteria.js";
 
 /**
  * Sets the search part of the mocked `page.url`.

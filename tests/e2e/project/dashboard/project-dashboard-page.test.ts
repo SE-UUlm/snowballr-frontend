@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./project-dashboard-page-fixture";
+import { test } from "#tests/e2e/project/dashboard/project-dashboard-page-fixture.js";
 
 test.describe("Project Dashboard Navigation", () => {
     test("When navigating to the project dashboard, then the page is displayed.", async ({

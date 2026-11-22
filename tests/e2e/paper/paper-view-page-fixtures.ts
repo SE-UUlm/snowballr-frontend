@@ -1,11 +1,11 @@
-import { test as base } from "../utils/fixtures/isolated-fixture";
-import { PaperViewPageModel } from "$tests/e2e/paper/paper-view-page-model";
-import { createPaper } from "$tests/model-builder";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
+import { PaperViewPageModel } from "#tests/e2e/paper/paper-view-page-model.js";
+import { createPaper } from "#tests/model-builder.js";
 import { expect } from "@playwright/test";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
-import { ReadingListPageModel } from "$tests/e2e/readinglist/reading-list-page-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
+import { ReadingListPageModel } from "#tests/e2e/readinglist/reading-list-page-model.js";
 import type { Project } from "snowballr-api/project";
 import type { Paper } from "snowballr-api/paper";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { logout } from "$lib/api/auth";
+    import { logout } from "#lib/api/auth.js";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
     import { resolve } from "$app/paths";

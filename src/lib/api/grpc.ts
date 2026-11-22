@@ -2,7 +2,7 @@
 // call of the generated client in `call`, which turns a gRPC failure into an ApiError. The REST
 // client replaces this file, while errors.ts stays as it is.
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { ApiError, type ApiErrorKind } from "./errors";
+import { ApiError, type ApiErrorKind } from "#lib/api/errors.js";
 
 const KIND_BY_GRPC_STATUS: Partial<Record<GrpcStatusCode, ApiErrorKind>> = {
     [GrpcStatusCode.UNAUTHENTICATED]: "unauthenticated",

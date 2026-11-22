@@ -1,9 +1,14 @@
 <script lang="ts">
-    import PaperNavigationButton from "./PaperNavigationButton.svelte";
-    import { type Project, type Project_Paper, type Review, ReviewDecision } from "$lib/api/types";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
-    import type { PaperDecisionButtonVariant } from "./decision-button-variants";
+    import PaperNavigationButton from "#lib/components/composites/paper-components/paper-view/PaperNavigationButton.svelte";
+    import {
+        type Project,
+        type Project_Paper,
+        type Review,
+        ReviewDecision,
+    } from "#lib/api/types.js";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+    import PaperDecisionButton from "#lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
+    import type { PaperDecisionButtonVariant } from "#lib/components/composites/paper-components/paper-view/decision-button-variants.js";
 
     export type ButtonBarProps = {
         userReview?: Review;

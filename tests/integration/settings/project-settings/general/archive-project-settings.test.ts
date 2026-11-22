@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { Projects } from "$tests/example-data";
+import { Projects } from "#tests/example-data.js";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall } from "$tests/setupTest";
-import { createProject } from "$tests/model-builder";
-import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
+import { mockApiCall } from "#tests/setupTest.js";
+import { createProject } from "#tests/model-builder.js";
+import ArchiveProjectSettings from "#lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
 import { ProjectStatus } from "snowballr-api/project";
-import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
-import { refreshProject } from "$lib/model/cache/project-cache";
+import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
+import { refreshProject } from "#lib/model/cache/project-cache.js";
 
-vi.mock("$lib/model/cache/project-cache", () => ({
+vi.mock("#lib/model/cache/project-cache.js", () => ({
     refreshProject: vi.fn(() => Promise.resolve()),
 }));
 

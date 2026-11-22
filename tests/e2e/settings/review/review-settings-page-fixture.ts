@@ -1,13 +1,13 @@
 import { expect } from "@playwright/test";
-import { test as base } from "../../utils/fixtures/shared-fixture";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
-import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
+import { ReviewSettingsPageModel } from "#tests/e2e/settings/review/review-settings-page-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
 import type { Project } from "snowballr-api/project";
 import type { Paper } from "snowballr-api/paper";
-import { createPaper } from "$tests/model-builder";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
+import { createPaper } from "#tests/model-builder.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
 
 type ReviewSettingsPageFixtures = {
     reviewSettingsPage: ReviewSettingsPageModel;

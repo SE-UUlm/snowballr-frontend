@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
-import { test } from "./project-setup-settings-page-fixture";
-import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
+import { test } from "#tests/e2e/settings/projectsetup/project-setup-settings-page-fixture.js";
+import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
 
 const fetcherName = "Semantic Scholar";
 

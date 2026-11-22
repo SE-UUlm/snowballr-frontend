@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import ExportProjectSettings from "$lib/components/composites/settings/project-settings/general/ExportProjectSettings.svelte";
-import { Projects } from "$tests/example-data";
+import ExportProjectSettings from "#lib/components/composites/settings/project-settings/general/ExportProjectSettings.svelte";
+import { Projects } from "#tests/example-data.js";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("ExportProjectSettings", () => {
     test("When all props are provided, then it renders correctly", async () => {

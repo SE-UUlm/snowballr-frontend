@@ -1,4 +1,4 @@
-import { test } from "./project-paper-view-page-fixtures";
+import { test } from "#tests/e2e/project/paper/project-paper-view-page-fixtures.js";
 import { expect } from "@playwright/test";
 import { ReviewDecision } from "snowballr-api/review";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import PaperCard from "$lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
-    import PaperCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
+    import PaperCard from "#lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
+    import PaperCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
 
     interface Props {
         tabs: {

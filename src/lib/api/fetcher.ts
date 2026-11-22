@@ -1,7 +1,7 @@
 import { Nothing } from "snowballr-api/base";
 import type { FetcherInformation, FetcherOptions } from "snowballr-api/fetcher";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 export type Fetchers = { [key: string]: FetcherOptions };
 

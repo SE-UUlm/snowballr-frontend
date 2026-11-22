@@ -1,6 +1,6 @@
 import type { User } from "snowballr-api/user";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Invites a user to a project by email. The backend sends the invitation email.

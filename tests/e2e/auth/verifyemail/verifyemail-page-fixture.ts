@@ -1,7 +1,7 @@
-import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { VerifyEmailPageModel } from "./verifyemail-page.model";
-import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
+import { VerifyEmailPageModel } from "#tests/e2e/auth/verifyemail/verifyemail-page.model.js";
+import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
 
 type VerifyEmailPageFixtures = {
     verifyEmailPage: VerifyEmailPageModel;

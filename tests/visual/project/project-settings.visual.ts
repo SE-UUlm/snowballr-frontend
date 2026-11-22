@@ -1,11 +1,11 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { expandViewportToFitScrollAreas, gotoAndSettle } from "$tests/visual/utils/helper";
-import { ProjectGeneralSettingsPageModel } from "$tests/e2e/project/settings/general/project-general-settings-page-model";
-import { ProjectMemberSettingsPageModel } from "$tests/e2e/project/settings/members/models/project-member-settings-page-model";
-import { ProjectReviewSettingsPageModel } from "$tests/e2e/project/settings/review/project-review-settings-page-model";
-import { ProjectSLRSettingsPageModel } from "$tests/e2e/project/settings/slr/project-slr-settings-page-model";
-import { INVITED_USER_EMAIL } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { expandViewportToFitScrollAreas, gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { ProjectGeneralSettingsPageModel } from "#tests/e2e/project/settings/general/project-general-settings-page-model.js";
+import { ProjectMemberSettingsPageModel } from "#tests/e2e/project/settings/members/models/project-member-settings-page-model.js";
+import { ProjectReviewSettingsPageModel } from "#tests/e2e/project/settings/review/project-review-settings-page-model.js";
+import { ProjectSLRSettingsPageModel } from "#tests/e2e/project/settings/slr/project-slr-settings-page-model.js";
+import { INVITED_USER_EMAIL } from "#tests/visual/utils/visual-data.js";
 
 test.describe("Project settings", () => {
     test("When the general settings are opened, then all sections match the baseline", async ({

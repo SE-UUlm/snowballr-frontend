@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./signout-fixture";
+import { test } from "#tests/e2e/auth/signout/signout-fixture.js";
 
 test.describe("Sign Out Tests", () => {
     test("When the user clicks logout, then they are logged out and will thus be redirected to the sign-in page", async ({

@@ -1,8 +1,8 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import NamedList from "$lib/components/composites/list/NamedList.svelte";
+import NamedList from "#lib/components/composites/list/NamedList.svelte";
 import { createRawSnippet } from "svelte";
-import { waitForComponentLoading } from "../test-helper";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 
 const listItemSkeleton = createRawSnippet(() => {
     return { render: () => `<Skeleton class="h-5 w-20 rounded-full" data-testid="skeleton" />` };

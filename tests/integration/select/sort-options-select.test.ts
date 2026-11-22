@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import SortOptionsSelect from "$lib/components/composites/select/SortOptionsSelect.svelte";
+import SortOptionsSelect from "#lib/components/composites/select/SortOptionsSelect.svelte";
 
 describe("SortOptionsSelect", () => {
     beforeEach(() => {

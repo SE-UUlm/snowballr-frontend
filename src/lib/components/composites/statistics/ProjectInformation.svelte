@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton";
-    import { pluralize } from "$lib/utils/common-helper";
-    import ErrorIndicator from "$lib/components/composites/utils/ErrorIndicator.svelte";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
+    import { pluralize } from "#lib/utils/common-helper.js";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
 
     export interface ProjectInformationInterface {
         projectName: string;

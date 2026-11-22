@@ -1,5 +1,5 @@
-import type { Project } from "$lib/api/types";
-import { createPrimedCache, type ProjectLoadEvent } from "$lib/model/cache/primed-cache";
+import type { Project } from "#lib/api/types.js";
+import { createPrimedCache, type ProjectLoadEvent } from "#lib/model/cache/primed-cache.js";
 
 const projectCache = createPrimedCache<Project>("data:getProjectById");
 

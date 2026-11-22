@@ -6,7 +6,7 @@ import { CookieJar, Cookie } from "tough-cookie";
 import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
 import { Nothing } from "snowballr-api/base";
-import { MOCK_BACKEND_IMAGE } from "./mock-backend-version";
+import { MOCK_BACKEND_IMAGE } from "#tests/e2e/utils/helper/mock-backend-version.js";
 
 async function isDockerInstalled(): Promise<boolean> {
     return new Promise((resolve) => {

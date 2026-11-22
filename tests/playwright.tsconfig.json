@@ -1,0 +1,11 @@
+// Used by Playwright only (see `tsconfig` in playwright.config.ts and playwright.visual.config.ts).
+// Playwright runs the e2e and visual tests in plain Node, which resolves the subpath imports from package.json
+// literally, e.g. `#lib/foo.js` to `src/lib/foo.js`. These paths map them to the TypeScript sources instead.
+{
+    "compilerOptions": {
+        "paths": {
+            "#lib/*": ["../src/lib/*"],
+            "#tests/*": ["./*"]
+        }
+    }
+}

@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { expandViewportToFitScrollAreas, gotoAndSettle } from "$tests/visual/utils/helper";
-import { AccountSettingsPageModel } from "$tests/e2e/settings/account/account-settings-page-model";
-import { ProjectSetupSettingsPageModel } from "$tests/e2e/settings/projectsetup/project-setup-settings-page-model";
-import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";
-import { ShortcutsSettingsPageModel } from "$tests/e2e/settings/shortcuts/shortcuts-settings-page-model";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { expandViewportToFitScrollAreas, gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { AccountSettingsPageModel } from "#tests/e2e/settings/account/account-settings-page-model.js";
+import { ProjectSetupSettingsPageModel } from "#tests/e2e/settings/projectsetup/project-setup-settings-page-model.js";
+import { ReviewSettingsPageModel } from "#tests/e2e/settings/review/review-settings-page-model.js";
+import { ShortcutsSettingsPageModel } from "#tests/e2e/settings/shortcuts/shortcuts-settings-page-model.js";
 
 test.describe("User settings", () => {
     test("When the account settings are opened, then all sections match the baseline", async ({

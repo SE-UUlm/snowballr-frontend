@@ -1,9 +1,9 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Separator from "$lib/components/primitives/separator/separator.svelte";
-    import type { Project } from "$lib/api/types";
-    import DeleteProjectSettings from "./DeleteProjectSettings.svelte";
-    import LeaveProjectSettings from "./LeaveProjectSettings.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import Separator from "#lib/components/primitives/separator/separator.svelte";
+    import type { Project } from "#lib/api/types.js";
+    import DeleteProjectSettings from "#lib/components/composites/settings/project-settings/general/DeleteProjectSettings.svelte";
+    import LeaveProjectSettings from "#lib/components/composites/settings/project-settings/general/LeaveProjectSettings.svelte";
 
     interface Props {
         projectId: string;

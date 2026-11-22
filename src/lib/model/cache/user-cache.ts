@@ -1,5 +1,5 @@
 import { invalidate } from "$app/navigation";
-import type { User } from "$lib/api/types";
+import type { User } from "#lib/api/types.js";
 
 export const USER_DEPENDENCY_KEY = "data:getCurrentUser";
 

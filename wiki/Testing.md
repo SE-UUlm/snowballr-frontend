@@ -76,7 +76,7 @@ to test components and user interaction. For example, to test if a button is cli
 ```ts
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import MyComponent from "./MyComponent.svelte";
+import MyComponent from "#lib/components/composites/group/MyComponent.svelte";
 
 test("When the button is clicked, then the text should change", async () => {
   const user = userEvent.setup();
@@ -103,7 +103,7 @@ After opening a dialog or an alert dialog, `await waitForDialogFocus();` before 
 focus into itself one animation frame after it opens, and keystrokes typed before that frame are lost.
 
 Sometimes, it is necessary to test the interaction with the backend. For this, we mock API calls. The mocks replace
-the generated client in `$lib/api/client`, so the functions of the API layer (see
+the generated client in `#lib/api/client.js`, so the functions of the API layer (see
 [Backend Access](https://github.com/SE-UUlm/snowballr-frontend/wiki/Contributing#backend-access)) run unchanged in
 tests.
 

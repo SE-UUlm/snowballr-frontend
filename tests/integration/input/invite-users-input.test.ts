@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { Users } from "$tests/example-data";
+import { Users } from "#tests/example-data.js";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import InviteUsersInput from "$lib/components/composites/input/InviteUsersInput.svelte";
+import InviteUsersInput from "#lib/components/composites/input/InviteUsersInput.svelte";
 import userEvent from "@testing-library/user-event";
-import { getName } from "$lib/utils/common-helper";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { createUser } from "$tests/model-builder";
+import { getName } from "#lib/utils/common-helper.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { createUser } from "#tests/model-builder.js";
 
 describe("InviteUsersInput", () => {
     beforeEach(() => {

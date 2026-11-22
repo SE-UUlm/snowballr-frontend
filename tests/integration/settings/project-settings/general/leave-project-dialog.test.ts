@@ -1,11 +1,11 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
-import LeaveProjectDialog from "$lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { mockUserContext } from "../../../test-helper";
+import LeaveProjectDialog from "#lib/components/composites/settings/project-settings/general/LeaveProjectDialog.svelte";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { mockUserContext } from "#tests/integration/test-helper.js";
 import { goto } from "$app/navigation";
-import { Projects, Users } from "$tests/example-data";
+import { Projects, Users } from "#tests/example-data.js";
 
 describe("LeaveProjectDialog", () => {
     async function openDialog(user: UserEvent) {

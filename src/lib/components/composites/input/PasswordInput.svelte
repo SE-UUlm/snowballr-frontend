@@ -1,8 +1,8 @@
 <script lang="ts">
     import Eye from "@lucide/svelte/icons/eye";
     import EyeClosed from "@lucide/svelte/icons/eye-closed";
-    import { Schema } from "$lib/schemas";
-    import Input, { type InputProps } from "./Input.svelte";
+    import { Schema } from "#lib/schemas.js";
+    import Input, { type InputProps } from "#lib/components/composites/input/Input.svelte";
     import type { ResolvedPathname } from "$app/types";
 
     type Props = Omit<InputProps, "inputId" | "label" | "required" | "type"> & {

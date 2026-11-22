@@ -1,11 +1,11 @@
 <script lang="ts">
-    import SimpleNavigationBar from "$lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
-    import NamedList from "$lib/components/composites/list/NamedList.svelte";
-    import ProjectListEntry from "$lib/components/composites/project-components/ProjectListEntry.svelte";
-    import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
-    import PaperListEntrySkeleton from "$lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
-    import PaperListEntry from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-    import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
+    import SimpleNavigationBar from "#lib/components/composites/navigation-bar/SimpleNavigationBar.svelte";
+    import NamedList from "#lib/components/composites/list/NamedList.svelte";
+    import ProjectListEntry from "#lib/components/composites/project-components/ProjectListEntry.svelte";
+    import ProjectListEntrySkeleton from "#lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
+    import PaperListEntrySkeleton from "#lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
+    import PaperListEntry from "#lib/components/composites/paper-components/PaperListEntry.svelte";
+    import CreateProjectDialog from "#lib/components/composites/project-components/CreateProjectDialog.svelte";
 
     let { data } = $props();
     const { openReviews, projectsMetadata } = $derived(data);

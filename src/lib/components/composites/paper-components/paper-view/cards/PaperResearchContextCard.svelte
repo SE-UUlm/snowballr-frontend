@@ -1,16 +1,16 @@
 <script lang="ts">
     import PaperDecisionBanner, {
         type PaperDecisionBannerProps,
-    } from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
-    import { Separator } from "$lib/components/primitives/separator";
-    import type { Paper } from "$lib/api/types";
-    import PaperCard from "$lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
-    import PaperCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
-    import ReferencesCardContent from "$lib/components/composites/paper-components/paper-view/cards/ReferencesCardContent.svelte";
+    } from "#lib/components/composites/criteria/PaperDecisionBanner.svelte";
+    import { Separator } from "#lib/components/primitives/separator/index.js";
+    import type { Paper } from "#lib/api/types.js";
+    import PaperCard from "#lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
+    import PaperCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
+    import ReferencesCardContent from "#lib/components/composites/paper-components/paper-view/cards/ReferencesCardContent.svelte";
     import ReviewCriteriaList, {
         type ReviewCriteriaListProps,
-    } from "$lib/components/composites/paper-components/paper-view/cards/ReviewCriteriaList.svelte";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    } from "#lib/components/composites/paper-components/paper-view/cards/ReviewCriteriaList.svelte";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
     export type ProjectResearchContextCardProps = ReviewCriteriaListProps &
         PaperDecisionBannerProps;

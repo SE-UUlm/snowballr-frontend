@@ -10,14 +10,22 @@ import {
     createProjectPaper,
     createReview,
     createUser,
-} from "./model-builder";
-import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+} from "#tests/model-builder.js";
+import {
+    Criteria,
+    Members,
+    Papers,
+    ProjectPapers,
+    Projects,
+    Reviews,
+    Users,
+} from "#tests/example-data.js";
 import type { ISnowballRClient } from "snowballr-api/main.client";
 import { RpcError, type RpcStatus, type UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { PaperDecision } from "snowballr-api/project";
 import { AuthenticationStatus } from "snowballr-api/authentication";
-import { client } from "$lib/api/client";
+import { client } from "#lib/api/client.js";
 import ResizeObserver from "resize-observer-polyfill";
 
 type PublicEnvironment = typeof import("$app/env/public");
@@ -115,7 +123,7 @@ global.ResizeObserver = ResizeObserver;
  * Mock of the {@link UnaryCall}.
  *
  * Only mocks the `response` and `status` properties and ignores other properties of the
- * `UnaryCall`. `call` from `$lib/api/grpc` awaits both. Build it with {@link mockUnaryCall}.
+ * `UnaryCall`. `call` from `#lib/api/grpc.js` awaits both. Build it with {@link mockUnaryCall}.
  */
 interface MockUnaryCall<T> {
     response: Promise<T>;
@@ -206,8 +214,8 @@ export async function getReturnValue<T>(fn: MockInstance): Promise<T> {
 // It is not necessary to mock all the API calls, only the ones that are used in the test.
 // See `invite-users-dialog.test.ts` for an example of how to override the mock.
 // The mock replaces the generated client underneath the API layer, so the domain functions in
-// `$lib/api/` run for real in tests.
-vi.mock("$lib/api/client", () => {
+// `#lib/api/` run for real in tests.
+vi.mock("#lib/api/client.js", () => {
     const mockBackend: { client: MockApi } = {
         client: {
             getAvailableFetchers: mock({

@@ -1,8 +1,11 @@
-import CriteriaList from "$lib/components/composites/criteria/CriteriaList.svelte";
+import CriteriaList from "#lib/components/composites/criteria/CriteriaList.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createReviewedCriterion, loading } from "../../model-builder";
-import { mockSelectedCriteriaContext, waitForComponentLoading } from "../test-helper";
+import { createReviewedCriterion, loading } from "#tests/model-builder.js";
+import {
+    mockSelectedCriteriaContext,
+    waitForComponentLoading,
+} from "#tests/integration/test-helper.js";
 
 describe("CriteriaList", () => {
     test("When props are provided, then the component is shown", async () => {

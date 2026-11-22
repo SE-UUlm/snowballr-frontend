@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { getAvailableFetchers } from "$lib/api/fetcher";
-    import { Project, Project_Settings, type FetcherInformation } from "$lib/api/types";
+    import { getAvailableFetchers } from "#lib/api/fetcher.js";
+    import { Project, Project_Settings, type FetcherInformation } from "#lib/api/types.js";
     import { onMount } from "svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
-    import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
-    import { updateFetchers } from "./update-fetchers";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
+    import { updateFetchers } from "#lib/components/composites/settings/project-settings/slr/fetcher/update-fetchers.js";
 
     interface Props {
         slrSettingsLocked?: boolean;

@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { Projects } from "$tests/example-data";
-import { loading } from "$tests/model-builder";
-import { mockUserContext } from "../../../test-helper";
-import DangerZoneSettings from "$lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
+import { Projects } from "#tests/example-data.js";
+import { loading } from "#tests/model-builder.js";
+import { mockUserContext } from "#tests/integration/test-helper.js";
+import DangerZoneSettings from "#lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
 
 describe("DangerZoneSettings", () => {
     test("When a project is provided, then it renders correctly", async () => {

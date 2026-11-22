@@ -7,8 +7,8 @@ import {
     suggestTag,
     toDraft,
     validateDraft,
-} from "$lib/model/criteria-draft";
-import { createCriterion } from "$tests/model-builder";
+} from "#lib/model/criteria-draft.js";
+import { createCriterion } from "#tests/model-builder.js";
 
 const exclusion = (id: string, tag: string) =>
     toDraft(

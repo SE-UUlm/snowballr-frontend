@@ -1,4 +1,4 @@
-import { test } from "./project-general-settings-page-fixture";
+import { test } from "#tests/e2e/project/settings/general/project-general-settings-page-fixture.js";
 import { expect } from "@playwright/test";
 
 test.describe("Project Name Settings Navigation", () => {

@@ -1,10 +1,13 @@
-import PaperDetailsCard from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
+import PaperDetailsCard from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCard.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { loading, createPaper, createProjectPaper } from "../../../../model-builder";
-import { mockIsProjectArchivedContext, waitForComponentLoading } from "../../../test-helper";
+import { loading, createPaper, createProjectPaper } from "#tests/model-builder.js";
+import {
+    mockIsProjectArchivedContext,
+    waitForComponentLoading,
+} from "#tests/integration/test-helper.js";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { type ISnowballRClient } from "snowballr-api/main.client";
 import { Paper } from "snowballr-api/paper";
 

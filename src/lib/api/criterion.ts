@@ -1,6 +1,6 @@
 import type { Criterion, CriterionCategory } from "snowballr-api/criterion";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /** The fields of a criterion that can be changed after it was created. */
 export type CriterionFields = Pick<Criterion, "tag" | "name" | "description">;

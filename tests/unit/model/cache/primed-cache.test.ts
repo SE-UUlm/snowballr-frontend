@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
 import { invalidate } from "$app/navigation";
-import { createPrimedCache, type PrimedCache } from "$lib/model/cache/primed-cache";
+import { createPrimedCache, type PrimedCache } from "#lib/model/cache/primed-cache.js";
 
 vi.mock("$app/navigation", () => ({
     invalidate: vi.fn(() => Promise.resolve()),

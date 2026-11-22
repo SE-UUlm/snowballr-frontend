@@ -1,11 +1,11 @@
-import { test as base } from "../../../utils/fixtures/shared-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import { expect } from "@playwright/test";
-import { createPaper } from "$tests/model-builder";
-import { ProjectSLRSettingsPageModel } from "$tests/e2e/project/settings/slr/project-slr-settings-page-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
+import { createPaper } from "#tests/model-builder.js";
+import { ProjectSLRSettingsPageModel } from "#tests/e2e/project/settings/slr/project-slr-settings-page-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ProjectSettingsSidebarModel } from "#tests/e2e/project/settings/project-settings-sidebar-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
 
 type ProjectSlrSettingsPageFixtures = {
     projectSLRSettingsPage: ProjectSLRSettingsPageModel;

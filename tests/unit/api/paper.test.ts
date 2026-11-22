@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { Paper } from "snowballr-api/paper";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     createPaper as createPaperInBackend,
     emptyPaper,
@@ -8,9 +8,9 @@ import {
     getForwardReferencedPapers,
     getPaper,
     updatePaperDetails,
-} from "$lib/api/paper";
-import { createPaper } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/paper.js";
+import { createPaper } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 const PAPER_ID = "paper-1";
 

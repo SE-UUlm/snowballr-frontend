@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import SingleSelect from "$lib/components/composites/select/SingleSelect.svelte";
+import SingleSelect from "#lib/components/composites/select/SingleSelect.svelte";
 
 describe("SingleSelect", () => {
     beforeEach(() => {

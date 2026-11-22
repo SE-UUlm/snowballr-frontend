@@ -8,9 +8,9 @@ import {
     register,
     renewSession,
     verifyEmail,
-} from "$lib/api/auth";
-import { ApiError } from "$lib/api/errors";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/auth.js";
+import { ApiError } from "#lib/api/errors.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getAuthenticationStatus", () => {
     test("When the status is loaded, then it is returned", async () => {

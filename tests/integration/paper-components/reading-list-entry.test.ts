@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import ReadingListEntry from "$lib/components/composites/paper-components/ReadingListEntry.svelte";
+import ReadingListEntry from "#lib/components/composites/paper-components/ReadingListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { waitForComponentLoading } from "../test-helper";
-import { Papers } from "../../example-data";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { Papers } from "#tests/example-data.js";
 
 describe("ReadingListEntryComponent", () => {
     test("When all required props except an onClick handler are provided, then the reading list entry is completely shown", async () => {

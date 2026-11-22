@@ -1,6 +1,6 @@
-import { PaperDecision, type Project_Paper, type Author, type Paper } from "$lib/api/types";
-import type { PaperStatus, Person, PersonWithEmail } from "$lib/model/general";
-import { asPaper, asProjectPaper, isProjectPaper } from "$lib/utils/model-helper";
+import { PaperDecision, type Project_Paper, type Author, type Paper } from "#lib/api/types.js";
+import type { PaperStatus, Person, PersonWithEmail } from "#lib/model/general.js";
+import { asPaper, asProjectPaper, isProjectPaper } from "#lib/utils/model-helper.js";
 
 /**
  * Convert a person object (\{ firstName: "...", lastName, "..." \}) to its string representation

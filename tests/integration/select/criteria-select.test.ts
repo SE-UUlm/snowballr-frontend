@@ -1,9 +1,9 @@
-import CriteriaSelect from "$lib/components/composites/select/CriteriaSelect.svelte";
+import CriteriaSelect from "#lib/components/composites/select/CriteriaSelect.svelte";
 import { Criterion } from "snowballr-api/criterion";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { Criteria } from "../../example-data";
+import { Criteria } from "#tests/example-data.js";
 
 describe("CriteriaSelect", () => {
     beforeEach(() => {

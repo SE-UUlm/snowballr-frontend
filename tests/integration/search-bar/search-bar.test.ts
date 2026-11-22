@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import SearchBar from "$lib/components/composites/search-bar/SearchBar.svelte";
+import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 

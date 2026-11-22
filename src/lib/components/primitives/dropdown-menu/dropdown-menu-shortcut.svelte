@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { HTMLAttributes } from "svelte/elements";
     import { type WithElementRef } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper.js";
-    import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { shortcuts } from "#lib/global-state/shortcuts-visibility-state.svelte.js";
 
     let {
         ref = $bindable(null),

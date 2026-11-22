@@ -1,8 +1,8 @@
-import Input from "$lib/components/composites/input/Input.svelte";
+import Input from "#lib/components/composites/input/Input.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { z } from "zod";
-import ExampleInput from "./ExampleInput.svelte";
+import ExampleInput from "#tests/integration/input/ExampleInput.svelte";
 
 describe("Input", () => {
     test("When props are provided, then label, link and input is shown", () => {

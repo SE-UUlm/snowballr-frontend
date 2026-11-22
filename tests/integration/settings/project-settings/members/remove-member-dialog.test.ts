@@ -1,10 +1,10 @@
 import { describe, test, beforeEach, afterEach, vi, expect, assert } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import RemoveMemberDialog from "$lib/components/composites/settings/project-settings/members/RemoveMemberDialog.svelte";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { Members } from "$tests/example-data";
+import RemoveMemberDialog from "#lib/components/composites/settings/project-settings/members/RemoveMemberDialog.svelte";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { Members } from "#tests/example-data.js";
 import userEvent from "@testing-library/user-event";
-import { getName } from "$lib/utils/common-helper";
+import { getName } from "#lib/utils/common-helper.js";
 import { MemberRole, Project_Member } from "snowballr-api/project";
 
 describe("RemoveMemberDialog", () => {

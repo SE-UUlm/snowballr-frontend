@@ -1,16 +1,16 @@
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { type FetcherOption } from "./FetcherOptionRow.svelte";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { type FetcherOption } from "#lib/components/composites/settings/fetcher/FetcherOptionRow.svelte";
     import Lock from "@lucide/svelte/icons/lock";
-    import { type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import FetcherInformationView from "./FetcherInformationView.svelte";
-    import { FetcherInformation } from "$lib/api/types";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { buttonVariants, type ButtonVariant } from "$lib/components/primitives/button";
+    import { type ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import FetcherInformationView from "#lib/components/composites/settings/fetcher/FetcherInformationView.svelte";
+    import { FetcherInformation } from "#lib/api/types.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { buttonVariants, type ButtonVariant } from "#lib/components/primitives/button/index.js";
     import type { Snippet } from "svelte";
-    import type { SaveFetchers } from "./fetcher";
-    import type { Fetchers } from "$lib/api/fetcher";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
+    import type { Fetchers } from "#lib/api/fetcher.js";
 
     interface Props {
         label: string;

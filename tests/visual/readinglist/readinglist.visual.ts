@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
-import { ReadingListPageModel } from "$tests/e2e/readinglist/reading-list-page-model";
-import { PAPERS, seedVisualData } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { ReadingListPageModel } from "#tests/e2e/readinglist/reading-list-page-model.js";
+import { PAPERS, seedVisualData } from "#tests/visual/utils/visual-data.js";
 
 test.describe("Reading list", () => {
     test("When the reading list is opened, then it matches the baseline", async ({

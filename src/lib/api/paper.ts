@@ -1,8 +1,8 @@
 import type { PartialMessage } from "@protobuf-ts/runtime";
 import { Paper } from "snowballr-api/paper";
-import { client } from "./client";
-import { buildFieldMask } from "./fieldmask";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { buildFieldMask } from "#lib/api/fieldmask.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * A sparse patch of the details of a paper that users edit: only the fields to change.

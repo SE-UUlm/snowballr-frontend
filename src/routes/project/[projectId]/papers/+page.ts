@@ -1,11 +1,11 @@
-import { listCriteria } from "$lib/api/criterion";
-import { getProjectMembers } from "$lib/api/project-member";
-import { listProjectPapers } from "$lib/api/project-paper";
-import { Project_Paper } from "$lib/api/types";
-import { type Stage } from "$lib/model/general";
-import { comparePaperId } from "$lib/utils/common-helper";
+import { listCriteria } from "#lib/api/criterion.js";
+import { getProjectMembers } from "#lib/api/project-member.js";
+import { listProjectPapers } from "#lib/api/project-paper.js";
+import { Project_Paper } from "#lib/api/types.js";
+import { type Stage } from "#lib/model/general.js";
+import { comparePaperId } from "#lib/utils/common-helper.js";
 import type { PageLoad } from "./$types";
-import { asPaper } from "$lib/utils/model-helper";
+import { asPaper } from "#lib/utils/model-helper.js";
 
 export const load: PageLoad = ({ depends, params }) => {
     depends("data:getAllProjectPapersForProject");

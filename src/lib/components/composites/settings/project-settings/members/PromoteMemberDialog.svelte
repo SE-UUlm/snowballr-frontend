@@ -1,11 +1,11 @@
 <script lang="ts">
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import { setProjectMemberRole } from "$lib/api/project-member";
-    import { MemberRole, type Project_Member } from "$lib/api/types";
-    import { getName, loadingWrapper, wrapLongWords } from "$lib/utils/common-helper";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import type { MemberInfo } from "$lib/model/member-info";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import { setProjectMemberRole } from "#lib/api/project-member.js";
+    import { MemberRole, type Project_Member } from "#lib/api/types.js";
+    import { getName, loadingWrapper, wrapLongWords } from "#lib/utils/common-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import type { MemberInfo } from "#lib/model/member-info.js";
 
     interface Props {
         projectId: string;

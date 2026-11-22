@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
-import { PaperViewPageModel } from "$tests/e2e/paper/paper-view-page-model";
-import { PAPERS } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { PaperViewPageModel } from "#tests/e2e/paper/paper-view-page-model.js";
+import { PAPERS } from "#tests/visual/utils/visual-data.js";
 
 test.describe("Paper view", () => {
     test("When a paper is opened outside of a project, then it matches the baseline", async ({

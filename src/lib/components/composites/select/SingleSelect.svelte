@@ -1,6 +1,6 @@
 <script lang="ts">
-    import * as Select from "$lib/components/primitives/select/index.js";
-    import type { SelectOption } from "$lib/model/select-option";
+    import * as Select from "#lib/components/primitives/select/index.js";
+    import type { SelectOption } from "#lib/model/select-option.js";
 
     interface Props {
         options: SelectOption[];

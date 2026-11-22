@@ -1,8 +1,8 @@
 <script lang="ts">
-    import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
-    import { PaperDecision } from "$lib/api/types";
-    import type { SelectOption } from "$lib/model/select-option";
-    import { getStatusText } from "$lib/utils/common-helper";
+    import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
+    import { PaperDecision } from "#lib/api/types.js";
+    import type { SelectOption } from "#lib/model/select-option.js";
+    import { getStatusText } from "#lib/utils/common-helper.js";
 
     interface Props {
         selectedDecisions?: string[];

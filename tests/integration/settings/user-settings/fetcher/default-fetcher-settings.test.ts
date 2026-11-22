@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import DefaultFetcherSettings from "$lib/components/composites/settings/user-settings/fetcher/DefaultFetcherSettings.svelte";
-import { createUserSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import DefaultFetcherSettings from "#lib/components/composites/settings/user-settings/fetcher/DefaultFetcherSettings.svelte";
+import { createUserSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import userEvent from "@testing-library/user-event";
 import { Project_Settings } from "snowballr-api/project";
 import { UserSettings } from "snowballr-api/user_settings";

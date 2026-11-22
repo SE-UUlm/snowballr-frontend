@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { ErrorPageModel } from "$tests/e2e/error/error-page-model";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { ErrorPageModel } from "#tests/e2e/error/error-page-model.js";
 
 test.describe("Error page", () => {
     test("When a non-existent page is opened, then the 404 page matches the baseline", async ({

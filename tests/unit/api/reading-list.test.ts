@@ -1,14 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { Nothing } from "snowballr-api/base";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     addPaperToReadingList,
     getReadingList,
     isPaperOnReadingList,
     removePaperFromReadingList,
-} from "$lib/api/reading-list";
-import { createPaper } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/reading-list.js";
+import { createPaper } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getReadingList", () => {
     test("When the reading list is loaded, then its papers are returned", async () => {

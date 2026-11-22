@@ -1,5 +1,5 @@
 import { type Locator, type Page } from "@playwright/test";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
 
 export class ProjectNavigationBarModel extends NavigationBarModel {
     readonly dashboardTab: Locator;

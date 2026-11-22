@@ -81,7 +81,7 @@ and point to the canonical page.
 | Testing conventions                   | wiki/Testing.md                                                               | when-then naming; `describe` grouping; `mockApiCall` / `mockFailedApiCall`.                        |
 | End-to-end tests                      | wiki/Testing.md#end-to-end-tests                                              | Playwright; shared/isolated fixtures; Page Object Models (`*-page-model.ts`, `*-dialog-model.ts`). |
 | Backend access                        | src/lib/api/                                                                  | Domain modules; `client.ts` holds the gRPC-Web wiring.                                             |
-| Generated API types/client            | `snowballr-api` npm package                                                   | Imported only in `src/lib/api/` and `tests/`; elsewhere import the types from `$lib/api/types`.    |
+| Generated API types/client            | `snowballr-api` npm package                                                   | Imported only in `src/lib/api/` and `tests/`; elsewhere import the types from `#lib/api/types.js`. |
 | Routes                                | src/routes/                                                                   | SvelteKit page/layout files.                                                                       |
 | Components (ours)                     | src/lib/components/composites/                                                | PascalCase Svelte files.                                                                           |
 | shadcn-svelte primitives              | src/lib/components/primitives/                                                | Configured via `components.json`.                                                                  |
@@ -101,7 +101,10 @@ and point to the canonical page.
   primitives. Build with Vite; production preview with `@sveltejs/adapter-node`.
 - **Transport:** gRPC-Web via `@protobuf-ts/grpcweb-transport`. The browser talks to a gRPC-Web proxy that
   forwards to the backend (proxy is provided by the umbrella `snowballr` repo).
-- **Backend access:** Routes and components call the domain functions in `$lib/api/*`, which reject with
+- **Imports:** Use the subpath imports `#lib/*`, `#routes/*` (tests only) and `#tests/*` from `package.json` with
+  explicit extensions (`#lib/foo.js` for `foo.ts`, `.svelte` kept); relative imports are rejected by ESLint
+  (exceptions: `./$types`, shadcn primitives). Rules: wiki/Contributing.md#imports.
+- **Backend access:** Routes and components call the domain functions in `#lib/api/*`, which reject with
   `ApiError` (check with `isApiError`). Only `src/lib/api/` imports `snowballr-api`, `@protobuf-ts/*` or the client;
   a missing function goes into its domain module. Rules: wiki/Contributing.md#backend-access.
 - **User context flow:** root `+layout.ts` resolves the current user (cached → fetched → redirect on

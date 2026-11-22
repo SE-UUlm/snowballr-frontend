@@ -1,7 +1,7 @@
 import type { Paper } from "snowballr-api/paper";
 import type { Project_Paper } from "snowballr-api/project";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Loads all papers of a project, from every stage.

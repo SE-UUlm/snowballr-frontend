@@ -1,11 +1,11 @@
-import MaybeAsDecisionSetting from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
-import { maybeAsDecision } from "$lib/global-state/maybe-as-decision-state.svelte";
+import MaybeAsDecisionSetting from "#lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
+import { maybeAsDecision } from "#lib/global-state/maybe-as-decision-state.svelte.js";
 import { ProjectStatus } from "snowballr-api/project";
-import { createProject, createProjectSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { createProject, createProjectSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
-import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
+import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
 
 describe("Maybe As Decision Project Setting", () => {
     const projectData = createProject();

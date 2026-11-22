@@ -1,9 +1,9 @@
-import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
+import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { get, type Writable, writable } from "svelte/store";
-import TestMultiSelect from "./TestMultiSelect.svelte";
+import TestMultiSelect from "#tests/integration/select/TestMultiSelect.svelte";
 
 describe("MultiSelect", () => {
     beforeEach(() => {

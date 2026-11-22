@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
-import { ApiError, isApiError } from "$lib/api/errors";
+import { ApiError, isApiError } from "#lib/api/errors.js";
 
 describe("isApiError", () => {
     const notFound = new ApiError("not-found", "gone");

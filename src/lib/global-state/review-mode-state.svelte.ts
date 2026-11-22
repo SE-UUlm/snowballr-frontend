@@ -1,4 +1,7 @@
-import { getLocalStorageItem, setLocalStorageItem } from "./local-storage-helper";
+import {
+    getLocalStorageItem,
+    setLocalStorageItem,
+} from "#lib/global-state/local-storage-helper.js";
 
 const STORAGE_KEY = "reviewMode";
 const initialValue = getLocalStorageItem<boolean>(STORAGE_KEY, true);

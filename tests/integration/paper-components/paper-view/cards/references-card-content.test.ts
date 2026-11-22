@@ -1,8 +1,8 @@
-import ReferencesCardContent from "$lib/components/composites/paper-components/paper-view/cards/ReferencesCardContent.svelte";
+import ReferencesCardContent from "#lib/components/composites/paper-components/paper-view/cards/ReferencesCardContent.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { Papers } from "$tests/example-data";
-import { waitForComponentLoading } from "$tests/integration/test-helper";
+import { Papers } from "#tests/example-data.js";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import userEvent from "@testing-library/user-event";
 
 describe("ReferencesCardContent", () => {

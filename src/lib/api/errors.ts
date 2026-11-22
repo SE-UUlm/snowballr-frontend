@@ -17,7 +17,7 @@ export type ApiErrorKind =
     | "cancelled"
     | "unknown";
 
-/** The error every function in `$lib/api/` rejects with. The transport's error is kept as `cause`. */
+/** The error every function in `#lib/api/` rejects with. The transport's error is kept as `cause`. */
 export class ApiError extends Error {
     readonly kind: ApiErrorKind;
 

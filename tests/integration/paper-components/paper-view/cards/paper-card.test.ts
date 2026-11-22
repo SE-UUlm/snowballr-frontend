@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import TestPaperCard from "./TestPaperCard.svelte";
+import TestPaperCard from "#tests/integration/paper-components/paper-view/cards/TestPaperCard.svelte";
 
 describe("PaperCard", () => {
     test("When tabs are provided as prop, then the tabs are listed in the tab list", () => {

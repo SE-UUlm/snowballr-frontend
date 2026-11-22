@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
-import ChangeNameSettings from "$lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
+import ChangeNameSettings from "#lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
 import userEvent from "@testing-library/user-event";
 import type { User } from "snowballr-api/user";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { mockUserContext } from "$tests/integration/test-helper";
-import { Users } from "$tests/example-data";
-import { client } from "$lib/api/client";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { mockUserContext } from "#tests/integration/test-helper.js";
+import { Users } from "#tests/example-data.js";
+import { client } from "#lib/api/client.js";
 
 describe("ChangeNameSettings", () => {
     test("When the component is rendered, some text, two input fields and a button are shown in order to change the name", () => {

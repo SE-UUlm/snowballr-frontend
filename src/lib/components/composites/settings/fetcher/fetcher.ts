@@ -1,5 +1,5 @@
-import type { Fetchers } from "$lib/api/fetcher";
-import type { ActionError } from "$lib/model/action-error";
+import type { Fetchers } from "#lib/api/fetcher.js";
+import type { ActionError } from "#lib/model/action-error.js";
 
 /**
  * Persists a new fetchers map for whatever entity (project or user) owns it.

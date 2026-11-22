@@ -1,4 +1,4 @@
-import { Schema, ZodIssueSubCode } from "$lib/schemas";
+import { Schema, ZodIssueSubCode } from "#lib/schemas.js";
 import { assert, describe, expect, test } from "vitest";
 import { z, ZodIssueCode } from "zod";
 

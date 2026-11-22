@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { MemberRole, Project_Information } from "snowballr-api/project";
-import { load } from "../../../src/routes/+page";
-import { createProject, createProjectPaper, createUser } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { load } from "#routes/+page.js";
+import { createProject, createProjectPaper, createUser } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 interface HomePageData {
     projectsMetadata: Promise<unknown[]>;

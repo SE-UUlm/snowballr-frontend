@@ -1,7 +1,7 @@
 import { expect, type Page } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
-import { test } from "./project-slr-settings-page-fixture";
-import type { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
+import { test } from "#tests/e2e/project/settings/slr/project-slr-settings-page-fixture.js";
+import type { ProjectSettingsSidebarModel } from "#tests/e2e/project/settings/project-settings-sidebar-model.js";
 
 const fetcherName = "Semantic Scholar";
 const SAVE_SUCCESS_MESSAGE = "Successfully updated project settings.";

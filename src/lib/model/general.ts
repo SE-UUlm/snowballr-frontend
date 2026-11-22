@@ -4,7 +4,7 @@ import {
     type Paper,
     type Paper_ExternalId,
     type Review,
-} from "$lib/api/types";
+} from "#lib/api/types.js";
 
 /**
  * Contains general types that are used in several components or pages but cannot be categorized anywhere else.

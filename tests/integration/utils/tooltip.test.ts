@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import TestToolTip from "./TestToolTip.svelte";
+import TestToolTip from "#tests/integration/utils/TestToolTip.svelte";
 import userEvent from "@testing-library/user-event";
 
 describe("Tooltip", () => {

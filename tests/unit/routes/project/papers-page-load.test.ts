@@ -1,8 +1,13 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { MemberRole } from "snowballr-api/project";
-import { load } from "../../../../src/routes/project/[projectId]/papers/+page";
-import { createCriterion, createPaper, createProjectPaper, createUser } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { load } from "#routes/project/[projectId]/papers/+page.js";
+import {
+    createCriterion,
+    createPaper,
+    createProjectPaper,
+    createUser,
+} from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 type PapersPageData = Record<
     "loadingCriteria" | "loadingStages" | "loadingYears" | "loadingPublishers" | "loadingReviewers",

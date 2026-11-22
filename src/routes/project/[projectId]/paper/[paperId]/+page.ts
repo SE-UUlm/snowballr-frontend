@@ -1,10 +1,10 @@
-import { listCriteria } from "$lib/api/criterion";
-import { getBackwardReferencedPapers, getForwardReferencedPapers } from "$lib/api/paper";
-import { getProjectPaperByLocalId } from "$lib/api/project-paper";
-import { type Criterion, Review, type User } from "$lib/api/types";
-import type { CriterionWithReviews } from "$lib/model/general";
+import { listCriteria } from "#lib/api/criterion.js";
+import { getBackwardReferencedPapers, getForwardReferencedPapers } from "#lib/api/paper.js";
+import { getProjectPaperByLocalId } from "#lib/api/project-paper.js";
+import { type Criterion, Review, type User } from "#lib/api/types.js";
+import type { CriterionWithReviews } from "#lib/model/general.js";
 import type { PageLoad } from "./$types";
-import { getUserById } from "$lib/api/user";
+import { getUserById } from "#lib/api/user.js";
 
 export const load: PageLoad = ({ params }) => {
     const loadingProjectPaper = getProjectPaperByLocalId(params.projectId, params.paperId);

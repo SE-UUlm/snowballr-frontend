@@ -1,7 +1,7 @@
 <script lang="ts">
     import { RadioGroup as RadioGroupPrimitive, type WithoutChildrenOrChild } from "bits-ui";
     import CircleIcon from "@lucide/svelte/icons/circle";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     let {
         ref = $bindable(null),

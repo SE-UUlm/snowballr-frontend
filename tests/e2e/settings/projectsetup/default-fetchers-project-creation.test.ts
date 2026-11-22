@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./default-fetchers-project-creation-fixture";
+import { test } from "#tests/e2e/settings/projectsetup/default-fetchers-project-creation-fixture.js";
 
 const fetcherName = "Semantic Scholar";
 

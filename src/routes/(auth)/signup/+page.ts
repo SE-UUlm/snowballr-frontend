@@ -1,6 +1,6 @@
 import { goto } from "$app/navigation";
-import { getAuthenticationStatus } from "$lib/api/auth";
-import { AuthenticationStatus } from "$lib/api/types";
+import { getAuthenticationStatus } from "#lib/api/auth.js";
+import { AuthenticationStatus } from "#lib/api/types.js";
 import type { PageLoad } from "./$types";
 import { resolve } from "$app/paths";
 

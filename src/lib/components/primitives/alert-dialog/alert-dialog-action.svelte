@@ -4,8 +4,8 @@
         buttonVariants,
         type ButtonSize,
         type ButtonVariant,
-    } from "$lib/components/primitives/button/index.js";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    } from "#lib/components/primitives/button/index.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     export type AlertDialogActionProps = AlertDialogPrimitive.ActionProps & {
         variant?: ButtonVariant;

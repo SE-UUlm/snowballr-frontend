@@ -3,12 +3,12 @@ import {
     getProjectInformation,
     listArchivedProjectsForUser,
     listProjectsForUser,
-} from "$lib/api/project";
-import { getProjectMembers } from "$lib/api/project-member";
-import { getPapersToReview } from "$lib/api/project-paper";
-import type { Project, User } from "$lib/api/types";
-import type { ProjectListEntryInterface } from "$lib/components/composites/project-components/ProjectListEntry.svelte";
-import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
+} from "#lib/api/project.js";
+import { getProjectMembers } from "#lib/api/project-member.js";
+import { getPapersToReview } from "#lib/api/project-paper.js";
+import type { Project, User } from "#lib/api/types.js";
+import type { ProjectListEntryInterface } from "#lib/components/composites/project-components/ProjectListEntry.svelte";
+import type { PaperListEntryInterface } from "#lib/components/composites/paper-components/PaperListEntry.svelte";
 
 async function requestProjectInformation(project: Project): Promise<ProjectListEntryInterface> {
     const [members, information] = await Promise.all([

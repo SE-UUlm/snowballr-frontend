@@ -1,5 +1,5 @@
-import { acceptProjectInvitation } from "$lib/api/invitation";
-import { createActionError } from "$lib/model/action-error";
+import { acceptProjectInvitation } from "#lib/api/invitation.js";
+import { createActionError } from "#lib/model/action-error.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ url }) => {

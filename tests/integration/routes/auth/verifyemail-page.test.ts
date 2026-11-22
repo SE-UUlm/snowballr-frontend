@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { AuthenticationStatus } from "snowballr-api/authentication";
-import VerifyEmailPage from "../../../../src/routes/(auth)/verifyemail/+page.svelte";
-import { load } from "../../../../src/routes/(auth)/verifyemail/+page";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import VerifyEmailPage from "#routes/(auth)/verifyemail/+page.svelte";
+import { load } from "#routes/(auth)/verifyemail/+page.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 /**
  * Runs the page's loader for the given URL and renders the page with the loaded data, because the

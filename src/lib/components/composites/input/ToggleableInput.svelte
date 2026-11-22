@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { HTMLInputAttributes } from "svelte/elements";
     import type { WithElementRef } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import Input from "./Input.svelte";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import Input from "#lib/components/composites/input/Input.svelte";
 
     type Props = WithElementRef<HTMLInputAttributes> & {
         key: string;

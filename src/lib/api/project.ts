@@ -7,10 +7,10 @@ import {
     type Project_Update,
     type ProjectStatus,
 } from "snowballr-api/project";
-import { client } from "./client";
-import type { Fetchers } from "./fetcher";
-import { buildFieldMask } from "./fieldmask";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import type { Fetchers } from "#lib/api/fetcher.js";
+import { buildFieldMask } from "#lib/api/fieldmask.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * A sparse patch of a project's settings: only the fields to change, nested as in the settings,

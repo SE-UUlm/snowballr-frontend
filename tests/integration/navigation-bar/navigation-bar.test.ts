@@ -1,11 +1,11 @@
 import { assert, expect, test, describe } from "vitest";
-import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
+import NavigationBar from "#lib/components/composites/navigation-bar/NavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
 import {
     mockUserContext,
     resetUserContext as resetMockUserContext,
     setContextUser as setMockContextUser,
-} from "../test-helper";
+} from "#tests/integration/test-helper.js";
 
 describe("NavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", () => {

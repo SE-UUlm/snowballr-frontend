@@ -1,7 +1,7 @@
-import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+import ProjectSettingsLayout from "#lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import TestProjectSettingsLayout from "./TestProjectSettingsLayout.svelte";
+import TestProjectSettingsLayout from "#tests/integration/settings/project-settings/TestProjectSettingsLayout.svelte";
 
 describe("ProjectSettingsLayout", () => {
     test("When all props are provided, then component is displayed correctly", () => {

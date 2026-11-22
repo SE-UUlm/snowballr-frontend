@@ -1,12 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import Input from "$lib/components/primitives/input/input.svelte";
-    import { deleteProject as deleteProjectById } from "$lib/api/project";
-    import { createActionError } from "$lib/model/action-error";
-    import type { Project } from "$lib/api/types";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import Input from "#lib/components/primitives/input/input.svelte";
+    import { deleteProject as deleteProjectById } from "#lib/api/project.js";
+    import { createActionError } from "#lib/model/action-error.js";
+    import type { Project } from "#lib/api/types.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
     import { resolve } from "$app/paths";

@@ -1,27 +1,27 @@
 <script lang="ts">
-    import PaperCard from "./PaperCard.svelte";
-    import PaperCardContent from "./PaperCardContent.svelte";
-    import type { Paper } from "$lib/api/types";
+    import PaperCard from "#lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
+    import PaperCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
+    import type { Paper } from "#lib/api/types.js";
     import {
         createPaper,
         emptyPaper,
         type PaperDetailsPatch,
         updatePaperDetails,
-    } from "$lib/api/paper";
-    import { addPaperToProject } from "$lib/api/project-paper";
-    import PaperDetailsCardContent from "$lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
+    } from "#lib/api/paper.js";
+    import { addPaperToProject } from "#lib/api/project-paper.js";
+    import PaperDetailsCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperDetailsCardContent.svelte";
     import Pencil from "@lucide/svelte/icons/pencil";
     import Save from "@lucide/svelte/icons/save";
     import Undo2 from "@lucide/svelte/icons/undo-2";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import { toast } from "svelte-sonner";
-    import type { PaperCreationTarget, StringifiedPaper } from "$lib/model/general";
-    import { stringifyPaper } from "$lib/utils/model-helper";
+    import type { PaperCreationTarget, StringifiedPaper } from "#lib/model/general.js";
+    import { stringifyPaper } from "#lib/utils/model-helper.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import { isStringEqual, stringToAuthors } from "$lib/utils/common-helper";
+    import { isStringEqual, stringToAuthors } from "#lib/utils/common-helper.js";
     import { beforeNavigate } from "$app/navigation";
     import { goto } from "$app/navigation";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
     import { resolve } from "$app/paths";
 
     interface Props {

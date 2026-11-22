@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { Label } from "$lib/components/primitives/label";
-    import { Button } from "$lib/components/primitives/button";
+    import { Label } from "#lib/components/primitives/label/index.js";
+    import { Button } from "#lib/components/primitives/button/index.js";
     import CircleAlert from "@lucide/svelte/icons/circle-alert";
-    import type { ValidationResult } from "$lib/model/general";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { debounce } from "$lib/utils/common-helper";
+    import type { ValidationResult } from "#lib/model/general.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { debounce } from "#lib/utils/common-helper.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-    import ScrollArea from "$lib/components/primitives/scroll-area/scroll-area.svelte";
+    import ScrollArea from "#lib/components/primitives/scroll-area/scroll-area.svelte";
 
     interface ChipsInputProps {
         label?: string;

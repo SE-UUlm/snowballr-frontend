@@ -1,9 +1,9 @@
-import { getPendingInvitations } from "$lib/api/invitation";
-import { getProjectMembers } from "$lib/api/project-member";
-import { MemberRole, type Project_Member, type User } from "$lib/api/types";
-import { resource } from "$lib/resource.svelte";
-import { getUserContext } from "$lib/custom-context/user-context";
-import type { MemberInfo } from "$lib/model/member-info";
+import { getPendingInvitations } from "#lib/api/invitation.js";
+import { getProjectMembers } from "#lib/api/project-member.js";
+import { MemberRole, type Project_Member, type User } from "#lib/api/types.js";
+import { resource } from "#lib/resource.svelte.js";
+import { getUserContext } from "#lib/custom-context/user-context.js";
+import type { MemberInfo } from "#lib/model/member-info.js";
 
 export async function loadMembers(projectId: string): Promise<MemberInfo[]> {
     const loadingMembers = getProjectMembers(projectId).then((members) =>

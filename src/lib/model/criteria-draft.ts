@@ -1,5 +1,5 @@
-import type { CriterionFields, NewCriterion } from "$lib/api/criterion";
-import { CriterionCategory, type Criterion } from "$lib/api/types";
+import type { CriterionFields, NewCriterion } from "#lib/api/criterion.js";
+import { CriterionCategory, type Criterion } from "#lib/api/types.js";
 
 export type { CriterionFields };
 

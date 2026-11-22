@@ -1,14 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import CriteriaSettings from "$lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
+import CriteriaSettings from "#lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
 import { CriterionCategory } from "snowballr-api/criterion";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { createCriterion, createProject } from "$tests/model-builder";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { createCriterion, createProject } from "#tests/model-builder.js";
 import {
     mockIsProjectArchivedContext,
     waitForComponentLoading,
-} from "$tests/integration/test-helper";
+} from "#tests/integration/test-helper.js";
 
 const storedCriterion = createCriterion({
     id: "7",

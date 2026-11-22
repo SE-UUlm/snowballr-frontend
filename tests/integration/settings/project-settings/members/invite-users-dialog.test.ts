@@ -1,10 +1,10 @@
 import { describe, test, beforeEach, afterEach, vi, expect } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import InviteUsersDialog from "$lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
-import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
-import { Members, Users } from "$tests/example-data";
+import InviteUsersDialog from "#lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "#tests/setupTest.js";
+import { Members, Users } from "#tests/example-data.js";
 import userEvent from "@testing-library/user-event";
-import { mockUserContext, waitForDialogFocus } from "$tests/integration/test-helper";
+import { mockUserContext, waitForDialogFocus } from "#tests/integration/test-helper.js";
 
 describe("InviteUsersDialog", () => {
     beforeEach(() => {

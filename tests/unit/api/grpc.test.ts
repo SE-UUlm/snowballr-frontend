@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
 import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { ApiError, type ApiErrorKind } from "$lib/api/errors";
-import { call, toApiError } from "$lib/api/grpc";
-import { client } from "$lib/api/client";
+import { ApiError, type ApiErrorKind } from "#lib/api/errors.js";
+import { call, toApiError } from "#lib/api/grpc.js";
+import { client } from "#lib/api/client.js";
 import { Nothing } from "snowballr-api/base";
-import { mockFailedApiCall } from "$tests/setupTest";
+import { mockFailedApiCall } from "#tests/setupTest.js";
 
 function codedError(code: unknown, message = "rpc failed") {
     return Object.assign(new Error(message), { code });

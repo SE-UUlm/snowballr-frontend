@@ -1,6 +1,6 @@
-import { test } from "./project-review-settings-page-fixture";
+import { test } from "#tests/e2e/project/settings/review/project-review-settings-page-fixture.js";
 import { expect } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 import { CriterionCategory } from "snowballr-api/criterion";
 
 test.describe("Project Review Settings Navigation", () => {

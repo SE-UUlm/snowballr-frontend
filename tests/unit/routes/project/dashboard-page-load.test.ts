@@ -5,9 +5,9 @@ import {
     Project_Information_DecisionStatistics,
 } from "snowballr-api/project";
 import { Timestamp } from "snowballr-api/google/protobuf/timestamp";
-import { load } from "../../../../src/routes/project/[projectId]/dashboard/+page";
-import { createProject, createProjectPaper } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { load } from "#routes/project/[projectId]/dashboard/+page.js";
+import { createProject, createProjectPaper } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 interface DashboardData {
     openReviews: Promise<unknown[]>;

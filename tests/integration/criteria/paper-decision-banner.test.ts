@@ -1,10 +1,10 @@
-import PaperDecisionBanner from "$lib/components/composites/criteria/PaperDecisionBanner.svelte";
+import PaperDecisionBanner from "#lib/components/composites/criteria/PaperDecisionBanner.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createProjectPaper, loading } from "../../model-builder";
+import { createProjectPaper, loading } from "#tests/model-builder.js";
 import { PaperDecision } from "snowballr-api/project";
-import { waitForComponentLoading } from "../test-helper";
-import { Reviews, Users } from "../../example-data";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { Reviews, Users } from "#tests/example-data.js";
 
 describe("PaperDecisionBanner", () => {
     test("When the paper is accepted, it should display the accepted banner", async () => {
