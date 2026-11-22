@@ -1,11 +1,5 @@
 import PaperExternalIds from "#lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
-import {
-    render,
-    screen,
-    waitFor,
-    waitForElementToBeRemoved,
-    within,
-} from "@testing-library/svelte";
+import { render, screen, waitFor, within } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { loading, createPaper } from "#tests/model-builder.js";
 import { waitForComponentLoading } from "#tests/integration/test-helper.js";
@@ -351,7 +345,9 @@ describe("PaperExternalIds", () => {
 
         await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
         // The dialog is unmounted only after its close animation has been checked (next frame).
-        await waitForElementToBeRemoved(() => screen.queryByTestId("external-ids-dialog"));
+        await waitFor(() =>
+            expect(screen.queryByTestId("external-ids-dialog")).not.toBeInTheDocument(),
+        );
 
         expect(screen.getByText("ArXiv")).toBeInTheDocument();
         expect(screen.queryByText("DOI")).not.toBeInTheDocument();
@@ -474,7 +470,9 @@ describe("PaperExternalIds", () => {
         await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
 
         // The dialog is unmounted only after its close animation has been checked (next frame).
-        await waitForElementToBeRemoved(() => screen.queryByTestId("external-ids-dialog"));
+        await waitFor(() =>
+            expect(screen.queryByTestId("external-ids-dialog")).not.toBeInTheDocument(),
+        );
         expect(screen.getByText("No External IDs available")).toBeInTheDocument();
     });
 });
