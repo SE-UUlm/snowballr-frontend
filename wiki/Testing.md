@@ -241,13 +241,15 @@ not run on your machine, but in the official
   installed `@playwright/test` version in `package-lock.json`, as client and server versions must match exactly.
 - The tests themselves, the preview server of the frontend and the mock backends still run on your machine.
   `exposeNetwork: "<loopback>"` lets the browser in the container reach them via `localhost`, so the regular E2E
-  fixtures and POMs can be reused.
+  fixtures and POMs can be reused. Unlike the E2E tests, every run builds the app and starts a new preview server, as
+  one that is already running may serve an outdated build. If port 4173 is in use, stop the other preview first.
 - Only Firefox with the `Desktop Firefox` viewport (1280×720), the `en-US` locale and the `UTC` timezone is used. The
   comparison is strict (no differing pixels allowed) and failed tests are not retried, as a visual difference is
   deterministic.
 
 Like the E2E tests, the visual tests require Docker to be installed and running. Without it, the scripts fail
-immediately.
+immediately. They also need network access: the first run pulls the Docker image, and every run downloads
+`playwright@<version>` from npm inside the container to start the browser server.
 
 ### Writing a Visual Test
 
@@ -297,6 +299,9 @@ This rewrites only the baselines that differ or are missing, and afterwards comp
 [oxipng](https://github.com/shssoichiro/oxipng). Then check the changed PNGs in the diff of your commit, and only commit
 them if every change is intended. As the browser runs in the same Docker image everywhere, baselines created on your
 machine are valid in CI.
+
+The update never deletes a baseline. When you rename or remove a screenshot (the name passed to `toHaveScreenshot`) or
+a test file, delete the old PNG yourself, otherwise it stays in the repository unused.
 
 ### Bumping Playwright or the Mock Backend
 
