@@ -16,10 +16,11 @@ FROM base AS build
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage bind mounts to package.json and package-lock.json to avoid having to copy them
-# into this layer.
+# Leverage bind mounts to package.json, package-lock.json and .npmrc to avoid having to copy
+# them into this layer. .npmrc is mounted so its settings (engine-strict, min-release-age) apply.
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=bind,source=.npmrc,target=.npmrc \
     --mount=type=cache,target=/root/.npm \
     npm ci
 
