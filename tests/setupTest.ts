@@ -1,7 +1,7 @@
 /* Test setup file, inspired by https://github.com/wd-David/svelte-component-test-recipes?tab=readme-ov-file#setuptestts */
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { beforeEach, expect, type Mock, type MockInstance, vi } from "vitest";
-import * as environment from "$app/environment";
+import * as environment from "$app/env";
 import * as navigation from "$app/navigation";
 import {
     createCriterion,
@@ -20,11 +20,13 @@ import { AuthenticationStatus } from "snowballr-api/authentication";
 import { client } from "$lib/api/client";
 import ResizeObserver from "resize-observer-polyfill";
 
+type PublicEnvironment = typeof import("$app/env/public");
+
 // Add custom jest matchers
 expect.extend(matchers);
 
-// Mock SvelteKit runtime module $app/environment
-vi.mock("$app/environment", (): typeof environment => ({
+// Mock SvelteKit runtime module $app/env
+vi.mock("$app/env", (): typeof environment => ({
     browser: false,
     dev: true,
     building: false,
@@ -42,9 +44,10 @@ vi.mock("$app/navigation", (): typeof navigation => ({
     onNavigate: () => {},
     preloadCode: () => Promise.resolve(),
     preloadData: () => Promise.resolve({ type: "loaded", status: 200, data: {} }),
-    pushState: () => {},
+    pushState: () => Promise.resolve(),
     refreshAll: () => Promise.resolve(),
-    replaceState: () => {},
+    replaceState: () => Promise.resolve(),
+    snapshot: () => {},
 }));
 
 // `goto` is one mock for the whole test file and test order is shuffled, so forget the calls and the
@@ -65,9 +68,15 @@ vi.mock("$app/state", async () => {
     };
 });
 
-// Mock SvelteKit runtime modules $env/static/public and $env/dynamic/public
-vi.mock("$env/static/public", () => ({ env: {} }));
-vi.mock("$env/dynamic/public", () => ({ env: {} }));
+// Mock SvelteKit runtime module $app/env/public, which reads the variables declared in src/env.ts
+vi.mock(
+    "$app/env/public",
+    (): PublicEnvironment => ({
+        PUBLIC_IS_DEV_MODE: undefined,
+        PUBLIC_API_BASE_URL: "",
+        PUBLIC_CREDENTIAL_POLICY: undefined,
+    }),
+);
 
 // Mock browser APIs (for integration tests)
 if (typeof window !== "undefined") {

@@ -1,19 +1,19 @@
 import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { SnowballRClient } from "snowballr-api/main.client";
-import { env } from "$env/dynamic/public";
+import { PUBLIC_API_BASE_URL, PUBLIC_CREDENTIAL_POLICY } from "$app/env/public";
 import { getFetch } from "./fetch";
 import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
 import { IS_IN_DEV_MODE } from "$lib/constants";
 
 // Without the base URL, we cannot make any API calls. This module runs in the browser and during the
 // build, so it throws instead of calling `process.exit`, which does not exist in the browser.
-if (!env.PUBLIC_API_BASE_URL) {
+if (!PUBLIC_API_BASE_URL) {
     throw new Error("PUBLIC_API_BASE_URL is not defined. Set it to the URL of the backend API.");
 }
 
 const credentials: RequestCredentials =
-    (env.PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
+    (PUBLIC_CREDENTIAL_POLICY as RequestCredentials) ?? "same-origin";
 
 /**
  * Calls the current `fetch` and reports a request that could not be sent as gRPC `UNAVAILABLE`.
@@ -32,7 +32,7 @@ const customFetch = (input: URL | RequestInfo, init?: RequestInit | undefined): 
     });
 
 const transport = new GrpcWebFetchTransport({
-    baseUrl: env.PUBLIC_API_BASE_URL,
+    baseUrl: PUBLIC_API_BASE_URL,
     fetchInit: {
         credentials,
         // DO NOT SET: mode: "no-cors"

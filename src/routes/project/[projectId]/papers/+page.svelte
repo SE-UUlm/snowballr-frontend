@@ -227,7 +227,7 @@
                     {/await}
                     <a
                         class="flex items-center"
-                        href={resolve(`/project/${projectId}/paper/${selectedPaper.localId}`)}
+                        href={resolve(`project/${projectId}/paper/${selectedPaper.localId}`)}
                     >
                         <Tooltip class="[&_svg]:size-6" aria-label="Open paper">
                             {#snippet trigger()}

@@ -41,7 +41,7 @@
         if (projectId === undefined) {
             projectWasCreated = false;
         } else {
-            await goto(resolve(`/project/${projectId}/dashboard`));
+            await goto(resolve(`project/${projectId}/dashboard`));
         }
     }
 
