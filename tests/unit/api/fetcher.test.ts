@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Nothing } from "snowballr-api/base";
-import type { FetcherInformation } from "snowballr-api/fetcher";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
+import type { FetcherInformation } from "@se-uulm/snowballr-grpc-client/fetcher";
 import { ApiError } from "#lib/api/errors.js";
 import { getAvailableFetchers } from "#lib/api/fetcher.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";

@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherAddDialog from "#lib/components/composites/settings/fetcher/FetcherAddDialog.svelte";
 import userEvent from "@testing-library/user-event";
-import type { FetcherInformation } from "snowballr-api/fetcher";
+import type { FetcherInformation } from "@se-uulm/snowballr-grpc-client/fetcher";
 import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
 import type { Fetchers } from "#lib/api/fetcher.js";
 

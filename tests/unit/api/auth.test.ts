@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { Nothing } from "snowballr-api/base";
-import { AuthenticationStatus } from "snowballr-api/authentication";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
+import { AuthenticationStatus } from "@se-uulm/snowballr-grpc-client/authentication";
 import {
     getAuthenticationStatus,
     login,

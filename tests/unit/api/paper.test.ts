@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Paper } from "snowballr-api/paper";
+import { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { ApiError } from "#lib/api/errors.js";
 import {
     createPaper as createPaperInBackend,

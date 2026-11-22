@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
-import { Paper } from "snowballr-api/paper";
-import { Project_Paper } from "snowballr-api/project";
+import { Paper } from "@se-uulm/snowballr-grpc-client/paper";
+import { Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import {
     addPaperCandidates,
     mergePaperCandidates,

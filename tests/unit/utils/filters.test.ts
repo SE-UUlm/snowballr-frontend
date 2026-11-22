@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { Papers, ProjectPapers } from "#tests/example-data.js";
 import { filterPapers, filterProjectPapers } from "#lib/utils/filters.js";
-import { PaperDecision, type Project_Paper } from "snowballr-api/project";
+import { PaperDecision, type Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import { createPaper, createProjectPaper, createReview } from "#tests/model-builder.js";
 
 describe("Filter papers", () => {

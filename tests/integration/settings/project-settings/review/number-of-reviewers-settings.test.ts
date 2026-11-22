@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import NumberOfReviewersSettings from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
-import { ReviewDecisionMatrix } from "snowballr-api/project";
+import { ReviewDecisionMatrix } from "@se-uulm/snowballr-grpc-client/project";
 import { createProject, createProjectSettings } from "#tests/model-builder.js";
 import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
 

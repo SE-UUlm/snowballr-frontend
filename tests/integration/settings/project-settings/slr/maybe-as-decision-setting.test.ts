@@ -1,6 +1,6 @@
 import MaybeAsDecisionSetting from "#lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 import { maybeAsDecision } from "#lib/global-state/maybe-as-decision-state.svelte.js";
-import { ProjectStatus } from "snowballr-api/project";
+import { ProjectStatus } from "@se-uulm/snowballr-grpc-client/project";
 import { createProject, createProjectSettings } from "#tests/model-builder.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen, waitFor } from "@testing-library/svelte";

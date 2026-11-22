@@ -1,5 +1,5 @@
 import SnowballingTypeSettings from "#lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
-import { SnowballingType } from "snowballr-api/project";
+import { SnowballingType } from "@se-uulm/snowballr-grpc-client/project";
 import { createProject, createProjectSettings } from "#tests/model-builder.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen, waitFor } from "@testing-library/svelte";

@@ -1,13 +1,13 @@
-import type { User } from "snowballr-api/user";
-import type { UserSettings } from "snowballr-api/user_settings";
-import type { Author, Paper } from "snowballr-api/paper";
+import type { User } from "@se-uulm/snowballr-grpc-client/user";
+import type { UserSettings } from "@se-uulm/snowballr-grpc-client/user_settings";
+import type { Author, Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import {
     ReviewDecisionMatrix,
     SnowballingType,
     type Project,
     type Project_Paper,
     type Project_Settings,
-} from "snowballr-api/project";
+} from "@se-uulm/snowballr-grpc-client/project";
 import {
     Authors,
     Criteria,
@@ -23,9 +23,9 @@ import type {
     PaperViewProps,
     ProjectSpecificPaperViewProps,
 } from "#lib/components/composites/paper-components/paper-view/PaperView.svelte";
-import type { Review } from "snowballr-api/review";
+import type { Review } from "@se-uulm/snowballr-grpc-client/review";
 import type { CriterionWithReviews, StringifiedPaper } from "#lib/model/general.js";
-import type { Criterion } from "snowballr-api/criterion";
+import type { Criterion } from "@se-uulm/snowballr-grpc-client/criterion";
 import type { ProjectPaperViewProps } from "#lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 import type { ForwardAndBackwardReferencesCardContentProps } from "#lib/components/composites/paper-components/paper-view/cards/PaperResearchContextCard.svelte";
 import type { ButtonBarProps } from "#lib/components/composites/paper-components/paper-view/ButtonBar.svelte";

@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
-import { Project_Information } from "snowballr-api/project";
-import { Timestamp } from "snowballr-api/google/protobuf/timestamp";
+import { Project_Information } from "@se-uulm/snowballr-grpc-client/project";
+import { Timestamp } from "@se-uulm/snowballr-grpc-client/google/protobuf/timestamp";
 import type { DockerMockBackend } from "#tests/e2e/utils/helper/mock-backend.js";
 
 const MESSAGE_FRAME = 0x00;

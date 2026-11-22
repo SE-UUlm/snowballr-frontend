@@ -1,5 +1,5 @@
-import { Nothing } from "snowballr-api/base";
-import type { Paper } from "snowballr-api/paper";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

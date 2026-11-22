@@ -1,8 +1,8 @@
 import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
-import { Project, SnowballingType } from "snowballr-api/project";
+import { Project, SnowballingType } from "@se-uulm/snowballr-grpc-client/project";
 import { Criteria, Reviews } from "#tests/example-data.js";
-import type { Paper } from "snowballr-api/paper";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { createPaper } from "#tests/model-builder.js";
 import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
 import { ReviewSettingsPageModel } from "#tests/e2e/settings/review/review-settings-page-model.js";

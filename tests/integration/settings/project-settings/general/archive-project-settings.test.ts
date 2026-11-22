@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { mockApiCall } from "#tests/setupTest.js";
 import { createProject } from "#tests/model-builder.js";
 import ArchiveProjectSettings from "#lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
-import { ProjectStatus } from "snowballr-api/project";
+import { ProjectStatus } from "@se-uulm/snowballr-grpc-client/project";
 import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
 import { refreshProject } from "#lib/model/cache/project-cache.js";
 

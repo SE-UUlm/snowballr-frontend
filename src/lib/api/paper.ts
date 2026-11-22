@@ -1,5 +1,5 @@
 import type { PartialMessage } from "@protobuf-ts/runtime";
-import { Paper } from "snowballr-api/paper";
+import { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { client } from "#lib/api/client.js";
 import { buildFieldMask } from "#lib/api/fieldmask.js";
 import { call } from "#lib/api/grpc.js";

@@ -20,11 +20,11 @@ import {
     Reviews,
     Users,
 } from "#tests/example-data.js";
-import type { ISnowballRClient } from "snowballr-api/main.client";
+import type { ISnowballRClient } from "@se-uulm/snowballr-grpc-client/main.client";
 import { RpcError, type RpcStatus, type UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { PaperDecision } from "snowballr-api/project";
-import { AuthenticationStatus } from "snowballr-api/authentication";
+import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
+import { AuthenticationStatus } from "@se-uulm/snowballr-grpc-client/authentication";
 import { client } from "#lib/api/client.js";
 import ResizeObserver from "resize-observer-polyfill";
 

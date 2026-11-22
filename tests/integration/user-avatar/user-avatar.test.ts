@@ -2,8 +2,8 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import userEvent from "@testing-library/user-event";
 import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
-import { UserRole, UserStatus } from "snowballr-api/user";
-import { ReviewDecision } from "snowballr-api/review";
+import { UserRole, UserStatus } from "@se-uulm/snowballr-grpc-client/user";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 
 describe("User avatar", () => {
     test("When no props are provided, then user avatar is added as an empty circle", () => {

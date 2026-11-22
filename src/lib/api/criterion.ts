@@ -1,4 +1,4 @@
-import type { Criterion, CriterionCategory } from "snowballr-api/criterion";
+import type { Criterion, CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { Nothing } from "snowballr-api/base";
-import { User } from "snowballr-api/user";
-import { UserSettings } from "snowballr-api/user_settings";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
+import { User } from "@se-uulm/snowballr-grpc-client/user";
+import { UserSettings } from "@se-uulm/snowballr-grpc-client/user_settings";
 import { ApiError } from "#lib/api/errors.js";
 import {
     getCurrentUser,

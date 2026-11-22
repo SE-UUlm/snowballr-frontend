@@ -1,6 +1,6 @@
 import { test } from "#tests/e2e/project/paper/project-paper-view-page-fixtures.js";
 import { expect } from "@playwright/test";
-import { ReviewDecision } from "snowballr-api/review";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 
 test.describe("Project Paper View Navigation", () => {
     test("When navigating to the project paper view, then the page is displayed", async ({

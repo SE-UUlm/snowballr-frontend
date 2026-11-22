@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { Project, SnowballingType } from "snowballr-api/project";
+import { Project, SnowballingType } from "@se-uulm/snowballr-grpc-client/project";
 import {
     commitProjectSetting,
     loadProjectSetting,

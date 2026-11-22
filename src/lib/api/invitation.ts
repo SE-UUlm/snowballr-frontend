@@ -1,4 +1,4 @@
-import type { User } from "snowballr-api/user";
+import type { User } from "@se-uulm/snowballr-grpc-client/user";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
-import { ReviewDecision } from "snowballr-api/review";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 import { client } from "#lib/api/client.js";
 import { load } from "#routes/project/[projectId]/paper/[paperId]/+page.js";
 import {

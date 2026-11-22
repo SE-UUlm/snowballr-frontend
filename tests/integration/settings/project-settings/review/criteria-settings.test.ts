@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import CriteriaSettings from "#lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
-import { CriterionCategory } from "snowballr-api/criterion";
+import { CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { createCriterion, createProject } from "#tests/model-builder.js";
 import {

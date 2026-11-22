@@ -5,9 +5,9 @@ import {
     ProjectPapersPageModel,
 } from "#tests/e2e/project/papers/project-papers-page-model.js";
 import { expect } from "@playwright/test";
-import { Author, type Paper } from "snowballr-api/paper";
+import { Author, type Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { createPaper } from "#tests/model-builder.js";
-import type { Project_Paper } from "snowballr-api/project";
+import type { Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { ProjectDashboardPageModel } from "#tests/e2e/project/dashboard/project-dashboard-page-model.js";
 import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";

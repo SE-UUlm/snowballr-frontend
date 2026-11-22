@@ -1,4 +1,4 @@
-import type { MemberRole, Project_Member } from "snowballr-api/project";
+import type { MemberRole, Project_Member } from "@se-uulm/snowballr-grpc-client/project";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

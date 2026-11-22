@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ReviewDecision } from "snowballr-api/review";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 import { ApiError } from "#lib/api/errors.js";
 import { createReview } from "#lib/api/review.js";
 import { createReview as buildReview } from "#tests/model-builder.js";

@@ -1,7 +1,10 @@
 import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
-import { AuthenticationStatus, AuthenticationStatusResponse } from "snowballr-api/authentication";
-import { Nothing } from "snowballr-api/base";
+import {
+    AuthenticationStatus,
+    AuthenticationStatusResponse,
+} from "@se-uulm/snowballr-grpc-client/authentication";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
 import { setFetch } from "#lib/api/fetch.js";
 import { call } from "#lib/api/grpc.js";
 import type * as ClientModule from "#lib/api/client.js";

@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { ReviewDecision } from "snowballr-api/review";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
 import { ReviewSettingsPageModel } from "#tests/e2e/settings/review/review-settings-page-model.js";
 import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { AuthenticationStatus } from "snowballr-api/authentication";
+import { AuthenticationStatus } from "@se-uulm/snowballr-grpc-client/authentication";
 import VerifyEmailPage from "#routes/(auth)/verifyemail/+page.svelte";
 import { load } from "#routes/(auth)/verifyemail/+page.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";

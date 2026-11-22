@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { MemberRole } from "snowballr-api/project";
+import { MemberRole } from "@se-uulm/snowballr-grpc-client/project";
 import { ApiError } from "#lib/api/errors.js";
 import {
     getProjectMembers,

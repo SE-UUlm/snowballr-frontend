@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Nothing } from "snowballr-api/base";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
 import { ApiError } from "#lib/api/errors.js";
 import {
     addPaperToReadingList,

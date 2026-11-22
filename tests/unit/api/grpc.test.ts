@@ -4,7 +4,7 @@ import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { ApiError, type ApiErrorKind } from "#lib/api/errors.js";
 import { call, toApiError } from "#lib/api/grpc.js";
 import { client } from "#lib/api/client.js";
-import { Nothing } from "snowballr-api/base";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
 import { mockFailedApiCall } from "#tests/setupTest.js";
 
 function codedError(code: unknown, message = "rpc failed") {

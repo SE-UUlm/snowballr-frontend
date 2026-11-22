@@ -1,8 +1,13 @@
 import type { AuthSnowballRClient } from "#tests/e2e/utils/helper/mock-backend.js";
-import { CriterionCategory } from "snowballr-api/criterion";
-import type { Paper } from "snowballr-api/paper";
-import { PaperDecision, Project, Project_Paper, ProjectStatus } from "snowballr-api/project";
-import { ReviewDecision } from "snowballr-api/review";
+import { CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
+import {
+    PaperDecision,
+    Project,
+    Project_Paper,
+    ProjectStatus,
+} from "@se-uulm/snowballr-grpc-client/project";
+import { ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 
 /*
 Fixed, hand-written data for the visual regression tests.

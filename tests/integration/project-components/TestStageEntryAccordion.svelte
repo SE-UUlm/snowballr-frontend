@@ -1,7 +1,7 @@
 <script lang="ts">
     import StageEntry from "#lib/components/composites/project-components/StageEntry.svelte";
     import * as Accordion from "#lib/components/primitives/accordion/index.js";
-    import { type Project_Paper } from "snowballr-api/project";
+    import { type Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
     import type { Stage } from "#lib/model/general.js";
     import { createProject, loading } from "#tests/model-builder.js";
 

@@ -1,5 +1,5 @@
-import type { Paper } from "snowballr-api/paper";
-import type { Project_Paper } from "snowballr-api/project";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
+import type { Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

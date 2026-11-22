@@ -1,4 +1,4 @@
-import type { Review, ReviewDecision } from "snowballr-api/review";
+import type { Review, ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

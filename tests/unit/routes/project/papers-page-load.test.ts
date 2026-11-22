@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { MemberRole } from "snowballr-api/project";
+import { MemberRole } from "@se-uulm/snowballr-grpc-client/project";
 import { load } from "#routes/project/[projectId]/papers/+page.js";
 import {
     createCriterion,

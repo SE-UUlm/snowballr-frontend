@@ -2,7 +2,7 @@ import { Members, Users } from "#tests/example-data.js";
 import { mockApiCall } from "#tests/setupTest.js";
 import { describe, expect, test } from "vitest";
 import { loadMembers } from "#lib/utils/project-member-settings-helper.js";
-import { MemberRole } from "snowballr-api/project";
+import { MemberRole } from "@se-uulm/snowballr-grpc-client/project";
 
 describe("LoadMembers", () => {
     test("When member is invitee, then isInvitationPending is true", async () => {
