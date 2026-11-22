@@ -41,13 +41,13 @@ function getPlaywrightVersion() {
     return lock.packages["node_modules/@playwright/test"].version;
 }
 
-/** Starts `playwright run-server` in Docker and returns the container id and WebSocket endpoint. */
-async function startBrowserServer(version) {
+/** Starts `playwright run-server` in a detached container and returns the container id. */
+function startContainer(version) {
     const image = `mcr.microsoft.com/playwright:v${version}-noble`;
-    const containerId = docker(
+    return docker(
         "run",
         "--pull=missing",
-        "--rm",
+        // No `--rm`: if the server fails to start, its logs must still be readable to show why.
         "--init",
         "--detach",
         "--user=pwuser",
@@ -59,27 +59,44 @@ async function startBrowserServer(version) {
         "-c",
         `npx -y playwright@${version} run-server --port ${CONTAINER_PORT} --host 0.0.0.0`,
     );
+}
 
-    const hostPort = docker("port", containerId, `${CONTAINER_PORT}`).split(":").pop();
+/** Returns the container's stdout and stderr (e.g. npm errors), without printing them. */
+function containerLogs(containerId) {
+    const { stdout, stderr } = spawnSync("docker", ["logs", containerId], { encoding: "utf8" });
+    return `${stdout ?? ""}${stderr ?? ""}`.trim();
+}
 
-    // Wait until the server announces that it is listening.
+function isRunning(containerId) {
+    return docker("inspect", "--format", "{{.State.Running}}", containerId) === "true";
+}
+
+/** Waits until the server in the container is listening and returns its WebSocket endpoint. */
+async function waitForBrowserServer(containerId, version) {
     const deadline = Date.now() + 120_000;
-    while (!docker("logs", containerId).includes("Listening on")) {
-        if (Date.now() > deadline) {
-            stopContainer(containerId);
-            throw new Error("Timed out waiting for the Playwright browser server in Docker.");
+    while (!containerLogs(containerId).includes("Listening on")) {
+        if (!isRunning(containerId) || Date.now() > deadline) {
+            // Fetched again, so that output written just before the container exited is included.
+            const logs = containerLogs(containerId);
+            throw new Error(
+                "The Playwright browser server in Docker could not be started. It downloads " +
+                    `playwright@${version} from npm, so it needs network access. Output of the ` +
+                    `container:\n${logs || "(none)"}`,
+            );
         }
         await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
-    return { containerId, wsEndpoint: `ws://127.0.0.1:${hostPort}/` };
+    const hostPort = docker("port", containerId, `${CONTAINER_PORT}`).split(":").pop();
+    return `ws://127.0.0.1:${hostPort}/`;
 }
 
-function stopContainer(containerId) {
+/** Stops and removes the container; does nothing if it is already gone. */
+function removeContainer(containerId) {
     try {
-        docker("stop", containerId);
+        execFileSync("docker", ["rm", "--force", containerId], { stdio: "ignore" });
     } catch {
-        // already stopped
+        // already removed
     }
 }
 
@@ -115,17 +132,20 @@ async function main() {
     if (update) playwrightArgs.push("--update-snapshots=changed");
 
     assertDockerAvailable();
-    const { containerId, wsEndpoint } = await startBrowserServer(getPlaywrightVersion());
+    const version = getPlaywrightVersion();
+    const containerId = startContainer(version);
 
-    const stop = () => stopContainer(containerId);
+    // Registered right away, as the server may take a while to start, and the detached
+    // container would keep running after an interrupted script.
     process.on("SIGINT", () => {
-        stop();
+        removeContainer(containerId);
         process.exit(130);
     });
 
     const startedAt = Date.now();
     let status;
     try {
+        const wsEndpoint = await waitForBrowserServer(containerId, version);
         status = spawnSync(
             "node",
             [
@@ -141,8 +161,10 @@ async function main() {
                 env: { ...process.env, PW_VISUAL_WS_ENDPOINT: wsEndpoint },
             },
         ).status;
+    } catch (error) {
+        console.error(error.message);
     } finally {
-        stop();
+        removeContainer(containerId);
     }
 
     if (update) await compressPngs(findPngsModifiedSince(VISUAL_TEST_DIR, startedAt));
