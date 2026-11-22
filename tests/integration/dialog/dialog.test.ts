@@ -59,7 +59,12 @@ describe("Dialog", () => {
         render(TestDialog, { cancelDisabled: true });
 
         const trigger = await clickTrigger(user);
-        await waitFor(() => expect(screen.getByTestId("dialog-content")).toHaveFocus());
+        // Wait until the dialog has moved focus into itself, so Escape is sent to it
+        await waitFor(() =>
+            expect(screen.getByTestId("dialog-content")).toContainElement(
+                document.activeElement as HTMLElement,
+            ),
+        );
 
         await user.keyboard("{Escape}");
         expect(trigger).toHaveAttribute("data-state", "open");
