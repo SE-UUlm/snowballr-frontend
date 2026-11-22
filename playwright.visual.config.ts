@@ -66,7 +66,9 @@ export default defineConfig({
             // Overrides a local `.env`, so dev-only UI (e.g. the breakpoint badge) never shows up in tests.
             PUBLIC_IS_DEV_MODE: "false",
         },
-        reuseExistingServer: !process.env.CI,
+        // Never reuse a running preview: it may serve an outdated build or ignore the `env`
+        // above, and `test:visual:update` would then write its screenshots as baselines.
+        reuseExistingServer: false,
     },
     projects: [
         {
