@@ -36,7 +36,7 @@
 
     const href = $derived(resolve(`project/${project.id}/dashboard`));
     const isCurrentUserAdmin = $derived(
-        members.some((member) => member.user?.id === user.id && member.role === MemberRole.ADMIN),
+        members.find((member) => member.user?.id === user.id)?.role === MemberRole.ADMIN,
     );
 </script>
 

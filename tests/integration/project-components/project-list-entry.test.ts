@@ -3,7 +3,7 @@ import ProjectListEntry from "#lib/components/composites/project-components/Proj
 import { render, screen } from "@testing-library/svelte";
 import { Projects, Users } from "#tests/example-data.js";
 import { MemberRole } from "@se-uulm/snowballr-grpc-client/project";
-import { mockUserContext } from "../test-helper";
+import { mockUserContext } from "#tests/integration/test-helper.js";
 
 describe("ProjectListEntryComponent", () => {
     test("When all required props except an onClick handler are provided, then the project list entry is completely shown.", () => {
