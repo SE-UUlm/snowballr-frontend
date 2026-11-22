@@ -14,6 +14,8 @@ export default defineConfig({
             preprocess: vitePreprocess(),
             adapter: adapter(),
             alias: {
+                $lib: "./src/lib",
+                "$lib/*": "./src/lib/*",
                 $tests: "./tests",
                 "$tests/*": "./tests/*",
             },
