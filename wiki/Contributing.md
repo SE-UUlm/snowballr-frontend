@@ -326,8 +326,8 @@ trigger a refresh of the user context to ensure all parts of the application hav
 ## Backend Access
 
 Routes and components reach the backend only through the domain modules in `src/lib/api/`. Only these modules import
-the generated API (`snowballr-api`), the protobuf-ts runtime (`@protobuf-ts/*`) and the client. This keeps transport
-details in one place, so the backend's switch from gRPC to REST
+the generated API (`@se-uulm/snowballr-grpc-client`), the protobuf-ts runtime (`@protobuf-ts/*`) and the client. This keeps
+transport details in one place, so the backend's switch from gRPC to REST
 ([snowballr-backend#536](https://github.com/SE-UUlm/snowballr-backend/issues/536)) changes one module per domain instead
 of every call site.
 
@@ -345,8 +345,8 @@ src/lib/api/
 Outside the layer, only the domain modules, `errors.ts`, `types.ts` and `fetch.ts` are imported. `fetch.ts` is for the
 root layout, which passes the `fetch` of its load function to `setFetch`. If code outside the layer needs a generated
 type that `types.ts` doesn't export yet, add it there. ESLint fails on any other import of the layer's modules,
-`snowballr-api` or `@protobuf-ts/*` outside `src/lib/api/` (`no-restricted-imports` in `eslint.config.js`). Tests are
-exempt and may import `snowballr-api` and the client directly.
+`@se-uulm/snowballr-grpc-client` or `@protobuf-ts/*` outside `src/lib/api/` (`no-restricted-imports` in
+`eslint.config.js`). Tests are exempt and may import `@se-uulm/snowballr-grpc-client` and the client directly.
 
 The domain modules follow these rules:
 
@@ -366,7 +366,7 @@ an `ApiError`. Pass a function that starts the call, so a synchronous throw of t
 
 ```ts
 // src/lib/api/project.ts
-import { Project } from "snowballr-api/project";
+import { Project } from "@se-uulm/snowballr-grpc-client/project";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 import { buildFieldMask } from "#lib/api/fieldmask.js";
