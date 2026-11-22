@@ -6,7 +6,7 @@
     import { cn } from "#lib/utils/shadcn-helper.js";
     import { buttonVariants } from "#lib/components/primitives/button/index.js";
     import type { FetcherInformation } from "#lib/api/types.js";
-    import type { SaveFetchers } from "./fetcher";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
     import type { Fetchers } from "#lib/api/fetcher.js";
 
     interface Props {

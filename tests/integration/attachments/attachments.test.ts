@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import ClickOutsideOrEscapeAttachmentComponent from "./ClickOutsideOrEscapeAttachmentComponent.svelte";
+import ClickOutsideOrEscapeAttachmentComponent from "#tests/integration/attachments/ClickOutsideOrEscapeAttachmentComponent.svelte";
 
 describe("Click outside or press escape action", () => {
     test("When a component is created with the 'clickOutsideOrEscape' attachment and the user clicks outside, then the 'onClickedOutsideOrEscape' callback is called.", async () => {

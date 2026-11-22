@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./home-page-fixture";
+import { test } from "#tests/e2e/homepage/home-page-fixture.js";
 
 test.describe("Project Creation Tests", () => {
     test("When clicking on the 'Create Project' button on the homepage, then a dialog for creating the project is opened.", async ({

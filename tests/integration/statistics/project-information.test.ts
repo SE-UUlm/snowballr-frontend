@@ -1,8 +1,8 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import ProjectInformation from "#lib/components/composites/statistics/ProjectInformation.svelte";
-import { waitForComponentLoading } from "../test-helper";
-import { loading } from "../../model-builder";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { loading } from "#tests/model-builder.js";
 
 describe("ProjectInformation", () => {
     test("When all required props are provided, then the project information component is completely shown.", async () => {

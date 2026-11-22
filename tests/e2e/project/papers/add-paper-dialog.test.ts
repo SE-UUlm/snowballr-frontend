@@ -1,6 +1,10 @@
 import { expect } from "@playwright/test";
-import { test, LOCAL_CANDIDATE_TITLES, SEARCH_QUERY } from "./add-paper-dialog-fixtures";
-import { fetcherOnlyPaperTitles } from "./add-paper-dialog-model";
+import {
+    test,
+    LOCAL_CANDIDATE_TITLES,
+    SEARCH_QUERY,
+} from "#tests/e2e/project/papers/add-paper-dialog-fixtures.js";
+import { fetcherOnlyPaperTitles } from "#tests/e2e/project/papers/add-paper-dialog-model.js";
 import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 
 test.describe("Add Paper Dialog", () => {

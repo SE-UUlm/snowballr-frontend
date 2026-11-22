@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { ProjectSetupSettingsPageModel } from "./project-setup-settings-page-model";
-import { test as base } from "../../utils/fixtures/shared-fixture";
+import { ProjectSetupSettingsPageModel } from "#tests/e2e/settings/projectsetup/project-setup-settings-page-model.js";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import { Nothing } from "snowballr-api/base";
 import { Project_Settings } from "snowballr-api/project";
 import { UserSettings } from "snowballr-api/user_settings";

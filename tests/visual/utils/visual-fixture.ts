@@ -1,6 +1,6 @@
 import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
-import { seedVisualData, type VisualData } from "./visual-data";
-import { pinProjectInformation } from "./pin-project-information";
+import { seedVisualData, type VisualData } from "#tests/visual/utils/visual-data.js";
+import { pinProjectInformation } from "#tests/visual/utils/pin-project-information.js";
 
 /** Fixed point in time for every visual test, so relative and absolute dates never change. */
 export const VISUAL_TEST_TIME = new Date("2026-01-15T10:00:00Z");

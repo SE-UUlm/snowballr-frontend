@@ -1,4 +1,4 @@
-import { test as base } from "../utils/fixtures/isolated-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { CreateProjectDialogModel } from "#tests/e2e/homepage/create-project-dialog-model.js";
 import { expect } from "@playwright/test";

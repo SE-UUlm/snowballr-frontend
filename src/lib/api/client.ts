@@ -2,8 +2,8 @@ import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-tran
 import { RpcError } from "@protobuf-ts/runtime-rpc";
 import { SnowballRClient } from "snowballr-api/main.client";
 import { PUBLIC_API_BASE_URL, PUBLIC_CREDENTIAL_POLICY } from "$app/env/public";
-import { getFetch } from "./fetch";
-import { grpcWebDevToolsInterceptor } from "./grpc-devtools";
+import { getFetch } from "#lib/api/fetch.js";
+import { grpcWebDevToolsInterceptor } from "#lib/api/grpc-devtools.js";
 import { IS_IN_DEV_MODE } from "#lib/constants.js";
 
 // Without the base URL, we cannot make any API calls. This module runs in the browser and during the

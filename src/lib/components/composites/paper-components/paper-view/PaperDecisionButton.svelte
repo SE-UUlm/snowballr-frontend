@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cn } from "#lib/utils/shadcn-helper.js";
-    import Tooltip from "../../utils/Tooltip.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
     import {
         type PaperDecisionButtonVariant,
         paperDecisionButtonVariants,

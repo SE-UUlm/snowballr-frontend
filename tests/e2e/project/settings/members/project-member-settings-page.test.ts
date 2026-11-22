@@ -1,4 +1,4 @@
-import { test } from "./project-members-settings-page-fixtures";
+import { test } from "#tests/e2e/project/settings/members/project-members-settings-page-fixtures.js";
 import { expect } from "@playwright/test";
 import { getNameOfCurrentUser } from "#tests/e2e/utils/helper/helper.js";
 import { getName } from "#lib/utils/common-helper.js";

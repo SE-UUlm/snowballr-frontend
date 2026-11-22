@@ -36,6 +36,32 @@ To set up the development environment, follow the steps in
 └── wiki/                   (this wiki)
 ```
 
+## Imports
+
+Files are imported via the [subpath imports](https://nodejs.org/api/packages.html#subpath-imports) declared in the
+`imports` field of `package.json`, never via relative paths, so moving a file doesn't break or change the imports of
+the files around it:
+
+| Subpath import | Directory     | Usable in                                    |
+| -------------- | ------------- | -------------------------------------------- |
+| `#lib/*`       | `src/lib/`    | everywhere                                   |
+| `#routes/*`    | `src/routes/` | `tests/` only (to test pages and load files) |
+| `#tests/*`     | `tests/`      | `tests/` and `scripts/`                      |
+
+Subpath imports need the file extension of the compiled file, i.e. `.js` for TypeScript files (also for
+`.svelte.ts`, which becomes `.svelte.js`) and `/index.js` for a directory:
+
+```ts
+import { cn } from "#lib/utils/shadcn-helper.js";
+import { resource } from "#lib/resource.svelte.js";
+import { Button } from "#lib/components/primitives/button/index.js";
+import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
+```
+
+ESLint rejects relative imports. The only exceptions are the generated `./$types` of a route, the `app.css` import of
+the root layout, and the shadcn/ui components in `src/lib/components/primitives/`, which are kept as the shadcn-svelte
+CLI generates them. Playwright resolves the subpath imports via `tests/playwright.tsconfig.json`.
+
 ## Supported Screen Sizes
 
 SnowballR supports screens from the `md` breakpoint (768px wide) upwards. Layouts have to work at 768px and above;
@@ -341,9 +367,9 @@ an `ApiError`. Pass a function that starts the call, so a synchronous throw of t
 ```ts
 // src/lib/api/project.ts
 import { Project } from "snowballr-api/project";
-import { client } from "./client";
-import { call } from "./grpc";
-import { buildFieldMask } from "./fieldmask";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
+import { buildFieldMask } from "#lib/api/fieldmask.js";
 
 export async function getProject(projectId: string): Promise<Project> {
   return call(() => client.getProjectById({ id: projectId }));

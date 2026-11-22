@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import TestAlert from "./TestAlert.svelte";
+import TestAlert from "#tests/integration/utils/TestAlert.svelte";
 import { render, screen } from "@testing-library/svelte";
 
 describe("Alert", () => {

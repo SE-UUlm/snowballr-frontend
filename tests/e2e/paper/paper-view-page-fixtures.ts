@@ -1,4 +1,4 @@
-import { test as base } from "../utils/fixtures/isolated-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { PaperViewPageModel } from "#tests/e2e/paper/paper-view-page-model.js";
 import { createPaper } from "#tests/model-builder.js";
 import { expect } from "@playwright/test";

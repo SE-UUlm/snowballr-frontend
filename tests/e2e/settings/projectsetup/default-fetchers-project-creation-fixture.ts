@@ -1,4 +1,4 @@
-import { test as base } from "./project-setup-settings-page-fixture";
+import { test as base } from "#tests/e2e/settings/projectsetup/project-setup-settings-page-fixture.js";
 import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { CreateProjectDialogModel } from "#tests/e2e/homepage/create-project-dialog-model.js";
 import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";

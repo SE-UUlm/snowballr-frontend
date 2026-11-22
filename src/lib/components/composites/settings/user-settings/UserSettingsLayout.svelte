@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
     import type { IconLinkTab } from "#lib/model/tabs.js";
-    import SettingsLayout from "../SettingsLayout.svelte";
+    import SettingsLayout from "#lib/components/composites/settings/SettingsLayout.svelte";
     import ClipboardCheck from "@lucide/svelte/icons/clipboard-check";
     import Settings from "@lucide/svelte/icons/settings";
     import Box from "@lucide/svelte/icons/box";

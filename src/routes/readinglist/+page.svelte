@@ -6,7 +6,7 @@
     import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
     import { filterPapers } from "#lib/utils/filters.js";
     import type { Paper } from "#lib/api/types.js";
-    import { loadReadingList } from "./helper.js";
+    import { loadReadingList } from "#lib/utils/reading-list-helper.js";
     import {
         getSearchTextFromURL,
         updateSearchTextParam,

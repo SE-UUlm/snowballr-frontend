@@ -10,7 +10,7 @@
         HTMLInputTypeAttribute,
     } from "svelte/elements";
     import { z } from "zod";
-    import InputValidationCriterion from "./InputValidationCriterion.svelte";
+    import InputValidationCriterion from "#lib/components/composites/input/InputValidationCriterion.svelte";
     import type { ResolvedPathname } from "$app/types";
     import Link from "#lib/components/composites/link/Link.svelte";
 

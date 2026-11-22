@@ -13,6 +13,7 @@
     "type": "module",
     "imports": {
         "#lib/*": "./src/lib/*",
+        "#routes/*": "./src/routes/*",
         "#tests/*": "./tests/*"
     },
     "license": "GPL-3.0-or-later",

@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
-import { test } from "./project-slr-settings-page-fixture";
+import { test } from "#tests/e2e/project/settings/slr/project-slr-settings-page-fixture.js";
 
 test.describe("SLR Settings Navigation", () => {
     test("When navigating to the project slr settings, then the page is displayed", async ({

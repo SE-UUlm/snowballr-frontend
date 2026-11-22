@@ -1,9 +1,9 @@
 <script lang="ts">
-    import CriterionListEntry from "./CriterionListEntry.svelte";
+    import CriterionListEntry from "#lib/components/composites/criteria/CriterionListEntry.svelte";
     import type { CriterionWithReviews } from "#lib/model/general.js";
     import type { User } from "#lib/api/types.js";
-    import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
-    import NamedList from "../list/NamedList.svelte";
+    import CriterionListEntrySkeleton from "#lib/components/composites/criteria/CriterionListEntrySkeleton.svelte";
+    import NamedList from "#lib/components/composites/list/NamedList.svelte";
 
     interface Props {
         listTitle: "Hard Exclusion" | "Soft Exclusion" | "Inclusion";

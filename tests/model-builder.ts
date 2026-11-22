@@ -8,7 +8,15 @@ import {
     type Project_Paper,
     type Project_Settings,
 } from "snowballr-api/project";
-import { Authors, Criteria, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+import {
+    Authors,
+    Criteria,
+    Papers,
+    ProjectPapers,
+    Projects,
+    Reviews,
+    Users,
+} from "#tests/example-data.js";
 import type {
     IndependentPaperViewProps,
     NonProjectPaperViewProps,

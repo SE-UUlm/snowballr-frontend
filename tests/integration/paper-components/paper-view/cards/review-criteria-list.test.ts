@@ -3,7 +3,10 @@ import { render, screen } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test } from "vitest";
 import { createReviewedCriterion, loading } from "#tests/model-builder.js";
 import { CriterionCategory } from "snowballr-api/criterion";
-import { mockSelectedCriteriaContext, waitForComponentLoading } from "../../../test-helper";
+import {
+    mockSelectedCriteriaContext,
+    waitForComponentLoading,
+} from "#tests/integration/test-helper.js";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
 describe("ReviewCriteriaList", () => {

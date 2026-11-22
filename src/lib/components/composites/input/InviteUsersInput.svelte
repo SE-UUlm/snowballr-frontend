@@ -1,11 +1,11 @@
 <script lang="ts">
-    import ChipsInput from "./ChipsInput.svelte";
+    import ChipsInput from "#lib/components/composites/input/ChipsInput.svelte";
     import type { User } from "#lib/api/types.js";
     import { getName } from "#lib/utils/common-helper.js";
     import type { ValidationResult } from "#lib/model/general.js";
     import { Schema } from "#lib/schemas.js";
     import { getInviteCandidates } from "#lib/api/invitation.js";
-    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionError } from "#lib/model/action-error.js";
 
     interface Props {

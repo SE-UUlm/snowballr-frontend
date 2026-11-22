@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { FetcherInformation } from "#lib/api/types.js";
     import Plus from "@lucide/svelte/icons/plus";
-    import FetcherChangeDialog from "./FetcherChangeDialog.svelte";
-    import type { SaveFetchers } from "./fetcher";
+    import FetcherChangeDialog from "#lib/components/composites/settings/fetcher/FetcherChangeDialog.svelte";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
     import type { Fetchers } from "#lib/api/fetcher.js";
 
     interface Props {

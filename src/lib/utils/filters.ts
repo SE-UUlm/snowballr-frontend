@@ -1,6 +1,6 @@
 import { basicMatch, extendedMatch, Fzf, type Selector } from "fzf";
 import type { Paper, Project_Paper } from "#lib/api/types.js";
-import { getNames } from "./common-helper";
+import { getNames } from "#lib/utils/common-helper.js";
 import type { ProjectPaperFilter } from "#lib/model/general.js";
 
 /**

@@ -27,7 +27,7 @@
     import Plus from "@lucide/svelte/icons/plus";
     import { onMount } from "svelte";
     import { toast } from "svelte-sonner";
-    import CriterionSettingsRow from "./CriterionSettingsRow.svelte";
+    import CriterionSettingsRow from "#lib/components/composites/settings/project-settings/review/CriterionSettingsRow.svelte";
 
     interface Props {
         projectId: string;

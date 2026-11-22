@@ -4,8 +4,8 @@ import type {
     RegisterRequest,
 } from "snowballr-api/authentication";
 import { Nothing } from "snowballr-api/base";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Asks the backend whether the session cookies authenticate the current user.

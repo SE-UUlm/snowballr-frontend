@@ -1,5 +1,5 @@
 import { Project_Paper, type Author, type Paper } from "#lib/api/types.js";
-import { getNames } from "./common-helper";
+import { getNames } from "#lib/utils/common-helper.js";
 import type { StringifiedPaper } from "#lib/model/general.js";
 
 function isProjectPaper(paper: Project_Paper | Paper): paper is Project_Paper {

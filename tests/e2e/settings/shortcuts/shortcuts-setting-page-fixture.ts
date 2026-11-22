@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { ShortcutsSettingsPageModel } from "./shortcuts-settings-page-model";
-import { test as base } from "../../utils/fixtures/shared-fixture";
+import { ShortcutsSettingsPageModel } from "#tests/e2e/settings/shortcuts/shortcuts-settings-page-model.js";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
 import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
 

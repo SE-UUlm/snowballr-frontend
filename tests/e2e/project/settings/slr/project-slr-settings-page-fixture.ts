@@ -1,4 +1,4 @@
-import { test as base } from "../../../utils/fixtures/shared-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import { expect } from "@playwright/test";
 import { createPaper } from "#tests/model-builder.js";
 import { ProjectSLRSettingsPageModel } from "#tests/e2e/project/settings/slr/project-slr-settings-page-model.js";

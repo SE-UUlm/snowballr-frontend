@@ -76,7 +76,7 @@ to test components and user interaction. For example, to test if a button is cli
 ```ts
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import MyComponent from "./MyComponent.svelte";
+import MyComponent from "#lib/components/composites/group/MyComponent.svelte";
 
 test("When the button is clicked, then the text should change", async () => {
   const user = userEvent.setup();

@@ -5,7 +5,7 @@ import {
     mockUserContext,
     resetUserContext as resetMockUserContext,
     setContextUser as setMockContextUser,
-} from "../test-helper";
+} from "#tests/integration/test-helper.js";
 
 describe("NavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", () => {

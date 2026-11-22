@@ -1,6 +1,6 @@
 import { Nothing } from "snowballr-api/base";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /** An exported project, ready to be saved as a file. */
 export interface ProjectExport {

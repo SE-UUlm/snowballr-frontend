@@ -5,7 +5,7 @@
     import KeywordSettings from "#lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
     import NumberOfReviewersSettings from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
     import { resource } from "#lib/resource.svelte.js";
-    import { isCurrentUserProjectAdmin } from "../helper";
+    import { isCurrentUserProjectAdmin } from "#lib/utils/project-member-settings-helper.js";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);

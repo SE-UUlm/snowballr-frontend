@@ -3,7 +3,7 @@
     import { Label } from "#lib/components/primitives/label/index.js";
     import Switch from "#lib/components/primitives/switch/switch.svelte";
     import { shortcuts } from "#lib/global-state/shortcuts-visibility-state.svelte.js";
-    import SettingsSection from "../SettingsSection.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
 </script>
 
 <!--

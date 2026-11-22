@@ -2,8 +2,8 @@
     import { updateUserName } from "#lib/api/user.js";
     import { Schema } from "#lib/schemas.js";
     import { toast } from "svelte-sonner";
-    import Input from "../../input/Input.svelte";
-    import SettingsSection from "../SettingsSection.svelte";
+    import Input from "#lib/components/composites/input/Input.svelte";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
     import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "#lib/utils/common-helper.js";
     import { triggerCurrentUserRefresh } from "#lib/model/cache/user-cache.js";
@@ -13,7 +13,7 @@
         createActionWarning,
         type ActionError,
     } from "#lib/model/action-error.js";
-    import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
 
     const user = $derived(getUserContext());
 

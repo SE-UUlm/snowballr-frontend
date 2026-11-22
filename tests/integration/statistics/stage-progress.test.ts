@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { waitForComponentLoading } from "../test-helper";
-import { loading } from "../../model-builder";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { loading } from "#tests/model-builder.js";
 import StageProgress, {
     type StageProgressInterface,
 } from "#lib/components/composites/statistics/StageProgress.svelte";

@@ -1,6 +1,6 @@
-import { test as base } from "../utils/fixtures/isolated-fixture";
-import { HomePageModel } from "../homepage/home-page-model";
-import { ErrorPageModel } from "./error-page-model";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ErrorPageModel } from "#tests/e2e/error/error-page-model.js";
 
 type ErrorPageFixtures = {
     errorPage: ErrorPageModel;

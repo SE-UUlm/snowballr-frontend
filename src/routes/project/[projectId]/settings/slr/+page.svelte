@@ -6,7 +6,7 @@
     import FetcherSettings from "#lib/components/composites/settings/project-settings/slr/fetcher/FetcherSettings.svelte";
     import { ProjectStatus } from "#lib/api/types.js";
     import { resource } from "#lib/resource.svelte.js";
-    import { isCurrentUserProjectAdmin } from "../helper";
+    import { isCurrentUserProjectAdmin } from "#lib/utils/project-member-settings-helper.js";
     import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionWarning } from "#lib/model/action-error.js";
     import SnowballingTypeSettings from "#lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";

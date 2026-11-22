@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Project } from "#lib/api/types.js";
-    import DeleteProjectSettingsDialog from "./DeleteProjectSettingsDialog.svelte";
+    import DeleteProjectSettingsDialog from "#lib/components/composites/settings/project-settings/general/DeleteProjectSettingsDialog.svelte";
 
     interface Props {
         projectId: string;

@@ -3,7 +3,7 @@ import { type User } from "snowballr-api/user";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { Users } from "../../example-data";
+import { Users } from "#tests/example-data.js";
 
 describe("ReviewersSelect", () => {
     beforeEach(() => {

@@ -1,9 +1,9 @@
 <script lang="ts">
     import Checkbox from "#lib/components/primitives/checkbox/checkbox.svelte";
     import CircleHelp from "@lucide/svelte/icons/circle-help";
-    import Tooltip from "../utils/Tooltip.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
     import type { CriterionWithReviews } from "#lib/model/general.js";
-    import UserAvatar from "../user-avatar/UserAvatar.svelte";
+    import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
     import type { User } from "#lib/api/types.js";
     import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
     import { getAlreadyReviewedContext } from "#lib/custom-context/was-paper-reviewed-context.js";

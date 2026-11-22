@@ -1,8 +1,8 @@
 import PaperDetail from "#lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { loading, createStringifiedPaper, createPaper } from "../../../model-builder";
-import { waitForComponentLoading } from "../../test-helper";
+import { loading, createStringifiedPaper, createPaper } from "#tests/model-builder.js";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { stringifyPaper } from "#lib/utils/model-helper.js";
 
 describe("PaperDetail", () => {

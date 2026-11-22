@@ -10,9 +10,9 @@
     import InviteUsersInput from "#lib/components/composites/input/InviteUsersInput.svelte";
     import Dialog from "#lib/components/composites/dialog/Dialog.svelte";
     import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
-    import LoadingButton from "../button/LoadingButton.svelte";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
     import { loadingWrapper } from "#lib/utils/common-helper.js";
-    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
     import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import { resolve } from "$app/paths";
     import { SvelteSet } from "svelte/reactivity";

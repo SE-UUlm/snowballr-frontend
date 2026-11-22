@@ -1,11 +1,11 @@
-import { test as base } from "../utils/fixtures/shared-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import {
     EXTRA_PAPER_TITLE,
     NUM_PAPERS_DEFAULT,
     PREDICTABLE_PAPER_TITLE_PREFIX,
     ReadingListPageModel,
 } from "#tests/e2e/readinglist/reading-list-page-model.js";
-import { HomePageModel } from "../homepage/home-page-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { expect } from "@playwright/test";
 import { Nothing } from "snowballr-api/base";
 import type { Project } from "snowballr-api/project";

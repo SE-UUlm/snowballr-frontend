@@ -1,4 +1,4 @@
-import { test } from "./account-settings-page-fixture";
+import { test } from "#tests/e2e/settings/account/account-settings-page-fixture.js";
 import { expect } from "@playwright/test";
 
 test.describe("Account Settings Navigation", () => {

@@ -6,7 +6,7 @@
     import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
     import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
-    import { updateDefaultFetchers } from "./update-default-fetchers";
+    import { updateDefaultFetchers } from "#lib/components/composites/settings/user-settings/fetcher/update-default-fetchers.js";
 
     let loadError: ActionError = $state(undefined);
     let loading = $state(true);

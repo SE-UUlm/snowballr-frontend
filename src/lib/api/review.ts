@@ -1,6 +1,6 @@
 import type { Review, ReviewDecision } from "snowballr-api/review";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Creates the current user's review of a project paper.

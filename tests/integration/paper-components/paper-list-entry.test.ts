@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, test } from "vitest";
 import PaperEntry from "#lib/components/composites/paper-components/PaperListEntry.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { waitForComponentLoading } from "../test-helper";
-import { Papers, Reviews } from "../../example-data";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { Papers, Reviews } from "#tests/example-data.js";
 import { PaperDecision } from "snowballr-api/project";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 

@@ -1,9 +1,9 @@
 import { expect, test, describe, assert } from "vitest";
 import PaperNavigationBar from "#lib/components/composites/navigation-bar/PaperNavigationBar.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { loading, createPaper } from "../../model-builder";
-import { mockUserContext, waitForComponentLoading } from "../test-helper";
-import { Authors } from "../../example-data";
+import { loading, createPaper } from "#tests/model-builder.js";
+import { mockUserContext, waitForComponentLoading } from "#tests/integration/test-helper.js";
+import { Authors } from "#tests/example-data.js";
 
 describe("PaperNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {

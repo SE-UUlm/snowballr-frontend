@@ -1,6 +1,6 @@
 import type { MemberRole, Project_Member } from "snowballr-api/project";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Loads the members of a project. Users with a pending invitation are left out.

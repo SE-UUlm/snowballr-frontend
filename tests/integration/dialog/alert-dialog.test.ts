@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import TestAlertDialog from "./TestAlertDialog.svelte";
+import TestAlertDialog from "#tests/integration/dialog/TestAlertDialog.svelte";
 
 describe("AlertDialog", () => {
     test("When all props are provided, then component is rendered correctly", () => {

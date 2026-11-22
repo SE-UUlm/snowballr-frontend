@@ -10,8 +10,16 @@ import {
     createProjectPaper,
     createReview,
     createUser,
-} from "./model-builder";
-import { Criteria, Members, Papers, ProjectPapers, Projects, Reviews, Users } from "./example-data";
+} from "#tests/model-builder.js";
+import {
+    Criteria,
+    Members,
+    Papers,
+    ProjectPapers,
+    Projects,
+    Reviews,
+    Users,
+} from "#tests/example-data.js";
 import type { ISnowballRClient } from "snowballr-api/main.client";
 import { RpcError, type RpcStatus, type UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";

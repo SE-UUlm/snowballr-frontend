@@ -101,6 +101,9 @@ and point to the canonical page.
   primitives. Build with Vite; production preview with `@sveltejs/adapter-node`.
 - **Transport:** gRPC-Web via `@protobuf-ts/grpcweb-transport`. The browser talks to a gRPC-Web proxy that
   forwards to the backend (proxy is provided by the umbrella `snowballr` repo).
+- **Imports:** Use the subpath imports `#lib/*`, `#routes/*` (tests only) and `#tests/*` from `package.json` with
+  explicit extensions (`#lib/foo.js` for `foo.ts`, `.svelte` kept); relative imports are rejected by ESLint
+  (exceptions: `./$types`, shadcn primitives). Rules: wiki/Contributing.md#imports.
 - **Backend access:** Routes and components call the domain functions in `#lib/api/*`, which reject with
   `ApiError` (check with `isApiError`). Only `src/lib/api/` imports `snowballr-api`, `@protobuf-ts/*` or the client;
   a missing function goes into its domain module. Rules: wiki/Contributing.md#backend-access.

@@ -16,8 +16,8 @@ import {
     sumBy,
     wrapLongWords,
 } from "#lib/utils/common-helper.js";
-import { createProjectPaper } from "../../model-builder";
-import { ProjectPapers, Reviews } from "../../example-data";
+import { createProjectPaper } from "#tests/model-builder.js";
+import { ProjectPapers, Reviews } from "#tests/example-data.js";
 import { PaperDecision, type Project_Paper } from "snowballr-api/project";
 import type { Person, PersonWithEmail } from "#lib/model/general.js";
 

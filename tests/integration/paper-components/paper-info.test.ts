@@ -2,7 +2,7 @@ import PaperInfo from "#lib/components/composites/paper-components/PaperInfo.sve
 import { createPaper, loading } from "#tests/model-builder.js";
 import { render, screen } from "@testing-library/svelte";
 import { describe, test } from "vitest";
-import { waitForComponentLoading } from "../test-helper";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 
 describe("PaperInfo", () => {
     test("When paper ID is a UUID, then only the first 8 characters are shown", async () => {

@@ -1,5 +1,5 @@
-import { ProjectMemberSettingsPageModel } from "./models/project-member-settings-page-model";
-import { test as base } from "../../../utils/fixtures/shared-fixture";
+import { ProjectMemberSettingsPageModel } from "#tests/e2e/project/settings/members/models/project-member-settings-page-model.js";
+import { test as base } from "#tests/e2e/utils/fixtures/shared-fixture.js";
 import { expect } from "@playwright/test";
 import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { ProjectSettingsSidebarModel } from "#tests/e2e/project/settings/project-settings-sidebar-model.js";

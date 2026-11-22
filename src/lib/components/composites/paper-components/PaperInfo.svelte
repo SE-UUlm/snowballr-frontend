@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Paper } from "#lib/api/types.js";
     import { getNames } from "#lib/utils/common-helper.js";
-    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
     import type { WithElementRef } from "bits-ui";
     import type { HTMLAttributes } from "svelte/elements";
     import { cn } from "#lib/utils/shadcn-helper.js";

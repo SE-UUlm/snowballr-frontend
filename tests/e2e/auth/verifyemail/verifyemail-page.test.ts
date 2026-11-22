@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./verifyemail-page-fixture";
+import { test } from "#tests/e2e/auth/verifyemail/verifyemail-page-fixture.js";
 
 test.use({ user: null });
 

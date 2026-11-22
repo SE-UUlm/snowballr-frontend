@@ -1,4 +1,4 @@
-import { test } from "./paper-view-page-fixtures";
+import { test } from "#tests/e2e/paper/paper-view-page-fixtures.js";
 import { expect } from "@playwright/test";
 
 test.describe("Paper View Navigation", () => {

@@ -2,7 +2,7 @@
     import { getStatusColor, getStatusText, sumBy } from "#lib/utils/common-helper.js";
     import type { PaperStatus } from "#lib/model/general.js";
     import * as d3 from "d3";
-    import type { StageProgressInterface } from "./StageProgress.svelte";
+    import type { StageProgressInterface } from "#lib/components/composites/statistics/StageProgress.svelte";
 
     interface Segment {
         decision: PaperStatus | "No decision";

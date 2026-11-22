@@ -1,4 +1,4 @@
-import { test as base } from "../../utils/fixtures/isolated-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
 import { Project, SnowballingType } from "snowballr-api/project";
 import { Criteria, Reviews } from "#tests/example-data.js";

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { MemberRole } from "snowballr-api/project";
-import { load } from "../../../../src/routes/project/[projectId]/papers/+page";
+import { load } from "#routes/project/[projectId]/papers/+page.js";
 import {
     createCriterion,
     createPaper,

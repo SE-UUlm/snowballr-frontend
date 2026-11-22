@@ -1,7 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "./project-papers-page-fixtures";
+import { test } from "#tests/e2e/project/papers/project-papers-page-fixtures.js";
 import { createAuthor, createPaper } from "#tests/model-builder.js";
-import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./project-papers-page-model";
+import {
+    getUniqueSequence,
+    NUM_PAPERS_PER_STAGE,
+} from "#tests/e2e/project/papers/project-papers-page-model.js";
 
 test.describe("Papers Overview Navigation", () => {
     test("When navigating to the papers overview page, then the page is displayed", async ({

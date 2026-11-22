@@ -3,7 +3,7 @@
     import * as Card from "#lib/components/primitives/card/index.js";
     import * as Tabs from "#lib/components/primitives/tabs/index.js";
     import type { Snippet } from "svelte";
-    import UserMenu from "./UserMenu.svelte";
+    import UserMenu from "#lib/components/composites/navigation-bar/UserMenu.svelte";
     import type { LinkTab } from "#lib/model/tabs.js";
     import type { ResolvedPathname } from "$app/types";
     import Link from "#lib/components/composites/link/Link.svelte";

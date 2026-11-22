@@ -8,7 +8,10 @@
     import { toast } from "svelte-sonner";
     import InviteUsersDialog from "#lib/components/composites/settings/project-settings/members/InviteUsersDialog.svelte";
     import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
-    import { isCurrentUserProjectAdmin, loadMembers } from "../helper";
+    import {
+        isCurrentUserProjectAdmin,
+        loadMembers,
+    } from "#lib/utils/project-member-settings-helper.js";
     import { refreshMembers } from "#lib/model/cache/project-members-cache.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
     import { getUserContext } from "#lib/custom-context/user-context.js";

@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "./reading-list-page-fixture";
+import { test } from "#tests/e2e/readinglist/reading-list-page-fixture.js";
 import {
     EXTRA_PAPER_TITLE,
     NUM_PAPERS_DEFAULT,
     PREDICTABLE_PAPER_TITLE_PREFIX,
-} from "./reading-list-page-model";
+} from "#tests/e2e/readinglist/reading-list-page-model.js";
 
 test.describe("Reading List Navigation", () => {
     test("When navigating to the reading list, then the page is displayed", async ({

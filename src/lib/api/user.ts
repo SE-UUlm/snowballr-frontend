@@ -1,10 +1,10 @@
 import { Nothing } from "snowballr-api/base";
 import { User } from "snowballr-api/user";
 import { UserSettings } from "snowballr-api/user_settings";
-import { client } from "./client";
-import { buildFieldMask } from "./fieldmask";
-import { call } from "./grpc";
-import type { Fetchers } from "./fetcher";
+import { client } from "#lib/api/client.js";
+import { buildFieldMask } from "#lib/api/fieldmask.js";
+import { call } from "#lib/api/grpc.js";
+import type { Fetchers } from "#lib/api/fetcher.js";
 
 /**
  * Loads the user that the session belongs to.

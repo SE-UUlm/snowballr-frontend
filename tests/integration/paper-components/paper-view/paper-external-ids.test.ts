@@ -1,8 +1,8 @@
 import PaperExternalIds from "#lib/components/composites/paper-components/paper-view/PaperExternalIds.svelte";
 import { render, screen, waitFor, within } from "@testing-library/svelte";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { loading, createPaper } from "../../../model-builder";
-import { waitForComponentLoading } from "../../test-helper";
+import { loading, createPaper } from "#tests/model-builder.js";
+import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { stringifyPaper } from "#lib/utils/model-helper.js";
 import userEvent from "@testing-library/user-event";
 import { EXTERNAL_ID_TYPE_OPTIONS } from "#lib/model/external-id-type.js";

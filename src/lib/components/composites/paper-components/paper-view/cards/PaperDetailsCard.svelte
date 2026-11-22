@@ -1,6 +1,6 @@
 <script lang="ts">
-    import PaperCard from "./PaperCard.svelte";
-    import PaperCardContent from "./PaperCardContent.svelte";
+    import PaperCard from "#lib/components/composites/paper-components/paper-view/cards/PaperCard.svelte";
+    import PaperCardContent from "#lib/components/composites/paper-components/paper-view/cards/PaperCardContent.svelte";
     import type { Paper } from "#lib/api/types.js";
     import {
         createPaper,

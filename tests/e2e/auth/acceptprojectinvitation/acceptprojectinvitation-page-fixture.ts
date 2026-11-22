@@ -1,5 +1,5 @@
-import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { AcceptProjectInvitationPageModel } from "./acceptprojectinvitation-page.model";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
+import { AcceptProjectInvitationPageModel } from "#tests/e2e/auth/acceptprojectinvitation/acceptprojectinvitation-page.model.js";
 import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
 import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
 

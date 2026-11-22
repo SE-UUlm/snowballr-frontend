@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { test } from "./sign-in-page-fixture";
-import { alice } from "../../utils/helper/users";
+import { test } from "#tests/e2e/auth/signin/sign-in-page-fixture.js";
+import { alice } from "#tests/e2e/utils/helper/users.js";
 
 test.use({ user: null });
 

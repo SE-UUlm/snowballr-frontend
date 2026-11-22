@@ -1,5 +1,5 @@
 <script lang="ts">
-    import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
+    import UserAvatarSkeleton from "#lib/components/composites/user-avatar/UserAvatarSkeleton.svelte";
     import PaperInfoSkeleton from "#lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
 
     // IMPORTANT: overwrite this property only for testing purpose

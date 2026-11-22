@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Separator from "../../primitives/separator/separator.svelte";
+    import Separator from "#lib/components/primitives/separator/separator.svelte";
     import type { IconLinkTab } from "#lib/model/tabs.js";
     import { cn } from "#lib/utils/shadcn-helper.js";
     import type { Snippet } from "svelte";

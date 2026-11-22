@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import TestDialog from "./TestDialog.svelte";
+import TestDialog from "#tests/integration/dialog/TestDialog.svelte";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 

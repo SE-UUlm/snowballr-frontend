@@ -9,7 +9,7 @@ import {
 } from "snowballr-api/project";
 import { Review, ReviewDecision } from "snowballr-api/review";
 import { Criterion, CriterionCategory } from "snowballr-api/criterion";
-import { createProjectSettings } from "./model-builder";
+import { createProjectSettings } from "#tests/model-builder.js";
 import type { Author, Paper } from "snowballr-api/paper";
 
 const johnDoeUser: User = {

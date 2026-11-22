@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import ProjectListEntry from "#lib/components/composites/project-components/ProjectListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
-import { Projects, Users } from "../../example-data";
+import { Projects, Users } from "#tests/example-data.js";
 import { MemberRole } from "snowballr-api/project";
 
 describe("ProjectListEntryComponent", () => {

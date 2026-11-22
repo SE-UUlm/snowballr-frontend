@@ -1,7 +1,7 @@
 <script lang="ts">
     import ArrowLeft from "@lucide/svelte/icons/arrow-left";
     import ArrowRight from "@lucide/svelte/icons/arrow-right";
-    import Tooltip from "../../utils/Tooltip.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
     import type { Project, Project_Paper } from "#lib/api/types.js";
     import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
     import {

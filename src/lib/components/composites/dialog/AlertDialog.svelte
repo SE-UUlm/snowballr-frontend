@@ -8,7 +8,7 @@
     import { wrapLongWords } from "#lib/utils/common-helper.js";
     import Alert from "#lib/components/composites/utils/Alert.svelte";
     import { isActionError } from "#lib/model/action-error.js";
-    import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
 
     interface Props {
         triggerProps?: DialogTriggerProps;

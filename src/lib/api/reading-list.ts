@@ -1,7 +1,7 @@
 import { Nothing } from "snowballr-api/base";
 import type { Paper } from "snowballr-api/paper";
-import { client } from "./client";
-import { call } from "./grpc";
+import { client } from "#lib/api/client.js";
+import { call } from "#lib/api/grpc.js";
 
 /**
  * Loads the papers on the current user's reading list.

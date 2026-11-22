@@ -1,4 +1,4 @@
-import { test as base } from "../../utils/fixtures/isolated-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import {
     getUniqueSequence,
     NUM_PAPERS_PER_STAGE,

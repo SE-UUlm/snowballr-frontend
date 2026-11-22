@@ -6,7 +6,7 @@
     import { createActionError, type ActionError } from "#lib/model/action-error.js";
     import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
     import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
-    import { updateFetchers } from "./update-fetchers";
+    import { updateFetchers } from "#lib/components/composites/settings/project-settings/slr/fetcher/update-fetchers.js";
 
     interface Props {
         slrSettingsLocked?: boolean;

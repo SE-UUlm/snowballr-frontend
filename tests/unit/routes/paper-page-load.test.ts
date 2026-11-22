@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { load } from "../../../src/routes/paper/[paperId]/+page";
+import { load } from "#routes/paper/[paperId]/+page.js";
 import { createPaper } from "#tests/model-builder.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 

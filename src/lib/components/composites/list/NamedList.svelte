@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-    import ErrorIndicator from "../utils/ErrorIndicator.svelte";
+    import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
     import { groupBy } from "#lib/utils/common-helper.js";
     import { Separator } from "#lib/components/primitives/separator/index.js";
     import { cn } from "#lib/utils/shadcn-helper.js";

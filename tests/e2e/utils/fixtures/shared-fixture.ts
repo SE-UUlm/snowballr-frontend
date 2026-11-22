@@ -1,13 +1,17 @@
 import { test as base } from "@playwright/test";
-import { AuthSnowballRClient, DockerMockBackend, type User } from "../helper/mock-backend";
-import { alice } from "../helper/users";
+import {
+    AuthSnowballRClient,
+    DockerMockBackend,
+    type User,
+} from "#tests/e2e/utils/helper/mock-backend.js";
+import { alice } from "#tests/e2e/utils/helper/users.js";
 
 /**
  * Extends the default test fixture and provides fundamental functionality
  * for mock-backend based end-to-end tests.
  *
  * This custom fixture should be imported using:
- * `import { test } from "./fixtures/isolated-fixture";`
+ * `import { test } from "#tests/e2e/utils/fixtures/shared-fixture.js";`
  * instead of the default Playwright import:
  * `import { test } from "@playwright/test";`
  *

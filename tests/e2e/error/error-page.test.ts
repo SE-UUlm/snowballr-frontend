@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "./error-page-fixture";
+import { test } from "#tests/e2e/error/error-page-fixture.js";
 
 test.describe("Error Page Tests", () => {
     test("When navigating to a non-existent page, a 404 error is displayed", async ({

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cn } from "#lib/utils/shadcn-helper.js";
+    // eslint-disable-next-line no-restricted-imports -- the global stylesheet lives outside src/lib, see components.json.
     import "../app.css";
     import { Toaster } from "svelte-sonner";
     import type { LayoutProps } from "./$types";

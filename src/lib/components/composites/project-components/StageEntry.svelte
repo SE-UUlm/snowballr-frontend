@@ -8,7 +8,7 @@
     import { filterProjectPapers } from "#lib/utils/filters.js";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
-    import AddPaperDialogButton from "./AddPaperDialogButton.svelte";
+    import AddPaperDialogButton from "#lib/components/composites/project-components/AddPaperDialogButton.svelte";
 
     interface Props {
         projectId: string;
