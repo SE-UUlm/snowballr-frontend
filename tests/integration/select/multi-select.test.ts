@@ -1,4 +1,4 @@
-import MultiSelect from "$lib/components/composites/select/MultiSelect.svelte";
+import MultiSelect from "#lib/components/composites/select/MultiSelect.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

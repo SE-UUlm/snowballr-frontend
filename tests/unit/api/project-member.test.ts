@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
 import { MemberRole } from "snowballr-api/project";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     getProjectMembers,
     removeProjectMember,
     setProjectMemberRole,
-} from "$lib/api/project-member";
-import { createUser } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/project-member.js";
+import { createUser } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getProjectMembers", () => {
     test("When the members are loaded, then they are requested by project ID and returned", async () => {

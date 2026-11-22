@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { FetcherInformation } from "$lib/api/types";
+    import type { FetcherInformation } from "#lib/api/types.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import FetcherOptionRow, { type FetcherOption } from "./FetcherOptionRow.svelte";
-    import type { Fetchers } from "$lib/api/fetcher";
+    import type { Fetchers } from "#lib/api/fetcher.js";
     import { onMount } from "svelte";
 
     interface Props {

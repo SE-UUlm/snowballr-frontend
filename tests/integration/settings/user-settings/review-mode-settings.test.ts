@@ -1,7 +1,7 @@
-import ReviewModeSettings from "$lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
+import ReviewModeSettings from "#lib/components/composites/settings/user-settings/ReviewModeSettings.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
 describe("ReviewModeSettings", () => {
     test("When component is rendered, then a switch is shown allowing to toggle the review mode", () => {

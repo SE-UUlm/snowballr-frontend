@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { ACTIVE_PROJECT_NAME } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ACTIVE_PROJECT_NAME } from "#tests/visual/utils/visual-data.js";
 
 test.describe("Homepage", () => {
     test("When the homepage is opened with projects and open reviews, then it matches the baseline", async ({

@@ -1,7 +1,7 @@
-import { setDefaultFetchers } from "$lib/api/user";
-import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { Fetchers } from "$lib/api/fetcher";
-import type { UserSettings } from "$lib/api/types";
+import { setDefaultFetchers } from "#lib/api/user.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
+import type { Fetchers } from "#lib/api/fetcher.js";
+import type { UserSettings } from "#lib/api/types.js";
 import { toast } from "svelte-sonner";
 
 export async function updateDefaultFetchers(

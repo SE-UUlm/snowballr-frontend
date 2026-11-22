@@ -13,12 +13,6 @@ export default defineConfig({
             // for more information about preprocessors
             preprocess: vitePreprocess(),
             adapter: adapter(),
-            alias: {
-                $lib: "./src/lib",
-                "$lib/*": "./src/lib/*",
-                $tests: "./tests",
-                "$tests/*": "./tests/*",
-            },
         }),
         svelteTesting(),
     ],

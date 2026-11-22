@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Project_Member } from "$lib/api/types";
-    import { getName } from "$lib/utils/common-helper";
-    import type { MemberInfo } from "$lib/model/member-info";
+    import type { Project_Member } from "#lib/api/types.js";
+    import { getName } from "#lib/utils/common-helper.js";
+    import type { MemberInfo } from "#lib/model/member-info.js";
     import PromoteMemberDialog from "./PromoteMemberDialog.svelte";
     import RemoveMemberDialog from "./RemoveMemberDialog.svelte";
 

@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { Projects } from "$tests/example-data";
+import { Projects } from "#tests/example-data.js";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { loading } from "$tests/model-builder";
-import DeleteProjectSettings from "$lib/components/composites/settings/project-settings/general/DeleteProjectSettings.svelte";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { loading } from "#tests/model-builder.js";
+import DeleteProjectSettings from "#lib/components/composites/settings/project-settings/general/DeleteProjectSettings.svelte";
 
 describe("DeleteProjectSettings", () => {
     async function openDialog(user: UserEvent) {

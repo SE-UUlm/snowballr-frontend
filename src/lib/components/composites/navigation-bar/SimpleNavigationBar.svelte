@@ -1,7 +1,7 @@
 <script lang="ts">
     import NavigationBar from "./NavigationBar.svelte";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import type { LinkTab } from "$lib/model/tabs";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
+    import type { LinkTab } from "#lib/model/tabs.js";
     import type { ResolvedPathname } from "$app/types";
 
     interface Props {

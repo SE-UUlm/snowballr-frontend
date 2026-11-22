@@ -1,20 +1,20 @@
 <script lang="ts">
-    import PaperInfo from "$lib/components/composites/paper-components/PaperInfo.svelte";
-    import UserAvatar from "$lib/components/composites/user-avatar/UserAvatar.svelte";
+    import PaperInfo from "#lib/components/composites/paper-components/PaperInfo.svelte";
+    import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
-    import { getUserById } from "$lib/api/user";
-    import type { User, Paper, Project_Paper } from "$lib/api/types";
+    import { getUserById } from "#lib/api/user.js";
+    import type { User, Paper, Project_Paper } from "#lib/api/types.js";
     import {
         getDisplayPaperId,
         getStatusColor,
         handleSingleOrDoubleClick,
-    } from "$lib/utils/common-helper";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import { asPaper, isProjectPaper } from "$lib/utils/model-helper";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+    } from "#lib/utils/common-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import { asPaper, isProjectPaper } from "#lib/utils/model-helper.js";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
-    import Link from "$lib/components/composites/link/Link.svelte";
+    import Link from "#lib/components/composites/link/Link.svelte";
 
     /**
      * Interface for the paper list entries.

@@ -1,8 +1,8 @@
-import { updateProjectSettings, type ProjectSettingsPatch } from "$lib/api/project";
-import type { Project } from "$lib/api/types";
-import { createActionError, type ActionError } from "$lib/model/action-error";
+import { updateProjectSettings, type ProjectSettingsPatch } from "#lib/api/project.js";
+import type { Project } from "#lib/api/types.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
 import { toast } from "svelte-sonner";
-import { refreshProject } from "$lib/model/cache/project-cache";
+import { refreshProject } from "#lib/model/cache/project-cache.js";
 
 /** The success message shown after a project setting was updated, unless the descriptor overrides it. */
 export const PROJECT_SETTING_SUCCESS_MESSAGE = "Successfully updated the project settings.";
@@ -11,7 +11,7 @@ export const PROJECT_SETTING_SUCCESS_MESSAGE = "Successfully updated the project
  * Describes a single project setting, i.e. one field of a project's configuration.
  *
  * A descriptor says how to read the setting off a {@link Project} and how to turn a new value into a
- * patch of the project settings. `updateProjectSettings` from `$lib/api/project` sends the patch;
+ * patch of the project settings. `updateProjectSettings` from `#lib/api/project.js` sends the patch;
  * toasting and error mapping are owned by this module.
  */
 export interface ProjectSettingDescriptor<T> {

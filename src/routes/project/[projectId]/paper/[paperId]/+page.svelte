@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ProjectPaperView from "$lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
+    import ProjectPaperView from "#lib/components/composites/paper-components/paper-view/ProjectPaperView.svelte";
 
     const { data } = $props();
     const {

@@ -1,10 +1,10 @@
-import { ProjectGeneralSettingsPageModel } from "$tests/e2e/project/settings/general/project-general-settings-page-model";
+import { ProjectGeneralSettingsPageModel } from "#tests/e2e/project/settings/general/project-general-settings-page-model.js";
 import { test as base } from "../../../utils/fixtures/shared-fixture";
 import { expect } from "@playwright/test";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
-import { ProjectMemberSettingsPageModel } from "$tests/e2e/project/settings/members/models/project-member-settings-page-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ProjectSettingsSidebarModel } from "#tests/e2e/project/settings/project-settings-sidebar-model.js";
+import { ProjectMemberSettingsPageModel } from "#tests/e2e/project/settings/members/models/project-member-settings-page-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
 
 type ProjectGeneralSettingsPageFixtures = {
     projectSettingsPage: ProjectGeneralSettingsPageModel;

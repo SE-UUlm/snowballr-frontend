@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { getAvailableFetchers } from "$lib/api/fetcher";
-    import { getUserSettings } from "$lib/api/user";
-    import type { FetcherInformation, UserSettings } from "$lib/api/types";
+    import { getAvailableFetchers } from "#lib/api/fetcher.js";
+    import { getUserSettings } from "#lib/api/user.js";
+    import type { FetcherInformation, UserSettings } from "#lib/api/types.js";
     import { onMount } from "svelte";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import FetcherSettingsList from "$lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
-    import type { SaveFetchers } from "$lib/components/composites/settings/fetcher/fetcher";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import FetcherSettingsList from "#lib/components/composites/settings/fetcher/FetcherSettingsList.svelte";
+    import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
     import { updateDefaultFetchers } from "./update-default-fetchers";
 
     let loadError: ActionError = $state(undefined);

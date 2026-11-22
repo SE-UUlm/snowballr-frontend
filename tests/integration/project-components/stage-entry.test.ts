@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest";
 import TestStageEntryAccordion from "./TestStageEntryAccordion.svelte";
 import userEvent from "@testing-library/user-event";
 import { ProjectPapers } from "../../example-data";
-import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
+import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
 
 describe("StageEntry", () => {
     test("When all props are provided, then component is shown correctly", async () => {

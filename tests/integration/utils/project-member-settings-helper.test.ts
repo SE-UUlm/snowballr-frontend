@@ -1,5 +1,5 @@
-import { Members, Users } from "$tests/example-data";
-import { mockApiCall } from "$tests/setupTest";
+import { Members, Users } from "#tests/example-data.js";
+import { mockApiCall } from "#tests/setupTest.js";
 import { describe, expect, test } from "vitest";
 import { loadMembers } from "../../../src/routes/project/[projectId]/settings/helper";
 import { MemberRole } from "snowballr-api/project";

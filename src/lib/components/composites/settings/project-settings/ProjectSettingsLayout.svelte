@@ -4,9 +4,9 @@
     import Users from "@lucide/svelte/icons/users";
     import Snowflake from "@lucide/svelte/icons/snowflake";
     import ClipboardCheck from "@lucide/svelte/icons/clipboard-check";
-    import type { IconLinkTab } from "$lib/model/tabs";
+    import type { IconLinkTab } from "#lib/model/tabs.js";
     import SettingsLayout from "../SettingsLayout.svelte";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     type ProjectTabValue = "general" | "members" | "slr" | "review";
 

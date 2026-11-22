@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     addPaperToProject,
     getNextPaper,
@@ -10,9 +10,9 @@ import {
     listProjectPapers,
     searchFetcherPaperCandidates,
     searchLocalPaperCandidates,
-} from "$lib/api/project-paper";
-import { createPaper, createProjectPaper } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/project-paper.js";
+import { createPaper, createProjectPaper } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 const PROJECT_ID = "project-1";
 

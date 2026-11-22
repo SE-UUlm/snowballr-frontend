@@ -1,9 +1,9 @@
 import { describe, expect, test as baseTest } from "vitest";
-import { ProjectPapers } from "$tests/example-data";
+import { ProjectPapers } from "#tests/example-data.js";
 import { type Project_Paper } from "snowballr-api/project";
-import { sortProjectPaper } from "$lib/utils/sorters";
-import { SortCriteria, SortDirection } from "$lib/model/sort-criteria";
-import { createPaper, createProjectPaper } from "$tests/model-builder";
+import { sortProjectPaper } from "#lib/utils/sorters.js";
+import { SortCriteria, SortDirection } from "#lib/model/sort-criteria.js";
+import { createPaper, createProjectPaper } from "#tests/model-builder.js";
 
 const test = baseTest.extend<{
     papers: Project_Paper[];

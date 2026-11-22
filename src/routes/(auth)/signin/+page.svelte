@@ -1,18 +1,18 @@
 <script lang="ts">
-    import Input from "$lib/components/composites/input/Input.svelte";
-    import PasswordInput from "$lib/components/composites/input/PasswordInput.svelte";
-    import * as Card from "$lib/components/primitives/card/index.js";
-    import { login } from "$lib/api/auth";
-    import { isApiError } from "$lib/api/errors";
-    import { Schema } from "$lib/schemas";
+    import Input from "#lib/components/composites/input/Input.svelte";
+    import PasswordInput from "#lib/components/composites/input/PasswordInput.svelte";
+    import * as Card from "#lib/components/primitives/card/index.js";
+    import { login } from "#lib/api/auth.js";
+    import { isApiError } from "#lib/api/errors.js";
+    import { Schema } from "#lib/schemas.js";
     import { goto } from "$app/navigation";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import logo from "$lib/assets/snowballr-logo_512.png";
-    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "$lib/utils/search-parameters";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import logo from "#lib/assets/snowballr-logo_512.png";
+    import { addRedirectUrlIfExists, getRedirectUrlOrValue } from "#lib/utils/search-parameters.js";
 
     let emailInput: Input;
     let passwordInput: PasswordInput;

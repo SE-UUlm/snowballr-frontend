@@ -1,17 +1,17 @@
 <script lang="ts">
-    import * as Select from "$lib/components/primitives/select/index.js";
+    import * as Select from "#lib/components/primitives/select/index.js";
     import {
         ALLOWED_SORT_OPTIONS,
         SortCriteria,
         SortDirection,
         type SortOptionLabel,
-    } from "$lib/model/sort-criteria";
+    } from "#lib/model/sort-criteria.js";
     import ArrowDown10 from "@lucide/svelte/icons/arrow-down-1-0";
     import ArrowDownZA from "@lucide/svelte/icons/arrow-down-z-a";
     import ArrowDown01 from "@lucide/svelte/icons/arrow-down-0-1";
     import ArrowDownAZ from "@lucide/svelte/icons/arrow-down-a-z";
-    import ArrowDownYN from "$lib/svg/ArrowDownYN.svelte";
-    import ArrowDownNY from "$lib/svg/ArrowDownNY.svelte";
+    import ArrowDownYN from "#lib/svg/ArrowDownYN.svelte";
+    import ArrowDownNY from "#lib/svg/ArrowDownNY.svelte";
 
     interface Props {
         selectedSortOption: SortOptionLabel;

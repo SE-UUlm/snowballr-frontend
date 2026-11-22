@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { load } from "../../../src/routes/paper/[paperId]/+page";
-import { createPaper } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { createPaper } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 type PaperPageData = Record<
     "loadingPaper" | "backwardReferencedPapers" | "forwardReferencedPapers",

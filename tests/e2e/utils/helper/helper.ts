@@ -1,4 +1,4 @@
-import type { Person } from "$lib/model/general";
+import type { Person } from "#lib/model/general.js";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 /**

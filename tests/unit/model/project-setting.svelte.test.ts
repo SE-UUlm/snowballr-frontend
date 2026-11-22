@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Project } from "snowballr-api/project";
-import type { ProjectSettingDescriptor } from "$lib/model/project-setting";
-import { projectSetting } from "$lib/model/project-setting.svelte";
-import { createProject, createProjectSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { client } from "$lib/api/client";
+import type { ProjectSettingDescriptor } from "#lib/model/project-setting.js";
+import { projectSetting } from "#lib/model/project-setting.svelte.js";
+import { createProject, createProjectSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { client } from "#lib/api/client.js";
 import type { Mock } from "vitest";
 
 vi.mock("svelte-sonner", () => ({

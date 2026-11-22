@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { type Project, ProjectStatus } from "$lib/api/types";
-    import type { LinkTab } from "$lib/model/tabs";
-    import NavigationBar from "$lib/components/composites/navigation-bar/NavigationBar.svelte";
-    import { Badge } from "$lib/components/primitives/badge";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
+    import { type Project, ProjectStatus } from "#lib/api/types.js";
+    import type { LinkTab } from "#lib/model/tabs.js";
+    import NavigationBar from "#lib/components/composites/navigation-bar/NavigationBar.svelte";
+    import { Badge } from "#lib/components/primitives/badge/index.js";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
 
     type TabValue = (typeof tabs)[number]["value"];
     interface Props {

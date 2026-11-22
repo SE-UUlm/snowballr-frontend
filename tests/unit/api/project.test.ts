@@ -6,7 +6,7 @@ import {
     Project_Information_DecisionStatistics,
     ProjectStatus,
 } from "snowballr-api/project";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     createProject,
     deleteProject,
@@ -20,9 +20,9 @@ import {
     setProjectFetchers,
     setProjectStatus,
     updateProjectSettings,
-} from "$lib/api/project";
-import { createProject as buildProject } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/project.js";
+import { createProject as buildProject } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 const PROJECT_ID = "project-1";
 

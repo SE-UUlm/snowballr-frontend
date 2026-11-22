@@ -1,16 +1,16 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterEach, beforeEach, describe, expect, type Mock, test, vi } from "vitest";
-import PaperNavigationButton from "$lib/components/composites/paper-components/paper-view/PaperNavigationButton.svelte";
+import PaperNavigationButton from "#lib/components/composites/paper-components/paper-view/PaperNavigationButton.svelte";
 import userEvent from "@testing-library/user-event";
-import { ProjectPapers } from "$tests/example-data";
-import { mockApiCall, mockFailedApiCall, mockUnaryCall } from "$tests/setupTest";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
-import { createProject, createProjectPaper } from "$tests/model-builder";
+import { ProjectPapers } from "#tests/example-data.js";
+import { mockApiCall, mockFailedApiCall, mockUnaryCall } from "#tests/setupTest.js";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
+import { createProject, createProjectPaper } from "#tests/model-builder.js";
 import { goto } from "$app/navigation";
 import { toast } from "svelte-sonner";
 import type { Project_Paper } from "snowballr-api/project";
-import { client } from "$lib/api/client";
+import { client } from "#lib/api/client.js";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },

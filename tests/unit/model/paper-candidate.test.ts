@@ -9,9 +9,9 @@ import {
     toFetcherCandidates,
     toKnownCandidates,
     type PaperCandidate,
-} from "$lib/model/paper-candidate";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { client } from "$lib/api/client";
+} from "#lib/model/paper-candidate.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { client } from "#lib/api/client.js";
 import { toast } from "svelte-sonner";
 
 vi.mock("svelte-sonner", () => ({

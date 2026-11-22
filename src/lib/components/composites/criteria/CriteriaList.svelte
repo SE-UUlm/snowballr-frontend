@@ -1,7 +1,7 @@
 <script lang="ts">
     import CriterionListEntry from "./CriterionListEntry.svelte";
-    import type { CriterionWithReviews } from "$lib/model/general";
-    import type { User } from "$lib/api/types";
+    import type { CriterionWithReviews } from "#lib/model/general.js";
+    import type { User } from "#lib/api/types.js";
     import CriterionListEntrySkeleton from "./CriterionListEntrySkeleton.svelte";
     import NamedList from "../list/NamedList.svelte";
 

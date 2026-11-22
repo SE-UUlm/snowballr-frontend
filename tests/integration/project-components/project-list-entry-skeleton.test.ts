@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import ProjectListEntrySkeleton from "$lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
+import ProjectListEntrySkeleton from "#lib/components/composites/project-components/ProjectListEntrySkeleton.svelte";
 import { render, screen } from "@testing-library/svelte";
 
 describe("ProjectListEntrySkeletonComponent", () => {

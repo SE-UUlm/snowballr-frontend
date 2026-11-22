@@ -1,11 +1,11 @@
-import SnowballingTypeSettings from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
+import SnowballingTypeSettings from "#lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
 import { SnowballingType } from "snowballr-api/project";
-import { createProject, createProjectSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { createProject, createProjectSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
+import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
 
 describe("SnowballingTypeSettings", () => {
     const projectData = createProject({

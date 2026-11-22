@@ -1,5 +1,5 @@
-import { stringifyPaper } from "$lib/utils/model-helper";
-import { createPaper } from "$tests/model-builder";
+import { stringifyPaper } from "#lib/utils/model-helper.js";
+import { createPaper } from "#tests/model-builder.js";
 import { describe, expect, test } from "vitest";
 
 describe("Stringify a paper", () => {

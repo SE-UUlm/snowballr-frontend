@@ -1,7 +1,7 @@
 <script lang="ts">
-    import PaperView from "$lib/components/composites/paper-components/paper-view/PaperView.svelte";
-    import { emptyPaper } from "$lib/api/paper";
-    import type { Paper } from "$lib/api/types";
+    import PaperView from "#lib/components/composites/paper-components/paper-view/PaperView.svelte";
+    import { emptyPaper } from "#lib/api/paper.js";
+    import type { Paper } from "#lib/api/types.js";
 
     const { data } = $props();
     const { projectId, loadingProject, creationTarget } = $derived(data);

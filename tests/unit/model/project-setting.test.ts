@@ -5,16 +5,16 @@ import {
     loadProjectSetting,
     PROJECT_SETTING_SUCCESS_MESSAGE,
     type ProjectSettingDescriptor,
-} from "$lib/model/project-setting";
-import { createProject, createProjectSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/model/project-setting.js";
+import { createProject, createProjectSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { toast } from "svelte-sonner";
 import { invalidate } from "$app/navigation";
-import { loadPrimedProject } from "$lib/model/cache/project-cache";
-import { similarityThresholdSetting } from "$lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
-import { numberOfReviewersSetting } from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
-import { snowballingTypeSetting } from "$lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
-import { maybeAsDecisionSetting } from "$lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
+import { loadPrimedProject } from "#lib/model/cache/project-cache.js";
+import { similarityThresholdSetting } from "#lib/components/composites/settings/project-settings/slr/SimilarityThresholdSetting.svelte";
+import { numberOfReviewersSetting } from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+import { snowballingTypeSetting } from "#lib/components/composites/settings/project-settings/slr/SnowballingTypeSettings.svelte";
+import { maybeAsDecisionSetting } from "#lib/components/composites/settings/project-settings/slr/MaybeAsDecisionSetting.svelte";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn(), promise: vi.fn() },

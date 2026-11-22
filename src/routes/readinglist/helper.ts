@@ -1,5 +1,5 @@
-import { getReadingList } from "$lib/api/reading-list";
-import type { Paper } from "$lib/api/types";
+import { getReadingList } from "#lib/api/reading-list.js";
+import type { Paper } from "#lib/api/types.js";
 
 export async function loadReadingList(): Promise<Paper[]> {
     return getReadingList().catch((error: unknown) => {

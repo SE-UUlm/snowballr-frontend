@@ -1,5 +1,5 @@
-import type { MemberInfo } from "$lib/model/member-info";
-import { createPrimedCache, type ProjectLoadEvent } from "$lib/model/cache/primed-cache";
+import type { MemberInfo } from "#lib/model/member-info.js";
+import { createPrimedCache, type ProjectLoadEvent } from "#lib/model/cache/primed-cache.js";
 
 const membersCache = createPrimedCache<MemberInfo[]>("data:getProjectMembers");
 

@@ -2,14 +2,14 @@
     import Bookmark from "@lucide/svelte/icons/bookmark";
     import BookmarkPlus from "@lucide/svelte/icons/bookmark-plus";
     import BookmarkMinus from "@lucide/svelte/icons/bookmark-minus";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
-    import { resource } from "$lib/resource.svelte";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
+    import { resource } from "#lib/resource.svelte.js";
     import {
         addPaperToReadingList,
         isPaperOnReadingList,
         removePaperFromReadingList,
-    } from "$lib/api/reading-list";
-    import { cn } from "$lib/utils/shadcn-helper";
+    } from "#lib/api/reading-list.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
     interface Props {

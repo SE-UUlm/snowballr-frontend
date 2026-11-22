@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { Button } from "$lib/components/primitives/button";
+    import { Button } from "#lib/components/primitives/button/index.js";
     import ClipboardPaste from "@lucide/svelte/icons/clipboard-paste";
-    import Label from "$lib/components/primitives/label/label.svelte";
-    import type { FetcherOptionSchema } from "$lib/api/types";
-    import Input from "$lib/components/composites/input/Input.svelte";
+    import Label from "#lib/components/primitives/label/label.svelte";
+    import type { FetcherOptionSchema } from "#lib/api/types.js";
+    import Input from "#lib/components/composites/input/Input.svelte";
     import Eye from "@lucide/svelte/icons/eye";
     import EyeClosed from "@lucide/svelte/icons/eye-closed";
 

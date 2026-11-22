@@ -1,5 +1,5 @@
-import ShortcutsVisibilitySettings from "$lib/components/composites/settings/user-settings/ShortcutsVisibilitySettings.svelte";
-import { shortcuts } from "$lib/global-state/shortcuts-visibility-state.svelte";
+import ShortcutsVisibilitySettings from "#lib/components/composites/settings/user-settings/ShortcutsVisibilitySettings.svelte";
+import { shortcuts } from "#lib/global-state/shortcuts-visibility-state.svelte.js";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 

@@ -1,16 +1,16 @@
-import { getDecisionStatisticsForStage, getProjectInformation } from "$lib/api/project";
-import { getPapersToReview } from "$lib/api/project-paper";
+import { getDecisionStatisticsForStage, getProjectInformation } from "#lib/api/project.js";
+import { getPapersToReview } from "#lib/api/project-paper.js";
 import type { PageLoad } from "./$types";
 import {
     PaperDecision,
     type Project,
     type Project_Information_DecisionStatistics,
     type Timestamp,
-} from "$lib/api/types";
-import type { ProjectInformationInterface } from "$lib/components/composites/statistics/ProjectInformation.svelte";
-import type { PaperListEntryInterface } from "$lib/components/composites/paper-components/PaperListEntry.svelte";
-import type { StageProgressInterface } from "$lib/components/composites/statistics/StageProgress.svelte";
-import { sumBy } from "$lib/utils/common-helper";
+} from "#lib/api/types.js";
+import type { ProjectInformationInterface } from "#lib/components/composites/statistics/ProjectInformation.svelte";
+import type { PaperListEntryInterface } from "#lib/components/composites/paper-components/PaperListEntry.svelte";
+import type { StageProgressInterface } from "#lib/components/composites/statistics/StageProgress.svelte";
+import { sumBy } from "#lib/utils/common-helper.js";
 
 /**
  * Parses a Timestamp object into a date object.

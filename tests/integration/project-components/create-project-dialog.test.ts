@@ -1,11 +1,11 @@
 import { expect, test, describe, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import CreateProjectDialog from "$lib/components/composites/project-components/CreateProjectDialog.svelte";
+import CreateProjectDialog from "#lib/components/composites/project-components/CreateProjectDialog.svelte";
 import userEvent from "@testing-library/user-event";
 import { mockUserContext, waitForDialogFocus } from "../test-helper";
-import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "#tests/setupTest.js";
 import { goto } from "$app/navigation";
-import { createProject as createDemoProject, createUser } from "$tests/model-builder";
+import { createProject as createDemoProject, createUser } from "#tests/model-builder.js";
 
 describe("CreateProjectDialog", () => {
     const invitee = createUser({

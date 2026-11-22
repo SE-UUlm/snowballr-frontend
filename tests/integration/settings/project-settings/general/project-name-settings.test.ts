@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/svelte";
-import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
-import { Projects } from "$tests/example-data";
+import ProjectNameSettings from "#lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
+import { Projects } from "#tests/example-data.js";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
-import { createProject, loading } from "$tests/model-builder";
-import { mockIsProjectArchivedContext } from "$tests/integration/test-helper";
-import { refreshProject } from "$lib/model/cache/project-cache";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { createProject, loading } from "#tests/model-builder.js";
+import { mockIsProjectArchivedContext } from "#tests/integration/test-helper.js";
+import { refreshProject } from "#lib/model/cache/project-cache.js";
 
-vi.mock("$lib/model/cache/project-cache", () => ({
+vi.mock("#lib/model/cache/project-cache.js", () => ({
     refreshProject: vi.fn(() => Promise.resolve()),
 }));
 

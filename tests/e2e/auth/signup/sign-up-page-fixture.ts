@@ -1,8 +1,8 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
 import { expect } from "@playwright/test";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
 
 type SignUpPageFixtures = {
     signUpPage: SignUpPageModel;

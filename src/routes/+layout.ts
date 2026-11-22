@@ -1,11 +1,11 @@
-import { type User, AuthenticationStatus } from "$lib/api/types";
-import { getAuthenticationStatus, renewSession } from "$lib/api/auth";
-import { getCurrentUser } from "$lib/api/user";
-import { setFetch } from "$lib/api/fetch";
+import { type User, AuthenticationStatus } from "#lib/api/types.js";
+import { getAuthenticationStatus, renewSession } from "#lib/api/auth.js";
+import { getCurrentUser } from "#lib/api/user.js";
+import { setFetch } from "#lib/api/fetch.js";
 import type { LayoutLoad } from "./$types";
 import { goto } from "$app/navigation";
-import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "$lib/model/cache/user-cache";
-import { addRedirectUrlIfExists } from "$lib/utils/search-parameters";
+import { getCachedUser, setCachedUser, USER_DEPENDENCY_KEY } from "#lib/model/cache/user-cache.js";
+import { addRedirectUrlIfExists } from "#lib/utils/search-parameters.js";
 import { resolve } from "$app/paths";
 
 export const ssr = false;

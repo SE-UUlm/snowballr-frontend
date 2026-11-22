@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test } from "vitest";
 import SignUpPage from "../../../../src/routes/(auth)/signup/+page.svelte";
-import { mockFailedApiCall } from "$tests/setupTest";
+import { mockFailedApiCall } from "#tests/setupTest.js";
 
 async function submitRegistration() {
     const user = userEvent.setup();

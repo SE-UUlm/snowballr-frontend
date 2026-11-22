@@ -1,4 +1,8 @@
-import { getBackwardReferencedPapers, getForwardReferencedPapers, getPaper } from "$lib/api/paper";
+import {
+    getBackwardReferencedPapers,
+    getForwardReferencedPapers,
+    getPaper,
+} from "#lib/api/paper.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params }) => {

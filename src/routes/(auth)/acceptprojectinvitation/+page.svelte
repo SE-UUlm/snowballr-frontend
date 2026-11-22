@@ -1,8 +1,8 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { Button } from "$lib/components/primitives/button";
-    import { isApiError, type ApiError } from "$lib/api/errors";
-    import { createActionError, isActionError, type ActionError } from "$lib/model/action-error.js";
+    import { Button } from "#lib/components/primitives/button/index.js";
+    import { isApiError, type ApiError } from "#lib/api/errors.js";
+    import { createActionError, isActionError, type ActionError } from "#lib/model/action-error.js";
     import { resolve } from "$app/paths";
 
     let { data } = $props();

@@ -1,22 +1,22 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { describe, expect, onTestFinished, test, vi } from "vitest";
-import PaperDecisionButton from "$lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
+import PaperDecisionButton from "#lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
-import { client } from "$lib/api/client";
+import { client } from "#lib/api/client.js";
 import { Review, ReviewDecision } from "snowballr-api/review";
-import { getReturnValue, mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { getReturnValue, mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import {
     type IsProjectArchivedContext,
     mockIsProjectArchivedContext,
     mockSelectedCriteriaContextWithInitialData,
     type SelectedCriteriaContext,
     type WasReviewedContext,
-} from "$tests/integration/test-helper";
-import { ProjectPapers } from "$tests/example-data";
-import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
+} from "#tests/integration/test-helper.js";
+import { ProjectPapers } from "#tests/example-data.js";
+import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
 import { goto } from "$app/navigation";
 import { toast } from "svelte-sonner";
-import { createProject, createProjectPaper, createReview } from "$tests/model-builder";
+import { createProject, createProjectPaper, createReview } from "#tests/model-builder.js";
 
 vi.mock("svelte-sonner", () => ({
     toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },

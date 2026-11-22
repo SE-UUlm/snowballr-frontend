@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import AcceptProjectInvitationPage from "../../../../src/routes/(auth)/acceptprojectinvitation/+page.svelte";
 import { load } from "../../../../src/routes/(auth)/acceptprojectinvitation/+page";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 /**
  * Runs the page's loader for the given URL and renders the page with the loaded data, because the

@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
-import { alice } from "$tests/e2e/utils/helper/users";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { alice } from "#tests/e2e/utils/helper/users.js";
 
 test.describe("Sign-in page", () => {
     test.use({ user: null });

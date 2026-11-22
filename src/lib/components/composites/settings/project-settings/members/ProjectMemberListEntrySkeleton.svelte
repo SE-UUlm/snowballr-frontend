@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
 </script>
 
 <!--

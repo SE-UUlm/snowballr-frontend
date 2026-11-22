@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Paper } from "$lib/api/types";
-    import Button from "$lib/components/primitives/button/button.svelte";
+    import type { Paper } from "#lib/api/types.js";
+    import Button from "#lib/components/primitives/button/button.svelte";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Trash from "@lucide/svelte/icons/trash";
 

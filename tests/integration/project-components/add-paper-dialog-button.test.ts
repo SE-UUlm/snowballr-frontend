@@ -1,11 +1,11 @@
 import { Paper_List } from "snowballr-api/paper";
 import { Project_Paper } from "snowballr-api/project";
-import AddPaperDialogButton from "$lib/components/composites/project-components/AddPaperDialogButton.svelte";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import AddPaperDialogButton from "#lib/components/composites/project-components/AddPaperDialogButton.svelte";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen } from "@testing-library/svelte";
 import { expect, test, describe, beforeEach, afterEach, vi, assert } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { createProject, createProjectSettings, loading } from "$tests/model-builder";
+import { createProject, createProjectSettings, loading } from "#tests/model-builder.js";
 
 describe("AddPaperDialogButton", () => {
     const user = userEvent.setup();

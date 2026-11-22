@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
 
 export class ProjectDashboardPageModel {
     readonly page: Page;

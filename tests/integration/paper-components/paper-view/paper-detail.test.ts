@@ -1,9 +1,9 @@
-import PaperDetail from "$lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
+import PaperDetail from "#lib/components/composites/paper-components/paper-view/PaperDetail.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { loading, createStringifiedPaper, createPaper } from "../../../model-builder";
 import { waitForComponentLoading } from "../../test-helper";
-import { stringifyPaper } from "$lib/utils/model-helper";
+import { stringifyPaper } from "#lib/utils/model-helper.js";
 
 describe("PaperDetail", () => {
     test("When props are provided, then component is shown", async () => {

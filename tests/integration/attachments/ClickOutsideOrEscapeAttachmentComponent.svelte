@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { clickOutsideOrEscape } from "$lib/utils/attachments.svelte";
+    import { clickOutsideOrEscape } from "#lib/utils/attachments.svelte.js";
 
     const { onEvent }: { onEvent: () => void } = $props();
 </script>

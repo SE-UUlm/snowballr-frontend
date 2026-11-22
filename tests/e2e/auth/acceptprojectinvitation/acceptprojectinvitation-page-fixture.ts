@@ -1,7 +1,7 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
 import { AcceptProjectInvitationPageModel } from "./acceptprojectinvitation-page.model";
-import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
+import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
 
 type AcceptProjectInvitationPageFixture = {
     acceptProjectInvitationPage: AcceptProjectInvitationPageModel;

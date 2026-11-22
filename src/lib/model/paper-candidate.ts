@@ -1,13 +1,13 @@
-import { isApiError } from "$lib/api/errors";
-import { createPaper } from "$lib/api/paper";
+import { isApiError } from "#lib/api/errors.js";
+import { createPaper } from "#lib/api/paper.js";
 import {
     addPaperToProject,
     searchFetcherPaperCandidates,
     searchLocalPaperCandidates,
-} from "$lib/api/project-paper";
-import type { Paper } from "$lib/api/types";
-import { createActionError, type ActionError } from "$lib/model/action-error";
-import { pluralize } from "$lib/utils/common-helper";
+} from "#lib/api/project-paper.js";
+import type { Paper } from "#lib/api/types.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
+import { pluralize } from "#lib/utils/common-helper.js";
 import { toast } from "svelte-sonner";
 
 /** Shown when every requested source answered and none of them had anything to offer. */

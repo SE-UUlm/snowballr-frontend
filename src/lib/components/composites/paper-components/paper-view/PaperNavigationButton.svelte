@@ -2,13 +2,17 @@
     import ArrowLeft from "@lucide/svelte/icons/arrow-left";
     import ArrowRight from "@lucide/svelte/icons/arrow-right";
     import Tooltip from "../../utils/Tooltip.svelte";
-    import type { Project, Project_Paper } from "$lib/api/types";
-    import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
-    import { getNextPaper, getNextPaperToReview, getPreviousPaper } from "$lib/api/project-paper";
-    import { navigatePaper } from "$lib/utils/paper-navigation";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { projectPaperLoading } from "$lib/global-state/project-paper-loading-state.svelte";
-    import { isApiError } from "$lib/api/errors";
+    import type { Project, Project_Paper } from "#lib/api/types.js";
+    import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+    import {
+        getNextPaper,
+        getNextPaperToReview,
+        getPreviousPaper,
+    } from "#lib/api/project-paper.js";
+    import { navigatePaper } from "#lib/utils/paper-navigation.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { projectPaperLoading } from "#lib/global-state/project-paper-loading-state.svelte.js";
+    import { isApiError } from "#lib/api/errors.js";
     import { toast } from "svelte-sonner";
 
     interface Props {

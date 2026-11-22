@@ -2,16 +2,16 @@ import { describe, expect, test } from "vitest";
 import { Nothing } from "snowballr-api/base";
 import { User } from "snowballr-api/user";
 import { UserSettings } from "snowballr-api/user_settings";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     getCurrentUser,
     getUserById,
     getUserSettings,
     setDefaultFetchers,
     updateUserName,
-} from "$lib/api/user";
-import { createUser, createUserSettings } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/user.js";
+import { createUser, createUserSettings } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getCurrentUser", () => {
     test("When the current user is loaded, then it is returned", async () => {

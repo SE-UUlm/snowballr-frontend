@@ -1,6 +1,6 @@
-import { PaperDecision, type Project_Paper } from "$lib/api/types";
-import { SortCriteria, SortDirection, type SortOption } from "$lib/model/sort-criteria";
-import { comparePaperId, exhaustiveCheck } from "$lib/utils/common-helper";
+import { PaperDecision, type Project_Paper } from "#lib/api/types.js";
+import { SortCriteria, SortDirection, type SortOption } from "#lib/model/sort-criteria.js";
+import { comparePaperId, exhaustiveCheck } from "#lib/utils/common-helper.js";
 
 /**
  * Compares two paper decisions based on a custom order:

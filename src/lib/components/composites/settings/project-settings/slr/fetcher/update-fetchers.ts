@@ -1,9 +1,9 @@
-import { setProjectFetchers } from "$lib/api/project";
-import { createActionError, type ActionError } from "$lib/model/action-error";
-import type { Fetchers } from "$lib/api/fetcher";
-import type { Project } from "$lib/api/types";
+import { setProjectFetchers } from "#lib/api/project.js";
+import { createActionError, type ActionError } from "#lib/model/action-error.js";
+import type { Fetchers } from "#lib/api/fetcher.js";
+import type { Project } from "#lib/api/types.js";
 import { toast } from "svelte-sonner";
-import { refreshProject } from "$lib/model/cache/project-cache";
+import { refreshProject } from "#lib/model/cache/project-cache.js";
 
 export async function updateFetchers(
     projectId: string,

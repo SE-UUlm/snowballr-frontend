@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { test, LOCAL_CANDIDATE_TITLES, SEARCH_QUERY } from "./add-paper-dialog-fixtures";
 import { fetcherOnlyPaperTitles } from "./add-paper-dialog-model";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 
 test.describe("Add Paper Dialog", () => {
     test("When both sources are searched, then local papers and fetcher-only papers are offered", async ({

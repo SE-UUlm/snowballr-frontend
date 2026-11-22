@@ -4,15 +4,15 @@ import {
     NUM_PAPERS_DEFAULT,
     PREDICTABLE_PAPER_TITLE_PREFIX,
     ReadingListPageModel,
-} from "$tests/e2e/readinglist/reading-list-page-model";
+} from "#tests/e2e/readinglist/reading-list-page-model.js";
 import { HomePageModel } from "../homepage/home-page-model";
 import { expect } from "@playwright/test";
 import { Nothing } from "snowballr-api/base";
 import type { Project } from "snowballr-api/project";
 import type { Paper } from "snowballr-api/paper";
-import { createPaper } from "$tests/model-builder";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
+import { createPaper } from "#tests/model-builder.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
 
 type ReadingListPageFixtures = {
     readingListPage: ReadingListPageModel;

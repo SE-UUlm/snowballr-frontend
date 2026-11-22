@@ -1,10 +1,10 @@
 <script lang="ts">
-    import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
-    import ProjectNameSettings from "$lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
+    import ProjectSettingsLayout from "#lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+    import ProjectNameSettings from "#lib/components/composites/settings/project-settings/general/ProjectNameSettings.svelte";
     import { isCurrentUserLastAdmin, isCurrentUserProjectAdmin } from "../helper";
-    import ArchiveProjectSettings from "$lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
-    import ExportProjectSettings from "$lib/components/composites/settings/project-settings/general/ExportProjectSettings.svelte";
-    import DangerZoneSettings from "$lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
+    import ArchiveProjectSettings from "#lib/components/composites/settings/project-settings/general/ArchiveProjectSettings.svelte";
+    import ExportProjectSettings from "#lib/components/composites/settings/project-settings/general/ExportProjectSettings.svelte";
+    import DangerZoneSettings from "#lib/components/composites/settings/project-settings/general/DangerZoneSettings.svelte";
 
     let { data } = $props();
     const { projectId, loadingProject, loadingMembers } = $derived(data);

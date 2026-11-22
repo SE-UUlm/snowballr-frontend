@@ -1,17 +1,17 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
 import { Project, SnowballingType } from "snowballr-api/project";
-import { Criteria, Reviews } from "$tests/example-data";
+import { Criteria, Reviews } from "#tests/example-data.js";
 import type { Paper } from "snowballr-api/paper";
-import { createPaper } from "$tests/model-builder";
-import { SettingsSidebarModel } from "$tests/e2e/settings/settings-sidebar-model";
-import { ReviewSettingsPageModel } from "$tests/e2e/settings/review/review-settings-page-model";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
+import { createPaper } from "#tests/model-builder.js";
+import { SettingsSidebarModel } from "#tests/e2e/settings/settings-sidebar-model.js";
+import { ReviewSettingsPageModel } from "#tests/e2e/settings/review/review-settings-page-model.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { expect } from "@playwright/test";
-import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
-import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
-import { buildFieldMask } from "$lib/api/fieldmask";
+import { ProjectDashboardPageModel } from "#tests/e2e/project/dashboard/project-dashboard-page-model.js";
+import { ProjectPapersPageModel } from "#tests/e2e/project/papers/project-papers-page-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
+import { buildFieldMask } from "#lib/api/fieldmask.js";
 
 type ProjectPaperViewPageFixtures = {
     projectPaperViewPage: ProjectPaperViewPageModel;

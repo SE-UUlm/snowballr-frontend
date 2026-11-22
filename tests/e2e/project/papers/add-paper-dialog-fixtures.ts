@@ -2,7 +2,7 @@ import { test as base } from "../../utils/fixtures/isolated-fixture";
 import { expect } from "@playwright/test";
 import { Project, SnowballingType, type Project_Settings } from "snowballr-api/project";
 import type { Paper } from "snowballr-api/paper";
-import { createPaper } from "$tests/model-builder";
+import { createPaper } from "#tests/model-builder.js";
 import { AddPaperDialogModel } from "./add-paper-dialog-model";
 
 /**

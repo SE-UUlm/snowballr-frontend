@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { PaperDecision, Project_Paper, type User } from "$lib/api/types";
-    import { resource } from "$lib/resource.svelte";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { PaperDecision, Project_Paper, type User } from "#lib/api/types.js";
+    import { resource } from "#lib/resource.svelte.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import UserAvatar from "../user-avatar/UserAvatar.svelte";
-    import { Skeleton } from "$lib/components/primitives/skeleton";
+    import { Skeleton } from "#lib/components/primitives/skeleton/index.js";
     import UserAvatarSkeleton from "../user-avatar/UserAvatarSkeleton.svelte";
     import ErrorIndicator from "../utils/ErrorIndicator.svelte";
-    import { getStatusColor, getStatusText } from "$lib/utils/common-helper";
+    import { getStatusColor, getStatusText } from "#lib/utils/common-helper.js";
 
     export interface PaperDecisionBannerProps {
         reviewers: Promise<User[]>;

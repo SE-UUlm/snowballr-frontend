@@ -1,12 +1,12 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
-import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
-import { AddPaperDialogModel } from "$tests/e2e/project/papers/add-paper-dialog-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { PAPERS } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
+import { ProjectPapersPageModel } from "#tests/e2e/project/papers/project-papers-page-model.js";
+import { AddPaperDialogModel } from "#tests/e2e/project/papers/add-paper-dialog-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { PAPERS } from "#tests/visual/utils/visual-data.js";
 
 /*
 Open overlays (menus, dropdowns, dialogs, tooltips). Page screenshots are used where the overlay is

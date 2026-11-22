@@ -1,13 +1,13 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { resolve } from "$app/paths";
-    import { buttonVariants } from "$lib/components/primitives/button";
-    import AlertDialog from "$lib/components/composites/dialog/AlertDialog.svelte";
-    import { isApiError } from "$lib/api/errors";
-    import { removeProjectMember } from "$lib/api/project-member";
-    import { getUserContext } from "$lib/custom-context/user-context";
-    import { createActionError, type ActionError } from "$lib/model/action-error";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import { buttonVariants } from "#lib/components/primitives/button/index.js";
+    import AlertDialog from "#lib/components/composites/dialog/AlertDialog.svelte";
+    import { isApiError } from "#lib/api/errors.js";
+    import { removeProjectMember } from "#lib/api/project-member.js";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
+    import { createActionError, type ActionError } from "#lib/model/action-error.js";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import { toast } from "svelte-sonner";
 
     interface Props {

@@ -1,15 +1,15 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import ButtonBar from "$lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
+import ButtonBar from "#lib/components/composites/paper-components/paper-view/ButtonBar.svelte";
 import {
     createProject,
     createProjectPaper,
     createProjectSettings,
     loading,
     createBUttonBarProps,
-} from "$tests/model-builder";
-import { mockUserContext } from "$tests/integration/test-helper";
-import { reviewMode } from "$lib/global-state/review-mode-state.svelte";
+} from "#tests/model-builder.js";
+import { mockUserContext } from "#tests/integration/test-helper.js";
+import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
 describe("ButtonBar", () => {
     test("When the user is not in the review mode, then no decision buttons are shown", async () => {

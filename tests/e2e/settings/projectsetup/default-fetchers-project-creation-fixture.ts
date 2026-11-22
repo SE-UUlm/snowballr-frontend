@@ -1,9 +1,9 @@
 import { test as base } from "./project-setup-settings-page-fixture";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { CreateProjectDialogModel } from "$tests/e2e/homepage/create-project-dialog-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
-import { ProjectSettingsSidebarModel } from "$tests/e2e/project/settings/project-settings-sidebar-model";
-import { ProjectSLRSettingsPageModel } from "$tests/e2e/project/settings/slr/project-slr-settings-page-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { CreateProjectDialogModel } from "#tests/e2e/homepage/create-project-dialog-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
+import { ProjectSettingsSidebarModel } from "#tests/e2e/project/settings/project-settings-sidebar-model.js";
+import { ProjectSLRSettingsPageModel } from "#tests/e2e/project/settings/slr/project-slr-settings-page-model.js";
 
 type DefaultFetchersProjectCreationFixtures = {
     homePage: HomePageModel;

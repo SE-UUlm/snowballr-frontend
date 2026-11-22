@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PaperInfoSkeleton from "$lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
+    import PaperInfoSkeleton from "#lib/components/composites/paper-components/PaperInfoSkeleton.svelte";
 </script>
 
 <div

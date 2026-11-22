@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Slider as SliderPrimitive, type WithoutChildrenOrChild } from "bits-ui";
-    import { cn } from "$lib/utils/shadcn-helper.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
 
     type Props = WithoutChildrenOrChild<SliderPrimitive.RootProps> & {
         /**

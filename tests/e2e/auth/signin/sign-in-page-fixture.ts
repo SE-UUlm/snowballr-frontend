@@ -1,10 +1,10 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
-import { alice } from "$tests/e2e/utils/helper/users";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
+import { alice } from "#tests/e2e/utils/helper/users.js";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { expect } from "@playwright/test";
-import { SignUpPageModel } from "$tests/e2e/auth/signup/signup-page.model";
-import { ReadingListPageModel } from "$tests/e2e/readinglist/reading-list-page-model";
+import { SignUpPageModel } from "#tests/e2e/auth/signup/signup-page.model.js";
+import { ReadingListPageModel } from "#tests/e2e/readinglist/reading-list-page-model.js";
 
 type SignInPageFixtures = {
     signInPage: SignInPageModel;

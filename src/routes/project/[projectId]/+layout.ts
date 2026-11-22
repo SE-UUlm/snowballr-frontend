@@ -1,5 +1,5 @@
-import { getProject } from "$lib/api/project";
-import { loadPrimedProject } from "$lib/model/cache/project-cache";
+import { getProject } from "#lib/api/project.js";
+import { loadPrimedProject } from "#lib/model/cache/project-cache.js";
 import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async (event) => {

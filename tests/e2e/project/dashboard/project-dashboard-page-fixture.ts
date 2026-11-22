@@ -1,12 +1,12 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { createPaper } from "$tests/model-builder";
+import { createPaper } from "#tests/model-builder.js";
 import { expect } from "@playwright/test";
-import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
+import { ProjectDashboardPageModel } from "#tests/e2e/project/dashboard/project-dashboard-page-model.js";
 import type { Project } from "snowballr-api/project";
 import type { Paper } from "snowballr-api/paper";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { ProjectNavigationBarModel } from "$tests/e2e/project/project-navigation-bar-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { ProjectNavigationBarModel } from "#tests/e2e/project/project-navigation-bar-model.js";
 
 type ProjectDashboardPageFixtures = {
     projectDashboardPage: ProjectDashboardPageModel;

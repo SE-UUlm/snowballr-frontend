@@ -101,19 +101,19 @@ export default defineConfig(
                         {
                             group: ["snowballr-api", "snowballr-api/**"],
                             message:
-                                "Generated API code is only used inside src/lib/api/. Import its types from $lib/api/types and call the domain functions in $lib/api/ instead.",
+                                "Generated API code is only used inside src/lib/api/. Import its types from #lib/api/types.js and call the domain functions in #lib/api/ instead.",
                         },
                         {
                             group: ["@protobuf-ts/**"],
                             message:
-                                "The protobuf-ts runtime is only used inside src/lib/api/. Call the domain functions in $lib/api/ and check errors with isApiError from $lib/api/errors instead.",
+                                "The protobuf-ts runtime is only used inside src/lib/api/. Call the domain functions in #lib/api/ and check errors with isApiError from #lib/api/errors.js instead.",
                         },
                         {
-                            // The leading **/ catches both "$lib/api/client" and relative imports such as
-                            // "../api/client"; the trailing * also catches extensions, e.g. "$lib/api/client.js".
+                            // The leading **/ catches both "#lib/api/client.js" and relative imports such as
+                            // "../api/client"; the trailing * catches the extension.
                             group: ["**/api/client*", "**/api/grpc*", "**/api/fieldmask*"],
                             message:
-                                "The client, call() and FieldMasks are internal to src/lib/api/. Call the domain functions in $lib/api/ instead.",
+                                "The client, call() and FieldMasks are internal to src/lib/api/. Call the domain functions in #lib/api/ instead.",
                         },
                     ],
                 },

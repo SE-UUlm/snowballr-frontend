@@ -1,4 +1,4 @@
-import { test as base } from "$tests/e2e/utils/fixtures/isolated-fixture";
+import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { seedVisualData, type VisualData } from "./visual-data";
 import { pinProjectInformation } from "./pin-project-information";
 

@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { test } from "./project-papers-page-fixtures";
-import { createAuthor, createPaper } from "$tests/model-builder";
+import { createAuthor, createPaper } from "#tests/model-builder.js";
 import { getUniqueSequence, NUM_PAPERS_PER_STAGE } from "./project-papers-page-model";
 
 test.describe("Papers Overview Navigation", () => {

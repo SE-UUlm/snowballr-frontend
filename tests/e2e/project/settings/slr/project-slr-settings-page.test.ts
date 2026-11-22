@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 import { test } from "./project-slr-settings-page-fixture";
 
 test.describe("SLR Settings Navigation", () => {

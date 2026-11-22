@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "$tests/visual/utils/visual-fixture";
-import { gotoAndSettle } from "$tests/visual/utils/helper";
-import { ProjectDashboardPageModel } from "$tests/e2e/project/dashboard/project-dashboard-page-model";
-import { ProjectPapersPageModel } from "$tests/e2e/project/papers/project-papers-page-model";
-import { ProjectPaperViewPageModel } from "$tests/e2e/project/paper/project-paper-view-page-model";
-import { ACTIVE_PROJECT_NAME, PAPERS } from "$tests/visual/utils/visual-data";
+import { test } from "#tests/visual/utils/visual-fixture.js";
+import { gotoAndSettle } from "#tests/visual/utils/helper.js";
+import { ProjectDashboardPageModel } from "#tests/e2e/project/dashboard/project-dashboard-page-model.js";
+import { ProjectPapersPageModel } from "#tests/e2e/project/papers/project-papers-page-model.js";
+import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
+import { ACTIVE_PROJECT_NAME, PAPERS } from "#tests/visual/utils/visual-data.js";
 
 test.describe("Project pages", () => {
     test("When the project dashboard is opened, then it matches the baseline", async ({

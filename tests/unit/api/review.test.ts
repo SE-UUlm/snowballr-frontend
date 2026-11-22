@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { ReviewDecision } from "snowballr-api/review";
-import { ApiError } from "$lib/api/errors";
-import { createReview } from "$lib/api/review";
-import { createReview as buildReview } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { ApiError } from "#lib/api/errors.js";
+import { createReview } from "#lib/api/review.js";
+import { createReview as buildReview } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("createReview", () => {
     test("When a review is created, then the project paper, the decision and the criteria are sent", async () => {

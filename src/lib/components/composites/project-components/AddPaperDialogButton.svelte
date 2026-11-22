@@ -1,24 +1,24 @@
 <script lang="ts">
-    import * as Dialog from "$lib/components/primitives/dialog/index.js";
-    import { buttonVariants } from "$lib/components/primitives/button/button.svelte";
+    import * as Dialog from "#lib/components/primitives/dialog/index.js";
+    import { buttonVariants } from "#lib/components/primitives/button/button.svelte";
     import CirclePlus from "@lucide/svelte/icons/circle-plus";
     import Search from "@lucide/svelte/icons/search";
     import LoadingButton from "../button/LoadingButton.svelte";
-    import { cn } from "$lib/utils/shadcn-helper";
+    import { cn } from "#lib/utils/shadcn-helper.js";
     import SearchBar from "../search-bar/SearchBar.svelte";
-    import Skeleton from "$lib/components/primitives/skeleton/skeleton.svelte";
-    import { pluralize } from "$lib/utils/common-helper";
-    import Separator from "$lib/components/primitives/separator/separator.svelte";
+    import Skeleton from "#lib/components/primitives/skeleton/skeleton.svelte";
+    import { pluralize } from "#lib/utils/common-helper.js";
+    import Separator from "#lib/components/primitives/separator/separator.svelte";
     import Alert from "../utils/Alert.svelte";
-    import type { ActionError } from "$lib/model/action-error";
+    import type { ActionError } from "#lib/model/action-error.js";
     import {
         addPaperCandidates,
         searchPaperCandidates,
         type PaperCandidate,
-    } from "$lib/model/paper-candidate";
+    } from "#lib/model/paper-candidate.js";
     import type { DialogTriggerProps } from "bits-ui";
     import ToggleButton from "../button/ToggleButton.svelte";
-    import type { Project } from "$lib/api/types";
+    import type { Project } from "#lib/api/types.js";
     import { onMount } from "svelte";
     import { invalidate } from "$app/navigation";
     import ProjectPaperCandidate from "./ProjectPaperCandidate.svelte";

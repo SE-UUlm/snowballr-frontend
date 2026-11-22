@@ -1,6 +1,6 @@
-import ProjectMemberListEntry from "$lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
+import ProjectMemberListEntry from "#lib/components/composites/settings/project-settings/members/ProjectMemberListEntry.svelte";
 import { MemberRole } from "snowballr-api/project";
-import { Members } from "$tests/example-data";
+import { Members } from "#tests/example-data.js";
 import { render, screen } from "@testing-library/svelte";
 import { describe, test, expect, assert } from "vitest";
 

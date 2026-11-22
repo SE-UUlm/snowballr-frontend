@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     acceptProjectInvitation,
     getInviteCandidates,
     getPendingInvitations,
     inviteUserToProject,
-} from "$lib/api/invitation";
-import { createUser } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/invitation.js";
+import { createUser } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("inviteUserToProject", () => {
     test("When a user is invited, then the project ID and email address are sent", async () => {

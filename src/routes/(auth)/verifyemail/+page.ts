@@ -1,8 +1,8 @@
 import { goto } from "$app/navigation";
-import { getAuthenticationStatus, verifyEmail } from "$lib/api/auth";
-import { AuthenticationStatus } from "$lib/api/types";
+import { getAuthenticationStatus, verifyEmail } from "#lib/api/auth.js";
+import { AuthenticationStatus } from "#lib/api/types.js";
 import type { PageLoad } from "./$types";
-import { createActionError } from "$lib/model/action-error";
+import { createActionError } from "#lib/model/action-error.js";
 import { resolve } from "$app/paths";
 
 export const load: PageLoad = async ({ url }) => {

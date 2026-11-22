@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { Nothing } from "snowballr-api/base";
-import { ApiError } from "$lib/api/errors";
-import { exportProject, getAvailableExportFormats } from "$lib/api/export";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { ApiError } from "#lib/api/errors.js";
+import { exportProject, getAvailableExportFormats } from "#lib/api/export.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getAvailableExportFormats", () => {
     test("When the export formats are loaded, then their names are returned", async () => {

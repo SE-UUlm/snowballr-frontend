@@ -1,10 +1,10 @@
 <script lang="ts">
-    import * as Avatar from "$lib/components/primitives/avatar/index.js";
+    import * as Avatar from "#lib/components/primitives/avatar/index.js";
     import Check from "@lucide/svelte/icons/check";
     import X from "@lucide/svelte/icons/x";
-    import { ReviewDecision, type User } from "$lib/api/types";
-    import { cn } from "$lib/utils/shadcn-helper";
-    import Tooltip from "$lib/components/composites/utils/Tooltip.svelte";
+    import { ReviewDecision, type User } from "#lib/api/types.js";
+    import { cn } from "#lib/utils/shadcn-helper.js";
+    import Tooltip from "#lib/components/composites/utils/Tooltip.svelte";
 
     interface Props {
         user?: User;

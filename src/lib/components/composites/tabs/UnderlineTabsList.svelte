@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as Tabs from "$lib/components/primitives/tabs/index.js";
-    import type { Tab } from "$lib/model/tabs";
-    import { sumBy } from "$lib/utils/common-helper";
+    import * as Tabs from "#lib/components/primitives/tabs/index.js";
+    import type { Tab } from "#lib/model/tabs.js";
+    import { sumBy } from "#lib/utils/common-helper.js";
     import type { Snippet } from "svelte";
 
     interface Props {

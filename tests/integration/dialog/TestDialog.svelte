@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Dialog from "$lib/components/composites/dialog/Dialog.svelte";
+    import Dialog from "#lib/components/composites/dialog/Dialog.svelte";
 
     let { cancelDisabled = false }: { cancelDisabled?: boolean } = $props();
 </script>

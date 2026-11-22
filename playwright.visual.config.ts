@@ -22,6 +22,7 @@ if (!wsEndpoint) {
 
 export default defineConfig({
     testDir: "tests/visual",
+    tsconfig: "tests/playwright.tsconfig.json",
     testMatch: "**/*.visual.ts",
     // The default template contains the host platform, but the browser always runs in the
     // same Linux container, so the same baselines are valid on every host.

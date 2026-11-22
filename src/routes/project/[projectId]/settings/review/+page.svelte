@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { ProjectStatus } from "$lib/api/types";
-    import ProjectSettingsLayout from "$lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
-    import CriteriaSettings from "$lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
-    import KeywordSettings from "$lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
-    import NumberOfReviewersSettings from "$lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
-    import { resource } from "$lib/resource.svelte";
+    import { ProjectStatus } from "#lib/api/types.js";
+    import ProjectSettingsLayout from "#lib/components/composites/settings/project-settings/ProjectSettingsLayout.svelte";
+    import CriteriaSettings from "#lib/components/composites/settings/project-settings/review/CriteriaSettings.svelte";
+    import KeywordSettings from "#lib/components/composites/settings/project-settings/review/KeywordSettings.svelte";
+    import NumberOfReviewersSettings from "#lib/components/composites/settings/project-settings/review/NumberOfReviewersSettings.svelte";
+    import { resource } from "#lib/resource.svelte.js";
     import { isCurrentUserProjectAdmin } from "../helper";
 
     let { data } = $props();

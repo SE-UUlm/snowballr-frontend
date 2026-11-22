@@ -1,21 +1,21 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import Input from "$lib/components/composites/input/Input.svelte";
-    import { renameProject } from "$lib/api/project";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import Input from "#lib/components/composites/input/Input.svelte";
+    import { renameProject } from "#lib/api/project.js";
     import { onMount } from "svelte";
-    import type { Project } from "$lib/api/types";
-    import { Schema } from "$lib/schemas";
-    import { refreshProject } from "$lib/model/cache/project-cache";
+    import type { Project } from "#lib/api/types.js";
+    import { Schema } from "#lib/schemas.js";
+    import { refreshProject } from "#lib/model/cache/project-cache.js";
     import { toast } from "svelte-sonner";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
     import {
         createActionError,
         createActionWarning,
         type ActionError,
-    } from "$lib/model/action-error";
-    import ActionErrorAlert from "$lib/components/composites/utils/ActionErrorAlert.svelte";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    } from "#lib/model/action-error.js";
+    import ActionErrorAlert from "#lib/components/composites/utils/ActionErrorAlert.svelte";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
 
     interface Props {
         projectId: string;

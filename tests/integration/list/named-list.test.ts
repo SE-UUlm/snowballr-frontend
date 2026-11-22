@@ -1,6 +1,6 @@
 import { expect, test, describe } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import NamedList from "$lib/components/composites/list/NamedList.svelte";
+import NamedList from "#lib/components/composites/list/NamedList.svelte";
 import { createRawSnippet } from "svelte";
 import { waitForComponentLoading } from "../test-helper";
 

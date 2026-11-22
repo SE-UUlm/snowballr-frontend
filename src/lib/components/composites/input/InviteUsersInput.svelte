@@ -1,12 +1,12 @@
 <script lang="ts">
     import ChipsInput from "./ChipsInput.svelte";
-    import type { User } from "$lib/api/types";
-    import { getName } from "$lib/utils/common-helper";
-    import type { ValidationResult } from "$lib/model/general";
-    import { Schema } from "$lib/schemas";
-    import { getInviteCandidates } from "$lib/api/invitation";
+    import type { User } from "#lib/api/types.js";
+    import { getName } from "#lib/utils/common-helper.js";
+    import type { ValidationResult } from "#lib/model/general.js";
+    import { Schema } from "#lib/schemas.js";
+    import { getInviteCandidates } from "#lib/api/invitation.js";
     import ActionErrorAlert from "../utils/ActionErrorAlert.svelte";
-    import { createActionError } from "$lib/model/action-error";
+    import { createActionError } from "#lib/model/action-error.js";
 
     interface Props {
         invitees: string[];

@@ -2,14 +2,14 @@ import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { GrpcStatusCode } from "@protobuf-ts/grpcweb-transport";
 import { AuthenticationStatus, AuthenticationStatusResponse } from "snowballr-api/authentication";
 import { Nothing } from "snowballr-api/base";
-import { setFetch } from "$lib/api/fetch";
-import { call } from "$lib/api/grpc";
-import type * as ClientModule from "$lib/api/client";
+import { setFetch } from "#lib/api/fetch.js";
+import { call } from "#lib/api/grpc.js";
+import type * as ClientModule from "#lib/api/client.js";
 import type * as PublicEnv from "$app/env/public";
 
 // setupTest.ts mocks the client for all other tests. These tests send real calls through the
 // grpc-web transport and only replace `fetch`.
-vi.unmock("$lib/api/client");
+vi.unmock("#lib/api/client.js");
 
 let api: typeof ClientModule;
 
@@ -28,7 +28,7 @@ function mockPublicEnv(baseUrl: string) {
 
 beforeAll(async () => {
     mockPublicEnv("http://backend.test");
-    api = await import("$lib/api/client");
+    api = await import("#lib/api/client.js");
 });
 
 afterEach(() => {
@@ -118,7 +118,7 @@ describe("client", () => {
         // What compose.yaml passes when the variable is unset
         mockPublicEnv("");
 
-        await expect(import("$lib/api/client")).rejects.toThrow(
+        await expect(import("#lib/api/client.js")).rejects.toThrow(
             "PUBLIC_API_BASE_URL is not defined",
         );
     });

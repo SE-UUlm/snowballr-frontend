@@ -1,4 +1,4 @@
-import type { AuthSnowballRClient } from "$tests/e2e/utils/helper/mock-backend";
+import type { AuthSnowballRClient } from "#tests/e2e/utils/helper/mock-backend.js";
 import { CriterionCategory } from "snowballr-api/criterion";
 import type { Paper } from "snowballr-api/paper";
 import { PaperDecision, Project, Project_Paper, ProjectStatus } from "snowballr-api/project";

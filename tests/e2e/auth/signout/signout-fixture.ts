@@ -1,8 +1,8 @@
 import { test as base } from "../../utils/fixtures/isolated-fixture";
-import { HomePageModel } from "$tests/e2e/homepage/home-page-model";
+import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { expect } from "@playwright/test";
-import { NavigationBarModel } from "$tests/e2e/navigation-bar-model";
-import { SignInPageModel } from "$tests/e2e/auth/signin/signin-page-model";
+import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
+import { SignInPageModel } from "#tests/e2e/auth/signin/signin-page-model.js";
 
 type SignOutPageFixtures = {
     signInPage: SignInPageModel;

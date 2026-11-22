@@ -1,6 +1,6 @@
 import { test } from "./review-settings-page-fixture";
 import { expect } from "@playwright/test";
-import { reloadWait } from "$tests/e2e/utils/helper/helper";
+import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
 
 test.describe("Review Settings Navigation", () => {
     test("When navigating to the review settings, then the page is displayed", async ({

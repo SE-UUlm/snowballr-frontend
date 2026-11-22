@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { Projects } from "$tests/example-data";
+import { Projects } from "#tests/example-data.js";
 import { mockUserContext } from "../../../test-helper";
-import LeaveProjectSettings from "$lib/components/composites/settings/project-settings/general/LeaveProjectSettings.svelte";
+import LeaveProjectSettings from "#lib/components/composites/settings/project-settings/general/LeaveProjectSettings.svelte";
 
 describe("LeaveProjectSettings", () => {
     test("When a project is provided, then it renders correctly", () => {

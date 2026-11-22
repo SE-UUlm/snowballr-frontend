@@ -1,14 +1,14 @@
 import { describe, expect, test } from "vitest";
-import { ApiError } from "$lib/api/errors";
+import { ApiError } from "#lib/api/errors.js";
 import {
     createCriterion as createCriterionInApi,
     deleteCriterion,
     listCriteria,
     updateCriterion,
-} from "$lib/api/criterion";
-import { CriterionCategory } from "$lib/api/types";
-import { createCriterion } from "$tests/model-builder";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+} from "#lib/api/criterion.js";
+import { CriterionCategory } from "#lib/api/types.js";
+import { createCriterion } from "#tests/model-builder.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("listCriteria", () => {
     test("When the criteria of a project are loaded, then they are requested by project ID and returned", async () => {

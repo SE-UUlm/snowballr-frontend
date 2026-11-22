@@ -11,6 +11,10 @@
         "url": "https://github.com/SE-UUlm/snowballr-frontend.git"
     },
     "type": "module",
+    "imports": {
+        "#lib/*": "./src/lib/*",
+        "#tests/*": "./tests/*"
+    },
     "license": "GPL-3.0-or-later",
     "packageManager": "npm@11.3.0",
     "scripts": {

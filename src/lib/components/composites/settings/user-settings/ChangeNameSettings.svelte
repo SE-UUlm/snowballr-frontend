@@ -1,18 +1,18 @@
 <script lang="ts">
-    import { updateUserName } from "$lib/api/user";
-    import { Schema } from "$lib/schemas";
+    import { updateUserName } from "#lib/api/user.js";
+    import { Schema } from "#lib/schemas.js";
     import { toast } from "svelte-sonner";
     import Input from "../../input/Input.svelte";
     import SettingsSection from "../SettingsSection.svelte";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { triggerCurrentUserRefresh } from "$lib/model/cache/user-cache";
-    import { getUserContext } from "$lib/custom-context/user-context";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { triggerCurrentUserRefresh } from "#lib/model/cache/user-cache.js";
+    import { getUserContext } from "#lib/custom-context/user-context.js";
     import {
         createActionError,
         createActionWarning,
         type ActionError,
-    } from "$lib/model/action-error";
+    } from "#lib/model/action-error.js";
     import ActionErrorAlert from "../../utils/ActionErrorAlert.svelte";
 
     const user = $derived(getUserContext());

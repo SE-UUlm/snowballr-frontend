@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { Nothing } from "snowballr-api/base";
 import type { FetcherInformation } from "snowballr-api/fetcher";
-import { ApiError } from "$lib/api/errors";
-import { getAvailableFetchers } from "$lib/api/fetcher";
-import { mockApiCall, mockFailedApiCall } from "$tests/setupTest";
+import { ApiError } from "#lib/api/errors.js";
+import { getAvailableFetchers } from "#lib/api/fetcher.js";
+import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 describe("getAvailableFetchers", () => {
     test("When the available fetchers are loaded, then they are returned", async () => {

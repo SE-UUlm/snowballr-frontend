@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { InviteUserDialogModel } from "$tests/e2e/project/settings/members/models/invite-user-dialog-model";
-import { PromoteMemberDialogModel } from "$tests/e2e/project/settings/members/models/promote-member-dialog-model";
-import { RemoveMemberDialogModel } from "$tests/e2e/project/settings/members/models/remove-member-dialog-model";
+import { InviteUserDialogModel } from "#tests/e2e/project/settings/members/models/invite-user-dialog-model.js";
+import { PromoteMemberDialogModel } from "#tests/e2e/project/settings/members/models/promote-member-dialog-model.js";
+import { RemoveMemberDialogModel } from "#tests/e2e/project/settings/members/models/remove-member-dialog-model.js";
 
 export interface ProjectMemberCounts {
     all: number;

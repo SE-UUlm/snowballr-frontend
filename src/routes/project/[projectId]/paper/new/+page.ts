@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { getStageFromSearchParams } from "$lib/utils/search-parameters";
+import { getStageFromSearchParams } from "#lib/utils/search-parameters.js";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = ({ params, url }) => {

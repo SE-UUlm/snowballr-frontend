@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import UserSettingsLayout from "$lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
+import UserSettingsLayout from "#lib/components/composites/settings/user-settings/UserSettingsLayout.svelte";
 import TestUserSettingsLayout from "./TestUserSettingsLayout.svelte";
 
 describe("UserSettingsLayout", () => {

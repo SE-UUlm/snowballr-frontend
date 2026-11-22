@@ -1,12 +1,12 @@
 <script lang="ts">
-    import SettingsSection from "$lib/components/composites/settings/SettingsSection.svelte";
-    import { setProjectStatus } from "$lib/api/project";
-    import { ProjectStatus } from "$lib/api/types";
-    import { refreshProject } from "$lib/model/cache/project-cache";
+    import SettingsSection from "#lib/components/composites/settings/SettingsSection.svelte";
+    import { setProjectStatus } from "#lib/api/project.js";
+    import { ProjectStatus } from "#lib/api/types.js";
+    import { refreshProject } from "#lib/model/cache/project-cache.js";
     import { toast } from "svelte-sonner";
-    import LoadingButton from "$lib/components/composites/button/LoadingButton.svelte";
-    import { loadingWrapper } from "$lib/utils/common-helper";
-    import { getIsProjectArchivedContext } from "$lib/custom-context/is-project-archived-context";
+    import LoadingButton from "#lib/components/composites/button/LoadingButton.svelte";
+    import { loadingWrapper } from "#lib/utils/common-helper.js";
+    import { getIsProjectArchivedContext } from "#lib/custom-context/is-project-archived-context.js";
 
     interface Props {
         projectId: string;
