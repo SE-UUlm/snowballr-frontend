@@ -72,7 +72,7 @@ Usage:
     </nav>
     <Separator orientation="vertical" />
     {#if allScrollable}
-        <ScrollArea class="overflow-hidden">
+        <ScrollArea class="w-full overflow-hidden">
             {@render content()}
         </ScrollArea>
     {:else}

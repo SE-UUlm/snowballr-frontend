@@ -26,6 +26,7 @@ jobs:
         runs-on: ubuntu-latest
         outputs:
             matrix: ${{ steps.create-matrix.outputs.matrix }}
+            visual-matrix: ${{ steps.create-matrix.outputs.visual-matrix }}
             is-fast-failing: ${{ steps.create-matrix.outputs.is-fast-failing }}
             is-complete-run: ${{ steps.create-matrix.outputs.is-complete-run }}
         steps:
@@ -57,22 +58,33 @@ jobs:
                     echo "Complete run: counting all E2E tests"
                   fi
 
-                  # Get count of E2E tests that will actually run
-                  test_count="$(npx playwright test --list --reporter list "${only_changed[@]}" | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
-                  if ! [[ "$test_count" =~ ^[0-9]+$ ]]; then
-                    echo "Error: Failed to extract a valid test count. Got: '$test_count'"
-                    exit 1
-                  fi
+                  # Prints a shard matrix for the tests that `playwright test --list` finds with the
+                  # given arguments, splitting them into shards of TESTS_PER_SHARD tests (at least one).
+                  create_matrix() {
+                    local test_count shards shard_array
+                    test_count="$(npx playwright test --list --reporter list "$@" | tail -n1 | sed -E 's/^Total: *([0-9]+).*/\1/')"
+                    if ! [[ "$test_count" =~ ^[0-9]+$ ]]; then
+                      echo "Error: Failed to extract a valid test count. Got: '$test_count'" >&2
+                      return 1
+                    fi
 
-                  # Get number of shards (default to 1)
-                  shards=$((test_count / ${{ env.TESTS_PER_SHARD }})); [ $shards -eq 0 ] && shards=1
-                  echo "Dividing $test_count tests on $shards shards"
+                    shards=$((test_count / ${{ env.TESTS_PER_SHARD }})); [ $shards -eq 0 ] && shards=1
+                    echo "Dividing $test_count tests on $shards shards" >&2
 
-                  # Create Shard Matrix
-                  shardArray=$(seq -s, 1 $shards | sed 's/,/","/g')
-                  matrix=$(echo "{\"shard\": [\"$shardArray\"]}")
-                  echo "Matrix: $matrix"
-                  echo "matrix=$matrix" >> $GITHUB_OUTPUT
+                    shard_array=$(seq -s, 1 $shards | sed 's/,/","/g')
+                    echo "{\"shard\": [\"$shard_array\"]}"
+                  }
+
+                  # E2E tests that will actually run
+                  matrix="$(create_matrix "${only_changed[@]}")"
+                  echo "E2E matrix: $matrix"
+                  echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+                  # Visual regression tests always run completely, never only the changed ones.
+                  # Listing doesn't connect to the browser, so a placeholder endpoint suffices.
+                  visual_matrix="$(PW_VISUAL_WS_ENDPOINT=ws://unused create_matrix --config playwright.visual.config.ts)"
+                  echo "Visual matrix: $visual_matrix"
+                  echo "visual-matrix=$visual_matrix" >> "$GITHUB_OUTPUT"
 
     ff-e2e-test:
         name: Fast-Failing End-to-End Testing with Playwright
@@ -131,4 +143,40 @@ jobs:
               with:
                   name: playwright-report-${{ matrix.shard }}
                   path: e2e-report/
+                  retention-days: 30
+
+    visual-test:
+        name: Visual Regression Testing with Playwright
+        # Always runs the complete visual suite, never only the tests affected by changes, since e.g.
+        # a dependency bump can change the appearance without touching any test.
+        runs-on: ubuntu-24.04
+        timeout-minutes: 30
+        needs: determine-shards
+        strategy:
+            fail-fast: false
+            matrix: ${{ fromJSON(needs.determine-shards.outputs.visual-matrix) }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+
+            - name: Setup
+              uses: ./.github/workflows/setup/
+
+            # See e2e-setup: obscure interaction between IPv6 and Docker in GitHub Pipelines.
+            - name: Avoid ERR_NETWORK_CHANGED
+              shell: bash
+              run: |
+                  sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+                  sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
+            # The browser runs in the Playwright Docker image, so no local browsers are installed.
+            - name: Run visual regression tests
+              run: npm run test:visual -- --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+
+            - name: Archive visual regression report
+              uses: actions/upload-artifact@v7
+              if: ${{ !cancelled() }}
+              with:
+                  name: visual-report-${{ matrix.shard }}
+                  path: visual-report/
                   retention-days: 30

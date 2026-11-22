@@ -39,17 +39,15 @@
     {projectId}
     selectedTab="review"
 >
-    <div class="flex flex-col gap-9 p-2.5">
-        {#if isCurrentUserAdmin.value}
-            <NumberOfReviewersSettings
-                {loadingProject}
-                {projectId}
-                settingsLocked={settingsLocked.value}
-            />
-        {/if}
-        <KeywordSettings {projectId} />
-        {#if isCurrentUserAdmin.value}
-            <CriteriaSettings {projectId} settingsLocked={settingsLocked.value} />
-        {/if}
-    </div>
+    {#if isCurrentUserAdmin.value}
+        <NumberOfReviewersSettings
+            {loadingProject}
+            {projectId}
+            settingsLocked={settingsLocked.value}
+        />
+    {/if}
+    <KeywordSettings {projectId} />
+    {#if isCurrentUserAdmin.value}
+        <CriteriaSettings {projectId} settingsLocked={settingsLocked.value} />
+    {/if}
 </ProjectSettingsLayout>
