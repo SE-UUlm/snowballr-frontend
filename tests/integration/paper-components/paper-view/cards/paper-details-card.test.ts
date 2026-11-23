@@ -8,8 +8,8 @@ import {
 } from "#tests/integration/test-helper.js";
 import userEvent from "@testing-library/user-event";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
-import { type ISnowballRClient } from "snowballr-api/main.client";
-import { Paper } from "snowballr-api/paper";
+import { type ISnowballRClient } from "@se-uulm/snowballr-grpc-client/main.client";
+import { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 
 /** The project stage a created paper should land in, as the route would supply it. */
 const CREATION_TARGET = { projectId: "1", stage: 3n };

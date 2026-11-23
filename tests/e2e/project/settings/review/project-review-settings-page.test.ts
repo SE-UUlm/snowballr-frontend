@@ -1,7 +1,7 @@
 import { test } from "#tests/e2e/project/settings/review/project-review-settings-page-fixture.js";
 import { expect } from "@playwright/test";
 import { reloadWait } from "#tests/e2e/utils/helper/helper.js";
-import { CriterionCategory } from "snowballr-api/criterion";
+import { CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
 
 test.describe("Project Review Settings Navigation", () => {
     test("When navigating to the project review settings, then the page is displayed", async ({

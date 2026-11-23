@@ -81,7 +81,7 @@ and point to the canonical page.
 | Testing conventions                   | wiki/Testing.md                                                               | when-then naming; `describe` grouping; `mockApiCall` / `mockFailedApiCall`.                        |
 | End-to-end tests                      | wiki/Testing.md#end-to-end-tests                                              | Playwright; shared/isolated fixtures; Page Object Models (`*-page-model.ts`, `*-dialog-model.ts`). |
 | Backend access                        | src/lib/api/                                                                  | Domain modules; `client.ts` holds the gRPC-Web wiring.                                             |
-| Generated API types/client            | `snowballr-api` npm package                                                   | Imported only in `src/lib/api/` and `tests/`; elsewhere import the types from `#lib/api/types.js`. |
+| Generated API types/client            | `@se-uulm/snowballr-grpc-client` npm package                                  | Imported only in `src/lib/api/` and `tests/`; elsewhere import the types from `#lib/api/types.js`. |
 | Routes                                | src/routes/                                                                   | SvelteKit page/layout files.                                                                       |
 | Components (ours)                     | src/lib/components/composites/                                                | PascalCase Svelte files.                                                                           |
 | shadcn-svelte primitives              | src/lib/components/primitives/                                                | Configured via `components.json`.                                                                  |
@@ -105,8 +105,8 @@ and point to the canonical page.
   explicit extensions (`#lib/foo.js` for `foo.ts`, `.svelte` kept); relative imports are rejected by ESLint
   (exceptions: `./$types`, shadcn primitives). Rules: wiki/Contributing.md#imports.
 - **Backend access:** Routes and components call the domain functions in `#lib/api/*`, which reject with
-  `ApiError` (check with `isApiError`). Only `src/lib/api/` imports `snowballr-api`, `@protobuf-ts/*` or the client;
-  a missing function goes into its domain module. Rules: wiki/Contributing.md#backend-access.
+  `ApiError` (check with `isApiError`). Only `src/lib/api/` imports `@se-uulm/snowballr-grpc-client`, `@protobuf-ts/*`
+  or the client; a missing function goes into its domain module. Rules: wiki/Contributing.md#backend-access.
 - **User context flow:** root `+layout.ts` resolves the current user (cached → fetched → redirect on
   unauthenticated), injects it via `+layout.svelte` into context. Components consume with
   `getUserContext()` wrapped in `$derived`. After mutating user data, call `triggerCurrentUserRefresh()`.
@@ -125,11 +125,12 @@ and point to the canonical page.
 
 - Always do: prefer wiki references for process guidance; keep changes focused to the requested scope; follow
   the component / testing conventions in wiki/Contributing.md and wiki/Testing.md.
-- Ask first: bumping the `snowballr-api` dependency (changes the generated client); changes to gRPC transport
-  config (`src/lib/api/client.ts`); changes to the root layout's auth/user-fetch logic; changes to `compose.yaml`,
-  Dockerfile, or e2e sharding strategy; changes to the license-check allowlist in `package.json` (`license-check`).
+- Ask first: bumping the `@se-uulm/snowballr-grpc-client` dependency (changes the generated client); changes to gRPC
+  transport config (`src/lib/api/client.ts`); changes to the root layout's auth/user-fetch logic; changes to
+  `compose.yaml`, Dockerfile, or e2e sharding strategy; changes to the license-check allowlist in `package.json`
+  (`license-check`).
 - Never do: commit secrets / real API base URLs to `.env`; copy or vendor the generated API client into `src/`
-  (import it from the `snowballr-api` package instead); commit `build/`, `node_modules/`,
+  (import it from the `@se-uulm/snowballr-grpc-client` package instead); commit `build/`, `node_modules/`,
   `e2e-report/`, `test-results/`, or `coverage/`; introduce `null`/`undefined` user checks downstream of the
   root layout (the context invariant guarantees a valid user — wiki/Contributing.md).
 

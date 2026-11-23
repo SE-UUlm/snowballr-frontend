@@ -6,8 +6,8 @@ import { HomePageModel } from "#tests/e2e/homepage/home-page-model.js";
 import { ProjectPaperViewPageModel } from "#tests/e2e/project/paper/project-paper-view-page-model.js";
 import { NavigationBarModel } from "#tests/e2e/navigation-bar-model.js";
 import { ReadingListPageModel } from "#tests/e2e/readinglist/reading-list-page-model.js";
-import type { Project } from "snowballr-api/project";
-import type { Paper } from "snowballr-api/paper";
+import type { Project } from "@se-uulm/snowballr-grpc-client/project";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 
 type PaperViewPageFixtures = {
     paperViewPage: PaperViewPageModel;

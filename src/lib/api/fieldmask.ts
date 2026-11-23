@@ -1,4 +1,4 @@
-import type { FieldMask } from "snowballr-api/google/protobuf/field_mask";
+import type { FieldMask } from "@se-uulm/snowballr-grpc-client/google/protobuf/field_mask";
 import { generateFieldMask } from "protobuf-fieldmask";
 
 /**

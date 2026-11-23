@@ -1,4 +1,4 @@
-import { Nothing } from "snowballr-api/base";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

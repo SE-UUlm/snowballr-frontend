@@ -1,6 +1,6 @@
 import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { RpcError } from "@protobuf-ts/runtime-rpc";
-import { SnowballRClient } from "snowballr-api/main.client";
+import { SnowballRClient } from "@se-uulm/snowballr-grpc-client/main.client";
 import { PUBLIC_API_BASE_URL, PUBLIC_CREDENTIAL_POLICY } from "$app/env/public";
 import { getFetch } from "#lib/api/fetch.js";
 import { grpcWebDevToolsInterceptor } from "#lib/api/grpc-devtools.js";

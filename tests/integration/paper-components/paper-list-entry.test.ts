@@ -4,7 +4,7 @@ import { render, screen, waitFor } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { Papers, Reviews } from "#tests/example-data.js";
-import { PaperDecision } from "snowballr-api/project";
+import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 
 describe("PaperListEntryComponent", () => {

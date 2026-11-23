@@ -5,7 +5,7 @@ import {
     Project_Information,
     Project_Information_DecisionStatistics,
     ProjectStatus,
-} from "snowballr-api/project";
+} from "@se-uulm/snowballr-grpc-client/project";
 import { ApiError } from "#lib/api/errors.js";
 import {
     createProject,

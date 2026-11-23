@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CriterionCategory } from "snowballr-api/criterion";
+import { CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
 import {
     collectChanges,
     getDraftStatus,

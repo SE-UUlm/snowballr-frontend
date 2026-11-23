@@ -2,7 +2,7 @@ import { waitFor, screen } from "@testing-library/svelte";
 import { expect } from "vitest";
 import { WAS_PROJECT_PAPER_ALREADY_REVIEWED_KEY } from "#lib/custom-context/was-paper-reviewed-context.js";
 import { SELECTED_REVIEW_CRITERIA_KEY } from "#lib/custom-context/selected-review-criteria-context.js";
-import type { User } from "snowballr-api/user";
+import type { User } from "@se-uulm/snowballr-grpc-client/user";
 import { USER_KEY, type UserContext } from "#lib/custom-context/user-context.js";
 import { createUser } from "#tests/model-builder.js";
 import { Users } from "#tests/example-data.js";

@@ -32,7 +32,7 @@ const testOnlyImports = {
 /** Backend access goes through the domain modules in src/lib/api/, see wiki/Contributing.md#backend-access. */
 const apiInternals = [
     {
-        group: ["snowballr-api", "snowballr-api/**"],
+        group: ["@se-uulm/snowballr-grpc-client", "@se-uulm/snowballr-grpc-client/**"],
         message:
             "Generated API code is only used inside src/lib/api/. Import its types from #lib/api/types.js and call the domain functions in #lib/api/ instead.",
     },

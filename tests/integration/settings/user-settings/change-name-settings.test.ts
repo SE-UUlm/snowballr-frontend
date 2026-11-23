@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test, vi } from "vitest";
 import ChangeNameSettings from "#lib/components/composites/settings/user-settings/ChangeNameSettings.svelte";
 import userEvent from "@testing-library/user-event";
-import type { User } from "snowballr-api/user";
+import type { User } from "@se-uulm/snowballr-grpc-client/user";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { mockUserContext } from "#tests/integration/test-helper.js";
 import { Users } from "#tests/example-data.js";

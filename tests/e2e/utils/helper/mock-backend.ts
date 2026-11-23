@@ -1,11 +1,11 @@
-import { SnowballRClient } from "snowballr-api/main.client";
+import { SnowballRClient } from "@se-uulm/snowballr-grpc-client/main.client";
 import type { Browser, Page } from "@playwright/test";
 import { GrpcStatusCode, GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { exec, execSync } from "node:child_process";
 import { CookieJar, Cookie } from "tough-cookie";
 import crossFetch from "cross-fetch";
 import cookieFetch from "fetch-cookie";
-import { Nothing } from "snowballr-api/base";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
 import { MOCK_BACKEND_IMAGE } from "#tests/e2e/utils/helper/mock-backend-version.js";
 
 async function isDockerInstalled(): Promise<boolean> {

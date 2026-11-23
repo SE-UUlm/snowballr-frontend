@@ -3,7 +3,7 @@ import { describe, expect, onTestFinished, test, vi } from "vitest";
 import PaperDecisionButton from "#lib/components/composites/paper-components/paper-view/PaperDecisionButton.svelte";
 import userEvent from "@testing-library/user-event";
 import { client } from "#lib/api/client.js";
-import { Review, ReviewDecision } from "snowballr-api/review";
+import { Review, ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
 import { getReturnValue, mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import {
     type IsProjectArchivedContext,

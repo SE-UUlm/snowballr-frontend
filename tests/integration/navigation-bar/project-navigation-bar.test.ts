@@ -3,7 +3,7 @@ import ProjectNavigationBar from "#lib/components/composites/navigation-bar/Proj
 import { render, screen } from "@testing-library/svelte";
 import { createProject, loading } from "#tests/model-builder.js";
 import { mockUserContext, waitForComponentLoading } from "#tests/integration/test-helper.js";
-import { ProjectStatus } from "snowballr-api/project";
+import { ProjectStatus } from "@se-uulm/snowballr-grpc-client/project";
 
 describe("ProjectNavigationBar", () => {
     test("When all props are provided, then whole navigation bar is shown", async () => {

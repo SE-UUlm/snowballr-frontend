@@ -1,5 +1,5 @@
-import { Nothing } from "snowballr-api/base";
-import type { FetcherInformation, FetcherOptions } from "snowballr-api/fetcher";
+import { Nothing } from "@se-uulm/snowballr-grpc-client/base";
+import type { FetcherInformation, FetcherOptions } from "@se-uulm/snowballr-grpc-client/fetcher";
 import { client } from "#lib/api/client.js";
 import { call } from "#lib/api/grpc.js";
 

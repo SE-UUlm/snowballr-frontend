@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "snowballr-api/user";
+import { User, UserRole, UserStatus } from "@se-uulm/snowballr-grpc-client/user";
 import {
     MemberRole,
     PaperDecision,
@@ -6,11 +6,11 @@ import {
     Project_Member,
     Project_Paper,
     ProjectStatus,
-} from "snowballr-api/project";
-import { Review, ReviewDecision } from "snowballr-api/review";
-import { Criterion, CriterionCategory } from "snowballr-api/criterion";
+} from "@se-uulm/snowballr-grpc-client/project";
+import { Review, ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
+import { Criterion, CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
 import { createProjectSettings } from "#tests/model-builder.js";
-import type { Author, Paper } from "snowballr-api/paper";
+import type { Author, Paper } from "@se-uulm/snowballr-grpc-client/paper";
 
 const johnDoeUser: User = {
     id: "0",

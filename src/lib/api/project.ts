@@ -6,7 +6,7 @@ import {
     type Project_Information_DecisionStatistics,
     type Project_Update,
     type ProjectStatus,
-} from "snowballr-api/project";
+} from "@se-uulm/snowballr-grpc-client/project";
 import { client } from "#lib/api/client.js";
 import type { Fetchers } from "#lib/api/fetcher.js";
 import { buildFieldMask } from "#lib/api/fieldmask.js";

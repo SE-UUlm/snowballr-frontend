@@ -1,7 +1,11 @@
 import { test as base } from "#tests/e2e/utils/fixtures/isolated-fixture.js";
 import { expect } from "@playwright/test";
-import { Project, SnowballingType, type Project_Settings } from "snowballr-api/project";
-import type { Paper } from "snowballr-api/paper";
+import {
+    Project,
+    SnowballingType,
+    type Project_Settings,
+} from "@se-uulm/snowballr-grpc-client/project";
+import type { Paper } from "@se-uulm/snowballr-grpc-client/paper";
 import { createPaper } from "#tests/model-builder.js";
 import { AddPaperDialogModel } from "#tests/e2e/project/papers/add-paper-dialog-model.js";
 

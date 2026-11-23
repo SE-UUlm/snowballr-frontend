@@ -2,7 +2,7 @@ import PaperDecisionBanner from "#lib/components/composites/criteria/PaperDecisi
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
 import { createProjectPaper, loading } from "#tests/model-builder.js";
-import { PaperDecision } from "snowballr-api/project";
+import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
 import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { Reviews, Users } from "#tests/example-data.js";
 

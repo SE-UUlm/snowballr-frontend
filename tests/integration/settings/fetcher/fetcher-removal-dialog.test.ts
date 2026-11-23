@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { afterAll, beforeEach, describe, expect, test, vi } from "vitest";
 import FetcherRemovalDialog from "#lib/components/composites/settings/fetcher/FetcherRemovalDialog.svelte";
-import type { FetcherInformation } from "snowballr-api/fetcher";
+import type { FetcherInformation } from "@se-uulm/snowballr-grpc-client/fetcher";
 import userEvent from "@testing-library/user-event";
 import type { SaveFetchers } from "#lib/components/composites/settings/fetcher/fetcher.js";
 import type { Fetchers } from "#lib/api/fetcher.js";

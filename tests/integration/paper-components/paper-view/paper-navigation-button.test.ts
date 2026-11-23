@@ -9,7 +9,7 @@ import { projectPaperLoading } from "#lib/global-state/project-paper-loading-sta
 import { createProject, createProjectPaper } from "#tests/model-builder.js";
 import { goto } from "$app/navigation";
 import { toast } from "svelte-sonner";
-import type { Project_Paper } from "snowballr-api/project";
+import type { Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import { client } from "#lib/api/client.js";
 
 vi.mock("svelte-sonner", () => ({

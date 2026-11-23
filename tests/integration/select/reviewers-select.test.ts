@@ -1,5 +1,5 @@
 import ReviewersSelect from "#lib/components/composites/select/ReviewersSelect.svelte";
-import { type User } from "snowballr-api/user";
+import { type User } from "@se-uulm/snowballr-grpc-client/user";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

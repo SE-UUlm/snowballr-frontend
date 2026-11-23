@@ -1,10 +1,14 @@
 // The generated API types and enums that code outside src/lib/api/ uses, under their generated names.
-// Only src/lib/api/ imports snowballr-api directly, so add a type here when a route or component needs
-// one. Names like Project_Paper change with the REST client, see #771.
-export { AuthenticationStatus } from "snowballr-api/authentication";
-export { Criterion, CriterionCategory } from "snowballr-api/criterion";
-export { FetcherInformation, FetcherOptionSchema, FetcherOptions } from "snowballr-api/fetcher";
-export { Author, Paper, Paper_ExternalId } from "snowballr-api/paper";
+// Only src/lib/api/ imports @se-uulm/snowballr-grpc-client directly, so add a type here when a route or
+// component needs one. Names like Project_Paper change with the REST client, see #771.
+export { AuthenticationStatus } from "@se-uulm/snowballr-grpc-client/authentication";
+export { Criterion, CriterionCategory } from "@se-uulm/snowballr-grpc-client/criterion";
+export {
+    FetcherInformation,
+    FetcherOptionSchema,
+    FetcherOptions,
+} from "@se-uulm/snowballr-grpc-client/fetcher";
+export { Author, Paper, Paper_ExternalId } from "@se-uulm/snowballr-grpc-client/paper";
 export {
     MemberRole,
     PaperDecision,
@@ -16,8 +20,8 @@ export {
     Project_Paper,
     Project_Settings,
     SnowballingType,
-} from "snowballr-api/project";
-export { Review, ReviewDecision } from "snowballr-api/review";
-export { User, UserRole } from "snowballr-api/user";
-export { UserSettings } from "snowballr-api/user_settings";
-export { Timestamp } from "snowballr-api/google/protobuf/timestamp";
+} from "@se-uulm/snowballr-grpc-client/project";
+export { Review, ReviewDecision } from "@se-uulm/snowballr-grpc-client/review";
+export { User, UserRole } from "@se-uulm/snowballr-grpc-client/user";
+export { UserSettings } from "@se-uulm/snowballr-grpc-client/user_settings";
+export { Timestamp } from "@se-uulm/snowballr-grpc-client/google/protobuf/timestamp";

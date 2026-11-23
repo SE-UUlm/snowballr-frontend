@@ -21,7 +21,7 @@ import {
 import { Criteria, Reviews } from "#tests/example-data.js";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 import type { UserContext } from "#lib/custom-context/user-context.js";
-import { PaperDecision } from "snowballr-api/project";
+import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
 
 describe("ProjectPaperView", () => {
     test("When the user already reviewed this paper but is in review mode, then the decision is shown", async () => {

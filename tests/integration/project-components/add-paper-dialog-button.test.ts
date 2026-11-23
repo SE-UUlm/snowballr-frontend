@@ -1,5 +1,5 @@
-import { Paper_List } from "snowballr-api/paper";
-import { Project_Paper } from "snowballr-api/project";
+import { Paper_List } from "@se-uulm/snowballr-grpc-client/paper";
+import { Project_Paper } from "@se-uulm/snowballr-grpc-client/project";
 import AddPaperDialogButton from "#lib/components/composites/project-components/AddPaperDialogButton.svelte";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { render, screen } from "@testing-library/svelte";

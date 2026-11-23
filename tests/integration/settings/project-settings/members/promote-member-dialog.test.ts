@@ -1,4 +1,4 @@
-import { MemberRole, Project_Member } from "snowballr-api/project";
+import { MemberRole, Project_Member } from "@se-uulm/snowballr-grpc-client/project";
 import { Members } from "#tests/example-data.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 import { afterEach, assert, beforeEach, describe, expect, test, vi } from "vitest";

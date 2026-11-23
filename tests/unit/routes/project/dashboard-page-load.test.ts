@@ -3,8 +3,8 @@ import {
     PaperDecision,
     Project_Information,
     Project_Information_DecisionStatistics,
-} from "snowballr-api/project";
-import { Timestamp } from "snowballr-api/google/protobuf/timestamp";
+} from "@se-uulm/snowballr-grpc-client/project";
+import { Timestamp } from "@se-uulm/snowballr-grpc-client/google/protobuf/timestamp";
 import { load } from "#routes/project/[projectId]/dashboard/+page.js";
 import { createProject, createProjectPaper } from "#tests/model-builder.js";
 import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
