@@ -344,6 +344,10 @@ describe("PaperExternalIds", () => {
         await user.click(screen.getByRole("option", { name: "ArXiv" }));
 
         await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
+        // The dialog is unmounted only after its close animation has been checked (next frame).
+        await waitFor(() =>
+            expect(screen.queryByTestId("external-ids-dialog")).not.toBeInTheDocument(),
+        );
 
         expect(screen.getByText("ArXiv")).toBeInTheDocument();
         expect(screen.queryByText("DOI")).not.toBeInTheDocument();
@@ -465,7 +469,10 @@ describe("PaperExternalIds", () => {
         await user.click(within(dialog).getByTestId("remove-external-id-btn-0"));
         await user.click(within(dialog).getByTestId("close-external-ids-dialog-btn"));
 
-        expect(screen.queryByTestId("external-ids-dialog")).not.toBeInTheDocument();
+        // The dialog is unmounted only after its close animation has been checked (next frame).
+        await waitFor(() =>
+            expect(screen.queryByTestId("external-ids-dialog")).not.toBeInTheDocument(),
+        );
         expect(screen.getByText("No External IDs available")).toBeInTheDocument();
     });
 });

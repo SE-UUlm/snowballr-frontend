@@ -46,7 +46,7 @@ describe("PaperDecisionButton", () => {
         expect(acceptButton).toHaveClass("bg-accept-green");
 
         await userEvent.hover(acceptButton);
-        await waitFor(() => expect(acceptButton).toHaveAttribute("data-state", "delayed-open"));
+        await waitFor(() => expect(acceptButton).toHaveAttribute("data-state", "instant-open"));
         const tooltip = screen.getByText("Accept paper");
         expect(tooltip).toBeInTheDocument();
 
@@ -83,7 +83,7 @@ describe("PaperDecisionButton", () => {
         expect(declineButton).toHaveClass("bg-decline-red");
 
         await userEvent.hover(declineButton);
-        await waitFor(() => expect(declineButton).toHaveAttribute("data-state", "delayed-open"));
+        await waitFor(() => expect(declineButton).toHaveAttribute("data-state", "instant-open"));
         const tooltip = screen.getByText("Decline paper");
         expect(tooltip).toBeInTheDocument();
 
@@ -120,7 +120,7 @@ describe("PaperDecisionButton", () => {
         expect(maybeButton).toHaveClass("bg-maybe-yellow");
 
         await userEvent.hover(maybeButton);
-        await waitFor(() => expect(maybeButton).toHaveAttribute("data-state", "delayed-open"));
+        await waitFor(() => expect(maybeButton).toHaveAttribute("data-state", "instant-open"));
         const tooltip = screen.getByText("Mark paper as undecided");
         expect(tooltip).toBeInTheDocument();
 

@@ -80,11 +80,12 @@ describe("SnowballingTypeSettings", () => {
 
         await waitFor(() => expect(screen.getByRole("radio", { name: "Backward" })).toBeChecked());
 
-        const forward = screen.getByRole("radio", { name: "Forward" });
-        await user.click(forward);
+        await user.click(screen.getByRole("radio", { name: "Forward" }));
 
-        await waitFor(() => expect(forward).toBeChecked());
-        expect(forward).toBeEnabled();
+        // While the update is in flight, the item is replaced by a spinner and then re-mounted,
+        // so it has to be queried again.
+        await waitFor(() => expect(screen.getByRole("radio", { name: "Forward" })).toBeChecked());
+        expect(screen.getByRole("radio", { name: "Forward" })).toBeEnabled();
         expect(mockUpdateCall).toHaveBeenCalledTimes(1);
     });
 

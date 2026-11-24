@@ -82,7 +82,7 @@ describe("User avatar", () => {
 
             const tooltip = screen.getByRole("button", { name: "JD" });
             await userEvent.hover(tooltip);
-            await waitFor(() => expect(tooltip).toHaveAttribute("data-state", "delayed-open"));
+            await waitFor(() => expect(tooltip).toHaveAttribute("data-state", "instant-open"));
 
             const fullNameHint = screen.getByText("John Doe");
             expect(fullNameHint).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe("User avatar", () => {
             const tooltipUnknownName = screen.getByRole("button", { name: "" });
             await userEvent.hover(tooltipUnknownName);
             await waitFor(() =>
-                expect(tooltipUnknownName).toHaveAttribute("data-state", "delayed-open"),
+                expect(tooltipUnknownName).toHaveAttribute("data-state", "instant-open"),
             );
 
             expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
