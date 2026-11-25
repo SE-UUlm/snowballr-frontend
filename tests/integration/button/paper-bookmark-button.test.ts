@@ -1,10 +1,14 @@
 import { render, screen, waitFor } from "@testing-library/svelte";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import PaperBookmarkButton from "#lib/components/composites/button/PaperBookmarkButton.svelte";
 import userEvent from "@testing-library/user-event";
-import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
+import { mockApiCall, mockFailedApiCall, mockPendingApiCall } from "#tests/setupTest.js";
 
 describe("PaperBookmarkButton", () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
     test("When the paper is not bookmarked, then bookmark button has 'Add to reading list' tooltip", () => {
         mockApiCall("isPaperOnReadingList", { value: false });
         render(PaperBookmarkButton, {
@@ -160,20 +164,64 @@ describe("PaperBookmarkButton", () => {
         expect(testFunction).not.toHaveBeenCalled();
     });
 
-    test("When the isPaperOnReadingList API call fails, then the button is not enabled", async () => {
-        mockFailedApiCall("isPaperOnReadingList");
+    test("When the isPaperOnReadingList API call fails, then the button stays disabled", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        const statusCall = mockFailedApiCall("isPaperOnReadingList");
 
-        const testFunction = vi.fn();
         render(PaperBookmarkButton, {
             target: document.body,
             props: {
                 paperId: "1",
                 isBookmarkedDefault: false,
-                onPaperChangedBookmarkStatus: testFunction,
             },
         });
 
+        // Wait until the failure was handled, so the assertion sees the state after the call settled
+        await waitFor(() => expect(consoleError).toHaveBeenCalled());
+        expect(statusCall).toHaveBeenCalledOnce();
         const button = screen.getByRole("button");
         expect(button).toBeDisabled();
+        expect(button).toHaveAttribute("aria-label", "Couldn't load reading list status");
+    });
+
+    test("When the paperId changes, then the button is disabled until the new status arrives", async () => {
+        mockApiCall("isPaperOnReadingList", { value: false });
+        const { rerender } = render(PaperBookmarkButton, {
+            target: document.body,
+            props: { paperId: "1" },
+        });
+        const button = screen.getByRole("button");
+        await waitFor(() => expect(button).toBeEnabled());
+
+        const { call, resolve } = mockPendingApiCall("isPaperOnReadingList");
+        await rerender({ paperId: "2" });
+
+        expect(call).toHaveBeenCalledWith({ id: "2" });
+        expect(button).toBeDisabled();
+
+        resolve({ value: true });
+        await waitFor(() => expect(button).toBeEnabled());
+        expect(button).toHaveAttribute("aria-label", "Remove from reading list");
+    });
+
+    test("When adding the paper is cancelled, then no error is logged and the button is not toggled", async () => {
+        const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+        mockApiCall("isPaperOnReadingList", { value: false });
+        const addCall = mockFailedApiCall("addPaperToReadingList", "", "CANCELLED");
+
+        const user = userEvent.setup();
+        render(PaperBookmarkButton, {
+            target: document.body,
+            props: { paperId: "1" },
+        });
+        const button = screen.getByRole("button");
+        await waitFor(() => expect(button).toBeEnabled());
+
+        await user.click(button);
+
+        await waitFor(() => expect(button).toBeEnabled());
+        expect(addCall).toHaveBeenCalledOnce();
+        expect(button).toHaveAttribute("aria-label", "Add to reading list");
+        expect(consoleError).not.toHaveBeenCalled();
     });
 });

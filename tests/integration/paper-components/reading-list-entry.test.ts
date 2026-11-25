@@ -1,11 +1,17 @@
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import ReadingListEntry from "#lib/components/composites/paper-components/ReadingListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { Papers } from "#tests/example-data.js";
+import { mockApiCall } from "#tests/setupTest.js";
 
 describe("ReadingListEntryComponent", () => {
+    beforeEach(() => {
+        // A reading list entry is for a paper on the reading list
+        mockApiCall("isPaperOnReadingList", { value: true });
+    });
+
     test("When all required props except an onClick handler are provided, then the reading list entry is completely shown", async () => {
         render(ReadingListEntry, {
             props: {
