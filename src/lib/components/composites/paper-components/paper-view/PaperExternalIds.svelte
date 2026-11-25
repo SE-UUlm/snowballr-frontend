@@ -9,6 +9,7 @@
     import Plus from "@lucide/svelte/icons/plus";
     import X from "@lucide/svelte/icons/x";
     import Pencil from "@lucide/svelte/icons/pencil";
+    import ExternalLink from "@lucide/svelte/icons/external-link";
     import type { Paper } from "#lib/api/types.js";
     import ErrorIndicator from "#lib/components/composites/utils/ErrorIndicator.svelte";
     import type { StringifiedPaper } from "#lib/model/general.js";
@@ -83,7 +84,8 @@ Displays the external IDs of a paper (e.g. its DOI or URL), each consisting of a
 
 Every external ID is shown as a badge with its type; hovering a badge reveals its value in a tooltip. This
 keeps the display compact no matter how many external IDs a paper has. If the type has a known page (e.g.
-`doi.org` for a DOI), the badge links to it in a new tab; otherwise clicking it reveals the value too.
+`doi.org` for a DOI), the badge links to it in a new tab and shows an external link icon to tell it apart;
+otherwise clicking it reveals the value too.
 
 In edit mode, an edit button opens a dialog where entries can be added, edited and removed. The type is
 picked from a fixed list of options so that no two entries can share the same type.
@@ -119,7 +121,15 @@ Usage:
                         triggerVariant="none"
                     >
                         {#snippet trigger()}
-                            <Badge variant="outline">{externalId.displayType || "Unknown"}</Badge>
+                            <Badge variant="outline">
+                                {externalId.displayType || "Unknown"}
+                                {#if url !== undefined}
+                                    <ExternalLink
+                                        aria-hidden="true"
+                                        data-testid="external-link-icon"
+                                    />
+                                {/if}
+                            </Badge>
                         {/snippet}
                         {#snippet content()}
                             {externalId.value || "No value"}

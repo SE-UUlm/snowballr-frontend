@@ -102,7 +102,7 @@ describe("PaperExternalIds", () => {
         expect(await screen.findByText("2963403868")).toBeInTheDocument();
     });
 
-    test("When an external id has a known page, then its badge links to it in a new tab", async () => {
+    test("When an external id has a known page, then its badge links to it in a new tab and shows an external link icon", async () => {
         const paper = createPaper({
             externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
         });
@@ -122,9 +122,10 @@ describe("PaperExternalIds", () => {
         expect(link).toHaveAttribute("href", "https://doi.org/10.1234/abc");
         expect(link).toHaveAttribute("target", "_blank");
         expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(within(link).getByTestId("external-link-icon")).toBeInTheDocument();
     });
 
-    test("When an external id has no known page, then its badge is not a link", async () => {
+    test("When an external id has no known page, then its badge is not a link and shows no external link icon", async () => {
         const paper = createPaper({
             externalIds: [{ type: "MAG", displayType: "MAG", value: "2963403868" }],
         });
@@ -142,6 +143,7 @@ describe("PaperExternalIds", () => {
 
         expect(screen.getByText("MAG")).toBeInTheDocument();
         expect(screen.queryByRole("link")).not.toBeInTheDocument();
+        expect(screen.queryByTestId("external-link-icon")).not.toBeInTheDocument();
     });
 
     test("When the paper has no external ids, then a placeholder is shown", async () => {
