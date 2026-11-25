@@ -2,8 +2,7 @@
     import PaperInfo from "#lib/components/composites/paper-components/PaperInfo.svelte";
     import UserAvatar from "#lib/components/composites/user-avatar/UserAvatar.svelte";
     import { goto } from "$app/navigation";
-    import { getUserById } from "#lib/api/user.js";
-    import type { User, Paper, Project_Paper } from "#lib/api/types.js";
+    import type { Paper, Project_Paper } from "#lib/api/types.js";
     import {
         getDisplayPaperId,
         getStatusColor,
@@ -15,6 +14,7 @@
     import ExternalLink from "@lucide/svelte/icons/external-link";
     import { resolve } from "$app/paths";
     import Link from "#lib/components/composites/link/Link.svelte";
+    import { getReviewerLookupContext } from "#lib/custom-context/reviewer-lookup-context.js";
 
     /**
      * Interface for the paper list entries.
@@ -43,16 +43,7 @@
             : resolve(`paper/${paperId}`),
     );
 
-    async function getReviewUserById(id: string): Promise<User | undefined> {
-        let reviewingUser: undefined | User = undefined;
-        try {
-            reviewingUser = await getUserById(id);
-        } catch (error) {
-            console.error(`Couldn't load review user with: ${id} (error: ${error})`);
-        }
-
-        return reviewingUser;
-    }
+    const reviewerLookup = getReviewerLookupContext();
 </script>
 
 <!--
@@ -69,6 +60,9 @@ Furthermore this component is clickable and navigates to the corresponding paper
 if the onClick() event handler is not overridden. Otherwise it executes the custom event handler
 on a single click. A double click always causes the navigation to the paper view.
 If an onClick event handler is provided, a link icon is shown to open the paper.
+
+The reviewers are loaded through the reviewer lookup of the page (see `setReviewerLookupContext`), so
+that entries sharing a reviewer request it once. Without one, each entry loads its reviewers itself.
 
 Usage:
 ```svelte
@@ -108,7 +102,7 @@ Usage:
     </div>
     {#if !reviewMode.isActivated && isProjectPaper(paper)}
         {#each paper.reviews as review (review.id)}
-            {#await getReviewUserById(review.userId) then user}
+            {#await reviewerLookup.getReviewer(review.userId) then user}
                 <UserAvatar reviewDecision={review.decision} {user} />
             {/await}
         {/each}

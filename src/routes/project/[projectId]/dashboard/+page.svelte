@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { setReviewerLookupContext } from "#lib/custom-context/reviewer-lookup-context.js";
     import ProjectNavigationBar from "#lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
     import PaperListEntrySkeleton from "#lib/components/composites/paper-components/PaperListEntrySkeleton.svelte";
     import NamedList from "#lib/components/composites/list/NamedList.svelte";
@@ -8,6 +9,9 @@
     import { Separator } from "#lib/components/primitives/separator/index.js";
 
     const { data } = $props();
+
+    // Paper list entries load the avatars of their reviewers, so that each one is requested once
+    setReviewerLookupContext();
     const { projectId, loadingProject, openReviews, projectInformation, stageProgress } =
         $derived(data);
 </script>
