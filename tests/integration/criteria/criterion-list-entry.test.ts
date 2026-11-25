@@ -1,7 +1,7 @@
 import CriterionListEntry from "#lib/components/composites/criteria/CriterionListEntry.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createReviewedCriterion } from "#tests/model-builder.js";
+import { createReview, createReviewedCriterion, createUser } from "#tests/model-builder.js";
 import { Criteria, Reviews, Users } from "#tests/example-data.js";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
 import { SELECTED_REVIEW_CRITERIA_KEY } from "#lib/custom-context/selected-review-criteria-context.js";
@@ -108,5 +108,28 @@ describe("CriterionListEntry", () => {
         await userEvent.click(checkbox);
         expect(checkbox).not.toBeChecked();
         expect(context.get(SELECTED_REVIEW_CRITERIA_KEY)!.criteria!.length).toBe(0);
+    });
+
+    test("When a reviewer couldn't be loaded, then their review is still shown with an avatar", () => {
+        const reviewer = createUser({ id: "u1", firstName: "John", lastName: "Doe" });
+
+        reviewMode.isActivated = false;
+
+        render(CriterionListEntry, {
+            target: document.body,
+            context: mockSelectedCriteriaContext,
+            props: {
+                reviewers: [reviewer],
+                criterion: createReviewedCriterion({
+                    reviews: [
+                        createReview({ id: "r1", userId: reviewer.id }),
+                        createReview({ id: "r2", userId: "missing" }),
+                    ],
+                }),
+            },
+        });
+
+        expect(screen.getAllByTestId("user-avatar")).toHaveLength(2);
+        expect(screen.getByText("JD")).toBeInTheDocument();
     });
 });
