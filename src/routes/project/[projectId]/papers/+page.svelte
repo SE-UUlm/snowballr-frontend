@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { setReviewerLookupContext } from "#lib/custom-context/reviewer-lookup-context.js";
     import ProjectNavigationBar from "#lib/components/composites/navigation-bar/ProjectNavigationBar.svelte";
     import SearchBar from "#lib/components/composites/search-bar/SearchBar.svelte";
     import Button from "#lib/components/primitives/button/button.svelte";
@@ -48,6 +49,9 @@
     import { resolve } from "$app/paths";
 
     let { data } = $props();
+
+    // Paper list entries load the avatars of their reviewers, so that each one is requested once
+    setReviewerLookupContext();
     const {
         projectId,
         loadingProject,

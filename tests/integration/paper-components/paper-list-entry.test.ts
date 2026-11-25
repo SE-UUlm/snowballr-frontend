@@ -6,6 +6,10 @@ import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { Papers, Reviews } from "#tests/example-data.js";
 import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
 import { reviewMode } from "#lib/global-state/review-mode-state.svelte.js";
+import { REVIEWER_LOOKUP_KEY } from "#lib/custom-context/reviewer-lookup-context.js";
+import { createReviewerLookup } from "#lib/model/reviewer-lookup.js";
+import { createProjectPaper, createReview, createUser } from "#tests/model-builder.js";
+import { mockApiCall } from "#tests/setupTest.js";
 
 describe("PaperListEntryComponent", () => {
     beforeEach(() => {
@@ -146,6 +150,26 @@ describe("PaperListEntryComponent", () => {
             "border-l-4 border-decline-red",
         );
         expect(screen.getByTestId("paper-list-entry").children[1]).toHaveTextContent("JD");
+    });
+
+    test("When several papers of a page share a reviewer, then the reviewer is requested once", async () => {
+        reviewMode.isActivated = false;
+        const getUserByIdCall = mockApiCall("getUserById", createUser({ id: "1" }));
+        const context = new Map([[REVIEWER_LOOKUP_KEY, createReviewerLookup()]]);
+        const papers = ["1", "2", "3"].map((id) =>
+            createProjectPaper({
+                id,
+                localId: id,
+                reviews: [createReview({ id: `review-${id}`, userId: "1" })],
+            }),
+        );
+
+        for (const paper of papers) {
+            render(PaperEntry, { props: { paper, projectId: "0" }, context });
+        }
+
+        await waitFor(() => expect(screen.getAllByTestId("user-avatar")).toHaveLength(3));
+        expect(getUserByIdCall).toHaveBeenCalledExactlyOnceWith({ id: "1" });
     });
 
     test("When the user provides a custom onclick function, then it is executed on click", async () => {
