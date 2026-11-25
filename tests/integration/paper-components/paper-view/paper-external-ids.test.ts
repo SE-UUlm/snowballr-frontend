@@ -78,8 +78,31 @@ describe("PaperExternalIds", () => {
         expect(await screen.findByText("10.1234/abc")).toBeInTheDocument();
     });
 
-    test("When a badge is clicked, then its value is shown", async () => {
+    test("When a badge without a known page is clicked, then its value is shown", async () => {
         const user = userEvent.setup();
+        const paper = createPaper({
+            externalIds: [{ type: "MAG", displayType: "MAG", value: "2963403868" }],
+        });
+
+        render(PaperExternalIds, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                paper: stringifyPaper(paper),
+                isInEditMode: false,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        const badge = screen.getByText("MAG");
+        await waitUntilClickable(badge);
+        await user.click(badge);
+
+        expect(await screen.findByText("2963403868")).toBeInTheDocument();
+    });
+
+    test("When an external id has a known page, then its badge links to it in a new tab and shows an external link icon", async () => {
         const paper = createPaper({
             externalIds: [{ type: "DOI", displayType: "DOI", value: "10.1234/abc" }],
         });
@@ -95,11 +118,32 @@ describe("PaperExternalIds", () => {
 
         await waitForComponentLoading();
 
-        const badge = screen.getByText("DOI");
-        await waitUntilClickable(badge);
-        await user.click(badge);
+        const link = screen.getByRole("link", { name: "Open DOI page in a new tab" });
+        expect(link).toHaveAttribute("href", "https://doi.org/10.1234/abc");
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(within(link).getByTestId("external-link-icon")).toBeInTheDocument();
+    });
 
-        expect(await screen.findByText("10.1234/abc")).toBeInTheDocument();
+    test("When an external id has no known page, then its badge is not a link and shows no external link icon", async () => {
+        const paper = createPaper({
+            externalIds: [{ type: "MAG", displayType: "MAG", value: "2963403868" }],
+        });
+
+        render(PaperExternalIds, {
+            target: document.body,
+            props: {
+                loadingPaper: loading(paper),
+                paper: stringifyPaper(paper),
+                isInEditMode: false,
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getByText("MAG")).toBeInTheDocument();
+        expect(screen.queryByRole("link")).not.toBeInTheDocument();
+        expect(screen.queryByTestId("external-link-icon")).not.toBeInTheDocument();
     });
 
     test("When the paper has no external ids, then a placeholder is shown", async () => {
