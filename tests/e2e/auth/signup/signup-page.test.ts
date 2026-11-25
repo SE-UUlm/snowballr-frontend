@@ -49,4 +49,23 @@ test.describe("Sign Up Tests", () => {
         await signUpPage.signInLink.click();
         await expect(signInPage.heading).toBeVisible();
     });
+
+    test("When the redirect parameter points to another site, then the user stays on this site after signing up", async ({
+        page,
+        baseURL,
+        signUpPage,
+    }) => {
+        await page.goto(`/signup?redirect=${encodeURIComponent("https://example.com")}`);
+        await expect(signUpPage.heading).toBeVisible();
+
+        await signUpPage.firstNameInput.fill("John");
+        await signUpPage.lastNameInput.fill("Doe");
+        await signUpPage.emailInput.fill("john.doe@example.com");
+        await signUpPage.passwordInput.fill("Valid_Password12!");
+        await signUpPage.signUpButton.click();
+
+        // The mock backend signs the user in on registration, so the sign-in page forwards to the home page
+        await page.waitForURL((url) => url.pathname !== "/signup");
+        expect(new URL(page.url()).origin).toBe(new URL(baseURL!).origin);
+    });
 });

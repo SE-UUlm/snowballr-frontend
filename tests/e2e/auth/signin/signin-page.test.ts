@@ -66,4 +66,21 @@ test.describe("Sign In Tests", () => {
         await expect(readingListPage.heading).toBeVisible();
         await expect(page).toHaveURL("/readinglist");
     });
+
+    test("When the redirect parameter points to another site, then the user lands on the home page after signing in", async ({
+        page,
+        signInPage,
+        homePage,
+    }) => {
+        await page.goto(`/signin?redirect=${encodeURIComponent("https://example.com")}`);
+        await expect(signInPage.heading).toBeVisible();
+
+        await signInPage.emailInput.fill(alice.email);
+        await signInPage.passwordInput.fill(alice.password);
+        await signInPage.signInButton.click();
+
+        await expect(homePage.heading).toBeVisible();
+        await expect(page).toHaveURL("/");
+        await expect(signInPage.errorAlert).toBeHidden();
+    });
 });

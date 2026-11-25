@@ -53,32 +53,34 @@
             password: passwordInput.getValue(),
         };
 
-        await register(userData)
-            .then(async () => {
-                toast.info("Registration successful!", {
-                    description:
-                        "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
-                });
-                await goto(getRedirectUrlOrValue("/signin"));
-            })
-            .catch((error: Error) => {
-                if (isApiError(error, "already-exists")) {
-                    registrationError = createActionError(
-                        "Email already Registered",
-                        {
-                            customDetails:
-                                "An account with this email address already exists. Try logging in or resetting your password.",
-                        },
-                        error,
-                    );
-                } else {
-                    registrationError = createActionError(
-                        "Registration Failed",
-                        { action: "registering your account" },
-                        error,
-                    );
-                }
-            });
+        try {
+            await register(userData);
+        } catch (error) {
+            if (isApiError(error, "already-exists")) {
+                registrationError = createActionError(
+                    "Email already Registered",
+                    {
+                        customDetails:
+                            "An account with this email address already exists. Try logging in or resetting your password.",
+                    },
+                    error,
+                );
+            } else {
+                registrationError = createActionError(
+                    "Registration Failed",
+                    { action: "registering your account" },
+                    error as Error,
+                );
+            }
+            return;
+        }
+
+        toast.info("Registration successful!", {
+            description:
+                "You will receive a verification email shortly. Please check your inbox and follow the instructions to verify your account.",
+        });
+        // Outside the `try`, so a failed navigation isn't shown as a failed registration
+        await goto(getRedirectUrlOrValue("/signin"));
     }
 </script>
 

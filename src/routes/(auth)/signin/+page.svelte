@@ -32,26 +32,30 @@
             password: passwordInput.getValue(),
         };
 
-        await login(userData)
-            .then(async () => await goto(getRedirectUrlOrValue("/")))
-            .catch((error: Error) => {
-                if (isApiError(error, "unauthenticated")) {
-                    signInError = createActionError(
-                        "Invalid Credentials",
-                        {
-                            customDetails:
-                                "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
-                        },
-                        error,
-                    );
-                } else {
-                    signInError = createActionError(
-                        "Sign In Failed",
-                        { action: "signing you in" },
-                        error,
-                    );
-                }
-            });
+        try {
+            await login(userData);
+        } catch (error) {
+            if (isApiError(error, "unauthenticated")) {
+                signInError = createActionError(
+                    "Invalid Credentials",
+                    {
+                        customDetails:
+                            "The email or password you entered is incorrect. Please check your credentials or try resetting your password.",
+                    },
+                    error,
+                );
+            } else {
+                signInError = createActionError(
+                    "Sign In Failed",
+                    { action: "signing you in" },
+                    error as Error,
+                );
+            }
+            return;
+        }
+
+        // Outside the `try`, so a failed navigation isn't shown as a failed sign-in
+        await goto(getRedirectUrlOrValue("/"));
     }
 </script>
 
