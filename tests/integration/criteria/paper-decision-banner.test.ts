@@ -1,7 +1,7 @@
 import PaperDecisionBanner from "#lib/components/composites/criteria/PaperDecisionBanner.svelte";
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, test } from "vitest";
-import { createProjectPaper, loading } from "#tests/model-builder.js";
+import { createProjectPaper, createReview, createUser, loading } from "#tests/model-builder.js";
 import { PaperDecision } from "@se-uulm/snowballr-grpc-client/project";
 import { waitForComponentLoading } from "#tests/integration/test-helper.js";
 import { Reviews, Users } from "#tests/example-data.js";
@@ -128,5 +128,30 @@ describe("PaperDecisionBanner", () => {
         expect(userAvatar).toBeInTheDocument();
         const userInitials = screen.getByText("JD");
         expect(userInitials).toBeInTheDocument();
+    });
+
+    test("When a reviewer couldn't be loaded, then their review is still shown with an avatar", async () => {
+        const reviewer = createUser({ id: "u1", firstName: "John", lastName: "Doe" });
+
+        render(PaperDecisionBanner, {
+            target: document.body,
+            props: {
+                reviewers: loading([reviewer]),
+                loadingProjectPaper: loading(
+                    createProjectPaper({
+                        reviews: [
+                            createReview({ id: "r1", userId: reviewer.id }),
+                            createReview({ id: "r2", userId: "missing" }),
+                        ],
+                        decision: PaperDecision.ACCEPTED,
+                    }),
+                ),
+            },
+        });
+
+        await waitForComponentLoading();
+
+        expect(screen.getAllByTestId("user-avatar")).toHaveLength(2);
+        expect(screen.getByText("JD")).toBeInTheDocument();
     });
 });
