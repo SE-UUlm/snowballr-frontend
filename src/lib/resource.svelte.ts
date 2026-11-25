@@ -1,3 +1,8 @@
+import { isApiError } from "#lib/api/errors.js";
+
+/** Whether the promise of a {@link resource} is still pending, has resolved or has rejected. */
+export type ResourceStatus = "pending" | "resolved" | "rejected";
+
 interface ResourceOptions<TPromise, TValue> {
     /** The initial value of the state */
     initialValue: TValue;
@@ -14,7 +19,11 @@ interface ResourceOptions<TPromise, TValue> {
  *
  * As long as the promise is pending, the state will have the initial value {@link options.initialValue}.
  * When the promise resolves, the state will be set to the value returned by {@link options.onSuccess}.
- * If the promise rejects, the state will be set to {@link options.onErrorValue} if it is defined.
+ * If the promise rejects, the state will be set to {@link options.onErrorValue} if it is defined, and
+ * the failure is logged, unless it is an `ApiError` of kind `"cancelled"`.
+ *
+ * The `status` property tells whether the promise is still pending, has resolved or has rejected,
+ * e.g. to disable an action until the resource has loaded.
  *
  * The value of the state can be accessed via the `value` property.
  *
@@ -43,7 +52,7 @@ interface ResourceOptions<TPromise, TValue> {
  *
  * @param loadingResource - The promise representing the loading resource.
  * @param options - The options for the resource state.
- * @returns The state that represents the loading resource.
+ * @returns The state that represents the loading resource, with its `value` and `status`.
  */
 export const resource = <TPromise, TValue>(
     loadingResource: Promise<TPromise>,
@@ -56,19 +65,24 @@ export const resource = <TPromise, TValue>(
         resourceName = "resource",
     } = options;
 
-    const rune = $state<{ value: TValue }>({
+    const rune = $state<{ value: TValue; status: ResourceStatus }>({
         value: initialValue,
+        status: "pending",
     });
 
     loadingResource
         .then((value) => {
             rune.value = onSuccess(value);
+            rune.status = "resolved";
         })
-        .catch(() => {
+        .catch((error: unknown) => {
             if (onErrorValue) {
                 rune.value = onErrorValue;
             }
-            console.error(`Couldn't load ${resourceName}`);
+            rune.status = "rejected";
+            if (!isApiError(error, "cancelled")) {
+                console.error(`Couldn't load ${resourceName}`);
+            }
         });
 
     return rune;
