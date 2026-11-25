@@ -7,10 +7,11 @@ import type { User } from "#lib/api/types.js";
 export interface ReviewerLookup {
     /**
      * Loads the reviewer with the given id. Lookups of the same id share one request, also after it
-     * settled.
+     * succeeded.
      *
-     * Never rejects: if the reviewer can't be loaded, the failure is logged once and every lookup of
-     * the id resolves to `undefined`, so that the review is shown without a user.
+     * Never rejects: if the reviewer can't be loaded, the failure is logged once and the lookups
+     * pending at that time resolve to `undefined`, so that the review is shown without a user. A later
+     * lookup of the id requests the reviewer again.
      *
      * @param userId - The id of the reviewer
      * @returns The reviewer, or `undefined` if it couldn't be loaded
@@ -22,19 +23,21 @@ export interface ReviewerLookup {
  * Creates a {@link ReviewerLookup} with its own, empty set of lookups.
  */
 export function createReviewerLookup(): ReviewerLookup {
-    const lookups = new Map<string, Promise<User | undefined>>();
+    const reviewersById = new Map<string, Promise<User | undefined>>();
 
     return {
         getReviewer(userId) {
-            let lookup = lookups.get(userId);
-            if (lookup === undefined) {
-                lookup = getUserById(userId).catch((error) => {
-                    console.error(`Couldn't load review user with: ${userId} (error: ${error})`);
+            let reviewer = reviewersById.get(userId);
+            if (reviewer === undefined) {
+                reviewer = getUserById(userId).catch((error) => {
+                    // Forget the failure, so that a later lookup retries it
+                    reviewersById.delete(userId);
+                    console.error(`Couldn't load reviewer ${userId}: ${error}`);
                     return undefined;
                 });
-                lookups.set(userId, lookup);
+                reviewersById.set(userId, reviewer);
             }
-            return lookup;
+            return reviewer;
         },
     };
 }
