@@ -18,6 +18,8 @@
         triggerSize?: ButtonSize;
         openOnClick?: boolean;
         loading?: boolean;
+        /** If set, the trigger is rendered as a link that opens this URL in a new tab. */
+        href?: string;
     };
 
     const {
@@ -28,6 +30,7 @@
         triggerSize = "fit",
         openOnClick = false,
         loading = false,
+        href,
         class: className,
         ...restProps
     }: Props = $props();
@@ -47,9 +50,11 @@
 <!--
 @component
 Reusable tooltip component that wraps a trigger and content component.
-The tooltip can't be used as link. To still redirect on click, use the `onclick` prop.
+To redirect within the app on click, use the `onclick` prop.
 
 - if `openOnClick` is set, the tooltip is immediately shown when it's clicked.
+- if `href` is set, the trigger is rendered as a link that opens the URL in a new tab, e.g. for
+  external pages.
 
 Usage:
 ```svelte
@@ -67,6 +72,15 @@ Usage:
     </Tooltip>
 ```
 -->
+{#snippet triggerContent()}
+    {#if loading}
+        <LoaderCircle class="animate-spin" />
+        {@render loadingTrigger()}
+    {:else}
+        {@render trigger()}
+    {/if}
+{/snippet}
+
 <Tooltip.Provider>
     <Tooltip.Root bind:open>
         <Tooltip.Trigger
@@ -74,12 +88,16 @@ Usage:
             onclick={handleClick}
             {...restProps}
         >
-            {#if loading}
-                <LoaderCircle class="animate-spin" />
-                {@render loadingTrigger()}
-            {:else}
-                {@render trigger()}
-            {/if}
+            {#snippet child({ props })}
+                {#if href === undefined}
+                    <button {...props}>{@render triggerContent()}</button>
+                {:else}
+                    <!-- `type` is set to "button" by the trigger, which doesn't apply to links. -->
+                    <a {...props} {href} rel="noopener noreferrer" target="_blank" type={undefined}>
+                        {@render triggerContent()}
+                    </a>
+                {/if}
+            {/snippet}
         </Tooltip.Trigger>
         <Tooltip.Content>
             {@render content()}
