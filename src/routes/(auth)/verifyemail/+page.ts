@@ -1,20 +1,11 @@
-import { goto } from "$app/navigation";
-import { getAuthenticationStatus, verifyEmail } from "#lib/api/auth.js";
-import { AuthenticationStatus } from "#lib/api/types.js";
+import { verifyEmail } from "#lib/api/auth.js";
+import { redirectIfAuthenticated } from "#lib/utils/auth-redirect.js";
 import type { PageLoad } from "./$types";
 import { createActionError } from "#lib/model/action-error.js";
-import { resolve } from "$app/paths";
 
 export const load: PageLoad = async ({ url }) => {
-    // Check if the user is already authenticated (only verify if user is not authenticated)
-    try {
-        const authStatus = await getAuthenticationStatus();
-        if (authStatus === AuthenticationStatus.AUTHENTICATED) {
-            await goto(resolve("/"));
-        }
-    } catch (error) {
-        console.error("There was an error acquiring the authentication status:", error);
-    }
+    // Only verify if the user is not signed in yet
+    await redirectIfAuthenticated();
 
     const token = url.searchParams.get("token");
 

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
     getFilterFromURL,
+    getRedirectUrlOrValue,
     getSearchTextFromURL,
     getSortOptionFromURL,
     getStageFromSearchParams,
@@ -187,4 +188,35 @@ describe("Helper stage URL query parameter", () => {
         // `BigInt("")` is `0n`, which would be indistinguishable from having asked for stage 0.
         expect(getStageFromSearchParams(new URLSearchParams(""))).not.toBe(0n);
     });
+});
+
+describe("Helper redirect URL query parameter", () => {
+    test("When the redirect parameter is a path on this site, then it is returned", () => {
+        setPageUrlSearch(`redirect=${encodeURIComponent("/project/1/dashboard?stage=2")}`);
+
+        expect(getRedirectUrlOrValue("/")).toBe("/project/1/dashboard?stage=2");
+    });
+
+    test("When there is no redirect parameter, then the given value is returned", () => {
+        setPageUrlSearch("");
+
+        expect(getRedirectUrlOrValue("/signin")).toBe("/signin");
+    });
+
+    test.each([
+        "https://example.com",
+        "https://example.com/project/1",
+        "//example.com/project/1",
+        "http://localhost:8080/",
+        "javascript:alert(1)",
+        "http://",
+        "http://[",
+    ])(
+        "When the redirect parameter %s is not a path on this site, then the given value is returned",
+        (redirectUrl) => {
+            setPageUrlSearch(`redirect=${encodeURIComponent(redirectUrl)}`);
+
+            expect(getRedirectUrlOrValue("/")).toBe("/");
+        },
+    );
 });
