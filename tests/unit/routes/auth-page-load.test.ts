@@ -8,15 +8,15 @@ import { mockApiCall, mockFailedApiCall } from "#tests/setupTest.js";
 
 type AnyLoad = (event: never) => unknown;
 
-async function runLoad(load: AnyLoad, search = ""): Promise<unknown> {
-    const event = { url: new URL(`http://localhost/page${search}`) };
+async function runLoad(load: AnyLoad): Promise<unknown> {
+    const event = { url: new URL("http://localhost/page?token=abc") };
     return await load(event as never);
 }
 
 /** Runs the loader and returns what it threw, or fails if it didn't throw. */
-async function loadAndCatch(load: AnyLoad, search = ""): Promise<unknown> {
+async function loadAndCatch(load: AnyLoad): Promise<unknown> {
     try {
-        await runLoad(load, search);
+        await runLoad(load);
     } catch (error) {
         return error;
     }
@@ -35,7 +35,7 @@ describe.each(loaders)("The %s page loader", (_, load) => {
             authenticationStatus: AuthenticationStatus.AUTHENTICATED,
         });
 
-        const error = await loadAndCatch(load, "?token=abc");
+        const error = await loadAndCatch(load);
 
         expect(isRedirect(error)).toBe(true);
         expect(error).toMatchObject({ status: 307, location: "/" });
@@ -47,14 +47,14 @@ describe.each(loaders)("The %s page loader", (_, load) => {
         });
         mockApiCall("verifyEmail", {});
 
-        await expect(runLoad(load, "?token=abc")).resolves.toBeDefined();
+        await expect(runLoad(load)).resolves.toBeDefined();
     });
 
     test("When the authentication status can't be loaded, then it doesn't redirect", async () => {
         mockFailedApiCall("getAuthenticationStatus", "backend down");
         mockApiCall("verifyEmail", {});
 
-        await expect(runLoad(load, "?token=abc")).resolves.toBeDefined();
+        await expect(runLoad(load)).resolves.toBeDefined();
     });
 });
 
@@ -65,7 +65,7 @@ describe("The verify-email page loader", () => {
         });
         const verifyCall = mockApiCall("verifyEmail", {});
 
-        await loadAndCatch(loadVerifyEmail, "?token=abc");
+        await loadAndCatch(loadVerifyEmail);
 
         expect(verifyCall).not.toHaveBeenCalled();
     });
@@ -76,7 +76,7 @@ describe("The verify-email page loader", () => {
         });
         const verifyCall = mockApiCall("verifyEmail", {});
 
-        const data = (await runLoad(loadVerifyEmail, "?token=abc")) as {
+        const data = (await runLoad(loadVerifyEmail)) as {
             verificationPromise: Promise<void>;
         };
 

@@ -209,8 +209,10 @@ describe("Helper redirect URL query parameter", () => {
         "//example.com/project/1",
         "http://localhost:8080/",
         "javascript:alert(1)",
+        "http://",
+        "http://[",
     ])(
-        "When the redirect parameter %s points to another origin, then the given value is returned",
+        "When the redirect parameter %s is not a path on this site, then the given value is returned",
         (redirectUrl) => {
             setPageUrlSearch(`redirect=${encodeURIComponent(redirectUrl)}`);
 

@@ -162,14 +162,14 @@ export function updateUrlParams(searchParameters: SvelteURLSearchParams): void {
 
 /**
  * Returns the 'redirect' query parameter from the current URL as a path on this site.
- * A redirect to another origin is dropped, since `goto` rejects it.
+ * A redirect to another origin or a malformed one is dropped, since `goto` rejects it.
  */
 function getRedirectParam(): string | null {
     const redirectParam = getUrlSearchParam("redirect");
     if (redirectParam === null) return null;
 
-    const redirectUrl = new URL(redirectParam, page.url.origin);
-    if (redirectUrl.origin !== page.url.origin) return null;
+    const redirectUrl = URL.parse(redirectParam, page.url.origin);
+    if (redirectUrl?.origin !== page.url.origin) return null;
 
     return redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
 }
